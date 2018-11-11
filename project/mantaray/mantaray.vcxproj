@@ -24,7 +24,8 @@
     <ClCompile Include="..\..\src\image_handling.cpp" />
     <ClCompile Include="..\..\src\light_ray.cpp" />
     <ClCompile Include="..\..\src\main.cpp" />
-    <ClCompile Include="..\..\src\manta_math.cpp" />
+    <ClCompile Include="..\..\src\manta_math_float_simd.cpp" />
+    <ClCompile Include="..\..\src\manta_math_single.cpp" />
     <ClCompile Include="..\..\src\material.cpp" />
     <ClCompile Include="..\..\src\monte_carlo_specular_diffuse_group.cpp" />
     <ClCompile Include="..\..\src\ray_emitter.cpp" />
@@ -47,7 +48,11 @@
     <ClInclude Include="..\..\include\image_handling.h" />
     <ClInclude Include="..\..\include\light_ray.h" />
     <ClInclude Include="..\..\include\manta_math.h" />
+    <ClInclude Include="..\..\include\manta_math_conf.h" />
+    <ClInclude Include="..\..\include\manta_math_float_simd.h" />
     <ClInclude Include="..\..\include\intersection_point.h" />
+    <ClInclude Include="..\..\include\manta_math_single.h" />
+    <ClInclude Include="..\..\include\manta_real.h" />
     <ClInclude Include="..\..\include\material.h" />
     <ClInclude Include="..\..\include\monte_carlo_specular_diffuse_group.h" />
     <ClInclude Include="..\..\include\pool_allocator.h" />
@@ -67,6 +72,9 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\tracking\BuildVersion.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

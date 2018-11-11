@@ -3,6 +3,8 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
+#include <manta_math.h>
+
 #include <math.h>
 
 Uint32 GetPixel24(SDL_Surface * surface, int x, int y) {
@@ -26,13 +28,15 @@ Uint32 GetPixel24(SDL_Surface * surface, int x, int y) {
 void PlacePixel24(SDL_Surface * surface, int x, int y, manta::math::Vector &color) {
 	Uint32 color32 = 0;
 
-	float r = manta::math::getX(color);
-	float g = manta::math::getY(color);
-	float b = manta::math::getZ(color);
+	manta::math::real r = manta::math::getX(color);
+	manta::math::real g = manta::math::getY(color);
+	manta::math::real b = manta::math::getZ(color);
 
-	r = manta::math::clamp(r);
-	g = manta::math::clamp(g);
-	b = manta::math::clamp(b);
+	manta::math::real gamma = (manta::math::real)1.0;
+
+	r = (manta::math::real)pow(manta::math::clamp(r), 1 / gamma);
+	g = (manta::math::real)pow(manta::math::clamp(g), 1 / gamma);
+	b = (manta::math::real)pow(manta::math::clamp(b), 1 / gamma);
 
 	color32 |= lround(r * 255);
 	color32 |= (lround(g * 255) << 8);

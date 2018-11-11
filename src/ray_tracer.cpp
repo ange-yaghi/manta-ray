@@ -97,7 +97,7 @@ void manta::RayTracer::traceRayGroupThread(const Scene * scene, const RayEmitter
 void manta::RayTracer::depthCull(const Scene *scene, const LightRay *ray, SceneObject **closestObject, IntersectionPoint *point) const {
 	int objectCount = scene->getSceneObjectCount();
 
-	float minDepth = FLT_MAX;
+	math::real minDepth = math::REAL_MAX;
 	SceneObject *currentClosest = NULL;
 	IntersectionPoint closestIntersection;
 	closestIntersection.m_intersection = false;
