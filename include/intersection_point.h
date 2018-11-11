@@ -9,7 +9,7 @@ namespace manta {
 	public:
 		math::Vector m_position;
 		math::Vector m_normal;
-		float m_depth;
+		math::real m_depth;
 
 		bool m_intersection;
 	};

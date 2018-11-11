@@ -1,25 +1,30 @@
-#include <manta_math.h>
+#include <manta_math_conf.h>
+
+#if MANTA_USE_SIMD
+#if MANTA_PRECISION == MANTA_PRECISION_FLOAT
+
+#include <manta_math_float_simd.h>
 
 #include <math.h>
 #include <random>
 
 namespace math = manta::math;
 
-math::Vector manta::math::uniformRandom4(float range) {
-	float r = (rand() % RAND_MAX) / ((float)(RAND_MAX - 1));
+math::Vector manta::math::uniformRandom4(real range) {
+	real r = (rand() % RAND_MAX) / ((real)(RAND_MAX - 1));
 	return loadScalar(range * r);
 }
 
-float manta::math::uniformRandom(float range) {
-	float r = (rand() % RAND_MAX) / ((float)(RAND_MAX - 1));
+float manta::math::uniformRandom(real range) {
+	real r = (rand() % RAND_MAX) / ((real)(RAND_MAX - 1));
 	return range * r;
 }
 
-math::Generic math::loadScalar(float s) {
+math::Generic math::loadScalar(real s) {
 	return _mm_set_ps(s, s, s, s);
 }
 
-math::Generic math::loadVector(float x, float y, float z, float w) {
+math::Generic math::loadVector(real x, real y, real z, real w) {
 	return _mm_set_ps(w, z, y, x);
 }
 
@@ -27,7 +32,7 @@ math::Generic math::loadVector(const Vector4 &v) {
 	return _mm_set_ps(v.w, v.z, v.y, v.x);
 }
 
-math::Generic math::loadVector(const Vector3 &v, float w) {
+math::Generic math::loadVector(const Vector3 &v, real w) {
 	return _mm_set_ps(w, v.z, v.y, v.x);
 }
 
@@ -39,9 +44,9 @@ math::Generic math::loadVector(const Vector2 &v1, const Vector2 &v2) {
 	return _mm_set_ps(v2.y, v2.x, v1.y, v1.x);
 }
 
-math::Quaternion math::loadQuaternion(float angle, const Vector &axis) {
-	float sinAngle = (float)sin(angle / 2.0f);
-	float cosAngle = (float)cos(angle / 2.0f);
+math::Quaternion math::loadQuaternion(real angle, const Vector &axis) {
+	real sinAngle = (real)sin(angle / (real)2.0);
+	real cosAngle = (real)cos(angle / (real)2.0);
 
 	Vector newAxis = _mm_shuffle_ps(axis, axis, _MM_SHUFFLE(2, 1, 0, 3));
 	newAxis = _mm_and_ps(newAxis, constants::MaskOffX);
@@ -218,7 +223,7 @@ math::Vector manta::math::bitOr(const Vector &v1, const Vector &v2) {
 // Quaternion
 
 math::Quaternion math::quatInvert(const Quaternion &q) {
-	Quaternion nq = math::loadVector(1.0f, -1.0f, -1.0f, -1.0f);
+	Quaternion nq = math::loadVector((real)1.0, (real)-1.0, (real)-1.0, (real)-1.0);
 
 	return math::mul(nq, q);
 }
@@ -258,7 +263,7 @@ math::Vector math::quatTransform(const Quaternion &q, const Vector &v) {
 	return transformed;
 }
 
-math::Quaternion math::quatAddScaled(const Quaternion &q, const Vector &vec, float scale) {
+math::Quaternion math::quatAddScaled(const Quaternion &q, const Vector &vec, real scale) {
 	Generic n = _mm_shuffle_ps(vec, vec, _MM_SHUFFLE(2, 1, 0, 3));
 	n = _mm_and_ps(n, constants::MaskOffX);
 
@@ -656,3 +661,6 @@ float math::clamp(float value) {
 		return value;
 	}
 }
+
+#endif /* MANTA_USE_SIMD */
+#endif /* MANTA_PRECISION */
