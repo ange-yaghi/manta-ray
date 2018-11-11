@@ -1,0 +1,230 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\geometry">
+      <UniqueIdentifier>{19dabb3c-bbd4-4fb1-849e-e87779c4bf83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\math">
+      <UniqueIdentifier>{e4c42f05-74c8-4f69-bcc0-d85070842ac3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\geometry">
+      <UniqueIdentifier>{bd3325db-94f3-4df8-b5b2-6b895a814b2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\math">
+      <UniqueIdentifier>{82da7650-aab7-4e70-bc60-4afd262cf907}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\material">
+      <UniqueIdentifier>{55dd5ee8-e105-401f-aedd-0cc09b039402}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\material">
+      <UniqueIdentifier>{71ef8e63-4165-4f89-a44d-670fc990f74b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\scene">
+      <UniqueIdentifier>{3bc7d3f7-f92f-496f-bbaf-e33dbac78525}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\scene">
+      <UniqueIdentifier>{a48b297e-5af0-4af6-b81e-29936c1938f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ray-tracer">
+      <UniqueIdentifier>{323d5e68-1381-4910-b41e-99bee1d8362c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ray-tracer">
+      <UniqueIdentifier>{07af04a8-813c-4ae3-9c22-d5e083cf1520}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\memory-management">
+      <UniqueIdentifier>{b8786211-b684-4d70-9979-06e59cf43c92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\memory-management">
+      <UniqueIdentifier>{9a29cc5f-8913-4a5c-8162-d29b2b91d03f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tracking">
+      <UniqueIdentifier>{bfe51395-0f70-416b-8bbd-d9e4cd965ec4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\image-handling">
+      <UniqueIdentifier>{21a944f2-b8e6-4bf7-b043-4ae32b2b02ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\image-handling">
+      <UniqueIdentifier>{89260930-fc47-4fab-b32c-743311ddf47f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ray-tracer\simple-ray-emitter">
+      <UniqueIdentifier>{45ad4b94-b02f-479a-ad38-671a106cd733}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ray-tracer\camera-ray-emitter">
+      <UniqueIdentifier>{bb1535d4-93bb-4fab-8f6d-b6338ebec472}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ray-tracer\simple-monte-carlo-emitter">
+      <UniqueIdentifier>{3d30888e-99a5-4382-96e5-d1c1de7e9c36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ray-tracer\camera-ray-emitter">
+      <UniqueIdentifier>{c1921a28-4ffa-456c-9e05-eb57c0a65d5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ray-tracer\simple-monte-carlo-emitter">
+      <UniqueIdentifier>{8b1484a0-65aa-4e5f-9ac3-53b7e3eea6e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ray-tracer\simple-ray-emitter">
+      <UniqueIdentifier>{162aba01-fefe-4b87-8bb1-c457daae1ff9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\material\library">
+      <UniqueIdentifier>{03921aff-b8f0-4ac0-a925-fe2fbadd8250}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\material\library">
+      <UniqueIdentifier>{71e49133-c41b-4971-ad99-3ef7ed4c1628}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ray-tracer\monte-carlo-specular-diffuse">
+      <UniqueIdentifier>{d42c1e68-7ece-404d-8b0b-7a20f8a724af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ray-tracer\monte-carlo-specular-diffuse">
+      <UniqueIdentifier>{b87e772b-14b9-46f5-bc6c-af9f9ce862e4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\scene_geometry.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sphere_primitive.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\manta_math.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\material.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\scene_object.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\light_ray.cpp">
+      <Filter>Source Files\ray-tracer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ray_tracer.cpp">
+      <Filter>Source Files\ray-tracer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ray_emitter.cpp">
+      <Filter>Source Files\ray-tracer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\scene.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ray_emitter_group.cpp">
+      <Filter>Source Files\ray-tracer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\image_handling.cpp">
+      <Filter>Source Files\image-handling</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\simple_ray_emitter_group.cpp">
+      <Filter>Source Files\ray-tracer\simple-ray-emitter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\simple_ray_emitter.cpp">
+      <Filter>Source Files\ray-tracer\simple-ray-emitter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\camera_ray_emitter.cpp">
+      <Filter>Source Files\ray-tracer\camera-ray-emitter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\camera_ray_emitter_group.cpp">
+      <Filter>Source Files\ray-tracer\camera-ray-emitter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\simple_monte_carlo_emitter.cpp">
+      <Filter>Source Files\ray-tracer\simple-monte-carlo-emitter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\simple_diffuse_material.cpp">
+      <Filter>Source Files\material\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\simple_monte_carlo_emitter_group.cpp">
+      <Filter>Source Files\ray-tracer\simple-monte-carlo-emitter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\monte_carlo_specular_diffuse_group.cpp">
+      <Filter>Source Files\ray-tracer\monte-carlo-specular-diffuse</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\simple_specular_diffuse_material.cpp">
+      <Filter>Source Files\material\library</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\include\intersection_point.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\scene_geometry.h">
+      <Filter>Header Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sphere_primitive.h">
+      <Filter>Header Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\manta_math.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\material.h">
+      <Filter>Header Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\scene_object.h">
+      <Filter>Header Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\light_ray.h">
+      <Filter>Header Files\ray-tracer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\ray_tracer.h">
+      <Filter>Header Files\ray-tracer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pool_allocator.h">
+      <Filter>Header Files\memory-management</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\scene.h">
+      <Filter>Header Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\ray_emitter_group.h">
+      <Filter>Header Files\ray-tracer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\image_handling.h">
+      <Filter>Header Files\image-handling</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\camera_ray_emitter.h">
+      <Filter>Header Files\ray-tracer\camera-ray-emitter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\camera_ray_emitter_group.h">
+      <Filter>Header Files\ray-tracer\camera-ray-emitter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\simple_ray_emitter.h">
+      <Filter>Header Files\ray-tracer\simple-ray-emitter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\simple_ray_emitter_group.h">
+      <Filter>Header Files\ray-tracer\simple-ray-emitter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\simple_monte_carlo_emitter.h">
+      <Filter>Header Files\ray-tracer\simple-monte-carlo-emitter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\simple_monte_carlo_emitter_group.h">
+      <Filter>Header Files\ray-tracer\simple-monte-carlo-emitter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\simple_diffuse_material.h">
+      <Filter>Header Files\material\library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\monte_carlo_specular_diffuse_group.h">
+      <Filter>Header Files\ray-tracer\monte-carlo-specular-diffuse</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\simple_specular_diffuse_material.h">
+      <Filter>Header Files\material\library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\ray_emitter.h">
+      <Filter>Header Files\ray-tracer</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\tracking\BuildVersion.txt">
+      <Filter>Tracking</Filter>
+    </Text>
+  </ItemGroup>
+</Project>
