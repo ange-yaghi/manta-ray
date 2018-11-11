@@ -1,7 +1,8 @@
-Personal Finance Tracker 2018 Build Information
+MantaRay 2018 Build Information
 Ange Yaghi | 2018 | Every now and then, some rain must fall
-BUILD VERSION: 265
+BUILD VERSION: 266
 
+Build	2018-11-11 01:17	3104	266
 Build	2018-11-11 00:36	3104	265
 Build	2018-11-11 00:24	3104	264
 Build	2018-11-11 00:23	3104	263

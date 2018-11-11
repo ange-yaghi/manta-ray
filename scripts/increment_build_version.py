@@ -67,7 +67,7 @@ if __name__ == "__main__":
        
     f = open(mypath + "/tracking/BuildVersion.txt", "w")
     
-    f.write("Personal Finance Tracker 2018 Build Information\n")
+    f.write("MantaRay 2018 Build Information\n")
     f.write("Ange Yaghi | 2018 | Every now and then, some rain must fall\n")
     
     f.write("BUILD VERSION: %d\n\n" % (buildVersion))
