@@ -99,9 +99,6 @@
     <ClCompile Include="..\..\src\sphere_primitive.cpp">
       <Filter>Source Files\geometry</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\manta_math.cpp">
-      <Filter>Source Files\math</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\material.cpp">
       <Filter>Source Files\material</Filter>
     </ClCompile>
@@ -153,6 +150,12 @@
     <ClCompile Include="..\..\src\simple_specular_diffuse_material.cpp">
       <Filter>Source Files\material\library</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\manta_math_float_simd.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\manta_math_single.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\intersection_point.h">
@@ -163,9 +166,6 @@
     </ClInclude>
     <ClInclude Include="..\..\include\sphere_primitive.h">
       <Filter>Header Files\geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\manta_math.h">
-      <Filter>Header Files\math</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\material.h">
       <Filter>Header Files\material</Filter>
@@ -221,10 +221,28 @@
     <ClInclude Include="..\..\include\ray_emitter.h">
       <Filter>Header Files\ray-tracer</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\manta_math_float_simd.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\manta_math.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\manta_math_conf.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\manta_math_single.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\manta_real.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\tracking\BuildVersion.txt">
       <Filter>Tracking</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>

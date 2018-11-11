@@ -19,7 +19,7 @@ void manta::SpherePrimitive::detectIntersection(const LightRay *ray, Intersectio
 	math::Vector radius2 = math::loadScalar(m_radius * m_radius);
 	math::Vector det = math::sub(math::mul(d_dot_dir, d_dot_dir), math::sub(mag2, radius2));
 
-	if (math::getScalar(det) < 0.0f) {
+	if (math::getScalar(det) < (math::real)0.0) {
 		p->m_intersection = false;
 	}
 	else {
@@ -27,14 +27,13 @@ void manta::SpherePrimitive::detectIntersection(const LightRay *ray, Intersectio
 		math::Vector t1 = math::sub(det, d_dot_dir);
 		math::Vector t2 = math::sub(math::negate(det), d_dot_dir);
 
-		float t1_s = math::getScalar(t1);
-		float t2_s = math::getScalar(t2);
+		math::real t1_s = math::getScalar(t1);
+		math::real t2_s = math::getScalar(t2);
 
-		p->m_intersection = t1_s > 0.0f || t2_s > 0.0f;
+		p->m_intersection = t1_s > (math::real)0.0 || t2_s > (math::real)0.0;
 
 		if (p->m_intersection) {
 			math::Vector t;
-			float depth;
 			if (t2_s < t1_s && t2_s >= 0.0f) {
 				t = t2;
 				p->m_depth = t2_s;
