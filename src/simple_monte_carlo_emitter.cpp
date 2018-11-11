@@ -18,9 +18,9 @@ manta::SimpleMonteCarloEmitter::~SimpleMonteCarloEmitter() {
 void manta::SimpleMonteCarloEmitter::generateRays() {
 	initializeRays(1);
 
-	float r1 = math::uniformRandom(2.0 * M_PI);
-	float r2 = math::uniformRandom();
-	float r2s = sqrt(r2);
+	math::real r1 = math::uniformRandom(2.0 * M_PI);
+	math::real r2 = math::uniformRandom();
+	math::real r2s = (math::real)sqrt(r2);
 
 	math::Vector realNormal = math::dot(m_incidentDirection, m_normal);
 

@@ -54,13 +54,13 @@ void manta::CameraRayEmitter::generateRays() {
 	LightRay *rays = getRays();
 
 	// Find the origin
-	float offset;
+	math::real offset;
 	if (m_samples % 2 == 0) {
 		// Even sampling
-		offset = 0.5f;
+		offset = (math::real)0.5;
 	}
 	else {
-		offset = 0.0f;
+		offset = (math::real)0.0;
 	}
 
 	int half = m_samples / 2;
@@ -69,8 +69,8 @@ void manta::CameraRayEmitter::generateRays() {
 
 	for (int i = 0; i < m_samples; i++) {
 		for (int j = 0; j < m_samples; j++) {
-			float x = i + offset;
-			float y = j + offset;
+			math::real x = i + offset;
+			math::real y = j + offset;
 
 			math::Vector u = math::mul(m_sampleOffsetX, math::loadScalar(x));
 			math::Vector v = math::mul(m_sampleOffsetY, math::loadScalar(y));
@@ -96,9 +96,9 @@ manta::math::Vector manta::CameraRayEmitter::getIntensity() const {
 	for (int i = 0; i < rayCount; i++) {
 		math::Vector clamped = rays[i].getIntensity();
 
-		float r = math::getX(clamped);
-		float g = math::getY(clamped);
-		float b = math::getZ(clamped);
+		math::real r = math::getX(clamped);
+		math::real g = math::getY(clamped);
+		math::real b = math::getZ(clamped);
 
 		r = math::clamp(r);
 		g = math::clamp(g);
@@ -109,6 +109,6 @@ manta::math::Vector manta::CameraRayEmitter::getIntensity() const {
 		accum = math::add(accum, clamped);
 	}
 
-	accum = math::div(accum, math::loadScalar((float)rayCount));
+	accum = math::div(accum, math::loadScalar((math::real)rayCount));
 	return accum;
 }

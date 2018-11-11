@@ -51,8 +51,8 @@ void manta::Material::integrateRay(LightRay *ray, const RayEmitterGroup *_rayEmi
 
 	ray->setIntensity(math::add(math::mul(reflectedRay->getIntensity(), math::loadScalar(0.5)), m_emission));
 
-	float r1 = math::getX(ray->getIntensity());
-	float r2 = math::getX(m_emission);
+	math::real r1 = math::getX(ray->getIntensity());
+	math::real r2 = math::getX(m_emission);
 	if (r2 > r1 && _rayEmitter->getDegree() == 1) {
 		int a = 0;
 	}

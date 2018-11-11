@@ -38,7 +38,9 @@ int main() {
 	leftWallMaterial.setSpecularColor(getColor(10, 10, 10));
 
 	rightWallMaterial.setEmission(math::loadVector(0.0f, 0.0f, 0.0f));
-	rightWallMaterial.setDiffuseColor(getColor(0x87, 0xb6, 0xa7));
+	rightWallMaterial.setDiffuseColor(getColor(0x3F, 0x51, 0xB5));
+	rightWallMaterial.setDiffuseColor(getColor(0x87, 0xB6, 0xA7));
+	rightWallMaterial.setDiffuseColor(getColor(0x40, 0xC4, 0xFF));
 	rightWallMaterial.setSpecularColor(getColor(10, 10, 10));
 
 	backWallMaterial.setEmission(math::loadVector(0.0f, 0.0f, 0.0f));
@@ -46,12 +48,14 @@ int main() {
 	backWallMaterial.setSpecularColor(getColor(10, 10, 10));
 
 	sphere1Material.setEmission(math::loadVector(0.0f, 0.0f, 0.0f));
-	sphere1Material.setDiffuseColor(getColor(0xf7, 0x9f, 0x79));
-	sphere1Material.setSpecularColor(getColor(50, 50, 50));
+	sphere1Material.setDiffuseColor(getColor(228, 0, 25));
+	sphere1Material.setSpecularColor(getColor(90, 90, 90));
 
 	sphere2Material.setEmission(math::loadVector(0.0f, 0.0f, 0.0f));
-	sphere2Material.setDiffuseColor(getColor(0xe3, 0xf0, 0x9b));
-	sphere2Material.setSpecularColor(getColor(100, 100, 100));
+	//sphere2Material.setDiffuseColor(getColor(0xe3, 0xf0, 0x9b));
+	//sphere2Material.setSpecularColor(getColor(100, 100, 100));
+	sphere2Material.setDiffuseColor(getColor(0, 0, 0));
+	sphere2Material.setSpecularColor(getColor(0xFF, 0xFF, 0xFF));
 
 	lightMaterial.setEmission(math::loadVector(7.2f, 7.2f, 7.2f));
 	lightMaterial.setDiffuseColor(math::loadVector(1.0f, 1.0f, 1.0f));
@@ -131,6 +135,9 @@ int main() {
 	int width = 1024;
 	int height = 768;
 
+	width = 100;
+	height = 100;
+
 	CameraRayEmitterGroup camera;
 	camera.setSamplingWidth(2);
 	camera.setDirection(math::loadVector(-1.0f, 0.0f, 0.0f));
@@ -140,7 +147,7 @@ int main() {
 	camera.setPlaneHeight(1.0f);
 	camera.setResolutionX(width);
 	camera.setResolutionY(height);
-	camera.setSamplesPerPixel(200);
+	camera.setSamplesPerPixel(1000);
 
 
 	//CameraRayEmitter cameraEmitter;
@@ -157,9 +164,9 @@ int main() {
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
 			math::Vector v = ((CameraRayEmitter *)(camera.getEmitters()[i * width + j]))->getIntensity();
-			float r = math::getX(v);
-			float g = math::getY(v);
-			float b = math::getZ(v);
+			math::real r = math::getX(v);
+			math::real g = math::getY(v);
+			math::real b = math::getZ(v);
 
 			if (r > 0.0 || g > 0.0 || b > 0.0) {
 				//std::cout << "+";
