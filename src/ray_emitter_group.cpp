@@ -18,7 +18,7 @@ void manta::RayEmitterGroup::destroyEmitters() {
 
 	delete[] m_rayEmitters;
 
-	m_rayEmitters = NULL;
+	m_rayEmitters = nullptr;
 	m_rayEmitterCount = 0;
 }
 

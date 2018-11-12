@@ -18,11 +18,11 @@ void manta::MonteCarloSpecularDiffuseGroup::createAllEmitters() {
 	}
 	else
 	{
-		m_diffuseEmitter = NULL;
+		m_diffuseEmitter = nullptr;
 	}
 
 	if (m_specularEnabled) m_specularEmitter = createEmitter<SimpleRayEmitter>();
-	else m_specularEmitter = NULL;
+	else m_specularEmitter = nullptr;
 
 	// TODO: remove this hack
 	m_rayEmitters[0] = (RayEmitter *)m_diffuseEmitter;

@@ -3,12 +3,11 @@
 #include <light_ray.h>
 #include <manta_math.h>
 
-#define _USE_MATH_DEFINES
 #include <random>
 #include <math.h>
 
 manta::SimpleMonteCarloEmitter::SimpleMonteCarloEmitter() {
-
+	m_singleRay = nullptr;
 }
 
 manta::SimpleMonteCarloEmitter::~SimpleMonteCarloEmitter() {
@@ -18,7 +17,7 @@ manta::SimpleMonteCarloEmitter::~SimpleMonteCarloEmitter() {
 void manta::SimpleMonteCarloEmitter::generateRays() {
 	initializeRays(1);
 
-	math::real r1 = math::uniformRandom(2.0 * M_PI);
+	math::real r1 = math::uniformRandom(math::constants::TWO_PI);
 	math::real r2 = math::uniformRandom();
 	math::real r2s = (math::real)sqrt(r2);
 

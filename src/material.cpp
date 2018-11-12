@@ -22,7 +22,7 @@ manta::RayEmitterGroup *manta::Material::generateRayEmitters(const LightRay *ray
 
 manta::RayEmitterGroup *manta::Material::generateRayEmittersInternal(const LightRay *ray, const IntersectionPoint *intersectionPoint, int degree) const {
 	if (degree >= 20) {
-		return NULL;
+		return nullptr;
 	}
 
 	if (degree >= 2) {
