@@ -59,7 +59,7 @@ void manta::RayTracer::traceRayEmitter(const Scene *scene, const RayEmitter *emi
 		LightRay *ray = &rays[i];
 
 		math::Vector average = math::constants::Zero;
-		math::Vector samples = math::loadScalar(emitter->getSamplesPerRay());
+		math::Vector samples = math::loadScalar((math::real)emitter->getSamplesPerRay());
 		for (int s = 0; s < emitter->getSamplesPerRay(); s++) {
 			traceRay(scene, ray, emitter->getDegree());
 			average = math::add(average, math::div(ray->getIntensity(), samples));
@@ -98,7 +98,7 @@ void manta::RayTracer::depthCull(const Scene *scene, const LightRay *ray, SceneO
 	int objectCount = scene->getSceneObjectCount();
 
 	math::real minDepth = math::REAL_MAX;
-	SceneObject *currentClosest = NULL;
+	SceneObject *currentClosest = nullptr;
 	IntersectionPoint closestIntersection;
 	closestIntersection.m_intersection = false;
 
@@ -126,17 +126,17 @@ void manta::RayTracer::depthCull(const Scene *scene, const LightRay *ray, SceneO
 }
 
 void manta::RayTracer::traceRay(const Scene *scene, LightRay *ray, int degree) const {
-	SceneObject *sceneObject = NULL;
+	SceneObject *sceneObject = nullptr;
 	IntersectionPoint point;
 
 	depthCull(scene, ray, &sceneObject, &point);
 
-	if (sceneObject != NULL) {
+	if (sceneObject != nullptr) {
 		Material *material = sceneObject->getMaterial();
 
 		RayEmitterGroup *group = material->generateRayEmitters(ray, &point, degree + 1);
 
-		if (group != NULL) {
+		if (group != nullptr) {
 			traceRayEmitterGroup(scene, group);
 			material->integrateRay(ray, group);
 			material->destroyEmitterGroup(group);

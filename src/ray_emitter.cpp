@@ -6,7 +6,7 @@
 
 manta::RayEmitter::RayEmitter() {
 	m_rayCount = 0;
-	m_rays = NULL;
+	m_rays = nullptr;
 	m_samplesPerRay = 1;
 }
 
@@ -27,8 +27,8 @@ void manta::RayEmitter::initializeRays(int count) {
 }
 
 void manta::RayEmitter::destroyRays() {
-	if (m_rays == NULL) return;
+	if (m_rays == nullptr) return;
 
 	_aligned_free((void *)m_rays);
-	m_rays = NULL;
+	m_rays = nullptr;
 }

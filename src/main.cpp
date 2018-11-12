@@ -32,24 +32,39 @@ int main() {
 	SimpleSpecularDiffuseMaterial sphere2Material;
 	SimpleSpecularDiffuseMaterial lightMaterial;
 	SimpleSpecularDiffuseMaterial floorMaterial;
+	SimpleSpecularDiffuseMaterial mirrorMaterial;
+	SimpleSpecularDiffuseMaterial orbMaterial;
 
 	leftWallMaterial.setEmission(math::loadVector(0.0f, 0.0f, 0.0f));
 	leftWallMaterial.setDiffuseColor(getColor(0xf7, 0xd0, 0x8a));
-	leftWallMaterial.setSpecularColor(getColor(10, 10, 10));
+	leftWallMaterial.setSpecularColor(getColor(0, 0, 0));
 
 	rightWallMaterial.setEmission(math::loadVector(0.0f, 0.0f, 0.0f));
 	rightWallMaterial.setDiffuseColor(getColor(0x3F, 0x51, 0xB5));
 	rightWallMaterial.setDiffuseColor(getColor(0x87, 0xB6, 0xA7));
 	rightWallMaterial.setDiffuseColor(getColor(0x40, 0xC4, 0xFF));
-	rightWallMaterial.setSpecularColor(getColor(10, 10, 10));
+	rightWallMaterial.setSpecularColor(getColor(0, 0, 0));
 
 	backWallMaterial.setEmission(math::loadVector(0.0f, 0.0f, 0.0f));
 	backWallMaterial.setDiffuseColor(getColor(200, 200, 200));
-	backWallMaterial.setSpecularColor(getColor(10, 10, 10));
+	backWallMaterial.setSpecularColor(getColor(0, 0, 0));
 
-	sphere1Material.setEmission(math::loadVector(0.0f, 0.0f, 0.0f));
+	sphere1Material.setEmission(math::loadVector(1.9f, 1.2f, 1.2f));
 	sphere1Material.setDiffuseColor(getColor(228, 0, 25));
 	sphere1Material.setSpecularColor(getColor(90, 90, 90));
+
+	//orbMaterial.setEmission(math::loadVector(0.9f, 0.2f, 0.2f));
+	//orbMaterial.setDiffuseColor(getColor(228, 0, 25));
+	//orbMaterial.setSpecularColor(getColor(200, 200, 200));
+	orbMaterial.setEmission(math::loadVector(0.0f, 0.0f, 0.0f));
+	orbMaterial.setDiffuseColor(getColor(0, 0, 0));
+	orbMaterial.setSpecularColor(getColor(20, 20, 20));
+
+	mirrorMaterial.setEmission(math::loadVector(5.75f, 5.75f, 5.75f));
+	//mirrorMaterial.setDiffuseColor(getColor(0xe3, 0xf0, 0x9b));
+	//mirrorMaterial.setSpecularColor(getColor(100, 100, 100));
+	mirrorMaterial.setDiffuseColor(getColor(0, 0, 0));
+	mirrorMaterial.setSpecularColor(getColor(0, 0, 0));
 
 	sphere2Material.setEmission(math::loadVector(0.0f, 0.0f, 0.0f));
 	//sphere2Material.setDiffuseColor(getColor(0xe3, 0xf0, 0x9b));
@@ -57,13 +72,13 @@ int main() {
 	sphere2Material.setDiffuseColor(getColor(0, 0, 0));
 	sphere2Material.setSpecularColor(getColor(0xFF, 0xFF, 0xFF));
 
-	lightMaterial.setEmission(math::loadVector(7.2f, 7.2f, 7.2f));
+	lightMaterial.setEmission(math::loadVector(1.2f, 1.2f, 1.2f));
 	lightMaterial.setDiffuseColor(math::loadVector(1.0f, 1.0f, 1.0f));
 	lightMaterial.setSpecularColor(getColor(0, 0, 0));
 
 	floorMaterial.setEmission(math::loadVector(0.0f, 0.0f, 0.0f));
 	floorMaterial.setDiffuseColor(getColor(200, 200, 200));
-	floorMaterial.setSpecularColor(getColor(10, 10, 10));
+	floorMaterial.setSpecularColor(getColor(0, 0, 0));
 
 	const float sphereSize = 10000.0f;
 	const float roomSize = 5.0f;
@@ -86,11 +101,19 @@ int main() {
 
 	SpherePrimitive sphere;
 	sphere.setRadius(1.0f);
-	sphere.setPosition(math::loadVector(2.0f, 1.0f, 2.0f));
+	sphere.setPosition(math::loadVector(3.0f, 1.0f, 1.0f));
+
+	const math::real G = 1.618;
 
 	SpherePrimitive sphere2;
-	sphere2.setRadius(2.0f);
-	sphere2.setPosition(math::loadVector(0.0f, 2.0f, -2.0f));
+	math::real s2_r = G * 1.0f;
+	sphere2.setRadius(s2_r);
+	sphere2.setPosition(math::loadVector(0.0f, s2_r, -2.5f));
+
+	SpherePrimitive sphere3;
+	math::real s3_r = G * s2_r;
+	sphere3.setRadius(s3_r);
+	sphere3.setPosition(math::loadVector(-roomSize + s3_r + 0.5, s3_r, roomSize - s3_r - 0.5));
 
 	SpherePrimitive floor;
 	floor.setRadius(sphereSize);
@@ -99,6 +122,24 @@ int main() {
 	SpherePrimitive light;
 	light.setRadius(10.0f);
 	light.setPosition(math::loadVector(0.0f, roomSize*2 + 9.75f, 0.0f));
+
+	SpherePrimitive mirror;
+	math::real mirrorSize = (math::real)500.0;
+	mirror.setRadius(mirrorSize);
+	mirror.setPosition(math::loadVector(0.0f, mirrorSize - 0.01 + roomSize*2, 0.0f));
+
+	SpherePrimitive orb;
+	math::real ringSize = 300;
+	orb.setRadius(ringSize);
+	orb.setPosition(math::loadVector(0, ringSize - 0.013 + roomSize * 2, 0));
+
+	SceneObject *mirrorObject = scene.createSceneObject();
+	mirrorObject->setMaterial(&mirrorMaterial);
+	mirrorObject->setGeometry(&mirror);
+
+	//SceneObject *orbObject = scene.createSceneObject();
+	//orbObject->setMaterial(&floorMaterial);
+	//orbObject->setGeometry(&orb);
 
 	SceneObject *backWallObject = scene.createSceneObject();
 	backWallObject->setMaterial(&backWallMaterial);
@@ -112,17 +153,21 @@ int main() {
 	leftWallObject->setMaterial(&leftWallMaterial);
 	leftWallObject->setGeometry(&leftWall);
 
-	SceneObject *lightObject = scene.createSceneObject();
-	lightObject->setMaterial(&lightMaterial);
-	lightObject->setGeometry(&light);
+	//SceneObject *lightObject = scene.createSceneObject();
+	//lightObject->setMaterial(&lightMaterial);
+	//lightObject->setGeometry(&light);
 
 	SceneObject *sphereObject = scene.createSceneObject();
-	sphereObject->setMaterial(&sphere1Material);
+	sphereObject->setMaterial(&leftWallMaterial);
 	sphereObject->setGeometry(&sphere);
 
 	SceneObject *sphere2Object = scene.createSceneObject();
-	sphere2Object->setMaterial(&sphere2Material);
+	sphere2Object->setMaterial(&rightWallMaterial);
 	sphere2Object->setGeometry(&sphere2);
+
+	SceneObject *sphere3Object = scene.createSceneObject();
+	sphere3Object->setMaterial(&sphere2Material);
+	sphere3Object->setGeometry(&sphere3);
 
 	SceneObject *floorObject = scene.createSceneObject();
 	floorObject->setMaterial(&floorMaterial);
@@ -135,8 +180,8 @@ int main() {
 	int width = 1024;
 	int height = 768;
 
-	width = 100;
-	height = 100;
+	width = 1024;
+	height = 768;
 
 	CameraRayEmitterGroup camera;
 	camera.setSamplingWidth(2);
@@ -147,7 +192,7 @@ int main() {
 	camera.setPlaneHeight(1.0f);
 	camera.setResolutionX(width);
 	camera.setResolutionY(height);
-	camera.setSamplesPerPixel(1000);
+	camera.setSamplesPerPixel(6000);
 
 
 	//CameraRayEmitter cameraEmitter;

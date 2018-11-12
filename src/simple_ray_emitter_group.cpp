@@ -1,7 +1,7 @@
 #include <simple_ray_emitter_group.h>
 
 manta::SimpleRayEmitterGroup::SimpleRayEmitterGroup() {
-	m_simpleRayEmitter = NULL;
+	m_simpleRayEmitter = nullptr;
 }
 
 manta::SimpleRayEmitterGroup::~SimpleRayEmitterGroup() {

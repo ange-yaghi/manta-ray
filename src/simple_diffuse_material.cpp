@@ -28,7 +28,7 @@ void manta::SimpleDiffuseMaterial::integrateRay(LightRay *ray, const RayEmitterG
 
 manta::RayEmitterGroup * manta::SimpleDiffuseMaterial::generateRayEmittersInternal(const LightRay *ray, const IntersectionPoint *intersectionPoint, int degree) const {
 	if (degree >= m_maxDegree) {
-		return NULL;
+		return nullptr;
 	}
 
 	// Calculate bias point

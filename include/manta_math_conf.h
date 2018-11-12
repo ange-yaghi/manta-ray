@@ -6,7 +6,7 @@
 #define MANTA_PRECISION_FLOAT	(32)
 
 // Configuration parameters
-#define MANTA_USE_SIMD			(true)
-#define MANTA_PRECISION			MANTA_PRECISION_FLOAT
+#define MANTA_USE_SIMD			(false)
+#define MANTA_PRECISION			MANTA_PRECISION_DOUBLE
 
 #endif /* MATH_CONF_H */

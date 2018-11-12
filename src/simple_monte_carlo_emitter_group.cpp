@@ -1,7 +1,7 @@
 #include <simple_monte_carlo_emitter_group.h>
 
 manta::SimpleMonteCarloEmitterGroup::SimpleMonteCarloEmitterGroup() {
-	m_simpleRayEmitter = NULL;
+	m_simpleRayEmitter = nullptr;
 }
 
 manta::SimpleMonteCarloEmitterGroup::~SimpleMonteCarloEmitterGroup() {

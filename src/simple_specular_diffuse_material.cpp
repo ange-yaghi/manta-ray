@@ -19,12 +19,12 @@ void manta::SimpleSpecularDiffuseMaterial::integrateRay(LightRay * ray, const Ra
 
 	math::Vector addedLight = math::constants::Zero;
 
-	if (specular != NULL) {
+	if (specular != nullptr) {
 		LightRay *reflectedRay = specular->getRay();
 		addedLight = math::add(addedLight, math::mul(m_specularColor, reflectedRay->getIntensity()));
 	}
 
-	if (diffuse != NULL) {
+	if (diffuse != nullptr) {
 		LightRay *reflectedRay = diffuse->getRay();
 		addedLight = math::add(addedLight, math::mul(m_diffuseColor, reflectedRay->getIntensity()));
 	}
@@ -48,7 +48,7 @@ void manta::SimpleSpecularDiffuseMaterial::preconfigureEmitterGroup(RayEmitterGr
 
 manta::RayEmitterGroup * manta::SimpleSpecularDiffuseMaterial::generateRayEmittersInternal(const LightRay * ray, const IntersectionPoint * intersectionPoint, int degree) const {
 	if (degree >= m_maxDiffuseDegree && degree >= m_maxSpecularDegree) {
-		return NULL;
+		return nullptr;
 	}
 
 	// Calculate bias point
