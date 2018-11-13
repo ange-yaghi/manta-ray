@@ -41,6 +41,7 @@
     <ClCompile Include="..\..\src\simple_ray_emitter_group.cpp" />
     <ClCompile Include="..\..\src\simple_specular_diffuse_material.cpp" />
     <ClCompile Include="..\..\src\sphere_primitive.cpp" />
+    <ClCompile Include="stack_allocator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\camera_ray_emitter.h" />
@@ -54,6 +55,7 @@
     <ClInclude Include="..\..\include\manta_math_single.h" />
     <ClInclude Include="..\..\include\manta_real.h" />
     <ClInclude Include="..\..\include\material.h" />
+    <ClInclude Include="..\..\include\memory_management.h" />
     <ClInclude Include="..\..\include\monte_carlo_specular_diffuse_group.h" />
     <ClInclude Include="..\..\include\pool_allocator.h" />
     <ClInclude Include="..\..\include\ray_emitter.h" />
@@ -69,6 +71,7 @@
     <ClInclude Include="..\..\include\simple_ray_emitter_group.h" />
     <ClInclude Include="..\..\include\simple_specular_diffuse_material.h" />
     <ClInclude Include="..\..\include\sphere_primitive.h" />
+    <ClInclude Include="..\..\include\stack_allocator.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\tracking\BuildVersion.txt" />
@@ -85,7 +88,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -130,6 +133,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>E:\Software\Common\SDL2-2.0.9\include;E:\Software\MantaRay\include;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\Software\Common\SDL2-2.0.9\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -147,7 +152,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
@@ -158,6 +163,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>SDL2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

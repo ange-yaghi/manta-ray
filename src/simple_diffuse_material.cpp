@@ -26,7 +26,7 @@ void manta::SimpleDiffuseMaterial::integrateRay(LightRay *ray, const RayEmitterG
 	);
 }
 
-manta::RayEmitterGroup * manta::SimpleDiffuseMaterial::generateRayEmittersInternal(const LightRay *ray, const IntersectionPoint *intersectionPoint, int degree) const {
+manta::RayEmitterGroup * manta::SimpleDiffuseMaterial::generateRayEmittersInternal(const LightRay *ray, const IntersectionPoint *intersectionPoint, int degree, StackAllocator *stackAllocator) const {
 	if (degree >= m_maxDegree) {
 		return nullptr;
 	}
@@ -34,7 +34,7 @@ manta::RayEmitterGroup * manta::SimpleDiffuseMaterial::generateRayEmittersIntern
 	// Calculate bias point
 	math::Vector biasPoint = math::add(intersectionPoint->m_position, math::mul(intersectionPoint->m_normal, math::loadScalar(0.001f)));
 
-	SimpleMonteCarloEmitterGroup *newEmitter = createEmitterGroup<SimpleMonteCarloEmitterGroup>(degree);
+	SimpleMonteCarloEmitterGroup *newEmitter = createEmitterGroup<SimpleMonteCarloEmitterGroup>(degree, stackAllocator);
 	newEmitter->m_simpleRayEmitter->setNormal(intersectionPoint->m_normal);
 	newEmitter->m_simpleRayEmitter->setIncident(ray->getDirection());
 	newEmitter->m_simpleRayEmitter->setPosition(biasPoint);

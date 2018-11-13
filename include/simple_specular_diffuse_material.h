@@ -33,7 +33,7 @@ namespace manta {
 
 		virtual void preconfigureEmitterGroup(RayEmitterGroup *group, int degree) const;
 
-		virtual RayEmitterGroup *generateRayEmittersInternal(const LightRay *ray, const IntersectionPoint *intersectionPoint, int degree) const;
+		virtual RayEmitterGroup *generateRayEmittersInternal(const LightRay *ray, const IntersectionPoint *intersectionPoint, int degree, StackAllocator *stackAllocator) const;
 	};
 
 }
