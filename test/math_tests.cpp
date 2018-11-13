@@ -45,7 +45,7 @@ TEST(MathTests, QuaternionLoad) {
 	math::Vector axis = math::loadVector(1.0f, 1.0f, 1.0f, 0.0f);
 	axis = math::normalize(axis);
 
-	float angle = 2.0f * math::constants::PI / 3.0f;
+	math::real angle = 2.0f * math::constants::PI / 3.0f;
 	math::Quaternion quat = math::loadQuaternion(angle, axis);
 	math::Quaternion inv = math::quatInvert(quat);
 
@@ -57,10 +57,10 @@ TEST(MathTests, QuaternionMultiply) {
 	math::Vector axis = math::loadVector(1.0f, 1.0f, 1.0f, 0.0f);
 	axis = math::normalize(axis);
 
-	float angle = math::constants::PI / 2.0f;
+	math::real angle = math::constants::PI / 2.0f;
 	math::Quaternion quat1 = math::loadQuaternion(angle, axis);
 
-	float sumAngle = angle*2;
+	math::real sumAngle = angle*2;
 	math::Quaternion sumQuat = math::loadQuaternion(sumAngle, axis);
 
 	math::Quaternion mulQuat = math::quatMultiply(quat1, quat1);
@@ -72,7 +72,7 @@ TEST(MathTests, QuaternionTransformation) {
 	math::Vector axis = math::loadVector(1.0f, 1.0f, 1.0f, 0.0f);
 	axis = math::normalize(axis);
 
-	float angle = 2.0f * math::constants::PI / 3.0f;
+	math::real angle = 2.0f * math::constants::PI / 3.0f;
 	math::Quaternion quat = math::loadQuaternion(angle, axis);
 	math::Quaternion inv = math::quatInvert(quat);
 
@@ -82,14 +82,14 @@ TEST(MathTests, QuaternionTransformation) {
 	math::Vector point = math::loadVector(1.0f, 0.0f, 0.0f, 0.0f);
 	math::Vector transformed = math::quatTransform(quat, point);
 
-	CHECK_VEC(transformed, 0.0f, 0.0f, 1.0f, 0.0f);
+	CHECK_VEC(transformed, 0.0f, 1.0f, 0.0f, 0.0f);
 }
 
 TEST(MathTests, QuaternionIdentityTest) {
 	math::Vector axis = math::loadVector(1.0f, 1.0f, 1.0f, 0.0f);
 	axis = math::normalize(axis);
 
-	float angle = 2.0f * math::constants::PI / 3.0f;
+	math::real angle = 2.0f * math::constants::PI / 3.0f;
 	math::Quaternion quat = math::loadQuaternion(angle, axis);
 	math::Quaternion inv = math::quatInvert(quat);
 

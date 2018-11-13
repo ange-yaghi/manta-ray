@@ -2,7 +2,7 @@
 
 #if MANTA_USE_SIMD == false
 
-#include <manta_math_single.h>
+#include <manta_math.h>
 
 namespace math = manta::math;
 
@@ -12,6 +12,37 @@ math::Generic math::loadScalar(math::real s) {
 
 math::Generic math::loadVector(math::real x, math::real y, math::real z, math::real w) {
 	return { x, y, z, w };
+}
+
+math::Generic math::loadVector(const Vector4 &v) {
+	return { v.x, v.y, v.z, v.w };
+}
+
+math::Generic math::loadVector(const Vector3 &v, real w) {
+	return { v.x, v.y, v.z, w };
+}
+
+math::Generic math::loadVector(const Vector2 &v) {
+	return { v.x, v.y, (real)0.0, (real)0.0 };
+}
+
+math::Generic math::loadVector(const Vector2 &v1, const Vector2 &v2) {
+	return { v1.x, v1.y, v2.x, v2.y };
+}
+
+math::Quaternion math::loadQuaternion(real angle, const Vector &axis) {
+	real sinAngle = (real)sin(angle / (real)2.0);
+	real cosAngle = (real)cos(angle / (real)2.0);
+
+	Quaternion q = { (real)0.0, axis.x, axis.y, axis.z };
+	q.qx *= sinAngle;
+	q.qy *= sinAngle;
+	q.qz *= sinAngle;
+	q.qw = cosAngle;
+
+	q = manta::math::normalize(q);
+
+	return q;
 }
 
 math::real math::getX(const math::Vector &v) {
@@ -43,7 +74,7 @@ math::real math::getQuatZ(const math::Quaternion &q) {
 }
 
 math::real math::getQuatW(const math::Quaternion &q) {
-	return q.qz;
+	return q.qw;
 }
 
 math::real math::getScalar(const math::Vector &v) {
@@ -115,8 +146,23 @@ math::Vector math::quatInvert(const math::Quaternion &q) {
 	return { q.qw, -q.qx, -q.qy, -q.qz };
 }
 
-math::Vector math::quatMultiply(const math::Quaternion &q1, const math::Quaternion &q2) {
-	return constants::Zero;
+math::Quaternion math::quatMultiply(const math::Quaternion &a, const math::Quaternion &b) {
+	return {
+		a.qw * b.qw - a.qx * b.qx - a.qy * b.qy - a.qz * b.qz,
+		a.qw * b.qx + a.qx * b.qw + a.qy * b.qz - a.qz * b.qy,
+		a.qw * b.qy - a.qx * b.qz + a.qy * b.qw + a.qz * b.qx,
+		a.qw * b.qz + a.qx * b.qy - a.qy * b.qx + a.qz * b.qw
+	};
+}
+
+math::Vector math::quatTransform(const Quaternion &q, const Vector &vec) {
+	Quaternion transformed = { vec.w, vec.x, vec.y, vec.z };
+	Quaternion inv = math::quatInvert(q);
+
+	transformed = math::quatMultiply(q, transformed);
+	transformed = math::quatMultiply(transformed, inv);
+
+	return { transformed.qx, transformed.qy, transformed.qz, transformed.qw };
 }
 
 math::Vector math::uniformRandom4(math::real range) {
