@@ -1,6 +1,8 @@
 #ifndef RAY_EMITTER_GROUP_H
 #define RAY_EMITTER_GROUP_H
 
+#include <stack_allocator.h>
+
 #include <malloc.h>
 #include <new>
 
@@ -17,9 +19,17 @@ namespace manta {
 
 		template<typename t_RayEmitterType>
 		t_RayEmitterType *createEmitter() {
-			void *buffer = _aligned_malloc(sizeof(t_RayEmitterType), 16);
-			t_RayEmitterType *newEmitter = new(buffer) t_RayEmitterType;
-			newEmitter->setDegree(m_degree);
+			t_RayEmitterType *newEmitter = nullptr;
+			if (m_stackAllocator == nullptr) {
+				void *buffer = _aligned_malloc(sizeof(t_RayEmitterType), 16);
+				newEmitter = new(buffer) t_RayEmitterType;
+				newEmitter->setDegree(m_degree);
+			}
+			else {
+				void *buffer = m_stackAllocator->allocate(sizeof(t_RayEmitterType), 16);
+				newEmitter = new(buffer) t_RayEmitterType;
+				newEmitter->setDegree(m_degree);
+			}
 
 			return newEmitter;
 		}
@@ -33,11 +43,17 @@ namespace manta {
 		void setDegree(int degree) { m_degree = degree; }
 		int getDegree() const { return m_degree; }
 
+		void setStackAllocator(StackAllocator *allocator) { m_stackAllocator = allocator; }
+		StackAllocator *getStackAllocator() const { return m_stackAllocator; }
+
 	protected:
 		RayEmitter **m_rayEmitters;
 		int m_rayEmitterCount;
 
 		int m_degree;
+
+	private:
+		StackAllocator *m_stackAllocator;
 	};
 
 }

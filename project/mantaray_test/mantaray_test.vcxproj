@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{a3b69c12-a5d1-41d6-9065-a38efab30252}</ProjectGuid>
+    <ProjectGuid>{9824E8EC-FDC7-4FB9-96DD-3D7F14CE125D}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
     <ConfigurationType>Application</ConfigurationType>
@@ -32,12 +32,12 @@
   <ImportGroup Label="Shared" />
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>E:\Software\MantaRay\include;E:\Software\MantaRay\project\mantaray_test;$(IncludePath)</IncludePath>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>E:\Software\MantaRay\include;E:\Software\MantaRay\project\mantaray_test;$(IncludePath)</IncludePath>
-    <ExecutablePath>E:\Software\Common\SDL2-2.0.9\lib\x64;$(ExecutablePath)</ExecutablePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>E:\Software\MantaRay\project\mantaray_test;E:\Software\MantaRay\include;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\Software\Common\SDL2-2.0.9\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\utilities.h" />
@@ -46,6 +46,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\test\integration_testing.cpp" />
     <ClCompile Include="..\..\test\math_tests.cpp" />
+    <ClCompile Include="..\..\test\memory_tests.cpp" />
     <ClCompile Include="..\..\test\primitives.cpp" />
     <ClCompile Include="..\..\test\sanity_check.cpp" />
     <ClCompile Include="pch.cpp">
@@ -82,6 +83,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>SDL2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

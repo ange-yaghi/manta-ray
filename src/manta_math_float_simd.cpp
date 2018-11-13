@@ -3,7 +3,7 @@
 #if MANTA_USE_SIMD
 #if MANTA_PRECISION == MANTA_PRECISION_FLOAT
 
-#include <manta_math_float_simd.h>
+#include <manta_math.h>
 
 #include <math.h>
 #include <random>
@@ -260,7 +260,7 @@ math::Vector math::quatTransform(const Quaternion &q, const Vector &v) {
 	transformed = math::quatMultiply(q, transformed);
 	transformed = math::quatMultiply(transformed, inv);
 
-	return transformed;
+	return _mm_shuffle_ps(transformed, transformed, _MM_SHUFFLE(0, 3, 2, 1)); // wxyz;
 }
 
 math::Quaternion math::quatAddScaled(const Quaternion &q, const Vector &vec, real scale) {

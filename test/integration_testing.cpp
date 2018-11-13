@@ -11,6 +11,7 @@
 #include <material.h>
 #include <ray_tracer.h>
 #include <camera_ray_emitter.h>
+#include <camera_ray_emitter_group.h>
 #include <image_handling.h>
 
 #include <manta_math.h>
@@ -42,8 +43,8 @@ TEST(IntegrationTests, BasicTest) {
 	lightObject->setMaterial(&lightMaterial);
 	lightObject->setGeometry(&light);
 
-	CameraRayEmitter cameraEmitter;
-	cameraEmitter.setDegree(0);
+	CameraRayEmitterGroup cameraEmitter;
+	cameraEmitter.setSamplingWidth(2);
 	cameraEmitter.setDirection(math::loadVector(-1.0f, 0.0f, 0.0f));
 	cameraEmitter.setPosition(math::loadVector(10.0f, 0.0f, 0.0f));
 	cameraEmitter.setUp(math::loadVector(0.0f, 1.0f, 0.0f));
@@ -51,7 +52,7 @@ TEST(IntegrationTests, BasicTest) {
 	cameraEmitter.setPlaneHeight(1.0f);
 	cameraEmitter.setResolutionX(10);
 	cameraEmitter.setResolutionY(10);
-	cameraEmitter.generateRays();
+	cameraEmitter.setSamplesPerPixel(1);
 
 	RayTracer rayTracer;
 	rayTracer.traceAll(&scene, &cameraEmitter);
@@ -60,11 +61,11 @@ TEST(IntegrationTests, BasicTest) {
 	
 	for (int i = 0; i < 10; i++) {
 		for (int j = 0; j < 10; j++) {
-			pixels[i * 10 + j] = cameraEmitter.getRays()[i * 10 + j].getIntensity();
+			pixels[i * 10 + j] = ((CameraRayEmitter *)(cameraEmitter.getEmitters()[i * 10 + j]))->getIntensity();
 		}
 	}
 
-	SaveImageData(pixels, 10, 10, "test.bmp");
+	//SaveImageData(pixels, 10, 10, "test.bmp");
 
-	EXPECT_EQ(cameraEmitter.getRayCount(), 100);
+	EXPECT_EQ(cameraEmitter.getEmitterCount(), 100);
 }

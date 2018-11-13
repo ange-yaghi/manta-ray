@@ -13,6 +13,7 @@
 #include <camera_ray_emitter_group.h>
 #include <camera_ray_emitter.h>
 #include <image_handling.h>
+#include <memory_management.h>
 
 #include <manta_math.h>
 
@@ -106,7 +107,7 @@ int main() {
 	const math::real G = 1.618;
 
 	SpherePrimitive sphere2;
-	math::real s2_r = G * 1.0f;
+	math::real s2_r = G * 1.0;
 	sphere2.setRadius(s2_r);
 	sphere2.setPosition(math::loadVector(0.0f, s2_r, -2.5f));
 
@@ -126,7 +127,7 @@ int main() {
 	SpherePrimitive mirror;
 	math::real mirrorSize = (math::real)500.0;
 	mirror.setRadius(mirrorSize);
-	mirror.setPosition(math::loadVector(0.0f, mirrorSize - 0.01 + roomSize*2, 0.0f));
+	mirror.setPosition(math::loadVector(0.0f, -mirrorSize + 0.0025, 0.0f));
 
 	SpherePrimitive orb;
 	math::real ringSize = 300;
@@ -180,8 +181,8 @@ int main() {
 	int width = 1024;
 	int height = 768;
 
-	width = 1024;
-	height = 768;
+	//width = 100;
+	//height = 100;
 
 	CameraRayEmitterGroup camera;
 	camera.setSamplingWidth(2);
@@ -192,7 +193,7 @@ int main() {
 	camera.setPlaneHeight(1.0f);
 	camera.setResolutionX(width);
 	camera.setResolutionY(height);
-	camera.setSamplesPerPixel(6000);
+	camera.setSamplesPerPixel(3600);
 
 
 	//CameraRayEmitter cameraEmitter;
@@ -201,7 +202,14 @@ int main() {
 
 	//cameraEmitter.generateRays();
 
+	//StackAllocator *mainAllocator = new StackAllocator;
+	//mainAllocator->initialize(500 * MB);
+
 	RayTracer rayTracer;
+	rayTracer.setThreadCount(12);
+	//rayTracer.initializeAllocators(500 * MB, 50 * MB);
+	rayTracer.initializeAllocators(500 * MB, 50 * MB);
+
 	rayTracer.traceAll(&scene, &camera);
 
 	math::Vector *pixels = (math::Vector *)_aligned_malloc(sizeof(math::Vector) * width * height, 16);
@@ -225,7 +233,13 @@ int main() {
 		//std::cout << std::endl;
 	}
 
+	// Destroy all emitters
+	for (int i = camera.getEmitterCount() - 1; i >= 0; i--) {
+		((CameraRayEmitter *)(camera.getEmitters()[i]))->destroyRays();
+	}
+
 	SaveImageData(pixels, width, height, "test.bmp");
+	camera.destroyEmitters();
 
 	int a = 0;
 }

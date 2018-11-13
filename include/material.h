@@ -3,6 +3,8 @@
 
 #include <manta_math.h>
 
+#include <stack_allocator.h>
+
 #include <new>
 
 namespace manta {
@@ -25,9 +27,9 @@ namespace manta {
 		void setDiffuseCoeff(float diffuseCoeff) { m_diffuseCoeff = diffuseCoeff; }
 		float getDiffuseCoeff() const { return m_diffuseCoeff; }
 
-		RayEmitterGroup *generateRayEmitters(const LightRay *ray, const IntersectionPoint *intersectionPoint, int degree) const;
+		RayEmitterGroup *generateRayEmitters(const LightRay *ray, const IntersectionPoint *intersectionPoint, int degree, StackAllocator *stackAllocator = nullptr) const;
 		virtual void integrateRay(LightRay *ray, const RayEmitterGroup *_rayEmitter) const;
-		void destroyEmitterGroup(RayEmitterGroup *group);
+		void destroyEmitterGroup(RayEmitterGroup *group, StackAllocator *stackAllocator = nullptr);
 
 	protected:
 		math::Vector m_diffuseColor;
@@ -39,19 +41,27 @@ namespace manta {
 		virtual void preconfigureEmitterGroup(RayEmitterGroup *group, int degree) const {}
 
 		template<typename t_RayEmitterGroupType>
-		t_RayEmitterGroupType *createEmitterGroup(int degree) const {
-			void *buffer = _aligned_malloc(sizeof(t_RayEmitterGroupType), 16);
+		t_RayEmitterGroupType *createEmitterGroup(int degree, StackAllocator *stackAllocator = nullptr) const {
+			void *buffer = nullptr;
+			if (stackAllocator == nullptr) {
+				buffer = _aligned_malloc(sizeof(t_RayEmitterGroupType), 16);
+			}
+			else {
+				buffer = stackAllocator->allocate(sizeof(t_RayEmitterGroupType), 16);
+			}
+
 			t_RayEmitterGroupType *newEmitter = new(buffer) t_RayEmitterGroupType;
 
 			preconfigureEmitterGroup(newEmitter, degree);
 
+			newEmitter->setStackAllocator(stackAllocator);
 			newEmitter->setDegree(degree);
 			newEmitter->createAllEmitters();
 
 			return newEmitter;
 		}
 
-		virtual RayEmitterGroup *generateRayEmittersInternal(const LightRay *ray, const IntersectionPoint *intersectionPoint, int degree) const;
+		virtual RayEmitterGroup *generateRayEmittersInternal(const LightRay *ray, const IntersectionPoint *intersectionPoint, int degree, StackAllocator *stackAllocator) const;
 	};
 
 }
