@@ -6,6 +6,7 @@
 namespace manta {
 
 	class LightRay;
+	class StackAllocator;
 
 	class RayEmitter {
 	public:
@@ -16,6 +17,7 @@ namespace manta {
 		int getRayCount() const { return m_rayCount; }
 
 		virtual void generateRays() = 0;
+		void destroyRays();
 
 		math::Vector getPosition() const { return m_position; }
 		void setPosition(const math::Vector &v) { m_position = v; }
@@ -29,9 +31,11 @@ namespace manta {
 		int getSamplesPerRay() const { return m_samplesPerRay; }
 		void setSamplesPerRay(int samples) { m_samplesPerRay = samples; }
 
+		void setStackAllocator(StackAllocator *allocator) { m_stackAllocator = allocator; }
+		StackAllocator *getStackAllocator() const { return m_stackAllocator; }
+
 	protected:
 		void initializeRays(int count);
-		void destroyRays();
 
 	private:
 		int m_degree;
@@ -43,6 +47,9 @@ namespace manta {
 	protected:
 		math::Vector m_position;
 		math::Vector m_direction;
+
+	private:
+		StackAllocator *m_stackAllocator;
 	};
 
 } /* namespace manta */

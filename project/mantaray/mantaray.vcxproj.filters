@@ -156,6 +156,9 @@
     <ClCompile Include="..\..\src\manta_math_single.cpp">
       <Filter>Source Files\math</Filter>
     </ClCompile>
+    <ClCompile Include="stack_allocator.cpp">
+      <Filter>Source Files\memory-management</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\intersection_point.h">
@@ -235,6 +238,12 @@
     </ClInclude>
     <ClInclude Include="..\..\include\manta_real.h">
       <Filter>Header Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\stack_allocator.h">
+      <Filter>Header Files\memory-management</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\memory_management.h">
+      <Filter>Header Files\memory-management</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

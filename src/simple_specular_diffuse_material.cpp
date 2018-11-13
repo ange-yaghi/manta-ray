@@ -5,8 +5,8 @@
 #include <monte_carlo_specular_diffuse_group.h>
 
 manta::SimpleSpecularDiffuseMaterial::SimpleSpecularDiffuseMaterial() {
-	m_maxDiffuseDegree = 4;
-	m_maxSpecularDegree = 5;
+	m_maxDiffuseDegree = 5;
+	m_maxSpecularDegree = 6;
 }
 
 manta::SimpleSpecularDiffuseMaterial::~SimpleSpecularDiffuseMaterial() {
@@ -46,14 +46,14 @@ void manta::SimpleSpecularDiffuseMaterial::preconfigureEmitterGroup(RayEmitterGr
 	else group->setSpecularEnabled(true);
 }
 
-manta::RayEmitterGroup * manta::SimpleSpecularDiffuseMaterial::generateRayEmittersInternal(const LightRay * ray, const IntersectionPoint * intersectionPoint, int degree) const {
+manta::RayEmitterGroup * manta::SimpleSpecularDiffuseMaterial::generateRayEmittersInternal(const LightRay * ray, const IntersectionPoint * intersectionPoint, int degree, StackAllocator *stackAllocator) const {
 	if (degree >= m_maxDiffuseDegree && degree >= m_maxSpecularDegree) {
 		return nullptr;
 	}
 
 	// Calculate bias point
 	math::Vector biasPoint = math::add(intersectionPoint->m_position, math::mul(intersectionPoint->m_normal, math::loadScalar(0.001f)));
-	MonteCarloSpecularDiffuseGroup *newEmitter = createEmitterGroup<MonteCarloSpecularDiffuseGroup>(degree);
+	MonteCarloSpecularDiffuseGroup *newEmitter = createEmitterGroup<MonteCarloSpecularDiffuseGroup>(degree, stackAllocator);
 
 	if (degree < m_maxDiffuseDegree) {
 		newEmitter->m_diffuseEmitter->setNormal(intersectionPoint->m_normal);
