@@ -19,9 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\biconvex_lens.cpp" />
     <ClCompile Include="..\..\src\camera_ray_emitter.cpp" />
     <ClCompile Include="..\..\src\camera_ray_emitter_group.cpp" />
     <ClCompile Include="..\..\src\image_handling.cpp" />
+    <ClCompile Include="..\..\src\lens_element.cpp" />
     <ClCompile Include="..\..\src\light_ray.cpp" />
     <ClCompile Include="..\..\src\main.cpp" />
     <ClCompile Include="..\..\src\manta_math_float_simd.cpp" />
@@ -41,12 +43,15 @@
     <ClCompile Include="..\..\src\simple_ray_emitter_group.cpp" />
     <ClCompile Include="..\..\src\simple_specular_diffuse_material.cpp" />
     <ClCompile Include="..\..\src\sphere_primitive.cpp" />
+    <ClCompile Include="..\..\src\spherical_surface.cpp" />
     <ClCompile Include="stack_allocator.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\include\biconvex_lens.h" />
     <ClInclude Include="..\..\include\camera_ray_emitter.h" />
     <ClInclude Include="..\..\include\camera_ray_emitter_group.h" />
     <ClInclude Include="..\..\include\image_handling.h" />
+    <ClInclude Include="..\..\include\lens_element.h" />
     <ClInclude Include="..\..\include\light_ray.h" />
     <ClInclude Include="..\..\include\manta_math.h" />
     <ClInclude Include="..\..\include\manta_math_conf.h" />
@@ -71,6 +76,7 @@
     <ClInclude Include="..\..\include\simple_ray_emitter_group.h" />
     <ClInclude Include="..\..\include\simple_specular_diffuse_material.h" />
     <ClInclude Include="..\..\include\sphere_primitive.h" />
+    <ClInclude Include="..\..\include\spherical_surface.h" />
     <ClInclude Include="..\..\include\stack_allocator.h" />
   </ItemGroup>
   <ItemGroup>
@@ -101,13 +107,13 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>

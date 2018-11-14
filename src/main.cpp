@@ -193,7 +193,7 @@ int main() {
 	camera.setPlaneHeight(1.0f);
 	camera.setResolutionX(width);
 	camera.setResolutionY(height);
-	camera.setSamplesPerPixel(3600);
+	camera.setSamplesPerPixel(3000);
 
 
 	//CameraRayEmitter cameraEmitter;
