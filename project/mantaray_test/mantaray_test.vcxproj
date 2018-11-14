@@ -44,6 +44,7 @@
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\test\camera_emulation_tests.cpp" />
     <ClCompile Include="..\..\test\integration_testing.cpp" />
     <ClCompile Include="..\..\test\math_tests.cpp" />
     <ClCompile Include="..\..\test\memory_tests.cpp" />
