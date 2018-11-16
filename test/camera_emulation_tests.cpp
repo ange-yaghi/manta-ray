@@ -3,6 +3,7 @@
 
 #include <biconvex_lens.h>
 #include <light_ray.h>
+#include <simple_lens.h>
 
 using namespace manta;
 
@@ -64,4 +65,38 @@ TEST(CameraEmulationTests, BiconvexLensConvergenceCheck) {
 	proj = math::add(proj, transformed.getSource());
 
 	EXPECT_NEAR(math::getY(proj), 0.0, 0.01);
+}
+
+TEST(CameraEmulationTests, SimpleLensSanityCheck) {
+	manta::SimpleLens lens;
+	lens.initialize();
+	lens.setPosition(math::loadVector(0.0, 0.0, 0.0));
+	lens.setDirection(math::loadVector(1.0, 0.0, 0.0));
+	lens.setUp(math::loadVector(0.0, 1.0, 0.0));
+	lens.setRadius(1.0);
+	lens.update();
+
+	math::real lensHeight = 1.0;
+	math::real focusDistance = 50.0;
+
+	Aperture *aperture = lens.getAperture();
+	aperture->setSize((math::real)1.0);
+	lens.setFocus(focusDistance);
+
+	math::Vector sensorLocation = lens.getSensorLocation();
+
+	LightRay ray1;
+	ray1.setSource(sensorLocation);
+	ray1.setDirection(math::normalize(math::loadVector(1.0, 0.5 * lensHeight / -math::getX(sensorLocation), 0.0)));
+
+	LightRay transformed;
+	bool flag;
+	flag = lens.transformRay(&ray1, &transformed);
+
+	EXPECT_TRUE(flag);
+
+	math::Vector proj = math::div(math::loadScalar(focusDistance), math::dot(transformed.getDirection(), lens.getDirection()));
+	proj = math::add(math::mul(proj, transformed.getDirection()), transformed.getSource());
+
+	EXPECT_NEAR(math::getY(proj), 0.0, 0.1);
 }

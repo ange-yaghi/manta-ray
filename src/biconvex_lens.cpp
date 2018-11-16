@@ -12,18 +12,6 @@ manta::BiconvexLens::~BiconvexLens() {
 
 }
 
-void manta::BiconvexLens::setDepth(math::real depth) {
-	m_depth = depth;
-}
-
-void manta::BiconvexLens::setDirection(const math::Vector &direction) {
-	m_direction = direction;
-}
-
-void manta::BiconvexLens::setPosition(const math::Vector &position) {
-	m_position = position;
-}
-
 void manta::BiconvexLens::setInputSurfaceRadius(math::real radius) {
 	m_inputSurface.getSphere()->setRadius(radius);
 }
@@ -49,7 +37,7 @@ void manta::BiconvexLens::configure() {
 	m_outputSurface.setIOR(m_ior);
 }
 
-bool manta::BiconvexLens::transformLightRay(const LightRay *ray, LightRay *transformed) {
+bool manta::BiconvexLens::transformLightRay(const LightRay *ray, LightRay *transformed) const {
 	LightRay intermediate;
 	bool flag;
 	math::Vector dist;
