@@ -213,13 +213,13 @@
     <ClCompile Include="..\..\src\lens_camera_ray_emitter_group.cpp">
       <Filter>Source Files\ray-tracer\lens-camera-ray-emitter</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\mesh.cpp">
+      <Filter>Source Files\geometry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\intersection_point.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\scene_geometry.h">
-      <Filter>Header Files\geometry</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\sphere_primitive.h">
       <Filter>Header Files\geometry</Filter>
@@ -325,6 +325,12 @@
     </ClInclude>
     <ClInclude Include="..\..\include\lens_camera_ray_emitter_group.h">
       <Filter>Header Files\ray-tracer\lens-camera-ray-emitter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\scene_geometry.h">
+      <Filter>Header Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\mesh.h">
+      <Filter>Header Files\geometry</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
