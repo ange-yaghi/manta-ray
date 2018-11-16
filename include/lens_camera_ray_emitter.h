@@ -1,14 +1,14 @@
-#ifndef CAMERA_RAY_EMITTER_H
-#define CAMERA_RAY_EMITTER_H
+#ifndef LENS_CAMERA_RAY_EMITTER_H
+#define LENS_CAMERA_RAY_EMITTER_H
 
 #include <ray_emitter.h>
 
 namespace manta {
 
-	class CameraRayEmitter : public RayEmitter {
+	class LensCameraRayEmitter : public RayEmitter {
 	public:
-		CameraRayEmitter();
-		virtual ~CameraRayEmitter();
+		LensCameraRayEmitter();
+		virtual ~LensCameraRayEmitter();
 
 		virtual void generateRays();
 
@@ -37,4 +37,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* CAMERA_RAY_EMITTER_H */
+#endif /* LENS_CAMERA_RAY_EMITTER_H */

@@ -74,6 +74,10 @@ void manta::SpherePrimitive::detectIntersection(const LightRay * ray, Intersecti
 		math::real t1_s = math::getScalar(t1);
 		math::real t2_s = math::getScalar(t2);
 
+		// Initialize these to false
+		if (convex != nullptr) convex->m_intersection = false;
+		if (concave != nullptr) concave->m_intersection = false;
+
 		if (t1_s > (math::real)0.0) {
 			math::Vector pos = math::add(ray->getSource(), math::mul(ray->getDirection(), t1));
 
