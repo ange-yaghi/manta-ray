@@ -33,6 +33,7 @@
     <ClCompile Include="..\..\src\manta_math_float_simd.cpp" />
     <ClCompile Include="..\..\src\manta_math_single.cpp" />
     <ClCompile Include="..\..\src\material.cpp" />
+    <ClCompile Include="..\..\src\mesh.cpp" />
     <ClCompile Include="..\..\src\monte_carlo_specular_diffuse_group.cpp" />
     <ClCompile Include="..\..\src\ray_emitter.cpp" />
     <ClCompile Include="..\..\src\ray_emitter_group.cpp" />
@@ -57,6 +58,7 @@
     <ClInclude Include="..\..\include\camera_ray_emitter.h" />
     <ClInclude Include="..\..\include\camera_ray_emitter_group.h" />
     <ClInclude Include="..\..\include\circular_aperture.h" />
+    <ClInclude Include="..\..\include\mesh.h" />
     <ClInclude Include="..\..\include\image_handling.h" />
     <ClInclude Include="..\..\include\lens.h" />
     <ClInclude Include="..\..\include\lens_camera_ray_emitter.h" />
@@ -118,13 +120,13 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>

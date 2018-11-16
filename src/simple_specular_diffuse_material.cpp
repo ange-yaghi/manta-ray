@@ -5,8 +5,8 @@
 #include <monte_carlo_specular_diffuse_group.h>
 
 manta::SimpleSpecularDiffuseMaterial::SimpleSpecularDiffuseMaterial() {
-	m_maxDiffuseDegree = 5;
-	m_maxSpecularDegree = 6;
+	m_maxDiffuseDegree = 4;
+	m_maxSpecularDegree = 5;
 }
 
 manta::SimpleSpecularDiffuseMaterial::~SimpleSpecularDiffuseMaterial() {
