@@ -88,6 +88,36 @@
     <Filter Include="Header Files\ray-tracer\monte-carlo-specular-diffuse">
       <UniqueIdentifier>{b87e772b-14b9-46f5-bc6c-af9f9ce862e4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\camera-emulation">
+      <UniqueIdentifier>{fbc96ab6-d910-4226-943b-97fd60797150}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\camera-emulation">
+      <UniqueIdentifier>{5c93d4f2-26d5-4c90-a691-2d0d05f0ec09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\camera-emulation\lens-elements">
+      <UniqueIdentifier>{ab8ec963-0e44-4390-8ff0-6bbe212db6fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\camera-emulation\lens-elements">
+      <UniqueIdentifier>{50050aba-9b38-4bf3-8451-8aad7bdadfd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\camera-emulation\lenses">
+      <UniqueIdentifier>{0626a23c-f4a2-4ded-9470-238b89b96cb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\camera-emulation\apertures">
+      <UniqueIdentifier>{d775624a-5c3a-4369-b9f8-f0b6083897c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\camera-emulation\lenses">
+      <UniqueIdentifier>{23e4a08a-e9e4-472c-b99f-090ee064042a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\camera-emulation\apertures">
+      <UniqueIdentifier>{39c44cb6-cdfb-43f5-93cb-6f92906e3f98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ray-tracer\lens-camera-ray-emitter">
+      <UniqueIdentifier>{920c74e4-f5c0-47ee-9761-298194848d63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ray-tracer\lens-camera-ray-emitter">
+      <UniqueIdentifier>{793e53dd-56cc-44cc-acf4-7279d0504ed0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\main.cpp">
@@ -158,6 +188,30 @@
     </ClCompile>
     <ClCompile Include="stack_allocator.cpp">
       <Filter>Source Files\memory-management</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\spherical_surface.cpp">
+      <Filter>Source Files\camera-emulation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\biconvex_lens.cpp">
+      <Filter>Source Files\camera-emulation\lens-elements</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lens_element.cpp">
+      <Filter>Source Files\camera-emulation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\circular_aperture.cpp">
+      <Filter>Source Files\camera-emulation\apertures</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lens.cpp">
+      <Filter>Source Files\camera-emulation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\simple_lens.cpp">
+      <Filter>Source Files\camera-emulation\lenses</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lens_camera_ray_emitter.cpp">
+      <Filter>Source Files\ray-tracer\lens-camera-ray-emitter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lens_camera_ray_emitter_group.cpp">
+      <Filter>Source Files\ray-tracer\lens-camera-ray-emitter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -244,6 +298,33 @@
     </ClInclude>
     <ClInclude Include="..\..\include\memory_management.h">
       <Filter>Header Files\memory-management</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\lens_element.h">
+      <Filter>Header Files\camera-emulation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\spherical_surface.h">
+      <Filter>Header Files\camera-emulation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\biconvex_lens.h">
+      <Filter>Header Files\camera-emulation\lens-elements</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\aperture.h">
+      <Filter>Header Files\camera-emulation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\circular_aperture.h">
+      <Filter>Header Files\camera-emulation\apertures</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\lens.h">
+      <Filter>Header Files\camera-emulation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\simple_lens.h">
+      <Filter>Header Files\camera-emulation\lenses</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\lens_camera_ray_emitter.h">
+      <Filter>Header Files\ray-tracer\lens-camera-ray-emitter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\lens_camera_ray_emitter_group.h">
+      <Filter>Header Files\ray-tracer\lens-camera-ray-emitter</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
