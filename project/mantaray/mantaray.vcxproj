@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\include\obj_file_loader.cpp" />
     <ClCompile Include="..\..\src\biconvex_lens.cpp" />
     <ClCompile Include="..\..\src\camera_ray_emitter.cpp" />
     <ClCompile Include="..\..\src\camera_ray_emitter_group.cpp" />
@@ -74,6 +75,7 @@
     <ClInclude Include="..\..\include\material.h" />
     <ClInclude Include="..\..\include\memory_management.h" />
     <ClInclude Include="..\..\include\monte_carlo_specular_diffuse_group.h" />
+    <ClInclude Include="..\..\include\obj_file_loader.h" />
     <ClInclude Include="..\..\include\pool_allocator.h" />
     <ClInclude Include="..\..\include\ray_emitter.h" />
     <ClInclude Include="..\..\include\ray_emitter_group.h" />

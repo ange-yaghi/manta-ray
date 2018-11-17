@@ -14,6 +14,7 @@ namespace manta {
 		~SceneGeometry();
 
 		virtual void detectIntersection(const LightRay *ray, IntersectionPoint *p) const = 0;
+		virtual bool fastIntersection(const LightRay *ray) const = 0;
 
 		void setId(int id);
 		int getId();

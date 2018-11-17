@@ -11,6 +11,10 @@ manta::SpherePrimitive::~SpherePrimitive() {
 
 }
 
+bool manta::SpherePrimitive::fastIntersection(const LightRay *ray) const {
+	return true;
+}
+
 void manta::SpherePrimitive::detectIntersection(const LightRay *ray, IntersectionPoint *p) const {
 	math::Vector d_pos = math::sub(ray->getSource(), m_position);
 	math::Vector d_dot_dir = math::dot(d_pos, ray->getDirection());

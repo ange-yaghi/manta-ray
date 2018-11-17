@@ -7,6 +7,9 @@ manta::Mesh::Mesh() {
 	m_faces = nullptr;
 	m_precomputedValues = nullptr;
 	m_vertices = nullptr;
+
+	m_fastIntersectEnabled = false;
+	m_fastIntersectRadius = (math::real)0.0;
 }
 
 manta::Mesh::~Mesh() {
@@ -60,6 +63,32 @@ void manta::Mesh::detectIntersection(const LightRay *ray, IntersectionPoint *p) 
 			closestDepth = p->m_depth;
 		}
 	}
+}
+
+bool manta::Mesh::fastIntersection(const LightRay *ray) const {
+	if (m_fastIntersectEnabled) {
+		math::Vector d_pos = math::sub(ray->getSource(), m_position);
+		math::Vector d_dot_dir = math::dot(d_pos, ray->getDirection());
+		math::Vector mag2 = math::magnitudeSquared3(d_pos);
+
+		math::Vector radius2 = math::loadScalar(m_fastIntersectRadius * m_fastIntersectRadius);
+		math::Vector det = math::sub(math::mul(d_dot_dir, d_dot_dir), math::sub(mag2, radius2));
+
+		if (math::getScalar(det) < (math::real)0.0) {
+			return false;
+		}
+		else {
+			det = math::sqrt(det);
+			math::Vector t1 = math::sub(det, d_dot_dir);
+			math::Vector t2 = math::sub(math::negate(det), d_dot_dir);
+
+			math::real t1_s = math::getScalar(t1);
+			math::real t2_s = math::getScalar(t2);
+
+			return t1_s > (math::real)0.0 || t2_s > (math::real)0.0;
+		}
+	}
+	else return true;
 }
 
 bool manta::Mesh::detectIntersection(int faceIndex, math::real earlyExitDepthHint, const LightRay *ray, IntersectionPoint *p) const {

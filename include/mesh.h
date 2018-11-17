@@ -38,12 +38,18 @@ namespace manta {
 		void precomputeValues();
 
 		virtual void detectIntersection(const LightRay *ray, IntersectionPoint *p) const;
+		virtual bool fastIntersection(const LightRay *ray) const;
 
 		int getFaceCount() const { return m_faceCount; }
 		int getVertexCount() const { return m_vertexCount; }
 
 		Face *getFaces() { return m_faces; }
 		SimpleVertex *getVertices() { return m_vertices; }
+
+		void setFastIntersectEnabled(bool fastIntersect) { m_fastIntersectEnabled = fastIntersect; }
+		bool isFastIntersectEnabled() const { return m_fastIntersectEnabled; }
+
+		void setFastIntersectRadius(math::real radius) { m_fastIntersectRadius = radius; }
 
 	protected:
 		bool detectIntersection(int faceIndex, math::real earlyExitDepthHint, const LightRay *ray, IntersectionPoint *p) const;
@@ -58,6 +64,10 @@ namespace manta {
 
 		// Precomputed values
 		PrecomputedValues *m_precomputedValues;
+
+		math::real m_fastIntersectRadius;
+		bool m_fastIntersectEnabled;
+
 	};
 
 }
