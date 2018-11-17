@@ -430,10 +430,10 @@ int main() {
 	//mainAllocator->initialize(500 * MB);
 
 	RayTracer rayTracer;
-	rayTracer.setThreadCount(12);
+	//rayTracer.setThreadCount(12);
 	//rayTracer.initializeAllocators(500 * MB, 50 * MB);
-	rayTracer.initializeAllocators(500 * MB, 50 * MB);
-
+	//rayTracer.initializeAllocators(500 * MB, 50 * MB);
+	rayTracer.initialize(500 * MB, 50 * MB, 12, 10000, false);
 	rayTracer.traceAll(&scene, &camera);
 
 	math::Vector *pixels = (math::Vector *)_aligned_malloc(sizeof(math::Vector) * width * height, 16);
