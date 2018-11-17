@@ -18,11 +18,13 @@ namespace manta {
 
 		virtual void integrateRay(LightRay *ray, const RayEmitterGroup *_rayEmitter) const;
 
-		void setSpecularColor(const math::Vector &specular) { m_specularColor = specular; }
+		void setSpecularColor(const math::Vector &specular);
 		math::Vector getSpecularColor() const { return m_specularColor; }
 
-		void setDiffuseColor(const math::Vector &diffuse) { m_diffuseColor = diffuse; }
+		void setDiffuseColor(const math::Vector &diffuse);
 		math::Vector getDiffuseColor() const { return m_diffuseColor; }
+
+		void setAutoDisableEmitters(bool autoDisableEmitters);
 
 	protected:
 		int m_maxDiffuseDegree;
@@ -30,6 +32,10 @@ namespace manta {
 
 		math::Vector m_specularColor;
 		math::Vector m_diffuseColor;
+
+		bool m_enableDiffuse;
+		bool m_enableSpecular;
+		bool m_autoDisableEmitters;
 
 		virtual void preconfigureEmitterGroup(RayEmitterGroup *group, int degree) const;
 

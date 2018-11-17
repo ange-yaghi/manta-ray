@@ -3,9 +3,9 @@
 
 namespace manta {
 
-	constexpr unsigned int KB = 1E3;
-	constexpr unsigned int MB = 1E6;
-	constexpr unsigned int GB = 1E9;
+	constexpr unsigned int KB = 1000;
+	constexpr unsigned int MB = 1000 * KB;
+	constexpr unsigned int GB = 1000 * MB;
 
 }
 
