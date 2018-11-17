@@ -10,12 +10,13 @@
 #include <scene_geometry.h>
 #include <stack_allocator.h>
 #include <memory_management.h>
+#include <worker.h>
 
 #include <iostream>
 #include <thread>
+#include <chrono>
 
 manta::RayTracer::RayTracer() {
-	m_secondaryAllocators = nullptr;
 }
 
 manta::RayTracer::~RayTracer() {
@@ -23,38 +24,48 @@ manta::RayTracer::~RayTracer() {
 }
 
 void manta::RayTracer::traceAll(const Scene *scene, RayEmitterGroup *group) {
+	// Simple performance metrics for now
+	auto startTime = std::chrono::system_clock::now();
+
 	// Set up the emitter group
 	group->setDegree(0);
-	group->setStackAllocator(&m_mainAllocator);
+	group->setStackAllocator(&m_stack);
 	group->createAllEmitters();
 
-	if (m_threadCount > 0) {
-		int raysPerThread = group->getEmitterCount() / m_threadCount;
-		m_rayCount = group->getEmitterCount();
-		m_currentRay = 0;
+	// Create jobs
+	int emitterCount = group->getEmitterCount();
+	int start = 0;
+	int end = 0;
+	bool done = false;
 
-		std::thread **threads = new std::thread *[m_threadCount];
+	while (!done) {
+		end = start + m_renderBlockSize - 1;
 
-		for (int i = 0; i < m_threadCount; i++) {
-			int start = i * raysPerThread;
-			int end = (i + 1) * raysPerThread - 1;
-
-			if (i == m_threadCount - 1) {
-				end = group->getEmitterCount() - 1;
-			}
-
-			threads[i] = new std::thread(&RayTracer::traceRayEmitterGroupThread, this, scene, group, start, end, m_secondaryAllocators[i]);
+		if (end >= emitterCount - 1) {
+			end = emitterCount - 1;
+			done = true;
 		}
 
-		for (int i = 0; i < m_threadCount; i++) {
-			threads[i]->join();
-			delete threads[i];
-		}
-		delete[] threads;
+		Job newJob;
+		newJob.scene = scene;
+		newJob.group = group;
+		newJob.start = start;
+		newJob.end = end;
+
+		m_jobQueue.push(newJob);
+
+		start += m_renderBlockSize;
 	}
-	else {
-		traceRayEmitterGroupThread(scene, group, 0, group->getEmitterCount() - 1, &m_mainAllocator);
-	}
+
+	// Create and start all threads
+	createWorkers();
+	startWorkers();
+	waitForWorkers();
+
+	auto endTime = std::chrono::system_clock::now();
+
+	std::chrono::duration<double> diff = endTime - startTime;
+	std::cout << "Total processing time: " << diff.count() << " s" << std::endl;
 }
 
 void manta::RayTracer::traceRayEmitter(const Scene *scene, const RayEmitter *emitter, StackAllocator *stackAllocator) const {
@@ -74,60 +85,61 @@ void manta::RayTracer::traceRayEmitter(const Scene *scene, const RayEmitter *emi
 	}
 }
 
-/*
-void manta::RayTracer::traceRayGroupThread(const Scene * scene, const RayEmitter * emitter, int start, int end) {
-	LightRay *rays = emitter->getRays();
-	int rayCount = emitter->getRayCount();
+void manta::RayTracer::initialize(unsigned int stackSize, unsigned int workerStackSize, int threadCount, int renderBlockSize, bool multithreaded) {
+	m_stack.initialize(stackSize);
+	m_renderBlockSize = renderBlockSize;
+	m_multithreaded = multithreaded;
+	m_threadCount = threadCount;
+	m_workerStackSize = workerStackSize;
+}
 
-	for (int i = start; i <= end; i++) {
-		LightRay *ray = &rays[i];
+void manta::RayTracer::destroy() {
+	destroyWorkers();
+}
 
-		math::Vector average = math::constants::Zero;
-		math::Vector samples = math::loadScalar(emitter->getSamplesPerRay());
-		for (int s = 0; s < emitter->getSamplesPerRay(); s++) {
-			traceRay(scene, ray, emitter->getDegree());
-			average = math::add(average, math::div(ray->getIntensity(), samples));
-		}
-		ray->setIntensity(average);
-
-		
-		m_outputLock.lock();
-		m_currentRay += 1;
-		if (m_currentRay % 1000 == 0) {
-			std::cout << "Ray " << m_currentRay << "/" << rayCount << std::endl;
-		}
-		m_outputLock.unlock();
+void manta::RayTracer::incrementRayCompletion(const Job *job) {
+	m_outputLock.lock();
+	int emitterCount = job->group->getEmitterCount();
+	m_currentRay += 1;
+	if (m_currentRay % 1000 == 0) {
+		std::cout << "Ray " << m_currentRay << "/" << emitterCount << std::endl;
 	}
-}*/
+	m_outputLock.unlock();
+}
 
-void manta::RayTracer::initializeAllocators(unsigned int mainAllocatorSize, unsigned int secondaryAllocatorSize) {
-	m_mainAllocator.initialize(mainAllocatorSize);
+void manta::RayTracer::createWorkers() {
+	m_workers = new Worker[m_threadCount];
 
-	if (m_threadCount > 0) {
-		m_secondaryAllocators = new StackAllocator *[m_threadCount];
-		if (secondaryAllocatorSize > 0) {
-			for (int i = 0; i < m_threadCount; i++) {
-				m_secondaryAllocators[i] = new StackAllocator;
-				m_secondaryAllocators[i]->initialize(secondaryAllocatorSize);
-			}
-		}
-		else {
-			for (int i = 0; i < m_threadCount; i++) {
-				m_secondaryAllocators[i] = nullptr;
-			}
-		}
-	}
-	else {
-		m_secondaryAllocators = nullptr;
+	for (int i = 0; i < m_threadCount; i++) {
+		m_workers[i].initialize(m_workerStackSize, this);
 	}
 }
 
-void manta::RayTracer::destroyAllocators() {
-	for (int i = 0; i < m_threadCount; i++) {
-		delete m_secondaryAllocators[i];
+void manta::RayTracer::startWorkers() {
+	int workerCount = m_threadCount;
+
+	for (int i = 0; i < workerCount; i++) {
+		m_workers[i].start(m_multithreaded);
+	}
+}
+
+void manta::RayTracer::waitForWorkers() {
+	int workerCount = m_threadCount;
+
+	for (int i = 0; i < workerCount; i++) {
+		m_workers[i].join();
+	}
+}
+
+void manta::RayTracer::destroyWorkers() {
+	int workerCount = m_threadCount;
+
+	for (int i = 0; i < workerCount; i++) {
+		m_workers[i].destroy();
 	}
 
-	delete[] m_secondaryAllocators;
+	delete[] m_workers;
+	m_workers = nullptr;
 }
 
 void manta::RayTracer::depthCull(const Scene *scene, const LightRay *ray, SceneObject **closestObject, IntersectionPoint *point) const {
@@ -162,7 +174,7 @@ void manta::RayTracer::depthCull(const Scene *scene, const LightRay *ray, SceneO
 	*closestObject = currentClosest;
 }
 
-void manta::RayTracer::traceRay(const Scene *scene, LightRay *ray, int degree, StackAllocator *s) const {
+void manta::RayTracer::traceRay(const Scene *scene, LightRay *ray, int degree, StackAllocator *stack) const {
 	SceneObject *sceneObject = nullptr;
 	IntersectionPoint point;
 
@@ -171,21 +183,23 @@ void manta::RayTracer::traceRay(const Scene *scene, LightRay *ray, int degree, S
 	if (sceneObject != nullptr) {
 		Material *material = sceneObject->getMaterial();
 
-		RayEmitterGroup *group = material->generateRayEmitters(ray, &point, degree + 1, s);
+		RayEmitterGroup *group = material->generateRayEmitterGroup(ray, &point, degree + 1, stack);
 
 		if (group != nullptr) {
-			traceRayEmitterGroup(scene, group, s);
+			traceRayEmitterGroup(scene, group, stack);
 		}
 
 		material->integrateRay(ray, group);
 
 		if (group != nullptr) {
 			int emitterCount = group->getEmitterCount();
+
+			// Data must be freed in reverse order
 			for (int i = emitterCount - 1; i >= 0; i--) {
 				group->getEmitters()[i]->destroyRays();
 			}
 
-			material->destroyEmitterGroup(group, s);
+			material->destroyEmitterGroup(group, stack);
 		}
 	}
 }
@@ -199,24 +213,5 @@ void manta::RayTracer::traceRayEmitterGroup(const Scene *scene, const RayEmitter
 		emitter->setStackAllocator(s);
 		emitter->generateRays();
 		traceRayEmitter(scene, emitter, s);
-	}
-}
-
-void manta::RayTracer::traceRayEmitterGroupThread(const Scene *scene, const RayEmitterGroup *rayEmitterGroup, int start, int end, StackAllocator *s) {
-	int emitterCount = rayEmitterGroup->getEmitterCount();
-	RayEmitter **emitters = rayEmitterGroup->getEmitters();
-
-	for (int i = start; i <= end; i++) {
-		RayEmitter *emitter = emitters[i];
-		emitter->setStackAllocator(s);
-		emitter->generateRays();
-		traceRayEmitter(scene, emitter, s);
-
-		m_outputLock.lock();
-		m_currentRay += 1;
-		if (m_currentRay % 1000 == 0) {
-			std::cout << "Ray " << m_currentRay << "/" << emitterCount << std::endl;
-		}
-		m_outputLock.unlock();
 	}
 }

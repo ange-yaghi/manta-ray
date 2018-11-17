@@ -19,12 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\include\obj_file_loader.cpp" />
     <ClCompile Include="..\..\src\biconvex_lens.cpp" />
     <ClCompile Include="..\..\src\camera_ray_emitter.cpp" />
     <ClCompile Include="..\..\src\camera_ray_emitter_group.cpp" />
     <ClCompile Include="..\..\src\circular_aperture.cpp" />
     <ClCompile Include="..\..\src\image_handling.cpp" />
+    <ClCompile Include="..\..\src\job_queue.cpp" />
     <ClCompile Include="..\..\src\lens.cpp" />
     <ClCompile Include="..\..\src\lens_camera_ray_emitter.cpp" />
     <ClCompile Include="..\..\src\lens_camera_ray_emitter_group.cpp" />
@@ -36,6 +36,7 @@
     <ClCompile Include="..\..\src\material.cpp" />
     <ClCompile Include="..\..\src\mesh.cpp" />
     <ClCompile Include="..\..\src\monte_carlo_specular_diffuse_group.cpp" />
+    <ClCompile Include="..\..\src\obj_file_loader.cpp" />
     <ClCompile Include="..\..\src\ray_emitter.cpp" />
     <ClCompile Include="..\..\src\ray_emitter_group.cpp" />
     <ClCompile Include="..\..\src\ray_tracer.cpp" />
@@ -51,6 +52,7 @@
     <ClCompile Include="..\..\src\simple_specular_diffuse_material.cpp" />
     <ClCompile Include="..\..\src\sphere_primitive.cpp" />
     <ClCompile Include="..\..\src\spherical_surface.cpp" />
+    <ClCompile Include="..\..\src\worker.cpp" />
     <ClCompile Include="stack_allocator.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -59,6 +61,7 @@
     <ClInclude Include="..\..\include\camera_ray_emitter.h" />
     <ClInclude Include="..\..\include\camera_ray_emitter_group.h" />
     <ClInclude Include="..\..\include\circular_aperture.h" />
+    <ClInclude Include="..\..\include\job_queue.h" />
     <ClInclude Include="..\..\include\mesh.h" />
     <ClInclude Include="..\..\include\image_handling.h" />
     <ClInclude Include="..\..\include\lens.h" />
@@ -93,6 +96,7 @@
     <ClInclude Include="..\..\include\sphere_primitive.h" />
     <ClInclude Include="..\..\include\spherical_surface.h" />
     <ClInclude Include="..\..\include\stack_allocator.h" />
+    <ClInclude Include="..\..\include\worker.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\tracking\BuildVersion.txt" />

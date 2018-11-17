@@ -58,35 +58,11 @@
     <Filter Include="Source Files\image-handling">
       <UniqueIdentifier>{89260930-fc47-4fab-b32c-743311ddf47f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\ray-tracer\simple-ray-emitter">
-      <UniqueIdentifier>{45ad4b94-b02f-479a-ad38-671a106cd733}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\ray-tracer\camera-ray-emitter">
-      <UniqueIdentifier>{bb1535d4-93bb-4fab-8f6d-b6338ebec472}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\ray-tracer\simple-monte-carlo-emitter">
-      <UniqueIdentifier>{3d30888e-99a5-4382-96e5-d1c1de7e9c36}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\ray-tracer\camera-ray-emitter">
-      <UniqueIdentifier>{c1921a28-4ffa-456c-9e05-eb57c0a65d5b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\ray-tracer\simple-monte-carlo-emitter">
-      <UniqueIdentifier>{8b1484a0-65aa-4e5f-9ac3-53b7e3eea6e4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\ray-tracer\simple-ray-emitter">
-      <UniqueIdentifier>{162aba01-fefe-4b87-8bb1-c457daae1ff9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\material\library">
       <UniqueIdentifier>{03921aff-b8f0-4ac0-a925-fe2fbadd8250}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\material\library">
       <UniqueIdentifier>{71e49133-c41b-4971-ad99-3ef7ed4c1628}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\ray-tracer\monte-carlo-specular-diffuse">
-      <UniqueIdentifier>{d42c1e68-7ece-404d-8b0b-7a20f8a724af}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\ray-tracer\monte-carlo-specular-diffuse">
-      <UniqueIdentifier>{b87e772b-14b9-46f5-bc6c-af9f9ce862e4}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\camera-emulation">
       <UniqueIdentifier>{fbc96ab6-d910-4226-943b-97fd60797150}</UniqueIdentifier>
@@ -112,17 +88,53 @@
     <Filter Include="Source Files\camera-emulation\apertures">
       <UniqueIdentifier>{39c44cb6-cdfb-43f5-93cb-6f92906e3f98}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\ray-tracer\lens-camera-ray-emitter">
-      <UniqueIdentifier>{920c74e4-f5c0-47ee-9761-298194848d63}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\ray-tracer\lens-camera-ray-emitter">
-      <UniqueIdentifier>{793e53dd-56cc-44cc-acf4-7279d0504ed0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\geometry\utilities">
       <UniqueIdentifier>{5a0b8afb-d82b-4dff-b4d9-7848b762aeed}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\geometry\utilities">
       <UniqueIdentifier>{aaf30593-12e3-46fa-86fe-20fbe7c73c41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ray-tracer\utilities">
+      <UniqueIdentifier>{55481527-5116-4814-865e-b5d82d4250da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\emitter">
+      <UniqueIdentifier>{a37d86d9-3b6d-46bd-961a-d37f7068d57c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\emitter\camera-ray-emitter">
+      <UniqueIdentifier>{bb1535d4-93bb-4fab-8f6d-b6338ebec472}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\emitter\lens-camera-ray-emitter">
+      <UniqueIdentifier>{793e53dd-56cc-44cc-acf4-7279d0504ed0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\emitter\monte-carlo-specular-diffuse">
+      <UniqueIdentifier>{d42c1e68-7ece-404d-8b0b-7a20f8a724af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\emitter\simple-monte-carlo-emitter">
+      <UniqueIdentifier>{3d30888e-99a5-4382-96e5-d1c1de7e9c36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\emitter\simple-ray-emitter">
+      <UniqueIdentifier>{45ad4b94-b02f-479a-ad38-671a106cd733}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\emitter">
+      <UniqueIdentifier>{3f640e92-52bf-451a-af62-56c6dc2e9a7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\emitter\camera-ray-emitter">
+      <UniqueIdentifier>{c1921a28-4ffa-456c-9e05-eb57c0a65d5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\emitter\lens-camera-ray-emitter">
+      <UniqueIdentifier>{920c74e4-f5c0-47ee-9761-298194848d63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\emitter\monte-carlo-specular-diffuse">
+      <UniqueIdentifier>{b87e772b-14b9-46f5-bc6c-af9f9ce862e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\emitter\simple-monte-carlo-emitter">
+      <UniqueIdentifier>{8b1484a0-65aa-4e5f-9ac3-53b7e3eea6e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\emitter\simple-ray-emitter">
+      <UniqueIdentifier>{162aba01-fefe-4b87-8bb1-c457daae1ff9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ray-tracer\utilities">
+      <UniqueIdentifier>{4e28975c-2fd5-4d7e-be39-076e95f078b7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -160,28 +172,28 @@
       <Filter>Source Files\image-handling</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\simple_ray_emitter_group.cpp">
-      <Filter>Source Files\ray-tracer\simple-ray-emitter</Filter>
+      <Filter>Source Files\emitter\simple-ray-emitter</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\simple_ray_emitter.cpp">
-      <Filter>Source Files\ray-tracer\simple-ray-emitter</Filter>
+      <Filter>Source Files\emitter\simple-ray-emitter</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\camera_ray_emitter.cpp">
-      <Filter>Source Files\ray-tracer\camera-ray-emitter</Filter>
+      <Filter>Source Files\emitter\camera-ray-emitter</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\camera_ray_emitter_group.cpp">
-      <Filter>Source Files\ray-tracer\camera-ray-emitter</Filter>
+      <Filter>Source Files\emitter\camera-ray-emitter</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\simple_monte_carlo_emitter.cpp">
-      <Filter>Source Files\ray-tracer\simple-monte-carlo-emitter</Filter>
+      <Filter>Source Files\emitter\simple-monte-carlo-emitter</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\simple_diffuse_material.cpp">
       <Filter>Source Files\material\library</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\simple_monte_carlo_emitter_group.cpp">
-      <Filter>Source Files\ray-tracer\simple-monte-carlo-emitter</Filter>
+      <Filter>Source Files\emitter\simple-monte-carlo-emitter</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\monte_carlo_specular_diffuse_group.cpp">
-      <Filter>Source Files\ray-tracer\monte-carlo-specular-diffuse</Filter>
+      <Filter>Source Files\emitter\monte-carlo-specular-diffuse</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\simple_specular_diffuse_material.cpp">
       <Filter>Source Files\material\library</Filter>
@@ -214,15 +226,21 @@
       <Filter>Source Files\camera-emulation\lenses</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\lens_camera_ray_emitter.cpp">
-      <Filter>Source Files\ray-tracer\lens-camera-ray-emitter</Filter>
+      <Filter>Source Files\emitter\lens-camera-ray-emitter</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\lens_camera_ray_emitter_group.cpp">
-      <Filter>Source Files\ray-tracer\lens-camera-ray-emitter</Filter>
+      <Filter>Source Files\emitter\lens-camera-ray-emitter</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\mesh.cpp">
       <Filter>Source Files\geometry</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\include\obj_file_loader.cpp">
+    <ClCompile Include="..\..\src\worker.cpp">
+      <Filter>Source Files\ray-tracer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\job_queue.cpp">
+      <Filter>Source Files\ray-tracer\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\obj_file_loader.cpp">
       <Filter>Source Files\geometry\utilities</Filter>
     </ClCompile>
   </ItemGroup>
@@ -258,28 +276,28 @@
       <Filter>Header Files\image-handling</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\camera_ray_emitter.h">
-      <Filter>Header Files\ray-tracer\camera-ray-emitter</Filter>
+      <Filter>Header Files\emitter\camera-ray-emitter</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\camera_ray_emitter_group.h">
-      <Filter>Header Files\ray-tracer\camera-ray-emitter</Filter>
+      <Filter>Header Files\emitter\camera-ray-emitter</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\simple_ray_emitter.h">
-      <Filter>Header Files\ray-tracer\simple-ray-emitter</Filter>
+      <Filter>Header Files\emitter\simple-ray-emitter</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\simple_ray_emitter_group.h">
-      <Filter>Header Files\ray-tracer\simple-ray-emitter</Filter>
+      <Filter>Header Files\emitter\simple-ray-emitter</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\simple_monte_carlo_emitter.h">
-      <Filter>Header Files\ray-tracer\simple-monte-carlo-emitter</Filter>
+      <Filter>Header Files\emitter\simple-monte-carlo-emitter</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\simple_monte_carlo_emitter_group.h">
-      <Filter>Header Files\ray-tracer\simple-monte-carlo-emitter</Filter>
+      <Filter>Header Files\emitter\simple-monte-carlo-emitter</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\simple_diffuse_material.h">
       <Filter>Header Files\material\library</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\monte_carlo_specular_diffuse_group.h">
-      <Filter>Header Files\ray-tracer\monte-carlo-specular-diffuse</Filter>
+      <Filter>Header Files\emitter\monte-carlo-specular-diffuse</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\simple_specular_diffuse_material.h">
       <Filter>Header Files\material\library</Filter>
@@ -330,10 +348,10 @@
       <Filter>Header Files\camera-emulation\lenses</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\lens_camera_ray_emitter.h">
-      <Filter>Header Files\ray-tracer\lens-camera-ray-emitter</Filter>
+      <Filter>Header Files\emitter\lens-camera-ray-emitter</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\lens_camera_ray_emitter_group.h">
-      <Filter>Header Files\ray-tracer\lens-camera-ray-emitter</Filter>
+      <Filter>Header Files\emitter\lens-camera-ray-emitter</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\scene_geometry.h">
       <Filter>Header Files\geometry</Filter>
@@ -343,6 +361,12 @@
     </ClInclude>
     <ClInclude Include="..\..\include\obj_file_loader.h">
       <Filter>Header Files\geometry\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\worker.h">
+      <Filter>Header Files\ray-tracer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\job_queue.h">
+      <Filter>Header Files\ray-tracer\utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

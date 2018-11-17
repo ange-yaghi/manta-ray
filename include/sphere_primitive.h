@@ -21,7 +21,7 @@ namespace manta {
 		void detectIntersection(const LightRay *ray, IntersectionPoint *convex, IntersectionPoint *concave) const;
 
 		math::real getRadius() const { return m_radius; }
-		void setRadius(float radius) { m_radius = radius; }
+		void setRadius(math::real radius) { m_radius = radius; }
 
 	protected:
 		math::real m_radius;

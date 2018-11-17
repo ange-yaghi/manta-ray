@@ -12,6 +12,8 @@ manta::RayEmitterGroup::~RayEmitterGroup() {
 }
 
 void manta::RayEmitterGroup::destroyEmitters() {
+	if (m_rayEmitterCount == 0) return;
+
 	// Make sure to destroy the emitters in reverse
 	for (int i = m_rayEmitterCount - 1; i >= 0; i--) {
 		m_rayEmitters[i]->~RayEmitter();
@@ -38,10 +40,15 @@ void manta::RayEmitterGroup::destroyEmitters() {
 void manta::RayEmitterGroup::initializeEmitters(int count) {
 	m_rayEmitterCount = count;
 
-	if (m_stackAllocator == nullptr) {
-		m_rayEmitters = new RayEmitter *[count];
+	if (count > 0) {
+		if (m_stackAllocator == nullptr) {
+			m_rayEmitters = new RayEmitter *[count];
+		}
+		else {
+			m_rayEmitters = (RayEmitter **)m_stackAllocator->allocate(sizeof(RayEmitter *) * count);
+		}
 	}
 	else {
-		m_rayEmitters = (RayEmitter **)m_stackAllocator->allocate(sizeof(RayEmitter *) * count);
+		m_rayEmitters = nullptr;
 	}
 }

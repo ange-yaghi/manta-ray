@@ -27,7 +27,7 @@ namespace manta {
 		void setDiffuseCoeff(float diffuseCoeff) { m_diffuseCoeff = diffuseCoeff; }
 		float getDiffuseCoeff() const { return m_diffuseCoeff; }
 
-		RayEmitterGroup *generateRayEmitters(const LightRay *ray, const IntersectionPoint *intersectionPoint, int degree, StackAllocator *stackAllocator = nullptr) const;
+		RayEmitterGroup *generateRayEmitterGroup(const LightRay *ray, const IntersectionPoint *intersectionPoint, int degree, StackAllocator *stackAllocator = nullptr) const;
 		virtual void integrateRay(LightRay *ray, const RayEmitterGroup *_rayEmitter) const;
 		void destroyEmitterGroup(RayEmitterGroup *group, StackAllocator *stackAllocator = nullptr);
 
