@@ -15,6 +15,7 @@
 #include <image_handling.h>
 #include <memory_management.h>
 #include <mesh.h>
+#include <obj_file_loader.h>
 
 #include <manta_math.h>
 
@@ -25,6 +26,9 @@ math::Vector getColor(int r, int g, int b) {
 }
 
 int main() {
+	ObjFileLoader objFile;
+	bool result = objFile.readObjFile("teapot.obj");
+
 	Scene scene;
 
 	SimpleSpecularDiffuseMaterial leftWallMaterial;
@@ -134,6 +138,28 @@ int main() {
 	math::real ringSize = 300;
 	orb.setRadius(ringSize);
 	orb.setPosition(math::loadVector(0, ringSize - 0.013 + roomSize * 2, 0));
+
+	// Teapot test
+	Mesh teapot;
+	teapot.initialize(objFile.getFaceCount(), objFile.getVertexCount());
+
+	Face *tFaces = teapot.getFaces();
+	SimpleVertex *tVerts = teapot.getVertices();
+
+	for (int i = 0; i < objFile.getFaceCount(); i++) {
+		ObjFace *face = objFile.getFace(i);
+		tFaces[i].u = face->v1 - 1;
+		tFaces[i].v = face->v3 - 1;
+		tFaces[i].w = face->v2 - 1;
+	}
+
+	for (int i = 0; i < objFile.getVertexCount(); i++) {
+		math::Vector3 *v = objFile.getVertex(i);
+		tVerts[i].location = math::loadVector(*v);
+	}
+	teapot.precomputeValues();
+	teapot.setFastIntersectEnabled(true);
+	teapot.setFastIntersectRadius((math::real)4.0);
 
 	// Outdoor light
 	Mesh mesh;
@@ -352,17 +378,21 @@ int main() {
 	//lightObject->setMaterial(&lightMaterial);
 	//lightObject->setGeometry(&light);
 
-	SceneObject *sphereObject = scene.createSceneObject();
-	sphereObject->setMaterial(&leftWallMaterial);
-	sphereObject->setGeometry(&sphere);
+	//SceneObject *sphereObject = scene.createSceneObject();
+	//sphereObject->setMaterial(&leftWallMaterial);
+	//sphereObject->setGeometry(&sphere);
 
-	SceneObject *sphere2Object = scene.createSceneObject();
-	sphere2Object->setMaterial(&rightWallMaterial);
-	sphere2Object->setGeometry(&sphere2);
+	//SceneObject *sphere2Object = scene.createSceneObject();
+	//sphere2Object->setMaterial(&rightWallMaterial);
+	//sphere2Object->setGeometry(&sphere2);
 
-	SceneObject *sphere3Object = scene.createSceneObject();
-	sphere3Object->setMaterial(&sphere2Material);
-	sphere3Object->setGeometry(&sphere3);
+	//SceneObject *sphere3Object = scene.createSceneObject();
+	//sphere3Object->setMaterial(&sphere2Material);
+	//sphere3Object->setGeometry(&sphere3);
+
+	SceneObject *teapotObject = scene.createSceneObject();
+	teapotObject->setMaterial(&sphere2Material);
+	teapotObject->setGeometry(&teapot);
 
 	SceneObject *floorObject = scene.createSceneObject();
 	floorObject->setMaterial(&floorMaterial);
@@ -387,7 +417,7 @@ int main() {
 	camera.setPlaneHeight(1.0f);
 	camera.setResolutionX(width);
 	camera.setResolutionY(height);
-	camera.setSamplesPerPixel(1200);
+	camera.setSamplesPerPixel(540);
 
 
 	//CameraRayEmitter cameraEmitter;

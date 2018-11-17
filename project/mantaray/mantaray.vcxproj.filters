@@ -118,6 +118,12 @@
     <Filter Include="Source Files\ray-tracer\lens-camera-ray-emitter">
       <UniqueIdentifier>{793e53dd-56cc-44cc-acf4-7279d0504ed0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\geometry\utilities">
+      <UniqueIdentifier>{5a0b8afb-d82b-4dff-b4d9-7848b762aeed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\geometry\utilities">
+      <UniqueIdentifier>{aaf30593-12e3-46fa-86fe-20fbe7c73c41}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\main.cpp">
@@ -215,6 +221,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\mesh.cpp">
       <Filter>Source Files\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\include\obj_file_loader.cpp">
+      <Filter>Source Files\geometry\utilities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -331,6 +340,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\mesh.h">
       <Filter>Header Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\obj_file_loader.h">
+      <Filter>Header Files\geometry\utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
