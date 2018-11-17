@@ -15,10 +15,8 @@ manta::Material::~Material() {
 
 }
 
-manta::RayEmitterGroup *manta::Material::generateRayEmitters(const LightRay *ray, const IntersectionPoint *intersectionPoint, int degree, StackAllocator *stackAllocator) const {
-	RayEmitterGroup *newGroup = generateRayEmittersInternal(ray, intersectionPoint, degree, stackAllocator);
-	
-	return newGroup;
+manta::RayEmitterGroup *manta::Material::generateRayEmitterGroup(const LightRay *ray, const IntersectionPoint *intersectionPoint, int degree, StackAllocator *stackAllocator) const {
+	return generateRayEmittersInternal(ray, intersectionPoint, degree, stackAllocator);
 }
 
 manta::RayEmitterGroup *manta::Material::generateRayEmittersInternal(const LightRay *ray, const IntersectionPoint *intersectionPoint, int degree, StackAllocator *stackAllocator) const {
@@ -61,9 +59,7 @@ void manta::Material::integrateRay(LightRay *ray, const RayEmitterGroup *_rayEmi
 }
 
 void manta::Material::destroyEmitterGroup(RayEmitterGroup *group, StackAllocator *stackAllocator) {
-	
 	group->destroyEmitters();
-	
 	group->~RayEmitterGroup();
 
 	if (stackAllocator == nullptr) {
