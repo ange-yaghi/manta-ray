@@ -150,9 +150,9 @@ int main() {
 	faces[1].v = 3;
 	faces[1].w = 2;
 
-	vertices[0].location = math::loadVector(-roomSize + 4, 0.0, -roomSize - 30);
-	vertices[1].location = math::loadVector(-roomSize + 4 + 10, 0.0, -roomSize - 30);
-	vertices[2].location = math::loadVector(-roomSize + 4 + 10, roomSize * 2, -roomSize);
+	vertices[0].location = math::loadVector(-roomSize + 4, 3.0, -roomSize - 70);
+	vertices[1].location = math::loadVector(-roomSize + 4 + 25, 3.0, -roomSize - 70);
+	vertices[2].location = math::loadVector(-roomSize + 4 + 25, roomSize * 2, -roomSize);
 	vertices[3].location = math::loadVector(-roomSize + 4, roomSize * 2, -roomSize);
 
 	mesh.precomputeValues();
@@ -387,7 +387,7 @@ int main() {
 	camera.setPlaneHeight(1.0f);
 	camera.setResolutionX(width);
 	camera.setResolutionY(height);
-	camera.setSamplesPerPixel(2700);
+	camera.setSamplesPerPixel(1200);
 
 
 	//CameraRayEmitter cameraEmitter;

@@ -174,8 +174,11 @@ void manta::RayTracer::traceRay(const Scene *scene, LightRay *ray, int degree, S
 
 		if (group != nullptr) {
 			traceRayEmitterGroup(scene, group, s);
-			material->integrateRay(ray, group);
+		}
 
+		material->integrateRay(ray, group);
+
+		if (group != nullptr) {
 			int emitterCount = group->getEmitterCount();
 			for (int i = emitterCount - 1; i >= 0; i--) {
 				group->getEmitters()[i]->destroyRays();
