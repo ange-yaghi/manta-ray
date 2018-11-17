@@ -5,6 +5,7 @@
 #include <mutex>
 
 #include <stack_allocator.h>
+#include <job_queue.h>
 
 namespace manta {
 
@@ -14,6 +15,7 @@ namespace manta {
 	class RayEmitterGroup;
 	class SceneObject;
 	struct IntersectionPoint;
+	class Worker;
 
 	class RayTracer {
 	public:
@@ -22,28 +24,45 @@ namespace manta {
 
 		void traceAll(const Scene *scene, RayEmitterGroup *rayEmitterGroup);
 
-		void setThreadCount(int threadCount) { m_threadCount = threadCount; }
 		int getThreadCount() const { return m_threadCount; }
 
-		void initializeAllocators(unsigned int mainAllocatorSize, unsigned int secondaryAllocatorSize);
-		void destroyAllocators();
+		void initialize(unsigned int stackSize, unsigned int workerStackSize, int threadCount, int renderBlockSize, bool multithreaded);
+		void destroy();
+
+		void incrementRayCompletion(const Job *job);
+
+		// Interface to workers
+		JobQueue *getJobQueue() { return &m_jobQueue; }
+		void traceRayEmitter(const Scene *scene, const RayEmitter *emitter, StackAllocator *stack) const;
+
+	protected:
+		// Multithreading features
+		JobQueue m_jobQueue;
+		Worker *m_workers;
+		Worker *m_singleThreadedWorker;
+
+		unsigned m_workerStackSize;
+
+		void createWorkers();
+		void startWorkers();
+		void waitForWorkers();
+		void destroyWorkers();
 
 	protected:
 		void depthCull(const Scene *scene, const LightRay *ray, SceneObject **closestObject, IntersectionPoint *point) const;
 
 		void traceRay(const Scene *scene, LightRay *ray, int degree, StackAllocator *s) const;
 		void traceRayEmitterGroup(const Scene *scene, const RayEmitterGroup *rayEmitterGroup, StackAllocator *s) const;
-		void traceRayEmitter(const Scene *scene, const RayEmitter *emitter, StackAllocator *s) const;
-		//void traceRayEmitterThread(const Scene *scene, const RayEmitter *emitter, int start, int end);
-		void traceRayEmitterGroupThread(const Scene *scene, const RayEmitterGroup *rayEmitterGroup, int start, int end, StackAllocator *s);
 
 		std::atomic<int> m_currentRay;
 		std::mutex m_outputLock;
 		int m_rayCount;
 		int m_threadCount;
+		int m_renderBlockSize;
 
-		StackAllocator m_mainAllocator;
-		StackAllocator **m_secondaryAllocators;
+		StackAllocator m_stack;
+
+		bool m_multithreaded;
 	};
 
 } /* namespace manta */
