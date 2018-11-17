@@ -12,20 +12,16 @@ void manta::MonteCarloSpecularDiffuseGroup::createAllEmitters() {
 	if (m_specularEnabled) emitterCount++;
 
 	initializeEmitters(emitterCount);
-	if (m_diffuseEnabled)
-	{
-		m_diffuseEmitter = createEmitter<SimpleMonteCarloEmitter>();
-	}
-	else
-	{
-		m_diffuseEmitter = nullptr;
-	}
+	if (m_diffuseEnabled) m_diffuseEmitter = createEmitter<SimpleMonteCarloEmitter>();
+	else m_diffuseEmitter = nullptr;
 
 	if (m_specularEnabled) m_specularEmitter = createEmitter<SimpleRayEmitter>();
 	else m_specularEmitter = nullptr;
 
-	// TODO: remove this hack
-	m_rayEmitters[0] = (RayEmitter *)m_diffuseEmitter;
-	if (m_specularEnabled && m_diffuseEnabled) m_rayEmitters[1] = (RayEmitter *)m_specularEmitter;
-	else if (m_specularEnabled) m_rayEmitters[0] = (RayEmitter *)m_specularEmitter;
+	if (emitterCount > 0) {
+		// TODO: remove this hack
+		m_rayEmitters[0] = (RayEmitter *)m_diffuseEmitter;
+		if (m_specularEnabled && m_diffuseEnabled) m_rayEmitters[1] = (RayEmitter *)m_specularEmitter;
+		else if (m_specularEnabled) m_rayEmitters[0] = (RayEmitter *)m_specularEmitter;
+	}
 }

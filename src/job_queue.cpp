@@ -24,10 +24,9 @@ bool manta::JobQueue::pop(Job *job) {
 	else {
 		*job = m_queue.front();
 		m_queue.pop();
-		m_queueLock.unlock();
-
 		result = true;
 	}
+	m_queueLock.unlock();
 
 	return result;
 }

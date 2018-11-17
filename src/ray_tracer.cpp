@@ -39,8 +39,12 @@ void manta::RayTracer::traceAll(const Scene *scene, RayEmitterGroup *group) {
 	bool done = false;
 
 	while (!done) {
-		start += m_renderBlockSize;
 		end = start + m_renderBlockSize - 1;
+
+		if (end >= emitterCount - 1) {
+			end = emitterCount - 1;
+			done = true;
+		}
 
 		Job newJob;
 		newJob.scene = scene;
@@ -50,16 +54,13 @@ void manta::RayTracer::traceAll(const Scene *scene, RayEmitterGroup *group) {
 
 		m_jobQueue.push(newJob);
 
-		if (end >= emitterCount - 1) {
-			done = true;
-		}
+		start += m_renderBlockSize;
 	}
 
 	// Create and start all threads
 	createWorkers();
 	startWorkers();
 	waitForWorkers();
-	destroyWorkers();
 
 	auto endTime = std::chrono::system_clock::now();
 
@@ -93,6 +94,7 @@ void manta::RayTracer::initialize(unsigned int stackSize, unsigned int workerSta
 }
 
 void manta::RayTracer::destroy() {
+	destroyWorkers();
 }
 
 void manta::RayTracer::incrementRayCompletion(const Job *job) {

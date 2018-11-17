@@ -146,14 +146,14 @@ int main() {
 	Face *tFaces = teapot.getFaces();
 	SimpleVertex *tVerts = teapot.getVertices();
 
-	for (int i = 0; i < objFile.getFaceCount(); i++) {
+	for (unsigned int i = 0; i < objFile.getFaceCount(); i++) {
 		ObjFace *face = objFile.getFace(i);
 		tFaces[i].u = face->v1 - 1;
 		tFaces[i].v = face->v3 - 1;
 		tFaces[i].w = face->v2 - 1;
 	}
 
-	for (int i = 0; i < objFile.getVertexCount(); i++) {
+	for (unsigned int i = 0; i < objFile.getVertexCount(); i++) {
 		math::Vector3 *v = objFile.getVertex(i);
 		tVerts[i].location = math::loadVector(*v);
 	}
@@ -405,8 +405,8 @@ int main() {
 	int width = 1024;
 	int height = 768;
 
-	//width = 100;
-	//height = 100;
+	//width = 300;
+	//height = 300;
 
 	CameraRayEmitterGroup camera;
 	camera.setSamplingWidth(2);
@@ -417,7 +417,7 @@ int main() {
 	camera.setPlaneHeight(1.0f);
 	camera.setResolutionX(width);
 	camera.setResolutionY(height);
-	camera.setSamplesPerPixel(540);
+	camera.setSamplesPerPixel(1);
 
 
 	//CameraRayEmitter cameraEmitter;
@@ -433,7 +433,7 @@ int main() {
 	//rayTracer.setThreadCount(12);
 	//rayTracer.initializeAllocators(500 * MB, 50 * MB);
 	//rayTracer.initializeAllocators(500 * MB, 50 * MB);
-	rayTracer.initialize(500 * MB, 50 * MB, 12, 10000, false);
+	rayTracer.initialize(500 * MB, 50 * MB, 12, 10000, true);
 	rayTracer.traceAll(&scene, &camera);
 
 	math::Vector *pixels = (math::Vector *)_aligned_malloc(sizeof(math::Vector) * width * height, 16);
@@ -464,6 +464,8 @@ int main() {
 
 	SaveImageData(pixels, width, height, "test.bmp");
 	camera.destroyEmitters();
+
+	rayTracer.destroy();
 
 	int a = 0;
 }
