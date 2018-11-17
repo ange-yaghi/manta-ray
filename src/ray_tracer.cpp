@@ -141,9 +141,10 @@ void manta::RayTracer::depthCull(const Scene *scene, const LightRay *ray, SceneO
 	IntersectionPoint intersection;
 	for (int i = 0; i < objectCount; i++) {
 		SceneObject *object = scene->getSceneObject(i);
-
 		SceneGeometry *geometry = object->getGeometry();
 		
+		if (!geometry->fastIntersection(ray)) continue;
+
 		geometry->detectIntersection(ray, &intersection);
 
 		if (intersection.m_intersection) {
@@ -174,8 +175,11 @@ void manta::RayTracer::traceRay(const Scene *scene, LightRay *ray, int degree, S
 
 		if (group != nullptr) {
 			traceRayEmitterGroup(scene, group, s);
-			material->integrateRay(ray, group);
+		}
 
+		material->integrateRay(ray, group);
+
+		if (group != nullptr) {
 			int emitterCount = group->getEmitterCount();
 			for (int i = emitterCount - 1; i >= 0; i--) {
 				group->getEmitters()[i]->destroyRays();
