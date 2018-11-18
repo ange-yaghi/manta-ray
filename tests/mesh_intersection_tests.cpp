@@ -40,14 +40,16 @@ TEST(MeshIntersectionTests, MeshIntersectionPerformance) {
 
 	auto begin = std::chrono::high_resolution_clock::now();
 
-	for (int i = 0; i < 100000000; i++) {
-		IntersectionPoint p;
+	IntersectionPoint p;
+	for (int i = 0; i < 10000; i++) {
 		mesh.detectIntersection(&ray, &p);
 	}
 
 	auto end = std::chrono::high_resolution_clock::now();
 
 	std::ofstream outputFile("../../../test_results/test_results_mesh_intersection.txt");
+	if (p.m_intersection) outputFile << "Intersection detected" << std::endl;
+	outputFile << "Precomputed values struct size: " << sizeof(PrecomputedValues) << std::endl;
 	outputFile << std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count() << "ns" << std::endl;
 	outputFile.close();
 }
