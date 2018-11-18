@@ -1,31 +1,15 @@
 #include <iostream>
 
-#include <light_ray.h>
-#include <sphere_primitive.h>
-#include <intersection_point.h>
-#include <scene.h>
-#include <scene_object.h>
-#include <scene_geometry.h>
-#include <material.h>
-#include <simple_diffuse_material.h>
-#include <simple_specular_diffuse_material.h>
-#include <ray_tracer.h>
-#include <camera_ray_emitter_group.h>
-#include <camera_ray_emitter.h>
-#include <image_handling.h>
-#include <memory_management.h>
-#include <mesh.h>
-#include <obj_file_loader.h>
-
 #include <manta_math.h>
+#include <demos.h>
 
 using namespace manta;
 
-math::Vector getColor(int r, int g, int b) {
-	return math::loadVector(r / 255.0f, g / 255.0f, b / 255.0f);
+int main() {
+	simpleRoomDemo(1, 1024, 768);
 }
 
-int main() {
+	/*
 	ObjFileLoader objFile;
 	bool result = objFile.readObjFile("teapot.obj");
 
@@ -419,19 +403,7 @@ int main() {
 	camera.setResolutionY(height);
 	camera.setSamplesPerPixel(1);
 
-	//CameraRayEmitter cameraEmitter;
-	//cameraEmitter.setDegree(0);
-	//cameraEmitter.setSamplesPerRay(1000);
-
-	//cameraEmitter.generateRays();
-
-	//StackAllocator *mainAllocator = new StackAllocator;
-	//mainAllocator->initialize(500 * MB);
-
 	RayTracer rayTracer;
-	//rayTracer.setThreadCount(12);
-	//rayTracer.initializeAllocators(500 * MB, 50 * MB);
-	//rayTracer.initializeAllocators(500 * MB, 50 * MB);
 	rayTracer.initialize(500 * MB, 50 * MB, 12, 10000, true);
 	rayTracer.traceAll(&scene, &camera);
 
@@ -444,16 +416,8 @@ int main() {
 			math::real g = math::getY(v);
 			math::real b = math::getZ(v);
 
-			if (r > 0.0 || g > 0.0 || b > 0.0) {
-				//std::cout << "+";
-			} 
-			else {
-				//std::cout << " ";
-			}
-
 			pixels[i * width + j] = v;
 		}
-		//std::cout << std::endl;
 	}
 
 	// Destroy all emitters
@@ -465,4 +429,4 @@ int main() {
 	camera.destroyEmitters();
 
 	rayTracer.destroy();
-}
+}*/

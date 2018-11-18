@@ -23,6 +23,9 @@
     <ClCompile Include="..\..\test\opencl_tests.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\tests\mesh_intersection_tests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -34,8 +37,16 @@
     <Filter Include="Tests">
       <UniqueIdentifier>{9bf0ba03-5ea5-4087-87f9-2f861d6fcb84}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Test Results">
+      <UniqueIdentifier>{85c515a9-c830-4145-abce-9f6f793c0fc8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\test_results\test_results_mesh_intersection.txt">
+      <Filter>Test Results</Filter>
+    </Text>
   </ItemGroup>
 </Project>

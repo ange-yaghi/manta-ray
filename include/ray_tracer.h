@@ -1,11 +1,12 @@
 #ifndef RAY_TRACER_H
 #define RAY_TRACER_H
 
-#include <atomic>
-#include <mutex>
-
 #include <stack_allocator.h>
 #include <job_queue.h>
+#include <manta_math.h>
+
+#include <atomic>
+#include <mutex>
 
 namespace manta {
 
@@ -29,11 +30,12 @@ namespace manta {
 		void initialize(unsigned int stackSize, unsigned int workerStackSize, int threadCount, int renderBlockSize, bool multithreaded);
 		void destroy();
 
-		void incrementRayCompletion(const Job *job);
+		void setBackgroundColor(const math::Vector &color) { m_backgroundColor = color; }
 
 		// Interface to workers
 		JobQueue *getJobQueue() { return &m_jobQueue; }
 		void traceRayEmitter(const Scene *scene, const RayEmitter *emitter, StackAllocator *stack) const;
+		void incrementRayCompletion(const Job *job);
 
 	protected:
 		// Multithreading features
@@ -53,6 +55,8 @@ namespace manta {
 
 		void traceRay(const Scene *scene, LightRay *ray, int degree, StackAllocator *s) const;
 		void traceRayEmitterGroup(const Scene *scene, const RayEmitterGroup *rayEmitterGroup, StackAllocator *s) const;
+
+		math::Vector m_backgroundColor;
 
 		std::atomic<int> m_currentRay;
 		std::mutex m_outputLock;
