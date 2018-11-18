@@ -4,6 +4,7 @@
 namespace manta {
 
 	void simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolutionY);
+	void teapotDemo(int samplesPerPixel, int resolutionX, int resolutionY);
 
 }
 

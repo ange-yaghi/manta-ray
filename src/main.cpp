@@ -6,7 +6,7 @@
 using namespace manta;
 
 int main() {
-	simpleRoomDemo(1, 1024, 768);
+	teapotDemo(1, 1024, 768);
 }
 
 	/*
