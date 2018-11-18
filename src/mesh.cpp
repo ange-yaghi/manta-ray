@@ -46,7 +46,7 @@ void manta::Mesh::precomputeValues() {
 
 		math::Vector normal = math::cross(math::sub(v, u), math::sub(w, u));
 		//computePlane(normal, u, &cache->plane);
-		cache->normal = normal;
+		cache->normal = math::normalize(normal);
 
 		computePlane(math::cross(normal, math::sub(w, v)), v, &cache->edgePlaneVW);
 		computePlane(math::cross(normal, math::sub(u, w)), w, &cache->edgePlaneWU);
