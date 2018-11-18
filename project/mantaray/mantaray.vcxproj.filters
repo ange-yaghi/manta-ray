@@ -136,6 +136,21 @@
     <Filter Include="Header Files\ray-tracer\utilities">
       <UniqueIdentifier>{4e28975c-2fd5-4d7e-be39-076e95f078b7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\hardware-acceleration">
+      <UniqueIdentifier>{6b0af5d4-62ac-4ebc-a2ad-060d86e82b6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\hardware-acceleration">
+      <UniqueIdentifier>{b58b1ee1-883e-45dd-804b-1141eb5d4652}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\hardware-acceleration\opencl">
+      <UniqueIdentifier>{3440456f-e4c6-4a6b-bfed-f810a521a952}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\hardware-acceleration\opencl">
+      <UniqueIdentifier>{bc23332a-d66b-4601-9f6b-c2c5214577c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="opencl-programs">
+      <UniqueIdentifier>{ff23a991-3a5f-40e8-adfd-7af0899831f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\main.cpp">
@@ -242,6 +257,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\obj_file_loader.cpp">
       <Filter>Source Files\geometry\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu_manager_opencl.cpp">
+      <Filter>Source Files\hardware-acceleration\opencl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu_memory_opencl.cpp">
+      <Filter>Source Files\hardware-acceleration\opencl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gpu_kernel_opencl.cpp">
+      <Filter>Source Files\hardware-acceleration\opencl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -368,6 +392,24 @@
     <ClInclude Include="..\..\include\job_queue.h">
       <Filter>Header Files\ray-tracer\utilities</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\gpu_manager.h">
+      <Filter>Header Files\hardware-acceleration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\gpu_memory.h">
+      <Filter>Header Files\hardware-acceleration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\gpu_manager_opencl.h">
+      <Filter>Header Files\hardware-acceleration\opencl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\gpu_memory_opencl.h">
+      <Filter>Header Files\hardware-acceleration\opencl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\gpu_kernel.h">
+      <Filter>Header Files\hardware-acceleration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\gpu_kernel_opencl.h">
+      <Filter>Header Files\hardware-acceleration\opencl</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\tracking\BuildVersion.txt">
@@ -376,5 +418,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
+    <None Include="..\..\opencl_programs\mantaray.cl">
+      <Filter>opencl-programs</Filter>
+    </None>
   </ItemGroup>
 </Project>
