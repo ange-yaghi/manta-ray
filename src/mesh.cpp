@@ -45,7 +45,8 @@ void manta::Mesh::precomputeValues() {
 		math::Vector w = m_vertices[m_faces[i].w].location;
 
 		math::Vector normal = math::cross(math::sub(v, u), math::sub(w, u));
-		computePlane(normal, u, &cache->plane);
+		//computePlane(normal, u, &cache->plane);
+		cache->normal = normal;
 
 		computePlane(math::cross(normal, math::sub(w, v)), v, &cache->edgePlaneVW);
 		computePlane(math::cross(normal, math::sub(u, w)), w, &cache->edgePlaneWU);
@@ -61,14 +62,19 @@ void manta::Mesh::precomputeValues() {
 
 		cache->edgePlaneWU.normal = math::div(cache->edgePlaneWU.normal, scaleWU);
 		cache->edgePlaneWU.d /= math::getScalar(scaleWU);
+
+		cache->p0 = u;
 	}
 }
 
 void manta::Mesh::detectIntersection(const LightRay *ray, IntersectionPoint *p) const {
 	p->m_intersection = false;
 	math::real closestDepth = (math::real)DBL_MAX;
+	math::Vector rayDir = ray->getDirection();
+	math::Vector raySource = ray->getSource();
+
 	for (int i = 0; i < m_faceCount; i++) {
-		if (detectIntersection(i, closestDepth, ray, p)) {
+		if (detectIntersection(i, closestDepth, rayDir, raySource, p)) {
 			closestDepth = p->m_depth;
 		}
 	}
@@ -100,17 +106,17 @@ bool manta::Mesh::fastIntersection(const LightRay *ray) const {
 	else return true;
 }
 
-bool manta::Mesh::detectIntersection(int faceIndex, math::real earlyExitDepthHint, const LightRay *ray, IntersectionPoint *p) const {
-	Face *face = &m_faces[faceIndex];
-	PrecomputedValues *cache = &m_precomputedValues[faceIndex];
+bool manta::Mesh::detectIntersection(int faceIndex, math::real earlyExitDepthHint, const math::Vector &rayDir, const math::Vector &rayOrigin, IntersectionPoint *p) const {
+	PrecomputedValues &cache = m_precomputedValues[faceIndex];
 
-	math::Vector denom = math::dot(cache->plane.normal, ray->getDirection());
+	math::Vector denom = math::dot(cache.normal, rayDir);
 
 	// The ray is nearly perpendicular to the plane
-	if (abs(math::getScalar(denom)) < 1e-6) return false;
+	math::real denom_s = math::getScalar(denom);
+	if (denom_s < 1e-6 && denom_s > -1e-6) return false;
 
-	math::Vector p0r0 = math::sub(m_vertices[face->u].location, ray->getSource());
-	math::Vector depth = math::div(math::dot(p0r0, cache->plane.normal), denom);
+	math::Vector p0r0 = math::sub(cache.p0, rayOrigin);
+	math::Vector depth = math::div(math::dot(p0r0, cache.normal), denom);
 
 	math::real depth_s = math::getScalar(depth);
 
@@ -119,13 +125,13 @@ bool manta::Mesh::detectIntersection(int faceIndex, math::real earlyExitDepthHin
 	// This ray either does not intersect the plane or intersects at a depth that is further than the early exit hint
 	if (depth_s <= (math::real)0.0 || depth_s > earlyExitDepthHint) return false;
 	
-	math::Vector s = math::add(ray->getSource(), math::mul(ray->getDirection(), depth));
+	math::Vector s = math::add(rayOrigin, math::mul(rayDir, depth));
 	
 	// Compute barycentric components u, v, w
-	math::real u = math::getScalar(math::dot(s, cache->edgePlaneVW.normal)) - cache->edgePlaneVW.d;
+	math::real u = math::getScalar(math::dot(s, cache.edgePlaneVW.normal)) - cache.edgePlaneVW.d;
 	if (u < bias || u > (math::real)1.0-bias) return false;
 
-	math::real v = math::getScalar(math::dot(s, cache->edgePlaneWU.normal)) - cache->edgePlaneWU.d;
+	math::real v = math::getScalar(math::dot(s, cache.edgePlaneWU.normal)) - cache.edgePlaneWU.d;
 	if (v < bias) return false;
 
 	math::real w = (math::real)1.0 - u - v;
@@ -134,10 +140,10 @@ bool manta::Mesh::detectIntersection(int faceIndex, math::real earlyExitDepthHin
 	p->m_depth = depth_s;
 	p->m_intersection = true;
 	// TODO: only apply this logic for two-sided objects
-	if (math::getScalar(math::dot(cache->plane.normal, ray->getDirection())) > (math::real)0.0)
-		p->m_normal = math::negate(cache->plane.normal);
+	if (math::getScalar(math::dot(cache.normal, rayDir)) > (math::real)0.0)
+		p->m_normal = math::negate(cache.normal);
 	else
-		p->m_normal = cache->plane.normal; // TODO: calculate smoothed normals based on vertices
+		p->m_normal = cache.normal; // TODO: calculate smoothed normals based on vertices
 	p->m_position = s;
 
 	return true;
