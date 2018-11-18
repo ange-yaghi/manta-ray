@@ -24,9 +24,10 @@ namespace manta {
 	};
 
 	struct PrecomputedValues {
-		Plane plane;
 		Plane edgePlaneVW;
 		Plane edgePlaneWU;
+		math::Vector normal;
+		math::Vector p0;
 	};
 
 	class Mesh : public SceneGeometry {
@@ -53,7 +54,7 @@ namespace manta {
 		void setFastIntersectRadius(math::real radius) { m_fastIntersectRadius = radius; }
 
 	protected:
-		bool detectIntersection(int faceIndex, math::real earlyExitDepthHint, const LightRay *ray, IntersectionPoint *p) const;
+		bool detectIntersection(int faceIndex, math::real earlyExitDepthHint, const math::Vector &rayDir, const math::Vector &rayOrigin, IntersectionPoint *p) const;
 
 		void computePlane(const math::Vector &n, const math::Vector &p, Plane *plane) const;
 
