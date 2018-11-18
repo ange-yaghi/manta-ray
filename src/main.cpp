@@ -419,7 +419,6 @@ int main() {
 	camera.setResolutionY(height);
 	camera.setSamplesPerPixel(1);
 
-
 	//CameraRayEmitter cameraEmitter;
 	//cameraEmitter.setDegree(0);
 	//cameraEmitter.setSamplesPerRay(1000);
@@ -466,6 +465,4 @@ int main() {
 	camera.destroyEmitters();
 
 	rayTracer.destroy();
-
-	int a = 0;
 }
