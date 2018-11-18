@@ -35,6 +35,7 @@ namespace manta {
 		~Mesh();
 
 		void initialize(int faceCount, int vertexCount);
+		void fixNormals();
 		void precomputeValues();
 
 		virtual void detectIntersection(const LightRay *ray, IntersectionPoint *p) const;

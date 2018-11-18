@@ -202,6 +202,10 @@ void manta::RayTracer::traceRay(const Scene *scene, LightRay *ray, int degree, S
 			material->destroyEmitterGroup(group, stack);
 		}
 	}
+	else {
+		// The ray hit nothing so it receives the background color
+		ray->setIntensity(m_backgroundColor);
+	}
 }
 
 void manta::RayTracer::traceRayEmitterGroup(const Scene *scene, const RayEmitterGroup *rayEmitterGroup, StackAllocator *s) const {

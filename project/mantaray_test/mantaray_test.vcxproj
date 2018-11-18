@@ -40,11 +40,16 @@
     <IncludePath>E:\Software\MantaRay\project\mantaray_test;E:\Software\MantaRay\include;$(IncludePath)</IncludePath>
     <LibraryPath>E:\Software\Common\SDL2-2.0.9\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>E:\Software\MantaRay\project\mantaray_test;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\include;E:\Software\MantaRay\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\lib\x64;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\utilities.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\tests\mesh_intersection_tests.cpp" />
     <ClCompile Include="..\..\test\camera_emulation_tests.cpp" />
     <ClCompile Include="..\..\test\integration_testing.cpp" />
     <ClCompile Include="..\..\test\math_tests.cpp" />
@@ -66,6 +71,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\test_results\test_results_mesh_intersection.txt" />
   </ItemGroup>
   <ItemDefinitionGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
@@ -136,6 +144,7 @@
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <AdditionalDependencies>OpenCL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

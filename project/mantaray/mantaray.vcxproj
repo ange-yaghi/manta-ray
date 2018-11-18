@@ -23,6 +23,7 @@
     <ClCompile Include="..\..\src\camera_ray_emitter.cpp" />
     <ClCompile Include="..\..\src\camera_ray_emitter_group.cpp" />
     <ClCompile Include="..\..\src\circular_aperture.cpp" />
+    <ClCompile Include="..\..\src\demos.cpp" />
     <ClCompile Include="..\..\src\gpu_kernel_opencl.cpp" />
     <ClCompile Include="..\..\src\gpu_manager_opencl.cpp" />
     <ClCompile Include="..\..\src\gpu_memory_opencl.cpp" />
@@ -64,6 +65,7 @@
     <ClInclude Include="..\..\include\camera_ray_emitter.h" />
     <ClInclude Include="..\..\include\camera_ray_emitter_group.h" />
     <ClInclude Include="..\..\include\circular_aperture.h" />
+    <ClInclude Include="..\..\include\demos.h" />
     <ClInclude Include="..\..\include\gpu_kernel.h" />
     <ClInclude Include="..\..\include\gpu_kernel_opencl.h" />
     <ClInclude Include="..\..\include\gpu_manager.h" />
@@ -136,13 +138,13 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>

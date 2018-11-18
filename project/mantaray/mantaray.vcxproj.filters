@@ -151,6 +151,12 @@
     <Filter Include="opencl-programs">
       <UniqueIdentifier>{ff23a991-3a5f-40e8-adfd-7af0899831f2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\demos">
+      <UniqueIdentifier>{79f6a041-e665-435a-ae71-f96cffde74b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\demos">
+      <UniqueIdentifier>{68fa0b6b-71c9-429d-8f4f-1cc5e3a3a166}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\main.cpp">
@@ -266,6 +272,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\gpu_kernel_opencl.cpp">
       <Filter>Source Files\hardware-acceleration\opencl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\demos.cpp">
+      <Filter>Source Files\demos</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -409,6 +418,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\gpu_kernel_opencl.h">
       <Filter>Header Files\hardware-acceleration\opencl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\demos.h">
+      <Filter>Header Files\demos</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

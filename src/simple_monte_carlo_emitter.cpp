@@ -6,6 +6,8 @@
 #include <random>
 #include <math.h>
 
+#include <iostream>
+
 manta::SimpleMonteCarloEmitter::SimpleMonteCarloEmitter() {
 	m_singleRay = nullptr;
 }
@@ -33,7 +35,7 @@ void manta::SimpleMonteCarloEmitter::generateRays() {
 	math::Vector u = math::constants::YAxis;
 	math::Vector v;
 	math::Vector w = realNormal;
-	if (math::getX(realNormal) < 0.1f) {
+	if (abs(math::getX(realNormal)) < 0.1f) {
 		u = math::constants::XAxis;
 	}
 	u = math::normalize(math::cross(u, realNormal));
@@ -50,6 +52,10 @@ void manta::SimpleMonteCarloEmitter::generateRays() {
 	LightRay *mainRay = getRays();
 	mainRay->setDirection(d);
 	mainRay->setSource(getPosition());
+
+	if (isnan(math::getScalar(math::magnitude(d)))) {
+		std::cout << math::getX(realNormal) << ", " << math::getY(realNormal) << ", " << math::getZ(realNormal) << std::endl;
+	}
 
 	m_singleRay = mainRay;
 }

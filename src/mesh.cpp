@@ -26,6 +26,15 @@ void manta::Mesh::initialize(int faceCount, int vertexCount) {
 	m_vertexCount = vertexCount;
 }
 
+void manta::Mesh::fixNormals() {
+	for (int i = 0; i < m_faceCount; i++) {
+		math::Vector u = m_vertices[m_faces[i].u].location;
+		math::Vector v = m_vertices[m_faces[i].v].location;
+		math::Vector w = m_vertices[m_faces[i].w].location;
+		math::Vector normal = math::cross(math::sub(v, u), math::sub(w, u));
+	}
+}
+
 void manta::Mesh::precomputeValues() {
 	m_precomputedValues = new PrecomputedValues[m_faceCount];
 
@@ -105,6 +114,8 @@ bool manta::Mesh::detectIntersection(int faceIndex, math::real earlyExitDepthHin
 
 	math::real depth_s = math::getScalar(depth);
 
+	constexpr math::real bias = -1E-2;
+
 	// This ray either does not intersect the plane or intersects at a depth that is further than the early exit hint
 	if (depth_s <= (math::real)0.0 || depth_s > earlyExitDepthHint) return false;
 	
@@ -112,13 +123,13 @@ bool manta::Mesh::detectIntersection(int faceIndex, math::real earlyExitDepthHin
 	
 	// Compute barycentric components u, v, w
 	math::real u = math::getScalar(math::dot(s, cache->edgePlaneVW.normal)) - cache->edgePlaneVW.d;
-	if (u < (math::real)0.0 || u > (math::real)1.0) return false;
+	if (u < bias || u > (math::real)1.0-bias) return false;
 
 	math::real v = math::getScalar(math::dot(s, cache->edgePlaneWU.normal)) - cache->edgePlaneWU.d;
-	if (v < (math::real)0.0) return false;
+	if (v < bias) return false;
 
 	math::real w = (math::real)1.0 - u - v;
-	if (w < (math::real)0.0) return false;
+	if (w < bias) return false;
 
 	p->m_depth = depth_s;
 	p->m_intersection = true;
