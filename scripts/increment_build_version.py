@@ -26,7 +26,7 @@ if __name__ == "__main__":
 
     mypath = os.path.dirname(os.path.realpath(__file__)) + "/../"
 
-    directories = ['src', 'test', 'include', 'scripts']
+    directories = ['src', 'test', 'include', 'scripts', 'opencl_programs']
     
     f = open(mypath + "/tracking/BuildVersion.txt", "r")
     
@@ -59,7 +59,7 @@ if __name__ == "__main__":
     for directory in directories:
         for root, subFolders, files in os.walk(mypath + directory):
             for fileEntry in files:
-                if (fileEntry.endswith(".h") or fileEntry.endswith(".cpp") or fileEntry.endswith(".py")):
+                if (fileEntry.endswith(".h") or fileEntry.endswith(".cpp") or fileEntry.endswith(".py") or fileEntry.endswith('.cl')):
                     if (fileEntry not in ignoreFiles):
                         lineCount += GetFileLineCount(os.path.join(root, fileEntry.strip()))
         
