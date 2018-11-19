@@ -21,6 +21,7 @@ void manta::GPUManagerOpenCL::initialize(const char *programLocation) {
 	cl_int ret;
 	ret = clGetPlatformIDs(1, &m_platformId, &m_numPlatforms);
 	ret = clGetDeviceIDs(m_platformId, CL_DEVICE_TYPE_GPU, 1, &m_deviceId, &m_numDevices);
+	ret = clGetDeviceInfo(m_deviceId, CL_DEVICE_NAME, sizeof(m_deviceName), (void *)m_deviceName, NULL);
 
 	// Create an OpenCL context
 	m_context = clCreateContext(NULL, 1, &m_deviceId, NULL, NULL, &ret);
@@ -44,6 +45,15 @@ void manta::GPUManagerOpenCL::initialize(const char *programLocation) {
 
 	m_program = clCreateProgramWithSource(m_context, 1, (const char **)&source_str, (const size_t *)&source_size, &ret);
 	ret = clBuildProgram(m_program, 1, &m_deviceId, NULL, NULL, NULL);
+
+	if (ret == CL_BUILD_PROGRAM_FAILURE) {
+		size_t size;
+		ret = clGetProgramBuildInfo(m_program, m_deviceId, CL_PROGRAM_BUILD_LOG, NULL, NULL, &size);
+
+		char *outputBuffer = new char[size + 1];
+		ret = clGetProgramBuildInfo(m_program, m_deviceId, CL_PROGRAM_BUILD_LOG, size, (void *)outputBuffer, NULL);
+		int a = 0;
+	}
 }
 
 manta::GPUMemory *manta::GPUManagerOpenCL::createMemoryBuffer(unsigned int size, GPUMemory::MODE mode) {
@@ -56,7 +66,7 @@ manta::GPUMemory *manta::GPUManagerOpenCL::createMemoryBuffer(unsigned int size,
 
 	cl_mem memObject = clCreateBuffer(
 		m_context, 
-		flags,
+		flags | CL_MEM_ALLOC_HOST_PTR,
 		size, 
 		NULL, 
 		&ret);
@@ -73,7 +83,7 @@ manta::GPUMemory *manta::GPUManagerOpenCL::createMemoryBuffer(unsigned int size,
 
 manta::GPUKernel * manta::GPUManagerOpenCL::createKernel(const char *name, const void *optionalData) {
 	cl_int result;
-	cl_kernel kernel = clCreateKernel(m_program,  name, &result);
+	cl_kernel kernel = clCreateKernel(m_program, name, &result);
 
 	GPUKernelOpenCL *newKernel = new GPUKernelOpenCL;
 	newKernel->setKernel(kernel);
@@ -82,6 +92,10 @@ manta::GPUKernel * manta::GPUManagerOpenCL::createKernel(const char *name, const
 	m_kernels.push_back(newKernel);
 
 	return newKernel;
+}
+
+const char *manta::GPUManagerOpenCL::getDeviceName() const {
+	return m_deviceName;
 }
 
 void manta::GPUManagerOpenCL::destroy() {
