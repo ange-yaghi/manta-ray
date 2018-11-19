@@ -53,6 +53,8 @@ namespace manta {
 
 		void setFastIntersectRadius(math::real radius) { m_fastIntersectRadius = radius; }
 
+		const PrecomputedValues *getPrecomputedValues() const { return m_precomputedValues; }
+
 	protected:
 		bool detectIntersection(int faceIndex, math::real earlyExitDepthHint, const math::Vector &rayDir, const math::Vector &rayOrigin, IntersectionPoint *p) const;
 

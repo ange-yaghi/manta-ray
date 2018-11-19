@@ -48,5 +48,11 @@
     <Text Include="..\..\test_results\test_results_mesh_intersection.txt">
       <Filter>Test Results</Filter>
     </Text>
+    <Text Include="..\..\test_results\test_results_opencl_vs_cpu_benchmark.txt">
+      <Filter>Test Results</Filter>
+    </Text>
+    <Text Include="..\..\test_results\test_results_intersection_opencl_vs_cpu_benchmark.txt">
+      <Filter>Test Results</Filter>
+    </Text>
   </ItemGroup>
 </Project>

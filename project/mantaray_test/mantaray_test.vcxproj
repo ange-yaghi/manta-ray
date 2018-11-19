@@ -73,7 +73,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="..\..\test_results\test_results_intersection_opencl_vs_cpu_benchmark.txt" />
     <Text Include="..\..\test_results\test_results_mesh_intersection.txt" />
+    <Text Include="..\..\test_results\test_results_opencl_vs_cpu_benchmark.txt" />
   </ItemGroup>
   <ItemDefinitionGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -81,6 +81,18 @@ math::real math::getScalar(const math::Vector &v) {
 	return v.x;
 }
 
+math::Vector4 math::getVector4(const math::Vector &v) {
+	return Vector4(v.x, v.y, v.z, v.w);
+}
+
+math::Vector3 math::getVector3(const math::Vector &v) {
+	return Vector3(v.x, v.y, v.z);
+}
+
+math::Vector2 math::getVector2(const math::Vector &v) {
+	return Vector2(v.x, v.y);
+}
+
 math::Generic math::add(const math::Generic &v1, const math::Generic &v2) {
 	return { v1.x + v2.x, v1.y + v2.y, v1.z + v2.z, v1.w + v2.w };
 }
