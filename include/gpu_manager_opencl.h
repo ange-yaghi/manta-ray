@@ -22,6 +22,7 @@ namespace manta {
 
 		virtual GPUMemory *createMemoryBuffer(unsigned int size, GPUMemory::MODE mode);
 		virtual GPUKernel *createKernel(const char *name, const void *optionalData = nullptr);
+		virtual const char *getDeviceName() const;
 
 		virtual void destroy();
 		
@@ -45,6 +46,8 @@ namespace manta {
 
 		std::vector<GPUMemory *>m_memoryBuffers;
 		std::vector<GPUKernel *>m_kernels;
+
+		char m_deviceName[128];
 	};
 
 } /* namespace manta */
