@@ -119,6 +119,7 @@ void manta::RayTracer::startWorkers() {
 	int workerCount = m_threadCount;
 
 	for (int i = 0; i < workerCount; i++) {
+		std::cout << "starting worker" << i << std::endl;
 		m_workers[i].start(m_multithreaded);
 	}
 }
@@ -161,11 +162,9 @@ void manta::RayTracer::depthCull(const Scene *scene, const LightRay *ray, SceneO
 
 		if (intersection.m_intersection) {
 			if (intersection.m_depth < minDepth) {
-				if (intersection.m_depth >= 1E-5) {
-					minDepth = intersection.m_depth;
-					currentClosest = object;
-					closestIntersection = intersection;
-				}
+				minDepth = intersection.m_depth;
+				currentClosest = object;
+				closestIntersection = intersection;
 			}
 		}
 	}

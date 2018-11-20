@@ -22,7 +22,7 @@ void manta::SimpleSpecularDiffuseMaterial::integrateRay(LightRay * ray, const Ra
 	if (_rayEmitter != nullptr) {
 		MonteCarloSpecularDiffuseGroup *rayEmitter = (MonteCarloSpecularDiffuseGroup *)_rayEmitter;
 		SimpleRayEmitter *specular = rayEmitter->m_specularEmitter;
-		SimpleMonteCarloEmitter *diffuse = rayEmitter->m_diffuseEmitter;
+		BatchedMonteCarloEmitter *diffuse = rayEmitter->m_diffuseEmitter;
 
 		if (specular != nullptr) {
 			LightRay *reflectedRay = specular->getRay();
@@ -30,8 +30,8 @@ void manta::SimpleSpecularDiffuseMaterial::integrateRay(LightRay * ray, const Ra
 		}
 
 		if (diffuse != nullptr) {
-			LightRay *reflectedRay = diffuse->getRay();
-			addedLight = math::add(addedLight, math::mul(m_diffuseColor, reflectedRay->getIntensity()));
+			math::Vector ave = diffuse->getAverageIntensity();
+			addedLight = math::add(addedLight, math::mul(m_diffuseColor, diffuse->getAverageIntensity()));
 		}
 	}
 
@@ -90,9 +90,26 @@ void manta::SimpleSpecularDiffuseMaterial::setAutoDisableEmitters(bool autoDisab
 	}
 }
 
+int manta::SimpleSpecularDiffuseMaterial::getDiffuseSampleCount(int degree) const {
+	// TODO: add logic to change the sample count as the degree changes
+	switch (degree) {
+	case 1:
+		return 2;
+	case 2:
+		return 1;
+	case 3:
+		return 1;
+	case 4:
+		return 1;
+	}
+}
+
 void manta::SimpleSpecularDiffuseMaterial::preconfigureEmitterGroup(RayEmitterGroup * _group, int degree) const {
 	MonteCarloSpecularDiffuseGroup *group = (MonteCarloSpecularDiffuseGroup *)_group;
-	if (degree >= m_maxDiffuseDegree || !m_enableDiffuse) group->setDiffuseEnabled(false);
+
+	int diffuseSamples = getDiffuseSampleCount(degree);
+
+	if (degree >= m_maxDiffuseDegree || !m_enableDiffuse || diffuseSamples <= 0) group->setDiffuseEnabled(false);
 	else group->setDiffuseEnabled(true);
 
 	if (degree >= m_maxSpecularDegree || !m_enableSpecular) group->setSpecularEnabled(false);
@@ -110,10 +127,13 @@ manta::RayEmitterGroup * manta::SimpleSpecularDiffuseMaterial::generateRayEmitte
 	math::Vector biasPoint = math::add(intersectionPoint->m_position, math::mul(intersectionPoint->m_normal, math::loadScalar(0.001f)));
 	MonteCarloSpecularDiffuseGroup *newEmitter = createEmitterGroup<MonteCarloSpecularDiffuseGroup>(degree, stackAllocator);
 
-	if (degree < m_maxDiffuseDegree && m_enableDiffuse) {
+	int diffuseSamples = getDiffuseSampleCount(degree);
+
+	if (degree < m_maxDiffuseDegree && m_enableDiffuse && diffuseSamples > 0) {
 		newEmitter->m_diffuseEmitter->setNormal(intersectionPoint->m_normal);
 		newEmitter->m_diffuseEmitter->setIncident(ray->getDirection());
 		newEmitter->m_diffuseEmitter->setPosition(biasPoint);
+		newEmitter->m_diffuseEmitter->setSampleCount(diffuseSamples);
 	}
 	
 	if (degree < m_maxSpecularDegree && m_enableSpecular) {
