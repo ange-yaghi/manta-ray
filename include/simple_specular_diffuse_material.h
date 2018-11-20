@@ -26,6 +26,8 @@ namespace manta {
 
 		void setAutoDisableEmitters(bool autoDisableEmitters);
 
+		int getDiffuseSampleCount(int degree) const;
+
 	protected:
 		int m_maxDiffuseDegree;
 		int m_maxSpecularDegree;
