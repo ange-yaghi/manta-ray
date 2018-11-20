@@ -102,16 +102,16 @@ void manta::GPUManagerOpenCL::destroy() {
 	clFlush(m_commandQueue);
 	clFinish(m_commandQueue);
 
-	int kernelCount = m_kernels.size();
-	for (int i = 0; i < kernelCount; i++) {
+	size_t kernelCount = m_kernels.size();
+	for (size_t i = 0; i < kernelCount; i++) {
 		m_kernels[i]->free();
 		delete m_kernels[i];
 	}
 
 	clReleaseProgram(m_program);
 
-	int memoryBufferCount = m_memoryBuffers.size();
-	for (int i = 0; i < memoryBufferCount; i++) {
+	size_t memoryBufferCount = m_memoryBuffers.size();
+	for (size_t i = 0; i < memoryBufferCount; i++) {
 		m_memoryBuffers[i]->free();
 		delete m_memoryBuffers[i];
 	}

@@ -148,7 +148,7 @@ void manta::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolutionY
 	
 	// Create the raytracer
 	RayTracer rayTracer;
-	rayTracer.initialize(500 * MB, 50 * MB, 12, 10000, true);
+	rayTracer.initialize(500 * MB, 100 * MB, 12, 10000, true);
 	rayTracer.setBackgroundColor(getColor(135, 206, 235));
 	rayTracer.traceAll(&scene, &camera);
 
@@ -157,10 +157,14 @@ void manta::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolutionY
 
 	for (int i = 0; i < resolutionY; i++) {
 		for (int j = 0; j < resolutionX; j++) {
-			math::Vector v = ((CameraRayEmitter *)(camera.getEmitters()[i * resolutionX + j]))->getIntensity();
-			math::real r = math::getX(v);
-			math::real g = math::getY(v);
-			math::real b = math::getZ(v);
+			math::Vector v = math::constants::Zero;
+			
+			if (camera.getEmitters()[i * resolutionX + j] != nullptr) {
+				v = ((CameraRayEmitter *)(camera.getEmitters()[i * resolutionX + j]))->getIntensity();
+				math::real r = math::getX(v);
+				math::real g = math::getY(v);
+				math::real b = math::getZ(v);
+			}
 
 			pixels[i * resolutionX + j] = v;
 		}
@@ -168,7 +172,9 @@ void manta::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolutionY
 
 	// Clean everything up
 	for (int i = camera.getEmitterCount() - 1; i >= 0; i--) {
-		((CameraRayEmitter *)(camera.getEmitters()[i]))->destroyRays();
+		if (camera.getEmitters()[i] != nullptr) {
+			((CameraRayEmitter *)(camera.getEmitters()[i]))->destroyRays();
+		}
 	}
 
 	SaveImageData(pixels, resolutionX, resolutionY, "test.bmp");

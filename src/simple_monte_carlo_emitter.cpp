@@ -13,7 +13,6 @@ manta::SimpleMonteCarloEmitter::SimpleMonteCarloEmitter() {
 }
 
 manta::SimpleMonteCarloEmitter::~SimpleMonteCarloEmitter() {
-
 }
 
 void manta::SimpleMonteCarloEmitter::generateRays() {
