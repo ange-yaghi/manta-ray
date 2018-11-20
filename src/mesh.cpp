@@ -120,7 +120,7 @@ bool manta::Mesh::detectIntersection(int faceIndex, math::real earlyExitDepthHin
 
 	math::real depth_s = math::getScalar(depth);
 
-	constexpr math::real bias = -1E-2;
+	constexpr math::real bias = 0;
 
 	// This ray either does not intersect the plane or intersects at a depth that is further than the early exit hint
 	if (depth_s <= (math::real)0.0 || depth_s > earlyExitDepthHint) return false;

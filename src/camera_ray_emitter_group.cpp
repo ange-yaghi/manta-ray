@@ -16,7 +16,6 @@ void manta::CameraRayEmitterGroup::createAllEmitters() {
 	float yIncrement = m_planeHeight / m_resolutionY;
 
 	initializeEmitters(nRays);
-	//initializeRays(1);
 
 	math::Vector right = math::cross(m_direction, m_up);
 
@@ -33,11 +32,9 @@ void manta::CameraRayEmitterGroup::createAllEmitters() {
 	}
 
 	math::Vector planeCenter = math::add(m_position, math::mul(m_direction, math::loadScalar(m_planeDistance)));
-	// 1015, 1042
+
 	for (int i = 0; i < m_resolutionY; i++) {
 		for (int j = 0; j < m_resolutionX; j++) {
-			//if (j != 966 || i != 1324) continue;
-
 			CameraRayEmitter *newEmitter = createEmitter<CameraRayEmitter>();
 			m_rayEmitters[i * m_resolutionX + j] = (RayEmitter *)newEmitter;
 
@@ -48,8 +45,6 @@ void manta::CameraRayEmitterGroup::createAllEmitters() {
 			loc = math::sub(loc, math::mul(m_up, math::loadScalar(y - m_planeHeight / 2.0f)));
 			loc = math::add(loc, planeCenter);
 
-			//LightRay *ray = &rays[0];  
-			//LightRay *ray = &rays[i * m_resolutionX + j];
 			math::Vector direction = math::sub(loc, m_position);
 
 			newEmitter->setStartDirection(direction);
@@ -59,9 +54,6 @@ void manta::CameraRayEmitterGroup::createAllEmitters() {
 			newEmitter->setSamplesPerRay(m_samplesPerPixel);
 
 			direction = math::normalize(direction);
-
-			//ray->setDirection(direction);
-			//ray->setSource(m_position);
 
 			newEmitter->setDirection(direction);
 			newEmitter->setPosition(m_position);

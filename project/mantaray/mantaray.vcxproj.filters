@@ -157,6 +157,12 @@
     <Filter Include="Source Files\demos">
       <UniqueIdentifier>{68fa0b6b-71c9-429d-8f4f-1cc5e3a3a166}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\emitter\batched-monte-carlo-emitter">
+      <UniqueIdentifier>{5013209d-d19f-492e-9a15-cb8852d48ce3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\emitter\batched-monte-carlo-emitter">
+      <UniqueIdentifier>{3533b5d3-134c-490d-8027-c5c721d8c61c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\main.cpp">
@@ -275,6 +281,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\demos.cpp">
       <Filter>Source Files\demos</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\batched_monte_carlo_emitter.cpp">
+      <Filter>Source Files\emitter\batched-monte-carlo-emitter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -421,6 +430,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\demos.h">
       <Filter>Header Files\demos</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\batched_monte_carlo_emitter.h">
+      <Filter>Header Files\emitter\batched-monte-carlo-emitter</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

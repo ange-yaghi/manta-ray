@@ -4,6 +4,9 @@
 #include <assert.h>
 #include <new>
 
+#define ENABLE_BOUNDS_CHECKING
+#define ENABLE_LEDGER
+
 namespace manta {
 
 	class StackAllocator {
@@ -14,9 +17,10 @@ namespace manta {
 		void initialize(unsigned int size);
 
 		void *allocate(unsigned int size, unsigned int alignment = 1) {
-#ifdef _DEBUG
+#ifdef ENABLE_LEDGER
 			m_allocationLedger++;
-#endif
+#endif /* ENABLE_LEDGER */
+
 			void *realAddress = m_stackPointer;
 
 			// Find an aligned address
@@ -27,6 +31,10 @@ namespace manta {
 
 			void *newObject = basePointer;
 
+#ifdef ENABLE_BOUNDS_CHECKING
+			assert(((unsigned __int64)newObject - (unsigned __int64)m_buffer) < m_size);
+#endif
+
 			// Update previous block pointers
 			m_stackPointer = (void *)((char *)basePointer + size);
 
@@ -34,7 +42,7 @@ namespace manta {
 		}
 
 		void free(void *memory) {
-#ifdef _DEBUG
+#ifdef ENABLE_LEDGER
 			m_allocationLedger--;
 			assert(m_allocationLedger >= 0);
 #endif

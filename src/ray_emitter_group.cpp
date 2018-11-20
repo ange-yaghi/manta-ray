@@ -16,13 +16,15 @@ void manta::RayEmitterGroup::destroyEmitters() {
 
 	// Make sure to destroy the emitters in reverse
 	for (int i = m_rayEmitterCount - 1; i >= 0; i--) {
-		m_rayEmitters[i]->~RayEmitter();
+		if (m_rayEmitters[i] != nullptr) {
+			m_rayEmitters[i]->~RayEmitter();
 
-		if (m_stackAllocator == nullptr) {
-			_aligned_free((void *)m_rayEmitters[i]);
-		}
-		else {
-			m_stackAllocator->free((void *)m_rayEmitters[i]);
+			if (m_stackAllocator == nullptr) {
+				_aligned_free((void *)m_rayEmitters[i]);
+			}
+			else {
+				m_stackAllocator->free((void *)m_rayEmitters[i]);
+			}
 		}
 	}
 

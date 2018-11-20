@@ -71,9 +71,12 @@ void manta::Worker::doJob(const Job *job) {
 
 	for (int i = job->start; i <= job->end; i++) {
 		RayEmitter *emitter = emitters[i];
-		emitter->setStackAllocator(m_stack);
-		emitter->generateRays();
-		m_rayTracer->traceRayEmitter(job->scene, emitter, m_stack);
+
+		if (emitter != nullptr) {
+			emitter->setStackAllocator(m_stack);
+			emitter->generateRays();
+			m_rayTracer->traceRayEmitter(job->scene, emitter, m_stack);
+		}
 		m_rayTracer->incrementRayCompletion(job);
 	}
 }
