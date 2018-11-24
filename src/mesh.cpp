@@ -2,37 +2,38 @@
 
 #include <light_ray.h>
 #include <intersection_point.h>
+#include <obj_file_loader.h>
 
 manta::Mesh::Mesh() {
 	m_faces = nullptr;
 	m_precomputedValues = nullptr;
 	m_vertices = nullptr;
+	m_normals = nullptr;
 
 	m_fastIntersectEnabled = false;
 	m_fastIntersectRadius = (math::real)0.0;
+
+	m_perVertexNormals = false;
 }
 
 manta::Mesh::~Mesh() {
 	delete[] m_faces;
 	delete[] m_precomputedValues;
 	delete[] m_vertices;
+	delete[] m_normals;
 }
 
-void manta::Mesh::initialize(int faceCount, int vertexCount) {
+void manta::Mesh::initialize(int faceCount, int vertexCount, int normalCount) {
 	m_faces = new Face[faceCount];
-	m_vertices = new SimpleVertex[vertexCount];
+	m_vertices = new math::Vector[vertexCount];
+
+	if (normalCount > 0) {
+		m_normals = new math::Vector[normalCount];
+	}
 
 	m_faceCount = faceCount;
 	m_vertexCount = vertexCount;
-}
-
-void manta::Mesh::fixNormals() {
-	for (int i = 0; i < m_faceCount; i++) {
-		math::Vector u = m_vertices[m_faces[i].u].location;
-		math::Vector v = m_vertices[m_faces[i].v].location;
-		math::Vector w = m_vertices[m_faces[i].w].location;
-		math::Vector normal = math::cross(math::sub(v, u), math::sub(w, u));
-	}
+	m_normalCount = normalCount;
 }
 
 void manta::Mesh::precomputeValues() {
@@ -40,9 +41,9 @@ void manta::Mesh::precomputeValues() {
 
 	for (int i = 0; i < m_faceCount; i++) {
 		PrecomputedValues *cache = &m_precomputedValues[i];
-		math::Vector u = m_vertices[m_faces[i].u].location;
-		math::Vector v = m_vertices[m_faces[i].v].location;
-		math::Vector w = m_vertices[m_faces[i].w].location;
+		math::Vector u = m_vertices[m_faces[i].u];
+		math::Vector v = m_vertices[m_faces[i].v];
+		math::Vector w = m_vertices[m_faces[i].w];
 
 		math::Vector normal = math::cross(math::sub(v, u), math::sub(w, u));
 		//computePlane(normal, u, &cache->plane);
@@ -106,6 +107,38 @@ bool manta::Mesh::fastIntersection(const LightRay *ray) const {
 	else return true;
 }
 
+void manta::Mesh::loadObjFileData(ObjFileLoader *data) {
+	initialize(data->getFaceCount(), data->getVertexCount(), data->getNormalCount());
+
+	for (unsigned int i = 0; i < data->getFaceCount(); i++) {
+		ObjFace *face = data->getFace(i);
+		m_faces[i].u = face->v1 - 1;
+		m_faces[i].v = face->v2 - 1;
+		m_faces[i].w = face->v3 - 1;
+
+		m_faces[i].nu = face->vn1 - 1;
+		m_faces[i].nv = face->vn2 - 1;
+		m_faces[i].nw = face->vn3 - 1;
+	}
+
+	for (unsigned int i = 0; i < data->getVertexCount(); i++) {
+		math::Vector3 *v = data->getVertex(i);
+		m_vertices[i] = math::loadVector(*v);
+	}
+
+	if (data->getNormalCount() > 0) {
+		for (unsigned int i = 0; i < data->getNormalCount(); i++) {
+			math::Vector3 *n = data->getNormal(i);
+			m_normals[i] = math::loadVector(*n);
+		}
+		m_perVertexNormals = true;
+	}
+	else {
+		m_perVertexNormals = false;
+	}
+	precomputeValues();
+}
+
 bool manta::Mesh::detectIntersection(int faceIndex, math::real earlyExitDepthHint, const math::Vector &rayDir, const math::Vector &rayOrigin, IntersectionPoint *p) const {
 	PrecomputedValues &cache = m_precomputedValues[faceIndex];
 
@@ -120,7 +153,7 @@ bool manta::Mesh::detectIntersection(int faceIndex, math::real earlyExitDepthHin
 
 	math::real depth_s = math::getScalar(depth);
 
-	constexpr math::real bias = 0;
+	constexpr math::real bias = -1e-2;
 
 	// This ray either does not intersect the plane or intersects at a depth that is further than the early exit hint
 	if (depth_s <= (math::real)0.0 || depth_s > earlyExitDepthHint) return false;
@@ -139,11 +172,27 @@ bool manta::Mesh::detectIntersection(int faceIndex, math::real earlyExitDepthHin
 
 	p->m_depth = depth_s;
 	p->m_intersection = true;
+
+	math::Vector vertexNormal;
+	
+	if (m_perVertexNormals) {
+		math::Vector normalU = m_normals[m_faces[faceIndex].nu];
+		math::Vector normalV = m_normals[m_faces[faceIndex].nv];
+		math::Vector normalW = m_normals[m_faces[faceIndex].nw];
+
+		vertexNormal = math::add(math::mul(normalU, math::loadScalar(u)), math::mul(normalV, math::loadScalar(v)));
+		vertexNormal = math::add(vertexNormal, math::mul(normalW, math::loadScalar(w)));
+		vertexNormal = math::normalize(vertexNormal);
+	}
+	else {
+		vertexNormal = cache.normal;
+	}
+
 	// TODO: only apply this logic for two-sided objects
-	if (math::getScalar(math::dot(cache.normal, rayDir)) > (math::real)0.0)
-		p->m_normal = math::negate(cache.normal);
+	if (math::getScalar(math::dot(vertexNormal, rayDir)) > (math::real)0.0)
+		p->m_normal = math::negate(vertexNormal);
 	else
-		p->m_normal = cache.normal; // TODO: calculate smoothed normals based on vertices
+		p->m_normal = vertexNormal; // TODO: calculate smoothed normals based on vertices
 	p->m_position = s;
 
 	return true;

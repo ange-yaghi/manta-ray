@@ -7,15 +7,16 @@
 
 namespace manta {
 
-	struct SimpleVertex {
-		math::Vector location;
-		math::Vector normal;
-	};
+	class ObjFileLoader;
 
 	struct Face {
 		unsigned int u;
 		unsigned int w;
 		unsigned int v;
+
+		unsigned int nu;
+		unsigned int nv;
+		unsigned int nw;
 	};
 
 	struct Plane {
@@ -35,8 +36,7 @@ namespace manta {
 		Mesh();
 		~Mesh();
 
-		void initialize(int faceCount, int vertexCount);
-		void fixNormals();
+		void initialize(int faceCount, int vertexCount, int normalCount);
 		void precomputeValues();
 
 		virtual void detectIntersection(const LightRay *ray, IntersectionPoint *p) const;
@@ -44,9 +44,10 @@ namespace manta {
 
 		int getFaceCount() const { return m_faceCount; }
 		int getVertexCount() const { return m_vertexCount; }
+		int getNormalCount() const { return m_normalCount; }
 
 		Face *getFaces() { return m_faces; }
-		SimpleVertex *getVertices() { return m_vertices; }
+		math::Vector *getVertices() { return m_vertices; }
 
 		void setFastIntersectEnabled(bool fastIntersect) { m_fastIntersectEnabled = fastIntersect; }
 		bool isFastIntersectEnabled() const { return m_fastIntersectEnabled; }
@@ -55,22 +56,28 @@ namespace manta {
 
 		const PrecomputedValues *getPrecomputedValues() const { return m_precomputedValues; }
 
+		void loadObjFileData(ObjFileLoader *data);
+
 	protected:
 		bool detectIntersection(int faceIndex, math::real earlyExitDepthHint, const math::Vector &rayDir, const math::Vector &rayOrigin, IntersectionPoint *p) const;
 
 		void computePlane(const math::Vector &n, const math::Vector &p, Plane *plane) const;
 
 		Face *m_faces;
-		SimpleVertex *m_vertices;
+		math::Vector *m_vertices;
+		math::Vector *m_normals;
 
 		int m_faceCount;
 		int m_vertexCount;
+		int m_normalCount;
 
 		// Precomputed values
 		PrecomputedValues *m_precomputedValues;
 
 		math::real m_fastIntersectRadius;
 		bool m_fastIntersectEnabled;
+
+		bool m_perVertexNormals;
 
 	};
 

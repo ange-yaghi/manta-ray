@@ -30,11 +30,14 @@ namespace manta {
 
 		bool readObjFile(const char *fname);
 
-		unsigned int getVertexCount() { return (unsigned int)m_vertices.size(); }
-		unsigned int getFaceCount() { return (unsigned int)m_faces.size(); }
+		unsigned int getVertexCount() const { return (unsigned int)m_vertices.size(); }
+		unsigned int getFaceCount() const { return (unsigned int)m_faces.size(); }
+		unsigned int getNormalCount() const { return (unsigned int)m_normals.size(); }
 
 		ObjFace *getFace(unsigned int i) { return m_faces[i]; }
 		math::Vector3 *getVertex(unsigned int i) { return m_vertices[i]; }
+		math::Vector3 *getNormal(unsigned int i) { return m_normals[i]; }
+		math::Vector2 *getTexCoords(unsigned int i) { return m_texCoords[i]; }
 
 	protected:
 		bool readObjFile(std::istream &stream);

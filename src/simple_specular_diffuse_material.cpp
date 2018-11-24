@@ -32,15 +32,20 @@ void manta::SimpleSpecularDiffuseMaterial::integrateRay(LightRay * ray, const Ra
 		if (diffuse != nullptr) {
 			math::Vector ave = diffuse->getAverageIntensity();
 			addedLight = math::add(addedLight, math::mul(m_diffuseColor, diffuse->getAverageIntensity()));
+
+			ray->setIntensity(
+				diffuse->getNormal()
+			);
 		}
 	}
 
+	/*
 	ray->setIntensity(
 		math::add(
 			addedLight,
 			m_emission
 		)
-	);
+	);*/
 }
 
 void manta::SimpleSpecularDiffuseMaterial::setSpecularColor(const math::Vector &specular) {
@@ -65,7 +70,7 @@ void manta::SimpleSpecularDiffuseMaterial::setDiffuseColor(const math::Vector &d
 
 	if (m_autoDisableEmitters) {
 		double magnitude = math::getScalar(math::magnitudeSquared3(diffuse));
-		if (magnitude < 1e-4) {
+		if (magnitude < 1e-8) {
 			m_enableDiffuse = false;
 		}
 		else {
@@ -94,13 +99,13 @@ int manta::SimpleSpecularDiffuseMaterial::getDiffuseSampleCount(int degree) cons
 	// TODO: add logic to change the sample count as the degree changes
 	switch (degree) {
 	case 1:
-		return 2;
+		return 1;
 	case 2:
-		return 1;
+		return 0;
 	case 3:
-		return 1;
+		return 0;
 	case 4:
-		return 1;
+		return 0;
 	}
 }
 
