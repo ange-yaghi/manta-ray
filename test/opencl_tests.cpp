@@ -127,23 +127,7 @@ TEST(OpenCLTests, OpenCLIntersectionTest) {
 	bool result = teapotObj.readObjFile("../../../models/teapot.obj");
 
 	Mesh mesh;
-	mesh.initialize(teapotObj.getFaceCount(), teapotObj.getVertexCount());
-
-	Face *tFaces = mesh.getFaces();
-	SimpleVertex *tVerts = mesh.getVertices();
-
-	for (unsigned int i = 0; i < mesh.getFaceCount(); i++) {
-		ObjFace *face = teapotObj.getFace(i);
-		tFaces[i].u = face->v1 - 1;
-		tFaces[i].v = face->v2 - 1;
-		tFaces[i].w = face->v3 - 1;
-	}
-
-	for (unsigned int i = 0; i < teapotObj.getVertexCount(); i++) {
-		math::Vector3 *v = teapotObj.getVertex(i);
-		tVerts[i].location = math::loadVector(*v);
-	}
-	mesh.precomputeValues();
+	mesh.loadObjFileData(&teapotObj);
 	mesh.setFastIntersectEnabled(false);
 
 	// Set up opencl device
