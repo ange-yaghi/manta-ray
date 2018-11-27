@@ -39,7 +39,8 @@ namespace manta {
 		void initialize(int faceCount, int vertexCount, int normalCount);
 		void precomputeValues();
 
-		virtual void detectIntersection(const LightRay *ray, IntersectionPoint *p) const;
+		virtual math::real coarseIntersection(const LightRay *ray, IntersectionList *l, SceneObject *object, math::real depthHint, math::real epsilon) const;
+		virtual void fineIntersection(const LightRay *ray, IntersectionPoint *p, CoarseIntersection *hint) const;
 		virtual bool fastIntersection(const LightRay *ray) const;
 
 		int getFaceCount() const { return m_faceCount; }

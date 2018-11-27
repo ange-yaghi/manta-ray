@@ -16,8 +16,10 @@ namespace manta {
 		SpherePrimitive();
 		~SpherePrimitive();
 
-		virtual void detectIntersection(const LightRay *ray, IntersectionPoint *p) const;
+		virtual math::real coarseIntersection(const LightRay *ray, IntersectionList *l, SceneObject *object, math::real depthHint, math::real epsilon) const;
+		virtual void fineIntersection(const LightRay *ray, IntersectionPoint *p, CoarseIntersection *hint) const;
 		virtual bool fastIntersection(const LightRay *ray) const;
+
 		void detectIntersection(const LightRay *ray, IntersectionPoint *convex, IntersectionPoint *concave) const;
 
 		math::real getRadius() const { return m_radius; }

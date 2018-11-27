@@ -16,6 +16,7 @@ namespace manta {
 	class RayEmitterGroup;
 	class SceneObject;
 	struct IntersectionPoint;
+	class IntersectionList;
 	class Worker;
 
 	class RayTracer {
@@ -51,7 +52,8 @@ namespace manta {
 		void destroyWorkers();
 
 	protected:
-		void depthCull(const Scene *scene, const LightRay *ray, SceneObject **closestObject, IntersectionPoint *point) const;
+		void depthCull(const Scene *scene, const LightRay *ray, SceneObject **closestObject, IntersectionPoint *point, StackAllocator *s) const;
+		void fluxMultisample(const LightRay *ray, IntersectionList *list, IntersectionPoint *point, SceneObject **closestObject, math::real minDepth, math::real epsilon, StackAllocator *s) const;
 
 		void traceRay(const Scene *scene, LightRay *ray, int degree, StackAllocator *s) const;
 		void traceRayEmitterGroup(const Scene *scene, const RayEmitterGroup *rayEmitterGroup, StackAllocator *s) const;

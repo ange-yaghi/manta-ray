@@ -32,7 +32,7 @@ namespace manta {
 			void *newObject = basePointer;
 
 #ifdef ENABLE_BOUNDS_CHECKING
-			assert(((unsigned __int64)newObject - (unsigned __int64)m_buffer) < m_size);
+			assert(((unsigned __int64)((char *)newObject) - ((unsigned __int64)(char *)m_buffer) + size) < m_size);
 #endif
 
 			// Update previous block pointers

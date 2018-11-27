@@ -3,6 +3,7 @@
 #include <light_ray.h>
 #include <intersection_point.h>
 #include <obj_file_loader.h>
+#include <intersection_list.h>
 
 manta::Mesh::Mesh() {
 	m_faces = nullptr;
@@ -68,17 +69,34 @@ void manta::Mesh::precomputeValues() {
 	}
 }
 
-void manta::Mesh::detectIntersection(const LightRay *ray, IntersectionPoint *p) const {
-	p->m_intersection = false;
-	math::real closestDepth = (math::real)DBL_MAX;
+manta::math::real manta::Mesh::coarseIntersection(const LightRay *ray, IntersectionList *l, SceneObject *object, math::real depthHint, math::real epsilon) const {
+	math::real closestDepth = depthHint;
 	math::Vector rayDir = ray->getDirection();
 	math::Vector raySource = ray->getSource();
 
+	IntersectionPoint p;
+
 	for (int i = 0; i < m_faceCount; i++) {
-		if (detectIntersection(i, closestDepth, rayDir, raySource, p)) {
-			closestDepth = p->m_depth;
+		if (detectIntersection(i, closestDepth + epsilon, rayDir, raySource, &p)) {
+			if (p.m_depth < closestDepth) {
+				closestDepth = p.m_depth;
+			}
+			CoarseIntersection *intersection = l->newIntersection();
+			intersection->depth = p.m_depth;
+			intersection->locationHint = i; // Face index
+			intersection->sceneObject = object;
 		}
 	}
+
+	return closestDepth;
+}
+
+void manta::Mesh::fineIntersection(const LightRay *ray, IntersectionPoint *p, CoarseIntersection *hint) const {
+	p->m_intersection = false;
+	math::Vector rayDir = ray->getDirection();
+	math::Vector raySource = ray->getSource();
+
+	detectIntersection(hint->locationHint, math::REAL_MAX, rayDir, raySource, p);
 }
 
 bool manta::Mesh::fastIntersection(const LightRay *ray) const {
@@ -153,7 +171,7 @@ bool manta::Mesh::detectIntersection(int faceIndex, math::real earlyExitDepthHin
 
 	math::real depth_s = math::getScalar(depth);
 
-	constexpr math::real bias = -1e-2;
+	constexpr math::real bias = 0.0;
 
 	// This ray either does not intersect the plane or intersects at a depth that is further than the early exit hint
 	if (depth_s <= (math::real)0.0 || depth_s > earlyExitDepthHint) return false;
@@ -189,10 +207,14 @@ bool manta::Mesh::detectIntersection(int faceIndex, math::real earlyExitDepthHin
 	}
 
 	// TODO: only apply this logic for two-sided objects
-	if (math::getScalar(math::dot(vertexNormal, rayDir)) > (math::real)0.0)
-		p->m_normal = math::negate(vertexNormal);
-	else
-		p->m_normal = vertexNormal; // TODO: calculate smoothed normals based on vertices
+	if (math::getScalar(math::dot(vertexNormal, rayDir)) > (math::real)0.0) {
+		p->m_vertexNormal = math::negate(vertexNormal);
+		p->m_faceNormal = math::negate(cache.normal);
+	}
+	else {
+		p->m_vertexNormal = vertexNormal;
+		p->m_faceNormal = cache.normal;
+	}
 	p->m_position = s;
 
 	return true;

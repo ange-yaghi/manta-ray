@@ -475,7 +475,7 @@ void manta::cubeTestDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 
 	// Create the raytracer
 	RayTracer rayTracer;
-	rayTracer.initialize(500 * MB, 50 * MB, 12, 10000, true);
+	rayTracer.initialize(500 * MB, 500 * MB, 1, 10000, false);
 	rayTracer.setBackgroundColor(getColor(0, 0, 0));
 	rayTracer.traceAll(&scene, &camera);
 
