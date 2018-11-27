@@ -29,6 +29,7 @@
     <ClCompile Include="..\..\src\gpu_manager_opencl.cpp" />
     <ClCompile Include="..\..\src\gpu_memory_opencl.cpp" />
     <ClCompile Include="..\..\src\image_handling.cpp" />
+    <ClCompile Include="..\..\src\intersection_list.cpp" />
     <ClCompile Include="..\..\src\job_queue.cpp" />
     <ClCompile Include="..\..\src\lens.cpp" />
     <ClCompile Include="..\..\src\lens_camera_ray_emitter.cpp" />
@@ -74,6 +75,7 @@
     <ClInclude Include="..\..\include\gpu_memory.h" />
     <ClInclude Include="..\..\include\gpu_memory_opencl.h" />
     <ClInclude Include="..\..\include\batched_monte_carlo_emitter.h" />
+    <ClInclude Include="..\..\include\intersection_list.h" />
     <ClInclude Include="..\..\include\job_queue.h" />
     <ClInclude Include="..\..\include\mesh.h" />
     <ClInclude Include="..\..\include\image_handling.h" />

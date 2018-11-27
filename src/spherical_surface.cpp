@@ -36,7 +36,7 @@ bool manta::SphericalSurface::transformLightRay(const LightRay *ray, LightRay *o
 		r = m_ior / (math::real)1.0;
 	}
 
-	math::real c = -math::getScalar(math::dot(ray->getDirection(), point.m_normal));
+	math::real c = -math::getScalar(math::dot(ray->getDirection(), point.m_vertexNormal));
 
 	math::real cos2t = 1 - r * r * (1 - c * c);
 
@@ -50,7 +50,7 @@ bool manta::SphericalSurface::transformLightRay(const LightRay *ray, LightRay *o
 	tdir = math::add(
 		tdir,
 		math::mul(
-			point.m_normal,
+			point.m_vertexNormal,
 			math::loadScalar(c * r - (math::real)sqrt(cos2t))));
 	tdir = math::normalize(tdir);
 

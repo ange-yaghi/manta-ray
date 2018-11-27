@@ -34,7 +34,7 @@ void manta::SimpleSpecularDiffuseMaterial::integrateRay(LightRay * ray, const Ra
 			addedLight = math::add(addedLight, math::mul(m_diffuseColor, diffuse->getAverageIntensity()));
 
 			ray->setIntensity(
-				diffuse->getNormal()
+				math::add(math::mul(diffuse->getNormal(), math::constants::Half), math::loadVector(0.5, 0.5, 0.5))
 			);
 		}
 	}
@@ -128,28 +128,26 @@ manta::RayEmitterGroup * manta::SimpleSpecularDiffuseMaterial::generateRayEmitte
 
 	if (!m_enableDiffuse && !m_enableSpecular) return nullptr;
 
-	// Calculate bias point
-	math::Vector biasPoint = math::add(intersectionPoint->m_position, math::mul(intersectionPoint->m_normal, math::loadScalar(0.001f)));
 	MonteCarloSpecularDiffuseGroup *newEmitter = createEmitterGroup<MonteCarloSpecularDiffuseGroup>(degree, stackAllocator);
 
 	int diffuseSamples = getDiffuseSampleCount(degree);
 
 	if (degree < m_maxDiffuseDegree && m_enableDiffuse && diffuseSamples > 0) {
-		newEmitter->m_diffuseEmitter->setNormal(intersectionPoint->m_normal);
+		newEmitter->m_diffuseEmitter->setNormal(intersectionPoint->m_vertexNormal);
 		newEmitter->m_diffuseEmitter->setIncident(ray->getDirection());
-		newEmitter->m_diffuseEmitter->setPosition(biasPoint);
+		newEmitter->m_diffuseEmitter->setPosition(intersectionPoint->m_position);
 		newEmitter->m_diffuseEmitter->setSampleCount(diffuseSamples);
 	}
 	
 	if (degree < m_maxSpecularDegree && m_enableSpecular) {
-		math::Vector perturb = intersectionPoint->m_normal;
-		math::Vector n_dot_d = math::dot(intersectionPoint->m_normal, ray->getDirection());
+		math::Vector perturb = intersectionPoint->m_vertexNormal;
+		math::Vector n_dot_d = math::dot(intersectionPoint->m_vertexNormal, ray->getDirection());
 		perturb = math::mul(perturb, math::add(n_dot_d, n_dot_d)); // Multiply by 2
 		math::Vector finalDirection = math::sub(ray->getDirection(), perturb);
 		finalDirection = math::normalize(finalDirection);
 
 		newEmitter->m_specularEmitter->setDirection(finalDirection);
-		newEmitter->m_specularEmitter->setPosition(biasPoint);
+		newEmitter->m_specularEmitter->setPosition(intersectionPoint->m_position);
 	}
 
 	return newEmitter;

@@ -31,13 +31,10 @@ manta::RayEmitterGroup * manta::SimpleDiffuseMaterial::generateRayEmittersIntern
 		return nullptr;
 	}
 
-	// Calculate bias point
-	math::Vector biasPoint = math::add(intersectionPoint->m_position, math::mul(intersectionPoint->m_normal, math::loadScalar(0.001f)));
-
 	SimpleMonteCarloEmitterGroup *newEmitter = createEmitterGroup<SimpleMonteCarloEmitterGroup>(degree, stackAllocator);
-	newEmitter->m_simpleRayEmitter->setNormal(intersectionPoint->m_normal);
+	newEmitter->m_simpleRayEmitter->setNormal(intersectionPoint->m_vertexNormal);
 	newEmitter->m_simpleRayEmitter->setIncident(ray->getDirection());
-	newEmitter->m_simpleRayEmitter->setPosition(biasPoint);
+	newEmitter->m_simpleRayEmitter->setPosition(intersectionPoint->m_position);
 
 	return newEmitter;
 }
