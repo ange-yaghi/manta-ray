@@ -8,7 +8,8 @@ namespace manta {
 	struct IntersectionPoint {
 	public:
 		math::Vector m_position;
-		math::Vector m_normal;
+		math::Vector m_vertexNormal;
+		math::Vector m_faceNormal;
 		math::real m_depth;
 
 		bool m_intersection;

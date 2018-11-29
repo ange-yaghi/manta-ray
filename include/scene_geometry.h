@@ -6,14 +6,18 @@
 namespace manta {
 
 	class LightRay;
+	class IntersectionList;
 	struct IntersectionPoint;
+	struct CoarseIntersection;
+	class SceneObject;
 
 	class SceneGeometry {
 	public:
 		SceneGeometry();
 		~SceneGeometry();
 
-		virtual void detectIntersection(const LightRay *ray, IntersectionPoint *p) const = 0;
+		virtual math::real coarseIntersection(const LightRay *ray, IntersectionList *l, SceneObject *object, math::real depthHint, math::real epsilon) const = 0;
+		virtual void fineIntersection(const LightRay *ray, IntersectionPoint *p, CoarseIntersection *hint) const = 0;
 		virtual bool fastIntersection(const LightRay *ray) const = 0;
 
 		void setId(int id);

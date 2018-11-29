@@ -6,10 +6,10 @@
 using namespace manta;
 
 int main() {
-	//simpleRoomDemo(782, 1024, 768); //1024, 768
+	//simpleRoomDemo(20, 1024, 768); //1024, 768
 	//teapotDemo(1, 500, 500);
-	//lampDemo(246, 1024, 768);
-	cubeTestDemo(1, 1024, 768);
+	lampDemo(350, 1024, 768);
+	//cubeTestDemo(1, 1024, 768);
 }
 
 	/*
