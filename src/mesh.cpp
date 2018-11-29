@@ -47,11 +47,11 @@ void manta::Mesh::precomputeValues() {
 		math::Vector w = m_vertices[m_faces[i].w];
 
 		math::Vector normal = math::cross(math::sub(v, u), math::sub(w, u));
-		//computePlane(normal, u, &cache->plane);
 		cache->normal = math::normalize(normal);
 
 		computePlane(math::cross(normal, math::sub(w, v)), v, &cache->edgePlaneVW);
 		computePlane(math::cross(normal, math::sub(u, w)), w, &cache->edgePlaneWU);
+		computePlane(math::cross(normal, math::sub(v, u)), u, &cache->edgePlaneVU);
 
 		// Scale the planes such that the computed barycentric coordinates are correct
 		math::Vector scaleVW = math::loadScalar(
@@ -65,30 +65,33 @@ void manta::Mesh::precomputeValues() {
 		cache->edgePlaneWU.normal = math::div(cache->edgePlaneWU.normal, scaleWU);
 		cache->edgePlaneWU.d /= math::getScalar(scaleWU);
 
+		cache->scaleWU = (math::real)1.0 / math::getScalar(scaleWU);
+		cache->scaleVW = (math::real)1.0 / math::getScalar(scaleVW);
+
 		cache->p0 = u;
 	}
 }
 
 manta::math::real manta::Mesh::coarseIntersection(const LightRay *ray, IntersectionList *l, SceneObject *object, math::real depthHint, math::real epsilon) const {
-	math::real closestDepth = depthHint;
+	//math::real closestDepth = depthHint;
 	math::Vector rayDir = ray->getDirection();
 	math::Vector raySource = ray->getSource();
 
-	IntersectionPoint p;
+	math::real depth;
 
 	for (int i = 0; i < m_faceCount; i++) {
-		if (detectIntersection(i, closestDepth + epsilon, rayDir, raySource, &p)) {
-			if (p.m_depth < closestDepth) {
-				closestDepth = p.m_depth;
-			}
+		if (detectIntersection(i, depthHint + epsilon, rayDir, raySource, &depth, -1E-1)) {
+			//if (p.m_depth < closestDepth) {
+			//	closestDepth = p.m_depth;
+			//}
 			CoarseIntersection *intersection = l->newIntersection();
-			intersection->depth = p.m_depth;
+			intersection->depth = depth;
 			intersection->locationHint = i; // Face index
 			intersection->sceneObject = object;
 		}
 	}
 
-	return closestDepth;
+	return depthHint;
 }
 
 void manta::Mesh::fineIntersection(const LightRay *ray, IntersectionPoint *p, CoarseIntersection *hint) const {
@@ -101,7 +104,7 @@ void manta::Mesh::fineIntersection(const LightRay *ray, IntersectionPoint *p, Co
 
 bool manta::Mesh::fastIntersection(const LightRay *ray) const {
 	if (m_fastIntersectEnabled) {
-		math::Vector d_pos = math::sub(ray->getSource(), m_position);
+		math::Vector d_pos = math::sub(ray->getSource(), m_fastIntersectPosition);
 		math::Vector d_dot_dir = math::dot(d_pos, ray->getDirection());
 		math::Vector mag2 = math::magnitudeSquared3(d_pos);
 
@@ -171,7 +174,7 @@ bool manta::Mesh::detectIntersection(int faceIndex, math::real earlyExitDepthHin
 
 	math::real depth_s = math::getScalar(depth);
 
-	constexpr math::real bias = 0.0;
+	const math::real bias = -1E-6;
 
 	// This ray either does not intersect the plane or intersects at a depth that is further than the early exit hint
 	if (depth_s <= (math::real)0.0 || depth_s > earlyExitDepthHint) return false;
@@ -207,7 +210,7 @@ bool manta::Mesh::detectIntersection(int faceIndex, math::real earlyExitDepthHin
 	}
 
 	// TODO: only apply this logic for two-sided objects
-	if (math::getScalar(math::dot(vertexNormal, rayDir)) > (math::real)0.0) {
+	if (math::getScalar(math::dot(cache.normal, rayDir)) > (math::real)0.0) {
 		p->m_vertexNormal = math::negate(vertexNormal);
 		p->m_faceNormal = math::negate(cache.normal);
 	}
@@ -216,6 +219,40 @@ bool manta::Mesh::detectIntersection(int faceIndex, math::real earlyExitDepthHin
 		p->m_faceNormal = cache.normal;
 	}
 	p->m_position = s;
+
+	return true;
+}
+
+bool manta::Mesh::detectIntersection(int faceIndex, math::real earlyExitDepthHint, const math::Vector &rayDir, const math::Vector &rayOrigin, math::real *depth, math::real delta) const {
+	PrecomputedValues &cache = m_precomputedValues[faceIndex];
+
+	math::Vector denom = math::dot(cache.normal, rayDir);
+
+	// The ray is nearly perpendicular to the plane
+	math::real denom_s = math::getScalar(denom);
+	if (denom_s < 1e-6 && denom_s > -1e-6) return false;
+
+	math::Vector p0r0 = math::sub(cache.p0, rayOrigin);
+	math::Vector d = math::div(math::dot(p0r0, cache.normal), denom);
+
+	math::real depth_s = math::getScalar(d);
+
+	// This ray either does not intersect the plane or intersects at a depth that is further than the early exit hint
+	if (depth_s <= (math::real)0.0 || depth_s > earlyExitDepthHint) return false;
+
+	math::Vector s = math::add(rayOrigin, math::mul(rayDir, d));
+
+	// Compute quasi-barycentric components u, v, w
+	math::real u = math::getScalar(math::dot(s, cache.edgePlaneVW.normal));
+	if (u < (cache.edgePlaneVW.d + delta * cache.scaleVW)) return false;
+
+	math::real v = math::getScalar(math::dot(s, cache.edgePlaneWU.normal));
+	if (v < (cache.edgePlaneWU.d + delta * cache.scaleWU)) return false;
+
+	math::real w = math::getScalar(math::dot(s, cache.edgePlaneVU.normal));
+	if (w < (cache.edgePlaneVU.d + delta)) return false;
+
+	*depth = depth_s;
 
 	return true;
 }

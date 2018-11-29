@@ -147,7 +147,7 @@ void manta::RayTracer::destroyWorkers() {
 void manta::RayTracer::depthCull(const Scene *scene, const LightRay *ray, SceneObject **closestObject, IntersectionPoint *point, StackAllocator *s) const {
 	int objectCount = scene->getSceneObjectCount();
 
-	constexpr math::real epsilon = 1E-4;
+	constexpr math::real epsilon = 1E-3;
 	math::real minDepth = math::REAL_MAX - epsilon;
 	SceneObject *currentClosest = nullptr;
 	//IntersectionPoint closestIntersection;
@@ -163,7 +163,7 @@ void manta::RayTracer::depthCull(const Scene *scene, const LightRay *ray, SceneO
 
 		if (!geometry->fastIntersection(ray)) continue;
 
-		minDepth = geometry->coarseIntersection(ray, &list, object, minDepth, epsilon);
+		geometry->coarseIntersection(ray, &list, object, minDepth, 1E-1);
 	}
 
 	// Refine and resolve the coarse intersections
@@ -205,16 +205,32 @@ void manta::RayTracer::fluxMultisample(const LightRay *ray, IntersectionList *li
 	int intersectionCount = list->getIntersectionCount();
 	CoarseIntersection *closest = nullptr;
 
+	IntersectionPoint *fineIntersections = (IntersectionPoint *)s->allocate(sizeof(IntersectionPoint) * intersectionCount);
+
 	// Count the number of real conflicts
 	for (int i = 0; i < intersectionCount; i++) {
 		CoarseIntersection *c = list->getIntersection(i);
-		if ((c->depth - minDepth) < epsilon) {
-			conflicts++;
+		IntersectionPoint *p = &fineIntersections[i];
 
-			if (closest == nullptr || c->depth < closest->depth) {
+		c->sceneObject->getGeometry()->fineIntersection(ray, p, c);
+
+		if (p->m_intersection) {
+			if (closest == nullptr || p->m_depth < closest->depth) {
 				closest = c;
 			}
 		}
+	}
+
+	if (closest != nullptr) {
+		for (int i = 0; i < intersectionCount; i++) {
+			CoarseIntersection *c = list->getIntersection(i);
+			if (abs(c->depth - closest->depth) < epsilon) {
+				conflicts++;
+			}
+		}
+	}
+	else {
+		conflicts = 0;
 	}
 
 	if (conflicts == 0) {
@@ -232,7 +248,7 @@ void manta::RayTracer::fluxMultisample(const LightRay *ray, IntersectionList *li
 	}
 	else {
 		// There are multiple conflicts that need to be resolved
-		constexpr int SAMPLE_RADIUS = 1;
+		constexpr int SAMPLE_RADIUS = 2;
 		constexpr int SAMPLE_WIDTH = SAMPLE_RADIUS * 2 + 1;
 		constexpr int SAMPLE_HEIGHT = SAMPLE_RADIUS * 2 + 1;
 		constexpr int SAMPLE_COUNT = SAMPLE_WIDTH * SAMPLE_HEIGHT;
@@ -244,7 +260,7 @@ void manta::RayTracer::fluxMultisample(const LightRay *ray, IntersectionList *li
 		// Initialize all intersection points
 		for (int i = 0; i < SAMPLE_WIDTH * SAMPLE_HEIGHT; i++) {
 			samples[i].m_intersection = false;
-			intersectionPointer[i] = 0;
+			intersectionPointer[i] = -1;
 		}
 
 		for (int i = 0; i < intersectionCount; i++) {
@@ -271,7 +287,7 @@ void manta::RayTracer::fluxMultisample(const LightRay *ray, IntersectionList *li
 				IntersectionPoint *sample = &samples[si];
 				for (int k = 0; k < intersectionCount; k++) {
 					CoarseIntersection *c = list->getIntersection(k);
-					if ((c->depth - minDepth) < epsilon) {
+					if (abs(c->depth - closest->depth) < epsilon) {
 						IntersectionPoint p;
 
 						// Create a new ray
@@ -284,9 +300,11 @@ void manta::RayTracer::fluxMultisample(const LightRay *ray, IntersectionList *li
 
 						c->sceneObject->getGeometry()->fineIntersection(&newRay, &p, c);
 
-						if (sample->m_intersection == false || p.m_depth < sample->m_depth) {
-							*sample = p;
-							intersectionPointer[si] = k;
+						if (p.m_intersection) {
+							if (sample->m_intersection == false || p.m_depth < sample->m_depth) {
+								*sample = p;
+								intersectionPointer[si] = k;
+							}
 						}
 					}
 				}
@@ -295,7 +313,9 @@ void manta::RayTracer::fluxMultisample(const LightRay *ray, IntersectionList *li
 
 		// Count the intersections
 		for (int i = 0; i < SAMPLE_COUNT; i++) {
-			sampleTally[intersectionPointer[i]]++;
+			if (intersectionPointer[i] != -1) {
+				sampleTally[intersectionPointer[i]]++;
+			}
 		}
 
 		int highestSampleCount = 0;
@@ -309,22 +329,32 @@ void manta::RayTracer::fluxMultisample(const LightRay *ray, IntersectionList *li
 
 		// Calculate the bias normal
 		math::Vector biasNormal = math::constants::Zero;
-		for (int i = 0; i < intersectionCount; i++) {
-			biasNormal = math::add(biasNormal, math::mul(math::loadScalar((math::real)sampleTally[i]), samples[i].m_faceNormal));
+		math::Vector vertexNormal = math::constants::Zero;
+		for (int i = 0; i < SAMPLE_COUNT; i++) {
+			if (intersectionPointer[i] != -1) {
+				biasNormal = math::add(biasNormal, samples[i].m_faceNormal);
+				vertexNormal = math::add(vertexNormal, samples[i].m_vertexNormal);
+			}
 		}
 		biasNormal = math::normalize(biasNormal);
+		vertexNormal = math::normalize(vertexNormal);
 
 		list->getIntersection(preferredIntersection)->sceneObject->getGeometry()->fineIntersection(ray, point, list->getIntersection(preferredIntersection));
 		*closestObject = list->getIntersection(preferredIntersection)->sceneObject;
 
 		// Bias the position of the intersection point
 		point->m_position = math::add(point->m_position, math::mul(math::loadScalar(SURFACE_BIAS), biasNormal));
+		point->m_faceNormal = biasNormal;
+		point->m_vertexNormal = vertexNormal;
+		//point->m_vertexNormal = math::loadVector(-1.0, -1.0, -1.0);
 
 		// Cleanup the allocated memory
 		s->free((void *)sampleTally);
 		s->free((void *)intersectionPointer);
 		s->free((void *)samples);
 	}
+
+	s->free((void *)fineIntersections);
 }
 
 void manta::RayTracer::traceRay(const Scene *scene, LightRay *ray, int degree, StackAllocator *stack) const {

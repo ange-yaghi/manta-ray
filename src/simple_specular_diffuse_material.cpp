@@ -4,8 +4,10 @@
 #include <intersection_point.h>
 #include <monte_carlo_specular_diffuse_group.h>
 
+#include <iostream>
+
 manta::SimpleSpecularDiffuseMaterial::SimpleSpecularDiffuseMaterial() {
-	m_maxDiffuseDegree = 4;
+	m_maxDiffuseDegree = 5;
 	m_maxSpecularDegree = 5;
 
 	m_autoDisableEmitters = true;
@@ -31,21 +33,24 @@ void manta::SimpleSpecularDiffuseMaterial::integrateRay(LightRay * ray, const Ra
 
 		if (diffuse != nullptr) {
 			math::Vector ave = diffuse->getAverageIntensity();
-			addedLight = math::add(addedLight, math::mul(m_diffuseColor, diffuse->getAverageIntensity()));
+			addedLight = math::add(addedLight, math::mul(m_diffuseColor, ave));
 
-			ray->setIntensity(
-				math::add(math::mul(diffuse->getNormal(), math::constants::Half), math::loadVector(0.5, 0.5, 0.5))
-			);
+			//if (math::getX(diffuse->getAverageIntensity()) > 0.5) {
+				//ray->setIntensity(
+				//	math::add(math::mul(diffuse->getRays()[0].getDirection(), math::constants::Half), math::loadVector(0.5, 0.5, 0.5))
+				//);
+
+				//std::cout << math::getX(diffuse->getRays()[0].getDirection()) << ", " << math::getY(diffuse->getRays()[0].getDirection()) << ", " << math::getZ(diffuse->getRays()[0].getDirection());
+			//}
 		}
 	}
 
-	/*
 	ray->setIntensity(
 		math::add(
 			addedLight,
 			m_emission
 		)
-	);*/
+	);
 }
 
 void manta::SimpleSpecularDiffuseMaterial::setSpecularColor(const math::Vector &specular) {
@@ -99,13 +104,15 @@ int manta::SimpleSpecularDiffuseMaterial::getDiffuseSampleCount(int degree) cons
 	// TODO: add logic to change the sample count as the degree changes
 	switch (degree) {
 	case 1:
-		return 1;
+		return 2;
 	case 2:
-		return 0;
+		return 1;
 	case 3:
-		return 0;
+		return 1;
 	case 4:
-		return 0;
+		return 1;
+	case 5:
+		return 1;
 	}
 }
 
