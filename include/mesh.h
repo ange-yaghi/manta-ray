@@ -27,8 +27,11 @@ namespace manta {
 	struct PrecomputedValues {
 		Plane edgePlaneVW;
 		Plane edgePlaneWU;
+		Plane edgePlaneVU; // Used only for coarse test
 		math::Vector normal;
 		math::Vector p0;
+		math::real scaleVW;
+		math::real scaleWU;
 	};
 
 	class Mesh : public SceneGeometry {
@@ -54,6 +57,7 @@ namespace manta {
 		bool isFastIntersectEnabled() const { return m_fastIntersectEnabled; }
 
 		void setFastIntersectRadius(math::real radius) { m_fastIntersectRadius = radius; }
+		void setFastIntersectPosition(math::Vector pos) { m_fastIntersectPosition = pos; }
 
 		const PrecomputedValues *getPrecomputedValues() const { return m_precomputedValues; }
 
@@ -61,6 +65,7 @@ namespace manta {
 
 	protected:
 		bool detectIntersection(int faceIndex, math::real earlyExitDepthHint, const math::Vector &rayDir, const math::Vector &rayOrigin, IntersectionPoint *p) const;
+		bool detectIntersection(int faceIndex, math::real earlyExitDepthHint, const math::Vector &rayDir, const math::Vector &rayOrigin, math::real *depth, math::real delta) const;
 
 		void computePlane(const math::Vector &n, const math::Vector &p, Plane *plane) const;
 
@@ -76,6 +81,7 @@ namespace manta {
 		PrecomputedValues *m_precomputedValues;
 
 		math::real m_fastIntersectRadius;
+		math::Vector m_fastIntersectPosition;
 		bool m_fastIntersectEnabled;
 
 		bool m_perVertexNormals;
