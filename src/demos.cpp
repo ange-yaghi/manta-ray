@@ -27,7 +27,7 @@ void manta::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolutionY
 
 	// Load all object files
 	ObjFileLoader smallHouseObj;
-	bool result = smallHouseObj.readObjFile("../../models/small_house.obj");
+	bool result = smallHouseObj.readObjFile("../../models/small_house_unsealed.obj");
 
 	ObjFileLoader tableObj;
 	result = tableObj.readObjFile("../../models/table.obj");
@@ -39,12 +39,12 @@ void manta::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolutionY
 	wallMaterial.setSpecularColor(math::constants::Zero);
 
 	SimpleSpecularDiffuseMaterial outdoorLight;
-	outdoorLight.setEmission(math::loadVector(9, 8, 8));
+	outdoorLight.setEmission(math::loadVector(18, 16, 16));
 	outdoorLight.setDiffuseColor(math::constants::Zero);
 	outdoorLight.setSpecularColor(math::constants::Zero);
 
 	SimpleSpecularDiffuseMaterial outdoorTopLightMaterial;
-	outdoorTopLightMaterial.setEmission(math::loadVector(10, 10, 11));
+	outdoorTopLightMaterial.setEmission(math::loadVector(20, 20, 22));
 	outdoorTopLightMaterial.setDiffuseColor(math::constants::Zero);
 	outdoorTopLightMaterial.setSpecularColor(math::constants::Zero);
 
@@ -76,6 +76,8 @@ void manta::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolutionY
 	SpherePrimitive outdoorTopLightGeometry;
 	outdoorTopLightGeometry.setRadius((math::real)10.0);
 	outdoorTopLightGeometry.setPosition(math::loadVector(0.0, 25.0, 2));
+	//outdoorTopLightGeometry.setPosition(math::loadVector(0.0, 4.0, 0));
+	//outdoorTopLightGeometry.setRadius((math::real)0.5);
 
 	SpherePrimitive groundGeometry;
 	groundGeometry.setRadius((math::real)50000.0);
@@ -279,7 +281,7 @@ void manta::lampDemo(int samplesPerPixel, int resolutionX, int resolutionY) {
 
 	// Load all object files
 	ObjFileLoader lampObj;
-	bool result = lampObj.readObjFile("../../models/lamp.obj");
+	bool result = lampObj.readObjFile("../../models/lamp2.obj");
 
 	ObjFileLoader teapotObj;
 	result = teapotObj.readObjFile("../../models/lamp_teapot.obj");
@@ -293,15 +295,10 @@ void manta::lampDemo(int samplesPerPixel, int resolutionX, int resolutionY) {
 	wallMaterial.setDiffuseColor(getColor(200, 200, 200));
 	wallMaterial.setSpecularColor(math::constants::Zero);
 
-	SimpleSpecularDiffuseMaterial outdoorLight;
-	outdoorLight.setEmission(math::loadVector(9, 8, 8));
-	outdoorLight.setDiffuseColor(math::constants::Zero);
-	outdoorLight.setSpecularColor(math::constants::Zero);
-
-	SimpleSpecularDiffuseMaterial outdoorTopLightMaterial;
-	outdoorTopLightMaterial.setEmission(math::loadVector(10, 10, 11));
-	outdoorTopLightMaterial.setDiffuseColor(math::constants::Zero);
-	outdoorTopLightMaterial.setSpecularColor(math::constants::Zero);
+	SimpleSpecularDiffuseMaterial lampLightMaterial;
+	lampLightMaterial.setEmission(math::mul(getColor(255, 197, 143), math::loadScalar(30.0)));
+	lampLightMaterial.setDiffuseColor(math::constants::Zero);
+	lampLightMaterial.setSpecularColor(math::constants::Zero);
 
 	SimpleSpecularDiffuseMaterial teapotMaterial;
 	teapotMaterial.setEmission(math::constants::Zero);
@@ -321,13 +318,13 @@ void manta::lampDemo(int samplesPerPixel, int resolutionX, int resolutionY) {
 
 	Mesh teapot;
 	teapot.loadObjFileData(&teapotObj);
-	teapot.setFastIntersectEnabled(false);
-	teapot.setFastIntersectRadius((math::real)4.0);
+	teapot.setFastIntersectEnabled(true);
+	teapot.setFastIntersectRadius((math::real)2.0);
+	teapot.setFastIntersectPosition(math::loadVector(-0.5724, 1.02483, -0.04969));
 
-	Mesh bulb;
-	bulb.loadObjFileData(&lightBulbObj);
-	bulb.setFastIntersectEnabled(false);
-	bulb.setFastIntersectRadius((math::real)4.0);
+	SpherePrimitive bulb;
+	bulb.setRadius(0.25);
+	bulb.setPosition(math::loadVector(0.10669, 3.42135, -2.47464));
 
 	SpherePrimitive outdoorLightGeometry;
 	outdoorLightGeometry.setRadius((math::real)10.0);
@@ -348,7 +345,7 @@ void manta::lampDemo(int samplesPerPixel, int resolutionX, int resolutionY) {
 
 	SceneObject *bulbObject = scene.createSceneObject();
 	bulbObject->setGeometry(&bulb);
-	bulbObject->setMaterial(&outdoorLight);
+	bulbObject->setMaterial(&lampLightMaterial);
 
 	SceneObject *teapotObject = scene.createSceneObject();
 	teapotObject->setGeometry(&teapot);
@@ -357,14 +354,6 @@ void manta::lampDemo(int samplesPerPixel, int resolutionX, int resolutionY) {
 	SceneObject *ground = scene.createSceneObject();
 	ground->setGeometry(&groundGeometry);
 	ground->setMaterial(&wallMaterial);
-
-	//SceneObject *outdoorTopLightObject = scene.createSceneObject();
-	//outdoorTopLightObject->setGeometry(&outdoorTopLightGeometry);
-	//outdoorTopLightObject->setMaterial(&outdoorTopLightMaterial);
-
-	//SceneObject *lightSource = scene.createSceneObject();
-	//lightSource->setGeometry(&outdoorLightGeometry);
-	//lightSource->setMaterial(&outdoorLight);
 
 	// Create the camera
 	CameraRayEmitterGroup camera;
@@ -475,7 +464,7 @@ void manta::cubeTestDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 
 	// Create the raytracer
 	RayTracer rayTracer;
-	rayTracer.initialize(500 * MB, 50 * MB, 12, 10000, true);
+	rayTracer.initialize(500 * MB, 500 * MB, 1, 10000, false);
 	rayTracer.setBackgroundColor(getColor(0, 0, 0));
 	rayTracer.traceAll(&scene, &camera);
 

@@ -285,6 +285,9 @@
     <ClCompile Include="..\..\src\batched_monte_carlo_emitter.cpp">
       <Filter>Source Files\emitter\batched-monte-carlo-emitter</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\intersection_list.cpp">
+      <Filter>Source Files\ray-tracer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\intersection_point.h">
@@ -433,6 +436,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\batched_monte_carlo_emitter.h">
       <Filter>Header Files\emitter\batched-monte-carlo-emitter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\intersection_list.h">
+      <Filter>Header Files\ray-tracer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
