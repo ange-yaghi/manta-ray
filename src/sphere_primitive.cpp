@@ -66,7 +66,7 @@ manta::math::real manta::SpherePrimitive::coarseIntersection(const LightRay *ray
 	}
 }
 
-void manta::SpherePrimitive::fineIntersection(const LightRay *ray, IntersectionPoint *p, CoarseIntersection *hint) const {
+void manta::SpherePrimitive::fineIntersection(const LightRay *ray, IntersectionPoint *p, CoarseIntersection *hint, math::real bleed) const {
 	math::Vector d_pos = math::sub(ray->getSource(), m_position);
 	math::Vector d_dot_dir = math::dot(d_pos, ray->getDirection());
 	math::Vector mag2 = math::magnitudeSquared3(d_pos);

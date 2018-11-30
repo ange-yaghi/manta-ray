@@ -1,6 +1,8 @@
 #ifndef SCENE_OBJECT_H
 #define SCENE_OBJECT_H
 
+#include <string>
+
 namespace manta {
 
 	class SceneGeometry;
@@ -17,9 +19,14 @@ namespace manta {
 		void setMaterial(Material *material) { m_material = material; }
 		Material *getMaterial() { return m_material; }
 
+		void setName(const char *name) { m_name = name; }
+		const char *getName() const { return m_name.c_str(); }
+
 	protected:
 		SceneGeometry *m_geometry;
 		Material *m_material;
+
+		std::string m_name;
 	};
 
 }

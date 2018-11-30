@@ -36,8 +36,9 @@ void manta::SimpleSpecularDiffuseMaterial::integrateRay(LightRay * ray, const Ra
 			addedLight = math::add(addedLight, math::mul(m_diffuseColor, ave));
 
 			//if (math::getX(diffuse->getAverageIntensity()) > 0.5) {
+
 				//ray->setIntensity(
-				//	math::add(math::mul(diffuse->getRays()[0].getDirection(), math::constants::Half), math::loadVector(0.5, 0.5, 0.5))
+				//	math::add(math::mul(diffuse->getNormal(), math::constants::Half), math::loadVector(0.5, 0.5, 0.5))
 				//);
 
 				//std::cout << math::getX(diffuse->getRays()[0].getDirection()) << ", " << math::getY(diffuse->getRays()[0].getDirection()) << ", " << math::getZ(diffuse->getRays()[0].getDirection());
