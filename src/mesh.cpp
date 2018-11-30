@@ -72,29 +72,44 @@ void manta::Mesh::precomputeValues() {
 	}
 }
 
-manta::math::real manta::Mesh::coarseIntersection(const LightRay *ray, IntersectionList *l, SceneObject *object, math::real depthHint, math::real epsilon) const {
-	//math::real closestDepth = depthHint;
+const manta::CoarseIntersection *manta::Mesh::coarseIntersection(const LightRay *ray, IntersectionList *l, SceneObject *object, const CoarseIntersection *reference, math::real epsilon) const {
+	const manta::CoarseIntersection *closest = reference;
 	math::Vector rayDir = ray->getDirection();
 	math::Vector raySource = ray->getSource();
 
-	math::real depth;
+	CoarseCollisionOutput output;
 
 	for (int i = 0; i < m_faceCount; i++) {
-		if (detectIntersection(i, depthHint + epsilon, rayDir, raySource, &depth, -1E-2)) {
-			//if (p.m_depth < closestDepth) {
-			//	closestDepth = p.m_depth;
-			//}
+		math::real depthHint = math::REAL_MAX;
+		if (closest != nullptr) {
+			depthHint = closest->depth + epsilon;
+		}
+
+		if (detectIntersection(i, depthHint, rayDir, raySource, 1E-2, &output)) {
 			CoarseIntersection *intersection = l->newIntersection();
-			intersection->depth = depth;
+			intersection->depth = output.depth;
 			intersection->locationHint = i; // Face index
 			intersection->sceneObject = object;
+
+			if (closest == nullptr || output.depth < closest->depth) {
+				// Check that the collision is eligible to be a reference
+				//if (detectIntersection(i, output.u, output.v, output.w, 1E-6)) {
+				IntersectionPoint p;
+				if (detectIntersection(i, math::REAL_MAX, rayDir, raySource, &p, 1E-6)) {
+					//	detectIntersection(i, output.u, output.v, output.w, 1E-6);
+					//	detectIntersection(i, math::REAL_MAX, rayDir, raySource, &p, 1E-6);
+					//}
+					closest = intersection;
+				}
+				//}
+			}
 		}
 	}
 
-	return depthHint;
+	return closest;
 }
 
-void manta::Mesh::fineIntersection(const LightRay *ray, IntersectionPoint *p, CoarseIntersection *hint, math::real bleed) const {
+void manta::Mesh::fineIntersection(const LightRay *ray, IntersectionPoint *p, const CoarseIntersection *hint, math::real bleed) const {
 	p->m_intersection = false;
 	math::Vector rayDir = ray->getDirection();
 	math::Vector raySource = ray->getSource();
@@ -174,7 +189,7 @@ bool manta::Mesh::detectIntersection(int faceIndex, math::real earlyExitDepthHin
 
 	math::real depth_s = math::getScalar(depth);
 
-	const math::real bias = bleed;
+	const math::real bias = -bleed;
 
 	// This ray either does not intersect the plane or intersects at a depth that is further than the early exit hint
 	if (depth_s <= (math::real)0.0 || depth_s > earlyExitDepthHint) return false;
@@ -223,7 +238,7 @@ bool manta::Mesh::detectIntersection(int faceIndex, math::real earlyExitDepthHin
 	return true;
 }
 
-bool manta::Mesh::detectIntersection(int faceIndex, math::real earlyExitDepthHint, const math::Vector &rayDir, const math::Vector &rayOrigin, math::real *depth, math::real delta) const {
+bool manta::Mesh::detectIntersection(int faceIndex, math::real earlyExitDepthHint, const math::Vector &rayDir, const math::Vector &rayOrigin, math::real delta, CoarseCollisionOutput *output) const {
 	PrecomputedValues &cache = m_precomputedValues[faceIndex];
 
 	math::Vector denom = math::dot(cache.normal, rayDir);
@@ -244,15 +259,32 @@ bool manta::Mesh::detectIntersection(int faceIndex, math::real earlyExitDepthHin
 
 	// Compute quasi-barycentric components u, v, w
 	math::real u = math::getScalar(math::dot(s, cache.edgePlaneVW.normal));
-	if (u < (cache.edgePlaneVW.d + delta * cache.scaleVW)) return false;
+	if (u < (cache.edgePlaneVW.d - delta * cache.scaleVW)) return false;
 
 	math::real v = math::getScalar(math::dot(s, cache.edgePlaneWU.normal));
-	if (v < (cache.edgePlaneWU.d + delta * cache.scaleWU)) return false;
+	if (v < (cache.edgePlaneWU.d - delta * cache.scaleWU)) return false;
 
 	math::real w = math::getScalar(math::dot(s, cache.edgePlaneVU.normal));
-	if (w < (cache.edgePlaneVU.d + delta)) return false;
+	if (w < (cache.edgePlaneVU.d - delta)) return false;
 
-	*depth = depth_s;
+	output->depth = depth_s;
+	output->u = u;
+	output->v = v;
+	output->w = w;
+
+	return true;
+}
+
+inline bool manta::Mesh::detectIntersection(int faceIndex, math::real u, math::real v, math::real w, math::real delta) const {
+	PrecomputedValues &cache = m_precomputedValues[faceIndex];
+
+	math::real ru = u - cache.edgePlaneVW.d;
+	math::real rv = v - cache.edgePlaneWU.d;
+
+	// Check quasi-barycentric components u, v, w
+	if (ru < -delta || ru > ((math::real)1.0 + delta)) return false;
+	if (rv < -delta) return false;
+	if (1 - ru - rv < -delta) return false;
 
 	return true;
 }

@@ -16,8 +16,8 @@ namespace manta {
 		SceneGeometry();
 		~SceneGeometry();
 
-		virtual math::real coarseIntersection(const LightRay *ray, IntersectionList *l, SceneObject *object, math::real depthHint, math::real epsilon) const = 0;
-		virtual void fineIntersection(const LightRay *ray, IntersectionPoint *p, CoarseIntersection *hint, math::real bleed) const = 0;
+		virtual const CoarseIntersection *coarseIntersection(const LightRay *ray, IntersectionList *l, SceneObject *object, const CoarseIntersection *reference, math::real epsilon) const = 0;
+		virtual void fineIntersection(const LightRay *ray, IntersectionPoint *p, const CoarseIntersection *hint, math::real bleed) const = 0;
 		virtual bool fastIntersection(const LightRay *ray) const = 0;
 
 		void setId(int id);

@@ -34,6 +34,13 @@ namespace manta {
 		math::real scaleWU;
 	};
 
+	struct CoarseCollisionOutput {
+		math::real depth;
+		math::real u;
+		math::real v;
+		math::real w;
+	};
+
 	class Mesh : public SceneGeometry {
 	public:
 		Mesh();
@@ -42,8 +49,8 @@ namespace manta {
 		void initialize(int faceCount, int vertexCount, int normalCount);
 		void precomputeValues();
 
-		virtual math::real coarseIntersection(const LightRay *ray, IntersectionList *l, SceneObject *object, math::real depthHint, math::real epsilon) const;
-		virtual void fineIntersection(const LightRay *ray, IntersectionPoint *p, CoarseIntersection *hint, math::real bleed) const;
+		virtual const CoarseIntersection *coarseIntersection(const LightRay *ray, IntersectionList *l, SceneObject *object, const CoarseIntersection *reference, math::real epsilon) const;
+		virtual void fineIntersection(const LightRay *ray, IntersectionPoint *p, const CoarseIntersection *hint, math::real bleed) const;
 		virtual bool fastIntersection(const LightRay *ray) const;
 
 		int getFaceCount() const { return m_faceCount; }
@@ -65,7 +72,8 @@ namespace manta {
 
 	protected:
 		bool detectIntersection(int faceIndex, math::real earlyExitDepthHint, const math::Vector &rayDir, const math::Vector &rayOrigin, IntersectionPoint *p, math::real bleed) const;
-		bool detectIntersection(int faceIndex, math::real earlyExitDepthHint, const math::Vector &rayDir, const math::Vector &rayOrigin, math::real *depth, math::real delta) const;
+		bool detectIntersection(int faceIndex, math::real earlyExitDepthHint, const math::Vector &rayDir, const math::Vector &rayOrigin, math::real delta, CoarseCollisionOutput *output) const;
+		inline bool detectIntersection(int faceIndex, math::real u, math::real v, math::real w, math::real delta) const;
 
 		void computePlane(const math::Vector &n, const math::Vector &p, Plane *plane) const;
 
