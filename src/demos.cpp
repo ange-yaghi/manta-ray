@@ -289,6 +289,9 @@ void manta::lampDemo(int samplesPerPixel, int resolutionX, int resolutionY) {
 	ObjFileLoader lightBulbObj;
 	result = lightBulbObj.readObjFile("../../models/lamp_lightbulb.obj");
 
+	ObjFileLoader lampBlockObj;
+	result = lampBlockObj.readObjFile("../../models/lampblock.obj");
+
 	// Create all materials
 	SimpleSpecularDiffuseMaterial wallMaterial;
 	wallMaterial.setEmission(math::constants::Zero);
@@ -302,7 +305,7 @@ void manta::lampDemo(int samplesPerPixel, int resolutionX, int resolutionY) {
 
 	SimpleSpecularDiffuseMaterial teapotMaterial;
 	teapotMaterial.setEmission(math::constants::Zero);
-	teapotMaterial.setDiffuseColor(getColor(150, 0, 0));
+	teapotMaterial.setDiffuseColor(getColor(0xFF, 0x08, 0x14));
 	teapotMaterial.setSpecularColor(getColor(100, 100, 100));
 
 	SimpleSpecularDiffuseMaterial groundMaterial;
@@ -315,6 +318,11 @@ void manta::lampDemo(int samplesPerPixel, int resolutionX, int resolutionY) {
 	lamp.loadObjFileData(&lampObj);
 	lamp.setFastIntersectEnabled(false);
 	lamp.setFastIntersectRadius((math::real)4.0);
+
+	Mesh lampBlock;
+	lampBlock.loadObjFileData(&lampBlockObj);
+	lampBlock.setFastIntersectEnabled(false);
+	lampBlock.setFastIntersectRadius((math::real)4.0);
 
 	Mesh teapot;
 	teapot.loadObjFileData(&teapotObj);
@@ -336,24 +344,33 @@ void manta::lampDemo(int samplesPerPixel, int resolutionX, int resolutionY) {
 
 	SpherePrimitive groundGeometry;
 	groundGeometry.setRadius((math::real)50000.0);
-	groundGeometry.setPosition(math::loadVector(0.0, -50000.1, 0));
+	groundGeometry.setPosition(math::loadVector(0.0, -50000.001, 0));
 
 	// Create scene objects
 	SceneObject *lampObject = scene.createSceneObject();
 	lampObject->setGeometry(&lamp);
 	lampObject->setMaterial(&wallMaterial);
+	lampObject->setName("Lamp");
 
 	SceneObject *bulbObject = scene.createSceneObject();
 	bulbObject->setGeometry(&bulb);
 	bulbObject->setMaterial(&lampLightMaterial);
+	bulbObject->setName("Bulb");
 
 	SceneObject *teapotObject = scene.createSceneObject();
 	teapotObject->setGeometry(&teapot);
 	teapotObject->setMaterial(&teapotMaterial);
+	teapotObject->setName("Teapot");
 
 	SceneObject *ground = scene.createSceneObject();
 	ground->setGeometry(&groundGeometry);
 	ground->setMaterial(&wallMaterial);
+	ground->setName("Ground");
+
+	//SceneObject *lampBlockObject = scene.createSceneObject();
+	//lampBlockObject->setGeometry(&lampBlock);
+	//lampBlockObject->setMaterial(&wallMaterial);
+	//lampBlockObject->setName("LampBlock");
 
 	// Create the camera
 	CameraRayEmitterGroup camera;
@@ -369,8 +386,12 @@ void manta::lampDemo(int samplesPerPixel, int resolutionX, int resolutionY) {
 
 	// Create the raytracer
 	RayTracer rayTracer;
-	rayTracer.initialize(500 * MB, 50 * MB, 12, 10000, true);
+	rayTracer.initialize(500 * MB, 100 * MB, 12, 10000, true);
 	rayTracer.setBackgroundColor(getColor(0, 0, 0));
+	//rayTracer.setDeterministicSeedMode(true);
+	//rayTracer.tracePixel(819, 199, &scene, &camera);
+	//rayTracer.tracePixel(702, 236, &scene, &camera);
+	//rayTracer.tracePixel(809, 211, &scene, &camera);
 	rayTracer.traceAll(&scene, &camera);
 
 	// Output the results to file
@@ -382,6 +403,10 @@ void manta::lampDemo(int samplesPerPixel, int resolutionX, int resolutionY) {
 			math::real r = math::getX(v);
 			math::real g = math::getY(v);
 			math::real b = math::getZ(v);
+
+			if (r > 0) {
+				int a = 0;
+			}
 
 			pixels[i * resolutionX + j] = v;
 		}
@@ -464,7 +489,7 @@ void manta::cubeTestDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 
 	// Create the raytracer
 	RayTracer rayTracer;
-	rayTracer.initialize(500 * MB, 500 * MB, 1, 10000, false);
+	rayTracer.initialize(500 * MB, 500 * MB, 12, 10000, true);
 	rayTracer.setBackgroundColor(getColor(0, 0, 0));
 	rayTracer.traceAll(&scene, &camera);
 

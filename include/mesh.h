@@ -43,7 +43,7 @@ namespace manta {
 		void precomputeValues();
 
 		virtual math::real coarseIntersection(const LightRay *ray, IntersectionList *l, SceneObject *object, math::real depthHint, math::real epsilon) const;
-		virtual void fineIntersection(const LightRay *ray, IntersectionPoint *p, CoarseIntersection *hint) const;
+		virtual void fineIntersection(const LightRay *ray, IntersectionPoint *p, CoarseIntersection *hint, math::real bleed) const;
 		virtual bool fastIntersection(const LightRay *ray) const;
 
 		int getFaceCount() const { return m_faceCount; }
@@ -64,7 +64,7 @@ namespace manta {
 		void loadObjFileData(ObjFileLoader *data);
 
 	protected:
-		bool detectIntersection(int faceIndex, math::real earlyExitDepthHint, const math::Vector &rayDir, const math::Vector &rayOrigin, IntersectionPoint *p) const;
+		bool detectIntersection(int faceIndex, math::real earlyExitDepthHint, const math::Vector &rayDir, const math::Vector &rayOrigin, IntersectionPoint *p, math::real bleed) const;
 		bool detectIntersection(int faceIndex, math::real earlyExitDepthHint, const math::Vector &rayDir, const math::Vector &rayOrigin, math::real *depth, math::real delta) const;
 
 		void computePlane(const math::Vector &n, const math::Vector &p, Plane *plane) const;
