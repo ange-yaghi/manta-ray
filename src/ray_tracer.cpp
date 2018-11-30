@@ -12,19 +12,22 @@
 #include <memory_management.h>
 #include <worker.h>
 #include <intersection_list.h>
+#include <camera_ray_emitter_group.h>
+#include <path_recorder.h>
 
 #include <iostream>
 #include <thread>
 #include <chrono>
 
 manta::RayTracer::RayTracer() {
+	m_deterministicSeed = false;
 }
 
 manta::RayTracer::~RayTracer() {
 
 }
 
-void manta::RayTracer::traceAll(const Scene *scene, RayEmitterGroup *group) {
+void manta::RayTracer::traceAll(const Scene *scene, CameraRayEmitterGroup *group) {
 	// Simple performance metrics for now
 	auto startTime = std::chrono::system_clock::now();
 
@@ -69,7 +72,29 @@ void manta::RayTracer::traceAll(const Scene *scene, RayEmitterGroup *group) {
 	std::cout << "Total processing time: " << diff.count() << " s" << std::endl;
 }
 
-void manta::RayTracer::traceRayEmitter(const Scene *scene, const RayEmitter *emitter, StackAllocator *stackAllocator) const {
+void manta::RayTracer::tracePixel(int px, int py, const Scene *scene, CameraRayEmitterGroup *group) {
+	int pixelIndex = py * group->getResolutionX() + px;
+
+	// Set up the emitter group
+	group->setDegree(0);
+	group->setStackAllocator(&m_stack);
+	group->createAllEmitters();
+
+	Job job;
+	job.scene = scene;
+	job.group = group;
+	job.start = pixelIndex;
+	job.end = pixelIndex;
+
+	m_jobQueue.push(job);
+
+	// Create and start all threads
+	createWorkers();
+	startWorkers();
+	waitForWorkers();
+}
+
+void manta::RayTracer::traceRayEmitter(const Scene *scene, const RayEmitter *emitter, StackAllocator *s /**/ PATH_RECORDER_DECL) const {
 	LightRay *rays = emitter->getRays();
 	int rayCount = emitter->getRayCount();
 
@@ -78,8 +103,8 @@ void manta::RayTracer::traceRayEmitter(const Scene *scene, const RayEmitter *emi
 
 		math::Vector average = math::constants::Zero;
 		math::Vector samples = math::loadScalar((math::real)emitter->getSamplesPerRay());
-		for (int s = 0; s < emitter->getSamplesPerRay(); s++) {
-			traceRay(scene, ray, emitter->getDegree(), stackAllocator);
+		for (int samp = 0; samp < emitter->getSamplesPerRay(); samp++) {
+			traceRay(scene, ray, emitter->getDegree(), s /**/ PATH_RECORDER_VAR);
 			average = math::add(average, math::div(ray->getIntensity(), samples));
 		}
 		ray->setIntensity(average);
@@ -112,7 +137,7 @@ void manta::RayTracer::createWorkers() {
 	m_workers = new Worker[m_threadCount];
 
 	for (int i = 0; i < m_threadCount; i++) {
-		m_workers[i].initialize(m_workerStackSize, this);
+		m_workers[i].initialize(m_workerStackSize, this, i, m_deterministicSeed);
 	}
 }
 
@@ -120,7 +145,7 @@ void manta::RayTracer::startWorkers() {
 	int workerCount = m_threadCount;
 
 	for (int i = 0; i < workerCount; i++) {
-		std::cout << "starting worker" << i << std::endl;
+		std::cout << "Starting worker " << i << std::endl;
 		m_workers[i].start(m_multithreaded);
 	}
 }
@@ -150,8 +175,6 @@ void manta::RayTracer::depthCull(const Scene *scene, const LightRay *ray, SceneO
 	constexpr math::real epsilon = 1E-3;
 	math::real minDepth = math::REAL_MAX - epsilon;
 	SceneObject *currentClosest = nullptr;
-	//IntersectionPoint closestIntersection;
-	//closestIntersection.m_intersection = false;
 
 	IntersectionList list;
 	list.setStack(s);
@@ -166,36 +189,9 @@ void manta::RayTracer::depthCull(const Scene *scene, const LightRay *ray, SceneO
 		geometry->coarseIntersection(ray, &list, object, minDepth, 1E-1);
 	}
 
-	// Refine and resolve the coarse intersections
-	/*
-	int intersectionCount = list.getIntersectionCount();
-	IntersectionPoint intersection;
-
-	for (int i = 0; i < intersectionCount; i++) {
-		CoarseIntersection *c = list.getIntersection(i);
-
-		// Only process coarse collisions that are within epsilon
-		// of the minimum depth
-		if ((c->depth - minDepth) > epsilon) {
-			SceneObject *object = c->sceneObject;
-			object->getGeometry()->fineIntersection(ray, &intersection, c);
-
-			if (intersection.m_intersection) {
-				if (intersection.m_depth < minDepth) {
-					minDepth = intersection.m_depth;
-					currentClosest = object;
-					closestIntersection = intersection;
-				}
-			}
-		}
-	}*/
-
 	fluxMultisample(ray, &list, point, closestObject, minDepth, epsilon, s);
 
 	list.destroy();
-
-	//*point = closestIntersection;
-	//*closestObject = currentClosest;
 }
 
 void manta::RayTracer::fluxMultisample(const LightRay *ray, IntersectionList *list, IntersectionPoint *point, SceneObject **closestObject, math::real minDepth, math::real epsilon, StackAllocator *s) const {
@@ -205,14 +201,18 @@ void manta::RayTracer::fluxMultisample(const LightRay *ray, IntersectionList *li
 	int intersectionCount = list->getIntersectionCount();
 	CoarseIntersection *closest = nullptr;
 
-	IntersectionPoint *fineIntersections = (IntersectionPoint *)s->allocate(sizeof(IntersectionPoint) * intersectionCount);
+	IntersectionPoint *fineIntersections = nullptr;
+	
+	if (intersectionCount > 0) {
+		fineIntersections = (IntersectionPoint *)s->allocate(sizeof(IntersectionPoint) * intersectionCount);
+	}
 
 	// Count the number of real conflicts
 	for (int i = 0; i < intersectionCount; i++) {
 		CoarseIntersection *c = list->getIntersection(i);
 		IntersectionPoint *p = &fineIntersections[i];
 
-		c->sceneObject->getGeometry()->fineIntersection(ray, p, c);
+		c->sceneObject->getGeometry()->fineIntersection(ray, p, c, -1E-6);
 
 		if (p->m_intersection) {
 			if (closest == nullptr || p->m_depth < closest->depth) {
@@ -236,15 +236,20 @@ void manta::RayTracer::fluxMultisample(const LightRay *ray, IntersectionList *li
 	if (conflicts == 0) {
 		point->m_intersection = false;
 		*closestObject = nullptr;
-		return;
 	}
 	else if (conflicts == 1) {
 		// There can only be one answer
-		closest->sceneObject->getGeometry()->fineIntersection(ray, point, closest);
-		*closestObject = closest->sceneObject;
+		closest->sceneObject->getGeometry()->fineIntersection(ray, point, closest, -1E-6);
 
-		// Bias the intersection position
-		point->m_position = math::add(point->m_position, math::mul(math::loadScalar(SURFACE_BIAS), point->m_faceNormal));
+		if (point->m_intersection) {
+			*closestObject = closest->sceneObject;
+
+			// Bias the intersection position
+			point->m_position = math::add(point->m_position, math::mul(math::loadScalar(SURFACE_BIAS), point->m_faceNormal));
+		}
+		else {
+			*closestObject = nullptr;
+		}
 	}
 	else {
 		// There are multiple conflicts that need to be resolved
@@ -256,6 +261,7 @@ void manta::RayTracer::fluxMultisample(const LightRay *ray, IntersectionList *li
 		IntersectionPoint *samples = (IntersectionPoint *)s->allocate(sizeof(IntersectionPoint) * SAMPLE_COUNT);
 		int *intersectionPointer = (int *)s->allocate(sizeof(int) * SAMPLE_COUNT);
 		int *sampleTally = (int *)s->allocate(sizeof(int) * intersectionCount);
+		math::real *averageDistance = (math::real *)s->allocate(sizeof(math::real) * intersectionCount);
 
 		// Initialize all intersection points
 		for (int i = 0; i < SAMPLE_WIDTH * SAMPLE_HEIGHT; i++) {
@@ -265,6 +271,7 @@ void manta::RayTracer::fluxMultisample(const LightRay *ray, IntersectionList *li
 
 		for (int i = 0; i < intersectionCount; i++) {
 			sampleTally[i] = 0;
+			averageDistance[i] = 0.0;
 		}
 
 		// Calculate basis vectors
@@ -274,12 +281,13 @@ void manta::RayTracer::fluxMultisample(const LightRay *ray, IntersectionList *li
 			u = math::constants::XAxis;
 		}
 		u = math::normalize(math::cross(u, ray->getDirection()));
-		v = math::cross(ray->getDirection(), u);
+		v = math::cross(u, ray->getDirection());
 
 		u = math::mul(u, math::loadScalar(epsilon));
 		v = math::mul(v, math::loadScalar(epsilon));
 
 		math::Vector mainPoint = math::add(math::mul(ray->getDirection(), math::loadScalar(closest->depth)), ray->getSource());
+		//math::Vector referenceNormal;
 
 		for (int i = -SAMPLE_RADIUS; i <= SAMPLE_RADIUS; i++) {
 			for (int j = -SAMPLE_RADIUS; j <= SAMPLE_RADIUS; j++) {
@@ -291,19 +299,20 @@ void manta::RayTracer::fluxMultisample(const LightRay *ray, IntersectionList *li
 						IntersectionPoint p;
 
 						// Create a new ray
-						math::Vector newTarget = math::add(mainPoint, math::mul(u, math::loadScalar(i)));
-						newTarget = math::add(newTarget, math::mul(v, math::loadScalar(j)));
+						math::Vector newTarget = math::add(mainPoint, math::mul(v, math::loadScalar(i)));
+						newTarget = math::add(newTarget, math::mul(u, math::loadScalar(j)));
 
 						LightRay newRay;
 						newRay.setSource(ray->getSource());
 						newRay.setDirection(math::normalize(math::sub(newTarget, ray->getSource())));
 
-						c->sceneObject->getGeometry()->fineIntersection(&newRay, &p, c);
+						c->sceneObject->getGeometry()->fineIntersection(&newRay, &p, c, (math::real)0.0);
 
 						if (p.m_intersection) {
-							if (sample->m_intersection == false || p.m_depth < sample->m_depth) {
+							if (!sample->m_intersection || p.m_depth < sample->m_depth) {
 								*sample = p;
 								intersectionPointer[si] = k;
+								//referenceNormal = sample->m_faceNormal;
 							}
 						}
 					}
@@ -311,65 +320,106 @@ void manta::RayTracer::fluxMultisample(const LightRay *ray, IntersectionList *li
 			}
 		}
 
+		//bool flipScenario = false;
+
+		//for (int i = 0; i < SAMPLE_COUNT; i++) {
+		//	if (intersectionPointer[i] != -1) {
+		//		if (math::getScalar(math::dot(samples[i].m_faceNormal, referenceNormal))) {
+		//			flipScenario = true;
+		//		}
+		//	}
+		//}
+
 		// Count the intersections
 		for (int i = 0; i < SAMPLE_COUNT; i++) {
 			if (intersectionPointer[i] != -1) {
 				sampleTally[intersectionPointer[i]]++;
+				averageDistance[intersectionPointer[i]] += samples[i].m_depth;
 			}
 		}
 
-		int highestSampleCount = 0;
-		int preferredIntersection = 0;
 		for (int i = 0; i < intersectionCount; i++) {
+			if (sampleTally[i] > 0) {
+				averageDistance[i] /= sampleTally[i];
+			}
+			else {
+				averageDistance[i] = (math::real)0.0;
+			}
+		}
+		
+
+		math::real lowestAverageDistance = math::REAL_MAX;
+		int highestSampleCount = 0;
+		int closestIntersection = -1;
+		int preferredIntersection = -1;
+		for (int i = 0; i < intersectionCount; i++) {
+			if (averageDistance[i] < lowestAverageDistance && sampleTally[i] > 0) {
+				lowestAverageDistance = averageDistance[i];
+				closestIntersection = i;
+			}
 			if (sampleTally[i] > highestSampleCount) {
 				highestSampleCount = sampleTally[i];
 				preferredIntersection = i;
 			}
 		}
 
+		//if (flipScenario) {
+		//	preferredIntersection = closestIntersection;
+		//}
+
 		// Calculate the bias normal
-		math::Vector biasNormal = math::constants::Zero;
-		math::Vector vertexNormal = math::constants::Zero;
-		for (int i = 0; i < SAMPLE_COUNT; i++) {
-			if (intersectionPointer[i] != -1) {
-				biasNormal = math::add(biasNormal, samples[i].m_faceNormal);
-				vertexNormal = math::add(vertexNormal, samples[i].m_vertexNormal);
-			}
+		//math::Vector biasNormal = math::constants::Zero;
+		//math::Vector vertexNormal = math::constants::Zero;
+		//for (int i = 0; i < SAMPLE_COUNT; i++) {
+		//	if (intersectionPointer[i] != -1) {
+		//		biasNormal = math::add(biasNormal, samples[i].m_faceNormal);
+		//		vertexNormal = math::add(vertexNormal, samples[i].m_vertexNormal);
+		//	}
+		//}
+		//biasNormal = math::normalize(biasNormal);
+		//vertexNormal = math::normalize(vertexNormal);
+
+		list->getIntersection(preferredIntersection)->sceneObject->getGeometry()->fineIntersection(ray, point, list->getIntersection(preferredIntersection), -1000);
+
+		if (point->m_intersection) {
+			*closestObject = list->getIntersection(preferredIntersection)->sceneObject;
+
+			// Bias the position of the intersection point
+			point->m_position = math::add(point->m_position, math::mul(math::loadScalar(SURFACE_BIAS), point->m_faceNormal));
+			//point->m_faceNormal = biasNormal;
+			//point->m_vertexNormal = vertexNormal;
+			//point->m_vertexNormal = math::loadVector(-1.0, -1.0, -1.0);
+		} 
+		else {
+			*closestObject = nullptr;
 		}
-		biasNormal = math::normalize(biasNormal);
-		vertexNormal = math::normalize(vertexNormal);
-
-		list->getIntersection(preferredIntersection)->sceneObject->getGeometry()->fineIntersection(ray, point, list->getIntersection(preferredIntersection));
-		*closestObject = list->getIntersection(preferredIntersection)->sceneObject;
-
-		// Bias the position of the intersection point
-		point->m_position = math::add(point->m_position, math::mul(math::loadScalar(SURFACE_BIAS), biasNormal));
-		point->m_faceNormal = biasNormal;
-		point->m_vertexNormal = vertexNormal;
-		//point->m_vertexNormal = math::loadVector(-1.0, -1.0, -1.0);
 
 		// Cleanup the allocated memory
+		s->free((void *)averageDistance);
 		s->free((void *)sampleTally);
 		s->free((void *)intersectionPointer);
 		s->free((void *)samples);
 	}
 
-	s->free((void *)fineIntersections);
+	if (fineIntersections != nullptr) {
+		s->free((void *)fineIntersections);
+	}
 }
 
-void manta::RayTracer::traceRay(const Scene *scene, LightRay *ray, int degree, StackAllocator *stack) const {
+void manta::RayTracer::traceRay(const Scene *scene, LightRay *ray, int degree, StackAllocator *s /**/ PATH_RECORDER_DECL) const {
 	SceneObject *sceneObject = nullptr;
 	IntersectionPoint point;
 
-	depthCull(scene, ray, &sceneObject, &point, stack);
+	depthCull(scene, ray, &sceneObject, &point, s);
 
 	if (sceneObject != nullptr) {
-		Material *material = sceneObject->getMaterial();
+		START_BRANCH(point.m_position); // For path recording
 
-		RayEmitterGroup *group = material->generateRayEmitterGroup(ray, &point, degree + 1, stack);
+		Material *material = sceneObject->getMaterial();
+		RayEmitterGroup *group = material->generateRayEmitterGroup(ray, &point, degree + 1, s);
 
 		if (group != nullptr) {
-			traceRayEmitterGroup(scene, group, stack);
+			traceRayEmitterGroup(scene, group, s /**/ PATH_RECORDER_VAR);
 		}
 
 		material->integrateRay(ray, group);
@@ -382,16 +432,22 @@ void manta::RayTracer::traceRay(const Scene *scene, LightRay *ray, int degree, S
 				group->getEmitters()[i]->destroyRays();
 			}
 
-			material->destroyEmitterGroup(group, stack);
+			material->destroyEmitterGroup(group, s);
 		}
+
+		END_BRANCH();
 	}
 	else {
 		// The ray hit nothing so it receives the background color
 		ray->setIntensity(m_backgroundColor);
+
+		// Point a ray in the air
+		START_BRANCH(math::add(ray->getSource(), math::mul(ray->getDirection(), math::loadScalar((math::real)1000.0))));
+		END_BRANCH();
 	}
 }
 
-void manta::RayTracer::traceRayEmitterGroup(const Scene *scene, const RayEmitterGroup *rayEmitterGroup, StackAllocator *s) const {
+void manta::RayTracer::traceRayEmitterGroup(const Scene *scene, const RayEmitterGroup *rayEmitterGroup, StackAllocator *s /**/ PATH_RECORDER_DECL) const {
 	int emitterCount = rayEmitterGroup->getEmitterCount();
 	RayEmitter **emitters = rayEmitterGroup->getEmitters();
 
@@ -399,6 +455,6 @@ void manta::RayTracer::traceRayEmitterGroup(const Scene *scene, const RayEmitter
 		RayEmitter *emitter = emitters[i];
 		emitter->setStackAllocator(s);
 		emitter->generateRays();
-		traceRayEmitter(scene, emitter, s);
+		traceRayEmitter(scene, emitter, s /**/ PATH_RECORDER_VAR);
 	}
 }
