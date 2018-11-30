@@ -316,8 +316,9 @@ void manta::lampDemo(int samplesPerPixel, int resolutionX, int resolutionY) {
 	// Create all scene geometry
 	Mesh lamp;
 	lamp.loadObjFileData(&lampObj);
-	lamp.setFastIntersectEnabled(false);
-	lamp.setFastIntersectRadius((math::real)4.0);
+	lamp.setFastIntersectEnabled(true);
+	lamp.setFastIntersectRadius((math::real)2.123);
+	lamp.setFastIntersectPosition(math::loadVector(-0.06430, 1.86833, -2.96564));
 
 	Mesh lampBlock;
 	lampBlock.loadObjFileData(&lampBlockObj);
@@ -392,6 +393,9 @@ void manta::lampDemo(int samplesPerPixel, int resolutionX, int resolutionY) {
 	//rayTracer.tracePixel(819, 199, &scene, &camera);
 	//rayTracer.tracePixel(702, 236, &scene, &camera);
 	//rayTracer.tracePixel(809, 211, &scene, &camera);
+	//rayTracer.tracePixel(793, 224, &scene, &camera);
+	//rayTracer.tracePixel(656, 185, &scene, &camera);
+	//rayTracer.tracePixel(769, 318, &scene, &camera);
 	rayTracer.traceAll(&scene, &camera);
 
 	// Output the results to file

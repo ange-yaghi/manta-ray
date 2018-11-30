@@ -16,7 +16,12 @@ bool manta::SpherePrimitive::fastIntersection(const LightRay *ray) const {
 	return true;
 }
 
-manta::math::real manta::SpherePrimitive::coarseIntersection(const LightRay *ray, IntersectionList *l, SceneObject *object, math::real depthHint, math::real epsilon) const {
+const manta::CoarseIntersection *manta::SpherePrimitive::coarseIntersection(const LightRay *ray, IntersectionList *l, SceneObject *object, const CoarseIntersection *reference, math::real epsilon) const {
+	math::real depthHint = math::REAL_MAX;
+	if (reference != nullptr) {
+		depthHint = reference->depth + epsilon;
+	}
+	
 	math::Vector d_pos = math::sub(ray->getSource(), m_position);
 	math::Vector d_dot_dir = math::dot(d_pos, ray->getDirection());
 	math::Vector mag2 = math::magnitudeSquared3(d_pos);
@@ -26,7 +31,7 @@ manta::math::real manta::SpherePrimitive::coarseIntersection(const LightRay *ray
 
 	if (math::getScalar(det) < (math::real)0.0) {
 		// No intersection detected
-		return depthHint;
+		return reference;
 	}
 	else {
 		det = math::sqrt(det);
@@ -39,7 +44,7 @@ manta::math::real manta::SpherePrimitive::coarseIntersection(const LightRay *ray
 		bool intersection = t1_s > (math::real)0.0 || t2_s > (math::real)0.0;
 
 		if (intersection) {
-			if (t1_s < depthHint + epsilon || t2_s < depthHint + epsilon) {
+			if (t1_s < depthHint || t2_s < depthHint) {
 				CoarseIntersection *newIntersection = l->newIntersection();
 				newIntersection->locationHint = -1; // Unused for spheres
 				newIntersection->sceneObject = object;
@@ -54,19 +59,24 @@ manta::math::real manta::SpherePrimitive::coarseIntersection(const LightRay *ray
 					newIntersection->depth = t1_s;
 				}
 
-				return newIntersection->depth;
+				if (reference == nullptr || newIntersection->depth < reference->depth) {
+					return newIntersection;
+				}
+				else {
+					return reference;
+				}
 			}
 			else {
-				return depthHint;
+				return reference;
 			}
 		}
 		else {
-			return depthHint;
+			return reference;
 		}
 	}
 }
 
-void manta::SpherePrimitive::fineIntersection(const LightRay *ray, IntersectionPoint *p, CoarseIntersection *hint, math::real bleed) const {
+void manta::SpherePrimitive::fineIntersection(const LightRay *ray, IntersectionPoint *p, const CoarseIntersection *hint, math::real bleed) const {
 	math::Vector d_pos = math::sub(ray->getSource(), m_position);
 	math::Vector d_dot_dir = math::dot(d_pos, ray->getDirection());
 	math::Vector mag2 = math::magnitudeSquared3(d_pos);
