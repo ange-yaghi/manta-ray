@@ -43,6 +43,7 @@
     <ClCompile Include="..\..\src\mesh.cpp" />
     <ClCompile Include="..\..\src\monte_carlo_specular_diffuse_group.cpp" />
     <ClCompile Include="..\..\src\obj_file_loader.cpp" />
+    <ClCompile Include="..\..\src\path_recorder.cpp" />
     <ClCompile Include="..\..\src\ray_emitter.cpp" />
     <ClCompile Include="..\..\src\ray_emitter_group.cpp" />
     <ClCompile Include="..\..\src\ray_tracer.cpp" />
@@ -77,6 +78,8 @@
     <ClInclude Include="..\..\include\batched_monte_carlo_emitter.h" />
     <ClInclude Include="..\..\include\intersection_list.h" />
     <ClInclude Include="..\..\include\job_queue.h" />
+    <ClInclude Include="..\..\include\manta.h" />
+    <ClInclude Include="..\..\include\manta_conf.h" />
     <ClInclude Include="..\..\include\mesh.h" />
     <ClInclude Include="..\..\include\image_handling.h" />
     <ClInclude Include="..\..\include\lens.h" />
@@ -94,6 +97,7 @@
     <ClInclude Include="..\..\include\memory_management.h" />
     <ClInclude Include="..\..\include\monte_carlo_specular_diffuse_group.h" />
     <ClInclude Include="..\..\include\obj_file_loader.h" />
+    <ClInclude Include="..\..\include\path_recorder.h" />
     <ClInclude Include="..\..\include\pool_allocator.h" />
     <ClInclude Include="..\..\include\ray_emitter.h" />
     <ClInclude Include="..\..\include\ray_emitter_group.h" />

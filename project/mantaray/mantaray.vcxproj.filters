@@ -163,6 +163,21 @@
     <Filter Include="Header Files\emitter\batched-monte-carlo-emitter">
       <UniqueIdentifier>{3533b5d3-134c-490d-8027-c5c721d8c61c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\debugging">
+      <UniqueIdentifier>{bc21e97a-fde4-4d2b-a2f3-dd5cb8000a99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\debugging">
+      <UniqueIdentifier>{1e331fda-c582-4d9e-8625-21601eaaca88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\debugging\path-recording">
+      <UniqueIdentifier>{ca9ef1cb-9f3f-42fc-a171-25f134adba3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\debugging\path-recording">
+      <UniqueIdentifier>{cd75f9ca-536c-4c17-bcf4-48ec539e0b11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\manta">
+      <UniqueIdentifier>{5fdfda90-0e17-44d9-b188-420de38668db}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\main.cpp">
@@ -287,6 +302,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\intersection_list.cpp">
       <Filter>Source Files\ray-tracer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\path_recorder.cpp">
+      <Filter>Source Files\debugging\path-recording</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -439,6 +457,15 @@
     </ClInclude>
     <ClInclude Include="..\..\include\intersection_list.h">
       <Filter>Header Files\ray-tracer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\path_recorder.h">
+      <Filter>Header Files\debugging\path-recording</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\manta.h">
+      <Filter>Header Files\manta</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\manta_conf.h">
+      <Filter>Header Files\manta</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

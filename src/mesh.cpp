@@ -80,7 +80,7 @@ manta::math::real manta::Mesh::coarseIntersection(const LightRay *ray, Intersect
 	math::real depth;
 
 	for (int i = 0; i < m_faceCount; i++) {
-		if (detectIntersection(i, depthHint + epsilon, rayDir, raySource, &depth, -1E-1)) {
+		if (detectIntersection(i, depthHint + epsilon, rayDir, raySource, &depth, -1E-2)) {
 			//if (p.m_depth < closestDepth) {
 			//	closestDepth = p.m_depth;
 			//}
@@ -94,12 +94,12 @@ manta::math::real manta::Mesh::coarseIntersection(const LightRay *ray, Intersect
 	return depthHint;
 }
 
-void manta::Mesh::fineIntersection(const LightRay *ray, IntersectionPoint *p, CoarseIntersection *hint) const {
+void manta::Mesh::fineIntersection(const LightRay *ray, IntersectionPoint *p, CoarseIntersection *hint, math::real bleed) const {
 	p->m_intersection = false;
 	math::Vector rayDir = ray->getDirection();
 	math::Vector raySource = ray->getSource();
 
-	detectIntersection(hint->locationHint, math::REAL_MAX, rayDir, raySource, p);
+	detectIntersection(hint->locationHint, math::REAL_MAX, rayDir, raySource, p, bleed);
 }
 
 bool manta::Mesh::fastIntersection(const LightRay *ray) const {
@@ -160,7 +160,7 @@ void manta::Mesh::loadObjFileData(ObjFileLoader *data) {
 	precomputeValues();
 }
 
-bool manta::Mesh::detectIntersection(int faceIndex, math::real earlyExitDepthHint, const math::Vector &rayDir, const math::Vector &rayOrigin, IntersectionPoint *p) const {
+bool manta::Mesh::detectIntersection(int faceIndex, math::real earlyExitDepthHint, const math::Vector &rayDir, const math::Vector &rayOrigin, IntersectionPoint *p, math::real bleed) const {
 	PrecomputedValues &cache = m_precomputedValues[faceIndex];
 
 	math::Vector denom = math::dot(cache.normal, rayDir);
@@ -174,7 +174,7 @@ bool manta::Mesh::detectIntersection(int faceIndex, math::real earlyExitDepthHin
 
 	math::real depth_s = math::getScalar(depth);
 
-	const math::real bias = -1E-6;
+	const math::real bias = bleed;
 
 	// This ray either does not intersect the plane or intersects at a depth that is further than the early exit hint
 	if (depth_s <= (math::real)0.0 || depth_s > earlyExitDepthHint) return false;
