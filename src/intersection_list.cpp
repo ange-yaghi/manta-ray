@@ -15,7 +15,7 @@ manta::IntersectionList::~IntersectionList() {
 	assert(m_intersectionCount == 0);
 }
 
-manta::CoarseIntersection * manta::IntersectionList::newIntersection() {
+manta::CoarseIntersection *manta::IntersectionList::newIntersection() {
 	CoarseIntersection *newIntersection = nullptr;
 	if (isUsingStack()) {
 		newIntersection = (CoarseIntersection *)m_stack->allocate(sizeof(CoarseIntersection));
@@ -26,7 +26,7 @@ manta::CoarseIntersection * manta::IntersectionList::newIntersection() {
 	}
 	else {
 		// If the list of intersections is not yet initialized, create the new vector
-		if (m_intersectionCount == 0) 
+		if (m_intersectionCount == 0) m_intersectionVector = new std::vector<CoarseIntersection *>;
 
 		newIntersection = new CoarseIntersection;
 		m_intersectionVector->push_back(newIntersection);

@@ -192,8 +192,8 @@ void manta::SpherePrimitive::detectIntersection(const LightRay * ray, Intersecti
 					convex->m_intersection = true;
 					convex->m_depth = t1_s;
 					convex->m_position = pos;
-					concave->m_faceNormal = normal;
-					concave->m_vertexNormal = concave->m_faceNormal;
+					convex->m_faceNormal = normal;
+					convex->m_vertexNormal = convex->m_faceNormal;
 				}
 			}
 		}
