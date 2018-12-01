@@ -47,7 +47,7 @@ void manta::SimpleSpecularDiffuseMaterial::integrateRay(LightRay * ray, const Ra
 	}
 
 	ray->setIntensity(
-		math::add(
+			math::add(
 			addedLight,
 			m_emission
 		)
@@ -105,7 +105,7 @@ int manta::SimpleSpecularDiffuseMaterial::getDiffuseSampleCount(int degree) cons
 	// TODO: add logic to change the sample count as the degree changes
 	switch (degree) {
 	case 1:
-		return 2;
+		return 1;
 	case 2:
 		return 1;
 	case 3:
