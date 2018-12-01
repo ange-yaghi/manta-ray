@@ -3,7 +3,7 @@
 #include <obj_file_loader.h>
 #include <mesh.h>
 #include <light_ray.h>
-#include <intersection_point.h>
+#include <intersection_list.h>
 
 #include <chrono>
 #include <fstream>
@@ -24,16 +24,18 @@ TEST(MeshIntersectionTests, MeshIntersectionPerformance) {
 
 	auto begin = std::chrono::high_resolution_clock::now();
 
-	IntersectionPoint p;
-	for (int i = 0; i < 10000; i++) {
-		mesh.detectIntersection(&ray, &p);
+	IntersectionList list;
+	for (int i = 0; i < 100; i++) {
+		mesh.coarseIntersection(&ray, &list, nullptr, nullptr, 1E-2);
 	}
 
 	auto end = std::chrono::high_resolution_clock::now();
 
 	std::ofstream outputFile("../../../test_results/test_results_mesh_intersection.txt");
-	if (p.m_intersection) outputFile << "Intersection detected" << std::endl;
+	if (list.getIntersectionCount() > 0) outputFile << "Intersection detected" << std::endl;
 	outputFile << "Precomputed values struct size: " << sizeof(PrecomputedValues) << std::endl;
 	outputFile << std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count() << "ns" << std::endl;
 	outputFile.close();
+
+	list.destroy();
 }
