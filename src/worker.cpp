@@ -136,5 +136,5 @@ std::string manta::Worker::getObjFname() {
 	std::stringstream ss;
 	ss << m_workerId;
 
-	return "wId_" + ss.str() + std::string(buffer);
+	return "diagnostics/wId_" + ss.str() + std::string(buffer);
 }
