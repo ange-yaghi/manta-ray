@@ -51,7 +51,10 @@
     <Text Include="..\..\test_results\test_results_opencl_vs_cpu_benchmark.txt">
       <Filter>Test Results</Filter>
     </Text>
-    <Text Include="..\..\test_results\test_results_intersection_opencl_vs_cpu_benchmark.txt">
+    <Text Include="..\..\test_results\test_results_intersection_opencl_vs_cpu_benchmark_stress_ball.txt">
+      <Filter>Test Results</Filter>
+    </Text>
+    <Text Include="..\..\test_results\test_results_intersection_opencl_vs_cpu_benchmark_teapot.txt">
       <Filter>Test Results</Filter>
     </Text>
   </ItemGroup>

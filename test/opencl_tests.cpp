@@ -7,6 +7,7 @@
 #include <mesh.h>
 #include <light_ray.h>
 #include <intersection_point.h>
+#include <intersection_list.h>
 
 #include <chrono>
 #include <fstream>
@@ -101,7 +102,7 @@ TEST(OpenCLTests, OpenCLPerformanceTest) {
 
 	auto endCPU = std::chrono::high_resolution_clock::now();
 
-	std::ofstream outputFile("../../../test_results/test_results_opencl_vs_cpu_benchmark.txt");
+	std::ofstream outputFile("../../../test_results/test_results_opencl_vs_cpu_benchmark_simple_calc.txt");
 	outputFile << "Device name: " << gpuManager.getDeviceName() << std::endl;
 	outputFile << "OpenCL: " << std::chrono::duration_cast<std::chrono::nanoseconds>(endOpenCL - beginOpenCL).count() << "ns" << std::endl;
 	outputFile << "CPU:    " << std::chrono::duration_cast<std::chrono::nanoseconds>(endCPU - endOpenCL).count() << "ns" << std::endl;
@@ -121,7 +122,7 @@ struct GPULightRay {
 	math::Vector4 rayOrigin;
 };
 
-TEST(OpenCLTests, OpenCLIntersectionTest) {
+TEST(OpenCLTests, OpenCLIntersectionTeapotTest) {
 	// Load mesh
 	ObjFileLoader teapotObj;
 	bool result = teapotObj.readObjFile("../../../models/teapot.obj");
@@ -188,14 +189,97 @@ TEST(OpenCLTests, OpenCLIntersectionTest) {
 
 	auto startCPU = std::chrono::high_resolution_clock::now();
 
+	IntersectionList list;
 	for (int i = 0; i < 128; i++) {
-		IntersectionPoint p;
-		mesh.detectIntersection(&ray, &p);
+		mesh.coarseIntersection(&ray, &list, nullptr, nullptr, 1E-2);
 	}
+	list.destroy();
 
 	auto endCPU = std::chrono::high_resolution_clock::now();
 
-	std::ofstream outputFile("../../../test_results/test_results_intersection_opencl_vs_cpu_benchmark.txt");
+	std::ofstream outputFile("../../../test_results/test_results_intersection_opencl_vs_cpu_benchmark_teapot.txt");
+	outputFile << "Device name: " << gpuManager.getDeviceName() << std::endl;
+	outputFile << "OpenCL: " << std::chrono::duration_cast<std::chrono::nanoseconds>(endOpenCL - beginOpenCL).count() << "ns" << std::endl;
+	outputFile << "CPU:    " << std::chrono::duration_cast<std::chrono::nanoseconds>(endCPU - startCPU).count() << "ns" << std::endl;
+	outputFile.close();
+}
+
+TEST(OpenCLTests, OpenCLIntersectionHighStressTest) {
+	// Load mesh
+	ObjFileLoader teapotObj;
+	bool result = teapotObj.readObjFile("../../../models/stress_ball.obj");
+
+	Mesh mesh;
+	mesh.loadObjFileData(&teapotObj);
+	mesh.setFastIntersectEnabled(false);
+
+	// Set up opencl device
+	GPUManagerOpenCL gpuManager;
+	gpuManager.initialize("../../../opencl_programs/mantaray.cl");
+
+	int faceCount = mesh.getFaceCount();
+	int unitCount = 65536;
+
+	int rayCount = 128;
+
+	GPUMemory *faceInput = gpuManager.createMemoryBuffer(sizeof(GPUFace) * unitCount, GPUMemory::READ_ONLY);
+	GPUMemory *rayInput = gpuManager.createMemoryBuffer(sizeof(GPULightRay) * rayCount, GPUMemory::READ_ONLY);
+	GPUMemory *outputDepths = gpuManager.createMemoryBuffer((rayCount / 32) * sizeof(int) * unitCount, GPUMemory::WRITE_ONLY);
+
+	LightRay ray;
+	ray.setDirection(math::loadVector(1.0, 0.0, 0.0));
+	ray.setSource(math::loadVector(-10, 1.0, 0.0));
+
+	GPUFace *faceData = new GPUFace[unitCount];
+	GPULightRay *lightRay = new GPULightRay[rayCount];
+
+	const PrecomputedValues *cache = mesh.getPrecomputedValues();
+
+	for (int i = 0; i < faceCount; i++) {
+		faceData[i].edgePlaneVWNormal = math::getVector4(cache[i].edgePlaneVW.normal);
+		faceData[i].edgePlaneVWNormal.w = (float)cache[i].edgePlaneVW.d;
+		faceData[i].edgePlaneWUNormal = math::getVector4(cache[i].edgePlaneWU.normal);
+		faceData[i].edgePlaneWUNormal.w = (float)cache[i].edgePlaneWU.d;
+		faceData[i].normal = math::getVector4(cache[i].normal);
+		faceData[i].p0 = math::getVector4(cache[i].p0);
+	}
+
+	faceInput->write(faceData);
+
+	GPUKernel *kernel = gpuManager.createKernel("mesh_intersection_test");
+
+	int *output = new int[(rayCount / 32)*unitCount];
+
+	auto beginOpenCL = std::chrono::high_resolution_clock::now();
+
+	for (int i = 0; i < rayCount; i++) {
+		lightRay[i].rayDir = math::getVector4(ray.getDirection());
+		lightRay[i].rayOrigin = math::getVector4(ray.getSource());
+	}
+
+	kernel->setArgument(0, faceInput);
+	kernel->setArgument(1, rayInput);
+	kernel->setArgument(2, outputDepths);
+
+	rayInput->write(lightRay);
+
+	kernel->run(unitCount);
+
+	outputDepths->read((void *)output);
+
+	auto endOpenCL = std::chrono::high_resolution_clock::now();
+
+	auto startCPU = std::chrono::high_resolution_clock::now();
+
+	IntersectionList list;
+	for (int i = 0; i < 128; i++) {
+		mesh.coarseIntersection(&ray, &list, nullptr, nullptr, 1E-2);
+	}
+	list.destroy();
+
+	auto endCPU = std::chrono::high_resolution_clock::now();
+
+	std::ofstream outputFile("../../../test_results/test_results_intersection_opencl_vs_cpu_benchmark_stress_ball.txt");
 	outputFile << "Device name: " << gpuManager.getDeviceName() << std::endl;
 	outputFile << "OpenCL: " << std::chrono::duration_cast<std::chrono::nanoseconds>(endOpenCL - beginOpenCL).count() << "ns" << std::endl;
 	outputFile << "CPU:    " << std::chrono::duration_cast<std::chrono::nanoseconds>(endCPU - startCPU).count() << "ns" << std::endl;

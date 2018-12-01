@@ -13,12 +13,16 @@
 #include <camera_ray_emitter.h>
 #include <camera_ray_emitter_group.h>
 #include <image_handling.h>
+#include <memory_management.h>
 
 #include <manta_math.h>
 
 using namespace manta;
 
 TEST(IntegrationTests, BasicTest) {
+	int resolutionX = 10;
+	int resolutionY = 10;
+
 	Scene scene;
 
 	Material sphereMaterial;
@@ -50,22 +54,35 @@ TEST(IntegrationTests, BasicTest) {
 	cameraEmitter.setUp(math::loadVector(0.0f, 1.0f, 0.0f));
 	cameraEmitter.setPlaneDistance(1.0f);
 	cameraEmitter.setPlaneHeight(1.0f);
-	cameraEmitter.setResolutionX(10);
-	cameraEmitter.setResolutionY(10);
+	cameraEmitter.setResolutionX(resolutionX);
+	cameraEmitter.setResolutionY(resolutionY);
 	cameraEmitter.setSamplesPerPixel(1);
 
 	RayTracer rayTracer;
+	rayTracer.initialize(500 * MB, 100 * MB, 1, 1000, false);
 	rayTracer.traceAll(&scene, &cameraEmitter);
 
 	math::Vector *pixels = (math::Vector *)_aligned_malloc(sizeof(math::Vector) * 100, 16);
 	
-	for (int i = 0; i < 10; i++) {
-		for (int j = 0; j < 10; j++) {
-			pixels[i * 10 + j] = ((CameraRayEmitter *)(cameraEmitter.getEmitters()[i * 10 + j]))->getIntensity();
+	for (int i = 0; i < resolutionY; i++) {
+		for (int j = 0; j < resolutionX; j++) {
+			pixels[i * resolutionX + j] = ((CameraRayEmitter *)(cameraEmitter.getEmitters()[i * resolutionX + j]))->getIntensity();
 		}
 	}
 
 	//SaveImageData(pixels, 10, 10, "test.bmp");
 
 	EXPECT_EQ(cameraEmitter.getEmitterCount(), 100);
+
+	// Clean everything up
+	
+	for (int i = cameraEmitter.getEmitterCount() - 1; i >= 0; i--) {
+		if (cameraEmitter.getEmitters()[i] != nullptr) {
+			((CameraRayEmitter *)(cameraEmitter.getEmitters()[i]))->destroyRays();
+		}
+	}
+
+	cameraEmitter.destroyEmitters();
+
+	rayTracer.destroy();
 }

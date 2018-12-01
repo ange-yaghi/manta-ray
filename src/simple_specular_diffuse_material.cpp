@@ -114,6 +114,8 @@ int manta::SimpleSpecularDiffuseMaterial::getDiffuseSampleCount(int degree) cons
 		return 1;
 	case 5:
 		return 1;
+	default:
+		return 0;
 	}
 }
 
