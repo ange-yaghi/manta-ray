@@ -18,6 +18,8 @@
 #include <obj_file_loader.h>
 #include <manta_math.h>
 
+#include <iostream>
+
 manta::math::Vector getColor(int r, int g, int b) {
 	return manta::math::loadVector(r / 255.0f, g / 255.0f, b / 255.0f);
 }
@@ -31,6 +33,9 @@ void manta::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolutionY
 
 	ObjFileLoader tableObj;
 	result = tableObj.readObjFile("../../models/table.obj");
+
+	ObjFileLoader shutterObj;
+	result = shutterObj.readObjFile("../../models/room_shutters.obj");
 
 	// Create all materials
 	SimpleSpecularDiffuseMaterial wallMaterial;
@@ -69,6 +74,11 @@ void manta::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolutionY
 	table.setFastIntersectEnabled(false);
 	table.setFastIntersectRadius((math::real)4.0);
 
+	Mesh shutters;
+	shutters.loadObjFileData(&shutterObj);
+	shutters.setFastIntersectEnabled(false);
+	shutters.setFastIntersectRadius((math::real)4.0);
+
 	SpherePrimitive outdoorLightGeometry;
 	outdoorLightGeometry.setRadius((math::real)10.0);
 	outdoorLightGeometry.setPosition(math::loadVector(10.5, 0.0, -20.5));
@@ -87,26 +97,33 @@ void manta::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolutionY
 	SceneObject *smallHouseObject = scene.createSceneObject();
 	smallHouseObject->setGeometry(&smallHouse);
 	smallHouseObject->setMaterial(&wallMaterial);
+	smallHouseObject->setName("House");
 
 	SceneObject *tableObject = scene.createSceneObject();
 	tableObject->setGeometry(&table);
 	tableObject->setMaterial(&tableMaterial);
+	tableObject->setName("Table");
 
-	SceneObject *ground = scene.createSceneObject();
-	ground->setGeometry(&groundGeometry);
-	ground->setMaterial(&groundMaterial);
+	SceneObject *shuttersObject = scene.createSceneObject();
+	shuttersObject->setGeometry(&shutters);
+	shuttersObject->setMaterial(&wallMaterial);
+	shuttersObject->setName("Shutters");
 
-	SceneObject *outdoorTopLightObject = scene.createSceneObject();
-	outdoorTopLightObject->setGeometry(&outdoorTopLightGeometry);
-	outdoorTopLightObject->setMaterial(&outdoorTopLightMaterial);
+	//SceneObject *ground = scene.createSceneObject();
+	//ground->setGeometry(&groundGeometry);
+	//ground->setMaterial(&groundMaterial);
 
-	SceneObject *lightSource = scene.createSceneObject();
-	lightSource->setGeometry(&outdoorLightGeometry);
-	lightSource->setMaterial(&outdoorLight);
+	//SceneObject *outdoorTopLightObject = scene.createSceneObject();
+	//outdoorTopLightObject->setGeometry(&outdoorTopLightGeometry);
+	//outdoorTopLightObject->setMaterial(&outdoorTopLightMaterial);
+
+	//SceneObject *lightSource = scene.createSceneObject();
+	//lightSource->setGeometry(&outdoorLightGeometry);
+	//lightSource->setMaterial(&outdoorLight);
 
 	// Create the camera
 	CameraRayEmitterGroup camera;
-	camera.setSamplingWidth(2);
+	camera.setSamplingWidth(1);
 	camera.setDirection(math::loadVector(-1.0, 0.0, 0.0));
 	camera.setPosition(math::loadVector(5.0, 2.0, 0.0));
 	camera.setUp(math::loadVector(0.0f, 1.0, 0.0));
@@ -118,9 +135,23 @@ void manta::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolutionY
 	
 	// Create the raytracer
 	RayTracer rayTracer;
-	rayTracer.initialize(500 * MB, 100 * MB, 12, 10000, true);
+	rayTracer.initialize(1000 * MB, 100 * MB, 12, 10000, true);
 	rayTracer.setBackgroundColor(getColor(135, 206, 235));
+	rayTracer.setDeterministicSeedMode(true);
 	rayTracer.traceAll(&scene, &camera);
+	// Leaks
+	//rayTracer.tracePixel(518, 101, &scene, &camera);
+	//rayTracer.tracePixel(495, 122, &scene, &camera);
+	//rayTracer.tracePixel(389, 188, &scene, &camera);
+	//rayTracer.tracePixel(1441, 227, &scene, &camera);
+	//rayTracer.tracePixel(459, 358, &scene, &camera);
+	//rayTracer.tracePixel(1160, 566, &scene, &camera);
+	//rayTracer.tracePixel(2020, 739, &scene, &camera);
+	//rayTracer.tracePixel(1094, 910, &scene, &camera);
+	//rayTracer.tracePixel(1829, 1402, &scene, &camera);
+	//rayTracer.tracePixel(839, 1417, &scene, &camera);
+	//rayTracer.tracePixel(2026, 1443, &scene, &camera);
+	//rayTracer.tracePixel(1215, 1511, &scene, &camera);
 
 	// Output the results to file
 	math::Vector *pixels = (math::Vector *)_aligned_malloc(sizeof(math::Vector) * resolutionX * resolutionY, 16);
@@ -134,6 +165,10 @@ void manta::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolutionY
 				math::real r = math::getX(v);
 				math::real g = math::getY(v);
 				math::real b = math::getZ(v);
+
+				if (r > 0.0 || g > 0.0 || b > 0.0) {
+					std::cout << "LEAK AT: " << j << ", " << i << std::endl;
+				}
 			}
 
 			pixels[i * resolutionX + j] = v;
@@ -249,7 +284,9 @@ void manta::teapotDemo(int samplesPerPixel, int resolutionX, int resolutionY) {
 	RayTracer rayTracer;
 	rayTracer.initialize(500 * MB, 50 * MB, 12, 10000, true);
 	rayTracer.setBackgroundColor(getColor(135, 206, 235));
-	rayTracer.traceAll(&scene, &camera);
+	rayTracer.setDeterministicSeedMode(true);
+	//rayTracer.traceAll(&scene, &camera);
+	rayTracer.tracePixel(817, 689, &scene, &camera);
 
 	// Output the results to file
 	math::Vector *pixels = (math::Vector *)_aligned_malloc(sizeof(math::Vector) * resolutionX * resolutionY, 16);
@@ -316,8 +353,9 @@ void manta::lampDemo(int samplesPerPixel, int resolutionX, int resolutionY) {
 	// Create all scene geometry
 	Mesh lamp;
 	lamp.loadObjFileData(&lampObj);
-	lamp.setFastIntersectEnabled(false);
-	lamp.setFastIntersectRadius((math::real)4.0);
+	lamp.setFastIntersectEnabled(true);
+	lamp.setFastIntersectRadius((math::real)2.123);
+	lamp.setFastIntersectPosition(math::loadVector(-0.06430, 1.86833, -2.96564));
 
 	Mesh lampBlock;
 	lampBlock.loadObjFileData(&lampBlockObj);
@@ -367,14 +405,14 @@ void manta::lampDemo(int samplesPerPixel, int resolutionX, int resolutionY) {
 	ground->setMaterial(&wallMaterial);
 	ground->setName("Ground");
 
-	//SceneObject *lampBlockObject = scene.createSceneObject();
-	//lampBlockObject->setGeometry(&lampBlock);
-	//lampBlockObject->setMaterial(&wallMaterial);
-	//lampBlockObject->setName("LampBlock");
+	SceneObject *lampBlockObject = scene.createSceneObject();
+	lampBlockObject->setGeometry(&lampBlock);
+	lampBlockObject->setMaterial(&wallMaterial);
+	lampBlockObject->setName("LampBlock");
 
 	// Create the camera
 	CameraRayEmitterGroup camera;
-	camera.setSamplingWidth(2);
+	camera.setSamplingWidth(1);
 	camera.setDirection(math::loadVector(-1.0, 0.0, 0.0));
 	camera.setPosition(math::loadVector(7.0, 2.0, 0.0));
 	camera.setUp(math::loadVector(0.0f, 1.0, 0.0));
@@ -386,12 +424,23 @@ void manta::lampDemo(int samplesPerPixel, int resolutionX, int resolutionY) {
 
 	// Create the raytracer
 	RayTracer rayTracer;
-	rayTracer.initialize(500 * MB, 100 * MB, 12, 10000, true);
+	rayTracer.initialize(1000 * MB, 100 * MB, 12, 10000, true);
 	rayTracer.setBackgroundColor(getColor(0, 0, 0));
-	//rayTracer.setDeterministicSeedMode(true);
+	rayTracer.setDeterministicSeedMode(true);
 	//rayTracer.tracePixel(819, 199, &scene, &camera);
 	//rayTracer.tracePixel(702, 236, &scene, &camera);
 	//rayTracer.tracePixel(809, 211, &scene, &camera);
+	//rayTracer.tracePixel(793, 224, &scene, &camera);
+	//rayTracer.tracePixel(656, 185, &scene, &camera);
+	//rayTracer.tracePixel(769, 318, &scene, &camera);
+	//rayTracer.tracePixel(742, 218, &scene, &camera);
+	//rayTracer.tracePixel(736, 331, &scene, &camera);
+
+	// Leaks
+	//rayTracer.tracePixel(1281, 900, &scene, &camera);
+	//rayTracer.tracePixel(1456, 1230, &scene, &camera);
+	//rayTracer.tracePixel(616, 1459, &scene, &camera);
+
 	rayTracer.traceAll(&scene, &camera);
 
 	// Output the results to file
@@ -405,7 +454,7 @@ void manta::lampDemo(int samplesPerPixel, int resolutionX, int resolutionY) {
 			math::real b = math::getZ(v);
 
 			if (r > 0) {
-				int a = 0;
+				std::cout << i << ", " << j << std::endl;
 			}
 
 			pixels[i * resolutionX + j] = v;
