@@ -5,6 +5,7 @@
 #include <light_ray.h>
 #include <sphere_primitive.h>
 #include <intersection_point.h>
+#include <intersection_list.h>
 
 #include <manta_math.h>
 
@@ -30,14 +31,13 @@ TEST(PrimitiveTests, SphereIntersection) {
 	ray.setDirection(math::loadVector(-1.0f, 0.0f, 0.0f));
 	ray.setSource(math::loadVector(10.0f, 0.0f, 0.0f));
 
-	IntersectionPoint point;
+	IntersectionList list;
+	const CoarseIntersection *c = sphere.coarseIntersection(&ray, &list, nullptr, nullptr, 1E-2);
 
-	sphere.detectIntersection(&ray, &point);
+	EXPECT_TRUE(c != nullptr);
+	EXPECT_TRUE(list.getIntersectionCount() == 1);
 
-	EXPECT_TRUE(point.m_intersection);
-
-	CHECK_VEC(point.m_normal, 1.0f, 0.0f, 0.0f, 0.0f);
-	CHECK_VEC(point.m_position, 1.0f, 0.0f, 0.0f, 0.0f);
+	list.destroy();
 }
 
 TEST(PrimitiveTests, SphereMiss) {
@@ -49,11 +49,11 @@ TEST(PrimitiveTests, SphereMiss) {
 	ray.setDirection(math::loadVector(-1.0f, 0.0f, 0.0f));
 	ray.setSource(math::loadVector(10.0f, 2.0f, 0.0f));
 
-	IntersectionPoint point;
+	IntersectionList list;
+	const CoarseIntersection *c = sphere.coarseIntersection(&ray, &list, nullptr, nullptr, 1E-2);
 
-	sphere.detectIntersection(&ray, &point);
-
-	EXPECT_FALSE(point.m_intersection);
+	EXPECT_TRUE(c == nullptr);
+	EXPECT_TRUE(list.getIntersectionCount() == 0);
 }
 
 TEST(PrimitiveTests, SphereIntersectionInside) {
@@ -65,12 +65,11 @@ TEST(PrimitiveTests, SphereIntersectionInside) {
 	ray.setDirection(math::loadVector(-1.0f, 0.0f, 0.0f));
 	ray.setSource(math::loadVector(0.0f, 0.0f, 0.0f));
 
-	IntersectionPoint point;
+	IntersectionList list;
+	const CoarseIntersection *c = sphere.coarseIntersection(&ray, &list, nullptr, nullptr, 1E-2);
 
-	sphere.detectIntersection(&ray, &point);
+	EXPECT_TRUE(c != nullptr);
+	EXPECT_TRUE(list.getIntersectionCount() == 1);
 
-	EXPECT_TRUE(point.m_intersection);
-
-	CHECK_VEC(point.m_normal, -1.0f, 0.0f, 0.0f, 0.0f);
-	CHECK_VEC(point.m_position, -1.0f, 0.0f, 0.0f, 0.0f);
+	list.destroy();
 }

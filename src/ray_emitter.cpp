@@ -27,7 +27,7 @@ void manta::RayEmitter::initializeRays(int count) {
 		buffer = _aligned_malloc(size, 16);
 	}
 	else {
-		buffer = m_stackAllocator->allocate(size, 16);
+		buffer = m_stackAllocator->allocate((unsigned int)size, 16);
 	}
 
 	m_rays = (LightRay *)buffer;
