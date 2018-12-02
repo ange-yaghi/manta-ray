@@ -80,7 +80,7 @@ const manta::CoarseIntersection *manta::Mesh::coarseIntersection(const LightRay 
 	CoarseCollisionOutput output;
 
 	for (int i = 0; i < m_faceCount; i++) {
-		math::real depthHint = math::REAL_MAX;
+		math::real depthHint = math::constants::REAL_MAX;
 		if (closest != nullptr) {
 			depthHint = closest->depth + epsilon;
 		}
@@ -95,7 +95,7 @@ const manta::CoarseIntersection *manta::Mesh::coarseIntersection(const LightRay 
 				// Check that the collision is eligible to be a reference
 				//if (detectIntersection(i, output.u, output.v, output.w, 1E-6)) {
 				IntersectionPoint p;
-				if (detectIntersection(i, math::REAL_MAX, rayDir, raySource, &p, 1E-6)) {
+				if (detectIntersection(i, math::constants::REAL_MAX, rayDir, raySource, &p, 1E-6)) {
 					//	detectIntersection(i, output.u, output.v, output.w, 1E-6);
 					//	detectIntersection(i, math::REAL_MAX, rayDir, raySource, &p, 1E-6);
 					//}
@@ -114,7 +114,7 @@ void manta::Mesh::fineIntersection(const LightRay *ray, IntersectionPoint *p, co
 	math::Vector rayDir = ray->getDirection();
 	math::Vector raySource = ray->getSource();
 
-	detectIntersection(hint->locationHint, math::REAL_MAX, rayDir, raySource, p, bleed);
+	detectIntersection(hint->locationHint, math::constants::REAL_MAX, rayDir, raySource, p, bleed);
 }
 
 bool manta::Mesh::fastIntersection(const LightRay *ray) const {

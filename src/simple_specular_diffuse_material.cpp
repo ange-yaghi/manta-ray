@@ -105,9 +105,9 @@ int manta::SimpleSpecularDiffuseMaterial::getDiffuseSampleCount(int degree) cons
 	// TODO: add logic to change the sample count as the degree changes
 	switch (degree) {
 	case 1:
-		return 1;
+		return 4;
 	case 2:
-		return 1;
+		return 2;
 	case 3:
 		return 1;
 	case 4:

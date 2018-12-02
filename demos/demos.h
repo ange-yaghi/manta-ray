@@ -14,14 +14,16 @@
 #include <simple_diffuse_material.h>
 #include <simple_specular_diffuse_material.h>
 #include <ray_tracer.h>
-#include <camera_ray_emitter_group.h>
-#include <camera_ray_emitter.h>
+#include <ss_camera_ray_emitter_group.h>
+#include <ss_camera_ray_emitter.h>
 #include <image_handling.h>
 #include <memory_management.h>
 #include <mesh.h>
 #include <obj_file_loader.h>
 #include <manta_math.h>
 #include <utils.h>
+#include <scene_buffer.h>
+#include <raw_file.h>
 
 namespace manta_demo {
 

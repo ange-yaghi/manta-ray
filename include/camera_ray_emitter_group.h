@@ -3,18 +3,19 @@
 
 #include <ray_emitter_group.h>
 
-#include <camera_ray_emitter.h>
+#include <manta_math.h>
 
 namespace manta {
+
+	class SceneBuffer;
 
 	class CameraRayEmitterGroup : public RayEmitterGroup {
 	public:
 		CameraRayEmitterGroup();
 		virtual ~CameraRayEmitterGroup();
 
-		virtual void createAllEmitters();
-
-		CameraRayEmitter **m_cameraRayEmitters;
+		virtual void createAllEmitters() = 0;
+		void destroyRays(); // Manually destroy all rays
 
 		void setUp(const math::Vector &up) { m_up = up; }
 		math::Vector getUp() const { return m_up; }
@@ -37,11 +38,7 @@ namespace manta {
 		void setDirection(const math::Vector &direction) { m_direction = direction; }
 		math::Vector getDirection() const { return m_direction; }
 
-		void setSamplingWidth(int width) { m_samplingWidth = width; }
-		int getSamplingWidth() const { return m_samplingWidth; }
-
-		void setSamplesPerPixel(int s) { m_samplesPerPixel = s; }
-		int getSamplesPerPixel() const { return m_samplesPerPixel; }
+		virtual void fillSceneBuffer(SceneBuffer *sceneBuffer) const;
 
 	protected:
 		math::Vector m_up;
@@ -50,9 +47,6 @@ namespace manta {
 
 		int m_resolutionX;
 		int m_resolutionY;
-
-		int m_samplingWidth;
-		int m_samplesPerPixel;
 
 		float m_planeHeight;
 		float m_planeDistance;
