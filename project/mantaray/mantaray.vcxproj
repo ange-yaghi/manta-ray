@@ -21,8 +21,9 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\batched_monte_carlo_emitter.cpp" />
     <ClCompile Include="..\..\src\biconvex_lens.cpp" />
-    <ClCompile Include="..\..\src\camera_ray_emitter.cpp" />
     <ClCompile Include="..\..\src\camera_ray_emitter_group.cpp" />
+    <ClCompile Include="..\..\src\ss_camera_ray_emitter.cpp" />
+    <ClCompile Include="..\..\src\ss_camera_ray_emitter_group.cpp" />
     <ClCompile Include="..\..\src\circular_aperture.cpp" />
     <ClCompile Include="..\..\src\gpu_kernel_opencl.cpp" />
     <ClCompile Include="..\..\src\gpu_manager_opencl.cpp" />
@@ -42,10 +43,12 @@
     <ClCompile Include="..\..\src\monte_carlo_specular_diffuse_group.cpp" />
     <ClCompile Include="..\..\src\obj_file_loader.cpp" />
     <ClCompile Include="..\..\src\path_recorder.cpp" />
+    <ClCompile Include="..\..\src\raw_file.cpp" />
     <ClCompile Include="..\..\src\ray_emitter.cpp" />
     <ClCompile Include="..\..\src\ray_emitter_group.cpp" />
     <ClCompile Include="..\..\src\ray_tracer.cpp" />
     <ClCompile Include="..\..\src\scene.cpp" />
+    <ClCompile Include="..\..\src\scene_buffer.cpp" />
     <ClCompile Include="..\..\src\scene_geometry.cpp" />
     <ClCompile Include="..\..\src\scene_object.cpp" />
     <ClCompile Include="..\..\src\simple_diffuse_material.cpp" />
@@ -63,8 +66,9 @@
   <ItemGroup>
     <ClInclude Include="..\..\include\aperture.h" />
     <ClInclude Include="..\..\include\biconvex_lens.h" />
-    <ClInclude Include="..\..\include\camera_ray_emitter.h" />
     <ClInclude Include="..\..\include\camera_ray_emitter_group.h" />
+    <ClInclude Include="..\..\include\ss_camera_ray_emitter.h" />
+    <ClInclude Include="..\..\include\ss_camera_ray_emitter_group.h" />
     <ClInclude Include="..\..\include\circular_aperture.h" />
     <ClInclude Include="..\..\include\gpu_kernel.h" />
     <ClInclude Include="..\..\include\gpu_kernel_opencl.h" />
@@ -96,10 +100,12 @@
     <ClInclude Include="..\..\include\obj_file_loader.h" />
     <ClInclude Include="..\..\include\path_recorder.h" />
     <ClInclude Include="..\..\include\pool_allocator.h" />
+    <ClInclude Include="..\..\include\raw_file.h" />
     <ClInclude Include="..\..\include\ray_emitter.h" />
     <ClInclude Include="..\..\include\ray_emitter_group.h" />
     <ClInclude Include="..\..\include\ray_tracer.h" />
     <ClInclude Include="..\..\include\scene.h" />
+    <ClInclude Include="..\..\include\scene_buffer.h" />
     <ClInclude Include="..\..\include\scene_geometry.h" />
     <ClInclude Include="..\..\include\scene_object.h" />
     <ClInclude Include="..\..\include\simple_diffuse_material.h" />

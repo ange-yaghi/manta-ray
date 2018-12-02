@@ -34,6 +34,8 @@ namespace manta {
 		void setStackAllocator(StackAllocator *allocator) { m_stackAllocator = allocator; }
 		StackAllocator *getStackAllocator() const { return m_stackAllocator; }
 
+		virtual math::Vector getIntensity() const { return math::constants::Zero; }
+
 	protected:
 		void initializeRays(int count);
 

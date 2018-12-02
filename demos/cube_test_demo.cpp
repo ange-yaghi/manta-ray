@@ -55,7 +55,7 @@ void manta_demo::cubeTestDemo(int samplesPerPixel, int resolutionX, int resoluti
 	//lightSource->setMaterial(&outdoorLight);
 
 	// Create the camera
-	CameraRayEmitterGroup camera;
+	SSCameraRayEmitterGroup camera;
 	camera.setSamplingWidth(1);
 	camera.setDirection(math::loadVector(-1.0, 0.0, 0.0));
 	camera.setPosition(math::loadVector(7.0, 2.0, 0.0));
@@ -72,27 +72,22 @@ void manta_demo::cubeTestDemo(int samplesPerPixel, int resolutionX, int resoluti
 	rayTracer.setBackgroundColor(getColor(0, 0, 0));
 	rayTracer.traceAll(&scene, &camera);
 
-	// Output the results to file
-	math::Vector *pixels = (math::Vector *)_aligned_malloc(sizeof(math::Vector) * resolutionX * resolutionY, 16);
+	// Output the results to a scene buffer
+	SceneBuffer sceneBuffer;
+	camera.fillSceneBuffer(&sceneBuffer);
 
-	for (int i = 0; i < resolutionY; i++) {
-		for (int j = 0; j < resolutionX; j++) {
-			math::Vector v = ((CameraRayEmitter *)(camera.getEmitters()[i * resolutionX + j]))->getIntensity();
-			math::real r = math::getX(v);
-			math::real g = math::getY(v);
-			math::real b = math::getZ(v);
-
-			pixels[i * resolutionX + j] = v;
-		}
-	}
-
-	// Clean everything up
-	for (int i = camera.getEmitterCount() - 1; i >= 0; i--) {
-		((CameraRayEmitter *)(camera.getEmitters()[i]))->destroyRays();
-	}
-
-	SaveImageData(pixels, resolutionX, resolutionY, createUniqueRenderFilename(RENDER_OUTPUT, "cube_test", samplesPerPixel).c_str());
+	// Clean up the camera
+	camera.destroyRays();
 	camera.destroyEmitters();
 
+	std::string fname = createUniqueRenderFilename("cube_test", samplesPerPixel);
+	std::string imageFname = std::string(RENDER_OUTPUT) + "bitmap/" + fname + ".bmp";
+	std::string rawFname = std::string(RENDER_OUTPUT) + "raw/" + fname + ".fpm";
+
+	RawFile rawFile;
+	rawFile.writeRawFile(rawFname.c_str(), &sceneBuffer);
+	editImage(&sceneBuffer, imageFname);
+
+	sceneBuffer.destroy();
 	rayTracer.destroy();
 }
