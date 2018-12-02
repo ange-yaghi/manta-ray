@@ -33,7 +33,7 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\include;E:\Software\MantaRay\include;E:\Software\MantaRay\project\mantaray_test;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\include;$(SolutionDir)\..\include;$(SolutionDir)\$(ProjectName);$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -41,7 +41,7 @@
     <LibraryPath>E:\Software\Common\SDL2-2.0.9\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>E:\Software\MantaRay\project\mantaray_test;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\include;E:\Software\MantaRay\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\$(ProjectName);C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\include;E:\Software\MantaRay\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemGroup>
@@ -49,11 +49,11 @@
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\tests\mesh_intersection_tests.cpp" />
     <ClCompile Include="..\..\test\camera_emulation_tests.cpp" />
     <ClCompile Include="..\..\test\integration_testing.cpp" />
     <ClCompile Include="..\..\test\math_tests.cpp" />
     <ClCompile Include="..\..\test\memory_tests.cpp" />
+    <ClCompile Include="..\..\test\mesh_intersection_tests.cpp" />
     <ClCompile Include="..\..\test\opencl_tests.cpp" />
     <ClCompile Include="..\..\test\primitives.cpp" />
     <ClCompile Include="..\..\test\sanity_check.cpp" />

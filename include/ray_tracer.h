@@ -54,10 +54,13 @@ namespace manta {
 		JobQueue *getJobQueue() { return &m_jobQueue; }
 		
 		void traceRay(const Scene *scene, LightRay *ray, int degree, StackAllocator *s /**/ PATH_RECORDER_DECL) const;
-		void incrementRayCompletion(const Job *job);
+		void incrementRayCompletion(const Job *job, int increment = 1);
 
 		void setDeterministicSeedMode(bool enable) { m_deterministicSeed = enable; }
 		bool isDeterministicSeedMode() const { return m_deterministicSeed; }
+
+		void setPathRecordingOutputDirectory(const std::string &s) { m_pathRecordingOutputDirectory = s; }
+		std::string getPathRecordingOutputDirector() const { return m_pathRecordingOutputDirectory; }
 
 	protected:
 		// Multithreading features
@@ -65,7 +68,11 @@ namespace manta {
 		Worker *m_workers;
 		Worker *m_singleThreadedWorker;
 
-		unsigned m_workerStackSize;
+		unsigned long m_workerStackSize;
+		int m_rayCount;
+		int m_threadCount;
+		int m_renderBlockSize;
+		bool m_multithreaded;
 
 		void createWorkers();
 		void startWorkers();
@@ -73,6 +80,7 @@ namespace manta {
 		void destroyWorkers();
 
 	protected:
+		// Ray tracing features
 		void depthCull(const Scene *scene, const LightRay *ray, SceneObject **closestObject, IntersectionPoint *point, StackAllocator *s) const;
 		void fluxMultisample(const LightRay *ray, IntersectionList *list, IntersectionPoint *point, SceneObject **closestObject, const CoarseIntersection *referenceIntersection, math::real epsilon, StackAllocator *s) const;
 
@@ -81,15 +89,16 @@ namespace manta {
 
 		math::Vector m_backgroundColor;
 
+	protected:
+		// Statistics
 		std::atomic<int> m_currentRay;
 		std::mutex m_outputLock;
-		int m_rayCount;
-		int m_threadCount;
-		int m_renderBlockSize;
 
 		StackAllocator m_stack;
 
-		bool m_multithreaded;
+	protected:
+		// Debugging and path recording
+		std::string m_pathRecordingOutputDirectory;
 		bool m_deterministicSeed;
 	};
 

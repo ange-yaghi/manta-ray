@@ -102,7 +102,7 @@ TEST(OpenCLTests, OpenCLPerformanceTest) {
 
 	auto endCPU = std::chrono::high_resolution_clock::now();
 
-	std::ofstream outputFile("../../../test_results/test_results_opencl_vs_cpu_benchmark_simple_calc.txt");
+	std::ofstream outputFile("../../../workspace/test_results/test_results_opencl_vs_cpu_benchmark_simple_calc.txt");
 	outputFile << "Device name: " << gpuManager.getDeviceName() << std::endl;
 	outputFile << "OpenCL: " << std::chrono::duration_cast<std::chrono::nanoseconds>(endOpenCL - beginOpenCL).count() << "ns" << std::endl;
 	outputFile << "CPU:    " << std::chrono::duration_cast<std::chrono::nanoseconds>(endCPU - endOpenCL).count() << "ns" << std::endl;
@@ -125,7 +125,7 @@ struct GPULightRay {
 TEST(OpenCLTests, OpenCLIntersectionTeapotTest) {
 	// Load mesh
 	ObjFileLoader teapotObj;
-	bool result = teapotObj.readObjFile("../../../models/teapot.obj");
+	bool result = teapotObj.readObjFile("../../../demos/models/teapot.obj");
 
 	Mesh mesh;
 	mesh.loadObjFileData(&teapotObj);
@@ -197,7 +197,7 @@ TEST(OpenCLTests, OpenCLIntersectionTeapotTest) {
 
 	auto endCPU = std::chrono::high_resolution_clock::now();
 
-	std::ofstream outputFile("../../../test_results/test_results_intersection_opencl_vs_cpu_benchmark_teapot.txt");
+	std::ofstream outputFile("../../../workspace/test_results/test_results_intersection_opencl_vs_cpu_benchmark_teapot.txt");
 	outputFile << "Device name: " << gpuManager.getDeviceName() << std::endl;
 	outputFile << "OpenCL: " << std::chrono::duration_cast<std::chrono::nanoseconds>(endOpenCL - beginOpenCL).count() << "ns" << std::endl;
 	outputFile << "CPU:    " << std::chrono::duration_cast<std::chrono::nanoseconds>(endCPU - startCPU).count() << "ns" << std::endl;
@@ -207,7 +207,7 @@ TEST(OpenCLTests, OpenCLIntersectionTeapotTest) {
 TEST(OpenCLTests, OpenCLIntersectionHighStressTest) {
 	// Load mesh
 	ObjFileLoader teapotObj;
-	bool result = teapotObj.readObjFile("../../../models/stress_ball.obj");
+	bool result = teapotObj.readObjFile("../../../demos/models/stress_ball.obj");
 
 	Mesh mesh;
 	mesh.loadObjFileData(&teapotObj);
@@ -279,7 +279,7 @@ TEST(OpenCLTests, OpenCLIntersectionHighStressTest) {
 
 	auto endCPU = std::chrono::high_resolution_clock::now();
 
-	std::ofstream outputFile("../../../test_results/test_results_intersection_opencl_vs_cpu_benchmark_stress_ball.txt");
+	std::ofstream outputFile("../../../workspace/test_results/test_results_intersection_opencl_vs_cpu_benchmark_stress_ball.txt");
 	outputFile << "Device name: " << gpuManager.getDeviceName() << std::endl;
 	outputFile << "OpenCL: " << std::chrono::duration_cast<std::chrono::nanoseconds>(endOpenCL - beginOpenCL).count() << "ns" << std::endl;
 	outputFile << "CPU:    " << std::chrono::duration_cast<std::chrono::nanoseconds>(endCPU - startCPU).count() << "ns" << std::endl;
