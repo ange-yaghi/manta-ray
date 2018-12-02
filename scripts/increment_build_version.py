@@ -26,7 +26,7 @@ if __name__ == "__main__":
 
     mypath = os.path.dirname(os.path.realpath(__file__)) + "/../"
 
-    directories = ['src', 'test', 'include', 'scripts', 'opencl_programs']
+    directories = ['src', 'test', 'include', 'scripts', 'opencl_programs', 'demos']
     
     f = open(mypath + "/tracking/BuildVersion.txt", "r")
     

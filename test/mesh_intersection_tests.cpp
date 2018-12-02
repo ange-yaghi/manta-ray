@@ -12,7 +12,7 @@ using namespace manta;
 
 TEST(MeshIntersectionTests, MeshIntersectionPerformance) {
 	ObjFileLoader teapotObj;
-	bool result = teapotObj.readObjFile("../../../models/teapot.obj");
+	bool result = teapotObj.readObjFile("../../../demos/models/teapot.obj");
 
 	Mesh mesh;
 	mesh.loadObjFileData(&teapotObj);

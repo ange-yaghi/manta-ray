@@ -24,7 +24,6 @@
     <ClCompile Include="..\..\src\camera_ray_emitter.cpp" />
     <ClCompile Include="..\..\src\camera_ray_emitter_group.cpp" />
     <ClCompile Include="..\..\src\circular_aperture.cpp" />
-    <ClCompile Include="..\..\src\demos.cpp" />
     <ClCompile Include="..\..\src\gpu_kernel_opencl.cpp" />
     <ClCompile Include="..\..\src\gpu_manager_opencl.cpp" />
     <ClCompile Include="..\..\src\gpu_memory_opencl.cpp" />
@@ -36,7 +35,6 @@
     <ClCompile Include="..\..\src\lens_camera_ray_emitter_group.cpp" />
     <ClCompile Include="..\..\src\lens_element.cpp" />
     <ClCompile Include="..\..\src\light_ray.cpp" />
-    <ClCompile Include="..\..\src\main.cpp" />
     <ClCompile Include="..\..\src\manta_math_float_simd.cpp" />
     <ClCompile Include="..\..\src\manta_math_single.cpp" />
     <ClCompile Include="..\..\src\material.cpp" />
@@ -68,7 +66,6 @@
     <ClInclude Include="..\..\include\camera_ray_emitter.h" />
     <ClInclude Include="..\..\include\camera_ray_emitter_group.h" />
     <ClInclude Include="..\..\include\circular_aperture.h" />
-    <ClInclude Include="..\..\include\demos.h" />
     <ClInclude Include="..\..\include\gpu_kernel.h" />
     <ClInclude Include="..\..\include\gpu_kernel_opencl.h" />
     <ClInclude Include="..\..\include\gpu_manager.h" />
@@ -122,7 +119,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\opencl_programs\mantaray.cl" />
-    <None Include="cpp.hint" />
+    <None Include="..\..\scripts\increment_build_version.py" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -183,7 +180,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\include;E:\Software\Common\SDL2-2.0.9\include;E:\Software\MantaRay\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\include;E:\Software\Common\SDL2-2.0.9\include;$(SolutionDir)\..\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\lib\x64;E:\Software\Common\SDL2-2.0.9\lib\x64;$(LibraryPath)</LibraryPath>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
@@ -192,7 +189,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\include;E:\Software\Common\SDL2-2.0.9\include;E:\Software\MantaRay\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\include;E:\Software\Common\SDL2-2.0.9\include;$(SolutionDir)\..\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\lib\x64;E:\Software\Common\SDL2-2.0.9\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -274,6 +271,9 @@
     <PostBuildEvent>
       <Command>"C:\Program Files (x86)\Microsoft Visual Studio\Shared\Python36_64\python" $(TargetDir)..\..\..\scripts\increment_build_version.py</Command>
     </PostBuildEvent>
+    <Lib>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
