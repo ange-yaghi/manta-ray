@@ -1,16 +1,16 @@
-#include <camera_ray_emitter.h>
+#include <ss_camera_ray_emitter.h>
 
 #include <light_ray.h>
 
-manta::CameraRayEmitter::CameraRayEmitter() {
+manta::SSCameraRayEmitter::SSCameraRayEmitter() {
 
 }
 
-manta::CameraRayEmitter::~CameraRayEmitter() {
+manta::SSCameraRayEmitter::~SSCameraRayEmitter() {
 
 }
 
-void manta::CameraRayEmitter::generateRays() {
+void manta::SSCameraRayEmitter::generateRays() {
 	// Create all rays
 	initializeRays(m_samples * m_samples);
 	LightRay *rays = getRays();
@@ -51,7 +51,7 @@ void manta::CameraRayEmitter::generateRays() {
 	}
 }
 
-manta::math::Vector manta::CameraRayEmitter::getIntensity() const {
+manta::math::Vector manta::SSCameraRayEmitter::getIntensity() const {
 	LightRay *rays = getRays();
 	int rayCount = getRayCount();
 
