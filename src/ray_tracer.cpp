@@ -21,6 +21,9 @@
 
 manta::RayTracer::RayTracer() {
 	m_deterministicSeed = false;
+	m_pathRecordingOutputDirectory = "";
+	m_backgroundColor = math::constants::Zero;
+	m_currentRay = 0;
 }
 
 manta::RayTracer::~RayTracer() {
@@ -123,10 +126,10 @@ void manta::RayTracer::destroy() {
 	destroyWorkers();
 }
 
-void manta::RayTracer::incrementRayCompletion(const Job *job) {
+void manta::RayTracer::incrementRayCompletion(const Job *job, int increment) {
 	m_outputLock.lock();
 	int emitterCount = job->group->getEmitterCount();
-	m_currentRay += 1;
+	m_currentRay += increment;
 	if (m_currentRay % 1000 == 0) {
 		std::cout << "Ray " << m_currentRay << "/" << emitterCount << std::endl;
 	}
@@ -137,7 +140,7 @@ void manta::RayTracer::createWorkers() {
 	m_workers = new Worker[m_threadCount];
 
 	for (int i = 0; i < m_threadCount; i++) {
-		m_workers[i].initialize(m_workerStackSize, this, i, m_deterministicSeed);
+		m_workers[i].initialize(m_workerStackSize, this, i, m_deterministicSeed, m_pathRecordingOutputDirectory);
 	}
 }
 

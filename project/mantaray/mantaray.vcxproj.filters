@@ -148,15 +148,6 @@
     <Filter Include="Source Files\hardware-acceleration\opencl">
       <UniqueIdentifier>{bc23332a-d66b-4601-9f6b-c2c5214577c1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="opencl-programs">
-      <UniqueIdentifier>{ff23a991-3a5f-40e8-adfd-7af0899831f2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\demos">
-      <UniqueIdentifier>{79f6a041-e665-435a-ae71-f96cffde74b8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\demos">
-      <UniqueIdentifier>{68fa0b6b-71c9-429d-8f4f-1cc5e3a3a166}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\emitter\batched-monte-carlo-emitter">
       <UniqueIdentifier>{5013209d-d19f-492e-9a15-cb8852d48ce3}</UniqueIdentifier>
     </Filter>
@@ -178,11 +169,14 @@
     <Filter Include="Header Files\manta">
       <UniqueIdentifier>{5fdfda90-0e17-44d9-b188-420de38668db}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scripts">
+      <UniqueIdentifier>{b45abf0e-3c9d-47cd-862f-e8742dceb52b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OpenCL Programs">
+      <UniqueIdentifier>{ff23a991-3a5f-40e8-adfd-7af0899831f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
       <Filter>Source Files\geometry</Filter>
     </ClCompile>
@@ -293,9 +287,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\gpu_kernel_opencl.cpp">
       <Filter>Source Files\hardware-acceleration\opencl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\demos.cpp">
-      <Filter>Source Files\demos</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\batched_monte_carlo_emitter.cpp">
       <Filter>Source Files\emitter\batched-monte-carlo-emitter</Filter>
@@ -449,9 +440,6 @@
     <ClInclude Include="..\..\include\gpu_kernel_opencl.h">
       <Filter>Header Files\hardware-acceleration\opencl</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\demos.h">
-      <Filter>Header Files\demos</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\batched_monte_carlo_emitter.h">
       <Filter>Header Files\emitter\batched-monte-carlo-emitter</Filter>
     </ClInclude>
@@ -474,9 +462,11 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <None Include="cpp.hint" />
     <None Include="..\..\opencl_programs\mantaray.cl">
-      <Filter>opencl-programs</Filter>
+      <Filter>OpenCL Programs</Filter>
+    </None>
+    <None Include="..\..\scripts\increment_build_version.py">
+      <Filter>Scripts</Filter>
     </None>
   </ItemGroup>
 </Project>

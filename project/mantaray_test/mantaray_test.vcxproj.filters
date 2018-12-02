@@ -23,7 +23,7 @@
     <ClCompile Include="..\..\test\opencl_tests.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\tests\mesh_intersection_tests.cpp">
+    <ClCompile Include="..\..\test\mesh_intersection_tests.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
   </ItemGroup>
