@@ -11,9 +11,6 @@
 #include <time.h>
 
 manta::Worker::Worker() {
-	m_start = 0;
-	m_end = 0;
-
 	m_stack = nullptr;
 	m_thread = nullptr;
 
@@ -25,7 +22,7 @@ manta::Worker::~Worker() {
 	assert(m_thread == nullptr);
 }
 
-void manta::Worker::initialize(unsigned int stackSize, RayTracer *rayTracer, int workerId, bool deterministicSeed) {
+void manta::Worker::initialize(unsigned int stackSize, RayTracer *rayTracer, int workerId, bool deterministicSeed, const std::string &pathRecorderOutputDirectory) {
 	if (stackSize > 0) {
 		m_stack = new StackAllocator;
 		m_stack->initialize(stackSize);
@@ -37,6 +34,7 @@ void manta::Worker::initialize(unsigned int stackSize, RayTracer *rayTracer, int
 	m_rayTracer = rayTracer;
 	m_deterministicSeed = deterministicSeed;
 	m_workerId = workerId;
+	m_pathRecorderOutputDirectory = pathRecorderOutputDirectory;
 }
 
 void manta::Worker::start(bool multithreaded) {
@@ -86,7 +84,12 @@ void manta::Worker::doJob(const Job *job) {
 		if (m_deterministicSeed) {
 			// Seed the random number generator with the emitter index
 			// This is useful for exactly replicating a run with a different number of pixels
-			srand(i);
+
+			// Compute pseudorandom LCG
+			constexpr __int64 a = 1664525;
+			constexpr __int64 c = 1013904223;
+			unsigned __int64 xn = (a * i + c) % 0xFFFFFFFF;
+			srand((unsigned int)xn);
 		}
 
 		if (emitter != nullptr) {
@@ -131,10 +134,10 @@ std::string manta::Worker::getObjFname() {
 	time(&rawTime);
 	localtime_s(&timeInfo, &rawTime);
 
-	strftime(buffer, 256, "diagnostics_%F_%H%M.obj", &timeInfo);
+	strftime(buffer, 256, "diagnostics_%F_%H%M%S", &timeInfo);
 
 	std::stringstream ss;
 	ss << m_workerId;
 
-	return "diagnostics/wId_" + ss.str() + std::string(buffer);
+	return m_pathRecorderOutputDirectory + std::string(buffer) + "worker_" + ss.str();
 }

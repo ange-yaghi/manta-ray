@@ -1,5 +1,9 @@
-#include <demos.h>
+#ifndef DEMOS_H
+#define DEMOS_H
 
+#include <settings.h>
+
+// All required manta-ray includes
 #include <light_ray.h>
 #include <sphere_primitive.h>
 #include <intersection_point.h>
@@ -17,13 +21,15 @@
 #include <mesh.h>
 #include <obj_file_loader.h>
 #include <manta_math.h>
+#include <utils.h>
 
-#include <iostream>
+namespace manta_demo {
 
-manta::math::Vector getColor(int r, int g, int b) {
-	return manta::math::loadVector(r / 255.0f, g / 255.0f, b / 255.0f);
-}
+	void simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolutionY);
+	void teapotDemo(int samplesPerPixel, int resolutionX, int resolutionY);
+	void teapotLampDemo(int samplesPerPixel, int resolutionX, int resolutionY);
+	void cubeTestDemo(int samplesPerPixel, int resolutionX, int resolutionY);
 
+} /* namespace manta_demo */
 
-
-
+#endif /* DEMOS_H */

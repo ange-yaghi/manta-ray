@@ -32,7 +32,7 @@ namespace manta {
 		Worker();
 		~Worker();
 
-		void initialize(unsigned int stackSize, RayTracer *rayTracer, int workerId, bool deterministicSeed);
+		void initialize(unsigned int stackSize, RayTracer *rayTracer, int workerId, bool deterministicSeed, const std::string &pathRecorderOutputDirectory);
 		void start(bool multithreaded = true);
 		void join();
 		void destroy();
@@ -44,19 +44,19 @@ namespace manta {
 		StackAllocator *m_stack;
 		RayTracer *m_rayTracer;
 
-		std::thread *m_thread;
-		
-		int m_start;
-		int m_end;
+		std::thread *m_thread;	
 
+	protected:
+		// Debugging/Path recording
+		std::string getTreeName(int pixelIndex, int sample);
+		std::string getObjFname();
+
+		PathRecorder m_pathRecorder;
+		std::string m_pathRecorderOutputDirectory;
 		bool m_deterministicSeed;
 
 	protected:
-		std::string getTreeName(int pixelIndex, int sample);
-		std::string getObjFname();
-		PathRecorder m_pathRecorder;
-
-	protected:
+		// Identification
 		int m_workerId;
 	};
 
