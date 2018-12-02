@@ -37,25 +37,8 @@
     <Filter Include="Tests">
       <UniqueIdentifier>{9bf0ba03-5ea5-4087-87f9-2f861d6fcb84}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Test Results">
-      <UniqueIdentifier>{85c515a9-c830-4145-abce-9f6f793c0fc8}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\..\test_results\test_results_mesh_intersection.txt">
-      <Filter>Test Results</Filter>
-    </Text>
-    <Text Include="..\..\test_results\test_results_opencl_vs_cpu_benchmark.txt">
-      <Filter>Test Results</Filter>
-    </Text>
-    <Text Include="..\..\test_results\test_results_intersection_opencl_vs_cpu_benchmark_stress_ball.txt">
-      <Filter>Test Results</Filter>
-    </Text>
-    <Text Include="..\..\test_results\test_results_intersection_opencl_vs_cpu_benchmark_teapot.txt">
-      <Filter>Test Results</Filter>
-    </Text>
   </ItemGroup>
 </Project>

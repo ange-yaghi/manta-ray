@@ -25,7 +25,7 @@ Uint32 GetPixel24(SDL_Surface * surface, int x, int y) {
 	return color;
 }
 
-void PlacePixel24(SDL_Surface * surface, int x, int y, manta::math::Vector &color) {
+void PlacePixel24(SDL_Surface * surface, int x, int y, const manta::math::Vector &color) {
 	Uint32 color32 = 0;
 
 	manta::math::real r = manta::math::getX(color);
@@ -56,7 +56,7 @@ void PlacePixel24(SDL_Surface * surface, int x, int y, manta::math::Vector &colo
 	int a = 0;
 }
 
-void manta::SaveImageData(math::Vector *target, int width, int height, const char *fname) {
+void manta::SaveImageData(const math::Vector *target, int width, int height, const char *fname) {
 
 	/* Create a 32-bit surface with the bytes of each pixel in R,G,B,A order,
 	as expected by OpenGL for textures */

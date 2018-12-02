@@ -10,10 +10,11 @@
 #include <scene_geometry.h>
 #include <material.h>
 #include <ray_tracer.h>
-#include <camera_ray_emitter.h>
-#include <camera_ray_emitter_group.h>
+#include <ss_camera_ray_emitter.h>
+#include <ss_camera_ray_emitter_group.h>
 #include <image_handling.h>
 #include <memory_management.h>
+#include <scene_buffer.h>
 
 #include <manta_math.h>
 
@@ -47,7 +48,7 @@ TEST(IntegrationTests, BasicTest) {
 	lightObject->setMaterial(&lightMaterial);
 	lightObject->setGeometry(&light);
 
-	CameraRayEmitterGroup cameraEmitter;
+	SSCameraRayEmitterGroup cameraEmitter;
 	cameraEmitter.setSamplingWidth(2);
 	cameraEmitter.setDirection(math::loadVector(-1.0f, 0.0f, 0.0f));
 	cameraEmitter.setPosition(math::loadVector(10.0f, 0.0f, 0.0f));
@@ -62,27 +63,18 @@ TEST(IntegrationTests, BasicTest) {
 	rayTracer.initialize(500 * MB, 100 * MB, 1, 1000, false);
 	rayTracer.traceAll(&scene, &cameraEmitter);
 
-	math::Vector *pixels = (math::Vector *)_aligned_malloc(sizeof(math::Vector) * 100, 16);
-	
-	for (int i = 0; i < resolutionY; i++) {
-		for (int j = 0; j < resolutionX; j++) {
-			pixels[i * resolutionX + j] = ((CameraRayEmitter *)(cameraEmitter.getEmitters()[i * resolutionX + j]))->getIntensity();
-		}
-	}
-
-	//SaveImageData(pixels, 10, 10, "test.bmp");
+	// Output the results to a scene buffer
+	SceneBuffer sceneBuffer;
+	cameraEmitter.fillSceneBuffer(&sceneBuffer);
 
 	EXPECT_EQ(cameraEmitter.getEmitterCount(), 100);
 
-	// Clean everything up
-	
-	for (int i = cameraEmitter.getEmitterCount() - 1; i >= 0; i--) {
-		if (cameraEmitter.getEmitters()[i] != nullptr) {
-			((CameraRayEmitter *)(cameraEmitter.getEmitters()[i]))->destroyRays();
-		}
-	}
-
+	// Clean up the camera
+	cameraEmitter.destroyRays();
 	cameraEmitter.destroyEmitters();
 
+	//SaveImageData(pixels, 10, 10, "test.bmp");
+
+	sceneBuffer.destroy();
 	rayTracer.destroy();
 }

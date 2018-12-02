@@ -5,7 +5,7 @@
 
 namespace manta {
 
-	void SaveImageData(math::Vector *target, int width, int height, const char *fname);
+	void SaveImageData(const math::Vector *target, int width, int height, const char *fname);
 
 }
 

@@ -340,7 +340,7 @@ void manta::RayTracer::fluxMultisample(const LightRay *ray, IntersectionList *li
 		}
 		
 
-		math::real lowestAverageDistance = math::REAL_MAX;
+		math::real lowestAverageDistance = math::constants::REAL_MAX;
 		int highestSampleCount = 0;
 		int closestIntersection = -1;
 		int preferredIntersection = -1;
