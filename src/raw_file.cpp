@@ -102,9 +102,9 @@ void *manta::RawFile::generatePixelArray(const SceneBuffer *buffer, int version,
 				for (int y = 0; y < height; y++) {
 					FloatPixel_v1 *px = &v[y * width + x];
 					math::Vector value = buffer->sample(x, y);
-					px->r = math::getX(value);
-					px->g = math::getY(value);
-					px->b = math::getZ(value);
+					px->r = (float)math::getX(value);
+					px->g = (float)math::getY(value);
+					px->b = (float)math::getZ(value);
 				}
 			}
 
@@ -152,7 +152,7 @@ bool manta::RawFile::readPixelArray(void *dataHeader, void *pixelData, SceneBuff
 			for (int x = 0; x < header->width; x++) {
 				for (int y = 0; y < header->height; y++) {
 					FloatPixel_v1 *px = &v[y * header->width + x];
-					math::Vector value = math::loadVector(px->r, px->g, px->b);
+					math::Vector value = math::loadVector((math::real)px->r, (math::real)px->g, (math::real)px->b);
 					buffer->set(value, x, y);
 				}
 			}
@@ -163,7 +163,7 @@ bool manta::RawFile::readPixelArray(void *dataHeader, void *pixelData, SceneBuff
 			for (int x = 0; x < header->width; x++) {
 				for (int y = 0; y < header->height; y++) {
 					DoublePixel_v1 *px = &v[y * header->width + x];
-					math::Vector value = math::loadVector(px->r, px->g, px->b);
+					math::Vector value = math::loadVector((math::real)px->r, (math::real)px->g, (math::real)px->b);
 					buffer->set(value, x, y);
 				}
 			}

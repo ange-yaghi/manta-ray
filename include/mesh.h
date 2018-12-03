@@ -70,11 +70,11 @@ namespace manta {
 
 		void loadObjFileData(ObjFileLoader *data);
 
-	protected:
 		bool detectIntersection(int faceIndex, math::real earlyExitDepthHint, const math::Vector &rayDir, const math::Vector &rayOrigin, IntersectionPoint *p, math::real bleed) const;
 		bool detectIntersection(int faceIndex, math::real earlyExitDepthHint, const math::Vector &rayDir, const math::Vector &rayOrigin, math::real delta, CoarseCollisionOutput *output) const;
 		inline bool detectIntersection(int faceIndex, math::real u, math::real v, math::real w, math::real delta) const;
 
+	protected:
 		void computePlane(const math::Vector &n, const math::Vector &p, Plane *plane) const;
 
 		Face *m_faces;
