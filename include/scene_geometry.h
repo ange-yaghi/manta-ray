@@ -8,8 +8,8 @@ namespace manta {
 	class LightRay;
 	class IntersectionList;
 	struct IntersectionPoint;
-	struct CoarseIntersection;
 	class SceneObject;
+	struct CoarseIntersection;
 
 	class SceneGeometry {
 	public:
