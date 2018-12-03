@@ -15,7 +15,7 @@ TEST(PrimitiveTests, SphereSanityCheck) {
 	SpherePrimitive sphere;
 	sphere.setRadius(10.0f);
 
-	EXPECT_FLOAT_EQ(sphere.getRadius(), 10.0f);
+	EXPECT_FLOAT_EQ((float)sphere.getRadius(), 10.0f);
 
 	sphere.setId(1);
 
