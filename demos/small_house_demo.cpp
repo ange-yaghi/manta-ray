@@ -93,13 +93,13 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 	//ground->setGeometry(&groundGeometry);
 	//ground->setMaterial(&groundMaterial);
 
-	SceneObject *outdoorTopLightObject = scene.createSceneObject();
-	outdoorTopLightObject->setGeometry(&outdoorTopLightGeometry);
-	outdoorTopLightObject->setMaterial(&outdoorTopLightMaterial);
+	//SceneObject *outdoorTopLightObject = scene.createSceneObject();
+	//outdoorTopLightObject->setGeometry(&outdoorTopLightGeometry);
+	//outdoorTopLightObject->setMaterial(&outdoorTopLightMaterial);
 
-	SceneObject *lightSource = scene.createSceneObject();
-	lightSource->setGeometry(&outdoorLightGeometry);
-	lightSource->setMaterial(&outdoorLight);
+	//SceneObject *lightSource = scene.createSceneObject();
+	//lightSource->setGeometry(&outdoorLightGeometry);
+	//lightSource->setMaterial(&outdoorLight);
 
 	// Create the camera
 	SSCameraRayEmitterGroup camera;
