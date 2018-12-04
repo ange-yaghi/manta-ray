@@ -48,6 +48,7 @@ const manta::CoarseIntersection *manta::SpherePrimitive::coarseIntersection(cons
 				CoarseIntersection *newIntersection = l->newIntersection();
 				newIntersection->locationHint = -1; // Unused for spheres
 				newIntersection->sceneObject = object;
+				newIntersection->sceneGeometry = this;
 
 				math::Vector t;
 				if (t2_s < t1_s && t2_s >= 0.0f) {

@@ -27,7 +27,7 @@ int main() {
 	std::cout << "Min: " << sceneBuffer.getMin() << std::endl;
 
 	// Remove the file extension
-	for (int i = fname.length(); i >= 0; i--) {
+	for (int i = (int)fname.length(); i >= 0; i--) {
 		if (fname[i] == '.') {
 			fname = fname.substr(0, i);
 		}

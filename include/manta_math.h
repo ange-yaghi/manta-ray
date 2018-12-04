@@ -3,6 +3,8 @@
 
 #include <manta_math_conf.h>
 
+#include <limits>
+
 #if MANTA_USE_SIMD == true
 
 #if MANTA_PRECISION == MANTA_PRECISION_FLOAT
@@ -178,6 +180,9 @@ namespace manta {
 		real getZ(const Vector &v);
 		real getW(const Vector &v);
 
+		inline real realNAN() { return std::numeric_limits<real>::quiet_NaN(); }
+		real get(const Vector &v, int index);
+
 		real getQuatX(const Quaternion &v);
 		real getQuatY(const Quaternion &v);
 		real getQuatZ(const Quaternion &v);
@@ -238,6 +243,7 @@ namespace manta {
 		real clamp(real value);
 
 	} /* namespace math */
+
 } /* namespace manta */
 
 #endif /* MANTA_MATH_H */

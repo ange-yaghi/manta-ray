@@ -3,36 +3,12 @@
 
 #include <scene_geometry.h>
 
+#include <geometry.h>
 #include <manta_math.h>
 
 namespace manta {
 
 	class ObjFileLoader;
-
-	struct Face {
-		unsigned int u;
-		unsigned int w;
-		unsigned int v;
-
-		unsigned int nu;
-		unsigned int nv;
-		unsigned int nw;
-	};
-
-	struct Plane {
-		math::Vector normal;
-		math::real d;
-	};
-
-	struct PrecomputedValues {
-		Plane edgePlaneVW;
-		Plane edgePlaneWU;
-		Plane edgePlaneVU; // Used only for coarse test
-		math::Vector normal;
-		math::Vector p0;
-		math::real scaleVW;
-		math::real scaleWU;
-	};
 
 	struct CoarseCollisionOutput {
 		math::real depth;

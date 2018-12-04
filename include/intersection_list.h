@@ -8,9 +8,11 @@ namespace manta {
 	// Forward declarations
 	class StackAllocator;
 	class SceneObject;
+	class SceneGeometry;
 
 	struct CoarseIntersection {
 		SceneObject *sceneObject;
+		const SceneGeometry *sceneGeometry;
 		double depth;
 		int locationHint;
 	};
