@@ -24,6 +24,7 @@
 #include <utils.h>
 #include <scene_buffer.h>
 #include <raw_file.h>
+#include <octree.h>
 
 namespace manta_demo {
 

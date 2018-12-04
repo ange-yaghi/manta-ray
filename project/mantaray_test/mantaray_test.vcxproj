@@ -54,6 +54,7 @@
     <ClCompile Include="..\..\test\math_tests.cpp" />
     <ClCompile Include="..\..\test\memory_tests.cpp" />
     <ClCompile Include="..\..\test\mesh_intersection_tests.cpp" />
+    <ClCompile Include="..\..\test\octree_tests.cpp" />
     <ClCompile Include="..\..\test\opencl_tests.cpp" />
     <ClCompile Include="..\..\test\primitives.cpp" />
     <ClCompile Include="..\..\test\sanity_check.cpp" />

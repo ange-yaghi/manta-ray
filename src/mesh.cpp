@@ -90,6 +90,7 @@ const manta::CoarseIntersection *manta::Mesh::coarseIntersection(const LightRay 
 			intersection->depth = output.depth;
 			intersection->locationHint = i; // Face index
 			intersection->sceneObject = object;
+			intersection->sceneGeometry = this;
 
 			if (closest == nullptr || output.depth < closest->depth) {
 				// Check that the collision is eligible to be a reference

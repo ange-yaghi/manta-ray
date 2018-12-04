@@ -181,6 +181,12 @@
     <Filter Include="Source Files\output">
       <UniqueIdentifier>{89260930-fc47-4fab-b32c-743311ddf47f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\space-partitioning">
+      <UniqueIdentifier>{7210e93d-c187-4ed9-b708-38c782804c55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\spatial-partitioning">
+      <UniqueIdentifier>{ca2f7598-9ead-4aff-a531-7571c897c85a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -311,6 +317,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\camera_ray_emitter_group.cpp">
       <Filter>Source Files\emitter\camera-ray-emitter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\octree.cpp">
+      <Filter>Source Files\spatial-partitioning</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\manta_math.cpp">
+      <Filter>Source Files\math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -478,6 +490,12 @@
     </ClInclude>
     <ClInclude Include="..\..\include\camera_ray_emitter_group.h">
       <Filter>Header Files\emitter\camera-ray-emitter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\octree.h">
+      <Filter>Header Files\space-partitioning</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\geometry.h">
+      <Filter>Header Files\geometry</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
