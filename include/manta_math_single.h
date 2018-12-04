@@ -9,6 +9,7 @@
 #define MATH_CONST extern const __declspec(selectany)
 
 namespace manta {
+
 	namespace math {
 
 		// Vector types
@@ -27,6 +28,7 @@ namespace manta {
 		typedef Generic Quaternion;
 
 	} /* namespace math */
+
 } /* namespace manta */
 
 #endif /* MANTA_MATH_SINGLE_H */

@@ -22,6 +22,8 @@
     <ClCompile Include="..\..\src\batched_monte_carlo_emitter.cpp" />
     <ClCompile Include="..\..\src\biconvex_lens.cpp" />
     <ClCompile Include="..\..\src\camera_ray_emitter_group.cpp" />
+    <ClCompile Include="..\..\src\manta_math.cpp" />
+    <ClCompile Include="..\..\src\octree.cpp" />
     <ClCompile Include="..\..\src\ss_camera_ray_emitter.cpp" />
     <ClCompile Include="..\..\src\ss_camera_ray_emitter_group.cpp" />
     <ClCompile Include="..\..\src\circular_aperture.cpp" />
@@ -67,6 +69,8 @@
     <ClInclude Include="..\..\include\aperture.h" />
     <ClInclude Include="..\..\include\biconvex_lens.h" />
     <ClInclude Include="..\..\include\camera_ray_emitter_group.h" />
+    <ClInclude Include="..\..\include\geometry.h" />
+    <ClInclude Include="..\..\include\octree.h" />
     <ClInclude Include="..\..\include\ss_camera_ray_emitter.h" />
     <ClInclude Include="..\..\include\ss_camera_ray_emitter_group.h" />
     <ClInclude Include="..\..\include\circular_aperture.h" />
