@@ -10,13 +10,14 @@ namespace manta {
 	struct IntersectionPoint;
 	class SceneObject;
 	struct CoarseIntersection;
+	class StackAllocator;
 
 	class SceneGeometry {
 	public:
 		SceneGeometry();
 		~SceneGeometry();
 
-		virtual const CoarseIntersection *coarseIntersection(const LightRay *ray, IntersectionList *l, SceneObject *object, const CoarseIntersection *reference, math::real epsilon) const = 0;
+		virtual const CoarseIntersection *coarseIntersection(const LightRay *ray, IntersectionList *l, SceneObject *object, const CoarseIntersection *reference, math::real epsilon, StackAllocator *s) const = 0;
 		virtual void fineIntersection(const LightRay *ray, IntersectionPoint *p, const CoarseIntersection *hint, math::real bleed) const = 0;
 		virtual bool fastIntersection(const LightRay *ray) const = 0;
 

@@ -32,7 +32,7 @@ TEST(PrimitiveTests, SphereIntersection) {
 	ray.setSource(math::loadVector(10.0f, 0.0f, 0.0f));
 
 	IntersectionList list;
-	const CoarseIntersection *c = sphere.coarseIntersection(&ray, &list, nullptr, nullptr, 1E-2);
+	const CoarseIntersection *c = sphere.coarseIntersection(&ray, &list, nullptr, nullptr, 1E-2, nullptr);
 
 	EXPECT_TRUE(c != nullptr);
 	EXPECT_TRUE(list.getIntersectionCount() == 1);
@@ -50,7 +50,7 @@ TEST(PrimitiveTests, SphereMiss) {
 	ray.setSource(math::loadVector(10.0f, 2.0f, 0.0f));
 
 	IntersectionList list;
-	const CoarseIntersection *c = sphere.coarseIntersection(&ray, &list, nullptr, nullptr, 1E-2);
+	const CoarseIntersection *c = sphere.coarseIntersection(&ray, &list, nullptr, nullptr, 1E-2, nullptr);
 
 	EXPECT_TRUE(c == nullptr);
 	EXPECT_TRUE(list.getIntersectionCount() == 0);
@@ -66,7 +66,7 @@ TEST(PrimitiveTests, SphereIntersectionInside) {
 	ray.setSource(math::loadVector(0.0f, 0.0f, 0.0f));
 
 	IntersectionList list;
-	const CoarseIntersection *c = sphere.coarseIntersection(&ray, &list, nullptr, nullptr, 1E-2);
+	const CoarseIntersection *c = sphere.coarseIntersection(&ray, &list, nullptr, nullptr, 1E-2, nullptr);
 
 	EXPECT_TRUE(c != nullptr);
 	EXPECT_TRUE(list.getIntersectionCount() == 1);

@@ -25,7 +25,7 @@ namespace manta {
 		void initialize(int faceCount, int vertexCount, int normalCount);
 		void precomputeValues();
 
-		virtual const CoarseIntersection *coarseIntersection(const LightRay *ray, IntersectionList *l, SceneObject *object, const CoarseIntersection *reference, math::real epsilon) const;
+		virtual const CoarseIntersection *coarseIntersection(const LightRay *ray, IntersectionList *l, SceneObject *object, const CoarseIntersection *reference, math::real epsilon, StackAllocator *s) const;
 		virtual void fineIntersection(const LightRay *ray, IntersectionPoint *p, const CoarseIntersection *hint, math::real bleed) const;
 		virtual bool fastIntersection(const LightRay *ray) const;
 
@@ -33,8 +33,11 @@ namespace manta {
 		int getVertexCount() const { return m_vertexCount; }
 		int getNormalCount() const { return m_normalCount; }
 
+		void setPerVertexNormals(bool perVertexNormals) { m_perVertexNormals = perVertexNormals; }
+
 		Face *getFaces() { return m_faces; }
 		math::Vector *getVertices() { return m_vertices; }
+		math::Vector *getNormals() { return m_normals; }
 
 		void setFastIntersectEnabled(bool fastIntersect) { m_fastIntersectEnabled = fastIntersect; }
 		bool isFastIntersectEnabled() const { return m_fastIntersectEnabled; }
@@ -69,7 +72,6 @@ namespace manta {
 		bool m_fastIntersectEnabled;
 
 		bool m_perVertexNormals;
-
 	};
 
 }
