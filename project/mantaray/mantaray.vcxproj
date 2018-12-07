@@ -24,6 +24,8 @@
     <ClCompile Include="..\..\src\camera_ray_emitter_group.cpp" />
     <ClCompile Include="..\..\src\manta_math.cpp" />
     <ClCompile Include="..\..\src\octree.cpp" />
+    <ClCompile Include="..\..\src\simple_scatter_emitter.cpp" />
+    <ClCompile Include="..\..\src\simple_scatter_emitter_group.cpp" />
     <ClCompile Include="..\..\src\ss_camera_ray_emitter.cpp" />
     <ClCompile Include="..\..\src\ss_camera_ray_emitter_group.cpp" />
     <ClCompile Include="..\..\src\circular_aperture.cpp" />
@@ -71,6 +73,8 @@
     <ClInclude Include="..\..\include\camera_ray_emitter_group.h" />
     <ClInclude Include="..\..\include\geometry.h" />
     <ClInclude Include="..\..\include\octree.h" />
+    <ClInclude Include="..\..\include\simple_scatter_emitter.h" />
+    <ClInclude Include="..\..\include\simple_scatter_emitter_group.h" />
     <ClInclude Include="..\..\include\ss_camera_ray_emitter.h" />
     <ClInclude Include="..\..\include\ss_camera_ray_emitter_group.h" />
     <ClInclude Include="..\..\include\circular_aperture.h" />
@@ -122,6 +126,7 @@
     <ClInclude Include="..\..\include\sphere_primitive.h" />
     <ClInclude Include="..\..\include\spherical_surface.h" />
     <ClInclude Include="..\..\include\stack_allocator.h" />
+    <ClInclude Include="..\..\include\stack_list.h" />
     <ClInclude Include="..\..\include\worker.h" />
   </ItemGroup>
   <ItemGroup>

@@ -25,17 +25,20 @@ TEST(OctreeTests, OctreeTestSanityCheck) {
 	
 	Octree octree;
 	octree.initialize(10.0, math::loadVector(0, 0, 0));
-	octree.analyze(&meshObject, 128);
+	octree.analyze(&meshObject, 4);
 
 	LightRay ray;
-	ray.setDirection(math::loadVector(1.0, 0.0, 0.0));
-	ray.setSource(math::loadVector(-10, 1.0, 0.0));
+	ray.setDirection(math::normalize(math::loadVector(0.5, -1.0, 0.5)));
+	ray.setSource(math::loadVector(0.5, 10, 0.5));
+
+	octree.writeToObjFile("../../../workspace/test_results/octree_debug.obj", &ray);
 
 	auto beginOctree = std::chrono::high_resolution_clock::now();
 
 	IntersectionList list;
-	for (int i = 0; i < 100; i++) {
-		octree.coarseIntersection(&ray, &list, nullptr, nullptr, 1E-2);
+	for (int i = 0; i < 100000; i++) {
+		octree.coarseIntersection(&ray, &list, nullptr, nullptr, 1E-2, nullptr);
+		list.destroy();
 	}
 
 	auto endOctree = std::chrono::high_resolution_clock::now();
@@ -43,8 +46,9 @@ TEST(OctreeTests, OctreeTestSanityCheck) {
 	auto begin = std::chrono::high_resolution_clock::now();
 
 	IntersectionList list2;
-	for (int i = 0; i < 100; i++) {
-		mesh.coarseIntersection(&ray, &list2, nullptr, nullptr, 1E-2);
+	for (int i = 0; i < 100000; i++) {
+		mesh.coarseIntersection(&ray, &list2, nullptr, nullptr, 1E-2, nullptr);
+		list2.destroy();
 	}
 
 	auto end = std::chrono::high_resolution_clock::now();

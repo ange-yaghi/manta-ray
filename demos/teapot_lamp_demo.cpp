@@ -48,6 +48,13 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	lamp.setFastIntersectRadius((math::real)2.123);
 	lamp.setFastIntersectPosition(math::loadVector(-0.06430, 1.86833, -2.96564));
 
+	SceneObject dummyLamp;
+	dummyLamp.setGeometry(&lamp);
+
+	Octree lampOctree;
+	lampOctree.initialize(2.5, math::loadVector(-0.06430, 1.86833, -2.96564));
+	lampOctree.analyze(&dummyLamp, 4);
+
 	Mesh lampBlock;
 	lampBlock.loadObjFileData(&lampBlockObj);
 	lampBlock.setFastIntersectEnabled(false);
@@ -58,6 +65,13 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	teapot.setFastIntersectEnabled(true);
 	teapot.setFastIntersectRadius((math::real)2.0);
 	teapot.setFastIntersectPosition(math::loadVector(-0.5724, 1.02483, -0.04969));
+
+	SceneObject  dummy;
+	dummy.setGeometry(&teapot);
+
+	Octree teapotOctree;
+	teapotOctree.initialize(2, math::constants::Zero);
+	teapotOctree.analyze(&dummy, 4);
 
 	SpherePrimitive bulb;
 	bulb.setRadius(0.25);
@@ -75,9 +89,12 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	groundGeometry.setRadius((math::real)50000.0);
 	groundGeometry.setPosition(math::loadVector(0.0, -50000.001, 0));
 
+	constexpr bool useOctree = true;
+
 	// Create scene objects
 	SceneObject *lampObject = scene.createSceneObject();
-	lampObject->setGeometry(&lamp);
+	if (useOctree) lampObject->setGeometry(&lampOctree);
+	else lampObject->setGeometry(&lamp);
 	lampObject->setMaterial(&wallMaterial);
 	lampObject->setName("Lamp");
 
@@ -87,7 +104,12 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	bulbObject->setName("Bulb");
 
 	SceneObject *teapotObject = scene.createSceneObject();
-	teapotObject->setGeometry(&teapot);
+	if (useOctree) {
+		teapotObject->setGeometry(&teapotOctree);
+	}
+	else {
+		teapotObject->setGeometry(&teapot);
+	}
 	teapotObject->setMaterial(&teapotMaterial);
 	teapotObject->setName("Teapot");
 
@@ -148,7 +170,10 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 
 	RawFile rawFile;
 	rawFile.writeRawFile(rawFname.c_str(), &sceneBuffer);
-	editImage(&sceneBuffer, imageFname);
+	//editImage(&sceneBuffer, imageFname);
+
+	sceneBuffer.applyGammaCurve((math::real)(1.0 / 2.2));
+	manta::SaveImageData(sceneBuffer.getBuffer(), sceneBuffer.getWidth(), sceneBuffer.getHeight(), imageFname.c_str());
 
 	sceneBuffer.destroy();
 	rayTracer.destroy();
