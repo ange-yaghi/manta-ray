@@ -32,6 +32,7 @@ namespace manta_demo {
 	void teapotDemo(int samplesPerPixel, int resolutionX, int resolutionY);
 	void teapotLampDemo(int samplesPerPixel, int resolutionX, int resolutionY);
 	void cubeTestDemo(int samplesPerPixel, int resolutionX, int resolutionY);
+	void boxCityDemo(int samplesPerPixel, int resolutionX, int resolutionY);
 
 } /* namespace manta_demo */
 

@@ -72,7 +72,7 @@ void manta::Mesh::precomputeValues() {
 	}
 }
 
-const manta::CoarseIntersection *manta::Mesh::coarseIntersection(const LightRay *ray, IntersectionList *l, SceneObject *object, const CoarseIntersection *reference, math::real epsilon) const {
+const manta::CoarseIntersection *manta::Mesh::coarseIntersection(const LightRay *ray, IntersectionList *l, SceneObject *object, const CoarseIntersection *reference, math::real epsilon, StackAllocator *s) const {
 	const manta::CoarseIntersection *closest = reference;
 	math::Vector rayDir = ray->getDirection();
 	math::Vector raySource = ray->getSource();

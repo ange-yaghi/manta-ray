@@ -191,7 +191,7 @@ TEST(OpenCLTests, OpenCLIntersectionTeapotTest) {
 
 	IntersectionList list;
 	for (int i = 0; i < 128; i++) {
-		mesh.coarseIntersection(&ray, &list, nullptr, nullptr, 1E-2);
+		mesh.coarseIntersection(&ray, &list, nullptr, nullptr, 1E-2, nullptr);
 	}
 	list.destroy();
 
@@ -278,7 +278,7 @@ TEST(OpenCLTests, OpenCLIntersectionHighStressTest) {
 
 	IntersectionList list;
 	for (int i = 0; i < 128; i++) {
-		mesh.coarseIntersection(&ray, &list, nullptr, nullptr, 1E-2);
+		mesh.coarseIntersection(&ray, &list, nullptr, nullptr, 1E-2, nullptr);
 	}
 	list.destroy();
 
@@ -330,7 +330,7 @@ void decode(const int *values, IntersectionList *lists, int rayCount, int faceCo
 TEST(OpenCLTests, OpenCLFullIntersectionTest) {
 	// Load mesh
 	ObjFileLoader teapotObj;
-	bool result = teapotObj.readObjFile("../../../demos/models/stress_ball.obj");
+	bool result = teapotObj.readObjFile("../../../demos/models/teapot.obj");
 
 	Mesh mesh;
 	mesh.loadObjFileData(&teapotObj);
@@ -343,7 +343,7 @@ TEST(OpenCLTests, OpenCLFullIntersectionTest) {
 	int faceCount = mesh.getFaceCount();
 	constexpr int unitCount = 65536;
 
-	int rayCount = 512;
+	int rayCount = 2048;
 
 	GPUMemory *faceInput = gpuManager.createMemoryBuffer(sizeof(GPUFaceV2) * unitCount, GPUMemory::READ_ONLY);
 	GPUMemory *rayInput = gpuManager.createMemoryBuffer(sizeof(GPULightRay) * rayCount, GPUMemory::READ_ONLY);
@@ -438,7 +438,7 @@ TEST(OpenCLTests, OpenCLFullIntersectionTest) {
 
 	IntersectionList *cpulists = new IntersectionList [rayCount];
 	for (int i = 0; i < rayCount; i++) {
-		mesh.coarseIntersection(&ray, &cpulists[i], nullptr, nullptr, 1E-2);
+		mesh.coarseIntersection(&ray, &cpulists[i], nullptr, nullptr, 1E-2, nullptr);
 	}
 
 	auto endCPU = std::chrono::high_resolution_clock::now();

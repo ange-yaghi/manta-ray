@@ -187,6 +187,12 @@
     <Filter Include="Source Files\spatial-partitioning">
       <UniqueIdentifier>{ca2f7598-9ead-4aff-a531-7571c897c85a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\emitter\scatter-emitter">
+      <UniqueIdentifier>{c51e3ae2-bd03-4dbc-b01f-d3a6af2b53ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\emitter\scatter-emitter">
+      <UniqueIdentifier>{89adf6f7-4294-4c6a-a18d-65feeb5effa7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -323,6 +329,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\manta_math.cpp">
       <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\simple_scatter_emitter.cpp">
+      <Filter>Source Files\emitter\scatter-emitter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\simple_scatter_emitter_group.cpp">
+      <Filter>Source Files\emitter\scatter-emitter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -496,6 +508,15 @@
     </ClInclude>
     <ClInclude Include="..\..\include\geometry.h">
       <Filter>Header Files\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\simple_scatter_emitter.h">
+      <Filter>Header Files\emitter\scatter-emitter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\simple_scatter_emitter_group.h">
+      <Filter>Header Files\emitter\scatter-emitter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\stack_list.h">
+      <Filter>Header Files\memory-management</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

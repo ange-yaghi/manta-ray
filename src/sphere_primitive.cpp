@@ -16,7 +16,7 @@ bool manta::SpherePrimitive::fastIntersection(const LightRay *ray) const {
 	return true;
 }
 
-const manta::CoarseIntersection *manta::SpherePrimitive::coarseIntersection(const LightRay *ray, IntersectionList *l, SceneObject *object, const CoarseIntersection *reference, math::real epsilon) const {
+const manta::CoarseIntersection *manta::SpherePrimitive::coarseIntersection(const LightRay *ray, IntersectionList *l, SceneObject *object, const CoarseIntersection *reference, math::real epsilon, StackAllocator *s) const {
 	math::real depthHint = math::constants::REAL_MAX;
 	if (reference != nullptr) {
 		depthHint = reference->depth + epsilon;

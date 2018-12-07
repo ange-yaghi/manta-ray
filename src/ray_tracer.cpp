@@ -14,6 +14,8 @@
 #include <intersection_list.h>
 #include <camera_ray_emitter_group.h>
 #include <path_recorder.h>
+#include <simple_scatter_emitter_group.h>
+#include <simple_scatter_emitter.h>
 
 #include <iostream>
 #include <thread>
@@ -189,7 +191,7 @@ void manta::RayTracer::depthCull(const Scene *scene, const LightRay *ray, SceneO
 
 		if (!geometry->fastIntersection(ray)) continue;
 
-		referenceIntersection = geometry->coarseIntersection(ray, &list, object, referenceIntersection, epsilon);
+		referenceIntersection = geometry->coarseIntersection(ray, &list, object, referenceIntersection, epsilon, s);
 	}
 
 	fluxMultisample(ray, &list, point, closestObject, referenceIntersection, epsilon, s);
@@ -421,38 +423,82 @@ void manta::RayTracer::traceRay(const Scene *scene, LightRay *ray, int degree, S
 
 	depthCull(scene, ray, &sceneObject, &point, s);
 
-	if (sceneObject != nullptr) {
-		START_BRANCH(point.m_position); // For path recording
+	math::real scatter = math::uniformRandom(1.0);
+	constexpr bool causticScatter = false;
+	if (causticScatter && scatter > 0.5) {
+		// Do a scatter for caustic simulation
+		void *buffer = s->allocate(sizeof(SimpleScatterEmitterGroup), 16);
+		SimpleScatterEmitterGroup *group = new (buffer) SimpleScatterEmitterGroup;
 
-		Material *material = sceneObject->getMaterial();
-		RayEmitterGroup *group = material->generateRayEmitterGroup(ray, &point, degree + 1, s);
+		group->setStackAllocator(s);
+		group->setDegree(degree + 1);
+		group->createAllEmitters();
 
-		if (group != nullptr) {
-			traceRayEmitterGroup(scene, group, s /**/ PATH_RECORDER_VAR);
+		constexpr math::real epsilon = 1E-3;
+		math::real depth; 
+
+		if (sceneObject != nullptr) {
+			depth = math::uniformRandom(point.m_depth - epsilon) + epsilon;
+		}
+		else {
+			// TODO: set more explicit depth
+			depth = math::uniformRandom((math::real)10.0);
 		}
 
-		material->integrateRay(ray, group);
+		math::Vector pos = math::add(ray->getSource(), math::mul(ray->getDirection(), math::loadScalar(depth)));
+		group->m_simpleRayEmitter->setPosition(pos);
+		group->m_simpleRayEmitter->setDirection(ray->getDirection());
+		group->m_simpleRayEmitter->setSamplesPerRay(1);
 
-		if (group != nullptr) {
-			int emitterCount = group->getEmitterCount();
-
-			// Data must be freed in reverse order
-			for (int i = emitterCount - 1; i >= 0; i--) {
-				group->getEmitters()[i]->destroyRays();
-			}
-
-			material->destroyEmitterGroup(group, s);
-		}
-
+		START_BRANCH(pos);
+		traceRayEmitterGroup(scene, group, s /**/ PATH_RECORDER_VAR);
 		END_BRANCH();
+
+		// Simple ray integration
+		ray->setIntensity(math::mul(group->m_simpleRayEmitter->getIntensity(), math::loadScalar(1.0)));
+
+		// Data must be freed in reverse order
+		int emitterCount = group->getEmitterCount();
+		for (int i = emitterCount - 1; i >= 0; i--) {
+			group->getEmitters()[i]->destroyRays();
+		}
+
+		group->destroyEmitters();
+		group->~SimpleScatterEmitterGroup();
+		s->free((void *)group);
 	}
 	else {
-		// The ray hit nothing so it receives the background color
-		ray->setIntensity(m_backgroundColor);
+		if (sceneObject != nullptr) {
+			START_BRANCH(point.m_position); // For path recording
+			Material *material = sceneObject->getMaterial();
+			RayEmitterGroup *group = material->generateRayEmitterGroup(ray, &point, degree + 1, s);
 
-		// Point a ray in the air
-		START_BRANCH(math::add(ray->getSource(), math::mul(ray->getDirection(), math::loadScalar((math::real)1000.0))));
-		END_BRANCH();
+			if (group != nullptr) {
+				traceRayEmitterGroup(scene, group, s /**/ PATH_RECORDER_VAR);
+			}
+
+			material->integrateRay(ray, group);
+
+			if (group != nullptr) {
+				int emitterCount = group->getEmitterCount();
+
+				// Data must be freed in reverse order
+				for (int i = emitterCount - 1; i >= 0; i--) {
+					group->getEmitters()[i]->destroyRays();
+				}
+
+				material->destroyEmitterGroup(group, s);
+			}
+			END_BRANCH();
+		}
+		else {
+			// The ray hit nothing so it receives the background color
+			ray->setIntensity(m_backgroundColor);
+
+			// Point a ray in the air
+			START_BRANCH(math::add(ray->getSource(), math::mul(ray->getDirection(), math::loadScalar((math::real)1000.0))));
+			END_BRANCH();
+		}
 	}
 }
 
