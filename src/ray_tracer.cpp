@@ -99,7 +99,9 @@ void manta::RayTracer::tracePixel(int px, int py, const Scene *scene, CameraRayE
 	waitForWorkers();
 }
 
-void manta::RayTracer::traceRayEmitter(const Scene *scene, const RayEmitter *emitter, StackAllocator *s /**/ PATH_RECORDER_DECL) const {
+void manta::RayTracer::traceRayEmitter(const Scene *scene, RayEmitter *emitter, StackAllocator *s /**/ PATH_RECORDER_DECL) const {
+	emitter->generateRays();
+
 	LightRay *rays = emitter->getRays();
 	int rayCount = emitter->getRayCount();
 
@@ -114,6 +116,9 @@ void manta::RayTracer::traceRayEmitter(const Scene *scene, const RayEmitter *emi
 		}
 		ray->setIntensity(average);
 	}
+
+	emitter->calculateIntensity();
+	emitter->destroyRays();
 }
 
 void manta::RayTracer::initialize(unsigned int stackSize, unsigned int workerStackSize, int threadCount, int renderBlockSize, bool multithreaded) {
@@ -246,7 +251,7 @@ void manta::RayTracer::fluxMultisample(const LightRay *ray, IntersectionList *li
 	}
 	else {
 		// There are multiple conflicts that need to be resolved
-		constexpr int SAMPLE_RADIUS = 2;
+		constexpr int SAMPLE_RADIUS = 5;
 		constexpr int SAMPLE_WIDTH = SAMPLE_RADIUS * 2 + 1;
 		constexpr int SAMPLE_HEIGHT = SAMPLE_RADIUS * 2 + 1;
 		constexpr int SAMPLE_COUNT = SAMPLE_WIDTH * SAMPLE_HEIGHT;
@@ -479,16 +484,16 @@ void manta::RayTracer::traceRay(const Scene *scene, LightRay *ray, int degree, S
 
 			material->integrateRay(ray, group);
 
-			if (group != nullptr) {
-				int emitterCount = group->getEmitterCount();
-
-				// Data must be freed in reverse order
-				for (int i = emitterCount - 1; i >= 0; i--) {
-					group->getEmitters()[i]->destroyRays();
-				}
-
-				material->destroyEmitterGroup(group, s);
-			}
+			//if (group != nullptr) {
+			//	int emitterCount = group->getEmitterCount();
+			//
+			//	// Data must be freed in reverse order
+			//	for (int i = emitterCount - 1; i >= 0; i--) {
+			//		group->getEmitters()[i]->destroyRays();
+			//	}
+			//
+			//	material->destroyEmitterGroup(group, s);
+			//}
 			END_BRANCH();
 		}
 		else {
@@ -509,7 +514,6 @@ void manta::RayTracer::traceRayEmitterGroup(const Scene *scene, const RayEmitter
 	for (int i = 0; i < emitterCount; i++) {
 		RayEmitter *emitter = emitters[i];
 		emitter->setStackAllocator(s);
-		emitter->generateRays();
 		traceRayEmitter(scene, emitter, s /**/ PATH_RECORDER_VAR);
 	}
 }

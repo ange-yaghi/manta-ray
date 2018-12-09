@@ -33,7 +33,7 @@
     <ClCompile Include="..\..\demos\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\demos\models\box_city_demo.cpp">
+    <ClCompile Include="..\..\demos\box_city_demo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

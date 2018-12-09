@@ -20,9 +20,19 @@ namespace manta {
 		virtual void initialize();
 		virtual void update();
 
+		virtual math::Vector getSensorElement(int x, int y) const;
+		virtual void lensScan(const math::Vector &sensorElement, LensScanHint *target, int div) const;
+		virtual bool generateOutgoingRay(const math::Vector &sensorElement, const LensScanHint *hint, LightRay *targetRay) const;
+
 	protected:
 		CircularAperture m_aperture;
 		BiconvexLens m_lens;
+
+		// Internal use only
+		math::Vector m_sensorDeltaX;
+		math::Vector m_sensorDeltaY;
+		math::Vector m_sensorBottomRight;
+		math::Vector m_right;
 	};
 
 } /* namespace manta */

@@ -25,6 +25,9 @@
 #include <scene_buffer.h>
 #include <raw_file.h>
 #include <octree.h>
+#include <lens_camera_ray_emitter.h>
+#include <lens_camera_ray_emitter_group.h>
+#include <simple_lens.h>
 
 namespace manta_demo {
 
