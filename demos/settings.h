@@ -11,6 +11,7 @@
 #if EXECUTION_ENV == VISUAL_STUDIO
 
 #define MODEL_PATH "../../demos/models/"
+#define TEXTURE_PATH "../../demos/textures/"
 #define RENDER_OUTPUT "../../workspace/render/"
 
 #elif EXECUTION_ENV == STANDALONE

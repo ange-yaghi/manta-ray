@@ -5,6 +5,8 @@
 
 namespace manta {
 
+	class TextureMap;
+
 	class SimpleSpecularDiffuseMaterial : public Material {
 	public:
 		SimpleSpecularDiffuseMaterial();
@@ -28,12 +30,17 @@ namespace manta {
 
 		int getDiffuseSampleCount(int degree) const;
 
+		void setDiffuseMap(TextureMap *map) { m_diffuseMap = map; }
+		TextureMap *getDiffuseMap() { return m_diffuseMap; }
+
 	protected:
 		int m_maxDiffuseDegree;
 		int m_maxSpecularDegree;
 
 		math::Vector m_specularColor;
 		math::Vector m_diffuseColor;
+
+		TextureMap *m_diffuseMap;
 
 		bool m_enableDiffuse;
 		bool m_enableSpecular;

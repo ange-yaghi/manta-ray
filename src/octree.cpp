@@ -57,47 +57,6 @@ const manta::CoarseIntersection *manta::Octree::coarseIntersection(const LightRa
 		}
 	}
 	return closest;
-	
-	/*
-	const CoarseIntersection *closest = reference;
-
-	StackList<OctreeLeafCollision> intersectionList;
-	intersectionList.setStack(nullptr);
-
-	// Find all leaves intersected by the ray
-	octreeTest(ray, &intersectionList);
-
-	// Sort the leaves by depth 
-	// Simple insertion sort for now
-	
-	for (int i = 0; i < intersectionList.getItemCount(); i++) {
-		int j = i;
-		while (j > 0 && intersectionList.getItem(j - 1)->depth > intersectionList.getItem(j)->depth) {
-			intersectionList.swapElements(j, j - 1);
-			j--;
-		}
-	}
-
-	OctreeLeafCollision *buffer = new OctreeLeafCollision[intersectionList.getItemCount()];
-	int leafCount = intersectionList.getItemCount();
-	intersectionList.fillBuffer(buffer);
-	intersectionList.destroy();
-
-	int faceCount = 0;
-	int leaves = 0;
-
-	for (int i = 0; i < leafCount; i++) {
-		OctreeLeafCollision *leafColl = &buffer[i];
-		// Early exit if the bounding box is beyond the current point
-		if (closest != nullptr && leafColl->depth > closest->depth + epsilon) break;
-		closest = leafColl->leaf->m_mesh->coarseIntersection(ray, l, object, closest, epsilon, s);
-		faceCount += leafColl->leaf->m_mesh->getFaceCount();
-		leaves++;
-	}
-
-	delete[] buffer;
-
-	return closest;*/
 }
 
 void manta::Octree::fineIntersection(const LightRay *ray, IntersectionPoint *p, const CoarseIntersection *hint, math::real bleed) const {
@@ -217,16 +176,20 @@ void manta::Octree::analyze(SceneObject *object, Octree *parent, int maxSize) {
 
 	int *vertexMap = nullptr;
 	int *normalMap = nullptr;
+	int *textureMap = nullptr;
 	int internalFaceCount = (int)m_tempFaces.size();
 	int realVertexCount = 0;
 	int realNormalCount = 0;
+	int realTextureCount = 0;
 	int realFaceCount = 0;
 
 	if (getUsageInternal() > 0) {
 		vertexMap = new int[mesh->getVertexCount()];
 		if (mesh->getNormalCount() > 0) normalMap = new int[mesh->getNormalCount()];
+		if (mesh->getTexCoordCount() > 0) textureMap = new int[mesh->getTexCoordCount()];
 		for (int i = 0; i < mesh->getVertexCount(); i++) vertexMap[i] = -1;
 		for (int i = 0; i < mesh->getNormalCount(); i++) normalMap[i] = -1;
+		for (int i = 0; i < mesh->getTexCoordCount(); i++) textureMap[i] = -1;
 
 		for (int i = 0; i < internalFaceCount; i++) {
 			if (!m_tempFaces[i].presentInChild) {
@@ -254,6 +217,25 @@ void manta::Octree::analyze(SceneObject *object, Octree *parent, int maxSize) {
 					}
 				}
 
+				if (textureMap != nullptr) {
+					int tu = face->tu;
+					int tv = face->tv;
+					int tw = face->tw;
+
+					if (textureMap[tu] == -1) {
+						textureMap[tu] = realTextureCount;
+						realTextureCount++;
+					}
+					if (textureMap[tv] == -1) {
+						textureMap[tv] = realTextureCount;
+						realTextureCount++;
+					}
+					if (textureMap[tw] == -1) {
+						textureMap[tw] = realTextureCount;
+						realTextureCount++;
+					}
+				}
+
 				if (vertexMap[u] == -1) {
 					vertexMap[u] = realVertexCount;
 					realVertexCount++;
@@ -273,11 +255,13 @@ void manta::Octree::analyze(SceneObject *object, Octree *parent, int maxSize) {
 
 	if (realFaceCount > 0) {
 		m_mesh = new Mesh;
-		m_mesh->initialize(realFaceCount, realVertexCount, realNormalCount);
+		m_mesh->initialize(realFaceCount, realVertexCount, realNormalCount, realTextureCount);
 		m_mesh->setPerVertexNormals(realNormalCount > 0);
+		m_mesh->setUseTexCoords(realTextureCount > 0);
 
 		math::Vector *newVertices = m_mesh->getVertices();
 		math::Vector *newNormals = m_mesh->getNormals();
+		math::Vector *newTexCoords = m_mesh->getTexCoords();
 		Face *newFaces = m_mesh->getFaces();
 
 		int currentFace = 0;
@@ -302,6 +286,20 @@ void manta::Octree::analyze(SceneObject *object, Octree *parent, int maxSize) {
 					newFaces[currentFace].nw = normalMap[nw];
 				}
 
+				if (textureMap != nullptr) {
+					int tu = face->tu;
+					int tv = face->tv;
+					int tw = face->tw;
+
+					newTexCoords[textureMap[tu]] = mesh->getTexCoords()[tu];
+					newTexCoords[textureMap[tv]] = mesh->getTexCoords()[tv];
+					newTexCoords[textureMap[tw]] = mesh->getTexCoords()[tw];
+
+					newFaces[currentFace].tu = textureMap[tu];
+					newFaces[currentFace].tv = textureMap[tv];
+					newFaces[currentFace].tw = textureMap[tw];
+				}
+
 				newVertices[vertexMap[u]] = mesh->getVertices()[u];
 				newVertices[vertexMap[v]] = mesh->getVertices()[v];
 				newVertices[vertexMap[w]] = mesh->getVertices()[w];
@@ -320,6 +318,7 @@ void manta::Octree::analyze(SceneObject *object, Octree *parent, int maxSize) {
 
 	if (vertexMap != nullptr) delete[] vertexMap;
 	if (normalMap != nullptr) delete[] normalMap;
+	if (textureMap != nullptr) delete[] textureMap;
 }
 
 bool manta::Octree::checkVertex(const math::Vector &v, math::real epsilon) const {

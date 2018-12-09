@@ -193,6 +193,12 @@
     <Filter Include="Source Files\emitter\scatter-emitter">
       <UniqueIdentifier>{89adf6f7-4294-4c6a-a18d-65feeb5effa7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\material\texture-mapping">
+      <UniqueIdentifier>{29194ddc-fe5b-46be-9337-f277e4e3b7a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\material\texture-mapping">
+      <UniqueIdentifier>{ca315444-873e-4ae6-afd6-3f52b6cb6b46}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -335,6 +341,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\simple_scatter_emitter_group.cpp">
       <Filter>Source Files\emitter\scatter-emitter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\include\texture_map.cpp">
+      <Filter>Source Files\material\texture-mapping</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -517,6 +526,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\stack_list.h">
       <Filter>Header Files\memory-management</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\texture_map.h">
+      <Filter>Header Files\material\texture-mapping</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
