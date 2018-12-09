@@ -117,6 +117,7 @@ void manta::SpherePrimitive::fineIntersection(const LightRay *ray, IntersectionP
 
 			p->m_vertexNormal = normal;
 			p->m_faceNormal = normal;
+			p->m_textureCoodinates = math::constants::Zero;
 		}
 	}
 }

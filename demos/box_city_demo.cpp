@@ -6,13 +6,19 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	Scene scene;
 
 	ObjFileLoader boxCityObj;
-	bool result = boxCityObj.readObjFile(MODEL_PATH "donut_land.obj");
+	bool result = boxCityObj.readObjFile(MODEL_PATH "box_city.obj");
+
+	TextureMap map;
+	map.loadFile(TEXTURE_PATH "1x/8ball.png", (math::real)2.2);
 
 	// Create all materials
 	SimpleSpecularDiffuseMaterial wallMaterial;
 	wallMaterial.setEmission(math::constants::Zero);
 	wallMaterial.setDiffuseColor(getColor(0xf1, 0xc4, 0x0f));
+	//wallMaterial.setDiffuseColor(getColor(255, 255, 255));
 	wallMaterial.setSpecularColor(getColor(50, 50, 50));
+	//wallMaterial.setSpecularColor(getColor(40, 40, 40));
+	//wallMaterial.setDiffuseMap(&map);
 
 	SimpleSpecularDiffuseMaterial outdoorLight;
 	outdoorLight.setEmission(math::loadVector(9, 8, 8));
@@ -46,6 +52,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
 	SpherePrimitive outdoorTopLightGeometry;
 	outdoorTopLightGeometry.setRadius((math::real)10.0);
+	//outdoorTopLightGeometry.setRadius((math::real)20.0);
 	outdoorTopLightGeometry.setPosition(math::loadVector(20, 30.0, -13.5));
 
 	SpherePrimitive groundGeometry;
@@ -114,8 +121,8 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	lens.setRadius(1.0);
 	lens.setSensorResolutionX(resolutionX);
 	lens.setSensorResolutionY(resolutionY);
-	lens.setSensorHeight(12.0);
-	lens.setSensorWidth(12.0 * (resolutionX / (math::real)resolutionY));
+	lens.setSensorHeight(10.0);
+	lens.setSensorWidth(10.0 * (resolutionX / (math::real)resolutionY));
 	lens.update();
 
 	if (regularCamera) {
@@ -137,7 +144,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 		math::real focusDistance = 22.0;
 
 		Aperture *aperture = lens.getAperture();
-		aperture->setSize((math::real)0.1);
+		aperture->setSize((math::real)0.18);
 		lens.setFocus(focusDistance);
 
 		LensCameraRayEmitterGroup *camera = new LensCameraRayEmitterGroup;
@@ -154,8 +161,9 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
 	// Create the raytracer
 	RayTracer rayTracer;
-	rayTracer.initialize(2000 * MB, 300 * MB, 12, 10000, true);
+	rayTracer.initialize(1000 * MB, 50 * MB, 12, 10000, true);
 	rayTracer.setBackgroundColor(getColor(255.0, 255.0, 255.0));
+	//rayTracer.setBackgroundColor(getColor(0.0, 0.0, 0.0));
 	//rayTracer.setDeterministicSeedMode(true);
 	rayTracer.traceAll(&scene, group);
 	//rayTracer.tracePixel(817, 689, &scene, &camera);
