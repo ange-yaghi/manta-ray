@@ -21,8 +21,6 @@ namespace manta {
 		void setSampleCount(int samples) { m_samples = samples; }
 		int getSampleCount() const { return m_samples; }
 
-		math::Vector getAverageIntensity() const;
-
 	protected:
 		math::Vector m_incidentDirection;
 		math::Vector m_normal;

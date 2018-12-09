@@ -1,9 +1,10 @@
 #include <lens_camera_ray_emitter.h>
 
 #include <light_ray.h>
+#include <lens.h>
 
 manta::LensCameraRayEmitter::LensCameraRayEmitter() {
-
+	m_explicitSampleCount = 0;
 }
 
 manta::LensCameraRayEmitter::~LensCameraRayEmitter() {
@@ -12,45 +13,19 @@ manta::LensCameraRayEmitter::~LensCameraRayEmitter() {
 
 void manta::LensCameraRayEmitter::generateRays() {
 	// Create all rays
-	initializeRays(m_samples * m_samples);
+	initializeRays(m_explicitSampleCount);
 	LightRay *rays = getRays();
 
-	// Find the origin
-	math::real offset;
-	if (m_samples % 2 == 0) {
-		// Even sampling
-		offset = (math::real)0.5;
-	}
-	else {
-		offset = (math::real)0.0;
-	}
+	LensScanHint hint;
+	m_lens->lensScan(m_position, &hint, 4);
 
-	int half = m_samples / 2;
-
-	offset = -half + offset;
-
-	for (int i = 0; i < m_samples; i++) {
-		for (int j = 0; j < m_samples; j++) {
-			math::real x = i + offset;
-			math::real y = j + offset;
-
-			math::Vector u = math::mul(m_sampleOffsetX, math::loadScalar(x));
-			math::Vector v = math::mul(m_sampleOffsetY, math::loadScalar(y));
-			math::Vector dir = math::add(u, v);
-			dir = math::add(
-				dir,
-				m_startDirection
-			);
-			dir = math::normalize(dir);
-
-			LightRay *ray = &rays[i * m_samples + j];
-			ray->setDirection(dir);
-			ray->setSource(m_position);
-		}
+	for (int i = 0; i < m_explicitSampleCount; i++) {
+		bool result = m_lens->generateOutgoingRay(m_position, &hint, &rays[i]);
+		rays[i].setIntensity(math::constants::Zero);
 	}
 }
 
-manta::math::Vector manta::LensCameraRayEmitter::getIntensity() const {
+void manta::LensCameraRayEmitter::calculateIntensity() {
 	LightRay *rays = getRays();
 	int rayCount = getRayCount();
 
@@ -72,5 +47,5 @@ manta::math::Vector manta::LensCameraRayEmitter::getIntensity() const {
 	}
 
 	accum = math::div(accum, math::loadScalar((math::real)rayCount));
-	return accum;
+	m_intensity = accum;
 }
