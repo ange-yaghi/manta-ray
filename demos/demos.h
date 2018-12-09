@@ -28,6 +28,7 @@
 #include <lens_camera_ray_emitter.h>
 #include <lens_camera_ray_emitter_group.h>
 #include <simple_lens.h>
+#include <texture_map.h>
 
 namespace manta_demo {
 

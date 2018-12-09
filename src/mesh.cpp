@@ -10,6 +10,7 @@ manta::Mesh::Mesh() {
 	m_precomputedValues = nullptr;
 	m_vertices = nullptr;
 	m_normals = nullptr;
+	m_textureCoords = nullptr;
 
 	m_fastIntersectEnabled = false;
 	m_fastIntersectRadius = (math::real)0.0;
@@ -22,9 +23,10 @@ manta::Mesh::~Mesh() {
 	delete[] m_precomputedValues;
 	delete[] m_vertices;
 	delete[] m_normals;
+	delete[] m_textureCoords;
 }
 
-void manta::Mesh::initialize(int faceCount, int vertexCount, int normalCount) {
+void manta::Mesh::initialize(int faceCount, int vertexCount, int normalCount, int texCoordCount) {
 	m_faces = new Face[faceCount];
 	m_vertices = new math::Vector[vertexCount];
 
@@ -32,9 +34,14 @@ void manta::Mesh::initialize(int faceCount, int vertexCount, int normalCount) {
 		m_normals = new math::Vector[normalCount];
 	}
 
+	if (texCoordCount > 0) {
+		m_textureCoords = new math::Vector[texCoordCount];
+	}
+
 	m_faceCount = faceCount;
 	m_vertexCount = vertexCount;
 	m_normalCount = normalCount;
+	m_texCoordCount = texCoordCount;
 }
 
 void manta::Mesh::precomputeValues() {
@@ -93,16 +100,10 @@ const manta::CoarseIntersection *manta::Mesh::coarseIntersection(const LightRay 
 			intersection->sceneGeometry = this;
 
 			if (closest == nullptr || output.depth < closest->depth) {
-				// Check that the collision is eligible to be a reference
-				//if (detectIntersection(i, output.u, output.v, output.w, 1E-6)) {
 				IntersectionPoint p;
 				if (detectIntersection(i, math::constants::REAL_MAX, rayDir, raySource, &p, 1E-6)) {
-					//	detectIntersection(i, output.u, output.v, output.w, 1E-6);
-					//	detectIntersection(i, math::REAL_MAX, rayDir, raySource, &p, 1E-6);
-					//}
 					closest = intersection;
 				}
-				//}
 			}
 		}
 	}
@@ -145,7 +146,7 @@ bool manta::Mesh::fastIntersection(const LightRay *ray) const {
 }
 
 void manta::Mesh::loadObjFileData(ObjFileLoader *data) {
-	initialize(data->getFaceCount(), data->getVertexCount(), data->getNormalCount());
+	initialize(data->getFaceCount(), data->getVertexCount(), data->getNormalCount(), data->getTexCoordCount());
 
 	for (unsigned int i = 0; i < data->getFaceCount(); i++) {
 		ObjFace *face = data->getFace(i);
@@ -156,6 +157,10 @@ void manta::Mesh::loadObjFileData(ObjFileLoader *data) {
 		m_faces[i].nu = face->vn1 - 1;
 		m_faces[i].nv = face->vn2 - 1;
 		m_faces[i].nw = face->vn3 - 1;
+
+		m_faces[i].tu = face->vt1 - 1;
+		m_faces[i].tv = face->vt2 - 1;
+		m_faces[i].tw = face->vt3 - 1;
 	}
 
 	for (unsigned int i = 0; i < data->getVertexCount(); i++) {
@@ -173,6 +178,18 @@ void manta::Mesh::loadObjFileData(ObjFileLoader *data) {
 	else {
 		m_perVertexNormals = false;
 	}
+
+	if (data->getTexCoordCount() > 0) {
+		for (unsigned int i = 0; i < data->getTexCoordCount(); i++) {
+			math::Vector2 *t = data->getTexCoords(i);
+			m_textureCoords[i] = math::loadVector(*t);
+		}
+		m_useTextureCoords = true;
+	}
+	else {
+		m_useTextureCoords = false;
+	}
+
 	precomputeValues();
 }
 
@@ -211,6 +228,7 @@ bool manta::Mesh::detectIntersection(int faceIndex, math::real earlyExitDepthHin
 	p->m_intersection = true;
 
 	math::Vector vertexNormal;
+	math::Vector textureCoordinates;
 	
 	if (m_perVertexNormals) {
 		math::Vector normalU = m_normals[m_faces[faceIndex].nu];
@@ -225,6 +243,18 @@ bool manta::Mesh::detectIntersection(int faceIndex, math::real earlyExitDepthHin
 		vertexNormal = cache.normal;
 	}
 
+	if (m_useTextureCoords) {
+		math::Vector texU = m_textureCoords[m_faces[faceIndex].tu];
+		math::Vector texV = m_textureCoords[m_faces[faceIndex].tv];
+		math::Vector texW = m_textureCoords[m_faces[faceIndex].tw];
+
+		textureCoordinates = math::add(math::mul(texU, math::loadScalar(u)), math::mul(texV, math::loadScalar(v)));
+		textureCoordinates = math::add(textureCoordinates, math::mul(texW, math::loadScalar(w)));
+	}
+	else {
+		textureCoordinates = math::constants::Zero;
+	}
+
 	// TODO: only apply this logic for two-sided objects
 	if (math::getScalar(math::dot(cache.normal, rayDir)) > (math::real)0.0) {
 		p->m_vertexNormal = math::negate(vertexNormal);
@@ -234,7 +264,9 @@ bool manta::Mesh::detectIntersection(int faceIndex, math::real earlyExitDepthHin
 		p->m_vertexNormal = vertexNormal;
 		p->m_faceNormal = cache.normal;
 	}
+
 	p->m_position = s;
+	p->m_textureCoodinates = textureCoordinates;
 
 	return true;
 }

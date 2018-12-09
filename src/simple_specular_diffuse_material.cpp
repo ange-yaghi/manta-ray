@@ -3,6 +3,7 @@
 #include <light_ray.h>
 #include <intersection_point.h>
 #include <monte_carlo_specular_diffuse_group.h>
+#include <texture_map.h>
 
 #include <iostream>
 
@@ -13,12 +14,14 @@ manta::SimpleSpecularDiffuseMaterial::SimpleSpecularDiffuseMaterial() {
 	m_autoDisableEmitters = true;
 	m_enableDiffuse = true;
 	m_enableSpecular = true;
+
+	m_diffuseMap = nullptr;
 }
 
 manta::SimpleSpecularDiffuseMaterial::~SimpleSpecularDiffuseMaterial() {
 }
 
-void manta::SimpleSpecularDiffuseMaterial::integrateRay(LightRay * ray, const RayEmitterGroup * _rayEmitter) const {
+void manta::SimpleSpecularDiffuseMaterial::integrateRay(LightRay *ray, const RayEmitterGroup *_rayEmitter) const {
 	math::Vector addedLight = math::constants::Zero;
 
 	if (_rayEmitter != nullptr) {
@@ -32,13 +35,23 @@ void manta::SimpleSpecularDiffuseMaterial::integrateRay(LightRay * ray, const Ra
 		}
 
 		if (diffuse != nullptr) {
+			math::Vector diffuseColor = m_diffuseColor;
 			math::Vector ave = diffuse->getIntensity();
-			addedLight = math::add(addedLight, math::mul(m_diffuseColor, ave));
+
+			if (m_diffuseMap != nullptr) {
+				math::Vector uv = rayEmitter->getTexCoord();
+				diffuseColor = math::mul(diffuseColor, m_diffuseMap->sample(math::getX(uv), math::getY(uv)));
+
+				//ray->setIntensity(m_diffuseMap->sample(0.5, 0.45));
+			}
+
+			addedLight = math::add(addedLight, math::mul(diffuseColor, ave));
+
 
 			//if (math::getX(diffuse->getAverageIntensity()) > 0.5) {
 
 				//ray->setIntensity(
-				//	math::add(math::mul(diffuse->getNormal(), math::constants::Half), math::loadVector(0.5, 0.5, 0.5))
+				//	math::add(math::mul(rayEmitter->getTexCoord(), math::constants::Half), math::loadVector(0.5, 0.5, 0.5))
 				//);
 
 				//std::cout << math::getX(diffuse->getRays()[0].getDirection()) << ", " << math::getY(diffuse->getRays()[0].getDirection()) << ", " << math::getZ(diffuse->getRays()[0].getDirection());
@@ -119,7 +132,7 @@ int manta::SimpleSpecularDiffuseMaterial::getDiffuseSampleCount(int degree) cons
 	}
 }
 
-void manta::SimpleSpecularDiffuseMaterial::preconfigureEmitterGroup(RayEmitterGroup * _group, int degree) const {
+void manta::SimpleSpecularDiffuseMaterial::preconfigureEmitterGroup(RayEmitterGroup *_group, int degree) const {
 	MonteCarloSpecularDiffuseGroup *group = (MonteCarloSpecularDiffuseGroup *)_group;
 
 	int diffuseSamples = getDiffuseSampleCount(degree);
@@ -131,7 +144,7 @@ void manta::SimpleSpecularDiffuseMaterial::preconfigureEmitterGroup(RayEmitterGr
 	else group->setSpecularEnabled(true);
 }
 
-manta::RayEmitterGroup * manta::SimpleSpecularDiffuseMaterial::generateRayEmittersInternal(const LightRay * ray, const IntersectionPoint * intersectionPoint, int degree, StackAllocator *stackAllocator) const {
+manta::RayEmitterGroup * manta::SimpleSpecularDiffuseMaterial::generateRayEmittersInternal(const LightRay *ray, const IntersectionPoint *intersectionPoint, int degree, StackAllocator *stackAllocator) const {
 	if (degree >= m_maxDiffuseDegree && degree >= m_maxSpecularDegree) {
 		return nullptr;
 	}
@@ -139,6 +152,7 @@ manta::RayEmitterGroup * manta::SimpleSpecularDiffuseMaterial::generateRayEmitte
 	if (!m_enableDiffuse && !m_enableSpecular) return nullptr;
 
 	MonteCarloSpecularDiffuseGroup *newEmitter = createEmitterGroup<MonteCarloSpecularDiffuseGroup>(degree, stackAllocator);
+	newEmitter->setTexCoord(intersectionPoint->m_textureCoodinates);
 
 	int diffuseSamples = getDiffuseSampleCount(degree);
 

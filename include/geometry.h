@@ -11,6 +11,10 @@ namespace manta {
 		unsigned int nu;
 		unsigned int nv;
 		unsigned int nw;
+
+		unsigned int tu;
+		unsigned int tv;
+		unsigned int tw;
 	};
 
 	struct Plane {
