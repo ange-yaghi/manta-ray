@@ -5,6 +5,8 @@
 
 namespace manta {
 
+	class Lens;
+
 	class LensCameraRayEmitter : public RayEmitter {
 	public:
 		LensCameraRayEmitter();
@@ -12,27 +14,17 @@ namespace manta {
 
 		virtual void generateRays();
 
-		void setSampleOffsetX(const math::Vector &sampleOffset) { m_sampleOffsetX = sampleOffset; }
-		math::Vector getSampleOffsetX() const { return m_sampleOffsetX; }
+		virtual void calculateIntensity();
 
-		void setSampleOffsetY(const math::Vector &sampleOffset) { m_sampleOffsetY = sampleOffset; }
-		math::Vector getSampleOffsetY() const { return m_sampleOffsetY; }
+		void setLens(Lens *lens) { m_lens = lens; }
+		Lens *getLens() const { return m_lens; }
 
-		void setStartDirection(const math::Vector &startDirection) { m_startDirection = startDirection; }
-		math::Vector getStartDirection() const { return m_startDirection; }
-
-		void setAASamples(int samples) { m_samples = samples; }
-		int getAASamples() const { return m_samples; }
-
-		math::Vector getIntensity() const;
+		void setExplicitSampleCount(int s) { m_explicitSampleCount = s; }
+		int getExplicitSampleCount() const { return m_explicitSampleCount; }
 
 	protected:
-		math::Vector m_sampleOffsetX;
-		math::Vector m_sampleOffsetY;
-
-		math::Vector m_startDirection;
-
-		int m_samples;
+		int m_explicitSampleCount;
+		Lens *m_lens;
 	};
 
 } /* namespace manta */

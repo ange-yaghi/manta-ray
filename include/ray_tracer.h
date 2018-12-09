@@ -42,6 +42,7 @@ namespace manta {
 
 		void traceAll(const Scene *scene, CameraRayEmitterGroup *rayEmitterGroup);
 		void tracePixel(int px, int py, const Scene *scene, CameraRayEmitterGroup *rayEmitterGroup);
+		void traceRayEmitter(const Scene *scene, RayEmitter *emitter, StackAllocator *s /**/ PATH_RECORDER_DECL) const;
 
 		int getThreadCount() const { return m_threadCount; }
 
@@ -85,7 +86,6 @@ namespace manta {
 		void fluxMultisample(const LightRay *ray, IntersectionList *list, IntersectionPoint *point, SceneObject **closestObject, const CoarseIntersection *referenceIntersection, math::real epsilon, StackAllocator *s) const;
 
 		void traceRayEmitterGroup(const Scene *scene, const RayEmitterGroup *rayEmitterGroup, StackAllocator *s /**/ PATH_RECORDER_DECL) const;
-		void traceRayEmitter(const Scene *scene, const RayEmitter *emitter, StackAllocator *s /**/ PATH_RECORDER_DECL) const;
 
 		math::Vector m_backgroundColor;
 

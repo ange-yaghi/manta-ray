@@ -1,13 +1,16 @@
-#ifndef CAMERA_RAY_EMITTER_GROUP_H
-#define CAMERA_RAY_EMITTER_GROUP_H
+#ifndef LENS_CAMERA_RAY_EMITTER_GROUP_H
+#define LENS_CAMERA_RAY_EMITTER_GROUP_H
 
 #include <ray_emitter_group.h>
 
-#include <lens_camera_ray_emitter.h>
+#include <camera_ray_emitter_group.h>
 
 namespace manta {
 
-	class LensCameraRayEmitterGroup : public RayEmitterGroup {
+	class Lens;
+	class LensCameraRayEmitter;
+
+	class LensCameraRayEmitterGroup : public CameraRayEmitterGroup {
 	public:
 		LensCameraRayEmitterGroup();
 		virtual ~LensCameraRayEmitterGroup();
@@ -16,48 +19,22 @@ namespace manta {
 
 		LensCameraRayEmitter **m_cameraRayEmitters;
 
-		void setUp(const math::Vector &up) { m_up = up; }
-		math::Vector getUp() const { return m_up; }
-
-		void setResolutionX(int resolution) { m_resolutionX = resolution; }
-		int getResolutionX() const { return m_resolutionX; }
-
-		void setResolutionY(int resolution) { m_resolutionY = resolution; }
-		int getResolutionY() const { return m_resolutionY; }
-
-		void setPlaneHeight(float planeHeight) { m_planeHeight = planeHeight; }
-		float getPlaneHeight() const { return m_planeHeight; }
-
-		void setPlaneDistance(float planeDistance) { m_planeDistance = planeDistance; }
-		float getPlaneDistance() const { return m_planeDistance; }
-
-		void setPosition(const math::Vector &position) { m_position = position; }
-		math::Vector getPosition() const { return m_position; }
-
-		void setDirection(const math::Vector &direction) { m_direction = direction; }
-		math::Vector getDirection() const { return m_direction; }
-
-		void setSamplingWidth(int width) { m_samplingWidth = width; }
-		int getSamplingWidth() const { return m_samplingWidth; }
-
 		void setSamplesPerPixel(int s) { m_samplesPerPixel = s; }
 		int getSamplesPerPixel() const { return m_samplesPerPixel; }
 
+		void setLens(Lens *lens) { m_lens = lens; }
+		Lens *getLens() { return m_lens; }
+
+		void setExplicitSampleCount(int s) { m_explicitSampleCount = s; }
+		int getExplicitSampleCount() const { return m_explicitSampleCount; }
+
 	protected:
-		math::Vector m_up;
-		math::Vector m_position;
-		math::Vector m_direction;
-
-		int m_resolutionX;
-		int m_resolutionY;
-
-		int m_samplingWidth;
 		int m_samplesPerPixel;
+		int m_explicitSampleCount;
 
-		float m_planeHeight;
-		float m_planeDistance;
+		Lens *m_lens;
 	};
 
 } /* namespace manta */
 
-#endif /* CAMERA_RAY_EMITTER_GROUP_H */
+#endif /* LENS_CAMERA_RAY_EMITTER_GROUP_H */

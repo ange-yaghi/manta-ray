@@ -19,6 +19,14 @@ manta::RayEmitter::~RayEmitter() {
 	assert(m_rays == nullptr);
 }
 
+void manta::RayEmitter::calculateIntensity() {
+	math::Vector sum = math::constants::Zero;
+	for (int i = 0; i < m_rayCount; i++) {
+		sum = math::add(sum, m_rays[i].getIntensity());
+	}
+	m_intensity = math::div(sum, math::loadScalar((math::real)m_rayCount));
+}
+
 void manta::RayEmitter::initializeRays(int count) {
 	size_t size = sizeof(LightRay) * count;
 	void *buffer = nullptr;

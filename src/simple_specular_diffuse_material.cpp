@@ -28,11 +28,11 @@ void manta::SimpleSpecularDiffuseMaterial::integrateRay(LightRay * ray, const Ra
 
 		if (specular != nullptr) {
 			LightRay *reflectedRay = specular->getRay();
-			addedLight = math::add(addedLight, math::mul(m_specularColor, reflectedRay->getIntensity()));
+			addedLight = math::add(addedLight, math::mul(m_specularColor, specular->getIntensity()));
 		}
 
 		if (diffuse != nullptr) {
-			math::Vector ave = diffuse->getAverageIntensity();
+			math::Vector ave = diffuse->getIntensity();
 			addedLight = math::add(addedLight, math::mul(m_diffuseColor, ave));
 
 			//if (math::getX(diffuse->getAverageIntensity()) > 0.5) {
