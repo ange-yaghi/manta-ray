@@ -1,6 +1,7 @@
 #include "monte_carlo_specular_diffuse_group.h"
 
 manta::MonteCarloSpecularDiffuseGroup::MonteCarloSpecularDiffuseGroup() {
+	m_texCoord = math::constants::Zero;
 }
 
 manta::MonteCarloSpecularDiffuseGroup::~MonteCarloSpecularDiffuseGroup() {

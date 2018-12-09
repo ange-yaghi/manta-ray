@@ -10,6 +10,7 @@ namespace manta {
 		math::Vector m_position;
 		math::Vector m_vertexNormal;
 		math::Vector m_faceNormal;
+		math::Vector m_textureCoodinates;
 		math::real m_depth;
 
 		bool m_intersection;

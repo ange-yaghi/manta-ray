@@ -22,7 +22,7 @@ namespace manta {
 		Mesh();
 		~Mesh();
 
-		void initialize(int faceCount, int vertexCount, int normalCount);
+		void initialize(int faceCount, int vertexCount, int normalCount, int texCoordCount);
 		void precomputeValues();
 
 		virtual const CoarseIntersection *coarseIntersection(const LightRay *ray, IntersectionList *l, SceneObject *object, const CoarseIntersection *reference, math::real epsilon, StackAllocator *s) const;
@@ -32,12 +32,15 @@ namespace manta {
 		int getFaceCount() const { return m_faceCount; }
 		int getVertexCount() const { return m_vertexCount; }
 		int getNormalCount() const { return m_normalCount; }
+		int getTexCoordCount() const { return m_texCoordCount; }
 
 		void setPerVertexNormals(bool perVertexNormals) { m_perVertexNormals = perVertexNormals; }
+		void setUseTexCoords(bool useTexCoords) { m_useTextureCoords = useTexCoords; }
 
 		Face *getFaces() { return m_faces; }
 		math::Vector *getVertices() { return m_vertices; }
 		math::Vector *getNormals() { return m_normals; }
+		math::Vector *getTexCoords() { return m_textureCoords; }
 
 		void setFastIntersectEnabled(bool fastIntersect) { m_fastIntersectEnabled = fastIntersect; }
 		bool isFastIntersectEnabled() const { return m_fastIntersectEnabled; }
@@ -59,10 +62,12 @@ namespace manta {
 		Face *m_faces;
 		math::Vector *m_vertices;
 		math::Vector *m_normals;
+		math::Vector *m_textureCoords;
 
 		int m_faceCount;
 		int m_vertexCount;
 		int m_normalCount;
+		int m_texCoordCount;
 
 		// Precomputed values
 		PrecomputedValues *m_precomputedValues;
@@ -72,6 +77,7 @@ namespace manta {
 		bool m_fastIntersectEnabled;
 
 		bool m_perVertexNormals;
+		bool m_useTextureCoords;
 	};
 
 }

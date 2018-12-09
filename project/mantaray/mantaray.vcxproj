@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\include\texture_map.cpp" />
     <ClCompile Include="..\..\src\batched_monte_carlo_emitter.cpp" />
     <ClCompile Include="..\..\src\biconvex_lens.cpp" />
     <ClCompile Include="..\..\src\camera_ray_emitter_group.cpp" />
@@ -127,6 +128,7 @@
     <ClInclude Include="..\..\include\spherical_surface.h" />
     <ClInclude Include="..\..\include\stack_allocator.h" />
     <ClInclude Include="..\..\include\stack_list.h" />
+    <ClInclude Include="..\..\include\texture_map.h" />
     <ClInclude Include="..\..\include\worker.h" />
   </ItemGroup>
   <ItemGroup>
@@ -168,7 +170,7 @@
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -242,7 +244,7 @@
       <Command>"C:\Program Files (x86)\Microsoft Visual Studio\Shared\Python36_64\python" $(TargetDir)..\..\..\scripts\increment_build_version.py</Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -287,7 +289,7 @@
       <Command>"C:\Program Files (x86)\Microsoft Visual Studio\Shared\Python36_64\python" $(TargetDir)..\..\..\scripts\increment_build_version.py</Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2_image.lib%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

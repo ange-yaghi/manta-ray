@@ -27,9 +27,14 @@ namespace manta {
 		void setDiffuseSamples(int samples) { m_diffuseSamples = samples; }
 		int getDiffuseSamples() const { return m_diffuseSamples; }
 
+		void setTexCoord(const math::Vector &texCoord) { m_texCoord = texCoord; }
+		math::Vector getTexCoord() const { return m_texCoord; }
+
 	protected:
 		bool m_diffuseEnabled;
 		bool m_specularEnabled;
+
+		math::Vector m_texCoord;
 
 		int m_diffuseSamples;
 	};

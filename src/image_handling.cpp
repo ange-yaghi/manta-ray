@@ -7,10 +7,10 @@
 
 #include <math.h>
 
-Uint32 GetPixel24(SDL_Surface * surface, int x, int y) {
+Uint32 GetPixel24(SDL_Surface *surface, int x, int y) {
 	Uint32 color = 0;
 
-	Uint8 * pixel = (Uint8*)surface->pixels;
+	Uint8 *pixel = (Uint8*)surface->pixels;
 	pixel += (y * surface->pitch) + (x * sizeof(Uint8) * 3);
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
 	color |= pixel[0] << 16;
