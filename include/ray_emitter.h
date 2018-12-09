@@ -34,7 +34,8 @@ namespace manta {
 		void setStackAllocator(StackAllocator *allocator) { m_stackAllocator = allocator; }
 		StackAllocator *getStackAllocator() const { return m_stackAllocator; }
 
-		virtual math::Vector getIntensity() const { return math::constants::Zero; }
+		virtual void calculateIntensity();
+		math::Vector getIntensity() const { return m_intensity; }
 
 	protected:
 		void initializeRays(int count);
@@ -49,6 +50,7 @@ namespace manta {
 	protected:
 		math::Vector m_position;
 		math::Vector m_direction;
+		math::Vector m_intensity;
 
 	private:
 		StackAllocator *m_stackAllocator;

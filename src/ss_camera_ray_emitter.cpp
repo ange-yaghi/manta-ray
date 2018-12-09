@@ -51,12 +51,13 @@ void manta::SSCameraRayEmitter::generateRays() {
 	}
 }
 
-manta::math::Vector manta::SSCameraRayEmitter::getIntensity() const {
+void manta::SSCameraRayEmitter::calculateIntensity() {
 	LightRay *rays = getRays();
 	int rayCount = getRayCount();
 
 	if (rayCount == 0) {
-		return math::constants::Zero;
+		m_intensity = math::constants::Zero;
+		return;
 	}
 
 	math::Vector accum = math::constants::Zero;
@@ -77,5 +78,5 @@ manta::math::Vector manta::SSCameraRayEmitter::getIntensity() const {
 	}
 
 	accum = math::div(accum, math::loadScalar((math::real)rayCount));
-	return accum;
+	m_intensity = accum;
 }

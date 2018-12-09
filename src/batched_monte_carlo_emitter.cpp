@@ -45,14 +45,6 @@ void manta::BatchedMonteCarloEmitter::generateRays() {
 		LightRay &ray = getRays()[i];
 		ray.setDirection(d);
 		ray.setSource(getPosition());
+		ray.setIntensity(math::constants::Zero);
 	}
-}
-
-manta::math::Vector manta::BatchedMonteCarloEmitter::getAverageIntensity() const {
-	math::Vector accum = math::constants::Zero;
-	for (int i = 0; i < m_samples; i++) {
-		accum = math::add(accum, getRays()[i].getIntensity());
-	}
-
-	return math::div(accum, math::loadScalar((math::real)m_samples));
 }

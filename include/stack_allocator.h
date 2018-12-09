@@ -4,6 +4,8 @@
 #include <assert.h>
 #include <new>
 
+#include <iostream>
+
 #define ENABLE_BOUNDS_CHECKING
 #define ENABLE_LEDGER
 
@@ -34,6 +36,9 @@ namespace manta {
 #ifdef ENABLE_BOUNDS_CHECKING
 			assert(((unsigned __int64)((char *)newObject) - ((unsigned __int64)(char *)m_buffer) + size) <= m_size);
 #endif
+			if (((unsigned __int64)((char *)newObject) - ((unsigned __int64)(char *)m_buffer) + size) > m_size) {
+				std::cout << "Out of memory! " << m_allocationLedger << std::endl;
+			}
 
 			// Update previous block pointers
 			m_stackPointer = (void *)((char *)basePointer + size);

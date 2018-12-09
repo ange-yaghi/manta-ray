@@ -24,7 +24,7 @@ namespace manta {
 		void setAASamples(int samples) { m_samples = samples; }
 		int getAASamples() const { return m_samples; }
 
-		math::Vector getIntensity() const;
+		virtual void calculateIntensity();
 
 	protected:
 		math::Vector m_sampleOffsetX;

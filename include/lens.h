@@ -8,6 +8,13 @@ namespace manta {
 	class Aperture;
 	class LightRay;
 
+	struct LensScanHint {
+		math::real centerX;
+		math::real centerY;
+		math::real radius;
+		bool failed;
+	};
+
 	class Lens {
 	public:
 		Lens();
@@ -37,12 +44,34 @@ namespace manta {
 
 		Aperture *getAperture() { return r_aperture; }
 
+		void setSensorResolutionX(int w) { m_sensorResolutionX = w; }
+		int getSensorResolutionX() const { return m_sensorResolutionX; }
+
+		void setSensorResolutionY(int h) { m_sensorResolutionY = h; }
+		int getSensorResolutionY() const { return m_sensorResolutionY; }
+
+		virtual math::Vector getSensorElement(int x, int y) const = 0;
+		virtual void lensScan(const math::Vector &sensorElement, LensScanHint *target, int div) const = 0;
+		virtual bool generateOutgoingRay(const math::Vector &sensorElement, const LensScanHint *hint, LightRay *targetRay) const = 0;
+
+		void setSensorWidth(math::real width) { m_sensorWidth = width; }
+		math::real getSensorWidth() const { return m_sensorWidth; }
+
+		void setSensorHeight(math::real height) { m_sensorHeight = height; }
+		math::real getSensorHeight() const { return m_sensorHeight; }
+
 	protected:
 		math::Vector m_position;
 		math::Vector m_direction;
 		math::Vector m_up;
 		math::Vector m_sensorLocation;
 		math::real m_radius;
+
+		math::real m_sensorWidth;
+		math::real m_sensorHeight;
+
+		int m_sensorResolutionX;
+		int m_sensorResolutionY;
 
 		void setAperture(Aperture *aperture) { r_aperture = aperture; }
 
