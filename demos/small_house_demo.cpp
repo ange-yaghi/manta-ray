@@ -49,24 +49,18 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 	smallHouse.setFastIntersectEnabled(false);
 	smallHouse.setFastIntersectRadius((math::real)4.0);
 
-	SceneObject dummyHouse;
-	dummyHouse.setGeometry(&smallHouse);
-
 	Octree houseOctree;
 	houseOctree.initialize(5.5, math::loadVector(1.5, 0, 0));
-	houseOctree.analyze(&dummyHouse, 4);
+	houseOctree.analyze(&smallHouse, 4);
 
 	Mesh table;
 	table.loadObjFileData(&tableObj);
 	table.setFastIntersectEnabled(false);
 	table.setFastIntersectRadius((math::real)4.0);
 
-	SceneObject dummyTable;
-	dummyTable.setGeometry(&table);
-
 	Octree tableOctree;
 	tableOctree.initialize(1.2, math::loadVector(-1.38, 0, -0.87403));
-	tableOctree.analyze(&dummyTable, 4);
+	tableOctree.analyze(&table, 4);
 
 	Mesh shutters;
 	shutters.loadObjFileData(&shutterObj);
@@ -93,13 +87,13 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 	SceneObject *smallHouseObject = scene.createSceneObject();
 	if (!useOctree) smallHouseObject->setGeometry(&smallHouse);
 	else smallHouseObject->setGeometry(&houseOctree);
-	smallHouseObject->setMaterial(&wallMaterial);
+	smallHouseObject->setDefaultMaterial(&wallMaterial);
 	smallHouseObject->setName("House");
 
 	SceneObject *tableObject = scene.createSceneObject();
 	if (!useOctree) tableObject->setGeometry(&table);
 	else tableObject->setGeometry(&tableOctree);
-	tableObject->setMaterial(&tableMaterial);
+	tableObject->setDefaultMaterial(&tableMaterial);
 	tableObject->setName("Table");
 
 	//SceneObject *shuttersObject = scene.createSceneObject();
@@ -109,15 +103,15 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 
 	SceneObject *ground = scene.createSceneObject();
 	ground->setGeometry(&groundGeometry);
-	ground->setMaterial(&groundMaterial);
+	ground->setDefaultMaterial(&groundMaterial);
 
 	SceneObject *outdoorTopLightObject = scene.createSceneObject();
 	outdoorTopLightObject->setGeometry(&outdoorTopLightGeometry);
-	outdoorTopLightObject->setMaterial(&outdoorTopLightMaterial);
+	outdoorTopLightObject->setDefaultMaterial(&outdoorTopLightMaterial);
 
 	SceneObject *lightSource = scene.createSceneObject();
 	lightSource->setGeometry(&outdoorLightGeometry);
-	lightSource->setMaterial(&outdoorLight);
+	lightSource->setDefaultMaterial(&outdoorLight);
 
 	// Create the camera
 	SSCameraRayEmitterGroup camera;

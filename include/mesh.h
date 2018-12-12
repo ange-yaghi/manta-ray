@@ -42,6 +42,11 @@ namespace manta {
 		math::Vector *getNormals() { return m_normals; }
 		math::Vector *getTexCoords() { return m_textureCoords; }
 
+		const Face *getFace(int index) const { return &m_faces[index]; }
+		const math::Vector *getVertex(int index) const { return &m_vertices[index]; }
+		const math::Vector *getNormal(int index) const { return &m_normals[index]; }
+		const math::Vector *getTexCoord(int index) const { return &m_textureCoords[index]; }
+
 		void setFastIntersectEnabled(bool fastIntersect) { m_fastIntersectEnabled = fastIntersect; }
 		bool isFastIntersectEnabled() const { return m_fastIntersectEnabled; }
 
@@ -50,7 +55,9 @@ namespace manta {
 
 		const PrecomputedValues *getPrecomputedValues() const { return m_precomputedValues; }
 
-		void loadObjFileData(ObjFileLoader *data);
+		void loadObjFileData(ObjFileLoader *data, int materialIndex = -1);
+
+		void merge(const Mesh *mesh);
 
 		bool detectIntersection(int faceIndex, math::real earlyExitDepthHint, const math::Vector &rayDir, const math::Vector &rayOrigin, IntersectionPoint *p, math::real bleed) const;
 		bool detectIntersection(int faceIndex, math::real earlyExitDepthHint, const math::Vector &rayDir, const math::Vector &rayOrigin, math::real delta, CoarseCollisionOutput *output) const;

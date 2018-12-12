@@ -36,6 +36,9 @@
     <ClCompile Include="..\..\demos\box_city_demo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\demos\blocks_demo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\demos\demos.h">

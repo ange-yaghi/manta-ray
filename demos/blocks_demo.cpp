@@ -2,23 +2,23 @@
 
 using namespace manta;
 
-void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutionY) {
+void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolutionY) {
 	Scene scene;
 
 	ObjFileLoader boxCityObj;
-	bool result = boxCityObj.readObjFile(MODEL_PATH "box_city.obj");
+	bool result = boxCityObj.readObjFile(MODEL_PATH "blocks_floor.obj");
 
 	TextureMap map;
-	map.loadFile(TEXTURE_PATH "8ball.png", (math::real)2.2);
+	map.loadFile(TEXTURE_PATH "blocks.png", (math::real)2.2);
 
 	// Create all materials
 	SimpleSpecularDiffuseMaterial wallMaterial;
 	wallMaterial.setEmission(math::constants::Zero);
 	wallMaterial.setDiffuseColor(getColor(0xf1, 0xc4, 0x0f));
-	//wallMaterial.setDiffuseColor(getColor(255, 255, 255));
-	wallMaterial.setSpecularColor(getColor(50, 50, 50));
+	wallMaterial.setDiffuseColor(getColor(255, 255, 255));
+	wallMaterial.setSpecularColor(getColor(0, 0, 0));
 	//wallMaterial.setSpecularColor(getColor(40, 40, 40));
-	//wallMaterial.setDiffuseMap(&map);
+	wallMaterial.setDiffuseMap(&map);
 
 	SimpleSpecularDiffuseMaterial outdoorLight;
 	outdoorLight.setEmission(math::loadVector(9, 8, 8));
@@ -53,7 +53,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	SpherePrimitive outdoorTopLightGeometry;
 	outdoorTopLightGeometry.setRadius((math::real)10.0);
 	//outdoorTopLightGeometry.setRadius((math::real)20.0);
-	outdoorTopLightGeometry.setPosition(math::loadVector(20, 30.0, -13.5));
+	outdoorTopLightGeometry.setPosition(math::loadVector(10, 20.0, -13.5));
 
 	SpherePrimitive groundGeometry;
 	groundGeometry.setRadius((math::real)500000.01);
@@ -69,8 +69,9 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	//smallHouseObject->setMaterial(&wallMaterial);
 
 	Octree octree;
-	octree.initialize(100.0, math::loadVector(0, 0, 0));
-	octree.analyze(&boxCity, 4);
+	octree.initialize(50.0, math::loadVector(0, 0, 0));
+	octree.analyze(&boxCity, 50);
+	octree.writeToObjFile("../../workspace/test_results/blocks_octree.obj", nullptr);
 
 	constexpr bool useOctree = true;
 
@@ -173,7 +174,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	group->destroyEmitters();
 	delete group;
 
-	std::string fname = createUniqueRenderFilename("box_city_demo", samplesPerPixel);
+	std::string fname = createUniqueRenderFilename("blocks_demo", samplesPerPixel);
 	std::string imageFname = std::string(RENDER_OUTPUT) + "bitmap/" + fname + ".bmp";
 	std::string rawFname = std::string(RENDER_OUTPUT) + "raw/" + fname + ".fpm";
 

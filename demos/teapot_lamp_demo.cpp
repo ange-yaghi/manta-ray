@@ -20,40 +20,39 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	ObjFileLoader lampBlockObj;
 	result = lampBlockObj.readObjFile(MODEL_PATH "lampblock.obj");
 
+	RayTracer rayTracer;
+
 	// Create all materials
-	SimpleSpecularDiffuseMaterial wallMaterial;
-	wallMaterial.setEmission(math::constants::Zero);
-	wallMaterial.setDiffuseColor(getColor(200, 200, 200));
-	wallMaterial.setSpecularColor(math::constants::Zero);
+	SimpleSpecularDiffuseMaterial *wallMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleSpecularDiffuseMaterial>();
+	wallMaterial->setEmission(math::constants::Zero);
+	wallMaterial->setDiffuseColor(getColor(200, 200, 200));
+	wallMaterial->setSpecularColor(math::constants::Zero);
 
-	SimpleSpecularDiffuseMaterial lampLightMaterial;
-	lampLightMaterial.setEmission(math::mul(getColor(255, 197, 143), math::loadScalar(30.0)));
-	lampLightMaterial.setDiffuseColor(math::constants::Zero);
-	lampLightMaterial.setSpecularColor(math::constants::Zero);
+	SimpleSpecularDiffuseMaterial *lampLightMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleSpecularDiffuseMaterial>();
+	lampLightMaterial->setEmission(math::mul(getColor(255, 197, 143), math::loadScalar(30.0)));
+	lampLightMaterial->setDiffuseColor(math::constants::Zero);
+	lampLightMaterial->setSpecularColor(math::constants::Zero);
 
-	SimpleSpecularDiffuseMaterial teapotMaterial;
-	teapotMaterial.setEmission(math::constants::Zero);
-	teapotMaterial.setDiffuseColor(getColor(0xFF, 0x08, 0x14));
-	teapotMaterial.setSpecularColor(getColor(100, 100, 100));
+	SimpleSpecularDiffuseMaterial *teapotMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleSpecularDiffuseMaterial>();
+	teapotMaterial->setEmission(math::constants::Zero);
+	teapotMaterial->setDiffuseColor(getColor(0xFF, 0x08, 0x14));
+	teapotMaterial->setSpecularColor(getColor(100, 100, 100));
 
-	SimpleSpecularDiffuseMaterial groundMaterial;
-	groundMaterial.setEmission(math::constants::Zero);
-	groundMaterial.setDiffuseColor(math::constants::Zero);
-	groundMaterial.setSpecularColor(getColor(100, 100, 100));
+	SimpleSpecularDiffuseMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleSpecularDiffuseMaterial>();
+	groundMaterial->setEmission(math::constants::Zero);
+	groundMaterial->setDiffuseColor(math::constants::Zero);
+	groundMaterial->setSpecularColor(getColor(100, 100, 100));
 
 	// Create all scene geometry
 	Mesh lamp;
-	lamp.loadObjFileData(&lampObj);
+	lamp.loadObjFileData(&lampObj, wallMaterial->getIndex());
 	lamp.setFastIntersectEnabled(true);
 	lamp.setFastIntersectRadius((math::real)2.123);
 	lamp.setFastIntersectPosition(math::loadVector(-0.06430, 1.86833, -2.96564));
 
-	SceneObject dummyLamp;
-	dummyLamp.setGeometry(&lamp);
-
-	Octree lampOctree;
-	lampOctree.initialize(2.5, math::loadVector(-0.06430, 1.86833, -2.96564));
-	lampOctree.analyze(&dummyLamp, 4);
+	//Octree lampOctree;
+	//lampOctree.initialize(2.5, math::loadVector(-0.06430, 1.86833, -2.96564));
+	//lampOctree.analyze(&lamp, 4);
 
 	Mesh lampBlock;
 	lampBlock.loadObjFileData(&lampBlockObj);
@@ -61,17 +60,16 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	lampBlock.setFastIntersectRadius((math::real)4.0);
 
 	Mesh teapot;
-	teapot.loadObjFileData(&teapotObj);
+	teapot.loadObjFileData(&teapotObj, teapotMaterial->getIndex());
 	teapot.setFastIntersectEnabled(true);
 	teapot.setFastIntersectRadius((math::real)2.0);
 	teapot.setFastIntersectPosition(math::loadVector(-0.5724, 1.02483, -0.04969));
 
-	SceneObject  dummy;
-	dummy.setGeometry(&teapot);
+	teapot.merge(&lamp);
 
 	Octree teapotOctree;
-	teapotOctree.initialize(2, math::constants::Zero);
-	teapotOctree.analyze(&dummy, 4);
+	teapotOctree.initialize(4, math::constants::Zero);
+	teapotOctree.analyze(&teapot, 50);
 
 	SpherePrimitive bulb;
 	bulb.setRadius(0.25);
@@ -92,15 +90,15 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	constexpr bool useOctree = true;
 
 	// Create scene objects
-	SceneObject *lampObject = scene.createSceneObject();
-	if (useOctree) lampObject->setGeometry(&lampOctree);
-	else lampObject->setGeometry(&lamp);
-	lampObject->setMaterial(&wallMaterial);
-	lampObject->setName("Lamp");
+	//SceneObject *lampObject = scene.createSceneObject();
+	//if (useOctree) lampObject->setGeometry(&lampOctree);
+	//else lampObject->setGeometry(&lamp);
+	//lampObject->setDefaultMaterial(wallMaterial);
+	//lampObject->setName("Lamp");
 
 	SceneObject *bulbObject = scene.createSceneObject();
 	bulbObject->setGeometry(&bulb);
-	bulbObject->setMaterial(&lampLightMaterial);
+	bulbObject->setDefaultMaterial(lampLightMaterial);
 	bulbObject->setName("Bulb");
 
 	SceneObject *teapotObject = scene.createSceneObject();
@@ -110,12 +108,12 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	else {
 		teapotObject->setGeometry(&teapot);
 	}
-	teapotObject->setMaterial(&teapotMaterial);
+	teapotObject->setDefaultMaterial(teapotMaterial);
 	teapotObject->setName("Teapot");
 
 	SceneObject *ground = scene.createSceneObject();
 	ground->setGeometry(&groundGeometry);
-	ground->setMaterial(&wallMaterial);
+	ground->setDefaultMaterial(wallMaterial);
 	ground->setName("Ground");
 
 	//SceneObject *lampBlockObject = scene.createSceneObject();
@@ -125,7 +123,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 
 	// Create the camera
 	SSCameraRayEmitterGroup camera;
-	camera.setSamplingWidth(1);
+	camera.setSamplingWidth(3);
 	camera.setDirection(math::loadVector(-1.0, 0.0, 0.0));
 	camera.setPosition(math::loadVector(7.0, 2.0, 0.0));
 	camera.setUp(math::loadVector(0.0f, 1.0, 0.0));
@@ -136,7 +134,6 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	camera.setSamplesPerPixel(samplesPerPixel);
 
 	// Create the raytracer
-	RayTracer rayTracer;
 	rayTracer.initialize(1000 * MB, 100 * MB, 12, 10000, true);
 	rayTracer.setBackgroundColor(getColor(0, 0, 0));
 	//rayTracer.setDeterministicSeedMode(true);

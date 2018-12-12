@@ -44,7 +44,7 @@ void manta_demo::cubeTestDemo(int samplesPerPixel, int resolutionX, int resoluti
 	// Create scene objects
 	SceneObject *cubeObject = scene.createSceneObject();
 	cubeObject->setGeometry(&cube);
-	cubeObject->setMaterial(&wallMaterial);
+	cubeObject->setDefaultMaterial(&wallMaterial);
 
 	//SceneObject *outdoorTopLightObject = scene.createSceneObject();
 	//outdoorTopLightObject->setGeometry(&outdoorTopLightGeometry);

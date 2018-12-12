@@ -19,11 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\include\texture_map.cpp" />
     <ClCompile Include="..\..\src\batched_monte_carlo_emitter.cpp" />
     <ClCompile Include="..\..\src\biconvex_lens.cpp" />
     <ClCompile Include="..\..\src\camera_ray_emitter_group.cpp" />
     <ClCompile Include="..\..\src\manta_math.cpp" />
+    <ClCompile Include="..\..\src\material_manager.cpp" />
     <ClCompile Include="..\..\src\octree.cpp" />
     <ClCompile Include="..\..\src\simple_scatter_emitter.cpp" />
     <ClCompile Include="..\..\src\simple_scatter_emitter_group.cpp" />
@@ -65,6 +65,7 @@
     <ClCompile Include="..\..\src\simple_specular_diffuse_material.cpp" />
     <ClCompile Include="..\..\src\sphere_primitive.cpp" />
     <ClCompile Include="..\..\src\spherical_surface.cpp" />
+    <ClCompile Include="..\..\src\texture_map.cpp" />
     <ClCompile Include="..\..\src\worker.cpp" />
     <ClCompile Include="stack_allocator.cpp" />
   </ItemGroup>
@@ -73,6 +74,7 @@
     <ClInclude Include="..\..\include\biconvex_lens.h" />
     <ClInclude Include="..\..\include\camera_ray_emitter_group.h" />
     <ClInclude Include="..\..\include\geometry.h" />
+    <ClInclude Include="..\..\include\material_manager.h" />
     <ClInclude Include="..\..\include\octree.h" />
     <ClInclude Include="..\..\include\simple_scatter_emitter.h" />
     <ClInclude Include="..\..\include\simple_scatter_emitter_group.h" />

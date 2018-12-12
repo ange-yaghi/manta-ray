@@ -12,6 +12,19 @@
 
 using namespace manta;
 
+TEST(OctreeTests, OctreeIntersectionTest) {
+	Octree octree;
+	octree.initialize(1.0, math::loadVector(100, 100, 100));
+
+	bool test = octree.checkTriangle(
+		math::loadVector(0.0, 100.0, 0.0),
+		math::loadVector(100.0, 100.0, 100.0),
+		math::loadVector(0.0, 100.0, 110.0)
+	);
+
+	int a = 0;
+}
+
 TEST(OctreeTests, OctreeTestSanityCheck) {
 	ObjFileLoader teapotObj;
 	bool result = teapotObj.readObjFile("../../../demos/models/teapot.obj");
@@ -19,13 +32,10 @@ TEST(OctreeTests, OctreeTestSanityCheck) {
 	Mesh mesh;
 	mesh.loadObjFileData(&teapotObj);
 	mesh.setFastIntersectEnabled(false);
-
-	SceneObject meshObject;
-	meshObject.setGeometry(&mesh);
 	
 	Octree octree;
 	octree.initialize(10.0, math::loadVector(0, 0, 0));
-	octree.analyze(&meshObject, 4);
+	octree.analyze(&mesh, 4);
 
 	LightRay ray;
 	ray.setDirection(math::normalize(math::loadVector(0.5, -1.0, 0.5)));
