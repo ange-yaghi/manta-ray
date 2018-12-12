@@ -163,7 +163,7 @@ void manta::Octree::analyze(Mesh *mesh, Octree *parent, int maxSize) {
 		}
 	}
 
-	if (getUsageInternal() > maxSize) {
+	if (getUsageInternal() > maxSize && m_width > 1E-4) {
 		m_children = new manta::Octree[8];
 		for (int i = 0; i < 2; i++) {
 			for (int j = 0; j < 2; j++) {
