@@ -67,8 +67,8 @@ bool manta::Octree::fastIntersection(const LightRay * ray) const {
 	return true;
 }
 
-void manta::Octree::analyze(SceneObject *object, int maxSize) {
-	analyze(object, nullptr, maxSize);
+void manta::Octree::analyze(Mesh *mesh, int maxSize) {
+	analyze(mesh, nullptr, maxSize);
 }
 
 void manta::Octree::writeToObjFile(const char *fname, const LightRay *ray) const {
@@ -85,7 +85,8 @@ void manta::Octree::writeToObjFile(const char *fname, const LightRay *ray) const
 void manta::Octree::writeToObjFile(std::ofstream &f, int &currentLeaf, const LightRay *ray) const {
 	math::real depth;
 	if ((m_mesh != nullptr || m_children != nullptr) && (ray == nullptr || AABBIntersect(ray, &depth))) {
-		f << "o " << "LEAF_" << currentLeaf << std::endl;
+		if (m_mesh != nullptr) f << "o " << "LEAF_" << currentLeaf << "_N" << m_mesh->getFaceCount() << std::endl;
+		else f << "o " << "LEAF_" << currentLeaf << "_N" << 0 << std::endl;
 
 		int vertexOffset = currentLeaf * 8 + 1;
 		f << "v " << math::getX(m_minPoint) << " " << math::getY(m_minPoint) << " " << math::getZ(m_minPoint) << std::endl;
@@ -131,8 +132,7 @@ void manta::Octree::octreeTest(const LightRay *ray, StackList<OctreeLeafCollisio
 	}
 }
 
-void manta::Octree::analyze(SceneObject *object, Octree *parent, int maxSize) {
-	Mesh *mesh = (Mesh *)object->getGeometry();
+void manta::Octree::analyze(Mesh *mesh, Octree *parent, int maxSize) {
 	Face *faces = mesh->getFaces();
 
 	int faceCount = (parent == nullptr) ? (int)mesh->getFaceCount() : (int)parent->m_tempFaces.size();
@@ -144,9 +144,15 @@ void manta::Octree::analyze(SceneObject *object, Octree *parent, int maxSize) {
 		math::Vector v2 = mesh->getVertices()[faces[faceIndex].v];
 		math::Vector v3 = mesh->getVertices()[faces[faceIndex].w];
 
-		if (!checkVertex(v1, 1E-5)) continue;
-		if (!checkVertex(v2, 1E-5)) continue;
-		if (!checkVertex(v3, 1E-5)) continue;
+		//if (!checkVertex(v1, 1E-5)) continue;
+		//if (!checkVertex(v2, 1E-5)) continue;
+		//if (!checkVertex(v3, 1E-5)) continue;
+
+		if (!checkTriangle(v1, v2, v3))
+			continue;
+		else if (m_width < 1e-6) {
+			checkTriangle(v1, v2, v3);
+		}
 
 		TempFace f;
 		f.face = faceIndex;
@@ -170,7 +176,7 @@ void manta::Octree::analyze(SceneObject *object, Octree *parent, int maxSize) {
 		}
 
 		for (int i = 0; i < 8; i++) {
-			m_children[i].analyze(object, this, maxSize);
+			m_children[i].analyze(mesh, this, maxSize);
 		}
 	}
 
@@ -307,6 +313,8 @@ void manta::Octree::analyze(SceneObject *object, Octree *parent, int maxSize) {
 				newFaces[currentFace].u = vertexMap[u];
 				newFaces[currentFace].v = vertexMap[v];
 				newFaces[currentFace].w = vertexMap[w];
+				
+				newFaces[currentFace].material = face->material;
 
 				currentFace++;
 			}
@@ -342,6 +350,101 @@ bool manta::Octree::checkVertex(const math::Vector &v, math::real epsilon) const
 		return false;
 	}
 	return true;
+}
+
+bool manta::Octree::checkPlane(const math::Vector &n, math::real d) const {
+	math::Vector c = m_position;
+	math::Vector e = math::sub(m_maxPoint, c);
+
+	math::real r = math::getX(e) * abs(math::getX(n)) + math::getY(e) * abs(math::getY(n)) + math::getZ(e) * abs(math::getZ(n));
+	math::real s = math::getScalar(math::dot(n, c)) - d;
+
+	return abs(s) <= r;
+}
+
+#define max(a, b) ((a) > (b) ? (a) : (b))
+#define min(a, b) ((a) < (b) ? (a) : (b))
+
+bool manta::Octree::checkTriangle(const math::Vector &v0, const math::Vector &v1, const math::Vector &v2) const {
+	math::real p0, p1, p2, r;
+
+	math::Vector c = m_position;
+	math::Vector extents = math::mul(math::sub(m_maxPoint, m_minPoint), math::constants::Half);
+	math::real e0 = math::getX(extents);
+	math::real e1 = math::getY(extents);
+	math::real e2 = math::getZ(extents);
+
+	math::Vector v0_rel = math::sub(v0, c);
+	math::Vector v1_rel = math::sub(v1, c);
+	math::Vector v2_rel = math::sub(v2, c);
+
+	math::Vector f0 = math::sub(v1_rel, v0_rel);
+	math::Vector f1 = math::sub(v2_rel, v1_rel);
+	math::Vector f2 = math::sub(v0_rel, v2_rel);
+
+	math::Vector u0 = math::constants::XAxis;
+	math::Vector u1 = math::constants::YAxis;
+	math::Vector u2 = math::constants::ZAxis;
+
+	// Naive implementation for now
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 3; j++) {
+			math::Vector u, f, altF;
+			if (i == 0) u = u0; 
+			else if (i == 1) u = u1;
+			else if (i == 2) u = u2;
+
+			if (j == 0) {
+				f = f0;
+				altF = f1;
+			}
+			else if (j == 1) {
+				f = f1;
+				altF = f2;
+			}
+			else if (j == 2) {
+				f = f2;
+				altF = f0;
+			}
+
+			math::Vector a = math::cross(u, f);
+
+			if (abs(math::getX(a)) < 1e-6 && abs(math::getY(a) < 1e-6) && abs(math::getZ(a) < 1e-6)) {
+				math::Vector n = math::cross(f, altF);
+				a = math::cross(n, f);
+			}
+
+			r = e0 * abs(math::getScalar(math::dot(u0, a))) + e1 * abs(math::getScalar(math::dot(u1, a))) + e2 * abs(math::getScalar(math::dot(u2, a)));
+
+			p0 = math::getScalar(math::dot(v0_rel, a));
+			p1 = math::getScalar(math::dot(v1_rel, a));
+			p2 = math::getScalar(math::dot(v2_rel, a));
+
+			math::real maxp = max(max(p0, p1), p2);
+			math::real minp = min(min(p0, p1), p2);
+
+			if (minp > r) return false;
+			if (maxp < -r) return false;
+		}
+	}
+
+	math::real maxX = max(max(math::getX(v0_rel), math::getX(v1_rel)), math::getX(v2_rel));
+	math::real minX = min(min(math::getX(v0_rel), math::getX(v1_rel)), math::getX(v2_rel));
+
+	math::real maxY = max(max(math::getY(v0_rel), math::getY(v1_rel)), math::getY(v2_rel));
+	math::real minY = min(min(math::getY(v0_rel), math::getY(v1_rel)), math::getY(v2_rel));
+
+	math::real maxZ = max(max(math::getZ(v0_rel), math::getZ(v1_rel)), math::getZ(v2_rel));
+	math::real minZ = min(min(math::getZ(v0_rel), math::getZ(v1_rel)), math::getZ(v2_rel));
+
+	if (maxX < -e0 || minX > e0) return false;
+	if (maxY < -e1 || minY > e1) return false;
+	if (maxZ < -e2 || minZ > e2) return false;
+
+	math::Vector planeNormal = math::cross(f0, f1);
+	math::Vector t = math::dot(planeNormal, v0_rel);
+	math::real planeD = math::getScalar(math::dot(planeNormal, v0));
+	return checkPlane(planeNormal, planeD);
 }
 
 bool manta::Octree::AABBIntersect(const LightRay *ray, math::real *depth) const {

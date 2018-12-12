@@ -5,6 +5,7 @@
 #include <job_queue.h>
 #include <manta_math.h>
 #include <manta_conf.h>
+#include <material_manager.h>
 
 #include <atomic>
 #include <mutex>
@@ -63,6 +64,8 @@ namespace manta {
 		void setPathRecordingOutputDirectory(const std::string &s) { m_pathRecordingOutputDirectory = s; }
 		std::string getPathRecordingOutputDirector() const { return m_pathRecordingOutputDirectory; }
 
+		MaterialManager *getMaterialManager() { return &m_materialManager; }
+
 	protected:
 		// Multithreading features
 		JobQueue m_jobQueue;
@@ -88,6 +91,10 @@ namespace manta {
 		void traceRayEmitterGroup(const Scene *scene, const RayEmitterGroup *rayEmitterGroup, StackAllocator *s /**/ PATH_RECORDER_DECL) const;
 
 		math::Vector m_backgroundColor;
+
+	protected:
+		// Material library
+		MaterialManager m_materialManager;
 
 	protected:
 		// Statistics

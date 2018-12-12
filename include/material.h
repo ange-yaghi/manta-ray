@@ -31,6 +31,9 @@ namespace manta {
 		virtual void integrateRay(LightRay *ray, const RayEmitterGroup *_rayEmitter) const;
 		void destroyEmitterGroup(RayEmitterGroup *group, StackAllocator *stackAllocator = nullptr);
 
+		void setIndex(int index) { m_index = index; }
+		int getIndex() const { return m_index; }
+
 	protected:
 		math::Vector m_diffuseColor;
 		math::Vector m_emission;
@@ -62,6 +65,8 @@ namespace manta {
 		}
 
 		virtual RayEmitterGroup *generateRayEmittersInternal(const LightRay *ray, const IntersectionPoint *intersectionPoint, int degree, StackAllocator *stackAllocator) const;
+
+		int m_index;
 	};
 
 }
