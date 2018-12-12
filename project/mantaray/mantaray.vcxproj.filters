@@ -342,7 +342,10 @@
     <ClCompile Include="..\..\src\simple_scatter_emitter_group.cpp">
       <Filter>Source Files\emitter\scatter-emitter</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\include\texture_map.cpp">
+    <ClCompile Include="..\..\src\material_manager.cpp">
+      <Filter>Source Files\material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\texture_map.cpp">
       <Filter>Source Files\material\texture-mapping</Filter>
     </ClCompile>
   </ItemGroup>
@@ -529,6 +532,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\texture_map.h">
       <Filter>Header Files\material\texture-mapping</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\material_manager.h">
+      <Filter>Header Files\material</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

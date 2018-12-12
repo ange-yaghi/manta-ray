@@ -13,6 +13,8 @@ namespace manta {
 		math::Vector m_textureCoodinates;
 		math::real m_depth;
 
+		int m_material;
+
 		bool m_intersection;
 	};
 

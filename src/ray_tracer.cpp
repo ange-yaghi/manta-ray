@@ -378,17 +378,16 @@ void manta::RayTracer::fluxMultisample(const LightRay *ray, IntersectionList *li
 
 		math::Vector biasNormal = math::constants::Zero;
 		math::Vector vertexNormal = math::constants::Zero;
-		//if (!flipScenario) {
-			// Calculate the bias normal
-			for (int i = 0; i < SAMPLE_COUNT; i++) {
-				if (intersectionPointer[i] != -1) {
-					biasNormal = math::add(biasNormal, samples[i].m_faceNormal);
-					vertexNormal = math::add(vertexNormal, samples[i].m_vertexNormal);
-				}
+
+		// Calculate the bias normal
+		for (int i = 0; i < SAMPLE_COUNT; i++) {
+			if (intersectionPointer[i] != -1) {
+				biasNormal = math::add(biasNormal, samples[i].m_faceNormal);
+				vertexNormal = math::add(vertexNormal, samples[i].m_vertexNormal);
 			}
-			biasNormal = math::normalize(biasNormal);
-			vertexNormal = math::normalize(vertexNormal);
-		//}
+		}
+		biasNormal = math::normalize(biasNormal);
+		vertexNormal = math::normalize(vertexNormal);
 
 		list->getIntersection(preferredIntersection)->sceneObject->getGeometry()->fineIntersection(ray, point, list->getIntersection(preferredIntersection), 1000);
 
@@ -475,7 +474,13 @@ void manta::RayTracer::traceRay(const Scene *scene, LightRay *ray, int degree, S
 	else {
 		if (sceneObject != nullptr) {
 			START_BRANCH(point.m_position); // For path recording
-			Material *material = sceneObject->getMaterial();
+			Material *material;
+			if (point.m_material == -1) {
+				material = sceneObject->getDefaultMaterial();
+			}
+			else {
+				material = m_materialManager.getMaterial(point.m_material);
+			}
 			RayEmitterGroup *group = material->generateRayEmitterGroup(ray, &point, degree + 1, s);
 
 			if (group != nullptr) {
@@ -483,17 +488,6 @@ void manta::RayTracer::traceRay(const Scene *scene, LightRay *ray, int degree, S
 			}
 
 			material->integrateRay(ray, group);
-
-			//if (group != nullptr) {
-			//	int emitterCount = group->getEmitterCount();
-			//
-			//	// Data must be freed in reverse order
-			//	for (int i = emitterCount - 1; i >= 0; i--) {
-			//		group->getEmitters()[i]->destroyRays();
-			//	}
-			//
-			//	material->destroyEmitterGroup(group, s);
-			//}
 			END_BRANCH();
 		}
 		else {

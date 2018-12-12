@@ -37,17 +37,20 @@ namespace manta {
 		virtual void fineIntersection(const LightRay *ray, IntersectionPoint *p, const CoarseIntersection *hint, math::real bleed) const;
 		virtual bool fastIntersection(const LightRay *ray) const;
 
-		void analyze(SceneObject *object, int maxSize);
+		void analyze(Mesh *mesh, int maxSize);
 
 		void writeToObjFile(const char *fname, const LightRay *ray) const;
 
 	protected:
+	public:
 		// Internal version
 		void octreeTest(const LightRay *ray, StackList<OctreeLeafCollision> *list) const;
 
-		void analyze(SceneObject *object, Octree *parent, int maxSize);
+		void analyze(Mesh *mesh, Octree *parent, int maxSize);
 
 		bool checkVertex(const math::Vector &v, math::real epsilon) const;
+		bool checkPlane(const math::Vector &n, math::real d) const;
+		bool checkTriangle(const math::Vector &v0, const math::Vector &v1, const math::Vector &v2) const;
 
 		int getUsageInternal() const { return (int)m_tempFaces.size(); }
 

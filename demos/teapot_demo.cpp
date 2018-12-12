@@ -68,11 +68,11 @@ void manta_demo::teapotDemo(int samplesPerPixel, int resolutionX, int resolution
 
 	SceneObject *teapotObject = scene.createSceneObject();
 	teapotObject->setGeometry(&teapot);
-	teapotObject->setMaterial(&teapotMaterial);
+	teapotObject->setDefaultMaterial(&teapotMaterial);
 
 	Octree octree;
 	octree.initialize(10.0, math::loadVector(0, 0, 0));
-	octree.analyze(teapotObject, 4);
+	octree.analyze(&teapot, 4);
 
 	//SceneObject *ground = scene.createSceneObject();
 	//ground->setGeometry(&groundGeometry);

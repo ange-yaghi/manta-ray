@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\demos\blocks_demo.cpp" />
     <ClCompile Include="..\..\demos\box_city_demo.cpp" />
     <ClCompile Include="..\..\demos\cube_test_demo.cpp" />
     <ClCompile Include="..\..\demos\main.cpp" />

@@ -41,11 +41,11 @@ TEST(IntegrationTests, BasicTest) {
 	light.setPosition(math::loadVector(15.0f, 15.0f, 15.0f));
 
 	SceneObject *sphereObject = scene.createSceneObject();
-	sphereObject->setMaterial(&sphereMaterial);
+	sphereObject->setDefaultMaterial(&sphereMaterial);
 	sphereObject->setGeometry(&sphere);
 
 	SceneObject *lightObject = scene.createSceneObject();
-	lightObject->setMaterial(&lightMaterial);
+	lightObject->setDefaultMaterial(&lightMaterial);
 	lightObject->setGeometry(&light);
 
 	SSCameraRayEmitterGroup cameraEmitter;

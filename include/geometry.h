@@ -15,6 +15,8 @@ namespace manta {
 		unsigned int tu;
 		unsigned int tv;
 		unsigned int tw;
+
+		unsigned int material;
 	};
 
 	struct Plane {
