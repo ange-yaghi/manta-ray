@@ -7,10 +7,16 @@
 
 manta::Mesh::Mesh() {
 	m_faces = nullptr;
-	m_precomputedValues = nullptr;
 	m_vertices = nullptr;
 	m_normals = nullptr;
 	m_textureCoords = nullptr;
+
+	m_faceCount = 0;
+	m_vertexCount = 0;
+	m_normalCount = 0;
+	m_texCoordCount = 0;
+
+	m_precomputedValues = nullptr;
 
 	m_fastIntersectEnabled = false;
 	m_fastIntersectRadius = (math::real)0.0;
@@ -145,7 +151,7 @@ bool manta::Mesh::fastIntersection(const LightRay *ray) const {
 	else return true;
 }
 
-void manta::Mesh::loadObjFileData(ObjFileLoader *data) {
+void manta::Mesh::loadObjFileData(ObjFileLoader *data, int materialIndex) {
 	initialize(data->getFaceCount(), data->getVertexCount(), data->getNormalCount(), data->getTexCoordCount());
 
 	for (unsigned int i = 0; i < data->getFaceCount(); i++) {
@@ -161,6 +167,8 @@ void manta::Mesh::loadObjFileData(ObjFileLoader *data) {
 		m_faces[i].tu = face->vt1 - 1;
 		m_faces[i].tv = face->vt2 - 1;
 		m_faces[i].tw = face->vt3 - 1;
+
+		m_faces[i].material = materialIndex;
 	}
 
 	for (unsigned int i = 0; i < data->getVertexCount(); i++) {
@@ -191,6 +199,69 @@ void manta::Mesh::loadObjFileData(ObjFileLoader *data) {
 	}
 
 	precomputeValues();
+}
+
+void manta::Mesh::merge(const Mesh *mesh) {
+	int newFaceCount = m_faceCount + mesh->getFaceCount();
+	int newVertexCount = m_vertexCount + mesh->getVertexCount();
+	int newNormalCount = m_normalCount + mesh->getNormalCount();
+	int newTexCoordCount = m_texCoordCount + mesh->getTexCoordCount();
+
+	Face *newFaces = new Face[newFaceCount];
+	math::Vector *newVerts = new math::Vector[newVertexCount];
+	math::Vector *newNormals = new math::Vector[newNormalCount];
+	math::Vector *newTexCoords = new math::Vector[newTexCoordCount];
+
+	memcpy((void *)newFaces, (void *)m_faces, sizeof(Face) * m_faceCount);
+	memcpy((void *)newVerts, (void *)m_vertices, sizeof(math::Vector) * m_vertexCount);
+	memcpy((void *)newNormals, (void *)m_normals, sizeof(math::Vector) * m_normalCount);
+	memcpy((void *)newTexCoords, (void *)m_textureCoords, sizeof(math::Vector) * m_texCoordCount);
+
+	for (int i = 0; i < mesh->getFaceCount(); i++) {
+		Face &newFace = newFaces[i + m_faceCount];
+		const Face *mergeFace = mesh->getFace(i);
+
+		newFace.material = mergeFace->material;
+
+		newFace.u = mergeFace->u + m_vertexCount;
+		newFace.v = mergeFace->v + m_vertexCount;
+		newFace.w = mergeFace->w + m_vertexCount;
+
+		newFace.nu = mergeFace->nu + m_normalCount;
+		newFace.nv = mergeFace->nv + m_normalCount;
+		newFace.nw = mergeFace->nw + m_normalCount;
+
+		newFace.tu = mergeFace->tu + m_texCoordCount;
+		newFace.tv = mergeFace->tv + m_texCoordCount;
+		newFace.tw = mergeFace->tw + m_texCoordCount;
+	}
+
+	for (int i = 0; i < mesh->getVertexCount(); i++) {
+		newVerts[i + m_vertexCount] = *mesh->getVertex(i);
+	}
+
+	for (int i = 0; i < mesh->getNormalCount(); i++) {
+		newNormals[i + m_normalCount] = *mesh->getNormal(i);
+	}
+
+	for (int i = 0; i < mesh->getTexCoordCount(); i++) {
+		newTexCoords[i + m_texCoordCount] = *mesh->getTexCoord(i);
+	}
+
+	delete[] m_faces;
+	delete[] m_vertices;
+	delete[] m_normals;
+	delete[] m_textureCoords;
+
+	m_faces = newFaces;
+	m_vertices = newVerts;
+	m_normals = newNormals;
+	m_textureCoords = newTexCoords;
+
+	m_faceCount = newFaceCount;
+	m_vertexCount = newVertexCount;
+	m_normalCount = newNormalCount;
+	m_texCoordCount = newTexCoordCount;
 }
 
 bool manta::Mesh::detectIntersection(int faceIndex, math::real earlyExitDepthHint, const math::Vector &rayDir, const math::Vector &rayOrigin, IntersectionPoint *p, math::real bleed) const {
@@ -267,6 +338,7 @@ bool manta::Mesh::detectIntersection(int faceIndex, math::real earlyExitDepthHin
 
 	p->m_position = s;
 	p->m_textureCoodinates = textureCoordinates;
+	p->m_material = m_faces[faceIndex].material;
 
 	return true;
 }

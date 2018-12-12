@@ -63,17 +63,11 @@ const manta::CoarseIntersection *manta::SpherePrimitive::coarseIntersection(cons
 				if (reference == nullptr || newIntersection->depth < reference->depth) {
 					return newIntersection;
 				}
-				else {
-					return reference;
-				}
+				else return reference;
 			}
-			else {
-				return reference;
-			}
+			else return reference;
 		}
-		else {
-			return reference;
-		}
+		else return reference;
 	}
 }
 
@@ -118,11 +112,12 @@ void manta::SpherePrimitive::fineIntersection(const LightRay *ray, IntersectionP
 			p->m_vertexNormal = normal;
 			p->m_faceNormal = normal;
 			p->m_textureCoodinates = math::constants::Zero;
+			p->m_material = -1;
 		}
 	}
 }
 
-void manta::SpherePrimitive::detectIntersection(const LightRay * ray, IntersectionPoint * convex, IntersectionPoint * concave) const {
+void manta::SpherePrimitive::detectIntersection(const LightRay *ray, IntersectionPoint *convex, IntersectionPoint *concave) const {
 	math::Vector d_pos = math::sub(ray->getSource(), m_position);
 	math::Vector d_dot_dir = math::dot(d_pos, ray->getDirection());
 	math::Vector mag2 = math::magnitudeSquared3(d_pos);
@@ -160,6 +155,7 @@ void manta::SpherePrimitive::detectIntersection(const LightRay * ray, Intersecti
 					concave->m_position = pos;
 					concave->m_faceNormal = math::negate(normal);
 					concave->m_vertexNormal = concave->m_faceNormal;
+					concave->m_material = -1;
 				}
 			}
 			else {
@@ -169,6 +165,7 @@ void manta::SpherePrimitive::detectIntersection(const LightRay * ray, Intersecti
 					convex->m_position = pos;
 					convex->m_faceNormal = normal;
 					convex->m_vertexNormal = convex->m_faceNormal;
+					convex->m_material = -1;
 				}
 			}
 		}
@@ -187,6 +184,7 @@ void manta::SpherePrimitive::detectIntersection(const LightRay * ray, Intersecti
 					concave->m_position = pos;
 					concave->m_faceNormal = math::negate(normal);
 					concave->m_vertexNormal = concave->m_faceNormal;
+					concave->m_material = -1;
 				}
 			}
 			else {
@@ -196,6 +194,7 @@ void manta::SpherePrimitive::detectIntersection(const LightRay * ray, Intersecti
 					convex->m_position = pos;
 					convex->m_faceNormal = normal;
 					convex->m_vertexNormal = convex->m_faceNormal;
+					convex->m_material = -1;
 				}
 			}
 		}
