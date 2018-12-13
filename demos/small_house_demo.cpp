@@ -51,7 +51,7 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 
 	Octree houseOctree;
 	houseOctree.initialize(5.5, math::loadVector(1.5, 0, 0));
-	houseOctree.analyze(&smallHouse, 4);
+	houseOctree.analyze(&smallHouse, 25);
 
 	Mesh table;
 	table.loadObjFileData(&tableObj);
@@ -60,7 +60,7 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 
 	Octree tableOctree;
 	tableOctree.initialize(1.2, math::loadVector(-1.38, 0, -0.87403));
-	tableOctree.analyze(&table, 4);
+	tableOctree.analyze(&table, 25);
 
 	Mesh shutters;
 	shutters.loadObjFileData(&shutterObj);
@@ -115,7 +115,7 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 
 	// Create the camera
 	SSCameraRayEmitterGroup camera;
-	camera.setSamplingWidth(1);
+	camera.setSamplingWidth(3);
 	camera.setDirection(math::loadVector(-1.0, 0.0, 0.0));
 	camera.setPosition(math::loadVector(5.0, 2.0, 0.0));
 	camera.setUp(math::loadVector(0.0f, 1.0, 0.0));
