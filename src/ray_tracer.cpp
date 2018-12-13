@@ -427,9 +427,12 @@ void manta::RayTracer::traceRay(const Scene *scene, LightRay *ray, int degree, S
 
 	depthCull(scene, ray, &sceneObject, &point, s);
 
+	math::real scatterDepth = (point.m_intersection) ? point.m_depth : 10.0;
+	if (scatterDepth > 70.0) scatterDepth = 70.0;
+	math::real scatterPDF = 0.01 * scatterDepth; // 10% chance per 10 units travelled
 	math::real scatter = math::uniformRandom(1.0);
-	constexpr bool causticScatter = false;
-	if (causticScatter && scatter > 0.5) {
+	constexpr bool causticScatter = true;
+	if (causticScatter && scatter < scatterPDF && degree < 5) {
 		// Do a scatter for caustic simulation
 		void *buffer = s->allocate(sizeof(SimpleScatterEmitterGroup), 16);
 		SimpleScatterEmitterGroup *group = new (buffer) SimpleScatterEmitterGroup;
@@ -440,14 +443,7 @@ void manta::RayTracer::traceRay(const Scene *scene, LightRay *ray, int degree, S
 
 		constexpr math::real epsilon = 1E-3;
 		math::real depth; 
-
-		if (sceneObject != nullptr) {
-			depth = math::uniformRandom(point.m_depth - epsilon) + epsilon;
-		}
-		else {
-			// TODO: set more explicit depth
-			depth = math::uniformRandom((math::real)10.0);
-		}
+		depth = math::uniformRandom(scatterDepth - epsilon) + epsilon;
 
 		math::Vector pos = math::add(ray->getSource(), math::mul(ray->getDirection(), math::loadScalar(depth)));
 		group->m_simpleRayEmitter->setPosition(pos);
