@@ -92,23 +92,27 @@ const manta::CoarseIntersection *manta::Mesh::coarseIntersection(const LightRay 
 
 	CoarseCollisionOutput output;
 
-	for (int i = 0; i < m_faceCount; i++) {
-		math::real depthHint = math::constants::REAL_MAX;
-		if (closest != nullptr) {
-			depthHint = closest->depth + epsilon;
-		}
+	math::real depthHint = math::constants::REAL_MAX;
+	if (closest != nullptr) {
+		depthHint = closest->depth + epsilon;
+	}
 
+	for (int i = 0; i < m_faceCount; i++) {
 		if (detectIntersection(i, depthHint, rayDir, raySource, 1E-2, &output)) {
 			CoarseIntersection *intersection = l->newIntersection();
 			intersection->depth = output.depth;
 			intersection->locationHint = i; // Face index
 			intersection->sceneObject = object;
 			intersection->sceneGeometry = this;
+			intersection->globalHint = m_faces[i].globalId;
 
 			if (closest == nullptr || output.depth < closest->depth) {
 				IntersectionPoint p;
 				if (detectIntersection(i, math::constants::REAL_MAX, rayDir, raySource, &p, 1E-6)) {
 					closest = intersection;
+
+					// Recalculate the depth hint
+					depthHint = closest->depth + epsilon;
 				}
 			}
 		}
@@ -151,7 +155,7 @@ bool manta::Mesh::fastIntersection(const LightRay *ray) const {
 	else return true;
 }
 
-void manta::Mesh::loadObjFileData(ObjFileLoader *data, int materialIndex) {
+void manta::Mesh::loadObjFileData(ObjFileLoader *data, int materialIndex, unsigned int globalId) {
 	initialize(data->getFaceCount(), data->getVertexCount(), data->getNormalCount(), data->getTexCoordCount());
 
 	for (unsigned int i = 0; i < data->getFaceCount(); i++) {
@@ -169,6 +173,7 @@ void manta::Mesh::loadObjFileData(ObjFileLoader *data, int materialIndex) {
 		m_faces[i].tw = face->vt3 - 1;
 
 		m_faces[i].material = materialIndex;
+		m_faces[i].globalId = globalId + i;
 	}
 
 	for (unsigned int i = 0; i < data->getVertexCount(); i++) {
@@ -308,7 +313,7 @@ bool manta::Mesh::detectIntersection(int faceIndex, math::real earlyExitDepthHin
 
 		vertexNormal = math::add(math::mul(normalU, math::loadScalar(u)), math::mul(normalV, math::loadScalar(v)));
 		vertexNormal = math::add(vertexNormal, math::mul(normalW, math::loadScalar(w)));
-		vertexNormal = math::normalize(vertexNormal);
+		//vertexNormal = math::normalize(vertexNormal);
 	}
 	else {
 		vertexNormal = cache.normal;

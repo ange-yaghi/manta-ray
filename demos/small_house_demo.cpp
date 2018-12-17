@@ -17,6 +17,8 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 	ObjFileLoader shutterObj;
 	result = shutterObj.readObjFile(MODEL_PATH "room_shutters.obj");
 
+	RayTracer rayTracer;
+
 	// Create all materials
 	SimpleSpecularDiffuseMaterial wallMaterial;
 	wallMaterial.setEmission(math::constants::Zero);
@@ -33,10 +35,10 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 	outdoorTopLightMaterial.setDiffuseColor(math::constants::Zero);
 	outdoorTopLightMaterial.setSpecularColor(math::constants::Zero);
 
-	SimpleSpecularDiffuseMaterial tableMaterial;
-	tableMaterial.setEmission(math::constants::Zero);
-	tableMaterial.setDiffuseColor(getColor(78, 46, 40));
-	tableMaterial.setSpecularColor(getColor(100, 100, 100));
+	SimpleSpecularDiffuseMaterial *tableMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleSpecularDiffuseMaterial>();
+	tableMaterial->setEmission(math::constants::Zero);
+	tableMaterial->setDiffuseColor(getColor(78, 46, 40));
+	tableMaterial->setSpecularColor(getColor(100, 100, 100));
 
 	SimpleSpecularDiffuseMaterial groundMaterial;
 	groundMaterial.setEmission(math::constants::Zero);
@@ -45,22 +47,27 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 
 	// Create all scene geometry
 	Mesh smallHouse;
-	smallHouse.loadObjFileData(&smallHouseObj);
+	smallHouse.loadObjFileData(&smallHouseObj, -1, 0);
 	smallHouse.setFastIntersectEnabled(false);
 	smallHouse.setFastIntersectRadius((math::real)4.0);
 
-	Octree houseOctree;
-	houseOctree.initialize(5.5, math::loadVector(1.5, 0, 0));
-	houseOctree.analyze(&smallHouse, 25);
-
 	Mesh table;
-	table.loadObjFileData(&tableObj);
+	table.loadObjFileData(&tableObj, tableMaterial->getIndex(), smallHouse.getFaceCount());
 	table.setFastIntersectEnabled(false);
 	table.setFastIntersectRadius((math::real)4.0);
 
-	Octree tableOctree;
-	tableOctree.initialize(1.2, math::loadVector(-1.38, 0, -0.87403));
-	tableOctree.analyze(&table, 25);
+	smallHouse.merge(&table);
+	smallHouse.precomputeValues();
+
+	Octree houseOctree;
+	houseOctree.initialize(8, math::loadVector(0, 0, 0));
+	houseOctree.analyze(&smallHouse, 20);
+
+	houseOctree.writeToObjFile("../../workspace/test_results/house_octree.obj", nullptr);
+
+	//Octree tableOctree;
+	//tableOctree.initialize(1.2, math::loadVector(-1.38, 0, -0.87403));
+	//tableOctree.analyze(&table, 25);
 
 	Mesh shutters;
 	shutters.loadObjFileData(&shutterObj);
@@ -90,11 +97,11 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 	smallHouseObject->setDefaultMaterial(&wallMaterial);
 	smallHouseObject->setName("House");
 
-	SceneObject *tableObject = scene.createSceneObject();
-	if (!useOctree) tableObject->setGeometry(&table);
-	else tableObject->setGeometry(&tableOctree);
-	tableObject->setDefaultMaterial(&tableMaterial);
-	tableObject->setName("Table");
+	//SceneObject *tableObject = scene.createSceneObject();
+	//if (!useOctree) tableObject->setGeometry(&table);
+	//else tableObject->setGeometry(&tableOctree);
+	//tableObject->setDefaultMaterial(&tableMaterial);
+	//tableObject->setName("Table");
 
 	//SceneObject *shuttersObject = scene.createSceneObject();
 	//shuttersObject->setGeometry(&shutters);
@@ -126,7 +133,6 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 	camera.setSamplesPerPixel(samplesPerPixel);
 
 	// Create the raytracer
-	RayTracer rayTracer;
 	rayTracer.initialize(1000 * MB, 100 * MB, 12, 10000, true);
 	rayTracer.setBackgroundColor(getColor(135, 206, 235));
 	//rayTracer.setDeterministicSeedMode(true);
