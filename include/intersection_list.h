@@ -15,6 +15,8 @@ namespace manta {
 		const SceneGeometry *sceneGeometry;
 		double depth;
 		int locationHint;
+		int globalHint;
+		bool valid;
 	};
 
 	class IntersectionList {

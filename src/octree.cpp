@@ -315,6 +315,7 @@ void manta::Octree::analyze(Mesh *mesh, Octree *parent, int maxSize) {
 				newFaces[currentFace].w = vertexMap[w];
 				
 				newFaces[currentFace].material = face->material;
+				newFaces[currentFace].globalId = face->globalId;
 
 				currentFace++;
 			}
