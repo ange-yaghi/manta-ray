@@ -223,6 +223,27 @@ void manta::RayTracer::fluxMultisample(const LightRay *ray, IntersectionList *li
 			CoarseIntersection *c = list->getIntersection(i);
 			if (abs(c->depth - referenceIntersection->depth) < epsilon) {
 				conflicts++;
+				c->valid = true;
+			}
+			else {
+				c->valid = false;
+			}
+		}
+
+		// Check for duplicates
+		
+		for (int i = 0; i < intersectionCount; i++) {
+			CoarseIntersection *ci = list->getIntersection(i);
+			if (ci->valid) {
+				for (int j = i + 1; j < intersectionCount; j++) {
+					CoarseIntersection *cj = list->getIntersection(j);
+					if (cj->valid) {
+						if (ci->globalHint == cj->globalHint && ci->sceneObject == cj->sceneObject) {
+							cj->valid = false;
+							conflicts--;
+						}
+					}
+				}
 			}
 		}
 	}
@@ -302,7 +323,7 @@ void manta::RayTracer::fluxMultisample(const LightRay *ray, IntersectionList *li
 
 				for (int k = 0; k < intersectionCount; k++) {
 					CoarseIntersection *c = list->getIntersection(k);
-					if (abs(c->depth - referenceIntersection->depth) < epsilon) {
+					if (c->valid) {
 						IntersectionPoint p;
 						c->sceneObject->getGeometry()->fineIntersection(&newRay, &p, c, (math::real)0.0);
 
@@ -427,9 +448,9 @@ void manta::RayTracer::traceRay(const Scene *scene, LightRay *ray, int degree, S
 
 	depthCull(scene, ray, &sceneObject, &point, s);
 
-	math::real scatterDepth = (point.m_intersection) ? point.m_depth : 10.0;
-	if (scatterDepth > 70.0) scatterDepth = 70.0;
-	math::real scatterPDF = 0.01 * scatterDepth; // 10% chance per 10 units travelled
+	math::real scatterDepth = (point.m_intersection) ? point.m_depth : 11.0;
+	if (scatterDepth > 11.0) scatterDepth = 11.0;
+	math::real scatterPDF = 0.03 * scatterDepth; // 10% chance per 10 units travelled
 	math::real scatter = math::uniformRandom(1.0);
 	constexpr bool causticScatter = true;
 	if (causticScatter && scatter < scatterPDF && degree < 5) {
