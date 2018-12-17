@@ -44,17 +44,15 @@ void manta::Octree::destroy() {
 const manta::CoarseIntersection *manta::Octree::coarseIntersection(const LightRay *ray, IntersectionList *l, SceneObject *object, const CoarseIntersection *reference, math::real epsilon, StackAllocator *s) const {
 	math::real depth;
 	const CoarseIntersection *closest = reference;
-	if ((m_mesh != nullptr || m_children != nullptr) && AABBIntersect(ray, &depth)) {
+	if (AABBIntersect(ray, &depth)) {
 		if (closest != nullptr && depth > closest->depth + epsilon) return closest;
 
 		if (m_mesh != nullptr) {
 			closest = m_mesh->coarseIntersection(ray, l, object, closest, epsilon, s);
 		}
 
-		if (m_children != nullptr) {
-			for (int i = 0; i < m_childCount; i++) {
-				closest = m_children[i].coarseIntersection(ray, l, object, closest, epsilon, s);
-			}
+		for (int i = 0; i < m_childCount; i++) {
+			closest = m_children[i].coarseIntersection(ray, l, object, closest, epsilon, s);
 		}
 	}
 	return closest;
