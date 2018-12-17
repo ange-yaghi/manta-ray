@@ -13,16 +13,17 @@
 manta::Octree::Octree() {
 	m_children = nullptr;
 	m_mesh = nullptr;
+	m_childCount = 0;
 }
 
 manta::Octree::~Octree() {
 	assert(m_children == nullptr);
 }
 
-
 void manta::Octree::initialize(math::real width, const math::Vector &position) {
 	m_width = width;
 	m_position = position;
+	m_childCount = 0;
 
 	math::real epsWidth = (math::real)(1.0 + 1E-4) * m_width;
 
@@ -32,7 +33,7 @@ void manta::Octree::initialize(math::real width, const math::Vector &position) {
 
 void manta::Octree::destroy() {
 	if (m_children != nullptr) {
-		for (int i = 0; i < 8; i++) {
+		for (int i = 0; i < m_childCount; i++) {
 			m_children[i].destroy();
 		}
 		delete[] m_children;
@@ -51,7 +52,7 @@ const manta::CoarseIntersection *manta::Octree::coarseIntersection(const LightRa
 		}
 
 		if (m_children != nullptr) {
-			for (int i = 0; i < 8; i++) {
+			for (int i = 0; i < m_childCount; i++) {
 				closest = m_children[i].coarseIntersection(ray, l, object, closest, epsilon, s);
 			}
 		}
@@ -69,6 +70,7 @@ bool manta::Octree::fastIntersection(const LightRay * ray) const {
 
 void manta::Octree::analyze(Mesh *mesh, int maxSize) {
 	analyze(mesh, nullptr, maxSize);
+	shrink();
 }
 
 void manta::Octree::writeToObjFile(const char *fname, const LightRay *ray) const {
@@ -108,7 +110,7 @@ void manta::Octree::writeToObjFile(std::ofstream &f, int &currentLeaf, const Lig
 		currentLeaf++;
 
 		if (m_children != nullptr) {
-			for (int i = 0; i < 8; i++) {
+			for (int i = 0; i < m_childCount; i++) {
 				m_children[i].writeToObjFile(f, currentLeaf, ray);
 			}
 		}
@@ -125,7 +127,7 @@ void manta::Octree::octreeTest(const LightRay *ray, StackList<OctreeLeafCollisio
 		}
 
 		if (m_children != nullptr) {
-			for (int i = 0; i < 8; i++) {
+			for (int i = 0; i < m_childCount; i++) {
 				m_children[i].octreeTest(ray, list);
 			}
 		}
@@ -165,6 +167,7 @@ void manta::Octree::analyze(Mesh *mesh, Octree *parent, int maxSize) {
 
 	if (getUsageInternal() > maxSize && m_width > 1E-4) {
 		m_children = new manta::Octree[8];
+		m_childCount = 8;
 		for (int i = 0; i < 2; i++) {
 			for (int j = 0; j < 2; j++) {
 				for (int k = 0; k < 2; k++) {
@@ -328,6 +331,84 @@ void manta::Octree::analyze(Mesh *mesh, Octree *parent, int maxSize) {
 	if (vertexMap != nullptr) delete[] vertexMap;
 	if (normalMap != nullptr) delete[] normalMap;
 	if (textureMap != nullptr) delete[] textureMap;
+}
+
+void manta::Octree::shrink() {
+	if (m_childCount > 0) {
+		for (int i = m_childCount - 1; i >= 0; i--) {
+			if (m_children[i].m_mesh == nullptr && m_children[i].m_children == nullptr) {
+				deleteChild(i);
+			}
+		}
+	}
+
+	for (int i = 0; i < m_childCount; i++) {
+		m_children[i].shrink();
+	}
+	
+	math::Vector childMax;
+	math::Vector childMin;
+	for (int i = 0; i < m_childCount; i++) {
+		if (i == 0) {
+			childMax = m_children[i].m_maxPoint;
+			childMin = m_children[i].m_minPoint;
+		}
+		else {
+			childMax = math::componentMax(childMax, m_children[i].m_maxPoint);
+			childMin = math::componentMin(childMin, m_children[i].m_minPoint);
+		}
+	}
+
+	math::Vector vertexMax;
+	math::Vector vertexMin;
+	if (m_mesh != nullptr) {
+		for (int i = 0; i < m_mesh->getVertexCount(); i++) {
+			const math::Vector &vertex = *m_mesh->getVertex(i);
+			if (i == 0) {
+				vertexMax = vertex;
+				vertexMin = vertex;
+			}
+			else {
+				vertexMax = math::componentMax(vertexMax, vertex);
+				vertexMin = math::componentMin(vertexMin, vertex);
+			}
+		}
+
+		math::Vector localMax = math::componentMin(vertexMax, m_maxPoint);
+		math::Vector localMin = math::componentMax(vertexMin, m_minPoint);
+		if (m_childCount > 0) {
+			m_maxPoint = math::componentMax(localMax, childMax);
+			m_minPoint = math::componentMin(localMin, childMin);
+		}
+		else {
+			m_maxPoint = localMax;
+			m_minPoint = localMin;
+		}
+	}
+	else {
+		if (m_childCount > 0) {
+			m_maxPoint = childMax;
+			m_minPoint = childMin;
+		}
+		else {
+			// Shouldn't happen
+		}
+	}
+
+	const math::Vector eps = math::loadScalar((math::real)(1.0 + 1E-4));
+
+	m_maxPoint = math::mul(m_maxPoint, eps);
+	m_minPoint = math::mul(m_minPoint, eps);
+}
+
+void manta::Octree::deleteChild(int childIndex) {
+	m_children[childIndex].destroy();
+
+	if (childIndex != m_childCount - 1) {
+		m_children[childIndex] = m_children[m_childCount - 1];
+	}
+
+	m_childCount--;
 }
 
 bool manta::Octree::checkVertex(const math::Vector &v, math::real epsilon) const {
