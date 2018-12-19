@@ -227,6 +227,7 @@ void manta::Mesh::merge(const Mesh *mesh) {
 		const Face *mergeFace = mesh->getFace(i);
 
 		newFace.material = mergeFace->material;
+		newFace.globalId = mergeFace->globalId;
 
 		newFace.u = mergeFace->u + m_vertexCount;
 		newFace.v = mergeFace->v + m_vertexCount;

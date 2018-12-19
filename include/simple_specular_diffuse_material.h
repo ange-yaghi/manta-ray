@@ -33,9 +33,14 @@ namespace manta {
 		void setDiffuseMap(TextureMap *map) { m_diffuseMap = map; }
 		TextureMap *getDiffuseMap() { return m_diffuseMap; }
 
+		void setGloss(math::real gloss) { m_gloss = gloss; }
+		math::real getGloss() const { return m_gloss; }
+
 	protected:
 		int m_maxDiffuseDegree;
 		int m_maxSpecularDegree;
+
+		math::real m_gloss;
 
 		math::Vector m_specularColor;
 		math::Vector m_diffuseColor;

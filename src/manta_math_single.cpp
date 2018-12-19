@@ -45,6 +45,24 @@ math::Quaternion math::loadQuaternion(real angle, const Vector &axis) {
 	return q;
 }
 
+math::Generic math::componentMax(const Generic &a, const Generic &b) {
+	math::Generic result = a;
+	if (b.x > a.x) result.x = b.x;
+	if (b.y > a.y) result.y = b.y;
+	if (b.z > a.z) result.z = b.z;
+	if (b.w > a.w) result.w = b.w;
+	return result;
+}
+
+math::Generic math::componentMin(const Generic &a, const Generic &b) {
+	math::Generic result = a;
+	if (b.x < a.x) result.x = b.x;
+	if (b.y < a.y) result.y = b.y;
+	if (b.z < a.z) result.z = b.z;
+	if (b.w < a.w) result.w = b.w;
+	return result;
+}
+
 math::real math::getX(const math::Vector &v) {
 	return v.x;
 }
