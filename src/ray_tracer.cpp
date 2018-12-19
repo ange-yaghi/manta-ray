@@ -417,7 +417,7 @@ void manta::RayTracer::fluxMultisample(const LightRay *ray, IntersectionList *li
 
 			//if (!flipScenario) {
 				point->m_faceNormal = biasNormal;
-				point->m_vertexNormal = vertexNormal;
+				point->m_vertexNormal = point->m_vertexNormal;
 			//}
 
 			// Bias the position of the intersection point
@@ -452,7 +452,7 @@ void manta::RayTracer::traceRay(const Scene *scene, LightRay *ray, int degree, S
 	if (scatterDepth > 11.0) scatterDepth = 11.0;
 	math::real scatterPDF = 0.03 * scatterDepth; // 10% chance per 10 units travelled
 	math::real scatter = math::uniformRandom(1.0);
-	constexpr bool causticScatter = true;
+	constexpr bool causticScatter = false;
 	if (causticScatter && scatter < scatterPDF && degree < 5) {
 		// Do a scatter for caustic simulation
 		void *buffer = s->allocate(sizeof(SimpleScatterEmitterGroup), 16);

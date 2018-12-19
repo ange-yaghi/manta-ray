@@ -70,7 +70,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	Octree teapotOctree;
 	teapotOctree.initialize(4, math::constants::Zero);
 	teapotOctree.analyze(&teapot, 25);
-	//teapotOctree.writeToObjFile("../../workspace/test_results/teapot_lamp_octree.obj", nullptr);
+	teapotOctree.writeToObjFile("../../workspace/test_results/teapot_lamp_octree.obj", nullptr);
 
 	SpherePrimitive bulb;
 	bulb.setRadius(0.25);
