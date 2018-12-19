@@ -167,8 +167,10 @@ manta::RayEmitterGroup * manta::SimpleSpecularDiffuseMaterial::generateRayEmitte
 		math::Vector perturb = intersectionPoint->m_vertexNormal;
 		math::Vector n_dot_d = math::dot(intersectionPoint->m_vertexNormal, ray->getDirection());
 		perturb = math::mul(perturb, math::add(n_dot_d, n_dot_d)); // Multiply by 2
-		math::Vector finalDirection = math::sub(ray->getDirection(), perturb);
-		finalDirection = math::normalize(finalDirection);
+		math::Vector finalDirection = math::sub(perturb, ray->getDirection());
+		finalDirection = math::negate(math::normalize(finalDirection));
+
+
 
 		newEmitter->m_specularEmitter->setDirection(finalDirection);
 		newEmitter->m_specularEmitter->setPosition(intersectionPoint->m_position);

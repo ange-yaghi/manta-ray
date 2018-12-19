@@ -122,7 +122,7 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 
 	// Create the camera
 	SSCameraRayEmitterGroup camera;
-	camera.setSamplingWidth(3);
+	camera.setSamplingWidth(1);
 	camera.setDirection(math::loadVector(-1.0, 0.0, 0.0));
 	camera.setPosition(math::loadVector(5.0, 2.0, 0.0));
 	camera.setUp(math::loadVector(0.0f, 1.0, 0.0));
