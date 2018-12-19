@@ -47,6 +47,8 @@ namespace manta {
 		void octreeTest(const LightRay *ray, StackList<OctreeLeafCollision> *list) const;
 
 		void analyze(Mesh *mesh, Octree *parent, int maxSize);
+		void shrink();
+		void deleteChild(int childIndex);
 
 		bool checkVertex(const math::Vector &v, math::real epsilon) const;
 		bool checkPlane(const math::Vector &n, math::real d) const;
@@ -66,6 +68,7 @@ namespace manta {
 		Mesh *m_mesh;
 
 		Octree *m_children;
+		int m_childCount;
 	};
 
 } /* namespace manta */

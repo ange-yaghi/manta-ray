@@ -170,6 +170,9 @@ namespace manta {
 		Generic loadVector(const Vector2 &v1, const Vector2 &v2);
 		Quaternion loadQuaternion(real angle, const Vector &axis);
 
+		Generic componentMax(const Generic &a, const Generic &b);
+		Generic componentMin(const Generic &a, const Generic &b);
+
 		Vector4 getVector4(const Vector &v);
 		Vector3 getVector3(const Vector &v);
 		Vector2 getVector2(const Vector &v);
