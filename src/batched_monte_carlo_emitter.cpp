@@ -3,6 +3,7 @@
 #include <light_ray.h>
 
 manta::BatchedMonteCarloEmitter::BatchedMonteCarloEmitter() {
+	m_gloss = 0.0;
 }
 
 manta::BatchedMonteCarloEmitter::~BatchedMonteCarloEmitter() {
@@ -20,31 +21,61 @@ void manta::BatchedMonteCarloEmitter::generateRays() {
 		realNormal = math::negate(m_normal);
 	}
 
-	math::Vector u = math::constants::YAxis;
-	math::Vector v;
-	math::Vector w = realNormal;
-	if (abs(math::getX(realNormal)) < 0.1f) {
-		u = math::constants::XAxis;
+	math::Vector preferredEmission = realNormal;
+
+	if (m_gloss >= 1E-5) {
+		math::Vector perturb = realNormal;
+		math::Vector n_dot_d = math::dot(realNormal, m_incidentDirection);
+		perturb = math::mul(perturb, math::add(n_dot_d, n_dot_d)); // Multiply by 2
+		preferredEmission = math::sub(perturb, m_incidentDirection);
+		preferredEmission = math::negate(math::normalize(preferredEmission));
 	}
-	u = math::normalize(math::cross(u, realNormal));
-	v = math::cross(realNormal, u);
 
-	for (int i = 0; i < m_samples; i++) {
-		math::real r1 = math::uniformRandom(math::constants::TWO_PI);
-		math::real r2 = math::uniformRandom();
-		math::real r2s = (math::real)sqrt(r2);
+	if (m_gloss + 1E-5 >= (math::real)1.0) {
+		// Very simple pure specular emission
+		for (int i = 0; i < m_samples; i++) {
+			LightRay &ray = getRays()[i];
+			ray.setDirection(preferredEmission);
+			ray.setSource(getPosition());
+			ray.setIntensity(math::constants::Zero);
+		}
+	}
+	else {
+		math::Vector u = math::constants::YAxis;
+		math::Vector v;
+		math::Vector w = realNormal;
+		if (abs(math::getX(realNormal)) < 0.1f) {
+			u = math::constants::XAxis;
+		}
+		u = math::normalize(math::cross(u, realNormal));
+		v = math::cross(realNormal, u);
 
-		math::Vector d = math::add(
-			math::mul(u, math::loadScalar(cos(r1) * r2s)),
-			math::mul(v, math::loadScalar(sin(r1) * r2s)));
-		d = math::add(
-			d,
-			math::mul(w, math::loadScalar(sqrt(1 - r2))));
-		d = math::normalize(d);
+		for (int i = 0; i < m_samples; i++) {
+			math::real r1 = math::uniformRandom(math::constants::TWO_PI);
+			math::real r2 = math::uniformRandom();
+			math::real r2s = (math::real)sqrt(r2);
 
-		LightRay &ray = getRays()[i];
-		ray.setDirection(d);
-		ray.setSource(getPosition());
-		ray.setIntensity(math::constants::Zero);
+			math::Vector diffuse = math::add(
+				math::mul(u, math::loadScalar(cos(r1) * r2s)),
+				math::mul(v, math::loadScalar(sin(r1) * r2s)));
+			diffuse = math::add(
+				diffuse,
+				math::mul(w, math::loadScalar(sqrt(1 - r2))));
+			diffuse = math::normalize(diffuse);
+
+			// Combine specular and diffuse component
+			math::real diffuseFactor = (math::real)1.0 - sqrt(m_gloss);
+
+			math::Vector d = math::add(
+				math::mul(math::loadScalar(diffuseFactor), diffuse),
+				math::mul(math::loadScalar((math::real)1.0 - diffuseFactor), preferredEmission)
+			);
+			d = math::normalize(d);
+
+			LightRay &ray = getRays()[i];
+			ray.setDirection(d);
+			ray.setSource(getPosition());
+			ray.setIntensity(math::constants::Zero);
+		}
 	}
 }

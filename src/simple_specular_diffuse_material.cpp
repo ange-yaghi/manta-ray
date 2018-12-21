@@ -16,6 +16,8 @@ manta::SimpleSpecularDiffuseMaterial::SimpleSpecularDiffuseMaterial() {
 	m_enableSpecular = true;
 
 	m_diffuseMap = nullptr;
+
+	m_gloss = (math::real)1.0;
 }
 
 manta::SimpleSpecularDiffuseMaterial::~SimpleSpecularDiffuseMaterial() {
@@ -26,11 +28,10 @@ void manta::SimpleSpecularDiffuseMaterial::integrateRay(LightRay *ray, const Ray
 
 	if (_rayEmitter != nullptr) {
 		MonteCarloSpecularDiffuseGroup *rayEmitter = (MonteCarloSpecularDiffuseGroup *)_rayEmitter;
-		SimpleRayEmitter *specular = rayEmitter->m_specularEmitter;
+		BatchedMonteCarloEmitter *specular = rayEmitter->m_specularEmitter;
 		BatchedMonteCarloEmitter *diffuse = rayEmitter->m_diffuseEmitter;
 
 		if (specular != nullptr) {
-			LightRay *reflectedRay = specular->getRay();
 			addedLight = math::add(addedLight, math::mul(m_specularColor, specular->getIntensity()));
 		}
 
@@ -41,6 +42,7 @@ void manta::SimpleSpecularDiffuseMaterial::integrateRay(LightRay *ray, const Ray
 			if (m_diffuseMap != nullptr) {
 				math::Vector uv = rayEmitter->getTexCoord();
 				diffuseColor = math::mul(diffuseColor, m_diffuseMap->sample(math::getX(uv), math::getY(uv)));
+				//std::cout << math::getX(diffuseColor) << "," << math::getY(diffuseColor) << "," << math::getZ(diffuseColor) << std::endl;
 
 				//ray->setIntensity(m_diffuseMap->sample(0.5, 0.45));
 			}
@@ -161,19 +163,15 @@ manta::RayEmitterGroup * manta::SimpleSpecularDiffuseMaterial::generateRayEmitte
 		newEmitter->m_diffuseEmitter->setIncident(ray->getDirection());
 		newEmitter->m_diffuseEmitter->setPosition(intersectionPoint->m_position);
 		newEmitter->m_diffuseEmitter->setSampleCount(diffuseSamples);
+		newEmitter->m_diffuseEmitter->setGloss((math::real)0.0);
 	}
 	
 	if (degree < m_maxSpecularDegree && m_enableSpecular) {
-		math::Vector perturb = intersectionPoint->m_vertexNormal;
-		math::Vector n_dot_d = math::dot(intersectionPoint->m_vertexNormal, ray->getDirection());
-		perturb = math::mul(perturb, math::add(n_dot_d, n_dot_d)); // Multiply by 2
-		math::Vector finalDirection = math::sub(perturb, ray->getDirection());
-		finalDirection = math::negate(math::normalize(finalDirection));
-
-
-
-		newEmitter->m_specularEmitter->setDirection(finalDirection);
+		newEmitter->m_specularEmitter->setNormal(intersectionPoint->m_vertexNormal);
+		newEmitter->m_specularEmitter->setIncident(ray->getDirection());
 		newEmitter->m_specularEmitter->setPosition(intersectionPoint->m_position);
+		newEmitter->m_specularEmitter->setSampleCount(diffuseSamples);
+		newEmitter->m_specularEmitter->setGloss((math::real)m_gloss);
 	}
 
 	return newEmitter;

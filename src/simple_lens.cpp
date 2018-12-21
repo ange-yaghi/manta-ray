@@ -99,6 +99,7 @@ manta::math::Vector manta::SimpleLens::getSensorElement(int x, int y) const {
 }
 
 void manta::SimpleLens::lensScan(const math::Vector &sensorElement, LensScanHint *target, int div) const {
+	constexpr int MIN_SAMPLES = 4;
 	if (div > 128) {
 		// Safely assume that no ray can be found
 		target->failed = true;
@@ -166,12 +167,12 @@ void manta::SimpleLens::lensScan(const math::Vector &sensorElement, LensScanHint
 		}
 	}
 
-	if (samples > 0) {
+	if (samples >= MIN_SAMPLES) {
 		target->failed = false;
 		target->centerX = averageX / samples;
 		target->centerY = averageY / samples;
 
-		math::real safetyRadius = maxWidth + 1.5 * incr;
+		math::real safetyRadius = maxWidth / (math::real)2.0 + (math::real)1.5 * incr;
 		target->radius = safetyRadius > m_lens.getRadius() ? m_lens.getRadius() : safetyRadius;
 	}
 	else {
