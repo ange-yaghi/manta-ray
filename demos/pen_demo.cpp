@@ -14,6 +14,9 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	ObjFileLoader penPaintedObj;
 	result = penPaintedObj.readObjFile(MODEL_PATH "pen_painted_parts.obj");
 
+	//ObjFileLoader penGroundObj;
+	//result = penGroundObj.readObjFile(MODEL_PATH "pen_ground.obj");
+
 	RayTracer rayTracer;
 
 	// Create all materials
@@ -21,12 +24,23 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	chrome->setEmission(math::mul(getColor(0xFF, 0x08, 0x14), math::loadScalar(0.0)));
 	chrome->setDiffuseColor(getColor(10, 10, 10));
 	chrome->setSpecularColor(getColor(200, 200, 200));
+	chrome->setGloss((math::real)0.85);
 
 	SimpleSpecularDiffuseMaterial *paint = rayTracer.getMaterialManager()->newMaterial<SimpleSpecularDiffuseMaterial>();
 	paint->setEmission(math::mul(getColor(0xFF, 0x08, 0x14), math::loadScalar(0.0)));
 	paint->setDiffuseColor(getColor(0xf1, 0xc4, 0x0f));
 	paint->setDiffuseColor(getColor(0xFF, 0x08, 0x14));
 	paint->setSpecularColor(getColor(70, 70, 70));
+	paint->setGloss((math::real)0.8);
+
+	//TextureMap woodTexture;
+	//woodTexture.loadFile(TEXTURE_PATH "wood.png", (math::real)2.2);
+	//SimpleSpecularDiffuseMaterial *wood = rayTracer.getMaterialManager()->newMaterial<SimpleSpecularDiffuseMaterial>();
+	//wood->setEmission(math::mul(getColor(0xFF, 0x08, 0x14), math::loadScalar(0.0)));
+	//wood->setDiffuseColor(getColor(0xFF, 0xFF, 0xFF));
+	//wood->setSpecularColor(getColor(2, 2, 2));
+	//wood->setGloss((math::real)0.3);
+	//wood->setDiffuseMap(&woodTexture);
 
 	SimpleSpecularDiffuseMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleSpecularDiffuseMaterial>();
 	groundMaterial->setEmission(math::constants::Zero);
@@ -45,12 +59,16 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	Mesh penPainted;
 	penPainted.loadObjFileData(&penPaintedObj, paint->getIndex(), penChrome.getFaceCount());
 
+	//Mesh penGround;
+	//penGround.loadObjFileData(&penGroundObj, wood->getIndex(), penChrome.getFaceCount() + penPainted.getFaceCount());
+
 	penChrome.merge(&penPainted);
+	//penChrome.merge(&penGround);
 
 	Octree penOctree;
 	penOctree.initialize(32, math::constants::Zero);
 	penOctree.analyze(&penChrome, 25);
-	penOctree.writeToObjFile("../../workspace/test_results/pen_octree.obj", nullptr);
+	//penOctree.writeToObjFile("../../workspace/test_results/pen_octree.obj", nullptr);
 
 	SpherePrimitive light1Geometry;
 	light1Geometry.setRadius((math::real)10.0);
@@ -145,7 +163,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 		math::real focusDistance = 11.0;
 
 		Aperture *aperture = lens.getAperture();
-		aperture->setSize((math::real)0.12);
+		aperture->setSize((math::real)0.09); // 0.09
 		lens.setFocus(focusDistance);
 
 		LensCameraRayEmitterGroup *camera = new LensCameraRayEmitterGroup;

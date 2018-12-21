@@ -229,15 +229,15 @@ void manta::Octree::analyze(Mesh *mesh, Octree *parent, int maxSize) {
 					int tv = face->tv;
 					int tw = face->tw;
 
-					if (textureMap[tu] == -1) {
+					if (tu != -1 && textureMap[tu] == -1) {
 						textureMap[tu] = realTextureCount;
 						realTextureCount++;
 					}
-					if (textureMap[tv] == -1) {
+					if (tv != -1 && textureMap[tv] == -1) {
 						textureMap[tv] = realTextureCount;
 						realTextureCount++;
 					}
-					if (textureMap[tw] == -1) {
+					if (tw != -1 && textureMap[tw] == -1) {
 						textureMap[tw] = realTextureCount;
 						realTextureCount++;
 					}
@@ -298,13 +298,18 @@ void manta::Octree::analyze(Mesh *mesh, Octree *parent, int maxSize) {
 					int tv = face->tv;
 					int tw = face->tw;
 
-					newTexCoords[textureMap[tu]] = mesh->getTexCoords()[tu];
-					newTexCoords[textureMap[tv]] = mesh->getTexCoords()[tv];
-					newTexCoords[textureMap[tw]] = mesh->getTexCoords()[tw];
+					if (tu != -1) newTexCoords[textureMap[tu]] = mesh->getTexCoords()[tu];
+					if (tv != -1) newTexCoords[textureMap[tv]] = mesh->getTexCoords()[tv];
+					if (tw != -1) newTexCoords[textureMap[tw]] = mesh->getTexCoords()[tw];
 
-					newFaces[currentFace].tu = textureMap[tu];
-					newFaces[currentFace].tv = textureMap[tv];
-					newFaces[currentFace].tw = textureMap[tw];
+					if (tu != -1) newFaces[currentFace].tu = textureMap[tu];
+					else newFaces[currentFace].tu = -1;
+
+					if (tv != -1) newFaces[currentFace].tv = textureMap[tv];
+					else newFaces[currentFace].tv = -1;
+
+					if (tw != -1) newFaces[currentFace].tw = textureMap[tw];
+					else newFaces[currentFace].tw = -1;
 				}
 
 				newVertices[vertexMap[u]] = mesh->getVertices()[u];
