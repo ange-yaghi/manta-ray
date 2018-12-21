@@ -21,9 +21,14 @@ namespace manta {
 		void setSampleCount(int samples) { m_samples = samples; }
 		int getSampleCount() const { return m_samples; }
 
+		void setGloss(math::real gloss) { m_gloss = gloss; }
+		math::real getGloss() const { return m_gloss; }
+
 	protected:
 		math::Vector m_incidentDirection;
 		math::Vector m_normal;
+
+		math::real m_gloss;
 
 		int m_samples;
 	};

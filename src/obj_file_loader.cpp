@@ -180,6 +180,13 @@ bool manta::ObjFileLoader::readFace(std::stringstream &s, ObjFace *face) {
 	size_t nParameters = 0;
 	int vertexIndex = 0;
 
+	// Initialize all indices
+	for (int i = 0; i < 3; i++) {
+		face->vt[i] = 0;
+		face->vn[i] = 0;
+		face->v[i] = 0;
+	}
+
 	while (!s.eof()) {
 		std::string group;
 		s >> group;

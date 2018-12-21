@@ -11,14 +11,14 @@ namespace manta {
 	struct ObjFace {
 		union {
 			struct {
-				unsigned int v1, v2, v3;
-				unsigned int vn1, vn2, vn3;
-				unsigned int vt1, vt2, vt3;
+				int v1, v2, v3;
+				int vn1, vn2, vn3;
+				int vt1, vt2, vt3;
 			};
 			struct {
-				unsigned int v[3];
-				unsigned int vn[3];
-				unsigned int vt[3];
+				int v[3];
+				int vn[3];
+				int vt[3];
 			};
 		};
 	};
