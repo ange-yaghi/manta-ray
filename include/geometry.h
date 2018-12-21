@@ -4,17 +4,17 @@
 namespace manta {
 
 	struct Face {
-		unsigned int u;
-		unsigned int w;
-		unsigned int v;
+		int u;
+		int w;
+		int v;
 
-		unsigned int nu;
-		unsigned int nv;
-		unsigned int nw;
+		int nu;
+		int nv;
+		int nw;
 
-		unsigned int tu;
-		unsigned int tv;
-		unsigned int tw;
+		int tu;
+		int tv;
+		int tw;
 
 		int material;
 		unsigned int globalId;

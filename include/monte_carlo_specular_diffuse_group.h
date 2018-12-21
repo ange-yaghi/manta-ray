@@ -16,7 +16,7 @@ namespace manta {
 		virtual void createAllEmitters();
 
 		BatchedMonteCarloEmitter *m_diffuseEmitter;
-		SimpleRayEmitter *m_specularEmitter;
+		BatchedMonteCarloEmitter *m_specularEmitter;
 
 		void setDiffuseEnabled(bool enabled) { m_diffuseEnabled = enabled; }
 		bool isDiffuseEnabled() const { return m_diffuseEnabled; }
