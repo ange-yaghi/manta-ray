@@ -5,6 +5,8 @@
 
 #include <manta_math.h>
 
+#include <string>
+
 namespace manta_demo {
 
 	manta::math::Vector getColor(int r, int g, int b, manta::math::real gamma = (manta::math::real)2.2);

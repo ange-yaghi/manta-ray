@@ -49,6 +49,7 @@ namespace manta {
 		void analyze(Mesh *mesh, Octree *parent, int maxSize);
 		void shrink();
 		void deleteChild(int childIndex);
+		void clear();
 
 		bool checkVertex(const math::Vector &v, math::real epsilon) const;
 		bool checkPlane(const math::Vector &n, math::real d) const;

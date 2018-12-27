@@ -4,6 +4,7 @@
 #include <intersection_point.h>
 #include <obj_file_loader.h>
 #include <intersection_list.h>
+#include <standard_allocator.h>
 
 manta::Mesh::Mesh() {
 	m_faces = nullptr;
@@ -25,23 +26,23 @@ manta::Mesh::Mesh() {
 }
 
 manta::Mesh::~Mesh() {
-	delete[] m_faces;
-	delete[] m_precomputedValues;
-	delete[] m_vertices;
-	delete[] m_normals;
-	delete[] m_textureCoords;
+	assert(m_faces == nullptr);
+	assert(m_vertices == nullptr);
+	assert(m_normals == nullptr);
+	assert(m_textureCoords == nullptr);
+	assert(m_precomputedValues == nullptr);
 }
 
 void manta::Mesh::initialize(int faceCount, int vertexCount, int normalCount, int texCoordCount) {
-	m_faces = new Face[faceCount];
-	m_vertices = new math::Vector[vertexCount];
+	m_faces = StandardAllocator::Global()->allocate<Face>(faceCount);
+	m_vertices = StandardAllocator::Global()->allocate<math::Vector>(vertexCount, 16);
 
 	if (normalCount > 0) {
-		m_normals = new math::Vector[normalCount];
+		m_normals = StandardAllocator::Global()->allocate<math::Vector>(normalCount, 16);
 	}
 
 	if (texCoordCount > 0) {
-		m_textureCoords = new math::Vector[texCoordCount];
+		m_textureCoords = StandardAllocator::Global()->allocate<math::Vector>(texCoordCount, 16);
 	}
 
 	m_faceCount = faceCount;
@@ -50,8 +51,22 @@ void manta::Mesh::initialize(int faceCount, int vertexCount, int normalCount, in
 	m_texCoordCount = texCoordCount;
 }
 
+void manta::Mesh::destroy() {
+	if (m_faces != nullptr) StandardAllocator::Global()->free(m_faces, m_faceCount);
+	if (m_vertices != nullptr) StandardAllocator::Global()->aligned_free(m_vertices, m_vertexCount);
+	if (m_normals != nullptr) StandardAllocator::Global()->aligned_free(m_normals, m_normalCount);
+	if (m_textureCoords != nullptr) StandardAllocator::Global()->aligned_free(m_textureCoords, m_texCoordCount);
+	if (m_precomputedValues != nullptr) StandardAllocator::Global()->aligned_free(m_precomputedValues, m_faceCount);
+
+	m_faces = nullptr;
+	m_vertices = nullptr;
+	m_normals = nullptr;
+	m_textureCoords = nullptr;
+	m_precomputedValues = nullptr;
+}
+
 void manta::Mesh::precomputeValues() {
-	m_precomputedValues = new PrecomputedValues[m_faceCount];
+	m_precomputedValues = StandardAllocator::Global()->allocate<PrecomputedValues>(m_faceCount, 16);
 
 	for (int i = 0; i < m_faceCount; i++) {
 		PrecomputedValues *cache = &m_precomputedValues[i];
@@ -212,15 +227,20 @@ void manta::Mesh::merge(const Mesh *mesh) {
 	int newNormalCount = m_normalCount + mesh->getNormalCount();
 	int newTexCoordCount = m_texCoordCount + mesh->getTexCoordCount();
 
-	Face *newFaces = new Face[newFaceCount];
-	math::Vector *newVerts = new math::Vector[newVertexCount];
-	math::Vector *newNormals = new math::Vector[newNormalCount];
-	math::Vector *newTexCoords = new math::Vector[newTexCoordCount];
+	Face *newFaces = nullptr;
+	math::Vector *newVerts = nullptr;
+	math::Vector *newNormals = nullptr;
+	math::Vector *newTexCoords = nullptr;
 
-	memcpy((void *)newFaces, (void *)m_faces, sizeof(Face) * m_faceCount);
-	memcpy((void *)newVerts, (void *)m_vertices, sizeof(math::Vector) * m_vertexCount);
-	memcpy((void *)newNormals, (void *)m_normals, sizeof(math::Vector) * m_normalCount);
-	memcpy((void *)newTexCoords, (void *)m_textureCoords, sizeof(math::Vector) * m_texCoordCount);
+	if (newFaceCount > 0) newFaces = StandardAllocator::Global()->allocate<Face>(newFaceCount);
+	if (newVertexCount > 0) newVerts = StandardAllocator::Global()->allocate<math::Vector>(newVertexCount, 16);
+	if (newNormalCount > 0) newNormals = StandardAllocator::Global()->allocate<math::Vector>(newNormalCount, 16);
+	if (newTexCoordCount > 0) newTexCoords = StandardAllocator::Global()->allocate<math::Vector>(newTexCoordCount, 16);
+
+	if (newFaceCount > 0) memcpy((void *)newFaces, (void *)m_faces, sizeof(Face) * m_faceCount);
+	if (newVertexCount > 0) memcpy((void *)newVerts, (void *)m_vertices, sizeof(math::Vector) * m_vertexCount);
+	if (newNormalCount > 0) memcpy((void *)newNormals, (void *)m_normals, sizeof(math::Vector) * m_normalCount);
+	if (newTexCoordCount > 0) memcpy((void *)newTexCoords, (void *)m_textureCoords, sizeof(math::Vector) * m_texCoordCount);
 
 	for (int i = 0; i < mesh->getFaceCount(); i++) {
 		Face &newFace = newFaces[i + m_faceCount];
@@ -229,17 +249,23 @@ void manta::Mesh::merge(const Mesh *mesh) {
 		newFace.material = mergeFace->material;
 		newFace.globalId = mergeFace->globalId;
 
-		newFace.u = mergeFace->u + m_vertexCount;
-		newFace.v = mergeFace->v + m_vertexCount;
-		newFace.w = mergeFace->w + m_vertexCount;
+		if (newFaceCount > 0) {
+			newFace.u = mergeFace->u + m_vertexCount;
+			newFace.v = mergeFace->v + m_vertexCount;
+			newFace.w = mergeFace->w + m_vertexCount;
+		}
 
-		newFace.nu = mergeFace->nu + m_normalCount;
-		newFace.nv = mergeFace->nv + m_normalCount;
-		newFace.nw = mergeFace->nw + m_normalCount;
+		if (newNormalCount > 0) {
+			newFace.nu = mergeFace->nu + m_normalCount;
+			newFace.nv = mergeFace->nv + m_normalCount;
+			newFace.nw = mergeFace->nw + m_normalCount;
+		}
 
-		newFace.tu = mergeFace->tu + m_texCoordCount;
-		newFace.tv = mergeFace->tv + m_texCoordCount;
-		newFace.tw = mergeFace->tw + m_texCoordCount;
+		if (newTexCoordCount > 0) {
+			newFace.tu = mergeFace->tu + m_texCoordCount;
+			newFace.tv = mergeFace->tv + m_texCoordCount;
+			newFace.tw = mergeFace->tw + m_texCoordCount;
+		}
 	}
 
 	for (int i = 0; i < mesh->getVertexCount(); i++) {
@@ -254,10 +280,11 @@ void manta::Mesh::merge(const Mesh *mesh) {
 		newTexCoords[i + m_texCoordCount] = *mesh->getTexCoord(i);
 	}
 
-	delete[] m_faces;
-	delete[] m_vertices;
-	delete[] m_normals;
-	delete[] m_textureCoords;
+	if (m_faces != nullptr) StandardAllocator::Global()->free(m_faces, m_faceCount);
+	if (m_vertices != nullptr) StandardAllocator::Global()->aligned_free(m_vertices, m_vertexCount);
+	if (m_normals != nullptr) StandardAllocator::Global()->aligned_free(m_normals, m_normalCount);
+	if (m_textureCoords != nullptr) StandardAllocator::Global()->aligned_free(m_textureCoords, m_texCoordCount);
+	if (m_precomputedValues != nullptr) StandardAllocator::Global()->aligned_free(m_precomputedValues, m_faceCount);
 
 	m_faces = newFaces;
 	m_vertices = newVerts;
@@ -268,6 +295,8 @@ void manta::Mesh::merge(const Mesh *mesh) {
 	m_vertexCount = newVertexCount;
 	m_normalCount = newNormalCount;
 	m_texCoordCount = newTexCoordCount;
+
+	precomputeValues();
 }
 
 bool manta::Mesh::detectIntersection(int faceIndex, math::real earlyExitDepthHint, const math::Vector &rayDir, const math::Vector &rayOrigin, IntersectionPoint *p, math::real bleed) const {

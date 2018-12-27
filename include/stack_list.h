@@ -15,6 +15,7 @@ namespace manta {
 			m_stack = nullptr;
 			m_list = nullptr;
 			m_itemCount = 0;
+			m_alignment = 1;
 		}
 		~StackList() {
 			assert(m_list == nullptr);
@@ -24,7 +25,7 @@ namespace manta {
 		T *newItem() {
 			T *newItem = nullptr;
 			if (isUsingStack()) {
-				void *buffer = m_stack->allocate(sizeof(T));
+				void *buffer = m_stack->allocate(sizeof(T), m_alignment);
 				newItem = new (buffer) T;
 
 				if (m_itemCount == 0) m_list = newItem;
@@ -32,7 +33,8 @@ namespace manta {
 			else {
 				if (m_itemCount == 0) m_vector = new std::vector<T *>;
 
-				newItem = new T;
+				void *buffer = _aligned_malloc(sizeof(T), m_alignment);
+				newItem = new (buffer) T;
 				m_vector->push_back(newItem);
 			}
 			m_itemCount++;
@@ -56,7 +58,8 @@ namespace manta {
 			}
 			else {
 				for (int i = 0; i < m_itemCount; i++) {
-					delete m_vector->at(i);
+					m_vector->at(i)->~T();
+					_aligned_free(m_vector->at(i));
 				}
 				delete m_vector;
 				m_vector = nullptr;
@@ -89,6 +92,14 @@ namespace manta {
 
 		int getItemCount() const { return m_itemCount; }
 
+		void setAlignment(int alignment) {
+			m_alignment = alignment;
+		}
+
+		int getAlignment() {
+			return m_alignment;
+		}
+
 		void swapElements(int i, int j) {
 			const T *temp = getItem(i);
 			setItem(i, *getItem(j));
@@ -106,6 +117,7 @@ namespace manta {
 		};
 
 		int m_itemCount;
+		int m_alignment;
 	};
 
 }
