@@ -99,6 +99,10 @@ manta::math::Vector manta::SimpleLens::getSensorElement(int x, int y) const {
 }
 
 void manta::SimpleLens::lensScan(const math::Vector &sensorElement, LensScanHint *target, int div) const {
+	lensScan(sensorElement, (math::real)0.0, (math::real)0.0, m_lens.getRadius(), target, div);
+}
+
+void manta::SimpleLens::lensScan(const math::Vector &sensorElement, math::real offsetX, math::real offsetY, math::real r, LensScanHint *target, int div) const {
 	constexpr int MIN_SAMPLES = 4;
 	if (div > 128) {
 		// Safely assume that no ray can be found
@@ -106,7 +110,7 @@ void manta::SimpleLens::lensScan(const math::Vector &sensorElement, LensScanHint
 		return;
 	}
 	
-	math::real incr = (m_lens.getRadius() * 2) / (div + 1);
+	math::real incr = (r * 2) / (div + 1);
 
 	math::real averageX = (math::real)0.0;
 	math::real averageY = (math::real)0.0;
@@ -116,12 +120,12 @@ void manta::SimpleLens::lensScan(const math::Vector &sensorElement, LensScanHint
 	bool foundMaxWidth = false;
 
 	for (int i = -div; i < div; i++) {
-		math::real maxY = -m_lens.getRadius() * 2;
-		math::real minY = m_lens.getRadius() * 2;
+		math::real maxY = -r * 2;
+		math::real minY = r * 2;
 		bool detected = false;
 		for (int j = -div; j < div; j++) {
-			math::real x = incr * i;
-			math::real y = incr * j;
+			math::real x = incr * i + offsetX;
+			math::real y = incr * j + offsetY;
 
 			math::Vector target = m_lens.getPosition();
 			target = math::add(target, math::mul(math::loadScalar(x), m_right));
@@ -174,6 +178,10 @@ void manta::SimpleLens::lensScan(const math::Vector &sensorElement, LensScanHint
 
 		math::real safetyRadius = maxWidth / (math::real)2.0 + (math::real)1.5 * incr;
 		target->radius = safetyRadius > m_lens.getRadius() ? m_lens.getRadius() : safetyRadius;
+	}
+	else if (samples >= 1) {
+		math::real safetyRadius = maxWidth / (math::real)2.0 + (math::real)1.5 * incr;
+		lensScan(sensorElement, averageX / samples, averageY / samples, safetyRadius, target, div);
 	}
 	else {
 		lensScan(sensorElement, target, div * 2);
