@@ -25,6 +25,8 @@ namespace manta {
 		virtual bool generateOutgoingRay(const math::Vector &sensorElement, const LensScanHint *hint, LightRay *targetRay) const;
 
 	protected:
+		void lensScan(const math::Vector &sensorElement, math::real x, math::real y, math::real r, LensScanHint *target, int div) const;
+
 		CircularAperture m_aperture;
 		BiconvexLens m_lens;
 
