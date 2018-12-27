@@ -30,8 +30,9 @@ namespace manta {
 			unsigned int mod = (alignment - stackPtr % alignment) % alignment;
 
 			void *basePointer = (void *)((char *)m_stackPointer + mod);
-
 			void *newObject = basePointer;
+
+
 
 #ifdef ENABLE_BOUNDS_CHECKING
 			assert(((unsigned __int64)((char *)newObject) - ((unsigned __int64)(char *)m_buffer) + size) <= m_size);
@@ -42,6 +43,8 @@ namespace manta {
 
 			// Update previous block pointers
 			m_stackPointer = (void *)((char *)basePointer + size);
+
+			if ((unsigned __int64)m_stackPointer > (unsigned __int64)m_maxStackPointer) m_maxStackPointer = m_stackPointer;
 
 			return newObject;
 		}
@@ -57,6 +60,8 @@ namespace manta {
 			m_stackPointer = memory;
 		}
 
+		unsigned int getMaxUsage() const { return (unsigned int)((unsigned __int64)m_maxStackPointer - (unsigned __int64)m_buffer); }
+
 	protected:
 		void *m_buffer;
 		void *m_stackPointer;
@@ -65,6 +70,7 @@ namespace manta {
 
 		// Statistics counters
 		int m_allocationLedger;
+		void *m_maxStackPointer;
 	};
 
 }
