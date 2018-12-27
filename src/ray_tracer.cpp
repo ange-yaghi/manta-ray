@@ -16,6 +16,7 @@
 #include <path_recorder.h>
 #include <simple_scatter_emitter_group.h>
 #include <simple_scatter_emitter.h>
+#include <standard_allocator.h>
 
 #include <iostream>
 #include <thread>
@@ -78,20 +79,21 @@ void manta::RayTracer::traceAll(const Scene *scene, CameraRayEmitterGroup *group
 	std::cout <<		"================================================" << std::endl;
 	std::cout <<		"Total processing time:               " << diff.count() << " s" << std::endl;
 	std::cout <<		"------------------------------------------------" << std::endl;
-	std::cout <<		"Main allocator max usage:            " << m_stack.getMaxUsage() << " B" << std::endl;
-	unsigned __int64 totalUsage = m_stack.getMaxUsage();
+	std::cout <<		"Standard allocator peak usage:       " << StandardAllocator::Global()->getMaxUsage() / (double)MB << " MB" << std::endl;
+	std::cout <<		"Main allocator peak usage:           " << m_stack.getMaxUsage() / (double)MB << " MB" << std::endl;
+	unsigned __int64 totalUsage = m_stack.getMaxUsage() + StandardAllocator::Global()->getMaxUsage();
 	for (int i = 0; i < m_threadCount; i++) {
 		std::stringstream ss;
-		ss << "Worker " << i << " max memory usage:";
+		ss <<			"Worker " << i << " peak memory usage:";
 		std::cout << ss.str();
 		for (int j = 0; j < (37 - ss.str().length()); j++) {
 			std::cout << " ";
 		}
-		std::cout << m_workers[i].getMaxMemoryUsage() << " B" << std::endl;
+		std::cout << m_workers[i].getMaxMemoryUsage() / (double)MB << " MB" << std::endl;
 		totalUsage += m_workers[i].getMaxMemoryUsage();
 	}
 	std::cout <<		"                                     -----------" << std::endl;
-	std::cout <<		"Total memory usage:                  " << totalUsage << " B" << std::endl;
+	std::cout <<		"Total memory usage:                  " << totalUsage / (double)MB << " MB" << std::endl;
 	std::cout <<		"================================================" << std::endl;
 }
 
@@ -233,7 +235,7 @@ void manta::RayTracer::fluxMultisample(const LightRay *ray, IntersectionList *li
 	IntersectionPoint *fineIntersections = nullptr;
 	
 	if (intersectionCount > 0) {
-		fineIntersections = (IntersectionPoint *)s->allocate(sizeof(IntersectionPoint) * intersectionCount);
+		fineIntersections = (IntersectionPoint *)s->allocate(sizeof(IntersectionPoint) * intersectionCount, 16);
 	}
 
 	if (referenceIntersection != nullptr) {
@@ -295,7 +297,7 @@ void manta::RayTracer::fluxMultisample(const LightRay *ray, IntersectionList *li
 		constexpr int SAMPLE_HEIGHT = SAMPLE_RADIUS * 2 + 1;
 		constexpr int SAMPLE_COUNT = SAMPLE_WIDTH * SAMPLE_HEIGHT;
 		
-		IntersectionPoint *samples = (IntersectionPoint *)s->allocate(sizeof(IntersectionPoint) * SAMPLE_COUNT);
+		IntersectionPoint *samples = (IntersectionPoint *)s->allocate(sizeof(IntersectionPoint) * SAMPLE_COUNT, 16);
 		int *intersectionPointer = (int *)s->allocate(sizeof(int) * SAMPLE_COUNT);
 		int *sampleTally = (int *)s->allocate(sizeof(int) * intersectionCount);
 		math::real *averageDistance = (math::real *)s->allocate(sizeof(math::real) * intersectionCount);

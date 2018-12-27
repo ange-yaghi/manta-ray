@@ -108,7 +108,7 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 	math::Vector up = math::loadVector(0.0f, 1.0, 0.0);
 	math::Vector dir = math::normalize(math::sub(target, cameraPos));
 	up = math::cross(math::cross(dir, up), dir);
-	up = normalize(up);
+	up = math::normalize(up);
 
 	manta::SimpleLens lens;
 	lens.initialize();

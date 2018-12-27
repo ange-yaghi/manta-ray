@@ -348,6 +348,9 @@
     <ClCompile Include="..\..\src\texture_map.cpp">
       <Filter>Source Files\material\texture-mapping</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\standard_allocator.cpp">
+      <Filter>Source Files\memory-management</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\intersection_point.h">
@@ -535,6 +538,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\material_manager.h">
       <Filter>Header Files\material</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\standard_allocator.h">
+      <Filter>Header Files\memory-management</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
