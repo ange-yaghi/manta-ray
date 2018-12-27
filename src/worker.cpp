@@ -73,6 +73,10 @@ void manta::Worker::work() {
 
 	// Output the path recordings to a 3D object file
 	PATH_RECORDER_OUTPUT(getObjFname());
+
+	// Record statistics
+	if (m_stack != nullptr) m_maxMemoryUsage = m_stack->getMaxUsage();
+	else m_maxMemoryUsage = 0;
 }
 
 void manta::Worker::doJob(const Job *job) {
@@ -94,26 +98,6 @@ void manta::Worker::doJob(const Job *job) {
 
 		if (emitter != nullptr) {
 			emitter->setStackAllocator(m_stack);
-			//emitter->generateRays();
-
-			//LightRay *rays = emitter->getRays();
-			//int rayCount = emitter->getRayCount();
-
-			//for (int j = 0; j < rayCount; j++) {
-			//	LightRay *ray = &rays[j];
-
-			//	math::Vector average = math::constants::Zero;
-			//	math::Vector samples = math::loadScalar((math::real)emitter->getSamplesPerRay());
-			//	for (int samp = 0; samp < emitter->getSamplesPerRay(); samp++) {
-			//		NEW_TREE(getTreeName(i, samp), emitter->getPosition());
-
-			//		m_rayTracer->traceRay(job->scene, ray, emitter->getDegree(), m_stack /**/ PATH_RECORDER_ARG);
-			//		average = math::add(average, math::div(ray->getIntensity(), samples));
-
-			//		END_TREE();
-			//	}
-			//	ray->setIntensity(average);
-			//}
 			m_rayTracer->traceRayEmitter(job->scene, emitter, m_stack /**/ PATH_RECORDER_ARG);
 		}
 		m_rayTracer->incrementRayCompletion(job);

@@ -40,14 +40,14 @@ namespace manta {
 		math::Vector3 *getNormal(unsigned int i) { return m_normals[i]; }
 		math::Vector2 *getTexCoords(unsigned int i) { return m_texCoords[i]; }
 
+		void destroy();
+
 	protected:
 		bool readObjFile(std::istream &stream);
 		bool readVertexPosition(std::stringstream &s, math::Vector3 *vertex) const;
 		bool readVertexNormal(std::stringstream &s, math::Vector3 *normal) const;
 		bool readVertexTextureCoords(std::stringstream &s, math::Vector2 *texCoords) const;
 		bool readFace(std::stringstream &s, ObjFace *face);
-
-		void destroy();
 
 	protected:
 		std::vector<ObjFace *> m_faces;

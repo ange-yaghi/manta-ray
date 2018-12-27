@@ -5,6 +5,7 @@
 #include <light_ray.h>
 #include <intersection_list.h>
 #include <stack_list.h>
+#include <standard_allocator.h>
 
 #include <assert.h>
 #include <math.h>
@@ -18,6 +19,7 @@ manta::Octree::Octree() {
 
 manta::Octree::~Octree() {
 	assert(m_children == nullptr);
+	assert(m_mesh == nullptr);
 }
 
 void manta::Octree::initialize(math::real width, const math::Vector &position) {
@@ -32,11 +34,16 @@ void manta::Octree::initialize(math::real width, const math::Vector &position) {
 }
 
 void manta::Octree::destroy() {
+	if (m_mesh != nullptr) {
+		m_mesh->destroy();
+		StandardAllocator::Global()->aligned_free(m_mesh);
+		m_mesh = nullptr;
+	}
 	if (m_children != nullptr) {
 		for (int i = 0; i < m_childCount; i++) {
 			m_children[i].destroy();
 		}
-		delete[] m_children;
+		StandardAllocator::Global()->aligned_free(m_children, 8);
 		m_children = nullptr;
 	}
 }
@@ -164,7 +171,7 @@ void manta::Octree::analyze(Mesh *mesh, Octree *parent, int maxSize) {
 	}
 
 	if (getUsageInternal() > maxSize && m_width > 1E-4) {
-		m_children = new manta::Octree[8];
+		m_children = StandardAllocator::Global()->allocate<Octree>(8, 16);
 		m_childCount = 8;
 		for (int i = 0; i < 2; i++) {
 			for (int j = 0; j < 2; j++) {
@@ -191,9 +198,9 @@ void manta::Octree::analyze(Mesh *mesh, Octree *parent, int maxSize) {
 	int realFaceCount = 0;
 
 	if (getUsageInternal() > 0) {
-		vertexMap = new int[mesh->getVertexCount()];
-		if (mesh->getNormalCount() > 0) normalMap = new int[mesh->getNormalCount()];
-		if (mesh->getTexCoordCount() > 0) textureMap = new int[mesh->getTexCoordCount()];
+		vertexMap = StandardAllocator::Global()->allocate<int>(mesh->getVertexCount());
+		if (mesh->getNormalCount() > 0) normalMap = StandardAllocator::Global()->allocate<int>(mesh->getNormalCount());
+		if (mesh->getTexCoordCount() > 0) textureMap = StandardAllocator::Global()->allocate<int>(mesh->getTexCoordCount());
 		for (int i = 0; i < mesh->getVertexCount(); i++) vertexMap[i] = -1;
 		for (int i = 0; i < mesh->getNormalCount(); i++) normalMap[i] = -1;
 		for (int i = 0; i < mesh->getTexCoordCount(); i++) textureMap[i] = -1;
@@ -261,7 +268,7 @@ void manta::Octree::analyze(Mesh *mesh, Octree *parent, int maxSize) {
 	}
 
 	if (realFaceCount > 0) {
-		m_mesh = new Mesh;
+		m_mesh = StandardAllocator::Global()->allocate<Mesh>(1, 16);
 		m_mesh->initialize(realFaceCount, realVertexCount, realNormalCount, realTextureCount);
 		m_mesh->setPerVertexNormals(realNormalCount > 0);
 		m_mesh->setUseTexCoords(realTextureCount > 0);
@@ -331,9 +338,9 @@ void manta::Octree::analyze(Mesh *mesh, Octree *parent, int maxSize) {
 
 	m_tempFaces.clear();
 
-	if (vertexMap != nullptr) delete[] vertexMap;
-	if (normalMap != nullptr) delete[] normalMap;
-	if (textureMap != nullptr) delete[] textureMap;
+	if (vertexMap != nullptr) StandardAllocator::Global()->free(vertexMap, mesh->getVertexCount());
+	if (normalMap != nullptr) StandardAllocator::Global()->free(normalMap, mesh->getNormalCount());
+	if (textureMap != nullptr) StandardAllocator::Global()->free(textureMap, mesh->getTexCoordCount());
 }
 
 void manta::Octree::shrink() {
@@ -409,9 +416,16 @@ void manta::Octree::deleteChild(int childIndex) {
 
 	if (childIndex != m_childCount - 1) {
 		m_children[childIndex] = m_children[m_childCount - 1];
+		m_children[m_childCount - 1].clear();
 	}
 
 	m_childCount--;
+}
+
+void manta::Octree::clear() {
+	m_childCount = 0;
+	m_children = nullptr;
+	m_mesh = nullptr;
 }
 
 bool manta::Octree::checkVertex(const math::Vector &v, math::real epsilon) const {

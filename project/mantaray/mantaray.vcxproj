@@ -65,6 +65,7 @@
     <ClCompile Include="..\..\src\simple_specular_diffuse_material.cpp" />
     <ClCompile Include="..\..\src\sphere_primitive.cpp" />
     <ClCompile Include="..\..\src\spherical_surface.cpp" />
+    <ClCompile Include="..\..\src\standard_allocator.cpp" />
     <ClCompile Include="..\..\src\texture_map.cpp" />
     <ClCompile Include="..\..\src\worker.cpp" />
     <ClCompile Include="stack_allocator.cpp" />
@@ -130,6 +131,7 @@
     <ClInclude Include="..\..\include\spherical_surface.h" />
     <ClInclude Include="..\..\include\stack_allocator.h" />
     <ClInclude Include="..\..\include\stack_list.h" />
+    <ClInclude Include="..\..\include\standard_allocator.h" />
     <ClInclude Include="..\..\include\texture_map.h" />
     <ClInclude Include="..\..\include\worker.h" />
   </ItemGroup>

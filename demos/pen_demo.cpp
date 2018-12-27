@@ -59,6 +59,10 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	Mesh penPainted;
 	penPainted.loadObjFileData(&penPaintedObj, paint->getIndex(), penChrome.getFaceCount());
 
+	// Destroy file loaders
+	penChromeObj.destroy();
+	penPaintedObj.destroy();
+
 	//Mesh penGround;
 	//penGround.loadObjFileData(&penGroundObj, wood->getIndex(), penChrome.getFaceCount() + penPainted.getFaceCount());
 
@@ -125,7 +129,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	math::Vector up = math::loadVector(0.0f, 1.0, 0.0);
 	math::Vector dir = math::normalize(math::sub(target, cameraPos));
 	up = math::cross(math::cross(dir, up), dir);
-	up = normalize(up);
+	up = math::normalize(up);
 
 	cameraPos = math::sub(cameraPos, math::mul(dir, math::loadScalar(3.9)));
 
@@ -163,7 +167,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 		math::real focusDistance = 11.0;
 
 		Aperture *aperture = lens.getAperture();
-		aperture->setSize((math::real)0.09); // 0.09
+		aperture->setSize((math::real)0.15); // 0.09
 		lens.setFocus(focusDistance);
 
 		LensCameraRayEmitterGroup *camera = new LensCameraRayEmitterGroup;
@@ -179,7 +183,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	}
 
 	// Create the raytracer
-	rayTracer.initialize(1000 * MB, 100 * MB, 12, 10000, true);
+	rayTracer.initialize(800 * MB, 5 * MB, 12, 10000, true);
 	rayTracer.setBackgroundColor(getColor(0, 0, 0));
 	//rayTracer.setDeterministicSeedMode(true);
 	//rayTracer.tracePixel(819, 199, &scene, &camera);
@@ -219,4 +223,11 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 
 	sceneBuffer.destroy();
 	rayTracer.destroy();
+
+	penChrome.destroy();
+	penPainted.destroy();
+
+	penOctree.destroy();
+
+	std::cout << "Standard allocator memory leaks:     " << StandardAllocator::Global()->getLedger() << ", " << StandardAllocator::Global()->getCurrentUsage() << std::endl;
 }
