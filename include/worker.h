@@ -37,6 +37,8 @@ namespace manta {
 		void join();
 		void destroy();
 
+		unsigned int getMaxMemoryUsage() const { return m_maxMemoryUsage; }
+
 	protected:
 		void work();
 		void doJob(const Job *job);
@@ -58,6 +60,10 @@ namespace manta {
 	protected:
 		// Identification
 		int m_workerId;
+
+	protected:
+		// Statistics
+		unsigned int m_maxMemoryUsage;
 	};
 
 }

@@ -20,6 +20,7 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
+#include <sstream>
 
 manta::RayTracer::RayTracer() {
 	m_deterministicSeed = false;
@@ -74,7 +75,24 @@ void manta::RayTracer::traceAll(const Scene *scene, CameraRayEmitterGroup *group
 	auto endTime = std::chrono::system_clock::now();
 
 	std::chrono::duration<double> diff = endTime - startTime;
-	std::cout << "Total processing time: " << diff.count() << " s" << std::endl;
+	std::cout <<		"================================================" << std::endl;
+	std::cout <<		"Total processing time:               " << diff.count() << " s" << std::endl;
+	std::cout <<		"------------------------------------------------" << std::endl;
+	std::cout <<		"Main allocator max usage:            " << m_stack.getMaxUsage() << " B" << std::endl;
+	unsigned __int64 totalUsage = m_stack.getMaxUsage();
+	for (int i = 0; i < m_threadCount; i++) {
+		std::stringstream ss;
+		ss << "Worker " << i << " max memory usage:";
+		std::cout << ss.str();
+		for (int j = 0; j < (37 - ss.str().length()); j++) {
+			std::cout << " ";
+		}
+		std::cout << m_workers[i].getMaxMemoryUsage() << " B" << std::endl;
+		totalUsage += m_workers[i].getMaxMemoryUsage();
+	}
+	std::cout <<		"                                     -----------" << std::endl;
+	std::cout <<		"Total memory usage:                  " << totalUsage << " B" << std::endl;
+	std::cout <<		"================================================" << std::endl;
 }
 
 void manta::RayTracer::tracePixel(int px, int py, const Scene *scene, CameraRayEmitterGroup *group) {
