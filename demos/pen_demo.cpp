@@ -167,7 +167,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 		math::real focusDistance = 11.0;
 
 		Aperture *aperture = lens.getAperture();
-		aperture->setSize((math::real)0.15); // 0.09
+		aperture->setSize((math::real)0.05); // 0.09
 		lens.setFocus(focusDistance);
 
 		LensCameraRayEmitterGroup *camera = new LensCameraRayEmitterGroup;
