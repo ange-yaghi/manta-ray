@@ -23,6 +23,7 @@ namespace manta {
 		~Mesh();
 
 		void initialize(int faceCount, int vertexCount, int normalCount, int texCoordCount);
+		void destroy();
 		void precomputeValues();
 
 		virtual const CoarseIntersection *coarseIntersection(const LightRay *ray, IntersectionList *l, SceneObject *object, const CoarseIntersection *reference, math::real epsilon, StackAllocator *s) const;

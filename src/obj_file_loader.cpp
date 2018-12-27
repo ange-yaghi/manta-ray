@@ -1,5 +1,7 @@
 #include <obj_file_loader.h>
 
+#include <standard_allocator.h>
+
 #include <fstream>
 #include <sstream>
 #include <cctype>
@@ -41,7 +43,6 @@ manta::ObjFileLoader::ObjFileLoader() {
 }
 
 manta::ObjFileLoader::~ObjFileLoader() {
-	destroy();
 }
 
 bool manta::ObjFileLoader::readObjFile(const char *fname) {
@@ -70,7 +71,7 @@ bool manta::ObjFileLoader::readObjFile(std::istream &stream) {
 		if (firstWord[0] == '#') continue;
 		else if (firstWord.compare("v") == 0) {
 			// Create a new vertex
-			math::Vector3 *newVertex = new math::Vector3;
+			math::Vector3 *newVertex = StandardAllocator::Global()->allocate<math::Vector3>();
 			m_vertices.push_back(newVertex);
 			bool result = readVertexPosition(ss, newVertex);
 			if (!result) {
@@ -79,7 +80,7 @@ bool manta::ObjFileLoader::readObjFile(std::istream &stream) {
 		}
 		else if (firstWord.compare("vt") == 0) {
 			// Read a texture coordinate
-			math::Vector2 *texCoords = new math::Vector2;
+			math::Vector2 *texCoords = StandardAllocator::Global()->allocate<math::Vector2>();
 			m_texCoords.push_back(texCoords);
 			bool result = readVertexTextureCoords(ss, texCoords);
 			if (!result) {
@@ -88,7 +89,7 @@ bool manta::ObjFileLoader::readObjFile(std::istream &stream) {
 		}
 		else if (firstWord.compare("vn") == 0) {
 			// Read a normal value
-			math::Vector3 *normal = new math::Vector3;
+			math::Vector3 *normal = StandardAllocator::Global()->allocate<math::Vector3>();
 			m_normals.push_back(normal);
 			bool result = readVertexNormal(ss, normal);
 			if (!result) {
@@ -97,7 +98,7 @@ bool manta::ObjFileLoader::readObjFile(std::istream &stream) {
 		}
 		else if (firstWord.compare("f") == 0) {
 			// Read a face
-			ObjFace *newFace = new ObjFace;
+			ObjFace *newFace = StandardAllocator::Global()->allocate<ObjFace>();
 			m_faces.push_back(newFace);
 			bool result = readFace(ss, newFace);
 			if (!result) {
@@ -236,18 +237,18 @@ bool manta::ObjFileLoader::readFace(std::stringstream &s, ObjFace *face) {
 
 void manta::ObjFileLoader::destroy() {
 	for (std::vector<math::Vector3 *>::iterator it = m_vertices.begin(); it != m_vertices.end(); ++it) {
-		delete (*it);
+		StandardAllocator::Global()->free(*it);
 	}
 
 	for (std::vector<math::Vector3 *>::iterator it = m_normals.begin(); it != m_normals.end(); ++it) {
-		delete (*it);
+		StandardAllocator::Global()->free(*it);
 	}
 
 	for (std::vector<math::Vector2 *>::iterator it = m_texCoords.begin(); it != m_texCoords.end(); ++it) {
-		delete (*it);
+		StandardAllocator::Global()->free(*it);
 	}
 
 	for (std::vector<ObjFace *>::iterator it = m_faces.begin(); it != m_faces.end(); ++it) {
-		delete (*it);
+		StandardAllocator::Global()->free(*it);
 	}
 }

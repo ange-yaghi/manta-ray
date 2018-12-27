@@ -58,6 +58,16 @@ math::Quaternion math::loadQuaternion(real angle, const Vector &axis) {
 	return newAxis;
 }
 
+math::Generic math::componentMax(const Generic &a, const Generic &b) {
+	math::Generic result = _mm_max_ps(a, b);
+	return result;
+}
+
+math::Generic math::componentMin(const Generic &a, const Generic &b) {
+	math::Generic result = _mm_min_ps(a, b);
+	return result;
+}
+
 math::Vector4 math::getVector4(const Vector &v) {
 	Vector4 r;
 	r.x = v.m128_f32[0];

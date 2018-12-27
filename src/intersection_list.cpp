@@ -47,7 +47,7 @@ void manta::IntersectionList::destroy() {
 	}
 	else {
 		for (int i = 0; i < m_intersectionCount; i++) {
-			delete m_intersectionVector->at(i);
+			_aligned_free((void *)m_intersectionVector->at(i));
 		}
 		delete m_intersectionVector;
 		m_intersectionVector = nullptr;
