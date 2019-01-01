@@ -63,7 +63,7 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 	houseOctree.initialize(8, math::loadVector(0, 0, 0));
 	houseOctree.analyze(&smallHouse, 20);
 
-	houseOctree.writeToObjFile("../../workspace/test_results/house_octree.obj", nullptr);
+	//houseOctree.writeToObjFile("../../workspace/test_results/house_octree.obj", nullptr);
 
 	//Octree tableOctree;
 	//tableOctree.initialize(1.2, math::loadVector(-1.38, 0, -0.87403));
@@ -122,7 +122,7 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 
 	// Create the camera
 	SSCameraRayEmitterGroup camera;
-	camera.setSamplingWidth(1);
+	camera.setSamplingWidth(3);
 	camera.setDirection(math::loadVector(-1.0, 0.0, 0.0));
 	camera.setPosition(math::loadVector(5.0, 2.0, 0.0));
 	camera.setUp(math::loadVector(0.0f, 1.0, 0.0));
@@ -173,4 +173,14 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 
 	sceneBuffer.destroy();
 	rayTracer.destroy();
+
+	houseOctree.destroy();
+	smallHouse.destroy();
+	table.destroy();
+	smallHouseObj.destroy();
+	tableObj.destroy();
+	shutterObj.destroy();
+	shutters.destroy();
+
+	std::cout << "Standard allocator memory leaks:     " << StandardAllocator::Global()->getLedger() << ", " << StandardAllocator::Global()->getCurrentUsage() << std::endl;
 }

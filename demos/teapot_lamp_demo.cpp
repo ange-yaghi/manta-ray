@@ -14,9 +14,6 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	ObjFileLoader teapotObj;
 	result = teapotObj.readObjFile(MODEL_PATH "lamp_teapot.obj");
 
-	ObjFileLoader lightBulbObj;
-	result = lightBulbObj.readObjFile(MODEL_PATH "lamp_lightbulb.obj");
-
 	ObjFileLoader lampBlockObj;
 	result = lampBlockObj.readObjFile(MODEL_PATH "lampblock.obj");
 
@@ -175,4 +172,14 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 
 	sceneBuffer.destroy();
 	rayTracer.destroy();
+
+	lamp.destroy();
+	lampBlock.destroy();
+	lampBlockObj.destroy();
+	lampObj.destroy();
+	teapot.destroy();
+	teapotObj.destroy();
+	teapotOctree.destroy();
+
+	std::cout << "Standard allocator memory leaks:     " << StandardAllocator::Global()->getLedger() << ", " << StandardAllocator::Global()->getCurrentUsage() << std::endl;
 }

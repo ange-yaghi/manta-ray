@@ -17,6 +17,7 @@
 #include <simple_scatter_emitter_group.h>
 #include <simple_scatter_emitter.h>
 #include <standard_allocator.h>
+#include <stack_list.h>
 
 #include <iostream>
 #include <thread>
@@ -232,11 +233,8 @@ void manta::RayTracer::fluxMultisample(const LightRay *ray, IntersectionList *li
 	int conflicts = 0;
 	int intersectionCount = list->getIntersectionCount();
 
-	IntersectionPoint *fineIntersections = nullptr;
-	
-	if (intersectionCount > 0) {
-		fineIntersections = (IntersectionPoint *)s->allocate(sizeof(IntersectionPoint) * intersectionCount, 16);
-	}
+	StackList<CoarseIntersection *> conflictList;
+	conflictList.setStack(s);
 
 	if (referenceIntersection != nullptr) {
 		for (int i = 0; i < intersectionCount; i++) {
@@ -264,6 +262,13 @@ void manta::RayTracer::fluxMultisample(const LightRay *ray, IntersectionList *li
 						}
 					}
 				}
+			}
+		}
+
+		for (int i = 0; i < intersectionCount; i++) {
+			CoarseIntersection *c = list->getIntersection(i);
+			if (c->valid) {
+				*conflictList.newItem() = list->getIntersection(i);
 			}
 		}
 	}
@@ -299,8 +304,8 @@ void manta::RayTracer::fluxMultisample(const LightRay *ray, IntersectionList *li
 		
 		IntersectionPoint *samples = (IntersectionPoint *)s->allocate(sizeof(IntersectionPoint) * SAMPLE_COUNT, 16);
 		int *intersectionPointer = (int *)s->allocate(sizeof(int) * SAMPLE_COUNT);
-		int *sampleTally = (int *)s->allocate(sizeof(int) * intersectionCount);
-		math::real *averageDistance = (math::real *)s->allocate(sizeof(math::real) * intersectionCount);
+		int *sampleTally = (int *)s->allocate(sizeof(int) * conflicts);
+		math::real *averageDistance = (math::real *)s->allocate(sizeof(math::real) * conflicts);
 
 		// Initialize all intersection points
 		for (int i = 0; i < SAMPLE_WIDTH * SAMPLE_HEIGHT; i++) {
@@ -308,7 +313,7 @@ void manta::RayTracer::fluxMultisample(const LightRay *ray, IntersectionList *li
 			intersectionPointer[i] = -1;
 		}
 
-		for (int i = 0; i < intersectionCount; i++) {
+		for (int i = 0; i < conflicts; i++) {
 			sampleTally[i] = 0;
 			averageDistance[i] = 0.0;
 		}
@@ -341,8 +346,8 @@ void manta::RayTracer::fluxMultisample(const LightRay *ray, IntersectionList *li
 				newRay.setSource(ray->getSource());
 				newRay.setDirection(math::normalize(math::sub(newTarget, ray->getSource())));
 
-				for (int k = 0; k < intersectionCount; k++) {
-					CoarseIntersection *c = list->getIntersection(k);
+				for (int k = 0; k < conflicts; k++) {
+					CoarseIntersection *c = *conflictList.getItem(k);
 					if (c->valid) {
 						IntersectionPoint p;
 						c->sceneObject->getGeometry()->fineIntersection(&newRay, &p, c, (math::real)0.0);
@@ -378,7 +383,7 @@ void manta::RayTracer::fluxMultisample(const LightRay *ray, IntersectionList *li
 			}
 		}
 
-		for (int i = 0; i < intersectionCount; i++) {
+		for (int i = 0; i < conflicts; i++) {
 			if (sampleTally[i] > 0) {
 				averageDistance[i] /= sampleTally[i];
 			}
@@ -392,7 +397,7 @@ void manta::RayTracer::fluxMultisample(const LightRay *ray, IntersectionList *li
 		int highestSampleCount = 0;
 		int closestIntersection = -1;
 		int preferredIntersection = -1;
-		for (int i = 0; i < intersectionCount; i++) {
+		for (int i = 0; i < conflicts; i++) {
 			if (averageDistance[i] < lowestAverageDistance && sampleTally[i] > 0) {
 				lowestAverageDistance = averageDistance[i];
 				closestIntersection = i;
@@ -430,10 +435,12 @@ void manta::RayTracer::fluxMultisample(const LightRay *ray, IntersectionList *li
 		biasNormal = math::normalize(biasNormal);
 		vertexNormal = math::normalize(vertexNormal);
 
-		list->getIntersection(preferredIntersection)->sceneObject->getGeometry()->fineIntersection(ray, point, list->getIntersection(preferredIntersection), 1000);
+		CoarseIntersection *perferredIntersectionC = *conflictList.getItem(preferredIntersection);
+
+		perferredIntersectionC->sceneObject->getGeometry()->fineIntersection(ray, point, perferredIntersectionC, 1000);
 
 		if (point->m_intersection) {
-			*closestObject = list->getIntersection(preferredIntersection)->sceneObject;
+			*closestObject = perferredIntersectionC->sceneObject;
 
 			//if (!flipScenario) {
 				point->m_faceNormal = biasNormal;
@@ -457,9 +464,7 @@ void manta::RayTracer::fluxMultisample(const LightRay *ray, IntersectionList *li
 		s->free((void *)samples);
 	}
 
-	if (fineIntersections != nullptr) {
-		s->free((void *)fineIntersections);
-	}
+	conflictList.destroy();
 }
 
 void manta::RayTracer::traceRay(const Scene *scene, LightRay *ray, int degree, StackAllocator *s /**/ PATH_RECORDER_DECL) const {
@@ -525,6 +530,11 @@ void manta::RayTracer::traceRay(const Scene *scene, LightRay *ray, int degree, S
 			}
 
 			material->integrateRay(ray, group);
+
+			if (group != nullptr) {
+				material->destroyEmitterGroup(group, s);
+			}
+
 			END_BRANCH();
 		}
 		else {
