@@ -27,7 +27,7 @@ void manta::Octree::initialize(math::real width, const math::Vector &position) {
 	m_position = position;
 	m_childCount = 0;
 
-	math::real epsWidth = (math::real)(1.0 + 1E-4) * m_width;
+	math::real epsWidth = (math::real)(1E-4) + m_width;
 
 	m_maxPoint = math::add(m_position, math::loadVector(epsWidth, epsWidth, epsWidth));
 	m_minPoint = math::sub(m_position, math::loadVector(epsWidth, epsWidth, epsWidth));
@@ -405,10 +405,10 @@ void manta::Octree::shrink() {
 		}
 	}
 
-	const math::Vector eps = math::loadScalar((math::real)(1.0 + 1E-4));
+	const math::Vector eps = math::loadScalar((math::real)(1E-4));
 
-	m_maxPoint = math::mul(m_maxPoint, eps);
-	m_minPoint = math::mul(m_minPoint, eps);
+	m_maxPoint = math::add(m_maxPoint, eps);
+	m_minPoint = math::sub(m_minPoint, eps);
 }
 
 void manta::Octree::deleteChild(int childIndex) {

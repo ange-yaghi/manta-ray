@@ -66,6 +66,8 @@ void manta::Mesh::destroy() {
 }
 
 void manta::Mesh::precomputeValues() {
+	if (m_precomputedValues != nullptr) StandardAllocator::Global()->aligned_free(m_precomputedValues, m_faceCount);
+
 	m_precomputedValues = StandardAllocator::Global()->allocate<PrecomputedValues>(m_faceCount, 16);
 
 	for (int i = 0; i < m_faceCount; i++) {
@@ -123,7 +125,7 @@ const manta::CoarseIntersection *manta::Mesh::coarseIntersection(const LightRay 
 
 			if (closest == nullptr || output.depth < closest->depth) {
 				IntersectionPoint p;
-				if (detectIntersection(i, math::constants::REAL_MAX, rayDir, raySource, &p, 1E-6)) {
+				if (detectIntersection(i, math::constants::REAL_MAX, rayDir, raySource, 1E-6, &output)) {
 					closest = intersection;
 
 					// Recalculate the depth hint
@@ -295,6 +297,7 @@ void manta::Mesh::merge(const Mesh *mesh) {
 	m_vertexCount = newVertexCount;
 	m_normalCount = newNormalCount;
 	m_texCoordCount = newTexCoordCount;
+	m_precomputedValues = nullptr;
 
 	precomputeValues();
 }
