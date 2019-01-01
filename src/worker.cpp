@@ -97,8 +97,10 @@ void manta::Worker::doJob(const Job *job) {
 		}
 
 		if (emitter != nullptr) {
+			NEW_TREE(getTreeName(i, 0), emitter->getPosition());
 			emitter->setStackAllocator(m_stack);
 			m_rayTracer->traceRayEmitter(job->scene, emitter, m_stack /**/ PATH_RECORDER_ARG);
+			END_TREE();
 		}
 		m_rayTracer->incrementRayCompletion(job);
 	}
@@ -122,7 +124,7 @@ std::string manta::Worker::getObjFname() {
 	strftime(buffer, 256, "diagnostics_%F_%H%M%S", &timeInfo);
 
 	std::stringstream ss;
-	ss << m_workerId;
+	ss << m_workerId << ".obj";
 
 	return m_pathRecorderOutputDirectory + std::string(buffer) + "worker_" + ss.str();
 }

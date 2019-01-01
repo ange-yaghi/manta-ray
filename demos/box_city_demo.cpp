@@ -8,9 +8,6 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	ObjFileLoader boxCityObj;
 	bool result = boxCityObj.readObjFile(MODEL_PATH "box_city.obj");
 
-	TextureMap map;
-	map.loadFile(TEXTURE_PATH "8ball.png", (math::real)2.2);
-
 	// Create all materials
 	SimpleSpecularDiffuseMaterial wallMaterial;
 	wallMaterial.setEmission(math::constants::Zero);
@@ -56,8 +53,8 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	outdoorTopLightGeometry.setPosition(math::loadVector(20, 30.0, -13.5));
 
 	SpherePrimitive groundGeometry;
-	groundGeometry.setRadius((math::real)500000.01);
-	groundGeometry.setPosition(math::loadVector(0.0, -500000, 0));
+	groundGeometry.setRadius((math::real)50000.01);
+	groundGeometry.setPosition(math::loadVector(0.0, -50000, 0));
 
 	SpherePrimitive groundLightGeometry;
 	groundLightGeometry.setRadius((math::real)50000.0 - 1);
@@ -183,4 +180,10 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
 	sceneBuffer.destroy();
 	rayTracer.destroy();
+
+	boxCity.destroy();
+	boxCityObj.destroy();
+	octree.destroy();
+
+	std::cout << "Standard allocator memory leaks:     " << StandardAllocator::Global()->getLedger() << ", " << StandardAllocator::Global()->getCurrentUsage() << std::endl;
 }
