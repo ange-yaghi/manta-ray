@@ -17,7 +17,10 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 	SimpleSpecularDiffuseMaterial *spiderMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleSpecularDiffuseMaterial>();
 	spiderMaterial->setEmission(math::mul(getColor(0xFF, 0x08, 0x14), math::loadScalar(0.0)));
 	spiderMaterial->setDiffuseColor(getColor(0xf1, 0xc4, 0x0f));
+	spiderMaterial->setDiffuseColor(getColor(0x1B, 0x23, 0x2E));
 	spiderMaterial->setSpecularColor(getColor(70, 70, 70));
+	spiderMaterial->setSpecularColor(getColor(0xAA, 0xAA, 0xAA));
+	spiderMaterial->setGloss((math::real)0.5);
 
 	SimpleSpecularDiffuseMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleSpecularDiffuseMaterial>();
 	groundMaterial->setEmission(math::constants::Zero);
@@ -36,10 +39,12 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 	stressSpiders.setFastIntersectRadius((math::real)2.123);
 	stressSpiders.setFastIntersectPosition(math::loadVector(-0.06430, 1.86833, -2.96564));
 
+	stressSpidersObj.destroy();
+
 	Octree stressSpidersOctree;
 	stressSpidersOctree.initialize(32, math::constants::Zero);
 	stressSpidersOctree.analyze(&stressSpiders, 25);
-	stressSpidersOctree.writeToObjFile("../../workspace/test_results/stress_spiders_octree.obj", nullptr);
+	//stressSpidersOctree.writeToObjFile("../../workspace/test_results/stress_spiders_octree.obj", nullptr);
 
 	SpherePrimitive outdoorTopLightGeometry;
 	outdoorTopLightGeometry.setRadius((math::real)10.0);
@@ -171,4 +176,9 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 
 	sceneBuffer.destroy();
 	rayTracer.destroy();
+
+	stressSpidersOctree.destroy();
+	stressSpiders.destroy();
+
+	std::cout << "Standard allocator memory leaks:     " << StandardAllocator::Global()->getLedger() << ", " << StandardAllocator::Global()->getCurrentUsage() << std::endl;
 }

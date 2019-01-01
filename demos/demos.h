@@ -41,6 +41,7 @@ namespace manta_demo {
 	void blocksDemo(int samplesPerPixel, int resolutionX, int resolutionY);
 	void stressSpidersDemo(int samplesPerPixel, int resolutionX, int resolutionY);
 	void penDemo(int samplesPerPixel, int resolutionX, int resolutionY);
+	void complexRoomDemo(int samplesPerPixel, int resolutionX, int resolutionY);
 
 } /* namespace manta_demo */
 
