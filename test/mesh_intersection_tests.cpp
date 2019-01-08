@@ -26,7 +26,7 @@ TEST(MeshIntersectionTests, MeshIntersectionPerformance) {
 
 	IntersectionList list;
 	for (int i = 0; i < 100; i++) {
-		mesh.coarseIntersection(&ray, &list, nullptr, nullptr, 1E-2, nullptr);
+		//mesh.coarseIntersection(&ray, &list, nullptr, nullptr, 1E-2, nullptr);
 	}
 
 	auto end = std::chrono::high_resolution_clock::now();

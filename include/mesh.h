@@ -26,8 +26,10 @@ namespace manta {
 		void destroy();
 		void precomputeValues();
 
-		virtual const CoarseIntersection *coarseIntersection(const LightRay *ray, IntersectionList *l, SceneObject *object, const CoarseIntersection *reference, math::real epsilon, StackAllocator *s) const;
-		virtual void fineIntersection(const LightRay *ray, IntersectionPoint *p, const CoarseIntersection *hint, math::real bleed) const;
+		virtual bool findClosestIntersection(const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s) const;
+		virtual math::Vector getClosestPoint(const CoarseIntersection *hint, const math::Vector &p) const;
+		virtual void getVicinity(const math::Vector &p, math::real radius, IntersectionList *list) const;
+		virtual void fineIntersection(const math::Vector &r, IntersectionPoint *p, const CoarseIntersection *hint) const;
 		virtual bool fastIntersection(const LightRay *ray) const;
 
 		int getFaceCount() const { return m_faceCount; }
@@ -60,8 +62,10 @@ namespace manta {
 
 		void merge(const Mesh *mesh);
 
-		bool detectIntersection(int faceIndex, math::real earlyExitDepthHint, const math::Vector &rayDir, const math::Vector &rayOrigin, IntersectionPoint *p, math::real bleed) const;
-		bool detectIntersection(int faceIndex, math::real earlyExitDepthHint, const math::Vector &rayDir, const math::Vector &rayOrigin, math::real delta, CoarseCollisionOutput *output) const;
+		math::Vector getClosestPointOnFace(int faceIndex, const math::Vector &p) const;
+		void getClosestPointOnFaceBarycentric(int faceIndex, const math::Vector &p, math::real *u, math::real *v, math::real *w) const;
+		bool testClosestPointOnFace(int faceIndex, math::real maxDepth, const math::Vector &p) const;
+		bool detectIntersection(int faceIndex, math::real minDepth, math::real maxDepth, const math::Vector &rayDir, const math::Vector &rayOrigin, math::real delta, CoarseCollisionOutput *output) const;
 		inline bool detectIntersection(int faceIndex, math::real u, math::real v, math::real w, math::real delta) const;
 
 	protected:
