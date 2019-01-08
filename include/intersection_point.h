@@ -16,6 +16,7 @@ namespace manta {
 		int m_material;
 
 		bool m_intersection;
+		bool m_valid;
 	};
 
 } /* namespace manta */

@@ -72,6 +72,7 @@ namespace manta {
 		math::Vector *m_normals;
 		math::Vector *m_textureCoords;
 
+		int m_rawFaceCount;
 		int m_faceCount;
 		int m_vertexCount;
 		int m_normalCount;

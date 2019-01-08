@@ -350,7 +350,7 @@ void manta::RayTracer::fluxMultisample(const LightRay *ray, IntersectionList *li
 					CoarseIntersection *c = *conflictList.getItem(k);
 					if (c->valid) {
 						IntersectionPoint p;
-						c->sceneObject->getGeometry()->fineIntersection(&newRay, &p, c, (math::real)0.0);
+						c->sceneObject->getGeometry()->fineIntersection(&newRay, &p, c, (math::real)1E-6);
 
 						if (p.m_intersection) {
 							if (!sample->m_intersection || p.m_depth < sample->m_depth) {
@@ -447,8 +447,14 @@ void manta::RayTracer::fluxMultisample(const LightRay *ray, IntersectionList *li
 				point->m_vertexNormal = point->m_vertexNormal;
 			//}
 
-			// Bias the position of the intersection point
-			point->m_position = math::add(point->m_position, math::mul(math::loadScalar(SURFACE_BIAS), point->m_faceNormal));
+			if (point->m_depth > SURFACE_BIAS) {
+				// Bias the position of the intersection point
+				point->m_position = math::sub(point->m_position, math::mul(math::loadScalar(SURFACE_BIAS), ray->getDirection()));
+				point->m_valid = true;
+			}
+			else {
+				point->m_valid = false;
+			}
 			//point->m_position = math::add(point->m_position, math::mul(math::loadScalar(-SURFACE_BIAS), ray->getDirection()));
 
 			//point->m_vertexNormal = math::loadVector(-1.0, -1.0, -1.0);
@@ -523,7 +529,8 @@ void manta::RayTracer::traceRay(const Scene *scene, LightRay *ray, int degree, S
 			else {
 				material = m_materialManager.getMaterial(point.m_material);
 			}
-			RayEmitterGroup *group = material->generateRayEmitterGroup(ray, &point, degree + 1, s);
+			RayEmitterGroup *group = nullptr;
+			if (point.m_valid) group = material->generateRayEmitterGroup(ray, &point, degree + 1, s);
 
 			if (group != nullptr) {
 				traceRayEmitterGroup(scene, group, s /**/ PATH_RECORDER_VAR);
