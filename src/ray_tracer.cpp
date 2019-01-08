@@ -203,28 +203,42 @@ void manta::RayTracer::destroyWorkers() {
 void manta::RayTracer::depthCull(const Scene *scene, const LightRay *ray, SceneObject **closestObject, IntersectionPoint *point, StackAllocator *s) const {
 	int objectCount = scene->getSceneObjectCount();
 
-	constexpr math::real epsilon = 1E-2;
-
 	IntersectionList list;
 	list.setStack(s);
 
-	const CoarseIntersection *referenceIntersection = nullptr;
+	CoarseIntersection closestIntersection;
+	math::real closestDepth = math::constants::REAL_MAX;
 
-	// First generate a list of coarse intersections
+	// Find the closest intersection
+	bool found = false;
 	for (int i = 0; i < objectCount; i++) {
 		SceneObject *object = scene->getSceneObject(i);
 		SceneGeometry *geometry = object->getGeometry();
 
 		if (!geometry->fastIntersection(ray)) continue;
 
-		referenceIntersection = geometry->coarseIntersection(ray, &list, object, referenceIntersection, epsilon, s);
+		if (geometry->findClosestIntersection(ray, &closestIntersection, (math::real)0.0, closestDepth, s)) {
+			found = true;
+			closestIntersection.sceneObject = object;
+			closestDepth = closestIntersection.depth;
+		}
 	}
 
-	fluxMultisample(ray, &list, point, closestObject, referenceIntersection, epsilon, s);
+	if (found) {
+		math::Vector s = math::add(ray->getSource(), math::mul(ray->getDirection(), math::loadScalar(closestIntersection.depth)));
+		closestIntersection.sceneGeometry->fineIntersection(s, point, &closestIntersection);
+		point->m_valid = true;
+		*closestObject = closestIntersection.sceneObject;
+	}
+	else {
+		point->m_valid = false;
+		*closestObject = nullptr;
+	}
 
 	list.destroy();
 }
 
+/*
 void manta::RayTracer::fluxMultisample(const LightRay *ray, IntersectionList *list, IntersectionPoint *point, 
 	SceneObject **closestObject, const CoarseIntersection *referenceIntersection, math::real epsilon, StackAllocator *s) const {
 
@@ -471,7 +485,7 @@ void manta::RayTracer::fluxMultisample(const LightRay *ray, IntersectionList *li
 	}
 
 	conflictList.destroy();
-}
+}*/
 
 void manta::RayTracer::traceRay(const Scene *scene, LightRay *ray, int degree, StackAllocator *s /**/ PATH_RECORDER_DECL) const {
 	SceneObject *sceneObject = nullptr;

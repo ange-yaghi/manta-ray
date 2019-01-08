@@ -191,7 +191,7 @@ TEST(OpenCLTests, OpenCLIntersectionTeapotTest) {
 
 	IntersectionList list;
 	for (int i = 0; i < 128; i++) {
-		mesh.coarseIntersection(&ray, &list, nullptr, nullptr, 1E-2, nullptr);
+		//mesh.coarseIntersection(&ray, &list, nullptr, nullptr, 1E-2, nullptr);
 	}
 	list.destroy();
 
@@ -278,7 +278,7 @@ TEST(OpenCLTests, OpenCLIntersectionHighStressTest) {
 
 	IntersectionList list;
 	for (int i = 0; i < 128; i++) {
-		mesh.coarseIntersection(&ray, &list, nullptr, nullptr, 1E-2, nullptr);
+		//mesh.coarseIntersection(&ray, &list, nullptr, nullptr, 1E-2, nullptr);
 	}
 	list.destroy();
 
@@ -412,7 +412,7 @@ TEST(OpenCLTests, OpenCLFullIntersectionTest) {
 			math::real depthHint = math::constants::REAL_MAX;
 
 			CoarseIntersection *intersection = list->getIntersection(j);
-			if (mesh.detectIntersection(intersection->locationHint, depthHint, rayDir, raySource, 1E-2, &output)) {
+			/*if (mesh.detectIntersection(intersection->locationHint, depthHint, rayDir, raySource, 1E-2, &output)) {
 				intersection->depth = output.depth;
 				intersection->sceneObject = nullptr;
 
@@ -428,7 +428,7 @@ TEST(OpenCLTests, OpenCLFullIntersectionTest) {
 					}
 					//}
 				}
-			}
+			}*/
 		}
 	}
 
@@ -438,7 +438,7 @@ TEST(OpenCLTests, OpenCLFullIntersectionTest) {
 
 	IntersectionList *cpulists = new IntersectionList [rayCount];
 	for (int i = 0; i < rayCount; i++) {
-		mesh.coarseIntersection(&ray, &cpulists[i], nullptr, nullptr, 1E-2, nullptr);
+		//mesh.coarseIntersection(&ray, &cpulists[i], nullptr, nullptr, 1E-2, nullptr);
 	}
 
 	auto endCPU = std::chrono::high_resolution_clock::now();
