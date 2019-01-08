@@ -553,15 +553,18 @@ bool manta::Octree::AABBIntersect(const LightRay *ray, math::real *depth) const 
 	math::Vector rayDir = ray->getDirection();
 	math::Vector rayOrigin = ray->getSource();
 
+	math::Vector maxPoint = math::add(math::loadScalar(1E-2), m_maxPoint);
+	math::Vector minPoint = math::sub(m_minPoint, math::loadScalar(1E-2));
+
 	for (int i = 0; i < 3; i++) {
 		if (abs(math::get(rayDir, i)) < 1E-6) {
 			// Ray is parallel
-			if (math::get(rayOrigin, i) < math::get(m_minPoint, i) || math::get(rayOrigin, i) > math::get(m_maxPoint, i)) return false;
+			if (math::get(rayOrigin, i) < math::get(minPoint, i) || math::get(rayOrigin, i) > math::get(maxPoint, i)) return false;
 		}
 		else {
 			math::real ood = (math::real)1.0 / math::get(rayDir, i);
-			math::real t1 = (math::get(m_minPoint, i) - math::get(rayOrigin, i)) * ood;
-			math::real t2 = (math::get(m_maxPoint, i) - math::get(rayOrigin, i)) * ood;
+			math::real t1 = (math::get(minPoint, i) - math::get(rayOrigin, i)) * ood;
+			math::real t2 = (math::get(maxPoint, i) - math::get(rayOrigin, i)) * ood;
 
 			if (t1 > t2) {
 				math::real temp = t1;
