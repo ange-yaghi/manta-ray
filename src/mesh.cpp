@@ -68,6 +68,30 @@ void manta::Mesh::destroy() {
 void manta::Mesh::precomputeValues() {
 	if (m_precomputedValues != nullptr) StandardAllocator::Global()->aligned_free(m_precomputedValues, m_faceCount);
 
+	// Delete faces that are too small
+	int actualFaceCount = m_faceCount;
+	for (int i = 0; i < actualFaceCount; i++) {
+		math::Vector u = m_vertices[m_faces[i].u];
+		math::Vector v = m_vertices[m_faces[i].v];
+		math::Vector w = m_vertices[m_faces[i].w];
+
+		math::Vector normal = math::cross(math::sub(v, u), math::sub(w, u));
+		if (abs(math::getX(normal)) < 1E-6 && abs(math::getY(normal)) < 1E-6 && abs(math::getZ(normal)) < 1E-6) {
+			m_faces[i] = m_faces[actualFaceCount - 1];
+			actualFaceCount--;
+			i--;
+		}
+	}
+
+	Face *newFaces = StandardAllocator::Global()->allocate<Face>(actualFaceCount);
+	for (int i = 0; i < actualFaceCount; i++) {
+		newFaces[i] = m_faces[i];
+	}
+
+	StandardAllocator::Global()->free(m_faces, m_faceCount);
+	m_faces = newFaces;
+	m_faceCount = actualFaceCount;
+
 	m_precomputedValues = StandardAllocator::Global()->allocate<PrecomputedValues>(m_faceCount, 16);
 
 	for (int i = 0; i < m_faceCount; i++) {
@@ -77,6 +101,7 @@ void manta::Mesh::precomputeValues() {
 		math::Vector w = m_vertices[m_faces[i].w];
 
 		math::Vector normal = math::cross(math::sub(v, u), math::sub(w, u));
+
 		cache->normal = math::normalize(normal);
 
 		computePlane(math::cross(normal, math::sub(w, v)), v, &cache->edgePlaneVW);

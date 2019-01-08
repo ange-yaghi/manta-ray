@@ -11,6 +11,9 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	ObjFileLoader stressSpidersObj;
 	bool result = stressSpidersObj.readObjFile(MODEL_PATH "complex_room.obj");
 
+	ObjFileLoader roomShuttersObj;
+	result = roomShuttersObj.readObjFile(MODEL_PATH "complex_room_shutters.obj");
+
 	RayTracer rayTracer;
 
 	// Create all materials
@@ -39,7 +42,16 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	//stressSpiders.setFastIntersectRadius((math::real)2.123);
 	//stressSpiders.setFastIntersectPosition(math::loadVector(-0.06430, 1.86833, -2.96564));
 
+	Mesh roomShutters;
+	roomShutters.loadObjFileData(&roomShuttersObj, spiderMaterial->getIndex());
+	roomShutters.setFastIntersectEnabled(false);
+
+	//stressSpiders.merge(&roomShutters);
+	roomShutters.destroy();
+	//stressSpiders.precomputeValues();
+
 	stressSpidersObj.destroy();
+	roomShuttersObj.destroy();
 
 	Octree stressSpidersOctree;
 	stressSpidersOctree.initialize(32, math::constants::Zero);
@@ -87,7 +99,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	up = math::normalize(up);
 
 	// Create the camera
-	constexpr bool regularCamera = false;
+	constexpr bool regularCamera = true;
 	CameraRayEmitterGroup *group;
 	manta::SimpleLens lens;
 	lens.initialize();
@@ -138,9 +150,9 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	// Create the raytracer
 	rayTracer.initialize(1000 * MB, 100 * MB, 12, 10000, true);
 	rayTracer.setBackgroundColor(getColor(255, 255, 255));
-	//rayTracer.setDeterministicSeedMode(true);
-	//rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");
-	//rayTracer.tracePixel(1604, 615, &scene, group);
+	rayTracer.setDeterministicSeedMode(false);
+	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");
+	//rayTracer.tracePixel(583, 818, &scene, group);
 	//rayTracer.tracePixel(702, 236, &scene, &camera);
 	//rayTracer.tracePixel(809, 211, &scene, &camera);
 	//rayTracer.tracePixel(793, 224, &scene, &camera);
