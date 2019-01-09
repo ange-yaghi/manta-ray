@@ -78,14 +78,14 @@ manta::math::Vector manta::Octree::getClosestPoint(const CoarseIntersection *hin
 	return hint->sceneGeometry->getClosestPoint(hint, p);
 }
 
-void manta::Octree::getVicinity(const math::Vector &p, math::real radius, IntersectionList *list) const {
+void manta::Octree::getVicinity(const math::Vector &p, math::real radius, IntersectionList *list, SceneObject *object) const {
 	if (AABBIntersect(p, radius)) {
 		if (m_mesh != nullptr) {
-			m_mesh->getVicinity(p, radius, list);
+			m_mesh->getVicinity(p, radius, list, object);
 		}
 
 		for (int i = 0; i < m_childCount; i++) {
-			m_children[i].getVicinity(p, radius, list);
+			m_children[i].getVicinity(p, radius, list, object);
 		}
 	}
 }
@@ -578,8 +578,8 @@ bool manta::Octree::AABBIntersect(const LightRay *ray, math::real *depth) const 
 	math::Vector rayDir = ray->getDirection();
 	math::Vector rayOrigin = ray->getSource();
 
-	math::Vector maxPoint = math::add(math::loadScalar(1E-2), m_maxPoint);
-	math::Vector minPoint = math::sub(m_minPoint, math::loadScalar(1E-2));
+	math::Vector maxPoint = m_maxPoint; //math::add(math::loadScalar(1E-2), m_maxPoint);
+	math::Vector minPoint = m_minPoint; //math::sub(m_minPoint, math::loadScalar(1E-2));
 
 	for (int i = 0; i < 3; i++) {
 		if (abs(math::get(rayDir, i)) < 1E-6) {

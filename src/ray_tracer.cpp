@@ -120,6 +120,14 @@ void manta::RayTracer::tracePixel(int px, int py, const Scene *scene, CameraRayE
 	waitForWorkers();
 }
 
+std::string manta::RayTracer::getTreeName(int pixelIndex, int sample) const {
+	std::stringstream ss;
+	ss << "PATH_" << pixelIndex << "_S" << sample;
+
+	return ss.str();
+}
+
+
 void manta::RayTracer::traceRayEmitter(const Scene *scene, RayEmitter *emitter, StackAllocator *s /**/ PATH_RECORDER_DECL) const {
 	emitter->generateRays();
 
@@ -132,8 +140,10 @@ void manta::RayTracer::traceRayEmitter(const Scene *scene, RayEmitter *emitter, 
 		math::Vector average = math::constants::Zero;
 		math::Vector samples = math::loadScalar((math::real)emitter->getSamplesPerRay());
 		for (int samp = 0; samp < emitter->getSamplesPerRay(); samp++) {
+			if (emitter->getSamplesPerRay() > 1) NEW_TREE(getTreeName(i, samp), emitter->getPosition());
 			traceRay(scene, ray, emitter->getDegree(), s /**/ PATH_RECORDER_VAR);
 			average = math::add(average, math::div(ray->getIntensity(), samples));
+			if (emitter->getSamplesPerRay() > 1) END_TREE();
 		}
 		ray->setIntensity(average);
 	}
@@ -225,10 +235,24 @@ void manta::RayTracer::depthCull(const Scene *scene, const LightRay *ray, SceneO
 	}
 
 	if (found) {
-		math::Vector s = math::add(ray->getSource(), math::mul(ray->getDirection(), math::loadScalar(closestIntersection.depth)));
-		closestIntersection.sceneGeometry->fineIntersection(s, point, &closestIntersection);
+		math::Vector position = math::add(ray->getSource(), math::mul(ray->getDirection(), math::loadScalar(closestIntersection.depth)));
+		closestIntersection.sceneGeometry->fineIntersection(position, point, &closestIntersection);
 		point->m_valid = true;
 		*closestObject = closestIntersection.sceneObject;
+
+		for (int i = 0; i < objectCount; i++) {
+			SceneObject *object = scene->getSceneObject(i);
+			SceneGeometry *geometry = object->getGeometry();
+
+			geometry->getVicinity(position, (math::real)1E-2, &list, object);
+		}
+
+		refineContact(ray, &list, point, closestObject, s);
+
+		//if (conflicts < 2) {
+		//	point->m_valid = false;
+		//	*closestObject = nullptr;
+		//}
 	}
 	else {
 		point->m_valid = false;
@@ -236,6 +260,77 @@ void manta::RayTracer::depthCull(const Scene *scene, const LightRay *ray, SceneO
 	}
 
 	list.destroy();
+}
+
+void manta::RayTracer::refineContact(const LightRay *ray, IntersectionList *list, IntersectionPoint *point, SceneObject **closestObject, StackAllocator *s) const {
+	int conflicts = list->getIntersectionCount();
+	int contactCount = list->getIntersectionCount();
+	for (int i = 0; i < contactCount; i++) {
+		CoarseIntersection *ci = list->getIntersection(i);
+		if (ci->valid) {
+			for (int j = i + 1; j < contactCount; j++) {
+				CoarseIntersection *cj = list->getIntersection(j);
+				if (cj->valid) {
+					if (ci->globalHint == cj->globalHint && ci->sceneObject == cj->sceneObject) {
+						cj->valid = false;
+						conflicts--;
+					}
+				}
+			}
+		}
+	}
+
+	// Determine which contact is the correct one
+	constexpr int samples = 10;
+	constexpr math::real photonRadius = (math::real)1E-3;
+	math::real distance = (math::real)1E-2;
+	math::real step = distance / 10;
+
+	CoarseIntersection *f = nullptr;
+
+	/*
+	for (int i = 0; i < samples; i++) {
+		math::Vector pos = math::sub(point->m_position, math::mul(math::loadScalar(step * i), ray->getDirection()));
+
+		math::real closest = math::constants::REAL_MAX;
+		CoarseIntersection *newInt = nullptr;
+
+		for (int c = 0; c < contactCount; c++) {
+			CoarseIntersection *ci = list->getIntersection(c);
+			if (ci->valid) {
+				math::Vector closestPoint = ci->sceneGeometry->getClosestPoint(ci, pos);
+				math::Vector d = math::sub(closestPoint, pos);
+				math::real dist2 = math::getScalar(math::magnitudeSquared3(d));
+				if (dist2 < distance * distance) {
+					math::real dot = math::getScalar(math::dot(math::normalize(d), ray->getDirection()));
+					if (dot >= 1E-4) {
+						if (dist2 < closest) {
+							newInt = ci;
+						}
+					}
+					if (dist2 < closest) {
+						closest = dist2;
+					}
+				}
+			}
+		}
+
+		if (newInt != nullptr) {
+			f = newInt;
+		}
+	}*/
+
+	if (f != nullptr) f->sceneGeometry->fineIntersection(point->m_position, point, f);
+
+	// Simple bias
+	math::Vector dist = math::sub(point->m_position, ray->getSource());
+	dist = math::componentMin(math::magnitude(dist), math::loadScalar(1E-3));
+	point->m_position = math::sub(point->m_position, math::mul(ray->getDirection(), dist));
+
+	if (math::getScalar(math::dot(point->m_faceNormal, ray->getDirection())) > 0.0) {
+		point->m_faceNormal = math::negate(point->m_faceNormal);
+		point->m_vertexNormal = math::negate(point->m_vertexNormal);
+	}
 }
 
 /*

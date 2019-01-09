@@ -95,7 +95,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	math::Vector cameraPos = math::loadVector(15.4473, 4.59977, 13.2961);
 	math::Vector target = math::loadVector(2.63987, 3.55547, 2.42282);
 
-	constexpr bool regularCamera = false;
+	constexpr bool regularCamera = true;
 
 	CameraRayEmitterGroup *group;
 
@@ -159,7 +159,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	//rayTracer.setBackgroundColor(getColor(0.0, 0.0, 0.0));
 	//rayTracer.setDeterministicSeedMode(true);
 	rayTracer.traceAll(&scene, group);
-	//rayTracer.tracePixel(817, 689, &scene, &camera);
+	//rayTracer.tracePixel(519, 1013, &scene, group);
 
 	// Output the results to a scene buffer
 	SceneBuffer sceneBuffer;
