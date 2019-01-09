@@ -20,10 +20,10 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	SimpleSpecularDiffuseMaterial *spiderMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleSpecularDiffuseMaterial>();
 	spiderMaterial->setEmission(math::mul(getColor(0xFF, 0x08, 0x14), math::loadScalar(0.0)));
 	spiderMaterial->setDiffuseColor(getColor(0xf1, 0xc4, 0x0f));
-	spiderMaterial->setDiffuseColor(getColor(0xD3, 0xD3, 0xD3));
+	spiderMaterial->setDiffuseColor(getColor(0xFF, 0xFF, 0xFF));
 	spiderMaterial->setSpecularColor(getColor(70, 70, 70));
-	spiderMaterial->setSpecularColor(getColor(0x10, 0x10, 0x10));
-	spiderMaterial->setGloss((math::real)0.1);
+	spiderMaterial->setSpecularColor(getColor(0x90, 0x90, 0x90));
+	spiderMaterial->setGloss((math::real)0.5);
 
 	SimpleSpecularDiffuseMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleSpecularDiffuseMaterial>();
 	groundMaterial->setEmission(math::constants::Zero);
@@ -115,7 +115,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 
 	if (regularCamera) {
 		SSCameraRayEmitterGroup *camera = new SSCameraRayEmitterGroup;
-		camera->setSamplingWidth(1);
+		camera->setSamplingWidth(3);
 		camera->setDirection(dir);
 		camera->setPosition(cameraPos);
 		camera->setUp(up);

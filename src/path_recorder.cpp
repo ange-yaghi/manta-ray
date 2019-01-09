@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <assert.h>
+#include <sstream>
 
 manta::PathRecorder::PathRecorder() {
 	m_currentPath = nullptr;

@@ -43,6 +43,7 @@ bool manta::SpherePrimitive::findClosestIntersection(const LightRay *ray, Coarse
 				intersection->locationHint = -1; // Unused for spheres
 				intersection->sceneGeometry = this;
 				intersection->globalHint = -1;
+				intersection->valid = true;
 
 				math::Vector t;
 				if (t2_s < t1_s && t2_s > minDepth) {
@@ -64,21 +65,22 @@ bool manta::SpherePrimitive::findClosestIntersection(const LightRay *ray, Coarse
 
 manta::math::Vector manta::SpherePrimitive::getClosestPoint(const CoarseIntersection *hint, const math::Vector &p) const {
 	math::Vector p_p0 = math::sub(p, m_position);
-	math::Vector closestPoint = math::mul(math::normalize(p_p0), math::loadScalar(m_radius));
+	math::Vector closestPoint = math::add(math::mul(math::normalize(p_p0), math::loadScalar(m_radius)), m_position);
 	return closestPoint;
 }
 
-void manta::SpherePrimitive::getVicinity(const math::Vector &p, math::real radius, IntersectionList *list) const {
+void manta::SpherePrimitive::getVicinity(const math::Vector &p, math::real radius, IntersectionList *list, SceneObject *object) const {
 	math::Vector closestPoint = getClosestPoint(nullptr, p);
 	math::Vector d = math::sub(closestPoint, p);
 
-	if (math::getScalar(math::magnitudeSquared3(d)) > (radius * radius)) {
+	if (math::getScalar(math::magnitudeSquared3(d)) < (radius * radius)) {
 		CoarseIntersection *newIntersection = list->newIntersection();
 		newIntersection->locationHint = -1;
 		newIntersection->globalHint = -1;
 		newIntersection->depth = (math::real)0.0;
-		newIntersection->sceneObject = nullptr; // TEMP
+		newIntersection->sceneObject = object;
 		newIntersection->valid = true;
+		newIntersection->sceneGeometry = this;
 	}
 }
 
@@ -91,10 +93,13 @@ void manta::SpherePrimitive::fineIntersection(const math::Vector &r, Intersectio
 	math::Vector normal = math::sub(p->m_position, m_position);
 	normal = math::normalize(normal);
 
+	p->m_depth = hint->depth;
 	p->m_vertexNormal = normal;
 	p->m_faceNormal = normal;
 	p->m_textureCoodinates = math::constants::Zero;
 	p->m_material = -1;
+	p->m_valid = true;
+	p->m_intersection = true;
 }
 
 void manta::SpherePrimitive::detectIntersection(const LightRay *ray, IntersectionPoint *convex, IntersectionPoint *concave) const {

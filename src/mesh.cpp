@@ -153,7 +153,7 @@ manta::math::Vector manta::Mesh::getClosestPoint(const CoarseIntersection *hint,
 	return getClosestPointOnFace(hint->locationHint, p);
 }
 
-void manta::Mesh::getVicinity(const math::Vector &p, math::real radius, IntersectionList *list) const {
+void manta::Mesh::getVicinity(const math::Vector &p, math::real radius, IntersectionList *list, SceneObject *object) const {
 	for (int i = 0; i < m_faceCount; i++) {
 		if (testClosestPointOnFace(i, radius, p)) {
 			CoarseIntersection *intersection = list->newIntersection();
@@ -161,6 +161,8 @@ void manta::Mesh::getVicinity(const math::Vector &p, math::real radius, Intersec
 			intersection->locationHint = i; // Face index
 			intersection->sceneGeometry = this;
 			intersection->globalHint = m_faces[i].globalId;
+			intersection->valid = true;
+			intersection->sceneObject = object;
 		}
 	}
 }
@@ -388,7 +390,7 @@ manta::math::Vector manta::Mesh::getClosestPointOnFace(int faceIndex, const math
 
 	// P in edge region of AB
 	math::real vc = d1 * d4 - d3 * d2;
-	if (vc <= (math::real)0.0 && d1 >= (math::real)0.0 && d3 >= (math::real)0.0) {
+	if (vc <= (math::real)0.0 && d1 >= (math::real)0.0 && d3 <= (math::real)0.0) {
 		math::real v = d1 / (d1 - d3);
 		return math::add(a, math::mul(math::loadScalar(v), ab));
 	}
@@ -459,7 +461,7 @@ void manta::Mesh::getClosestPointOnFaceBarycentric(int faceIndex, const math::Ve
 
 	// P in edge region of AB
 	math::real vc = d1 * d4 - d3 * d2;
-	if (vc <= (math::real)0.0 && d1 >= (math::real)0.0 && d3 >= (math::real)0.0) {
+	if (vc <= (math::real)0.0 && d1 >= (math::real)0.0 && d3 <= (math::real)0.0) {
 		math::real v = d1 / (d1 - d3);
 		*bu = (math::real)1.0 - v;
 		*bv = v;
@@ -511,12 +513,12 @@ bool manta::Mesh::testClosestPointOnFace(int faceIndex, math::real maxDepth, con
 
 	math::Vector denom = math::dot(cache.normal, cache.normal);
 
-	math::Vector p0r0 = math::sub(cache.p0, p);
-	math::Vector d = math::div(math::dot(p0r0, cache.normal), denom);
+	math::Vector p0r0 = math::sub(p, cache.p0);
+	math::Vector d = math::div(math::dot(p0r0, cache.normal), math::negate(denom));
 
 	math::real depth_s = math::getScalar(d);
 
-	if (depth_s > maxDepth) return false;
+	if (abs(depth_s) > maxDepth) return false;
 
 	math::Vector closestPoint = getClosestPointOnFace(faceIndex, p);
 	math::Vector cp = math::sub(p, closestPoint);

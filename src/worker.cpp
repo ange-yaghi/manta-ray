@@ -97,20 +97,11 @@ void manta::Worker::doJob(const Job *job) {
 		}
 
 		if (emitter != nullptr) {
-			NEW_TREE(getTreeName(i, 0), emitter->getPosition());
 			emitter->setStackAllocator(m_stack);
 			m_rayTracer->traceRayEmitter(job->scene, emitter, m_stack /**/ PATH_RECORDER_ARG);
-			END_TREE();
 		}
 		m_rayTracer->incrementRayCompletion(job);
 	}
-}
-
-std::string manta::Worker::getTreeName(int pixelIndex, int sample) {
-	std::stringstream ss;
-	ss << "PATH_" << pixelIndex << "_S" << sample;
-
-	return ss.str();
 }
 
 std::string manta::Worker::getObjFname() {
