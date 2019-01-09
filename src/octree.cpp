@@ -48,25 +48,50 @@ void manta::Octree::destroy() {
 	}
 }
 
-const manta::CoarseIntersection *manta::Octree::coarseIntersection(const LightRay *ray, IntersectionList *l, SceneObject *object, const CoarseIntersection *reference, math::real epsilon, StackAllocator *s) const {
+bool manta::Octree::findClosestIntersection(const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s) const {
+	math::real currentMaxDepth = maxDepth;
 	math::real depth;
-	const CoarseIntersection *closest = reference;
+	bool found = false;
 	if (AABBIntersect(ray, &depth)) {
-		if (closest != nullptr && depth > closest->depth + epsilon) return closest;
+		if (depth > currentMaxDepth) return false;
 
 		if (m_mesh != nullptr) {
-			closest = m_mesh->coarseIntersection(ray, l, object, closest, epsilon, s);
+			bool foundInMesh = m_mesh->findClosestIntersection(ray, intersection, minDepth, currentMaxDepth, s);
+			if (foundInMesh) {
+				found = true;
+				currentMaxDepth = intersection->depth;
+			}
 		}
 
 		for (int i = 0; i < m_childCount; i++) {
-			closest = m_children[i].coarseIntersection(ray, l, object, closest, epsilon, s);
+			bool foundInChild = m_children[i].findClosestIntersection(ray, intersection, minDepth, currentMaxDepth, s);
+			if (foundInChild) {
+				found = true;
+				currentMaxDepth = intersection->depth;
+			}
 		}
 	}
-	return closest;
+	return found;
 }
 
-void manta::Octree::fineIntersection(const LightRay *ray, IntersectionPoint *p, const CoarseIntersection *hint, math::real bleed) const {
-	hint->sceneGeometry->fineIntersection(ray, p, hint, bleed);
+manta::math::Vector manta::Octree::getClosestPoint(const CoarseIntersection *hint, const math::Vector &p) const {
+	return hint->sceneGeometry->getClosestPoint(hint, p);
+}
+
+void manta::Octree::getVicinity(const math::Vector &p, math::real radius, IntersectionList *list, SceneObject *object) const {
+	if (AABBIntersect(p, radius)) {
+		if (m_mesh != nullptr) {
+			m_mesh->getVicinity(p, radius, list, object);
+		}
+
+		for (int i = 0; i < m_childCount; i++) {
+			m_children[i].getVicinity(p, radius, list, object);
+		}
+	}
+}
+
+void manta::Octree::fineIntersection(const math::Vector &r, IntersectionPoint *p, const CoarseIntersection *hint) const {
+	hint->sceneGeometry->fineIntersection(r, p, hint);
 }
 
 bool manta::Octree::fastIntersection(const LightRay * ray) const {
@@ -553,8 +578,8 @@ bool manta::Octree::AABBIntersect(const LightRay *ray, math::real *depth) const 
 	math::Vector rayDir = ray->getDirection();
 	math::Vector rayOrigin = ray->getSource();
 
-	math::Vector maxPoint = math::add(math::loadScalar(1E-2), m_maxPoint);
-	math::Vector minPoint = math::sub(m_minPoint, math::loadScalar(1E-2));
+	math::Vector maxPoint = m_maxPoint; //math::add(math::loadScalar(1E-2), m_maxPoint);
+	math::Vector minPoint = m_minPoint; //math::sub(m_minPoint, math::loadScalar(1E-2));
 
 	for (int i = 0; i < 3; i++) {
 		if (abs(math::get(rayDir, i)) < 1E-6) {
@@ -579,5 +604,17 @@ bool manta::Octree::AABBIntersect(const LightRay *ray, math::real *depth) const 
 		}
 	}
 	*depth = tmin;
+	return true;
+}
+
+bool manta::Octree::AABBIntersect(const math::Vector &p, math::real radius) const {
+	math::Vector v = p;
+	v = math::componentMax(v, m_minPoint);
+	v = math::componentMin(v, m_maxPoint);
+
+	math::real radius2 = radius * radius;
+	if (math::getScalar(math::magnitudeSquared3(math::sub(p, v))) > radius2) {
+		return false;
+	}
 	return true;
 }

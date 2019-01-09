@@ -66,6 +66,8 @@ namespace manta {
 
 		MaterialManager *getMaterialManager() { return &m_materialManager; }
 
+		std::string getTreeName(int pixelIndex, int sample) const;
+
 	protected:
 		// Multithreading features
 		JobQueue m_jobQueue;
@@ -87,6 +89,7 @@ namespace manta {
 		// Ray tracing features
 		void depthCull(const Scene *scene, const LightRay *ray, SceneObject **closestObject, IntersectionPoint *point, StackAllocator *s) const;
 		void fluxMultisample(const LightRay *ray, IntersectionList *list, IntersectionPoint *point, SceneObject **closestObject, const CoarseIntersection *referenceIntersection, math::real epsilon, StackAllocator *s) const;
+		void refineContact(const LightRay *ray, IntersectionList *list, IntersectionPoint *point, SceneObject **closestObject, StackAllocator *s) const;
 
 		void traceRayEmitterGroup(const Scene *scene, const RayEmitterGroup *rayEmitterGroup, StackAllocator *s /**/ PATH_RECORDER_DECL) const;
 

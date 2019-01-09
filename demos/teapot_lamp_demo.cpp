@@ -63,11 +63,12 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	teapot.setFastIntersectPosition(math::loadVector(-0.5724, 1.02483, -0.04969));
 
 	teapot.merge(&lamp);
+	//teapot.merge(&lampBlock);
 
 	Octree teapotOctree;
 	teapotOctree.initialize(4, math::constants::Zero);
 	teapotOctree.analyze(&teapot, 25);
-	teapotOctree.writeToObjFile("../../workspace/test_results/teapot_lamp_octree.obj", nullptr);
+	//teapotOctree.writeToObjFile("../../workspace/test_results/teapot_lamp_octree.obj", nullptr);
 
 	SpherePrimitive bulb;
 	bulb.setRadius(0.25);
@@ -82,8 +83,8 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	outdoorTopLightGeometry.setPosition(math::loadVector(0.0, 25.0, 2));
 
 	SpherePrimitive groundGeometry;
-	groundGeometry.setRadius((math::real)50000.0);
-	groundGeometry.setPosition(math::loadVector(0.0, -50000.001, 0));
+	groundGeometry.setRadius((math::real)5000.0);
+	groundGeometry.setPosition(math::loadVector(0.0, -5000.001, 0));
 
 	constexpr bool useOctree = true;
 
@@ -134,8 +135,9 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	// Create the raytracer
 	rayTracer.initialize(1000 * MB, 100 * MB, 12, 10000, true);
 	rayTracer.setBackgroundColor(getColor(0, 0, 0));
-	//rayTracer.setDeterministicSeedMode(true);
-	//rayTracer.tracePixel(819, 199, &scene, &camera);
+	rayTracer.setDeterministicSeedMode(false);
+	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");
+	//rayTracer.tracePixel(684, 909, &scene, &camera);
 	//rayTracer.tracePixel(702, 236, &scene, &camera);
 	//rayTracer.tracePixel(809, 211, &scene, &camera);
 	//rayTracer.tracePixel(793, 224, &scene, &camera);
