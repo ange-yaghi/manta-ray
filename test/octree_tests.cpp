@@ -47,7 +47,7 @@ TEST(OctreeTests, OctreeTestSanityCheck) {
 
 	IntersectionList list;
 	for (int i = 0; i < 100000; i++) {
-		octree.coarseIntersection(&ray, &list, nullptr, nullptr, 1E-2, nullptr);
+		//octree.coarseIntersection(&ray, &list, nullptr, nullptr, 1E-2, nullptr);
 		list.destroy();
 	}
 
@@ -57,7 +57,7 @@ TEST(OctreeTests, OctreeTestSanityCheck) {
 
 	IntersectionList list2;
 	for (int i = 0; i < 100000; i++) {
-		mesh.coarseIntersection(&ray, &list2, nullptr, nullptr, 1E-2, nullptr);
+		//mesh.coarseIntersection(&ray, &list2, nullptr, nullptr, 1E-2, nullptr);
 		list2.destroy();
 	}
 

@@ -35,7 +35,7 @@ namespace manta {
 		int getTreeCount() const { return (int)m_trees.size(); }
 		Tree *getTree(int index) { return m_trees[index]; }
 
-		bool writeObjFile(const std::string &fname);
+		bool writeObjFile(const std::string &fname);		
 
 	protected:
 		std::vector<Tree *> m_trees;

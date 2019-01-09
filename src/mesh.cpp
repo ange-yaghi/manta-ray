@@ -127,48 +127,87 @@ void manta::Mesh::precomputeValues() {
 	}
 }
 
-const manta::CoarseIntersection *manta::Mesh::coarseIntersection(const LightRay *ray, IntersectionList *l, SceneObject *object, const CoarseIntersection *reference, math::real epsilon, StackAllocator *s) const {
-	const manta::CoarseIntersection *closest = reference;
+bool manta::Mesh::findClosestIntersection(const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s) const {
 	math::Vector rayDir = ray->getDirection();
 	math::Vector raySource = ray->getSource();
 
 	CoarseCollisionOutput output;
-
-	math::real depthHint = math::constants::REAL_MAX;
-	if (closest != nullptr) {
-		depthHint = closest->depth + epsilon;
-	}
-
+	math::real currentMaxDepth = maxDepth;
+	bool found = false;
 	for (int i = 0; i < m_faceCount; i++) {
-		if (detectIntersection(i, depthHint, rayDir, raySource, 1E-2, &output)) {
-			CoarseIntersection *intersection = l->newIntersection();
+		if (detectIntersection(i, minDepth, currentMaxDepth, rayDir, raySource, 1E-6, &output)) {
 			intersection->depth = output.depth;
 			intersection->locationHint = i; // Face index
-			intersection->sceneObject = object;
 			intersection->sceneGeometry = this;
 			intersection->globalHint = m_faces[i].globalId;
 
-			if (closest == nullptr || output.depth < closest->depth) {
-				IntersectionPoint p;
-				if (detectIntersection(i, math::constants::REAL_MAX, rayDir, raySource, 1E-6, &output)) {
-					closest = intersection;
-
-					// Recalculate the depth hint
-					depthHint = closest->depth + epsilon;
-				}
-			}
+			currentMaxDepth = output.depth;
+			found = true;
 		}
 	}
 
-	return closest;
+	return found;
 }
 
-void manta::Mesh::fineIntersection(const LightRay *ray, IntersectionPoint *p, const CoarseIntersection *hint, math::real bleed) const {
-	p->m_intersection = false;
-	math::Vector rayDir = ray->getDirection();
-	math::Vector raySource = ray->getSource();
+manta::math::Vector manta::Mesh::getClosestPoint(const CoarseIntersection *hint, const math::Vector &p) const {
+	return getClosestPointOnFace(hint->locationHint, p);
+}
 
-	detectIntersection(hint->locationHint, math::constants::REAL_MAX, rayDir, raySource, p, bleed);
+void manta::Mesh::getVicinity(const math::Vector &p, math::real radius, IntersectionList *list, SceneObject *object) const {
+	for (int i = 0; i < m_faceCount; i++) {
+		if (testClosestPointOnFace(i, radius, p)) {
+			CoarseIntersection *intersection = list->newIntersection();
+			intersection->depth = 0.0;
+			intersection->locationHint = i; // Face index
+			intersection->sceneGeometry = this;
+			intersection->globalHint = m_faces[i].globalId;
+			intersection->valid = true;
+			intersection->sceneObject = object;
+		}
+	}
+}
+
+void manta::Mesh::fineIntersection(const math::Vector &r, IntersectionPoint *p, const CoarseIntersection *hint) const {
+	int faceIndex = hint->locationHint;
+	PrecomputedValues &cache = m_precomputedValues[faceIndex];
+	math::real u, v, w; // Barycentric coordinates
+
+	getClosestPointOnFaceBarycentric(hint->locationHint, r, &u, &v, &w);
+
+	p->m_depth = hint->depth;
+
+	math::Vector vertexNormal;
+	math::Vector textureCoordinates;
+
+	if (m_perVertexNormals) {
+		math::Vector normalU = m_normals[m_faces[faceIndex].nu];
+		math::Vector normalV = m_normals[m_faces[faceIndex].nv];
+		math::Vector normalW = m_normals[m_faces[faceIndex].nw];
+
+		vertexNormal = math::add(math::mul(normalU, math::loadScalar(u)), math::mul(normalV, math::loadScalar(v)));
+		vertexNormal = math::add(vertexNormal, math::mul(normalW, math::loadScalar(w)));
+	}
+	else {
+		vertexNormal = cache.normal;
+	}
+
+	if (m_useTextureCoords) {
+		math::Vector texU = m_textureCoords[m_faces[faceIndex].tu];
+		math::Vector texV = m_textureCoords[m_faces[faceIndex].tv];
+		math::Vector texW = m_textureCoords[m_faces[faceIndex].tw];
+
+		textureCoordinates = math::add(math::mul(texU, math::loadScalar(u)), math::mul(texV, math::loadScalar(v)));
+		textureCoordinates = math::add(textureCoordinates, math::mul(texW, math::loadScalar(w)));
+	}
+	else {
+		textureCoordinates = math::constants::Zero;
+	}
+
+	p->m_vertexNormal = vertexNormal;
+	p->m_faceNormal = cache.normal;
+	p->m_position = r;
+	p->m_textureCoodinates = textureCoordinates;
+	p->m_material = m_faces[faceIndex].material;
 }
 
 bool manta::Mesh::fastIntersection(const LightRay *ray) const {
@@ -327,86 +366,171 @@ void manta::Mesh::merge(const Mesh *mesh) {
 	precomputeValues();
 }
 
-bool manta::Mesh::detectIntersection(int faceIndex, math::real earlyExitDepthHint, const math::Vector &rayDir, const math::Vector &rayOrigin, IntersectionPoint *p, math::real bleed) const {
+manta::math::Vector manta::Mesh::getClosestPointOnFace(int faceIndex, const math::Vector &p) const {
 	PrecomputedValues &cache = m_precomputedValues[faceIndex];
 
-	math::Vector denom = math::dot(cache.normal, rayDir);
+	math::Vector a = m_vertices[m_faces[faceIndex].u];
+	math::Vector b = m_vertices[m_faces[faceIndex].v];
+	math::Vector c = m_vertices[m_faces[faceIndex].w];
 
-	// The ray is nearly perpendicular to the plane
-	math::real denom_s = math::getScalar(denom);
-	if (denom_s < 1e-6 && denom_s > -1e-6) return false;
+	math::Vector ab = math::sub(b, a);
+	math::Vector ac = math::sub(c, a);
+	math::Vector ap = math::sub(p, a);
 
-	math::Vector p0r0 = math::sub(cache.p0, rayOrigin);
-	math::Vector depth = math::div(math::dot(p0r0, cache.normal), denom);
+	// P in vertex region outside A
+	math::real d1 = math::getScalar(math::dot(ab, ap));
+	math::real d2 = math::getScalar(math::dot(ac, ap));
+	if (d1 <= (math::real)0.0 && d2 <= 0.0) return a; // Barycentric coordinates: (1, 0, 0)
 
-	math::real depth_s = math::getScalar(depth);
+	// P in vertex region outside B
+	math::Vector bp = math::sub(p, b);
+	math::real d3 = math::getScalar(math::dot(ab, bp));
+	math::real d4 = math::getScalar(math::dot(ac, bp));
+	if (d3 >= (math::real)0.0 && d4 <= d3) return b; // Barycentric coordinates: (0, 1, 0)
 
-	const math::real bias = -bleed;
+	// P in edge region of AB
+	math::real vc = d1 * d4 - d3 * d2;
+	if (vc <= (math::real)0.0 && d1 >= (math::real)0.0 && d3 <= (math::real)0.0) {
+		math::real v = d1 / (d1 - d3);
+		return math::add(a, math::mul(math::loadScalar(v), ab));
+	}
 
-	// This ray either does not intersect the plane or intersects at a depth that is further than the early exit hint
-	if (depth_s <= (math::real)0.0 || depth_s > earlyExitDepthHint) return false;
+	// P in vertex region outside C
+	math::Vector cp = math::sub(p, c);
+	math::real d5 = math::getScalar(math::dot(ab, cp));
+	math::real d6 = math::getScalar(math::dot(ac, cp));
+	if (d6 >= (math::real)0.0 && d5 <= d6) return c;
+
+	// P in edge region AC
+	math::real vb = d5 * d2 - d1 * d6;
+	if (vb <= (math::real)0.0 && d2 >= (math::real)0.0 && d6 <= (math::real)0.0) {
+		math::real w = d2 / (d2 - d6);
+		return math::add(a, math::mul(math::loadScalar(w), ac)); // Barycentric coordinates (1 - w, 0, w)
+	}
+
+	// P in edge region of BC
+	math::real va = d3 * d6 - d5 * d4;
+	if (va <= (math::real)0.0 && (d4 - d3) >= (math::real)0.0 && (d5 - d6) >= (math::real)0.0) {
+		math::real w = (d4 - d3) / ((d4 - d3) + (d5 - d6));
+		return math::add(b, math::mul(math::loadScalar(w), math::sub(c, b))); // Barycentric coordinates (0, 1 - w, w)
+	}
+
+	// P inside face region
+	math::real denom = (math::real)1.0 / (va + vb + vc);
+	math::real v = vb * denom;
+	math::real w = vc * denom;
+	return
+		math::add(
+			math::add(
+				a,
+				math::mul(ab, math::loadScalar(v))),
+			math::mul(math::loadScalar(w), ac));
+}
+
+void manta::Mesh::getClosestPointOnFaceBarycentric(int faceIndex, const math::Vector &p, math::real *bu, math::real *bv, math::real *bw) const {
+	PrecomputedValues &cache = m_precomputedValues[faceIndex];
+
+	math::Vector a = m_vertices[m_faces[faceIndex].u];
+	math::Vector b = m_vertices[m_faces[faceIndex].v];
+	math::Vector c = m_vertices[m_faces[faceIndex].w];
+
+	math::Vector ab = math::sub(b, a);
+	math::Vector ac = math::sub(c, a);
+	math::Vector ap = math::sub(p, a);
+
+	// P in vertex region outside A
+	math::real d1 = math::getScalar(math::dot(ab, ap));
+	math::real d2 = math::getScalar(math::dot(ac, ap));
+	if (d1 <= (math::real)0.0 && d2 <= 0.0) {
+		// Barycentric coordinates: (1, 0, 0)
+		*bu = (math::real)1.0;
+		*bv = (math::real)0.0;
+		*bw = (math::real)0.0;
+	}
+
+	// P in vertex region outside B
+	math::Vector bp = math::sub(p, b);
+	math::real d3 = math::getScalar(math::dot(ab, bp));
+	math::real d4 = math::getScalar(math::dot(ac, bp));
+	if (d3 >= (math::real)0.0 && d4 <= d3) {
+		// Barycentric coordinates: (0, 1, 0)
+		*bu = (math::real)0.0;
+		*bv = (math::real)1.0;
+		*bw = (math::real)0.0;
+	}
+
+	// P in edge region of AB
+	math::real vc = d1 * d4 - d3 * d2;
+	if (vc <= (math::real)0.0 && d1 >= (math::real)0.0 && d3 <= (math::real)0.0) {
+		math::real v = d1 / (d1 - d3);
+		*bu = (math::real)1.0 - v;
+		*bv = v;
+		*bw = (math::real)0.0;
+	}
+
+	// P in vertex region outside C
+	math::Vector cp = math::sub(p, c);
+	math::real d5 = math::getScalar(math::dot(ab, cp));
+	math::real d6 = math::getScalar(math::dot(ac, cp));
+	if (d6 >= (math::real)0.0 && d5 <= d6) {
+		*bu = (math::real)0.0;
+		*bv = (math::real)0.0;
+		*bw = (math::real)1.0;
+	}
+
+	// P in edge region AC
+	math::real vb = d5 * d2 - d1 * d6;
+	if (vb <= (math::real)0.0 && d2 >= (math::real)0.0 && d6 <= (math::real)0.0) {
+		math::real w = d2 / (d2 - d6);
+		// Barycentric coordinates (1 - w, 0, w)
+		*bu = (math::real)1.0 - w;
+		*bv = (math::real)0.0;
+		*bw = w;
+	}
+
+	// P in edge region of BC
+	math::real va = d3 * d6 - d5 * d4;
+	if (va <= (math::real)0.0 && (d4 - d3) >= (math::real)0.0 && (d5 - d6) >= (math::real)0.0) {
+		math::real w = (d4 - d3) / ((d4 - d3) + (d5 - d6));
+		// Barycentric coordinates (0, 1 - w, w)
+		*bu = (math::real)0.0;
+		*bv = (math::real)1.0 - w;
+		*bw = w;
+	}
+
+	// P inside face region
+	math::real denom = (math::real)1.0 / (va + vb + vc);
+	math::real v = vb * denom;
+	math::real w = vc * denom;
 	
-	math::Vector s = math::add(rayOrigin, math::mul(rayDir, depth));
-	
-	// Compute barycentric components u, v, w
-	math::real u = math::getScalar(math::dot(s, cache.edgePlaneVW.normal)) - cache.edgePlaneVW.d;
-	if (u < bias || u > (math::real)1.0-bias) return false;
+	*bu = (math::real)1.0 - v - w;
+	*bv = v;
+	*bw = w;
+}
 
-	math::real v = math::getScalar(math::dot(s, cache.edgePlaneWU.normal)) - cache.edgePlaneWU.d;
-	if (v < bias) return false;
+bool manta::Mesh::testClosestPointOnFace(int faceIndex, math::real maxDepth, const math::Vector &p) const {
+	PrecomputedValues &cache = m_precomputedValues[faceIndex];
 
-	math::real w = (math::real)1.0 - u - v;
-	if (w < bias) return false;
+	math::Vector denom = math::dot(cache.normal, cache.normal);
 
-	p->m_depth = depth_s;
-	p->m_intersection = true;
+	math::Vector p0r0 = math::sub(p, cache.p0);
+	math::Vector d = math::div(math::dot(p0r0, cache.normal), math::negate(denom));
 
-	math::Vector vertexNormal;
-	math::Vector textureCoordinates;
-	
-	if (m_perVertexNormals) {
-		math::Vector normalU = m_normals[m_faces[faceIndex].nu];
-		math::Vector normalV = m_normals[m_faces[faceIndex].nv];
-		math::Vector normalW = m_normals[m_faces[faceIndex].nw];
+	math::real depth_s = math::getScalar(d);
 
-		vertexNormal = math::add(math::mul(normalU, math::loadScalar(u)), math::mul(normalV, math::loadScalar(v)));
-		vertexNormal = math::add(vertexNormal, math::mul(normalW, math::loadScalar(w)));
-		//vertexNormal = math::normalize(vertexNormal);
+	if (abs(depth_s) > maxDepth) return false;
+
+	math::Vector closestPoint = getClosestPointOnFace(faceIndex, p);
+	math::Vector cp = math::sub(p, closestPoint);
+
+	if (math::getScalar(math::magnitudeSquared3(cp)) > maxDepth * maxDepth) {
+		return false;
 	}
-	else {
-		vertexNormal = cache.normal;
-	}
-
-	if (m_useTextureCoords) {
-		math::Vector texU = m_textureCoords[m_faces[faceIndex].tu];
-		math::Vector texV = m_textureCoords[m_faces[faceIndex].tv];
-		math::Vector texW = m_textureCoords[m_faces[faceIndex].tw];
-
-		textureCoordinates = math::add(math::mul(texU, math::loadScalar(u)), math::mul(texV, math::loadScalar(v)));
-		textureCoordinates = math::add(textureCoordinates, math::mul(texW, math::loadScalar(w)));
-	}
-	else {
-		textureCoordinates = math::constants::Zero;
-	}
-
-	// TODO: only apply this logic for two-sided objects
-	if (math::getScalar(math::dot(cache.normal, rayDir)) > (math::real)0.0) {
-		p->m_vertexNormal = math::negate(vertexNormal);
-		p->m_faceNormal = math::negate(cache.normal);
-	}
-	else {
-		p->m_vertexNormal = vertexNormal;
-		p->m_faceNormal = cache.normal;
-	}
-
-	p->m_position = s;
-	p->m_textureCoodinates = textureCoordinates;
-	p->m_material = m_faces[faceIndex].material;
 
 	return true;
 }
 
-bool manta::Mesh::detectIntersection(int faceIndex, math::real earlyExitDepthHint, const math::Vector &rayDir, const math::Vector &rayOrigin, math::real delta, CoarseCollisionOutput *output) const {
+bool manta::Mesh::detectIntersection(int faceIndex, math::real minDepth, math::real maxDepth, const math::Vector &rayDir, const math::Vector &rayOrigin, math::real delta, CoarseCollisionOutput *output) const {
 	PrecomputedValues &cache = m_precomputedValues[faceIndex];
 
 	math::Vector denom = math::dot(cache.normal, rayDir);
@@ -421,7 +545,7 @@ bool manta::Mesh::detectIntersection(int faceIndex, math::real earlyExitDepthHin
 	math::real depth_s = math::getScalar(d);
 
 	// This ray either does not intersect the plane or intersects at a depth that is further than the early exit hint
-	if (depth_s <= (math::real)0.0 || depth_s > earlyExitDepthHint) return false;
+	if (depth_s <= (math::real)0.0 || depth_s > maxDepth || depth_s < minDepth) return false;
 
 	math::Vector s = math::add(rayOrigin, math::mul(rayDir, d));
 

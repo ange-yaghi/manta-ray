@@ -16,12 +16,7 @@ bool manta::SpherePrimitive::fastIntersection(const LightRay *ray) const {
 	return true;
 }
 
-const manta::CoarseIntersection *manta::SpherePrimitive::coarseIntersection(const LightRay *ray, IntersectionList *l, SceneObject *object, const CoarseIntersection *reference, math::real epsilon, StackAllocator *s) const {
-	math::real depthHint = math::constants::REAL_MAX;
-	if (reference != nullptr) {
-		depthHint = reference->depth + epsilon;
-	}
-	
+bool manta::SpherePrimitive::findClosestIntersection(const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s) const {	
 	math::Vector d_pos = math::sub(ray->getSource(), m_position);
 	math::Vector d_dot_dir = math::dot(d_pos, ray->getDirection());
 	math::Vector mag2 = math::magnitudeSquared3(d_pos);
@@ -31,7 +26,7 @@ const manta::CoarseIntersection *manta::SpherePrimitive::coarseIntersection(cons
 
 	if (math::getScalar(det) < (math::real)0.0) {
 		// No intersection detected
-		return reference;
+		return false;
 	}
 	else {
 		det = math::sqrt(det);
@@ -41,81 +36,70 @@ const manta::CoarseIntersection *manta::SpherePrimitive::coarseIntersection(cons
 		math::real t1_s = math::getScalar(t1);
 		math::real t2_s = math::getScalar(t2);
 
-		bool intersection = t1_s > (math::real)0.0 || t2_s > (math::real)0.0;
+		bool intersects = t1_s > (math::real)0.0 || t2_s > (math::real)0.0;
 
-		if (intersection) {
-			if (t1_s < depthHint || t2_s < depthHint) {
-				CoarseIntersection *newIntersection = l->newIntersection();
-				newIntersection->locationHint = -1; // Unused for spheres
-				newIntersection->sceneObject = object;
-				newIntersection->sceneGeometry = this;
-				newIntersection->globalHint = -1;
+		if (intersects) {
+			if ((t1_s < maxDepth && t1_s > minDepth) || (t2_s < maxDepth && t2_s > minDepth)) {
+				intersection->locationHint = -1; // Unused for spheres
+				intersection->sceneGeometry = this;
+				intersection->globalHint = -1;
+				intersection->valid = true;
 
 				math::Vector t;
-				if (t2_s < t1_s && t2_s >= 0.0f) {
+				if (t2_s < t1_s && t2_s > minDepth) {
 					t = t2;
-					newIntersection->depth = t2_s;
+					intersection->depth = t2_s;
 				}
 				else {
 					t = t1;
-					newIntersection->depth = t1_s;
+					intersection->depth = t1_s;
 				}
 
-				if (reference == nullptr || newIntersection->depth < reference->depth) {
-					return newIntersection;
-				}
-				else return reference;
+				return true;
 			}
-			else return reference;
+			else return false;
 		}
-		else return reference;
+		else return false;
 	}
 }
 
-void manta::SpherePrimitive::fineIntersection(const LightRay *ray, IntersectionPoint *p, const CoarseIntersection *hint, math::real bleed) const {
-	math::Vector d_pos = math::sub(ray->getSource(), m_position);
-	math::Vector d_dot_dir = math::dot(d_pos, ray->getDirection());
-	math::Vector mag2 = math::magnitudeSquared3(d_pos);
+manta::math::Vector manta::SpherePrimitive::getClosestPoint(const CoarseIntersection *hint, const math::Vector &p) const {
+	math::Vector p_p0 = math::sub(p, m_position);
+	math::Vector closestPoint = math::add(math::mul(math::normalize(p_p0), math::loadScalar(m_radius)), m_position);
+	return closestPoint;
+}
 
-	math::Vector radius2 = math::loadScalar(m_radius * m_radius);
-	math::Vector det = math::sub(math::mul(d_dot_dir, d_dot_dir), math::sub(mag2, radius2));
+void manta::SpherePrimitive::getVicinity(const math::Vector &p, math::real radius, IntersectionList *list, SceneObject *object) const {
+	math::Vector closestPoint = getClosestPoint(nullptr, p);
+	math::Vector d = math::sub(closestPoint, p);
 
-	if (math::getScalar(det) < (math::real)0.0) {
-		p->m_intersection = false;
+	if (math::getScalar(math::magnitudeSquared3(d)) < (radius * radius)) {
+		CoarseIntersection *newIntersection = list->newIntersection();
+		newIntersection->locationHint = -1;
+		newIntersection->globalHint = -1;
+		newIntersection->depth = (math::real)0.0;
+		newIntersection->sceneObject = object;
+		newIntersection->valid = true;
+		newIntersection->sceneGeometry = this;
 	}
-	else {
-		det = math::sqrt(det);
-		math::Vector t1 = math::sub(det, d_dot_dir);
-		math::Vector t2 = math::sub(math::negate(det), d_dot_dir);
+}
 
-		math::real t1_s = math::getScalar(t1);
-		math::real t2_s = math::getScalar(t2);
+void manta::SpherePrimitive::fineIntersection(const math::Vector &r, IntersectionPoint *p, const CoarseIntersection *hint) const {
+	math::Vector position = getClosestPoint(hint, r);
 
-		p->m_intersection = t1_s > (math::real)0.0 || t2_s > (math::real)0.0;
+	p->m_position = position;
 
-		if (p->m_intersection) {
-			math::Vector t;
-			if (t2_s < t1_s && t2_s >= 0.0f) {
-				t = t2;
-				p->m_depth = t2_s;
-			}
-			else {
-				t = t1;
-				p->m_depth = t1_s;
-			}
+	// Calculate the normal
+	math::Vector normal = math::sub(p->m_position, m_position);
+	normal = math::normalize(normal);
 
-			p->m_position = math::add(ray->getSource(), math::mul(ray->getDirection(), t));
-
-			// Calculate the normal
-			math::Vector normal = math::sub(p->m_position, m_position);
-			normal = math::normalize(normal);
-
-			p->m_vertexNormal = normal;
-			p->m_faceNormal = normal;
-			p->m_textureCoodinates = math::constants::Zero;
-			p->m_material = -1;
-		}
-	}
+	p->m_depth = hint->depth;
+	p->m_vertexNormal = normal;
+	p->m_faceNormal = normal;
+	p->m_textureCoodinates = math::constants::Zero;
+	p->m_material = -1;
+	p->m_valid = true;
+	p->m_intersection = true;
 }
 
 void manta::SpherePrimitive::detectIntersection(const LightRay *ray, IntersectionPoint *convex, IntersectionPoint *concave) const {
