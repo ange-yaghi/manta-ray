@@ -495,63 +495,67 @@ bool manta::Octree::analyze(Mesh *mesh, OctreeBV *leaf, int maxSize, std::vector
 }
 
 void manta::Octree::shrink(OctreeBV *leaf) {
-	/*
-	int leafChildCount = leaf->childCount;
-	if (leafChildCount > 0) {
-		for (int i = leafChildCount - 1; i >= 0; i--) {
-			if (m_children[i].m_mesh == nullptr && m_children[i].m_children == nullptr) {
-				deleteChild(i);
-			}
-		}
-	}
-
-	for (int i = 0; i < m_childCount; i++) {
-		m_children[i].shrink();
+	int childCount = leaf->childCount;
+	int childListIndex = leaf->childList;
+	OctreeBV *childList = m_childLists[childListIndex];
+	for (int i = 0; i < childCount; i++) {
+		shrink(&childList[i]);
 	}
 	
 	math::Vector childMax;
 	math::Vector childMin;
-	for (int i = 0; i < m_childCount; i++) {
+	for (int i = 0; i < childCount; i++) {
 		if (i == 0) {
-			childMax = m_children[i].m_maxPoint;
-			childMin = m_children[i].m_minPoint;
+			childMax = childList[i].maxPoint;
+			childMin = childList[i].minPoint;
 		}
 		else {
-			childMax = math::componentMax(childMax, m_children[i].m_maxPoint);
-			childMin = math::componentMin(childMin, m_children[i].m_minPoint);
+			childMax = math::componentMax(childMax, childList[i].maxPoint);
+			childMin = math::componentMin(childMin, childList[i].minPoint);
 		}
 	}
 
 	math::Vector vertexMax;
 	math::Vector vertexMin;
-	if (m_mesh != nullptr) {
-		for (int i = 0; i < m_mesh->getVertexCount(); i++) {
-			const math::Vector &vertex = *m_mesh->getVertex(i);
+	if (leaf->faceCount > 0) {
+		int *faces = m_faceLists[leaf->faceList];
+
+		for (int i = 0; i < leaf->faceCount; i++) {
+			const Face *face = m_mesh->getFace(faces[i]);
+			const math::Vector &vu = *m_mesh->getVertex(face->u);
+			const math::Vector &vv = *m_mesh->getVertex(face->v);
+			const math::Vector &vw = *m_mesh->getVertex(face->w);
 			if (i == 0) {
-				vertexMax = vertex;
-				vertexMin = vertex;
+				vertexMax = math::componentMax(vu, vv);
+				vertexMax = math::componentMax(vertexMax, vw);
+				vertexMin = math::componentMin(vu, vv);
+				vertexMin = math::componentMin(vertexMin, vw);
 			}
 			else {
-				vertexMax = math::componentMax(vertexMax, vertex);
-				vertexMin = math::componentMin(vertexMin, vertex);
+				vertexMax = math::componentMax(vertexMax, vu);
+				vertexMax = math::componentMax(vertexMax, vv);
+				vertexMax = math::componentMax(vertexMax, vw);
+				vertexMin = math::componentMin(vertexMin, vu);
+				vertexMin = math::componentMin(vertexMin, vv);
+				vertexMin = math::componentMin(vertexMin, vw);
 			}
 		}
 
-		math::Vector localMax = math::componentMin(vertexMax, m_maxPoint);
-		math::Vector localMin = math::componentMax(vertexMin, m_minPoint);
-		if (m_childCount > 0) {
-			m_maxPoint = math::componentMax(localMax, childMax);
-			m_minPoint = math::componentMin(localMin, childMin);
+		math::Vector localMax = math::componentMin(vertexMax, leaf->maxPoint);
+		math::Vector localMin = math::componentMax(vertexMin, leaf->minPoint);
+		if (childCount > 0) {
+			leaf->maxPoint = math::componentMax(localMax, childMax);
+			leaf->minPoint = math::componentMin(localMin, childMin);
 		}
 		else {
-			m_maxPoint = localMax;
-			m_minPoint = localMin;
+			leaf->maxPoint = localMax;
+			leaf->minPoint = localMin;
 		}
 	}
 	else {
-		if (m_childCount > 0) {
-			m_maxPoint = childMax;
-			m_minPoint = childMin;
+		if (leaf->childCount > 0) {
+			leaf->maxPoint = childMax;
+			leaf->minPoint = childMin;
 		}
 		else {
 			// Shouldn't happen
@@ -560,8 +564,8 @@ void manta::Octree::shrink(OctreeBV *leaf) {
 
 	const math::Vector eps = math::loadScalar((math::real)(1E-4));
 
-	m_maxPoint = math::add(m_maxPoint, eps);
-	m_minPoint = math::sub(m_minPoint, eps);*/
+	leaf->maxPoint = math::add(leaf->maxPoint, eps);
+	leaf->minPoint = math::sub(leaf->minPoint, eps);
 }
 
 void manta::Octree::deleteChild(int childIndex) {
