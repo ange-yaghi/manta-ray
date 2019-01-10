@@ -351,6 +351,12 @@
     <ClCompile Include="..\..\src\standard_allocator.cpp">
       <Filter>Source Files\memory-management</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\standard_specular_diffuse_material.cpp">
+      <Filter>Source Files\material\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\batched_monte_carlo_emitter_group.cpp">
+      <Filter>Source Files\emitter\batched-monte-carlo-emitter</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\intersection_point.h">
@@ -400,9 +406,6 @@
     </ClInclude>
     <ClInclude Include="..\..\include\monte_carlo_specular_diffuse_group.h">
       <Filter>Header Files\emitter\monte-carlo-specular-diffuse</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\simple_specular_diffuse_material.h">
-      <Filter>Header Files\material\library</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\ray_emitter.h">
       <Filter>Header Files\ray-tracer</Filter>
@@ -541,6 +544,15 @@
     </ClInclude>
     <ClInclude Include="..\..\include\standard_allocator.h">
       <Filter>Header Files\memory-management</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\standard_specular_diffuse_material.h">
+      <Filter>Header Files\material\library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\simple_specular_diffuse_material.h">
+      <Filter>Header Files\material\library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\batched_monte_carlo_emitter_group.h">
+      <Filter>Header Files\emitter\batched-monte-carlo-emitter</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

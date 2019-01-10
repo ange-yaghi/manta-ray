@@ -6,6 +6,7 @@
 #include <stack_allocator.h>
 
 #include <new>
+#include <string>
 
 namespace manta {
 
@@ -24,8 +25,8 @@ namespace manta {
 		void setDiffuseColor(const math::Vector &diffuse) { m_diffuseColor = diffuse; }
 		math::Vector getDiffuseColor() { return m_diffuseColor; }
 
-		void setDiffuseCoeff(float diffuseCoeff) { m_diffuseCoeff = diffuseCoeff; }
-		float getDiffuseCoeff() const { return m_diffuseCoeff; }
+		void setName(const std::string &name) { m_name = name; }
+		std::string getName() const { return m_name; }
 
 		RayEmitterGroup *generateRayEmitterGroup(const LightRay *ray, const IntersectionPoint *intersectionPoint, int degree, StackAllocator *stackAllocator = nullptr) const;
 		virtual void integrateRay(LightRay *ray, const RayEmitterGroup *_rayEmitter) const;
@@ -37,8 +38,7 @@ namespace manta {
 	protected:
 		math::Vector m_diffuseColor;
 		math::Vector m_emission;
-		
-		float m_diffuseCoeff;
+		std::string m_name;
 
 	protected:
 		virtual void preconfigureEmitterGroup(RayEmitterGroup *group, int degree) const {}

@@ -34,7 +34,7 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 
 	// Create all scene geometry
 	Mesh stressSpiders;
-	stressSpiders.loadObjFileData(&stressSpidersObj, spiderMaterial->getIndex());
+	stressSpiders.loadObjFileData(&stressSpidersObj, rayTracer.getMaterialManager(), spiderMaterial->getIndex());
 	stressSpiders.setFastIntersectEnabled(true);
 	stressSpiders.setFastIntersectRadius((math::real)2.123);
 	stressSpiders.setFastIntersectPosition(math::loadVector(-0.06430, 1.86833, -2.96564));

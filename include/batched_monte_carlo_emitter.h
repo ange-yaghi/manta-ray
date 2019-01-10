@@ -24,12 +24,16 @@ namespace manta {
 		void setGloss(math::real gloss) { m_gloss = gloss; }
 		math::real getGloss() const { return m_gloss; }
 
+		void setMeta(int meta) { m_meta = meta; }
+		int getMeta() const { return m_meta; }
+
 	protected:
 		math::Vector m_incidentDirection;
 		math::Vector m_normal;
 
 		math::real m_gloss;
 
+		int m_meta;
 		int m_samples;
 	};
 
