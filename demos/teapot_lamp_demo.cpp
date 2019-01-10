@@ -42,7 +42,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 
 	// Create all scene geometry
 	Mesh lamp;
-	lamp.loadObjFileData(&lampObj, wallMaterial->getIndex());
+	lamp.loadObjFileData(&lampObj, rayTracer.getMaterialManager(), wallMaterial->getIndex());
 	lamp.setFastIntersectEnabled(true);
 	lamp.setFastIntersectRadius((math::real)2.123);
 	lamp.setFastIntersectPosition(math::loadVector(-0.06430, 1.86833, -2.96564));
@@ -57,7 +57,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	lampBlock.setFastIntersectRadius((math::real)4.0);
 
 	Mesh teapot;
-	teapot.loadObjFileData(&teapotObj, teapotMaterial->getIndex());
+	teapot.loadObjFileData(&teapotObj, rayTracer.getMaterialManager(), teapotMaterial->getIndex());
 	teapot.setFastIntersectEnabled(true);
 	teapot.setFastIntersectRadius((math::real)2.0);
 	teapot.setFastIntersectPosition(math::loadVector(-0.5724, 1.02483, -0.04969));

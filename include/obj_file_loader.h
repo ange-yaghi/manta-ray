@@ -5,8 +5,13 @@
 
 #include <istream>
 #include <vector>
+#include <string>
 
 namespace manta {
+
+	struct ObjMaterial {
+		std::string name;
+	};
 
 	struct ObjFace {
 		union {
@@ -21,6 +26,7 @@ namespace manta {
 				int vt[3];
 			};
 		};
+		ObjMaterial *material;
 	};
 
 	class ObjFileLoader {
@@ -48,14 +54,17 @@ namespace manta {
 		bool readVertexNormal(std::stringstream &s, math::Vector3 *normal) const;
 		bool readVertexTextureCoords(std::stringstream &s, math::Vector2 *texCoords) const;
 		bool readFace(std::stringstream &s, ObjFace *face);
+		bool readMaterial(std::stringstream &s);
 
 	protected:
 		std::vector<ObjFace *> m_faces;
 		std::vector<math::Vector3 *> m_vertices;
 		std::vector<math::Vector2 *> m_texCoords;
 		std::vector<math::Vector3 *> m_normals;
+		std::vector<ObjMaterial *> m_materials;
 
 		unsigned int m_currentLine;
+		ObjMaterial *m_currentMaterial;
 	};
 
 } /* namespace manta */

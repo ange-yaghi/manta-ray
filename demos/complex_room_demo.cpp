@@ -7,6 +7,8 @@ using namespace manta;
 void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resolutionY) {
 	Scene scene;
 
+	std::cout << sizeof(Octree) << std::endl;
+
 	// Load all object files
 	ObjFileLoader stressSpidersObj;
 	bool result = stressSpidersObj.readObjFile(MODEL_PATH "complex_room.obj");
@@ -17,13 +19,40 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	RayTracer rayTracer;
 
 	// Create all materials
-	SimpleSpecularDiffuseMaterial *spiderMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleSpecularDiffuseMaterial>();
-	spiderMaterial->setEmission(math::mul(getColor(0xFF, 0x08, 0x14), math::loadScalar(0.0)));
-	spiderMaterial->setDiffuseColor(getColor(0xf1, 0xc4, 0x0f));
-	spiderMaterial->setDiffuseColor(getColor(0xFF, 0xFF, 0xFF));
-	spiderMaterial->setSpecularColor(getColor(70, 70, 70));
-	spiderMaterial->setSpecularColor(getColor(0x90, 0x90, 0x90));
-	spiderMaterial->setGloss((math::real)0.5);
+	StandardSpecularDiffuseMaterial *wallMaterial = rayTracer.getMaterialManager()->newMaterial<StandardSpecularDiffuseMaterial>();
+	wallMaterial->setName("WallMaterial");
+	wallMaterial->setEmission(math::constants::Zero);
+	wallMaterial->setDiffuseColor(getColor(0xFF, 0xFF, 0xFF));
+	wallMaterial->setSpecularColor(getColor(0x20, 0x20, 0x20));
+	wallMaterial->setGloss((math::real)0.1);
+
+	StandardSpecularDiffuseMaterial *floorMaterial = rayTracer.getMaterialManager()->newMaterial<StandardSpecularDiffuseMaterial>();
+	floorMaterial->setName("FloorMaterial");
+	floorMaterial->setEmission(math::constants::Zero);
+	floorMaterial->setDiffuseColor(getColor(0xFF, 0xFF, 0xFF));
+	floorMaterial->setSpecularColor(getColor(0x90, 0x90, 0x90));
+	floorMaterial->setGloss((math::real)0.5);
+
+	StandardSpecularDiffuseMaterial *carpetMaterial = rayTracer.getMaterialManager()->newMaterial<StandardSpecularDiffuseMaterial>();
+	carpetMaterial->setName("CarpetMaterial");
+	carpetMaterial->setEmission(math::constants::Zero);
+	carpetMaterial->setDiffuseColor(getColor(0xC3, 0x2A, 0x2A));
+	carpetMaterial->setSpecularColor(getColor(0x50, 0x50, 0x50));
+	carpetMaterial->setGloss((math::real)0.1);
+
+	StandardSpecularDiffuseMaterial *tableSteel = rayTracer.getMaterialManager()->newMaterial<StandardSpecularDiffuseMaterial>();
+	tableSteel->setName("TableSteel");
+	tableSteel->setEmission(math::constants::Zero);
+	tableSteel->setDiffuseColor(getColor(0xB0, 0xB3, 0xB7));
+	tableSteel->setSpecularColor(getColor(0xD0, 0xD0, 0xD0));
+	tableSteel->setGloss((math::real)0.7);
+
+	StandardSpecularDiffuseMaterial *tableTop = rayTracer.getMaterialManager()->newMaterial<StandardSpecularDiffuseMaterial>();
+	tableTop->setName("TableTop");
+	tableTop->setEmission(math::constants::Zero);
+	tableTop->setDiffuseColor(getColor(0x30, 0x26, 0x21));
+	tableTop->setSpecularColor(getColor(0x80, 0x80, 0x80));
+	tableTop->setGloss((math::real)0.4);
 
 	SimpleSpecularDiffuseMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleSpecularDiffuseMaterial>();
 	groundMaterial->setEmission(math::constants::Zero);
@@ -37,13 +66,15 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 
 	// Create all scene geometry
 	Mesh stressSpiders;
-	stressSpiders.loadObjFileData(&stressSpidersObj, spiderMaterial->getIndex());
+	stressSpiders.loadObjFileData(&stressSpidersObj, rayTracer.getMaterialManager(), wallMaterial->getIndex());
 	stressSpiders.setFastIntersectEnabled(false);
 	//stressSpiders.setFastIntersectRadius((math::real)2.123);
 	//stressSpiders.setFastIntersectPosition(math::loadVector(-0.06430, 1.86833, -2.96564));
 
+	std::cout << "Scene vertices/faces: " << stressSpiders.getVertexCount() << "/" << stressSpiders.getFaceCount() << std::endl;
+
 	Mesh roomShutters;
-	roomShutters.loadObjFileData(&roomShuttersObj, spiderMaterial->getIndex());
+	roomShutters.loadObjFileData(&roomShuttersObj, rayTracer.getMaterialManager(), wallMaterial->getIndex());
 	roomShutters.setFastIntersectEnabled(false);
 
 	//stressSpiders.merge(&roomShutters);
@@ -57,6 +88,9 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	stressSpidersOctree.initialize(32, math::constants::Zero);
 	stressSpidersOctree.analyze(&stressSpiders, 25);
 	//stressSpidersOctree.writeToObjFile("../../workspace/test_results/complex_room_octree.obj", nullptr);
+
+	std::cout << "Octree vertices/faces: " << stressSpidersOctree.countVertices() << "/" << stressSpidersOctree.countFaces() << std::endl;
+	std::cout << "Leaf count: " << stressSpidersOctree.countLeaves() << std::endl;
 
 	SpherePrimitive outdoorTopLightGeometry;
 	outdoorTopLightGeometry.setRadius((math::real)10.0);
@@ -77,7 +111,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	else {
 		stressSpidersObject->setGeometry(&stressSpiders);
 	}
-	stressSpidersObject->setDefaultMaterial(spiderMaterial);
+	stressSpidersObject->setDefaultMaterial(wallMaterial);
 	stressSpidersObject->setName("StressSpiders");
 
 	//SceneObject *ground = scene.createSceneObject();
@@ -149,7 +183,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 
 	// Create the raytracer
 	rayTracer.initialize(1000 * MB, 100 * MB, 12, 10000, true);
-	rayTracer.setBackgroundColor(getColor(255, 255, 255));
+	rayTracer.setBackgroundColor(getColor(512, 512, 512));
 	rayTracer.setDeterministicSeedMode(false);
 	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");
 	//rayTracer.tracePixel(583, 818, &scene, group);

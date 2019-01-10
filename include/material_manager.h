@@ -23,6 +23,7 @@ namespace manta {
 		}
 
 		Material *getMaterial(int index) const { return m_materials[index]; }
+		Material *searchByName(const std::string &name) const;
 
 	protected:
 		std::vector<Material *> m_materials;

@@ -9,6 +9,7 @@
 namespace manta {
 
 	class ObjFileLoader;
+	class MaterialManager;
 
 	struct CoarseCollisionOutput {
 		math::real depth;
@@ -58,7 +59,7 @@ namespace manta {
 
 		const PrecomputedValues *getPrecomputedValues() const { return m_precomputedValues; }
 
-		void loadObjFileData(ObjFileLoader *data, int materialIndex = -1, unsigned int globalId = 0);
+		void loadObjFileData(ObjFileLoader *data, MaterialManager *materialLibrary = nullptr, int defaultMaterialIndex = -1, unsigned int globalId = 0);
 
 		void merge(const Mesh *mesh);
 
