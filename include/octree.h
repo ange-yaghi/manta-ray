@@ -18,6 +18,12 @@ namespace manta {
 	struct OctreeBV {
 		math::Vector maxPoint;
 		math::Vector minPoint;
+		unsigned int childList;
+		unsigned int faceList;
+		unsigned short int faceCount;
+		unsigned char childCount;
+
+		char padding[5];
 	};
 
 	class Octree : public SceneGeometry {
@@ -31,6 +37,9 @@ namespace manta {
 			const Octree *leaf;
 			math::real depth;
 		};
+
+		static const int MAX_DEPTH = 50;
+
 	public:
 		Octree();
 		~Octree();
@@ -48,40 +57,36 @@ namespace manta {
 
 		void writeToObjFile(const char *fname, const LightRay *ray) const;
 
-		int countVertices() const;
 		int countFaces() const;
 		int countLeaves() const;
 
 	protected:
 	public:
-		// Internal version
-		void octreeTest(const LightRay *ray, StackList<OctreeLeafCollision> *list) const;
+		int countFaces(const OctreeBV *leaf) const;
+		int countLeaves(const OctreeBV *leaf) const;
 
-		void analyze(Mesh *mesh, Octree *parent, int maxSize);
-		void shrink();
+		bool findClosestIntersection(const OctreeBV *leaf, const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s) const;
+		void getVicinity(const OctreeBV *leaf, const math::Vector &p, math::real radius, IntersectionList *list, SceneObject *object) const;
+
+		bool analyze(Mesh *mesh, OctreeBV *leaf, int maxSize, std::vector<int> &facePool);
+		void shrink(OctreeBV *leaf);
 		void deleteChild(int childIndex);
 		void clear();
 
-		bool checkVertex(const math::Vector &v, math::real epsilon) const;
-		bool checkPlane(const math::Vector &n, math::real d) const;
-		bool checkTriangle(const math::Vector &v0, const math::Vector &v1, const math::Vector &v2) const;
+		bool checkVertex(const OctreeBV *leaf, const math::Vector &v, math::real epsilon) const;
+		bool checkPlane(const OctreeBV *leaf, const math::Vector &n, math::real d) const;
+		bool checkTriangle(const OctreeBV *leaf, const math::Vector &v0, const math::Vector &v1, const math::Vector &v2) const;
 
-		int getUsageInternal() const { return (int)m_tempFaces.size(); }
+		bool AABBIntersect(const OctreeBV *leaf, const LightRay *ray, math::real *depth) const;
+		bool AABBIntersect(const OctreeBV *leaf, const math::Vector &p, math::real radius) const;
 
-		bool AABBIntersect(const LightRay *ray, math::real *depth) const;
-		bool AABBIntersect(const math::Vector &p, math::real radius) const;
+		void writeToObjFile(const OctreeBV *leaf, std::ofstream &f, int &currentLeaf, const LightRay *ray) const;
 
-		void writeToObjFile(std::ofstream &f, int &currentLeaf, const LightRay *ray) const;
-
-		math::real m_width;
-		math::Vector m_maxPoint;
-		math::Vector m_minPoint;
-
-		std::vector<TempFace> m_tempFaces;
 		Mesh *m_mesh;
+		OctreeBV m_tree;
 
-		Octree *m_children;
-		int m_childCount;
+		std::vector<OctreeBV *>m_childLists;
+		std::vector<int *>m_faceLists;
 	};
 
 } /* namespace manta */

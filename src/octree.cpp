@@ -12,28 +12,23 @@
 #include <fstream>
 
 manta::Octree::Octree() {
-	m_children = nullptr;
 	m_mesh = nullptr;
-	m_childCount = 0;
 }
 
 manta::Octree::~Octree() {
-	assert(m_children == nullptr);
-	assert(m_mesh == nullptr);
 }
 
 void manta::Octree::initialize(math::real width, const math::Vector &position) {
-	m_width = width;
 	m_position = position;
-	m_childCount = 0;
 
-	math::real epsWidth = (math::real)(1E-4) + m_width;
+	math::real epsWidth = (math::real)(1E-4) + width;
 
-	m_maxPoint = math::add(m_position, math::loadVector(epsWidth, epsWidth, epsWidth));
-	m_minPoint = math::sub(m_position, math::loadVector(epsWidth, epsWidth, epsWidth));
+	m_tree.maxPoint = math::add(m_position, math::loadVector(epsWidth, epsWidth, epsWidth));
+	m_tree.minPoint = math::sub(m_position, math::loadVector(epsWidth, epsWidth, epsWidth));
 }
 
 void manta::Octree::destroy() {
+	/*
 	if (m_mesh != nullptr) {
 		m_mesh->destroy();
 		StandardAllocator::Global()->aligned_free(m_mesh);
@@ -45,33 +40,11 @@ void manta::Octree::destroy() {
 		}
 		StandardAllocator::Global()->aligned_free(m_children, 8);
 		m_children = nullptr;
-	}
+	}*/
 }
 
 bool manta::Octree::findClosestIntersection(const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s) const {
-	math::real currentMaxDepth = maxDepth;
-	math::real depth;
-	bool found = false;
-	if (AABBIntersect(ray, &depth)) {
-		if (depth > currentMaxDepth) return false;
-
-		if (m_mesh != nullptr) {
-			bool foundInMesh = m_mesh->findClosestIntersection(ray, intersection, minDepth, currentMaxDepth, s);
-			if (foundInMesh) {
-				found = true;
-				currentMaxDepth = intersection->depth;
-			}
-		}
-
-		for (int i = 0; i < m_childCount; i++) {
-			bool foundInChild = m_children[i].findClosestIntersection(ray, intersection, minDepth, currentMaxDepth, s);
-			if (foundInChild) {
-				found = true;
-				currentMaxDepth = intersection->depth;
-			}
-		}
-	}
-	return found;
+	return findClosestIntersection(&m_tree, ray, intersection, minDepth, maxDepth, s);
 }
 
 manta::math::Vector manta::Octree::getClosestPoint(const CoarseIntersection *hint, const math::Vector &p) const {
@@ -79,15 +52,7 @@ manta::math::Vector manta::Octree::getClosestPoint(const CoarseIntersection *hin
 }
 
 void manta::Octree::getVicinity(const math::Vector &p, math::real radius, IntersectionList *list, SceneObject *object) const {
-	if (AABBIntersect(p, radius)) {
-		if (m_mesh != nullptr) {
-			m_mesh->getVicinity(p, radius, list, object);
-		}
-
-		for (int i = 0; i < m_childCount; i++) {
-			m_children[i].getVicinity(p, radius, list, object);
-		}
-	}
+	getVicinity(&m_tree, p, radius, list, object);
 }
 
 void manta::Octree::fineIntersection(const math::Vector &r, IntersectionPoint *p, const CoarseIntersection *hint) const {
@@ -99,8 +64,17 @@ bool manta::Octree::fastIntersection(const LightRay * ray) const {
 }
 
 void manta::Octree::analyze(Mesh *mesh, int maxSize) {
-	analyze(mesh, nullptr, maxSize);
-	shrink();
+	std::vector<int> allFaces;
+	int faceCount = mesh->getFaceCount();
+
+	m_mesh = mesh;
+
+	for (int i = 0; i < faceCount; i++) {
+		allFaces.push_back(i);
+	}
+
+	analyze(mesh, &m_tree, maxSize, allFaces);
+	shrink(&m_tree);
 }
 
 void manta::Octree::writeToObjFile(const char *fname, const LightRay *ray) const {
@@ -109,64 +83,71 @@ void manta::Octree::writeToObjFile(const char *fname, const LightRay *ray) const
 	assert(f.is_open());
 
 	int currentLeaf = 0;
-	writeToObjFile(f, currentLeaf, ray);
+	writeToObjFile(&m_tree, f, currentLeaf, ray);
 
 	f.close();
 }
 
-int manta::Octree::countVertices() const {
-	int vertexCount = 0;
-	for (int i = 0; i < m_childCount; i++) {
-		vertexCount += m_children[i].countVertices();
-	}
-
-	if (m_mesh != nullptr) {
-		vertexCount += m_mesh->getVertexCount();
-	}
-
-	return vertexCount;
-}
 int manta::Octree::countFaces() const {
+	return countFaces(&m_tree);
+}
+
+int manta::Octree::countLeaves() const {
+	return countLeaves(&m_tree);
+}
+
+int manta::Octree::countFaces(const OctreeBV *leaf) const {
 	int faceCount = 0;
-	for (int i = 0; i < m_childCount; i++) {
-		faceCount += m_children[i].countFaces();
+	int childCount = leaf->childCount;
+
+	if (childCount > 0) {
+		OctreeBV *children = m_childLists[leaf->childList];
+		for (int i = 0; i < childCount; i++) {
+			faceCount += countFaces(&children[i]);
+		}
 	}
 
-	if (m_mesh != nullptr) {
-		faceCount += m_mesh->getFaceCount();
-	}
+	faceCount += leaf->faceCount;
 
 	return faceCount;
 }
 
-int manta::Octree::countLeaves() const {
+int manta::Octree::countLeaves(const OctreeBV *leaf) const {
 	int leafCount = 0;
-	for (int i = 0; i < m_childCount; i++) {
-		leafCount += m_children[i].countLeaves();
+	int childCount = leaf->childCount;
+
+	if (childCount > 0) {
+		OctreeBV *children = m_childLists[leaf->childList];
+		for (int i = 0; i < childCount; i++) {
+			leafCount += countLeaves(&children[i]);
+		}
 	}
 
 	if (m_mesh != nullptr) {
-		leafCount++;
+		leafCount += 1;
 	}
 
 	return leafCount;
 }
 
-void manta::Octree::writeToObjFile(std::ofstream &f, int &currentLeaf, const LightRay *ray) const {
+void manta::Octree::writeToObjFile(const OctreeBV *leaf, std::ofstream &f, int &currentLeaf, const LightRay *ray) const {
 	math::real depth;
-	if ((m_mesh != nullptr || m_children != nullptr) && (ray == nullptr || AABBIntersect(ray, &depth))) {
-		if (m_mesh != nullptr) f << "o " << "LEAF_" << currentLeaf << "_N" << m_mesh->getFaceCount() << std::endl;
+	if ((leaf->childCount != 0 || leaf->faceCount != 0) && (ray == nullptr || AABBIntersect(leaf, ray, &depth))) {
+		if (leaf->faceCount != 0) f << "o " << "LEAF_" << currentLeaf << "_N" << leaf->faceCount << std::endl;
 		else f << "o " << "LEAF_" << currentLeaf << "_N" << 0 << std::endl;
 
+		math::Vector minPoint = leaf->minPoint;
+		math::Vector maxPoint = leaf->maxPoint;
+
 		int vertexOffset = currentLeaf * 8 + 1;
-		f << "v " << math::getX(m_minPoint) << " " << math::getY(m_minPoint) << " " << math::getZ(m_minPoint) << std::endl;
-		f << "v " << math::getX(m_maxPoint) << " " << math::getY(m_minPoint) << " " << math::getZ(m_minPoint) << std::endl;
-		f << "v " << math::getX(m_minPoint) << " " << math::getY(m_minPoint) << " " << math::getZ(m_maxPoint) << std::endl;
-		f << "v " << math::getX(m_maxPoint) << " " << math::getY(m_minPoint) << " " << math::getZ(m_maxPoint) << std::endl;
-		f << "v " << math::getX(m_minPoint) << " " << math::getY(m_maxPoint) << " " << math::getZ(m_minPoint) << std::endl;
-		f << "v " << math::getX(m_maxPoint) << " " << math::getY(m_maxPoint) << " " << math::getZ(m_minPoint) << std::endl;
-		f << "v " << math::getX(m_minPoint) << " " << math::getY(m_maxPoint) << " " << math::getZ(m_maxPoint) << std::endl;
-		f << "v " << math::getX(m_maxPoint) << " " << math::getY(m_maxPoint) << " " << math::getZ(m_maxPoint) << std::endl;
+		f << "v " << math::getX(minPoint) << " " << math::getY(minPoint) << " " << math::getZ(minPoint) << std::endl;
+		f << "v " << math::getX(maxPoint) << " " << math::getY(minPoint) << " " << math::getZ(minPoint) << std::endl;
+		f << "v " << math::getX(minPoint) << " " << math::getY(minPoint) << " " << math::getZ(maxPoint) << std::endl;
+		f << "v " << math::getX(maxPoint) << " " << math::getY(minPoint) << " " << math::getZ(maxPoint) << std::endl;
+		f << "v " << math::getX(minPoint) << " " << math::getY(maxPoint) << " " << math::getZ(minPoint) << std::endl;
+		f << "v " << math::getX(maxPoint) << " " << math::getY(maxPoint) << " " << math::getZ(minPoint) << std::endl;
+		f << "v " << math::getX(minPoint) << " " << math::getY(maxPoint) << " " << math::getZ(maxPoint) << std::endl;
+		f << "v " << math::getX(maxPoint) << " " << math::getY(maxPoint) << " " << math::getZ(maxPoint) << std::endl;
 
 		f << "f " << vertexOffset << " " << vertexOffset + 1 << " " << vertexOffset + 3 << " " << vertexOffset + 2 << std::endl;
 		f << "f " << vertexOffset << " " << vertexOffset + 4 << " " << vertexOffset + 6 << " " << vertexOffset + 2 << std::endl;
@@ -177,32 +158,54 @@ void manta::Octree::writeToObjFile(std::ofstream &f, int &currentLeaf, const Lig
 
 		currentLeaf++;
 
-		if (m_children != nullptr) {
-			for (int i = 0; i < m_childCount; i++) {
-				m_children[i].writeToObjFile(f, currentLeaf, ray);
-			}
+		int childCount = leaf->childCount;
+		for (int i = 0; i < childCount; i++) {
+			writeToObjFile(&m_childLists[leaf->childList][i], f, currentLeaf, ray);
 		}
 	}
 }
 
-void manta::Octree::octreeTest(const LightRay *ray, StackList<OctreeLeafCollision> *list) const {
-	math::real depth;
-	if ((m_mesh != nullptr || m_children != nullptr) && AABBIntersect(ray, &depth)) {
-		if (m_mesh != nullptr) {
-			OctreeLeafCollision *leafCollision = list->newItem();
-			leafCollision->depth = depth;
-			leafCollision->leaf = this;
+bool manta::Octree::findClosestIntersection(const OctreeBV *leaf, const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s) const {
+	math::real currentMaxDepth = maxDepth;
+	math::real rayDepth;
+	
+	bool found = false;
+	if (AABBIntersect(leaf, ray, &rayDepth)) {
+		//if (rayDepth > currentMaxDepth) return false;
+
+		if (leaf->faceCount > 0) {
+			bool foundInMesh = m_mesh->findClosestIntersection(m_faceLists[leaf->faceList], leaf->faceCount, ray, intersection, minDepth, currentMaxDepth, s);
+			if (foundInMesh) {
+				found = true;
+				currentMaxDepth = intersection->depth;
+			}
 		}
 
-		if (m_children != nullptr) {
-			for (int i = 0; i < m_childCount; i++) {
-				m_children[i].octreeTest(ray, list);
+		int childCount = leaf->childCount;
+		for (int i = 0; i < childCount; i++) {
+			bool foundInChild = findClosestIntersection(&m_childLists[leaf->childList][i], ray, intersection, minDepth, currentMaxDepth, s);
+			if (foundInChild) {
+				found = true;
+				currentMaxDepth = intersection->depth;
 			}
+		}
+	}
+	return found;
+}
+
+void manta::Octree::getVicinity(const OctreeBV *leaf, const math::Vector &p, math::real radius, IntersectionList *list, SceneObject *object) const {
+	if (AABBIntersect(leaf, p, radius)) {
+		m_mesh->getVicinity(m_faceLists[leaf->faceList], leaf->faceCount, p, radius, list, object);
+
+		int childList = leaf->childList;
+		for (int i = 0; i < leaf->childCount; i++) {
+			getVicinity(&m_childLists[childList][i], p, radius, list, object);
 		}
 	}
 }
 
-void manta::Octree::analyze(Mesh *mesh, Octree *parent, int maxSize) {
+bool manta::Octree::analyze(Mesh *mesh, OctreeBV *leaf, int maxSize, std::vector<int> &facePool) {
+	/*
 	Face *faces = mesh->getFaces();
 
 	int faceCount = (parent == nullptr) ? (int)mesh->getFaceCount() : (int)parent->m_tempFaces.size();
@@ -404,11 +407,98 @@ void manta::Octree::analyze(Mesh *mesh, Octree *parent, int maxSize) {
 	if (vertexMap != nullptr) StandardAllocator::Global()->free(vertexMap, mesh->getVertexCount());
 	if (normalMap != nullptr) StandardAllocator::Global()->free(normalMap, mesh->getNormalCount());
 	if (textureMap != nullptr) StandardAllocator::Global()->free(textureMap, mesh->getTexCoordCount());
+	*/
+	Face *faces = mesh->getFaces();
+	math::Vector *vertices = mesh->getVertices();
+	int faceCount = facePool.size();
+
+	std::vector<int> enclosedFaces;
+
+	for (int i = 0; i < faceCount; i++) {
+		Face &face = faces[facePool[i]];
+		math::Vector v1, v2, v3;
+
+		v1 = vertices[face.u];
+		v2 = vertices[face.v];
+		v3 = vertices[face.w];
+
+		if (checkTriangle(leaf, v1, v2, v3)) {
+			enclosedFaces.push_back(facePool[i]);
+		}
+	}
+
+	int enclosedFaceCount = enclosedFaces.size();
+
+	math::Vector halfSize = math::mul(math::sub(leaf->maxPoint, leaf->minPoint), math::constants::Half);
+	math::Vector halfHalfSize = math::mul(halfSize, math::constants::Half);
+	math::Vector position = math::mul(math::add(leaf->maxPoint, leaf->minPoint), math::constants::Half);
+
+	if ((enclosedFaceCount <= maxSize || math::getScalar(halfSize) < 1E-4) && enclosedFaceCount > 0) {
+		int *newFaceArray = StandardAllocator::Global()->allocate<int>(enclosedFaceCount);
+		for (int i = 0; i < enclosedFaceCount; i++) {
+			newFaceArray[i] = enclosedFaces[i];
+		}
+		int index = m_faceLists.size();
+		m_faceLists.push_back(newFaceArray);
+
+		leaf->faceList = index;
+		leaf->faceCount = enclosedFaceCount;
+		leaf->childCount = 0;
+		leaf->childList = 0;
+
+		return true;
+	}
+	else if (enclosedFaceCount > 0) {
+		// Create new children
+
+		std::vector<OctreeBV> tempChildren;
+
+		for (int i = 0; i < 2; i++) {
+			for (int j = 0; j < 2; j++) {
+				for (int k = 0; k < 2; k++) {
+					OctreeBV newChild;
+					math::Vector offset = math::mul(
+						math::loadVector((2 * i - 1), (2 * j - 1), (2 * k - 1)),
+						halfHalfSize);
+					math::Vector childPosition = math::add(position, offset);
+
+					newChild.maxPoint = math::add(childPosition, halfHalfSize);
+					newChild.minPoint = math::sub(childPosition, halfHalfSize);
+
+					bool containsFaces = analyze(mesh, &newChild, maxSize, enclosedFaces);
+					if (containsFaces) {
+						tempChildren.push_back(newChild);
+					}
+				}
+			}
+		}
+
+		int childCount = tempChildren.size();
+		OctreeBV *childList = StandardAllocator::Global()->allocate<OctreeBV>(childCount);
+		int childListIndex = m_childLists.size();
+		m_childLists.push_back(childList);
+
+		for (int i = 0; i < childCount; i++) {
+			childList[i] = tempChildren[i];
+		}
+
+		leaf->faceList = 0;
+		leaf->faceCount = 0;
+		leaf->childCount = childCount;
+		leaf->childList = childListIndex;
+
+		return true;
+	}
+	else {
+		return false;
+	}
 }
 
-void manta::Octree::shrink() {
-	if (m_childCount > 0) {
-		for (int i = m_childCount - 1; i >= 0; i--) {
+void manta::Octree::shrink(OctreeBV *leaf) {
+	/*
+	int leafChildCount = leaf->childCount;
+	if (leafChildCount > 0) {
+		for (int i = leafChildCount - 1; i >= 0; i--) {
 			if (m_children[i].m_mesh == nullptr && m_children[i].m_children == nullptr) {
 				deleteChild(i);
 			}
@@ -471,10 +561,11 @@ void manta::Octree::shrink() {
 	const math::Vector eps = math::loadScalar((math::real)(1E-4));
 
 	m_maxPoint = math::add(m_maxPoint, eps);
-	m_minPoint = math::sub(m_minPoint, eps);
+	m_minPoint = math::sub(m_minPoint, eps);*/
 }
 
 void manta::Octree::deleteChild(int childIndex) {
+	/*
 	m_children[childIndex].destroy();
 
 	if (childIndex != m_childCount - 1) {
@@ -483,40 +574,46 @@ void manta::Octree::deleteChild(int childIndex) {
 	}
 
 	m_childCount--;
+	*/
 }
 
 void manta::Octree::clear() {
+	/*
 	m_childCount = 0;
 	m_children = nullptr;
 	m_mesh = nullptr;
+	*/
 }
 
-bool manta::Octree::checkVertex(const math::Vector &v, math::real epsilon) const {
-	if (math::getX(v) - math::getX(m_maxPoint) > epsilon) {
+bool manta::Octree::checkVertex(const OctreeBV *leaf, const math::Vector &v, math::real epsilon) const {
+	math::Vector dmax = math::sub(v, leaf->maxPoint);
+	if (math::getX(dmax) > epsilon) {
 		return false;
 	}
-	if (math::getY(v) - math::getY(m_maxPoint) > epsilon) {
+	if (math::getY(dmax) > epsilon) {
 		return false;
 	}
-	if (math::getZ(v) - math::getZ(m_maxPoint) > epsilon) {
+	if (math::getZ(dmax) > epsilon) {
 		return false;
 	}
 
-	if (math::getX(m_minPoint) - math::getX(v) > epsilon) {
+	math::Vector dmin = math::sub(leaf->minPoint, v);
+	if (math::getX(dmin) > epsilon) {
 		return false;
 	}
-	if (math::getY(m_minPoint) - math::getY(v) > epsilon) {
+	if (math::getY(dmin) > epsilon) {
 		return false;
 	}
-	if (math::getZ(m_minPoint) - math::getZ(v) > epsilon) {
+	if (math::getZ(dmin) > epsilon) {
 		return false;
 	}
+
 	return true;
 }
 
-bool manta::Octree::checkPlane(const math::Vector &n, math::real d) const {
-	math::Vector c = m_position;
-	math::Vector e = math::sub(m_maxPoint, c);
+bool manta::Octree::checkPlane(const OctreeBV *leaf, const math::Vector &n, math::real d) const {
+	math::Vector c = math::mul(math::add(leaf->maxPoint, leaf->minPoint), math::constants::Half);
+	math::Vector e = math::sub(leaf->maxPoint, c);
 
 	math::real r = math::getX(e) * abs(math::getX(n)) + math::getY(e) * abs(math::getY(n)) + math::getZ(e) * abs(math::getZ(n));
 	math::real s = math::getScalar(math::dot(n, c)) - d;
@@ -527,11 +624,11 @@ bool manta::Octree::checkPlane(const math::Vector &n, math::real d) const {
 #define max(a, b) ((a) > (b) ? (a) : (b))
 #define min(a, b) ((a) < (b) ? (a) : (b))
 
-bool manta::Octree::checkTriangle(const math::Vector &v0, const math::Vector &v1, const math::Vector &v2) const {
+bool manta::Octree::checkTriangle(const OctreeBV *leaf, const math::Vector &v0, const math::Vector &v1, const math::Vector &v2) const {
 	math::real p0, p1, p2, r;
 
-	math::Vector c = m_position;
-	math::Vector extents = math::mul(math::sub(m_maxPoint, m_minPoint), math::constants::Half);
+	math::Vector c = math::mul(math::add(leaf->maxPoint, leaf->minPoint), math::constants::Half);
+	math::Vector extents = math::mul(math::sub(leaf->maxPoint, leaf->minPoint), math::constants::Half);
 	math::real e0 = math::getX(extents);
 	math::real e1 = math::getY(extents);
 	math::real e2 = math::getZ(extents);
@@ -606,18 +703,18 @@ bool manta::Octree::checkTriangle(const math::Vector &v0, const math::Vector &v1
 	math::Vector planeNormal = math::cross(f0, f1);
 	math::Vector t = math::dot(planeNormal, v0_rel);
 	math::real planeD = math::getScalar(math::dot(planeNormal, v0));
-	return checkPlane(planeNormal, planeD);
+	return checkPlane(leaf, planeNormal, planeD);
 }
 
-bool manta::Octree::AABBIntersect(const LightRay *ray, math::real *depth) const {
+bool manta::Octree::AABBIntersect(const OctreeBV *leaf, const LightRay *ray, math::real *depth) const {
 	math::real tmin = (math::real)0.0;
 	math::real tmax = math::constants::REAL_MAX;
 
 	math::Vector rayDir = ray->getDirection();
 	math::Vector rayOrigin = ray->getSource();
 
-	math::Vector maxPoint = m_maxPoint; //math::add(math::loadScalar(1E-2), m_maxPoint);
-	math::Vector minPoint = m_minPoint; //math::sub(m_minPoint, math::loadScalar(1E-2));
+	math::Vector maxPoint = leaf->maxPoint; //math::add(math::loadScalar(1E-2), m_maxPoint);
+	math::Vector minPoint = leaf->minPoint; //math::sub(m_minPoint, math::loadScalar(1E-2));
 
 	for (int i = 0; i < 3; i++) {
 		if (abs(math::get(rayDir, i)) < 1E-6) {
@@ -645,10 +742,10 @@ bool manta::Octree::AABBIntersect(const LightRay *ray, math::real *depth) const 
 	return true;
 }
 
-bool manta::Octree::AABBIntersect(const math::Vector &p, math::real radius) const {
+bool manta::Octree::AABBIntersect(const OctreeBV *leaf, const math::Vector &p, math::real radius) const {
 	math::Vector v = p;
-	v = math::componentMax(v, m_minPoint);
-	v = math::componentMin(v, m_maxPoint);
+	v = math::componentMax(v, leaf->minPoint);
+	v = math::componentMin(v, leaf->maxPoint);
 
 	math::real radius2 = radius * radius;
 	if (math::getScalar(math::magnitudeSquared3(math::sub(p, v))) > radius2) {
