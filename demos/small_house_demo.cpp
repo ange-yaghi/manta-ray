@@ -47,12 +47,12 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 
 	// Create all scene geometry
 	Mesh smallHouse;
-	smallHouse.loadObjFileData(&smallHouseObj, -1, 0);
+	smallHouse.loadObjFileData(&smallHouseObj, rayTracer.getMaterialManager(), -1, 0);
 	smallHouse.setFastIntersectEnabled(false);
 	smallHouse.setFastIntersectRadius((math::real)4.0);
 
 	Mesh table;
-	table.loadObjFileData(&tableObj, tableMaterial->getIndex(), smallHouse.getFaceCount());
+	table.loadObjFileData(&tableObj, rayTracer.getMaterialManager(), tableMaterial->getIndex(), smallHouse.getFaceCount());
 	table.setFastIntersectEnabled(false);
 	table.setFastIntersectRadius((math::real)4.0);
 

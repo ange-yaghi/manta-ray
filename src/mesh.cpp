@@ -5,6 +5,8 @@
 #include <obj_file_loader.h>
 #include <intersection_list.h>
 #include <standard_allocator.h>
+#include <material.h>
+#include <material_manager.h>
 
 manta::Mesh::Mesh() {
 	m_faces = nullptr;
@@ -236,7 +238,7 @@ bool manta::Mesh::fastIntersection(const LightRay *ray) const {
 	else return true;
 }
 
-void manta::Mesh::loadObjFileData(ObjFileLoader *data, int materialIndex, unsigned int globalId) {
+void manta::Mesh::loadObjFileData(ObjFileLoader *data, MaterialManager *materialLibrary, int defaultMaterialIndex, unsigned int globalId) {
 	initialize(data->getFaceCount(), data->getVertexCount(), data->getNormalCount(), data->getTexCoordCount());
 
 	for (unsigned int i = 0; i < data->getFaceCount(); i++) {
@@ -253,8 +255,27 @@ void manta::Mesh::loadObjFileData(ObjFileLoader *data, int materialIndex, unsign
 		m_faces[i].tv = face->vt2 - 1;
 		m_faces[i].tw = face->vt3 - 1;
 
-		m_faces[i].material = materialIndex;
 		m_faces[i].globalId = globalId + i;
+
+		// Resolve the material reference
+		if (face->material == nullptr) {
+			m_faces[i].material = defaultMaterialIndex;
+		}
+		else {
+			if (materialLibrary != nullptr) {
+				Material *material = materialLibrary->searchByName(face->material->name);
+				if (material != nullptr) {
+					m_faces[i].material = material->getIndex();
+				}
+				else {
+					// TODO: raise an error or notification if this happens
+					m_faces[i].material = defaultMaterialIndex;
+				}
+			}
+			else {
+				m_faces[i].material = defaultMaterialIndex;
+			}
+		}
 	}
 
 	for (unsigned int i = 0; i < data->getVertexCount(); i++) {
