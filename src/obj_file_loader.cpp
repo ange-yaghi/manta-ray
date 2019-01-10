@@ -40,6 +40,7 @@ bool isWhitespace(const std::string &s) {
 
 manta::ObjFileLoader::ObjFileLoader() {
 	m_currentLine = 0;
+	m_currentMaterial = nullptr;
 }
 
 manta::ObjFileLoader::~ObjFileLoader() {
@@ -59,6 +60,7 @@ bool manta::ObjFileLoader::readObjFile(const char *fname) {
 
 bool manta::ObjFileLoader::readObjFile(std::istream &stream) {
 	m_currentLine = 0;
+	m_currentMaterial = nullptr;
 	
 	for (std::string line; std::getline(stream, line); ) {
 		m_currentLine++;
@@ -99,8 +101,16 @@ bool manta::ObjFileLoader::readObjFile(std::istream &stream) {
 		else if (firstWord.compare("f") == 0) {
 			// Read a face
 			ObjFace *newFace = StandardAllocator::Global()->allocate<ObjFace>();
+			newFace->material = m_currentMaterial;
 			m_faces.push_back(newFace);
 			bool result = readFace(ss, newFace);
+			if (!result) {
+				return false;
+			}
+		}
+		else if (firstWord.compare("usemtl") == 0) {
+			// Use a new material
+			bool result = readMaterial(ss);
 			if (!result) {
 				return false;
 			}
@@ -235,6 +245,27 @@ bool manta::ObjFileLoader::readFace(std::stringstream &s, ObjFace *face) {
 	return true;
 }
 
+bool manta::ObjFileLoader::readMaterial(std::stringstream &s) {
+	std::string materialName;
+	s >> materialName;
+
+	if (s.fail()) {
+		return false;
+	}
+
+	if (materialName == "None") {
+		m_currentMaterial = nullptr;
+	}
+	else {
+		ObjMaterial *newMaterial = StandardAllocator::Global()->allocate<ObjMaterial>();
+		m_materials.push_back(newMaterial);
+		newMaterial->name = materialName;
+		m_currentMaterial = newMaterial;
+	}
+	
+	return true;
+}
+
 void manta::ObjFileLoader::destroy() {
 	for (std::vector<math::Vector3 *>::iterator it = m_vertices.begin(); it != m_vertices.end(); ++it) {
 		StandardAllocator::Global()->free(*it);
@@ -249,6 +280,10 @@ void manta::ObjFileLoader::destroy() {
 	}
 
 	for (std::vector<ObjFace *>::iterator it = m_faces.begin(); it != m_faces.end(); ++it) {
+		StandardAllocator::Global()->free(*it);
+	}
+
+	for (std::vector<ObjMaterial *>::iterator it = m_materials.begin(); it != m_materials.end(); ++it) {
 		StandardAllocator::Global()->free(*it);
 	}
 }

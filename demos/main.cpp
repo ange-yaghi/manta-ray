@@ -3,7 +3,7 @@
 using namespace manta_demo;
 
 int main() {
-	complexRoomDemo(1, 1024 * 2, 768 * 2);
+	complexRoomDemo(2, 1024 * 2, 768 * 2);
 	//penDemo(20, 1024 * 2, 768 * 2);
 	//stressSpidersDemo(10, 1024 * 2, 768 * 2); // 871 samples
 	//simpleRoomDemo(1, 1024*2, 768*2); //1024, 768

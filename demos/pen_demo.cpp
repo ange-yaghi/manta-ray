@@ -54,10 +54,10 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 
 	// Create all scene geometry
 	Mesh penChrome;
-	penChrome.loadObjFileData(&penChromeObj, chrome->getIndex(), 0);
+	penChrome.loadObjFileData(&penChromeObj, rayTracer.getMaterialManager(), chrome->getIndex(), 0);
 
 	Mesh penPainted;
-	penPainted.loadObjFileData(&penPaintedObj, paint->getIndex(), penChrome.getFaceCount());
+	penPainted.loadObjFileData(&penPaintedObj, rayTracer.getMaterialManager(), paint->getIndex(), penChrome.getFaceCount());
 
 	// Destroy file loaders
 	penChromeObj.destroy();

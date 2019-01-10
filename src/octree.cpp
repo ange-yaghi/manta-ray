@@ -114,6 +114,44 @@ void manta::Octree::writeToObjFile(const char *fname, const LightRay *ray) const
 	f.close();
 }
 
+int manta::Octree::countVertices() const {
+	int vertexCount = 0;
+	for (int i = 0; i < m_childCount; i++) {
+		vertexCount += m_children[i].countVertices();
+	}
+
+	if (m_mesh != nullptr) {
+		vertexCount += m_mesh->getVertexCount();
+	}
+
+	return vertexCount;
+}
+int manta::Octree::countFaces() const {
+	int faceCount = 0;
+	for (int i = 0; i < m_childCount; i++) {
+		faceCount += m_children[i].countFaces();
+	}
+
+	if (m_mesh != nullptr) {
+		faceCount += m_mesh->getFaceCount();
+	}
+
+	return faceCount;
+}
+
+int manta::Octree::countLeaves() const {
+	int leafCount = 0;
+	for (int i = 0; i < m_childCount; i++) {
+		leafCount += m_children[i].countLeaves();
+	}
+
+	if (m_mesh != nullptr) {
+		leafCount++;
+	}
+
+	return leafCount;
+}
+
 void manta::Octree::writeToObjFile(std::ofstream &f, int &currentLeaf, const LightRay *ray) const {
 	math::real depth;
 	if ((m_mesh != nullptr || m_children != nullptr) && (ray == nullptr || AABBIntersect(ray, &depth))) {

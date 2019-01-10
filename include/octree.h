@@ -15,6 +15,11 @@ namespace manta {
 	class SceneObject;
 	class StackAllocator;
 
+	struct OctreeBV {
+		math::Vector maxPoint;
+		math::Vector minPoint;
+	};
+
 	class Octree : public SceneGeometry {
 	public:
 		struct TempFace{
@@ -42,6 +47,10 @@ namespace manta {
 		void analyze(Mesh *mesh, int maxSize);
 
 		void writeToObjFile(const char *fname, const LightRay *ray) const;
+
+		int countVertices() const;
+		int countFaces() const;
+		int countLeaves() const;
 
 	protected:
 	public:

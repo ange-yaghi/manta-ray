@@ -13,6 +13,7 @@
 #include <material.h>
 #include <simple_diffuse_material.h>
 #include <simple_specular_diffuse_material.h>
+#include <standard_specular_diffuse_material.h>
 #include <ray_tracer.h>
 #include <ss_camera_ray_emitter_group.h>
 #include <ss_camera_ray_emitter.h>
