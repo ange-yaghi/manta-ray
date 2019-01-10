@@ -602,6 +602,42 @@ inline bool manta::Mesh::detectIntersection(int faceIndex, math::real u, math::r
 	return true;
 }
 
+bool manta::Mesh::findClosestIntersection(int *faceList, int faceCount, const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s) const {
+	math::Vector rayDir = ray->getDirection();
+	math::Vector raySource = ray->getSource();
+
+	CoarseCollisionOutput output;
+	math::real currentMaxDepth = maxDepth;
+	bool found = false;
+	for (int i = 0; i < faceCount; i++) {
+		if (detectIntersection(faceList[i], minDepth, currentMaxDepth, rayDir, raySource, 1E-6, &output)) {
+			intersection->depth = output.depth;
+			intersection->locationHint = faceList[i]; // Face index
+			intersection->sceneGeometry = this;
+			intersection->globalHint = m_faces[faceList[i]].globalId;
+
+			currentMaxDepth = output.depth;
+			found = true;
+		}
+	}
+
+	return found;
+}
+
+void manta::Mesh::getVicinity(int *faceList, int faceCount, const math::Vector &p, math::real radius, IntersectionList *list, SceneObject *object) const {
+	for (int i = 0; i < faceCount; i++) {
+		if (testClosestPointOnFace(faceList[i], radius, p)) {
+			CoarseIntersection *intersection = list->newIntersection();
+			intersection->depth = 0.0;
+			intersection->locationHint = faceList[i]; // Face index
+			intersection->sceneGeometry = this;
+			intersection->globalHint = m_faces[faceList[i]].globalId;
+			intersection->valid = true;
+			intersection->sceneObject = object;
+		}
+	}
+}
+
 void manta::Mesh::computePlane(const math::Vector &n, const math::Vector &p, Plane *plane) const {
 	plane->normal = math::normalize(n);
 	plane->d = math::getScalar(math::dot(plane->normal, p));

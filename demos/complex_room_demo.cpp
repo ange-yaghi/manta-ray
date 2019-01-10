@@ -89,7 +89,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	stressSpidersOctree.analyze(&stressSpiders, 25);
 	//stressSpidersOctree.writeToObjFile("../../workspace/test_results/complex_room_octree.obj", nullptr);
 
-	std::cout << "Octree vertices/faces: " << stressSpidersOctree.countVertices() << "/" << stressSpidersOctree.countFaces() << std::endl;
+	std::cout << "Octree faces: " << stressSpidersOctree.countFaces() << std::endl;
 	std::cout << "Leaf count: " << stressSpidersOctree.countLeaves() << std::endl;
 
 	SpherePrimitive outdoorTopLightGeometry;

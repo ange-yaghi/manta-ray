@@ -67,7 +67,13 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
 	Octree octree;
 	octree.initialize(100.0, math::loadVector(0, 0, 0));
-	octree.analyze(&boxCity, 4);
+	octree.analyze(&boxCity, 25);
+
+	octree.writeToObjFile("../../workspace/test_results/box_city_octree.obj", nullptr);
+
+	std::cout << "Scene vertices/faces: " << boxCity.getVertexCount() << "/" << boxCity.getFaceCount() << std::endl;
+	std::cout << "Octree faces: " << octree.countFaces() << std::endl;
+	std::cout << "Leaf count: " << octree.countLeaves() << std::endl;
 
 	constexpr bool useOctree = true;
 
