@@ -25,7 +25,11 @@ void manta::StandardSpecularDiffuseMaterial::integrateRay(LightRay *ray, const R
 		BatchedMonteCarloEmitter *emitter = rayEmitter->m_simpleRayEmitter;
 
 		if (emitter->getMeta() == 0) {
-			addedLight = math::add(addedLight, math::mul(m_specularColor, emitter->getIntensity()));
+			addedLight = math::add(addedLight, math::mul(m_diffuseColor, emitter->getIntensity()));
+
+			//ray->setIntensity(
+			//	math::add(math::mul(emitter->getNormal(), math::constants::Half), math::loadVector(0.5, 0.5, 0.5))
+			//);
 		}
 		else if (emitter->getMeta() == 1) {
 			math::Vector diffuseColor = m_diffuseColor;
@@ -45,7 +49,7 @@ void manta::StandardSpecularDiffuseMaterial::integrateRay(LightRay *ray, const R
 			//if (math::getX(diffuse->getAverageIntensity()) > 0.5) {
 
 				//ray->setIntensity(
-				//	math::add(math::mul(diffuse->getNormal(), math::constants::Half), math::loadVector(0.5, 0.5, 0.5))
+				//	math::add(math::mul(emitter->getNormal(), math::constants::Half), math::loadVector(0.5, 0.5, 0.5))
 				//);
 
 				//std::cout << math::getX(diffuse->getRays()[0].getDirection()) << ", " << math::getY(diffuse->getRays()[0].getDirection()) << ", " << math::getZ(diffuse->getRays()[0].getDirection());
@@ -74,7 +78,7 @@ manta::RayEmitterGroup * manta::StandardSpecularDiffuseMaterial::generateRayEmit
 
 	math::real r = math::uniformRandom();
 
-	if (r >= (math::real)0.2) {
+	if (r >= m_specular) {
 		// Diffuse reflection
 		newEmitter->m_simpleRayEmitter->setNormal(intersectionPoint->m_vertexNormal);
 		newEmitter->m_simpleRayEmitter->setIncident(ray->getDirection());
@@ -85,7 +89,13 @@ manta::RayEmitterGroup * manta::StandardSpecularDiffuseMaterial::generateRayEmit
 	}
 	else {
 		// Specular reflection
-		newEmitter->m_simpleRayEmitter->setNormal(intersectionPoint->m_vertexNormal);
+		math::Vector perturb = intersectionPoint->m_vertexNormal;
+		math::Vector n_dot_d = math::dot(intersectionPoint->m_vertexNormal, ray->getDirection());
+		perturb = math::mul(perturb, math::add(n_dot_d, n_dot_d)); // Multiply by 2
+		math::Vector normal = math::sub(perturb, ray->getDirection());
+		//normal = math::negate(math::normalize(normal));
+
+		newEmitter->m_simpleRayEmitter->setNormal(normal);
 		newEmitter->m_simpleRayEmitter->setIncident(ray->getDirection());
 		newEmitter->m_simpleRayEmitter->setPosition(intersectionPoint->m_position);
 		newEmitter->m_simpleRayEmitter->setSampleCount(1);
