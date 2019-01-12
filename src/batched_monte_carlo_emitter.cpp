@@ -21,15 +21,15 @@ void manta::BatchedMonteCarloEmitter::generateRays() {
 		realNormal = math::negate(m_normal);
 	}
 
-	math::Vector preferredEmission = realNormal;
+	math::Vector preferredEmission = m_normal;
 
-	if (m_gloss >= 1E-5) {
-		math::Vector perturb = realNormal;
-		math::Vector n_dot_d = math::dot(realNormal, m_incidentDirection);
-		perturb = math::mul(perturb, math::add(n_dot_d, n_dot_d)); // Multiply by 2
-		preferredEmission = math::sub(perturb, m_incidentDirection);
-		preferredEmission = math::negate(math::normalize(preferredEmission));
-	}
+	//if (m_gloss >= 1E-5) {
+	//	math::Vector perturb = realNormal;
+	//	math::Vector n_dot_d = math::dot(realNormal, m_incidentDirection);
+	//	perturb = math::mul(perturb, math::add(n_dot_d, n_dot_d)); // Multiply by 2
+	//	preferredEmission = math::sub(perturb, m_incidentDirection);
+	//	preferredEmission = math::negate(math::normalize(preferredEmission));
+	//}
 
 	if (m_gloss + 1E-5 >= (math::real)1.0) {
 		// Very simple pure specular emission
@@ -52,7 +52,7 @@ void manta::BatchedMonteCarloEmitter::generateRays() {
 
 		for (int i = 0; i < m_samples; i++) {
 			math::real r1 = math::uniformRandom(math::constants::TWO_PI);
-			math::real r2 = math::uniformRandom();
+			math::real r2 = pow(math::uniformRandom(), 1 - m_gloss);
 			math::real r2s = (math::real)sqrt(r2);
 
 			math::Vector diffuse = math::add(
@@ -73,7 +73,7 @@ void manta::BatchedMonteCarloEmitter::generateRays() {
 			d = math::normalize(d);
 
 			LightRay &ray = getRays()[i];
-			ray.setDirection(d);
+			ray.setDirection(diffuse);
 			ray.setSource(getPosition());
 			ray.setIntensity(math::constants::Zero);
 		}

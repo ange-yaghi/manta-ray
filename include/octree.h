@@ -65,7 +65,7 @@ namespace manta {
 		int countFaces(const OctreeBV *leaf) const;
 		int countLeaves(const OctreeBV *leaf) const;
 
-		bool findClosestIntersection(const OctreeBV *leaf, const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s) const;
+		bool findClosestIntersection(const OctreeBV *leaf, const LightRay *ray, const math::Vector &ood, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s, bool skip=false) const;
 		void getVicinity(const OctreeBV *leaf, const math::Vector &p, math::real radius, IntersectionList *list, SceneObject *object) const;
 
 		bool analyze(Mesh *mesh, OctreeBV *leaf, int maxSize, std::vector<int> &facePool);
@@ -77,16 +77,19 @@ namespace manta {
 		bool checkPlane(const OctreeBV *leaf, const math::Vector &n, math::real d) const;
 		bool checkTriangle(const OctreeBV *leaf, const math::Vector &v0, const math::Vector &v1, const math::Vector &v2) const;
 
-		bool AABBIntersect(const OctreeBV *leaf, const LightRay *ray, math::real *depth) const;
+		bool AABBIntersect(const OctreeBV *leaf, const LightRay *ray, math::real *depth, const math::Vector &ood) const;
 		bool AABBIntersect(const OctreeBV *leaf, const math::Vector &p, math::real radius) const;
 
-		void writeToObjFile(const OctreeBV *leaf, std::ofstream &f, int &currentLeaf, const LightRay *ray) const;
+		void writeToObjFile(const OctreeBV *leaf, std::ofstream &f, int &currentLeaf, const LightRay *ray, const math::Vector &ood) const;
 
 		Mesh *m_mesh;
 		OctreeBV m_tree;
 
-		std::vector<OctreeBV *>m_childLists;
-		std::vector<int *>m_faceLists;
+		std::vector<OctreeBV *>m_childListsTemp;
+		std::vector<int *>m_faceListsTemp;
+
+		OctreeBV **m_childLists;
+		int **m_faceLists;
 	};
 
 } /* namespace manta */

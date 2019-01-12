@@ -17,8 +17,8 @@ namespace manta {
 
 		virtual void integrateRay(LightRay *ray, const RayEmitterGroup *_rayEmitter) const;
 
-		void setSpecularColor(const math::Vector &specular) { m_specularColor = specular; }
-		math::Vector getSpecularColor() const { return m_specularColor; }
+		void setSpecular(math::real specular) { m_specular = specular; }
+		math::real getSpecular() const { return m_specular; }
 
 		void setDiffuseColor(const math::Vector &diffuse) { m_diffuseColor = diffuse; }
 		math::Vector getDiffuseColor() const { return m_diffuseColor; }
@@ -32,8 +32,8 @@ namespace manta {
 	protected:
 		int m_maxDegree;
 		math::real m_gloss;
+		math::real m_specular;
 
-		math::Vector m_specularColor;
 		math::Vector m_diffuseColor;
 
 		TextureMap *m_diffuseMap;

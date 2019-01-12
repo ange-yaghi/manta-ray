@@ -244,10 +244,10 @@ void manta::RayTracer::depthCull(const Scene *scene, const LightRay *ray, SceneO
 			SceneObject *object = scene->getSceneObject(i);
 			SceneGeometry *geometry = object->getGeometry();
 
-			geometry->getVicinity(position, (math::real)1E-2, &list, object);
+			//geometry->getVicinity(position, (math::real)1E-2, &list, object);
 		}
 
-		refineContact(ray, &list, point, closestObject, s);
+		refineContact(ray, closestIntersection.depth, &list, point, closestObject, s);
 
 		//if (conflicts < 2) {
 		//	point->m_valid = false;
@@ -262,8 +262,8 @@ void manta::RayTracer::depthCull(const Scene *scene, const LightRay *ray, SceneO
 	list.destroy();
 }
 
-void manta::RayTracer::refineContact(const LightRay *ray, IntersectionList *list, IntersectionPoint *point, SceneObject **closestObject, StackAllocator *s) const {
-	int conflicts = list->getIntersectionCount();
+void manta::RayTracer::refineContact(const LightRay *ray, math::real depth, IntersectionList *list, IntersectionPoint *point, SceneObject **closestObject, StackAllocator *s) const {
+	/*int conflicts = list->getIntersectionCount();
 	int contactCount = list->getIntersectionCount();
 	for (int i = 0; i < contactCount; i++) {
 		CoarseIntersection *ci = list->getIntersection(i);
@@ -278,7 +278,7 @@ void manta::RayTracer::refineContact(const LightRay *ray, IntersectionList *list
 				}
 			}
 		}
-	}
+	}*/
 
 	// Determine which contact is the correct one
 	constexpr int samples = 10;
@@ -323,9 +323,13 @@ void manta::RayTracer::refineContact(const LightRay *ray, IntersectionList *list
 	if (f != nullptr) f->sceneGeometry->fineIntersection(point->m_position, point, f);
 
 	// Simple bias
-	math::Vector dist = math::sub(point->m_position, ray->getSource());
-	dist = math::componentMin(math::magnitude(dist), math::loadScalar(1E-3));
-	point->m_position = math::sub(point->m_position, math::mul(ray->getDirection(), dist));
+	math::real d = depth;
+	d -= 5E-3;
+	if (d < (math::real)0.0) {
+		d = (math::real)0.0;
+	}
+	math::Vector dist = math::loadScalar(d);
+	point->m_position = math::add(ray->getSource(), math::mul(ray->getDirection(), dist));
 
 	if (math::getScalar(math::dot(point->m_faceNormal, ray->getDirection())) > 0.0) {
 		point->m_faceNormal = math::negate(point->m_faceNormal);

@@ -180,11 +180,12 @@ void manta::Mesh::fineIntersection(const math::Vector &r, IntersectionPoint *p, 
 
 	math::Vector vertexNormal;
 	math::Vector textureCoordinates;
+	const Face &face = m_faces[faceIndex];
 
 	if (m_perVertexNormals) {
-		math::Vector normalU = m_normals[m_faces[faceIndex].nu];
-		math::Vector normalV = m_normals[m_faces[faceIndex].nv];
-		math::Vector normalW = m_normals[m_faces[faceIndex].nw];
+		math::Vector normalU = m_normals[face.nu];
+		math::Vector normalV = m_normals[face.nv];
+		math::Vector normalW = m_normals[face.nw];
 
 		vertexNormal = math::add(math::mul(normalU, math::loadScalar(u)), math::mul(normalV, math::loadScalar(v)));
 		vertexNormal = math::add(vertexNormal, math::mul(normalW, math::loadScalar(w)));
@@ -194,9 +195,9 @@ void manta::Mesh::fineIntersection(const math::Vector &r, IntersectionPoint *p, 
 	}
 
 	if (m_useTextureCoords) {
-		math::Vector texU = m_textureCoords[m_faces[faceIndex].tu];
-		math::Vector texV = m_textureCoords[m_faces[faceIndex].tv];
-		math::Vector texW = m_textureCoords[m_faces[faceIndex].tw];
+		math::Vector texU = m_textureCoords[face.tu];
+		math::Vector texV = m_textureCoords[face.tv];
+		math::Vector texW = m_textureCoords[face.tw];
 
 		textureCoordinates = math::add(math::mul(texU, math::loadScalar(u)), math::mul(texV, math::loadScalar(v)));
 		textureCoordinates = math::add(textureCoordinates, math::mul(texW, math::loadScalar(w)));
@@ -209,7 +210,7 @@ void manta::Mesh::fineIntersection(const math::Vector &r, IntersectionPoint *p, 
 	p->m_faceNormal = cache.normal;
 	p->m_position = r;
 	p->m_textureCoodinates = textureCoordinates;
-	p->m_material = m_faces[faceIndex].material;
+	p->m_material = face.material;
 }
 
 bool manta::Mesh::fastIntersection(const LightRay *ray) const {
