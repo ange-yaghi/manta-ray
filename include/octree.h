@@ -70,8 +70,8 @@ namespace manta {
 
 		bool analyze(Mesh *mesh, OctreeBV *leaf, int maxSize, std::vector<int> &facePool);
 		void shrink(OctreeBV *leaf);
-		void deleteChild(int childIndex);
-		void clear();
+
+		void destroyBV(const OctreeBV *bv);
 
 		bool checkVertex(const OctreeBV *leaf, const math::Vector &v, math::real epsilon) const;
 		bool checkPlane(const OctreeBV *leaf, const math::Vector &n, math::real d) const;
@@ -90,6 +90,9 @@ namespace manta {
 
 		OctreeBV **m_childLists;
 		int **m_faceLists;
+
+		int m_childListsCount;
+		int m_faceListsCount;
 	};
 
 } /* namespace manta */
