@@ -6,7 +6,7 @@
 
 #include <iostream>
 
-#define STD_ALLOC_ENABLE_LEDGER true
+#define STD_ALLOC_ENABLE_LEDGER (true)
 
 namespace manta {
 
@@ -57,10 +57,6 @@ namespace manta {
 			m_allocationLedger--;
 			assert(m_allocationLedger >= 0);
 #endif /* STD_ALLOC_ENABLE_LEDGER */
-			if (memory == nullptr) {
-				std::cout << "hey1 " << n << std::endl;
-			}
-
 			assert(m_currentUsage >= sizeof(t_alloc) * n);
 
 			m_currentUsage -= sizeof(t_alloc) * n;
@@ -79,11 +75,6 @@ namespace manta {
 			m_allocationLedger--;
 			assert(m_allocationLedger >= 0);
 #endif /* STD_ALLOC_ENABLE_LEDGER */
-			if (memory == nullptr) {
-				int a = 0;
-				std::cout << "hey2 " << n << std::endl;
-			}
-
 			assert(m_currentUsage >= sizeof(t_alloc));
 
 			m_currentUsage -= sizeof(t_alloc) * n;

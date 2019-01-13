@@ -13,6 +13,9 @@
 
 manta::Octree::Octree() {
 	m_mesh = nullptr;
+
+	m_childListsCount = 0;
+	m_faceListsCount = 0;
 }
 
 manta::Octree::~Octree() {
@@ -28,19 +31,10 @@ void manta::Octree::initialize(math::real width, const math::Vector &position) {
 }
 
 void manta::Octree::destroy() {
-	/*
-	if (m_mesh != nullptr) {
-		m_mesh->destroy();
-		StandardAllocator::Global()->aligned_free(m_mesh);
-		m_mesh = nullptr;
-	}
-	if (m_children != nullptr) {
-		for (int i = 0; i < m_childCount; i++) {
-			m_children[i].destroy();
-		}
-		StandardAllocator::Global()->aligned_free(m_children, 8);
-		m_children = nullptr;
-	}*/
+	destroyBV(&m_tree);
+
+	StandardAllocator::Global()->free(m_childLists, m_childListsCount);
+	StandardAllocator::Global()->free(m_faceLists, m_faceListsCount);
 }
 
 bool manta::Octree::findClosestIntersection(const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s) const {
@@ -91,6 +85,9 @@ void manta::Octree::analyze(Mesh *mesh, int maxSize) {
 	for (int i = 0; i < faceListsCount; i++) {
 		m_faceLists[i] = m_faceListsTemp[i];
 	}
+
+	m_childListsCount = childListsCount;
+	m_faceListsCount = faceListsCount;
 }
 
 void manta::Octree::writeToObjFile(const char *fname, const LightRay *ray) const {
@@ -224,209 +221,6 @@ void manta::Octree::getVicinity(const OctreeBV *leaf, const math::Vector &p, mat
 }
 
 bool manta::Octree::analyze(Mesh *mesh, OctreeBV *leaf, int maxSize, std::vector<int> &facePool) {
-	/*
-	Face *faces = mesh->getFaces();
-
-	int faceCount = (parent == nullptr) ? (int)mesh->getFaceCount() : (int)parent->m_tempFaces.size();
-
-	for (int i = 0; i < faceCount; i++) {
-		int faceIndex = (parent == nullptr) ? i : parent->m_tempFaces[i].face;
-
-		math::Vector v1 = mesh->getVertices()[faces[faceIndex].u];
-		math::Vector v2 = mesh->getVertices()[faces[faceIndex].v];
-		math::Vector v3 = mesh->getVertices()[faces[faceIndex].w];
-
-		//if (!checkVertex(v1, 1E-5)) continue;
-		//if (!checkVertex(v2, 1E-5)) continue;
-		//if (!checkVertex(v3, 1E-5)) continue;
-
-		if (!checkTriangle(v1, v2, v3))
-			continue;
-		else if (m_width < 1e-6) {
-			checkTriangle(v1, v2, v3);
-		}
-
-		TempFace f;
-		f.face = faceIndex;
-		f.presentInChild = false;
-		m_tempFaces.push_back(f);
-		if (parent != nullptr) {
-			parent->m_tempFaces[i].presentInChild = true;
-		}
-	}
-
-	if (getUsageInternal() > maxSize && m_width > 1E-4) {
-		m_children = StandardAllocator::Global()->allocate<Octree>(8, 16);
-		m_childCount = 8;
-		for (int i = 0; i < 2; i++) {
-			for (int j = 0; j < 2; j++) {
-				for (int k = 0; k < 2; k++) {
-					math::real halfWidth = m_width / (math::real)2.0;
-					math::Vector offset = math::loadVector((2 * i - 1) * halfWidth, (2 * j - 1) * halfWidth, (2 * k - 1) * halfWidth);
-					m_children[i * (2 * 2) + j * 2 + k].initialize(halfWidth, math::add(m_position, offset));
-				}
-			}
-		}
-
-		for (int i = 0; i < 8; i++) {
-			m_children[i].analyze(mesh, this, maxSize);
-		}
-	}
-
-	int *vertexMap = nullptr;
-	int *normalMap = nullptr;
-	int *textureMap = nullptr;
-	int internalFaceCount = (int)m_tempFaces.size();
-	int realVertexCount = 0;
-	int realNormalCount = 0;
-	int realTextureCount = 0;
-	int realFaceCount = 0;
-
-	if (getUsageInternal() > 0) {
-		vertexMap = StandardAllocator::Global()->allocate<int>(mesh->getVertexCount());
-		if (mesh->getNormalCount() > 0) normalMap = StandardAllocator::Global()->allocate<int>(mesh->getNormalCount());
-		if (mesh->getTexCoordCount() > 0) textureMap = StandardAllocator::Global()->allocate<int>(mesh->getTexCoordCount());
-		for (int i = 0; i < mesh->getVertexCount(); i++) vertexMap[i] = -1;
-		for (int i = 0; i < mesh->getNormalCount(); i++) normalMap[i] = -1;
-		for (int i = 0; i < mesh->getTexCoordCount(); i++) textureMap[i] = -1;
-
-		for (int i = 0; i < internalFaceCount; i++) {
-			if (!m_tempFaces[i].presentInChild) {
-				Face *face = &mesh->getFaces()[m_tempFaces[i].face];
-				int u = face->u;
-				int v = face->v;
-				int w = face->w;
-
-				if (normalMap != nullptr) {
-					int nu = face->nu;
-					int nv = face->nv;
-					int nw = face->nw;
-
-					if (normalMap[nu] == -1) {
-						normalMap[nu] = realNormalCount;
-						realNormalCount++;
-					}
-					if (normalMap[nv] == -1) {
-						normalMap[nv] = realNormalCount;
-						realNormalCount++;
-					}
-					if (normalMap[nw] == -1) {
-						normalMap[nw] = realNormalCount;
-						realNormalCount++;
-					}
-				}
-
-				if (textureMap != nullptr) {
-					int tu = face->tu;
-					int tv = face->tv;
-					int tw = face->tw;
-
-					if (tu != -1 && textureMap[tu] == -1) {
-						textureMap[tu] = realTextureCount;
-						realTextureCount++;
-					}
-					if (tv != -1 && textureMap[tv] == -1) {
-						textureMap[tv] = realTextureCount;
-						realTextureCount++;
-					}
-					if (tw != -1 && textureMap[tw] == -1) {
-						textureMap[tw] = realTextureCount;
-						realTextureCount++;
-					}
-				}
-
-				if (vertexMap[u] == -1) {
-					vertexMap[u] = realVertexCount;
-					realVertexCount++;
-				}
-				if (vertexMap[v] == -1) {
-					vertexMap[v] = realVertexCount;
-					realVertexCount++;
-				}
-				if (vertexMap[w] == -1) {
-					vertexMap[w] = realVertexCount;
-					realVertexCount++;
-				}
-				realFaceCount++;
-			}
-		}
-	}
-
-	if (realFaceCount > 0) {
-		m_mesh = StandardAllocator::Global()->allocate<Mesh>(1, 16);
-		m_mesh->initialize(realFaceCount, realVertexCount, realNormalCount, realTextureCount);
-		m_mesh->setPerVertexNormals(realNormalCount > 0);
-		m_mesh->setUseTexCoords(realTextureCount > 0);
-
-		math::Vector *newVertices = m_mesh->getVertices();
-		math::Vector *newNormals = m_mesh->getNormals();
-		math::Vector *newTexCoords = m_mesh->getTexCoords();
-		Face *newFaces = m_mesh->getFaces();
-
-		int currentFace = 0;
-		for (int i = 0; i < internalFaceCount; i++) {
-			if (!m_tempFaces[i].presentInChild) {
-				Face *face = &mesh->getFaces()[m_tempFaces[i].face];
-				int u = face->u;
-				int v = face->v;
-				int w = face->w;
-
-				if (normalMap != nullptr) {
-					int nu = face->nu;
-					int nv = face->nv;
-					int nw = face->nw;
-
-					newNormals[normalMap[nu]] = mesh->getNormals()[nu];
-					newNormals[normalMap[nv]] = mesh->getNormals()[nv];
-					newNormals[normalMap[nw]] = mesh->getNormals()[nw];
-
-					newFaces[currentFace].nu = normalMap[nu];
-					newFaces[currentFace].nv = normalMap[nv];
-					newFaces[currentFace].nw = normalMap[nw];
-				}
-
-				if (textureMap != nullptr) {
-					int tu = face->tu;
-					int tv = face->tv;
-					int tw = face->tw;
-
-					if (tu != -1) newTexCoords[textureMap[tu]] = mesh->getTexCoords()[tu];
-					if (tv != -1) newTexCoords[textureMap[tv]] = mesh->getTexCoords()[tv];
-					if (tw != -1) newTexCoords[textureMap[tw]] = mesh->getTexCoords()[tw];
-
-					if (tu != -1) newFaces[currentFace].tu = textureMap[tu];
-					else newFaces[currentFace].tu = -1;
-
-					if (tv != -1) newFaces[currentFace].tv = textureMap[tv];
-					else newFaces[currentFace].tv = -1;
-
-					if (tw != -1) newFaces[currentFace].tw = textureMap[tw];
-					else newFaces[currentFace].tw = -1;
-				}
-
-				newVertices[vertexMap[u]] = mesh->getVertices()[u];
-				newVertices[vertexMap[v]] = mesh->getVertices()[v];
-				newVertices[vertexMap[w]] = mesh->getVertices()[w];
-
-				newFaces[currentFace].u = vertexMap[u];
-				newFaces[currentFace].v = vertexMap[v];
-				newFaces[currentFace].w = vertexMap[w];
-				
-				newFaces[currentFace].material = face->material;
-				newFaces[currentFace].globalId = face->globalId;
-
-				currentFace++;
-			}
-		}
-		m_mesh->precomputeValues();
-	}
-
-	m_tempFaces.clear();
-
-	if (vertexMap != nullptr) StandardAllocator::Global()->free(vertexMap, mesh->getVertexCount());
-	if (normalMap != nullptr) StandardAllocator::Global()->free(normalMap, mesh->getNormalCount());
-	if (textureMap != nullptr) StandardAllocator::Global()->free(textureMap, mesh->getTexCoordCount());
-	*/
 	Face *faces = mesh->getFaces();
 	math::Vector *vertices = mesh->getVertices();
 	int faceCount = facePool.size();
@@ -597,25 +391,19 @@ void manta::Octree::shrink(OctreeBV *leaf) {
 	leaf->minPoint = math::sub(leaf->minPoint, eps);
 }
 
-void manta::Octree::deleteChild(int childIndex) {
-	/*
-	m_children[childIndex].destroy();
-
-	if (childIndex != m_childCount - 1) {
-		m_children[childIndex] = m_children[m_childCount - 1];
-		m_children[m_childCount - 1].clear();
+void manta::Octree::destroyBV(const OctreeBV *bv) {
+	OctreeBV *childList = m_childLists[bv->childList];
+	for (int i = 0; i < bv->childCount; i++) {
+		destroyBV(&childList[i]);
 	}
 
-	m_childCount--;
-	*/
-}
+	if (bv->childCount > 0) {
+		StandardAllocator::Global()->aligned_free(childList, bv->childCount);
+	}
 
-void manta::Octree::clear() {
-	/*
-	m_childCount = 0;
-	m_children = nullptr;
-	m_mesh = nullptr;
-	*/
+	if (bv->faceCount > 0) {
+		StandardAllocator::Global()->free(m_faceLists[bv->faceList], bv->faceCount);
+	}
 }
 
 bool manta::Octree::checkVertex(const OctreeBV *leaf, const math::Vector &v, math::real epsilon) const {

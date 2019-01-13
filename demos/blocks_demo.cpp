@@ -141,7 +141,7 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 		math::real focusDistance = 22.0;
 
 		Aperture *aperture = lens.getAperture();
-		aperture->setSize((math::real)0.18);
+		aperture->setRadius((math::real)0.18);
 		lens.setFocus(focusDistance);
 
 		LensCameraRayEmitterGroup *camera = new LensCameraRayEmitterGroup;
