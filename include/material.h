@@ -29,7 +29,7 @@ namespace manta {
 		std::string getName() const { return m_name; }
 
 		RayEmitterGroup *generateRayEmitterGroup(const LightRay *ray, const IntersectionPoint *intersectionPoint, int degree, StackAllocator *stackAllocator = nullptr) const;
-		virtual void integrateRay(LightRay *ray, const RayEmitterGroup *_rayEmitter) const;
+		virtual void integrateRay(LightRay *ray, const RayEmitterGroup *_rayEmitter, const IntersectionPoint *intersectionPoint) const;
 		void destroyEmitterGroup(RayEmitterGroup *group, StackAllocator *stackAllocator = nullptr);
 
 		void setIndex(int index) { m_index = index; }

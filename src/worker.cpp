@@ -99,6 +99,7 @@ void manta::Worker::doJob(const Job *job) {
 		if (emitter != nullptr) {
 			emitter->setStackAllocator(m_stack);
 			m_rayTracer->traceRayEmitter(job->scene, emitter, m_stack /**/ PATH_RECORDER_ARG);
+			emitter->destroyRays();
 		}
 		m_rayTracer->incrementRayCompletion(job);
 	}

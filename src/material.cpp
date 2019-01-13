@@ -41,7 +41,7 @@ manta::RayEmitterGroup *manta::Material::generateRayEmittersInternal(const Light
 	return newEmitter;
 }
 
-void manta::Material::integrateRay(LightRay *ray, const RayEmitterGroup *_rayEmitter) const {
+void manta::Material::integrateRay(LightRay *ray, const RayEmitterGroup *_rayEmitter, const IntersectionPoint *intersectionPoint) const {
 	SimpleRayEmitterGroup *rayEmitter = (SimpleRayEmitterGroup *)_rayEmitter;
 	LightRay *reflectedRay = rayEmitter->m_simpleRayEmitter->getRay();
 

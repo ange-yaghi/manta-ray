@@ -14,7 +14,7 @@ manta::SimpleDiffuseMaterial::~SimpleDiffuseMaterial() {
 
 }
 
-void manta::SimpleDiffuseMaterial::integrateRay(LightRay *ray, const RayEmitterGroup *_rayEmitter) const {
+void manta::SimpleDiffuseMaterial::integrateRay(LightRay *ray, const RayEmitterGroup *_rayEmitter, const IntersectionPoint *intersectionPoint) const {
 	SimpleMonteCarloEmitterGroup *rayEmitter = (SimpleMonteCarloEmitterGroup *)_rayEmitter;
 	LightRay *reflectedRay = rayEmitter->m_simpleRayEmitter->getRay();
 

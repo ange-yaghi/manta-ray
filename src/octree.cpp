@@ -182,9 +182,9 @@ void manta::Octree::writeToObjFile(const OctreeBV *leaf, std::ofstream &f, int &
 
 bool manta::Octree::findClosestIntersection(const OctreeBV *leaf, const LightRay *ray, const math::Vector &ood, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s, bool skip) const {
 	math::real currentMaxDepth = maxDepth;
-	math::real rayDepth;
-	
+	math::real rayDepth = math::constants::REAL_MAX;
 	bool found = false;
+
 	if (skip || AABBIntersect(leaf, ray, &rayDepth, ood)) {
 		if (rayDepth > currentMaxDepth) return false;
 

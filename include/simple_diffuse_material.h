@@ -13,7 +13,7 @@ namespace manta {
 		void setMaxDegree(int degree) { m_maxDegree = degree; }
 		int getMaxDegree() const { return m_maxDegree; }
 
-		virtual void integrateRay(LightRay *ray, const RayEmitterGroup *_rayEmitter) const;
+		virtual void integrateRay(LightRay *ray, const RayEmitterGroup *_rayEmitter, const IntersectionPoint *intersectionPoint) const;
 
 	protected:
 		int m_maxDegree;
@@ -22,6 +22,6 @@ namespace manta {
 
 	};
 
-}
+} /* namespace manta */
 
 #endif /* SIMPLE_DIFFUSE_MATERIAL_H */
