@@ -80,7 +80,7 @@ TEST(CameraEmulationTests, SimpleLensSanityCheck) {
 	math::real focusDistance = 50.0;
 
 	Aperture *aperture = lens.getAperture();
-	aperture->setSize((math::real)1.0);
+	aperture->setRadius((math::real)1.0);
 	lens.setFocus(focusDistance);
 
 	math::Vector sensorLocation = lens.getSensorLocation();

@@ -11,7 +11,12 @@ namespace manta {
 		~Aperture() {}
 
 		virtual bool filter(math::real x, math::real y) const = 0;
-		virtual void setSize(math::real size) = 0;
+
+		void setRadius(math::real size) { m_radius = size; };
+		math::real getRadius() const { return m_radius; };
+
+	protected:
+		math::real m_radius;
 	};
 
 } /* namespace manta */

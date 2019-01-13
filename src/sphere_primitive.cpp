@@ -87,7 +87,7 @@ void manta::SpherePrimitive::getVicinity(const math::Vector &p, math::real radiu
 void manta::SpherePrimitive::fineIntersection(const math::Vector &r, IntersectionPoint *p, const CoarseIntersection *hint) const {
 	math::Vector position = getClosestPoint(hint, r);
 
-	p->m_position = position;
+	p->m_position = r;
 
 	// Calculate the normal
 	math::Vector normal = math::sub(p->m_position, m_position);

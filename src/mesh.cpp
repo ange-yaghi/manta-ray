@@ -180,11 +180,12 @@ void manta::Mesh::fineIntersection(const math::Vector &r, IntersectionPoint *p, 
 
 	math::Vector vertexNormal;
 	math::Vector textureCoordinates;
+	const Face &face = m_faces[faceIndex];
 
 	if (m_perVertexNormals) {
-		math::Vector normalU = m_normals[m_faces[faceIndex].nu];
-		math::Vector normalV = m_normals[m_faces[faceIndex].nv];
-		math::Vector normalW = m_normals[m_faces[faceIndex].nw];
+		math::Vector normalU = m_normals[face.nu];
+		math::Vector normalV = m_normals[face.nv];
+		math::Vector normalW = m_normals[face.nw];
 
 		vertexNormal = math::add(math::mul(normalU, math::loadScalar(u)), math::mul(normalV, math::loadScalar(v)));
 		vertexNormal = math::add(vertexNormal, math::mul(normalW, math::loadScalar(w)));
@@ -194,9 +195,9 @@ void manta::Mesh::fineIntersection(const math::Vector &r, IntersectionPoint *p, 
 	}
 
 	if (m_useTextureCoords) {
-		math::Vector texU = m_textureCoords[m_faces[faceIndex].tu];
-		math::Vector texV = m_textureCoords[m_faces[faceIndex].tv];
-		math::Vector texW = m_textureCoords[m_faces[faceIndex].tw];
+		math::Vector texU = m_textureCoords[face.tu];
+		math::Vector texV = m_textureCoords[face.tv];
+		math::Vector texW = m_textureCoords[face.tw];
 
 		textureCoordinates = math::add(math::mul(texU, math::loadScalar(u)), math::mul(texV, math::loadScalar(v)));
 		textureCoordinates = math::add(textureCoordinates, math::mul(texW, math::loadScalar(w)));
@@ -209,7 +210,7 @@ void manta::Mesh::fineIntersection(const math::Vector &r, IntersectionPoint *p, 
 	p->m_faceNormal = cache.normal;
 	p->m_position = r;
 	p->m_textureCoodinates = textureCoordinates;
-	p->m_material = m_faces[faceIndex].material;
+	p->m_material = face.material;
 }
 
 bool manta::Mesh::fastIntersection(const LightRay *ray) const {
@@ -600,6 +601,42 @@ inline bool manta::Mesh::detectIntersection(int faceIndex, math::real u, math::r
 	if (1 - ru - rv < -delta) return false;
 
 	return true;
+}
+
+bool manta::Mesh::findClosestIntersection(int *faceList, int faceCount, const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s) const {
+	math::Vector rayDir = ray->getDirection();
+	math::Vector raySource = ray->getSource();
+
+	CoarseCollisionOutput output;
+	math::real currentMaxDepth = maxDepth;
+	bool found = false;
+	for (int i = 0; i < faceCount; i++) {
+		if (detectIntersection(faceList[i], minDepth, currentMaxDepth, rayDir, raySource, 1E-6, &output)) {
+			intersection->depth = output.depth;
+			intersection->locationHint = faceList[i]; // Face index
+			intersection->sceneGeometry = this;
+			intersection->globalHint = m_faces[faceList[i]].globalId;
+
+			currentMaxDepth = output.depth;
+			found = true;
+		}
+	}
+
+	return found;
+}
+
+void manta::Mesh::getVicinity(int *faceList, int faceCount, const math::Vector &p, math::real radius, IntersectionList *list, SceneObject *object) const {
+	for (int i = 0; i < faceCount; i++) {
+		if (testClosestPointOnFace(faceList[i], radius, p)) {
+			CoarseIntersection *intersection = list->newIntersection();
+			intersection->depth = 0.0;
+			intersection->locationHint = faceList[i]; // Face index
+			intersection->sceneGeometry = this;
+			intersection->globalHint = m_faces[faceList[i]].globalId;
+			intersection->valid = true;
+			intersection->sceneObject = object;
+		}
+	}
 }
 
 void manta::Mesh::computePlane(const math::Vector &n, const math::Vector &p, Plane *plane) const {
