@@ -39,6 +39,7 @@ namespace manta {
 
 		int getEmitterCount() const { return m_rayEmitterCount; }
 		RayEmitter **getEmitters() const { return m_rayEmitters; }
+		RayEmitter *getEmitter(int index) const { return m_rayEmitters[index]; }
 
 		void setDegree(int degree) { m_degree = degree; }
 		int getDegree() const { return m_degree; }

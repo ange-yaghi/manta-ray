@@ -18,7 +18,7 @@ namespace manta {
 		void setMaxSpecularDegree(int degree) { m_maxSpecularDegree = degree; }
 		int getMaxSpecularDegree() const { return m_maxSpecularDegree; }
 
-		virtual void integrateRay(LightRay *ray, const RayEmitterGroup *_rayEmitter) const;
+		virtual void integrateRay(LightRay *ray, const RayEmitterGroup *_rayEmitter, const IntersectionPoint *intersectionPoint) const;
 
 		void setSpecularColor(const math::Vector &specular);
 		math::Vector getSpecularColor() const { return m_specularColor; }

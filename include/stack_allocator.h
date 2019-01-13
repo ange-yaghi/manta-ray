@@ -49,12 +49,12 @@ namespace manta {
 		}
 
 		void free(void *memory) {
-#ifdef ENABLE_LEDGER
+#if ENABLE_LEDGER
 			m_allocationLedger--;
 			assert(m_allocationLedger >= 0);
 #endif
 
-#ifdef ENABLE_BOUNDS_CHECKING
+#if ENABLE_BOUNDS_CHECKING
 			assert((unsigned __int64)memory < (unsigned __int64)m_stackPointer);
 #endif
 

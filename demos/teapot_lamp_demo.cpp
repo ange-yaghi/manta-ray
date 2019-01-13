@@ -20,7 +20,8 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	RayTracer rayTracer;
 
 	// Create all materials
-	SimpleSpecularDiffuseMaterial *wallMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleSpecularDiffuseMaterial>();
+	PhongMaterial *wallMaterial = rayTracer.getMaterialManager()->newMaterial<PhongMaterial>();
+	wallMaterial->setSpecularPower((math::real)1.0);
 	wallMaterial->setEmission(math::constants::Zero);
 	wallMaterial->setDiffuseColor(getColor(200, 200, 200));
 	wallMaterial->setSpecularColor(math::constants::Zero);
@@ -30,7 +31,8 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	lampLightMaterial->setDiffuseColor(math::constants::Zero);
 	lampLightMaterial->setSpecularColor(math::constants::Zero);
 
-	SimpleSpecularDiffuseMaterial *teapotMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleSpecularDiffuseMaterial>();
+	PhongMaterial *teapotMaterial = rayTracer.getMaterialManager()->newMaterial<PhongMaterial>();
+	teapotMaterial->setSpecularPower((math::real)2.0);
 	teapotMaterial->setEmission(math::constants::Zero);
 	teapotMaterial->setDiffuseColor(getColor(0xFF, 0x08, 0x14));
 	teapotMaterial->setSpecularColor(getColor(100, 100, 100));

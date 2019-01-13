@@ -23,7 +23,7 @@ manta::SimpleSpecularDiffuseMaterial::SimpleSpecularDiffuseMaterial() {
 manta::SimpleSpecularDiffuseMaterial::~SimpleSpecularDiffuseMaterial() {
 }
 
-void manta::SimpleSpecularDiffuseMaterial::integrateRay(LightRay *ray, const RayEmitterGroup *_rayEmitter) const {
+void manta::SimpleSpecularDiffuseMaterial::integrateRay(LightRay *ray, const RayEmitterGroup *_rayEmitter, const IntersectionPoint *intersectionPoint) const {
 	math::Vector addedLight = math::constants::Zero;
 
 	if (_rayEmitter != nullptr) {
