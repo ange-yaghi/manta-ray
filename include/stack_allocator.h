@@ -6,8 +6,8 @@
 
 #include <iostream>
 
-#define ENABLE_BOUNDS_CHECKING
-#define ENABLE_LEDGER
+#define ENABLE_BOUNDS_CHECKING (false)
+#define ENABLE_LEDGER (false)
 
 namespace manta {
 
@@ -19,7 +19,7 @@ namespace manta {
 		void initialize(unsigned int size);
 
 		void *allocate(unsigned int size, unsigned int alignment = 1) {
-#ifdef ENABLE_LEDGER
+#if ENABLE_LEDGER
 			m_allocationLedger++;
 #endif /* ENABLE_LEDGER */
 
@@ -32,14 +32,13 @@ namespace manta {
 			void *basePointer = (void *)((char *)m_stackPointer + mod);
 			void *newObject = basePointer;
 
-
-
-#ifdef ENABLE_BOUNDS_CHECKING
+#if ENABLE_BOUNDS_CHECKING
 			assert(((unsigned __int64)((char *)newObject) - ((unsigned __int64)(char *)m_buffer) + size) <= m_size);
-#endif
+
 			if (((unsigned __int64)((char *)newObject) - ((unsigned __int64)(char *)m_buffer) + size) > m_size) {
 				std::cout << "Out of memory! " << m_allocationLedger << std::endl;
 			}
+#endif
 
 			// Update previous block pointers
 			m_stackPointer = (void *)((char *)basePointer + size);
@@ -54,7 +53,10 @@ namespace manta {
 			m_allocationLedger--;
 			assert(m_allocationLedger >= 0);
 #endif
+
+#ifdef ENABLE_BOUNDS_CHECKING
 			assert((unsigned __int64)memory < (unsigned __int64)m_stackPointer);
+#endif
 
 			// Return the stack pointer to the beginning of the block
 			m_stackPointer = memory;

@@ -69,6 +69,9 @@ namespace manta {
 		bool detectIntersection(int faceIndex, math::real minDepth, math::real maxDepth, const math::Vector &rayDir, const math::Vector &rayOrigin, math::real delta, CoarseCollisionOutput *output) const;
 		inline bool detectIntersection(int faceIndex, math::real u, math::real v, math::real w, math::real delta) const;
 
+		bool findClosestIntersection(int *faceList, int faceCount, const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s) const;
+		void getVicinity(int *faceList, int faceCount, const math::Vector &p, math::real radius, IntersectionList *list, SceneObject *object) const;
+
 	protected:
 		void computePlane(const math::Vector &n, const math::Vector &p, Plane *plane) const;
 
