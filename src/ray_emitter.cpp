@@ -22,7 +22,7 @@ manta::RayEmitter::~RayEmitter() {
 void manta::RayEmitter::calculateIntensity() {
 	math::Vector sum = math::constants::Zero;
 	for (int i = 0; i < m_rayCount; i++) {
-		sum = math::add(sum, m_rays[i].getIntensity());
+		sum = math::add(sum, m_rays[i].getWeightedIntensity());
 	}
 	m_intensity = math::div(sum, math::loadScalar((math::real)m_rayCount));
 }
@@ -43,6 +43,7 @@ void manta::RayEmitter::initializeRays(int count) {
 
 	for (int i = 0; i < m_rayCount; i++) {
 		m_rays[i].setIntensity(math::constants::Zero);
+		m_rays[i].setWeight((math::real)1.0);
 	}
 }
 

@@ -21,10 +21,10 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 
 	// Create all materials
 	PhongMaterial *wallMaterial = rayTracer.getMaterialManager()->newMaterial<PhongMaterial>();
-	wallMaterial->setSpecularPower((math::real)1.0);
-	wallMaterial->setEmission(math::constants::Zero);
+	wallMaterial->setSpecularPower((math::real)16.0);
+	wallMaterial->setEmission(getColor(0, 0, 0));
 	wallMaterial->setDiffuseColor(getColor(200, 200, 200));
-	wallMaterial->setSpecularColor(math::constants::Zero);
+	wallMaterial->setSpecularColor(getColor(255, 255, 255));
 
 	SimpleSpecularDiffuseMaterial *lampLightMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleSpecularDiffuseMaterial>();
 	lampLightMaterial->setEmission(math::mul(getColor(255, 197, 143), math::loadScalar(30.0)));
@@ -32,15 +32,15 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	lampLightMaterial->setSpecularColor(math::constants::Zero);
 
 	PhongMaterial *teapotMaterial = rayTracer.getMaterialManager()->newMaterial<PhongMaterial>();
-	teapotMaterial->setSpecularPower((math::real)2.0);
+	teapotMaterial->setSpecularPower((math::real)1024.0);
 	teapotMaterial->setEmission(math::constants::Zero);
 	teapotMaterial->setDiffuseColor(getColor(0xFF, 0x08, 0x14));
-	teapotMaterial->setSpecularColor(getColor(100, 100, 100));
+	teapotMaterial->setSpecularColor(getColor(200, 200, 200));
 
-	SimpleSpecularDiffuseMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleSpecularDiffuseMaterial>();
-	groundMaterial->setEmission(math::constants::Zero);
-	groundMaterial->setDiffuseColor(math::constants::Zero);
-	groundMaterial->setSpecularColor(getColor(100, 100, 100));
+	//SimpleSpecularDiffuseMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleSpecularDiffuseMaterial>();
+	//groundMaterial->setEmission(math::constants::Zero);
+	//groundMaterial->setDiffuseColor(math::constants::Zero);
+	//groundMaterial->setSpecularColor(getColor(100, 100, 100));
 
 	// Create all scene geometry
 	Mesh lamp;
@@ -136,10 +136,12 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 
 	// Create the raytracer
 	rayTracer.initialize(1000 * MB, 100 * MB, 12, 10000, true);
+	rayTracer.setBackgroundColor(getColor(255, 255, 255));
+	//rayTracer.setBackgroundColor(getColor(50, 50, 50));
 	rayTracer.setBackgroundColor(getColor(0, 0, 0));
 	rayTracer.setDeterministicSeedMode(false);
 	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");
-	//rayTracer.tracePixel(684, 909, &scene, &camera);
+	//rayTracer.tracePixel(563, 470, &scene, &camera);
 	//rayTracer.tracePixel(702, 236, &scene, &camera);
 	//rayTracer.tracePixel(809, 211, &scene, &camera);
 	//rayTracer.tracePixel(793, 224, &scene, &camera);

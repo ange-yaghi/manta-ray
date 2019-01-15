@@ -62,7 +62,7 @@ void manta::SSCameraRayEmitter::calculateIntensity() {
 
 	math::Vector accum = math::constants::Zero;
 	for (int i = 0; i < rayCount; i++) {
-		math::Vector clamped = rays[i].getIntensity();
+		math::Vector clamped = rays[i].getWeightedIntensity();
 
 		math::real r = math::getX(clamped);
 		math::real g = math::getY(clamped);

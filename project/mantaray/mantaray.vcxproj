@@ -28,6 +28,8 @@
     <ClCompile Include="..\..\src\manta_math.cpp" />
     <ClCompile Include="..\..\src\material_manager.cpp" />
     <ClCompile Include="..\..\src\octree.cpp" />
+    <ClCompile Include="..\..\src\phong_emitter.cpp" />
+    <ClCompile Include="..\..\src\phong_emitter_group.cpp" />
     <ClCompile Include="..\..\src\phong_material.cpp" />
     <ClCompile Include="..\..\src\simple_scatter_emitter.cpp" />
     <ClCompile Include="..\..\src\simple_scatter_emitter_group.cpp" />
@@ -85,6 +87,8 @@
     <ClInclude Include="..\..\include\hemi_monte_carlo_emitter_group.h" />
     <ClInclude Include="..\..\include\material_manager.h" />
     <ClInclude Include="..\..\include\octree.h" />
+    <ClInclude Include="..\..\include\phong_emitter.h" />
+    <ClInclude Include="..\..\include\phong_emitter_group.h" />
     <ClInclude Include="..\..\include\phong_material.h" />
     <ClInclude Include="..\..\include\simple_scatter_emitter.h" />
     <ClInclude Include="..\..\include\simple_scatter_emitter_group.h" />
