@@ -205,6 +205,12 @@
     <Filter Include="Header Files\emitter\hemi-monte-carlo-emitter">
       <UniqueIdentifier>{8209d65a-0352-4ab7-b195-0c0b841c4134}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\emitter\phong-emitter">
+      <UniqueIdentifier>{bba08006-a46c-41d8-bcd0-9d831d34388f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\emitter\phong-emitter">
+      <UniqueIdentifier>{cf4b3b08-3ee8-40a9-9bde-5fedbf798b38}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -371,6 +377,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\phong_material.cpp">
       <Filter>Source Files\material\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\phong_emitter.cpp">
+      <Filter>Source Files\emitter\phong-emitter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\phong_emitter_group.cpp">
+      <Filter>Source Files\emitter\phong-emitter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -577,6 +589,12 @@
     </ClInclude>
     <ClInclude Include="..\..\include\phong_material.h">
       <Filter>Header Files\material\library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\phong_emitter.h">
+      <Filter>Header Files\emitter\phong-emitter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\phong_emitter_group.h">
+      <Filter>Header Files\emitter\phong-emitter</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

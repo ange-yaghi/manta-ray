@@ -142,7 +142,7 @@ void manta::RayTracer::traceRayEmitter(const Scene *scene, RayEmitter *emitter, 
 		for (int samp = 0; samp < emitter->getSamplesPerRay(); samp++) {
 			if (emitter->getSamplesPerRay() > 1) NEW_TREE(getTreeName(i, samp), emitter->getPosition());
 			traceRay(scene, ray, emitter->getDegree(), s /**/ PATH_RECORDER_VAR);
-			average = math::add(average, math::div(ray->getIntensity(), samples));
+			average = math::add(average, math::div(ray->getWeightedIntensity(), samples));
 			if (emitter->getSamplesPerRay() > 1) END_TREE();
 		}
 		ray->setIntensity(average);

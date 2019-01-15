@@ -20,7 +20,7 @@ void manta::SimpleDiffuseMaterial::integrateRay(LightRay *ray, const RayEmitterG
 
 	ray->setIntensity(
 		math::add(
-			math::mul(reflectedRay->getIntensity(), m_diffuseColor),
+			math::mul(reflectedRay->getWeightedIntensity(), m_diffuseColor),
 			m_emission
 		)
 	);

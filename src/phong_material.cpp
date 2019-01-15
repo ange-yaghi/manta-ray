@@ -1,13 +1,13 @@
 #include <phong_material.h>
 
-#include <hemi_monte_carlo_emitter.h>
-#include <hemi_monte_carlo_emitter_group.h>
+#include <phong_emitter.h>
+#include <phong_emitter_group.h>
 
 #include <intersection_point.h>
 #include <light_ray.h>
 
 manta::PhongMaterial::PhongMaterial() {
-	m_maxDegree = 4;
+	m_maxDegree = 5;
 }
 
 manta::PhongMaterial::~PhongMaterial() {
@@ -17,39 +17,23 @@ void manta::PhongMaterial::integrateRay(LightRay *ray, const RayEmitterGroup *_r
 	math::Vector totalLight = m_emission;
 	
 	if (_rayEmitter != nullptr) {
-		HemiMonteCarloEmitterGroup *group = (HemiMonteCarloEmitterGroup *)_rayEmitter;
-		HemiMonteCarloEmitter *emitter = group->getHemiEmitter(0);
+		PhongEmitterGroup *group = (PhongEmitterGroup *)_rayEmitter;
+		PhongEmitter *emitter = group->getPhongEmitter(0);
 
-		if (emitter->getMeta() == SPECULAR_EMITTER) {
-			// Calculate reflection vector
-			math::Vector perturb = intersectionPoint->m_vertexNormal;
-			math::Vector n_dot_d = math::dot(intersectionPoint->m_vertexNormal, ray->getDirection());
-			perturb = math::mul(perturb, math::add(n_dot_d, n_dot_d)); // Multiply by 2
-			math::Vector reflection = math::sub(perturb, ray->getDirection());
+		LightRay *i = &emitter->getRays()[0];
 
-			const LightRay &ray = emitter->getRays()[0];
-			math::Vector k_spec = math::dot(ray.getDirection(), reflection);
+		totalLight = math::add(totalLight,
+			math::mul(
+				i->getWeightedIntensity(),
+				m_specularColor));
 
-			math::real k_spec_r = math::getScalar(k_spec);
-			k_spec_r = pow(k_spec_r, m_specularPower);
-
-			math::Vector light = math::mul(math::loadScalar(k_spec_r), ray.getIntensity());
-
-			totalLight = math::add(totalLight,
-				math::mul(light, m_specularColor));
-		}
-		else if (emitter->getMeta() == DIFFUSE_EMITTER) {
-			totalLight = math::add(totalLight,
-				math::mul(m_diffuseColor, emitter->getIntensity()));
-		}
+		//totalLight = math::add(math::mul(emitter->getNormal(), math::constants::Half), math::loadVector(0.5, 0.5, 0.5));
 	}
 
 	ray->setIntensity(totalLight);
 }
 
 void manta::PhongMaterial::preconfigureEmitterGroup(RayEmitterGroup *_group, int degree) const {
-	HemiMonteCarloEmitterGroup *group = static_cast<HemiMonteCarloEmitterGroup *>(_group);
-	group->setLayerCount(1);
 }
 
 manta::RayEmitterGroup *manta::PhongMaterial::generateRayEmittersInternal(const LightRay *ray, const IntersectionPoint *intersectionPoint, int degree, StackAllocator *stackAllocator) const {
@@ -57,10 +41,13 @@ manta::RayEmitterGroup *manta::PhongMaterial::generateRayEmittersInternal(const 
 		return nullptr;
 	}
 
-	HemiMonteCarloEmitterGroup *group = createEmitterGroup<HemiMonteCarloEmitterGroup>(degree, stackAllocator);
-	HemiMonteCarloEmitter *emitter = group->getHemiEmitter(0);
-	emitter->setNormal(intersectionPoint->m_vertexNormal);
+	PhongEmitterGroup *group = createEmitterGroup<PhongEmitterGroup>(degree, stackAllocator);
+	PhongEmitter *emitter = group->getPhongEmitter(0);
+	emitter->setFaceNormal(intersectionPoint->m_faceNormal);
+	emitter->setVertexNormal(intersectionPoint->m_vertexNormal);
 	emitter->setPosition(intersectionPoint->m_position);
+	emitter->setIncident(ray->getDirection());
+	emitter->setPower(m_specularPower);
 	emitter->setSampleCount(1);
 
 	math::real r = math::uniformRandom();
