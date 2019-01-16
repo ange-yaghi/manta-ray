@@ -15,7 +15,7 @@ namespace manta {
 		RayEmitterGroup();
 		virtual ~RayEmitterGroup();
 
-		virtual void createAllEmitters() = 0;
+		virtual void createAllEmitters() {}
 
 		template<typename t_RayEmitterType>
 		t_RayEmitterType *createEmitter() {
@@ -30,6 +30,8 @@ namespace manta {
 				newEmitter = new(buffer) t_RayEmitterType;
 				newEmitter->setDegree(m_degree);
 			}
+			m_rayEmitters[m_currentRayEmitterCount] = newEmitter;
+			m_currentRayEmitterCount++;
 
 			return newEmitter;
 		}
@@ -39,7 +41,7 @@ namespace manta {
 
 		int getEmitterCount() const { return m_rayEmitterCount; }
 		RayEmitter **getEmitters() const { return m_rayEmitters; }
-		RayEmitter *getEmitter(int index) const { return m_rayEmitters[index]; }
+		RayEmitter *getEmitter(int index=0) const { return m_rayEmitters[index]; }
 
 		void setDegree(int degree) { m_degree = degree; }
 		int getDegree() const { return m_degree; }
@@ -47,11 +49,16 @@ namespace manta {
 		void setStackAllocator(StackAllocator *allocator) { m_stackAllocator = allocator; }
 		StackAllocator *getStackAllocator() const { return m_stackAllocator; }
 
+		void setMeta(int meta) { m_meta = meta; }
+		int getMeta() const { return m_meta; }
+
 	protected:
 		RayEmitter **m_rayEmitters;
 		int m_rayEmitterCount;
+		int m_currentRayEmitterCount;
 
 		int m_degree;
+		int m_meta;
 
 	private:
 		StackAllocator *m_stackAllocator;

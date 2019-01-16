@@ -41,10 +41,10 @@ namespace manta {
 		std::string m_name;
 
 	protected:
-		virtual void preconfigureEmitterGroup(RayEmitterGroup *group, int degree) const {}
+		virtual void configureEmitterGroup(RayEmitterGroup *group, int degree, const LightRay *ray, const IntersectionPoint *intersectionPoint) const {};
 
 		template<typename t_RayEmitterGroupType>
-		t_RayEmitterGroupType *createEmitterGroup(int degree, StackAllocator *stackAllocator = nullptr) const {
+		t_RayEmitterGroupType *createEmitterGroup(int degree, const LightRay *ray, const IntersectionPoint *intersectionPoint, StackAllocator *stackAllocator = nullptr) const {
 			void *buffer = nullptr;
 			if (stackAllocator == nullptr) {
 				buffer = _aligned_malloc(sizeof(t_RayEmitterGroupType), 16);
@@ -55,10 +55,10 @@ namespace manta {
 
 			t_RayEmitterGroupType *newEmitter = new(buffer) t_RayEmitterGroupType;
 
-			preconfigureEmitterGroup(newEmitter, degree);
-
-			newEmitter->setStackAllocator(stackAllocator);
 			newEmitter->setDegree(degree);
+			newEmitter->setStackAllocator(stackAllocator);
+			configureEmitterGroup(newEmitter, degree, ray, intersectionPoint);
+
 			newEmitter->createAllEmitters();
 
 			return newEmitter;

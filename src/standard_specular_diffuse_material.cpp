@@ -73,7 +73,7 @@ manta::RayEmitterGroup * manta::StandardSpecularDiffuseMaterial::generateRayEmit
 		return nullptr;
 	}
 
-	BatchedMonteCarloEmitterGroup *newEmitter = createEmitterGroup<BatchedMonteCarloEmitterGroup>(degree, stackAllocator);
+	BatchedMonteCarloEmitterGroup *newEmitter = createEmitterGroup<BatchedMonteCarloEmitterGroup>(degree, ray, intersectionPoint, stackAllocator);
 	newEmitter->setTexCoord(intersectionPoint->m_textureCoodinates);
 
 	math::real r = math::uniformRandom();

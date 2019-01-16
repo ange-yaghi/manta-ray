@@ -20,7 +20,7 @@ namespace manta {
 
 		virtual void integrateRay(LightRay *ray, const RayEmitterGroup *_rayEmitter, const IntersectionPoint *intersectionPoint) const;
 
-		virtual void preconfigureEmitterGroup(RayEmitterGroup *_group, int degree) const;
+		virtual void configureEmitterGroup(RayEmitterGroup *group, int degree, const LightRay *ray, const IntersectionPoint *intersectionPoint) const;
 
 		void setSpecularPower(math::real specularPower) { m_specularPower = specularPower; }
 		math::real getSpecularPower() const { return m_specularPower; }
@@ -28,11 +28,15 @@ namespace manta {
 		void setSpecularColor(const math::Vector &specularColor) { m_specularColor = specularColor; }
 		math::Vector getSpecularColor() const { return m_specularColor; }
 
+		void setSurfaceTransmission(math::real t) { m_surfaceTransmission = t; }
+		math::real getSurfaceTransmission() const { return m_surfaceTransmission; }
+
 	protected:
 		int m_maxDegree;
 
 		math::real m_specularPower;
 		math::Vector m_specularColor;
+		math::real m_surfaceTransmission;
 
 		virtual RayEmitterGroup *generateRayEmittersInternal(const LightRay *ray, const IntersectionPoint *intersectionPoint, int degree, StackAllocator *stackAllocator) const;
 
