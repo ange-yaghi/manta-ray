@@ -4,6 +4,9 @@
 
 manta::RayEmitterGroup::RayEmitterGroup() {
 	m_degree = 0;
+	m_currentRayEmitterCount = 0;
+	m_rayEmitterCount = 0;
+	m_rayEmitters = nullptr;
 	m_stackAllocator = nullptr;
 }
 

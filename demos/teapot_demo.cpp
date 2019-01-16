@@ -28,8 +28,9 @@ void manta_demo::teapotDemo(int samplesPerPixel, int resolutionX, int resolution
 	outdoorTopLightMaterial.setDiffuseColor(math::constants::Zero);
 	outdoorTopLightMaterial.setSpecularColor(math::constants::Zero);
 
-	SimpleSpecularDiffuseMaterial teapotMaterial;
+	PhongMaterial teapotMaterial;
 	teapotMaterial.setEmission(math::constants::Zero);
+	teapotMaterial.setSpecularPower((math::real)2.0);
 	teapotMaterial.setDiffuseColor(getColor(1, 1, 1));
 	teapotMaterial.setSpecularColor(getColor(100, 100, 100));
 

@@ -14,13 +14,13 @@ manta::SimpleDiffuseMaterial::~SimpleDiffuseMaterial() {
 
 }
 
-void manta::SimpleDiffuseMaterial::integrateRay(LightRay *ray, const RayEmitterGroup *_rayEmitter) const {
+void manta::SimpleDiffuseMaterial::integrateRay(LightRay *ray, const RayEmitterGroup *_rayEmitter, const IntersectionPoint *intersectionPoint) const {
 	SimpleMonteCarloEmitterGroup *rayEmitter = (SimpleMonteCarloEmitterGroup *)_rayEmitter;
 	LightRay *reflectedRay = rayEmitter->m_simpleRayEmitter->getRay();
 
 	ray->setIntensity(
 		math::add(
-			math::mul(reflectedRay->getIntensity(), m_diffuseColor),
+			math::mul(reflectedRay->getWeightedIntensity(), m_diffuseColor),
 			m_emission
 		)
 	);
@@ -31,7 +31,7 @@ manta::RayEmitterGroup * manta::SimpleDiffuseMaterial::generateRayEmittersIntern
 		return nullptr;
 	}
 
-	SimpleMonteCarloEmitterGroup *newEmitter = createEmitterGroup<SimpleMonteCarloEmitterGroup>(degree, stackAllocator);
+	SimpleMonteCarloEmitterGroup *newEmitter = createEmitterGroup<SimpleMonteCarloEmitterGroup>(degree, ray, intersectionPoint, stackAllocator);
 	newEmitter->m_simpleRayEmitter->setNormal(intersectionPoint->m_vertexNormal);
 	newEmitter->m_simpleRayEmitter->setIncident(ray->getDirection());
 	newEmitter->m_simpleRayEmitter->setPosition(intersectionPoint->m_position);

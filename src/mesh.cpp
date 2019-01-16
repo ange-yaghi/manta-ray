@@ -189,6 +189,7 @@ void manta::Mesh::fineIntersection(const math::Vector &r, IntersectionPoint *p, 
 
 		vertexNormal = math::add(math::mul(normalU, math::loadScalar(u)), math::mul(normalV, math::loadScalar(v)));
 		vertexNormal = math::add(vertexNormal, math::mul(normalW, math::loadScalar(w)));
+		vertexNormal = math::normalize(vertexNormal);
 	}
 	else {
 		vertexNormal = cache.normal;

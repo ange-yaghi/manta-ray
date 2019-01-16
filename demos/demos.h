@@ -31,6 +31,7 @@
 #include <simple_lens.h>
 #include <texture_map.h>
 #include <standard_allocator.h>
+#include <phong_material.h>
 
 namespace manta_demo {
 

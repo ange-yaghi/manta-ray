@@ -23,7 +23,7 @@ manta::SimpleSpecularDiffuseMaterial::SimpleSpecularDiffuseMaterial() {
 manta::SimpleSpecularDiffuseMaterial::~SimpleSpecularDiffuseMaterial() {
 }
 
-void manta::SimpleSpecularDiffuseMaterial::integrateRay(LightRay *ray, const RayEmitterGroup *_rayEmitter) const {
+void manta::SimpleSpecularDiffuseMaterial::integrateRay(LightRay *ray, const RayEmitterGroup *_rayEmitter, const IntersectionPoint *intersectionPoint) const {
 	math::Vector addedLight = math::constants::Zero;
 
 	if (_rayEmitter != nullptr) {
@@ -134,7 +134,7 @@ int manta::SimpleSpecularDiffuseMaterial::getDiffuseSampleCount(int degree) cons
 	}
 }
 
-void manta::SimpleSpecularDiffuseMaterial::preconfigureEmitterGroup(RayEmitterGroup *_group, int degree) const {
+void manta::SimpleSpecularDiffuseMaterial::configureEmitterGroup(RayEmitterGroup *_group, int degree) const {
 	MonteCarloSpecularDiffuseGroup *group = (MonteCarloSpecularDiffuseGroup *)_group;
 
 	int diffuseSamples = getDiffuseSampleCount(degree);
@@ -153,7 +153,7 @@ manta::RayEmitterGroup * manta::SimpleSpecularDiffuseMaterial::generateRayEmitte
 
 	if (!m_enableDiffuse && !m_enableSpecular) return nullptr;
 
-	MonteCarloSpecularDiffuseGroup *newEmitter = createEmitterGroup<MonteCarloSpecularDiffuseGroup>(degree, stackAllocator);
+	MonteCarloSpecularDiffuseGroup *newEmitter = createEmitterGroup<MonteCarloSpecularDiffuseGroup>(degree, ray, intersectionPoint, stackAllocator);
 	newEmitter->setTexCoord(intersectionPoint->m_textureCoodinates);
 
 	int diffuseSamples = getDiffuseSampleCount(degree);

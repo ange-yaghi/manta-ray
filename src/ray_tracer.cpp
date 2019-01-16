@@ -140,16 +140,19 @@ void manta::RayTracer::traceRayEmitter(const Scene *scene, RayEmitter *emitter, 
 		math::Vector average = math::constants::Zero;
 		math::Vector samples = math::loadScalar((math::real)emitter->getSamplesPerRay());
 		for (int samp = 0; samp < emitter->getSamplesPerRay(); samp++) {
+			if (isnan(ray->getWeight()) || isnan(math::getScalar(ray->getIntensity()))) {
+				int a = 0;
+			}
+
 			if (emitter->getSamplesPerRay() > 1) NEW_TREE(getTreeName(i, samp), emitter->getPosition());
 			traceRay(scene, ray, emitter->getDegree(), s /**/ PATH_RECORDER_VAR);
-			average = math::add(average, math::div(ray->getIntensity(), samples));
+			average = math::add(average, math::div(ray->getWeightedIntensity(), samples));
 			if (emitter->getSamplesPerRay() > 1) END_TREE();
 		}
 		ray->setIntensity(average);
 	}
 
 	emitter->calculateIntensity();
-	emitter->destroyRays();
 }
 
 void manta::RayTracer::initialize(unsigned int stackSize, unsigned int workerStackSize, int threadCount, int renderBlockSize, bool multithreaded) {
@@ -337,255 +340,6 @@ void manta::RayTracer::refineContact(const LightRay *ray, math::real depth, Inte
 	}
 }
 
-/*
-void manta::RayTracer::fluxMultisample(const LightRay *ray, IntersectionList *list, IntersectionPoint *point, 
-	SceneObject **closestObject, const CoarseIntersection *referenceIntersection, math::real epsilon, StackAllocator *s) const {
-
-	constexpr math::real SURFACE_BIAS = 5E-3;
-	
-	int conflicts = 0;
-	int intersectionCount = list->getIntersectionCount();
-
-	StackList<CoarseIntersection *> conflictList;
-	conflictList.setStack(s);
-
-	if (referenceIntersection != nullptr) {
-		for (int i = 0; i < intersectionCount; i++) {
-			CoarseIntersection *c = list->getIntersection(i);
-			if (abs(c->depth - referenceIntersection->depth) < epsilon) {
-				conflicts++;
-				c->valid = true;
-			}
-			else {
-				c->valid = false;
-			}
-		}
-
-		// Check for duplicates
-		
-		for (int i = 0; i < intersectionCount; i++) {
-			CoarseIntersection *ci = list->getIntersection(i);
-			if (ci->valid) {
-				for (int j = i + 1; j < intersectionCount; j++) {
-					CoarseIntersection *cj = list->getIntersection(j);
-					if (cj->valid) {
-						if (ci->globalHint == cj->globalHint && ci->sceneObject == cj->sceneObject) {
-							cj->valid = false;
-							conflicts--;
-						}
-					}
-				}
-			}
-		}
-
-		for (int i = 0; i < intersectionCount; i++) {
-			CoarseIntersection *c = list->getIntersection(i);
-			if (c->valid) {
-				*conflictList.newItem() = list->getIntersection(i);
-			}
-		}
-	}
-	else {
-		conflicts = 0;
-	}
-
-	if (conflicts == 0) {
-		point->m_intersection = false;
-		*closestObject = nullptr;
-	}
-	else if (conflicts == 1) {
-		// There can only be one answer
-		referenceIntersection->sceneObject->getGeometry()->fineIntersection(ray, point, referenceIntersection, 1E-6);
-
-		if (point->m_intersection) {
-			*closestObject = referenceIntersection->sceneObject;
-
-			// Bias the intersection position
-			point->m_position = math::add(point->m_position, math::mul(math::loadScalar(SURFACE_BIAS), point->m_faceNormal));
-			//point->m_position = math::add(point->m_position, math::mul(math::loadScalar(-SURFACE_BIAS), ray->getDirection()));
-		}
-		else {
-			*closestObject = nullptr;
-		}
-	}
-	else {
-		// There are multiple conflicts that need to be resolved
-		constexpr int SAMPLE_RADIUS = 5;
-		constexpr int SAMPLE_WIDTH = SAMPLE_RADIUS * 2 + 1;
-		constexpr int SAMPLE_HEIGHT = SAMPLE_RADIUS * 2 + 1;
-		constexpr int SAMPLE_COUNT = SAMPLE_WIDTH * SAMPLE_HEIGHT;
-		
-		IntersectionPoint *samples = (IntersectionPoint *)s->allocate(sizeof(IntersectionPoint) * SAMPLE_COUNT, 16);
-		int *intersectionPointer = (int *)s->allocate(sizeof(int) * SAMPLE_COUNT);
-		int *sampleTally = (int *)s->allocate(sizeof(int) * conflicts);
-		math::real *averageDistance = (math::real *)s->allocate(sizeof(math::real) * conflicts);
-
-		// Initialize all intersection points
-		for (int i = 0; i < SAMPLE_WIDTH * SAMPLE_HEIGHT; i++) {
-			samples[i].m_intersection = false;
-			intersectionPointer[i] = -1;
-		}
-
-		for (int i = 0; i < conflicts; i++) {
-			sampleTally[i] = 0;
-			averageDistance[i] = 0.0;
-		}
-
-		// Calculate basis vectors
-		math::Vector u = math::constants::YAxis;
-		math::Vector v;
-		if (abs(math::getX(ray->getDirection())) < (math::real)0.1) {
-			u = math::constants::XAxis;
-		}
-		u = math::normalize(math::cross(u, ray->getDirection()));
-		v = math::cross(u, ray->getDirection());
-
-		u = math::mul(u, math::loadScalar(1E-4));
-		v = math::mul(v, math::loadScalar(1E-4));
-
-		math::Vector mainPoint = math::add(math::mul(ray->getDirection(), math::loadScalar(referenceIntersection->depth)), ray->getSource());
-		math::Vector referenceNormal;
-
-		for (int i = -SAMPLE_RADIUS; i <= SAMPLE_RADIUS; i++) {
-			for (int j = -SAMPLE_RADIUS; j <= SAMPLE_RADIUS; j++) {
-				int si = (i + SAMPLE_RADIUS) * SAMPLE_WIDTH + j + SAMPLE_RADIUS;
-				IntersectionPoint *sample = &samples[si];
-
-				// Create a new ray
-				math::Vector newTarget = math::add(mainPoint, math::mul(v, math::loadScalar(i)));
-				newTarget = math::add(newTarget, math::mul(u, math::loadScalar(j)));
-
-				LightRay newRay;
-				newRay.setSource(ray->getSource());
-				newRay.setDirection(math::normalize(math::sub(newTarget, ray->getSource())));
-
-				for (int k = 0; k < conflicts; k++) {
-					CoarseIntersection *c = *conflictList.getItem(k);
-					if (c->valid) {
-						IntersectionPoint p;
-						c->sceneObject->getGeometry()->fineIntersection(&newRay, &p, c, (math::real)1E-6);
-
-						if (p.m_intersection) {
-							if (!sample->m_intersection || p.m_depth < sample->m_depth) {
-								*sample = p;
-								intersectionPointer[si] = k;
-								referenceNormal = sample->m_faceNormal;
-							}
-						}
-					}
-				}
-			}
-		}
-
-		bool flipScenario = false;
-
-		for (int i = 0; i < SAMPLE_COUNT; i++) {
-			if (intersectionPointer[i] != -1) {
-				if (math::getScalar(math::dot(samples[i].m_faceNormal, referenceNormal)) < 0.0) {
-					flipScenario = true;
-					break;
-				}
-			}
-		}
-
-		// Count the intersections
-		for (int i = 0; i < SAMPLE_COUNT; i++) {
-			if (intersectionPointer[i] != -1) {
-				sampleTally[intersectionPointer[i]]++;
-				averageDistance[intersectionPointer[i]] += samples[i].m_depth;
-			}
-		}
-
-		for (int i = 0; i < conflicts; i++) {
-			if (sampleTally[i] > 0) {
-				averageDistance[i] /= sampleTally[i];
-			}
-			else {
-				averageDistance[i] = (math::real)0.0;
-			}
-		}
-		
-
-		math::real lowestAverageDistance = math::constants::REAL_MAX;
-		int highestSampleCount = 0;
-		int closestIntersection = -1;
-		int preferredIntersection = -1;
-		for (int i = 0; i < conflicts; i++) {
-			if (averageDistance[i] < lowestAverageDistance && sampleTally[i] > 0) {
-				lowestAverageDistance = averageDistance[i];
-				closestIntersection = i;
-			}
-			if (sampleTally[i] > highestSampleCount) {
-				highestSampleCount = sampleTally[i];
-				preferredIntersection = i;
-			}
-		}
-
-		bool repairNormals = false;
-
-		if (flipScenario) {
-			if (preferredIntersection != closestIntersection) {
-				math::real realDelta = abs(list->getIntersection(preferredIntersection)->depth - list->getIntersection(closestIntersection)->depth);
-				math::real sampleDelta = abs(averageDistance[preferredIntersection] - averageDistance[closestIntersection]);
-				if (sampleDelta > realDelta) {
-					// Only switch if there is a high confidence in the decision
-					preferredIntersection = closestIntersection;
-					repairNormals = true;
-				}
-			}
-		}
-
-		math::Vector biasNormal = math::constants::Zero;
-		math::Vector vertexNormal = math::constants::Zero;
-
-		// Calculate the bias normal
-		for (int i = 0; i < SAMPLE_COUNT; i++) {
-			if (intersectionPointer[i] != -1) {
-				biasNormal = math::add(biasNormal, samples[i].m_faceNormal);
-				vertexNormal = math::add(vertexNormal, samples[i].m_vertexNormal);
-			}
-		}
-		biasNormal = math::normalize(biasNormal);
-		vertexNormal = math::normalize(vertexNormal);
-
-		CoarseIntersection *perferredIntersectionC = *conflictList.getItem(preferredIntersection);
-
-		perferredIntersectionC->sceneObject->getGeometry()->fineIntersection(ray, point, perferredIntersectionC, 1000);
-
-		if (point->m_intersection) {
-			*closestObject = perferredIntersectionC->sceneObject;
-
-			//if (!flipScenario) {
-				point->m_faceNormal = biasNormal;
-				point->m_vertexNormal = point->m_vertexNormal;
-			//}
-
-			if (point->m_depth > SURFACE_BIAS) {
-				// Bias the position of the intersection point
-				point->m_position = math::sub(point->m_position, math::mul(math::loadScalar(SURFACE_BIAS), ray->getDirection()));
-				point->m_valid = true;
-			}
-			else {
-				point->m_valid = false;
-			}
-			//point->m_position = math::add(point->m_position, math::mul(math::loadScalar(-SURFACE_BIAS), ray->getDirection()));
-
-			//point->m_vertexNormal = math::loadVector(-1.0, -1.0, -1.0);
-		} 
-		else {
-			*closestObject = nullptr;
-		}
-
-		// Cleanup the allocated memory
-		s->free((void *)averageDistance);
-		s->free((void *)sampleTally);
-		s->free((void *)intersectionPointer);
-		s->free((void *)samples);
-	}
-
-	conflictList.destroy();
-}*/
-
 void manta::RayTracer::traceRay(const Scene *scene, LightRay *ray, int degree, StackAllocator *s /**/ PATH_RECORDER_DECL) const {
 	SceneObject *sceneObject = nullptr;
 	IntersectionPoint point;
@@ -649,9 +403,15 @@ void manta::RayTracer::traceRay(const Scene *scene, LightRay *ray, int degree, S
 				traceRayEmitterGroup(scene, group, s /**/ PATH_RECORDER_VAR);
 			}
 
-			material->integrateRay(ray, group);
+			material->integrateRay(ray, group, &point);
 
 			if (group != nullptr) {
+				// Destroy rays
+				int emitterCount = group->getEmitterCount();
+				for (int i = 0; i < emitterCount; i++) {
+					group->getEmitter(i)->destroyRays();
+				}
+
 				material->destroyEmitterGroup(group, s);
 			}
 
