@@ -32,8 +32,16 @@ void manta::PhongEmitter::generateRays() {
 			w = calculateWeight(m, o);
 		//}
 
-		if (w > 10.0) {
-			w = 10.0;
+		if (w > 4.0) {
+			w = 4.0;
+		}
+
+		if (isnan(w)) {
+			int a = 0;
+			w = calculateWeight(m, o);
+		}
+		else if (w == -math::realNAN()) {
+			int a = 0;
 		}
 
 		LightRay &ray = getRays()[i];
@@ -52,6 +60,10 @@ manta::math::real manta::PhongEmitter::g1(const math::Vector &i, const math::Vec
 	math::real i_dot_n = math::getScalar(math::dot(m_incident, m_vertexNormal));
 	math::real power = (1.2 - 0.2 * ::sqrt(::abs(i_dot_n))) * m_power;
 	math::real a = sqrt(0.5 * power + 1) / tan(acos(math::getScalar(math::dot(m, i))));
+
+	if (a < (math::real)0.0) {
+		a = (math::real)0.0;
+	}
 
 	math::real secondTerm = 1.0;
 	if (a < (math::real)1.6) {
@@ -120,7 +132,19 @@ manta::math::real manta::PhongEmitter::calculateWeight(const math::Vector &m, co
 	math::real i_dot_n = math::getScalar(math::dot(m_incident, m_vertexNormal));
 	math::real m_dot_n = math::getScalar(math::dot(m, m_vertexNormal));
 
-	return (::abs(i_dot_m) * g) / (::abs(i_dot_n) * ::abs(m_dot_n));
+	math::real num = ::abs(i_dot_m) * g;
+	math::real div = ::abs(i_dot_n) * ::abs(m_dot_n);
+
+	if (div < 1E-6) {
+		if (num < 1E-6) {
+			return (math::real)1.0;
+		}
+		else {
+			return (math::real)0.0;
+		}
+	}
+
+	return num / div;
 }
 
 manta::math::Vector manta::PhongEmitter::reflect(const math::Vector &v, const math::Vector &n) const {

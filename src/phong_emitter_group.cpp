@@ -10,6 +10,6 @@ manta::PhongEmitterGroup::~PhongEmitterGroup() {
 }
 
 void manta::PhongEmitterGroup::createAllEmitters() {
-	initializeEmitters(1);
-	m_rayEmitters[0] = createEmitter<PhongEmitter>();
+	//initializeEmitters(1);
+	//m_rayEmitters[0] = createEmitter<PhongEmitter>();
 }

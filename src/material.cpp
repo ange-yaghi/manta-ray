@@ -34,7 +34,7 @@ manta::RayEmitterGroup *manta::Material::generateRayEmittersInternal(const Light
 	math::Vector finalDirection = math::sub(ray->getDirection(), perturb);
 	finalDirection = math::normalize(finalDirection);
 
-	SimpleRayEmitterGroup *newEmitter = createEmitterGroup<SimpleRayEmitterGroup>(degree, stackAllocator);
+	SimpleRayEmitterGroup *newEmitter = createEmitterGroup<SimpleRayEmitterGroup>(degree, ray, intersectionPoint, stackAllocator);
 	newEmitter->m_simpleRayEmitter->setDirection(finalDirection);
 	newEmitter->m_simpleRayEmitter->setPosition(intersectionPoint->m_position);
 

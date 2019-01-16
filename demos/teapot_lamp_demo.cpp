@@ -21,10 +21,11 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 
 	// Create all materials
 	PhongMaterial *wallMaterial = rayTracer.getMaterialManager()->newMaterial<PhongMaterial>();
-	wallMaterial->setSpecularPower((math::real)16.0);
+	wallMaterial->setSpecularPower((math::real)32.0);
 	wallMaterial->setEmission(getColor(0, 0, 0));
-	wallMaterial->setDiffuseColor(getColor(200, 200, 200));
+	wallMaterial->setDiffuseColor(getColor(255, 255, 255));
 	wallMaterial->setSpecularColor(getColor(255, 255, 255));
+	wallMaterial->setSurfaceTransmission((math::real)0.7);
 
 	SimpleSpecularDiffuseMaterial *lampLightMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleSpecularDiffuseMaterial>();
 	lampLightMaterial->setEmission(math::mul(getColor(255, 197, 143), math::loadScalar(30.0)));
@@ -35,7 +36,8 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	teapotMaterial->setSpecularPower((math::real)1024.0);
 	teapotMaterial->setEmission(math::constants::Zero);
 	teapotMaterial->setDiffuseColor(getColor(0xFF, 0x08, 0x14));
-	teapotMaterial->setSpecularColor(getColor(200, 200, 200));
+	teapotMaterial->setSpecularColor(getColor(255, 255, 255));
+	teapotMaterial->setSurfaceTransmission((math::real)0.85);
 
 	//SimpleSpecularDiffuseMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleSpecularDiffuseMaterial>();
 	//groundMaterial->setEmission(math::constants::Zero);
@@ -139,9 +141,9 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	rayTracer.setBackgroundColor(getColor(255, 255, 255));
 	//rayTracer.setBackgroundColor(getColor(50, 50, 50));
 	rayTracer.setBackgroundColor(getColor(0, 0, 0));
-	rayTracer.setDeterministicSeedMode(false);
+	//rayTracer.setDeterministicSeedMode(true);
 	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");
-	//rayTracer.tracePixel(563, 470, &scene, &camera);
+	//rayTracer.tracePixel(1140, 904, &scene, &camera);
 	//rayTracer.tracePixel(702, 236, &scene, &camera);
 	//rayTracer.tracePixel(809, 211, &scene, &camera);
 	//rayTracer.tracePixel(793, 224, &scene, &camera);

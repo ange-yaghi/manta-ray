@@ -31,7 +31,7 @@ manta::RayEmitterGroup * manta::SimpleDiffuseMaterial::generateRayEmittersIntern
 		return nullptr;
 	}
 
-	SimpleMonteCarloEmitterGroup *newEmitter = createEmitterGroup<SimpleMonteCarloEmitterGroup>(degree, stackAllocator);
+	SimpleMonteCarloEmitterGroup *newEmitter = createEmitterGroup<SimpleMonteCarloEmitterGroup>(degree, ray, intersectionPoint, stackAllocator);
 	newEmitter->m_simpleRayEmitter->setNormal(intersectionPoint->m_vertexNormal);
 	newEmitter->m_simpleRayEmitter->setIncident(ray->getDirection());
 	newEmitter->m_simpleRayEmitter->setPosition(intersectionPoint->m_position);
