@@ -19,11 +19,17 @@ namespace manta {
 		math::Vector getIntensity() const { return m_intensity; }
 		void setIntensity(const math::Vector &intensity) { m_intensity = intensity; }
 
+		math::Vector getWeightedIntensity() const { return math::mul(m_intensity, math::loadScalar(m_weight)); }
+
+		void setWeight(math::real weight) { m_weight = weight; }
+		math::real getWeight() const { return m_weight; }
+
 	protected:
 		math::Vector m_direction;
 		math::Vector m_source;
 
 		math::Vector m_intensity;
+		math::real m_weight;
 	};
 
 } /* namespace manta */

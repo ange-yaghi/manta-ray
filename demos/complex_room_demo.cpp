@@ -19,52 +19,58 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	RayTracer rayTracer;
 
 	// Create all materials
-	StandardSpecularDiffuseMaterial *wallMaterial = rayTracer.getMaterialManager()->newMaterial<StandardSpecularDiffuseMaterial>();
+	PhongMaterial *wallMaterial = rayTracer.getMaterialManager()->newMaterial<PhongMaterial>();
 	wallMaterial->setName("WallMaterial");
 	wallMaterial->setEmission(math::constants::Zero);
 	wallMaterial->setDiffuseColor(getColor(0xFF, 0xFF, 0xFF));
-	wallMaterial->setSpecular(0.5);
-	wallMaterial->setGloss((math::real)0.1);
+	wallMaterial->setSpecularColor(getColor(0xFF, 0xFF, 0xFF));
+	wallMaterial->setSurfaceTransmission((math::real)0.3);
+	wallMaterial->setSpecularPower((math::real)4.0);
 	//wallMaterial->setGloss((math::real)0.95);
 
-	StandardSpecularDiffuseMaterial *floorMaterial = rayTracer.getMaterialManager()->newMaterial<StandardSpecularDiffuseMaterial>();
+	PhongMaterial *floorMaterial = rayTracer.getMaterialManager()->newMaterial<PhongMaterial>();
 	floorMaterial->setName("FloorMaterial");
 	floorMaterial->setEmission(math::constants::Zero);
 	floorMaterial->setDiffuseColor(getColor(0xFF, 0xFF, 0xFF));
-	floorMaterial->setSpecular(1.7);
-	floorMaterial->setGloss((math::real)1.0);
+	floorMaterial->setSpecularColor(getColor(0xFF, 0xFF, 0xFF));
+	floorMaterial->setSpecularPower((math::real)32.0);
+	floorMaterial->setSurfaceTransmission((math::real)0.5);
 	//floorMaterial->setGloss((math::real)0.95);
 
-	StandardSpecularDiffuseMaterial *carpetMaterial = rayTracer.getMaterialManager()->newMaterial<StandardSpecularDiffuseMaterial>();
+	PhongMaterial *carpetMaterial = rayTracer.getMaterialManager()->newMaterial<PhongMaterial>();
 	carpetMaterial->setName("CarpetMaterial");
 	carpetMaterial->setEmission(math::constants::Zero);
 	carpetMaterial->setDiffuseColor(getColor(0xdc, 0xb4, 0x84));
-	carpetMaterial->setSpecular(0.3);
-	carpetMaterial->setGloss((math::real)0.1);
+	carpetMaterial->setSpecularColor(getColor(0xdc, 0xb4, 0x84));
+	carpetMaterial->setSpecularPower((math::real)2.0);
+	carpetMaterial->setSurfaceTransmission((math::real)0.3);
 	//carpetMaterial->setGloss((math::real)0.95);
 
-	StandardSpecularDiffuseMaterial *tableSteel = rayTracer.getMaterialManager()->newMaterial<StandardSpecularDiffuseMaterial>();
+	PhongMaterial *tableSteel = rayTracer.getMaterialManager()->newMaterial<PhongMaterial>();
 	tableSteel->setName("TableSteel");
 	tableSteel->setEmission(math::constants::Zero);
 	tableSteel->setDiffuseColor(getColor(0xCC, 0xCC, 0xCC));
-	tableSteel->setSpecular(0.9);
-	tableSteel->setGloss((math::real)0.95);
+	tableSteel->setSpecularColor(getColor(0xff, 0xff, 0xff));
+	tableSteel->setSpecularPower((math::real)256);
+	tableSteel->setSurfaceTransmission(0.95);
 	//tableSteel->setGloss((math::real)0.95);
 
-	StandardSpecularDiffuseMaterial *tableTop = rayTracer.getMaterialManager()->newMaterial<StandardSpecularDiffuseMaterial>();
+	PhongMaterial *tableTop = rayTracer.getMaterialManager()->newMaterial<PhongMaterial>();
 	tableTop->setName("TableTop");
 	tableTop->setEmission(math::constants::Zero);
 	tableTop->setDiffuseColor(getColor(0xa6, 0x80, 0x64));
-	tableTop->setSpecular(0.7);
-	tableTop->setGloss((math::real)0.8);
+	tableTop->setSpecularColor(getColor(0xff, 0xff, 0xff));
+	tableTop->setSpecularPower((math::real)128.0);
+	tableTop->setSurfaceTransmission((math::real)0.10);
 	//tableTop->setGloss((math::real)0.95);
 
-	StandardSpecularDiffuseMaterial *book = rayTracer.getMaterialManager()->newMaterial<StandardSpecularDiffuseMaterial>();
+	PhongMaterial *book = rayTracer.getMaterialManager()->newMaterial<PhongMaterial>();
 	book->setName("Book");
 	book->setEmission(math::constants::Zero);
 	book->setDiffuseColor(getColor(0xFF, 0xFF, 0xFF));
-	book->setSpecular(0.5);
-	book->setGloss((math::real)0.8);
+	book->setSpecularColor(getColor(0xFF, 0xFF, 0xff));
+	book->setSpecularPower((math::real)8.0);
+	book->setSurfaceTransmission((math::real)0.4);
 
 	SimpleSpecularDiffuseMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleSpecularDiffuseMaterial>();
 	groundMaterial->setEmission(math::constants::Zero);
