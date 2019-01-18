@@ -51,7 +51,7 @@ namespace manta {
 		bool m_enableSpecular;
 		bool m_autoDisableEmitters;
 
-		virtual void configureEmitterGroup(RayEmitterGroup *group, int degree) const;
+		virtual void configureEmitterGroup(RayEmitterGroup *group, int degree, const LightRay *ray, const IntersectionPoint *intersectionPoint) const;
 
 		virtual RayEmitterGroup *generateRayEmittersInternal(const LightRay *ray, const IntersectionPoint *intersectionPoint, int degree, StackAllocator *stackAllocator) const;
 	};
