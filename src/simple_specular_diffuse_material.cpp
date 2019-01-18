@@ -134,7 +134,7 @@ int manta::SimpleSpecularDiffuseMaterial::getDiffuseSampleCount(int degree) cons
 	}
 }
 
-void manta::SimpleSpecularDiffuseMaterial::configureEmitterGroup(RayEmitterGroup *_group, int degree) const {
+void manta::SimpleSpecularDiffuseMaterial::configureEmitterGroup(RayEmitterGroup *_group, int degree, const LightRay *ray, const IntersectionPoint *intersectionPoint) const {
 	MonteCarloSpecularDiffuseGroup *group = (MonteCarloSpecularDiffuseGroup *)_group;
 
 	int diffuseSamples = getDiffuseSampleCount(degree);

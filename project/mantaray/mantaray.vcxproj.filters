@@ -52,12 +52,6 @@
     <Filter Include="Tracking">
       <UniqueIdentifier>{bfe51395-0f70-416b-8bbd-d9e4cd965ec4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\material\library">
-      <UniqueIdentifier>{03921aff-b8f0-4ac0-a925-fe2fbadd8250}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\material\library">
-      <UniqueIdentifier>{71e49133-c41b-4971-ad99-3ef7ed4c1628}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\camera-emulation">
       <UniqueIdentifier>{fbc96ab6-d910-4226-943b-97fd60797150}</UniqueIdentifier>
     </Filter>
@@ -193,12 +187,6 @@
     <Filter Include="Source Files\emitter\scatter-emitter">
       <UniqueIdentifier>{89adf6f7-4294-4c6a-a18d-65feeb5effa7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\material\texture-mapping">
-      <UniqueIdentifier>{29194ddc-fe5b-46be-9337-f277e4e3b7a6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\material\texture-mapping">
-      <UniqueIdentifier>{ca315444-873e-4ae6-afd6-3f52b6cb6b46}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\emitter\hemi-monte-carlo-emitter">
       <UniqueIdentifier>{b0fd3bd7-0d58-4833-8bf5-c9f02f3a54da}</UniqueIdentifier>
     </Filter>
@@ -211,6 +199,54 @@
     <Filter Include="Source Files\emitter\phong-emitter">
       <UniqueIdentifier>{cf4b3b08-3ee8-40a9-9bde-5fedbf798b38}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\material\surface-modeling">
+      <UniqueIdentifier>{489493f0-7612-4940-94ef-a32f113ba235}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\material\interface">
+      <UniqueIdentifier>{4d8cc064-1f20-4a91-8978-af4bfa363cfc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\material\interface\library">
+      <UniqueIdentifier>{03921aff-b8f0-4ac0-a925-fe2fbadd8250}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\material\interface\texture-mapping">
+      <UniqueIdentifier>{29194ddc-fe5b-46be-9337-f277e4e3b7a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\material\surface-modeling\bsdf">
+      <UniqueIdentifier>{47fe389e-9c7f-4bb5-a435-93ea3835bae7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\material\surface-modeling\bsdf\library">
+      <UniqueIdentifier>{4cc682f0-2753-4133-a2f7-1137f73a1ba7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\material\interface">
+      <UniqueIdentifier>{ee1a65dc-432b-44a1-9507-b2268ed9484c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\material\interface\library">
+      <UniqueIdentifier>{71e49133-c41b-4971-ad99-3ef7ed4c1628}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\material\interface\texture-mapping">
+      <UniqueIdentifier>{ca315444-873e-4ae6-afd6-3f52b6cb6b46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\material\surface-modeling">
+      <UniqueIdentifier>{b6f488fd-35a7-4ab8-94ba-143b4f1491e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\material\surface-modeling\bsdf">
+      <UniqueIdentifier>{f7860d8f-8017-4ff9-93df-7cac58efda08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\material\surface-modeling\bsdf\library">
+      <UniqueIdentifier>{ff7e7e50-0e34-4be3-9502-654fe2c2bce3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\material\surface-modeling\media-interface">
+      <UniqueIdentifier>{3c8dba32-1d04-4217-9ee1-183697545ab3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\material\surface-modeling\media-interface">
+      <UniqueIdentifier>{c6a7a6ee-afee-4419-baff-211150384661}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\emitter\bsdf-emitter">
+      <UniqueIdentifier>{59854376-3457-43ea-9173-40e4e0f705a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\emitter\bsdf-emitter">
+      <UniqueIdentifier>{3b1ce557-5269-4765-bc24-32704d4791e3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -218,9 +254,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\sphere_primitive.cpp">
       <Filter>Source Files\geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\material.cpp">
-      <Filter>Source Files\material</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\scene_object.cpp">
       <Filter>Source Files\scene</Filter>
@@ -253,7 +286,7 @@
       <Filter>Source Files\emitter\simple-monte-carlo-emitter</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\simple_diffuse_material.cpp">
-      <Filter>Source Files\material\library</Filter>
+      <Filter>Source Files\material\interface\library</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\simple_monte_carlo_emitter_group.cpp">
       <Filter>Source Files\emitter\simple-monte-carlo-emitter</Filter>
@@ -262,7 +295,7 @@
       <Filter>Source Files\emitter\monte-carlo-specular-diffuse</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\simple_specular_diffuse_material.cpp">
-      <Filter>Source Files\material\library</Filter>
+      <Filter>Source Files\material\interface\library</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\manta_math_float_simd.cpp">
       <Filter>Source Files\math</Filter>
@@ -354,17 +387,11 @@
     <ClCompile Include="..\..\src\simple_scatter_emitter_group.cpp">
       <Filter>Source Files\emitter\scatter-emitter</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\material_manager.cpp">
-      <Filter>Source Files\material</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\texture_map.cpp">
-      <Filter>Source Files\material\texture-mapping</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\standard_allocator.cpp">
       <Filter>Source Files\memory-management</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\standard_specular_diffuse_material.cpp">
-      <Filter>Source Files\material\library</Filter>
+      <Filter>Source Files\material\interface\library</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\batched_monte_carlo_emitter_group.cpp">
       <Filter>Source Files\emitter\batched-monte-carlo-emitter</Filter>
@@ -375,25 +402,43 @@
     <ClCompile Include="..\..\src\hemi_monte_carlo_emitter_group.cpp">
       <Filter>Source Files\emitter\hemi-monte-carlo-emitter</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\phong_material.cpp">
-      <Filter>Source Files\material\library</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\phong_emitter.cpp">
       <Filter>Source Files\emitter\phong-emitter</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\phong_emitter_group.cpp">
       <Filter>Source Files\emitter\phong-emitter</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\bsdf.cpp">
+      <Filter>Source Files\material\surface-modeling\bsdf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\phong_bsdf.cpp">
+      <Filter>Source Files\material\surface-modeling\bsdf\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\texture_map.cpp">
+      <Filter>Source Files\material\interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\material.cpp">
+      <Filter>Source Files\material\interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\material_manager.cpp">
+      <Filter>Source Files\material\interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\dielectric_media_interface.cpp">
+      <Filter>Source Files\material\surface-modeling\media-interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\lambertian_bsdf.cpp">
+      <Filter>Source Files\material\surface-modeling\bsdf\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\simple_phong_lambert_material.cpp">
+      <Filter>Source Files\material\interface\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bsdf_emitter.cpp">
+      <Filter>Source Files\emitter\bsdf-emitter</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\include\intersection_point.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\sphere_primitive.h">
       <Filter>Header Files\geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\material.h">
-      <Filter>Header Files\material</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\scene_object.h">
       <Filter>Header Files\scene</Filter>
@@ -429,7 +474,7 @@
       <Filter>Header Files\emitter\simple-monte-carlo-emitter</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\simple_diffuse_material.h">
-      <Filter>Header Files\material\library</Filter>
+      <Filter>Header Files\material\interface\library</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\monte_carlo_specular_diffuse_group.h">
       <Filter>Header Files\emitter\monte-carlo-specular-diffuse</Filter>
@@ -564,19 +609,16 @@
       <Filter>Header Files\memory-management</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\texture_map.h">
-      <Filter>Header Files\material\texture-mapping</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\material_manager.h">
-      <Filter>Header Files\material</Filter>
+      <Filter>Header Files\material\interface\texture-mapping</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\standard_allocator.h">
       <Filter>Header Files\memory-management</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\standard_specular_diffuse_material.h">
-      <Filter>Header Files\material\library</Filter>
+      <Filter>Header Files\material\interface\library</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\simple_specular_diffuse_material.h">
-      <Filter>Header Files\material\library</Filter>
+      <Filter>Header Files\material\interface\library</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\batched_monte_carlo_emitter_group.h">
       <Filter>Header Files\emitter\batched-monte-carlo-emitter</Filter>
@@ -587,14 +629,44 @@
     <ClInclude Include="..\..\include\hemi_monte_carlo_emitter_group.h">
       <Filter>Header Files\emitter\hemi-monte-carlo-emitter</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\phong_material.h">
-      <Filter>Header Files\material\library</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\phong_emitter.h">
       <Filter>Header Files\emitter\phong-emitter</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\phong_emitter_group.h">
       <Filter>Header Files\emitter\phong-emitter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\intersection_point.h">
+      <Filter>Header Files\ray-tracer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\bsdf.h">
+      <Filter>Header Files\material\surface-modeling\bsdf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\phong_bsdf.h">
+      <Filter>Header Files\material\surface-modeling\bsdf\library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\material.h">
+      <Filter>Header Files\material\interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\material_manager.h">
+      <Filter>Header Files\material\interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\media_interface.h">
+      <Filter>Header Files\material\surface-modeling\media-interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\opaque_media_interface.h">
+      <Filter>Header Files\material\surface-modeling\media-interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\dielectric_media_interface.h">
+      <Filter>Header Files\material\surface-modeling\media-interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\lambertian_bsdf.h">
+      <Filter>Header Files\material\surface-modeling\bsdf\library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\simple_phong_lambert_material.h">
+      <Filter>Header Files\material\interface\library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\bsdf_emitter.h">
+      <Filter>Header Files\emitter\bsdf-emitter</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

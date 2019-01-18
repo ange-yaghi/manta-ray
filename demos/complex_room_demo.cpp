@@ -19,57 +19,57 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	RayTracer rayTracer;
 
 	// Create all materials
-	PhongMaterial *wallMaterial = rayTracer.getMaterialManager()->newMaterial<PhongMaterial>();
+	SimplePhongLambertMaterial *wallMaterial = rayTracer.getMaterialManager()->newMaterial<SimplePhongLambertMaterial>();
 	wallMaterial->setName("WallMaterial");
 	wallMaterial->setEmission(math::constants::Zero);
 	wallMaterial->setDiffuseColor(getColor(0xFF, 0xFF, 0xFF));
 	wallMaterial->setSpecularColor(getColor(0xFF, 0xFF, 0xFF));
 	wallMaterial->setSurfaceTransmission((math::real)0.3);
-	wallMaterial->setSpecularPower((math::real)4.0);
+	wallMaterial->getSpecularBSDF()->setPower((math::real)4.0);
 	//wallMaterial->setGloss((math::real)0.95);
 
-	PhongMaterial *floorMaterial = rayTracer.getMaterialManager()->newMaterial<PhongMaterial>();
+	SimplePhongLambertMaterial *floorMaterial = rayTracer.getMaterialManager()->newMaterial<SimplePhongLambertMaterial>();
 	floorMaterial->setName("FloorMaterial");
 	floorMaterial->setEmission(math::constants::Zero);
 	floorMaterial->setDiffuseColor(getColor(0xFF, 0xFF, 0xFF));
 	floorMaterial->setSpecularColor(getColor(0xFF, 0xFF, 0xFF));
-	floorMaterial->setSpecularPower((math::real)32.0);
+	floorMaterial->getSpecularBSDF()->setPower((math::real)32.0);
 	floorMaterial->setSurfaceTransmission((math::real)0.5);
 	//floorMaterial->setGloss((math::real)0.95);
 
-	PhongMaterial *carpetMaterial = rayTracer.getMaterialManager()->newMaterial<PhongMaterial>();
+	SimplePhongLambertMaterial *carpetMaterial = rayTracer.getMaterialManager()->newMaterial<SimplePhongLambertMaterial>();
 	carpetMaterial->setName("CarpetMaterial");
 	carpetMaterial->setEmission(math::constants::Zero);
 	carpetMaterial->setDiffuseColor(getColor(0xdc, 0xb4, 0x84));
 	carpetMaterial->setSpecularColor(getColor(0xdc, 0xb4, 0x84));
-	carpetMaterial->setSpecularPower((math::real)2.0);
+	carpetMaterial->getSpecularBSDF()->setPower((math::real)2.0);
 	carpetMaterial->setSurfaceTransmission((math::real)0.3);
 	//carpetMaterial->setGloss((math::real)0.95);
 
-	PhongMaterial *tableSteel = rayTracer.getMaterialManager()->newMaterial<PhongMaterial>();
+	SimplePhongLambertMaterial *tableSteel = rayTracer.getMaterialManager()->newMaterial<SimplePhongLambertMaterial>();
 	tableSteel->setName("TableSteel");
 	tableSteel->setEmission(math::constants::Zero);
 	tableSteel->setDiffuseColor(getColor(0xCC, 0xCC, 0xCC));
 	tableSteel->setSpecularColor(getColor(0xff, 0xff, 0xff));
-	tableSteel->setSpecularPower((math::real)256);
+	tableSteel->getSpecularBSDF()->setPower((math::real)1024);
 	tableSteel->setSurfaceTransmission(0.95);
 	//tableSteel->setGloss((math::real)0.95);
 
-	PhongMaterial *tableTop = rayTracer.getMaterialManager()->newMaterial<PhongMaterial>();
+	SimplePhongLambertMaterial *tableTop = rayTracer.getMaterialManager()->newMaterial<SimplePhongLambertMaterial>();
 	tableTop->setName("TableTop");
 	tableTop->setEmission(math::constants::Zero);
-	tableTop->setDiffuseColor(getColor(0xa6, 0x80, 0x64));
+	tableTop->setDiffuseColor(getColor(0x30, 0x26, 0x21));
 	tableTop->setSpecularColor(getColor(0xff, 0xff, 0xff));
-	tableTop->setSpecularPower((math::real)128.0);
-	tableTop->setSurfaceTransmission((math::real)0.10);
+	tableTop->getSpecularBSDF()->setPower((math::real)512.0);
+	tableTop->setSurfaceTransmission((math::real)0.30);
 	//tableTop->setGloss((math::real)0.95);
 
-	PhongMaterial *book = rayTracer.getMaterialManager()->newMaterial<PhongMaterial>();
+	SimplePhongLambertMaterial *book = rayTracer.getMaterialManager()->newMaterial<SimplePhongLambertMaterial>();
 	book->setName("Book");
 	book->setEmission(math::constants::Zero);
 	book->setDiffuseColor(getColor(0xFF, 0xFF, 0xFF));
 	book->setSpecularColor(getColor(0xFF, 0xFF, 0xff));
-	book->setSpecularPower((math::real)8.0);
+	book->getSpecularBSDF()->setPower((math::real)8.0);
 	book->setSurfaceTransmission((math::real)0.4);
 
 	SimpleSpecularDiffuseMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleSpecularDiffuseMaterial>();

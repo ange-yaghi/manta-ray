@@ -209,6 +209,9 @@ namespace manta {
 		Vector mask(const Vector &v, const VectorMask &mask);
 		Vector bitOr(const Vector &v1, const Vector &v2);
 
+		Vector reflect(const Vector &v, const Vector &n);
+		Vector inverseReflect(const Vector &v, const Vector &r);
+
 		// Quaternion
 		Quaternion quatInvert(const Quaternion &q);
 		Quaternion quatMultiply(const Quaternion &q1, const Quaternion &q2);
