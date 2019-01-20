@@ -10,11 +10,11 @@
 #include <scene_geometry.h>
 #include <material.h>
 #include <ray_tracer.h>
-#include <ss_camera_ray_emitter.h>
-#include <ss_camera_ray_emitter_group.h>
 #include <image_handling.h>
 #include <memory_management.h>
 #include <scene_buffer.h>
+#include <standard_camera_ray_emitter_group.h>
+#include <grid_sampler.h>
 
 #include <manta_math.h>
 
@@ -48,8 +48,11 @@ TEST(IntegrationTests, BasicTest) {
 	lightObject->setDefaultMaterial(&lightMaterial);
 	lightObject->setGeometry(&light);
 
-	SSCameraRayEmitterGroup cameraEmitter;
-	cameraEmitter.setSamplingWidth(2);
+	GridSampler sampler;
+	sampler.setGridWidth(2);
+
+	StandardCameraRayEmitterGroup cameraEmitter;
+	cameraEmitter.setSampler(&sampler);
 	cameraEmitter.setDirection(math::loadVector(-1.0f, 0.0f, 0.0f));
 	cameraEmitter.setPosition(math::loadVector(10.0f, 0.0f, 0.0f));
 	cameraEmitter.setUp(math::loadVector(0.0f, 1.0f, 0.0f));
@@ -57,7 +60,7 @@ TEST(IntegrationTests, BasicTest) {
 	cameraEmitter.setPlaneHeight(1.0f);
 	cameraEmitter.setResolutionX(resolutionX);
 	cameraEmitter.setResolutionY(resolutionY);
-	cameraEmitter.setSamplesPerPixel(1);
+	cameraEmitter.setSampleCount(1);
 
 	RayTracer rayTracer;
 	rayTracer.initialize(500 * MB, 100 * MB, 1, 1000, false);

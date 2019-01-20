@@ -8,6 +8,7 @@
 namespace manta {
 
 	class SceneBuffer;
+	class Sampler2D;
 
 	class CameraRayEmitterGroup : public RayEmitterGroup {
 	public:
@@ -40,6 +41,12 @@ namespace manta {
 
 		virtual void fillSceneBuffer(SceneBuffer *sceneBuffer) const;
 
+		void setSampleCount(int samples) { m_samples = samples; }
+		int getSampleCount() const { return m_samples; }
+
+		void setSampler(Sampler2D *sampler) { m_sampler = sampler; }
+		Sampler2D *getSampler() const { return m_sampler; }
+
 	protected:
 		math::Vector m_up;
 		math::Vector m_position;
@@ -50,6 +57,9 @@ namespace manta {
 
 		float m_planeHeight;
 		float m_planeDistance;
+
+		int m_samples;
+		Sampler2D *m_sampler;
 	};
 
 } /* namespace manta */

@@ -57,7 +57,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	groundMaterial->setSurfaceTransmission(0.4);
 
 	SimpleSpecularDiffuseMaterial outdoorTopLightMaterial;
-	outdoorTopLightMaterial.setEmission(math::loadVector(5, 5, 5));
+	outdoorTopLightMaterial.setEmission(math::loadVector(2, 2, 2));
 	outdoorTopLightMaterial.setDiffuseColor(math::constants::Zero);
 	outdoorTopLightMaterial.setSpecularColor(math::constants::Zero);
 
@@ -77,7 +77,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	Octree penOctree;
 	penOctree.initialize(150, math::constants::Zero);
 	penOctree.analyze(&pen, 25);
-	//penOctree.writeToObjFile("../../workspace/test_results/pen_octree.obj", nullptr);
+	penOctree.writeToObjFile("../../workspace/test_results/pen_octree.obj", nullptr);
 
 	math::real lightRadius = 10.0;
 
@@ -155,18 +155,20 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	lens.setSensorWidth(30.0 * (resolutionX / (math::real)resolutionY));
 	lens.update();
 
+	RandomSampler sampler;
+	SimpleSampler simpleSampler;
+
 	if (regularCamera) {
-		SSCameraRayEmitterGroup *camera = new SSCameraRayEmitterGroup;
-		camera->setSamplingWidth(3);
+		StandardCameraRayEmitterGroup *camera = new StandardCameraRayEmitterGroup;
+		camera->setSampler(&simpleSampler);
 		camera->setDirection(dir);
 		camera->setPosition(cameraPos);
 		camera->setUp(up);
 		camera->setPlaneDistance(1.0f);
-		camera->setPlaneHeight(1.0f);
+		camera->setPlaneHeight(0.25f);
 		camera->setResolutionX(resolutionX);
 		camera->setResolutionY(resolutionY);
-		camera->setSamplesPerPixel(samplesPerPixel);
-
+		camera->setSampleCount(samplesPerPixel);
 		group = camera;
 	}
 	else {
@@ -183,8 +185,8 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 		camera->setLens(&lens);
 		camera->setResolutionX(resolutionX);
 		camera->setResolutionY(resolutionY);
-		camera->setSamplesPerPixel(1);
-		camera->setExplicitSampleCount(samplesPerPixel);
+		camera->setSampleCount(samplesPerPixel);
+		camera->setSampler(&sampler);
 
 		group = camera;
 	}
@@ -193,7 +195,8 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	rayTracer.initialize(800 * MB, 5 * MB, 12, 10000, true);
 	rayTracer.setBackgroundColor(getColor(0, 0, 0));
 	//rayTracer.setDeterministicSeedMode(true);
-	//rayTracer.tracePixel(819, 199, &scene, &camera);
+	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");
+	//rayTracer.tracePixel(1829, 934, &scene, group);
 	//rayTracer.tracePixel(702, 236, &scene, &camera);
 	//rayTracer.tracePixel(809, 211, &scene, &camera);
 	//rayTracer.tracePixel(793, 224, &scene, &camera);

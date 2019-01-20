@@ -65,6 +65,13 @@ void manta::Worker::destroy() {
 	m_thread = nullptr;
 }
 
+std::string manta::Worker::getTreeName(int pixelIndex, int sample) const {
+	std::stringstream ss;
+	ss << "PATH_" << pixelIndex << "_S" << sample;
+
+	return ss.str();
+}
+
 void manta::Worker::work() {
 	Job currentJob;
 	while (m_rayTracer->getJobQueue()->pop(&currentJob)) {
@@ -98,7 +105,22 @@ void manta::Worker::doJob(const Job *job) {
 
 		if (emitter != nullptr) {
 			emitter->setStackAllocator(m_stack);
-			m_rayTracer->traceRayEmitter(job->scene, emitter, m_stack /**/ PATH_RECORDER_ARG);
+			emitter->generateRays();
+
+			LightRay *rays = emitter->getRays();
+			int rayCount = emitter->getRayCount();
+
+			for (int samp = 0; samp < rayCount; samp++) {
+				NEW_TREE(getTreeName(i, samp), emitter->getPosition());
+				LightRay *ray = &rays[samp];
+				math::Vector average = math::constants::Zero;
+				math::Vector samples = math::loadScalar((math::real)emitter->getSamplesPerRay());
+				m_rayTracer->traceRay(job->scene, ray, emitter->getDegree(), m_stack /**/ PATH_RECORDER_ARG);
+				ray->setIntensity(ray->getWeightedIntensity());
+				END_TREE();
+			}
+
+			emitter->calculateIntensity();			
 			emitter->destroyRays();
 		}
 		m_rayTracer->incrementRayCompletion(job);

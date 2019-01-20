@@ -78,7 +78,7 @@ void manta::Mesh::precomputeValues() {
 		math::Vector w = m_vertices[m_faces[i].w];
 
 		math::Vector normal = math::cross(math::sub(v, u), math::sub(w, u));
-		if (abs(math::getX(normal)) < 1E-6 && abs(math::getY(normal)) < 1E-6 && abs(math::getZ(normal)) < 1E-6) {
+		if (abs(math::getX(normal)) < 1E-9 && abs(math::getY(normal)) < 1E-9 && abs(math::getZ(normal)) < 1E-9) {
 			m_faces[i] = m_faces[actualFaceCount - 1];
 			actualFaceCount--;
 			i--;

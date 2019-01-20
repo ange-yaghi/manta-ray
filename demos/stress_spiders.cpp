@@ -14,18 +14,21 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 	RayTracer rayTracer;
 
 	// Create all materials
-	SimpleSpecularDiffuseMaterial *spiderMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleSpecularDiffuseMaterial>();
+	SimplePhongLambertMaterial *spiderMaterial = rayTracer.getMaterialManager()->newMaterial<SimplePhongLambertMaterial>();
 	spiderMaterial->setEmission(math::mul(getColor(0xFF, 0x08, 0x14), math::loadScalar(0.0)));
 	spiderMaterial->setDiffuseColor(getColor(0xf1, 0xc4, 0x0f));
 	spiderMaterial->setDiffuseColor(getColor(0x1B, 0x23, 0x2E));
 	spiderMaterial->setSpecularColor(getColor(70, 70, 70));
-	spiderMaterial->setSpecularColor(getColor(0xAA, 0xAA, 0xAA));
-	spiderMaterial->setGloss((math::real)0.5);
+	spiderMaterial->setSpecularColor(getColor(0xFF, 0xFF, 0xFF));
+	spiderMaterial->setSurfaceTransmission((math::real)0.5);
+	spiderMaterial->getSpecularBSDF()->setPower((math::real)512);
+	//spiderMaterial->setGloss((math::real)0.5);
 
-	SimpleSpecularDiffuseMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleSpecularDiffuseMaterial>();
+	SimplePhongLambertMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<SimplePhongLambertMaterial>();
 	groundMaterial->setEmission(math::constants::Zero);
 	groundMaterial->setDiffuseColor(getColor(255, 255, 255));
 	groundMaterial->setSpecularColor(math::constants::Zero);
+	groundMaterial->setSurfaceTransmission((math::real)0.0);
 
 	SimpleSpecularDiffuseMaterial outdoorTopLightMaterial;
 	outdoorTopLightMaterial.setEmission(math::loadVector(5, 5, 5));
@@ -101,9 +104,11 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 	lens.setSensorWidth(44.0 * (resolutionX / (math::real)resolutionY));
 	lens.update();
 
+	RandomSampler sampler;
+
 	if (regularCamera) {
-		SSCameraRayEmitterGroup *camera = new SSCameraRayEmitterGroup;
-		camera->setSamplingWidth(3);
+		StandardCameraRayEmitterGroup *camera = new StandardCameraRayEmitterGroup;
+		camera->setSampler(&sampler);
 		camera->setDirection(dir);
 		camera->setPosition(cameraPos);
 		camera->setUp(up);
@@ -111,7 +116,7 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 		camera->setPlaneHeight(1.0f);
 		camera->setResolutionX(resolutionX);
 		camera->setResolutionY(resolutionY);
-		camera->setSamplesPerPixel(samplesPerPixel);
+		camera->setSampleCount(samplesPerPixel);
 
 		group = camera;
 	}
@@ -129,8 +134,8 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 		camera->setLens(&lens);
 		camera->setResolutionX(resolutionX);
 		camera->setResolutionY(resolutionY);
-		camera->setSamplesPerPixel(1);
-		camera->setExplicitSampleCount(samplesPerPixel);
+		camera->setSampleCount(samplesPerPixel);
+		camera->setSampler(&sampler);
 
 		group = camera;
 	}
