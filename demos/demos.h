@@ -31,7 +31,11 @@
 #include <simple_lens.h>
 #include <texture_map.h>
 #include <standard_allocator.h>
+#include <jitter_camera_ray_emitter_group.h>
 #include <simple_phong_lambert_material.h>
+#include <grid_sampler.h>
+#include <random_sampler.h>
+#include <standard_camera_ray_emitter_group.h>
 
 namespace manta_demo {
 

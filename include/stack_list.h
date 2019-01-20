@@ -72,7 +72,7 @@ namespace manta {
 		StackAllocator *getStack() const { return m_stack; }
 		inline bool isUsingStack() const { return m_stack != nullptr; }
 
-		T *getItem(int i) {
+		T *getItem(int i) const {
 			if (isUsingStack()) {
 				return &m_list[i];
 			}
