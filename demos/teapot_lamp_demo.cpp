@@ -126,9 +126,14 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	//lampBlockObject->setMaterial(&wallMaterial);
 	//lampBlockObject->setName("LampBlock");
 
+	GridSampler gridSampler;
+	gridSampler.setGridWidth(3);
+
+	RandomSampler randomSampler;
+
 	// Create the camera
-	SSCameraRayEmitterGroup camera;
-	camera.setSamplingWidth(3);
+	StandardCameraRayEmitterGroup camera;
+	//camera.setSamplingWidth(3);
 	camera.setDirection(math::loadVector(-1.0, 0.0, 0.0));
 	camera.setPosition(math::loadVector(7.0, 2.0, 0.0));
 	camera.setUp(math::loadVector(0.0f, 1.0, 0.0));
@@ -136,7 +141,9 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	camera.setPlaneHeight(1.0f);
 	camera.setResolutionX(resolutionX);
 	camera.setResolutionY(resolutionY);
-	camera.setSamplesPerPixel(samplesPerPixel);
+	camera.setSampleCount(samplesPerPixel);
+	camera.setSampler(&randomSampler);
+	//camera.setSamplesPerPixel(samplesPerPixel);
 
 	// Create the raytracer
 	rayTracer.initialize(1000 * MB, 100 * MB, 12, 10000, true);
