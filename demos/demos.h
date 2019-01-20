@@ -15,8 +15,6 @@
 #include <simple_specular_diffuse_material.h>
 #include <standard_specular_diffuse_material.h>
 #include <ray_tracer.h>
-#include <ss_camera_ray_emitter_group.h>
-#include <ss_camera_ray_emitter.h>
 #include <image_handling.h>
 #include <memory_management.h>
 #include <mesh.h>
@@ -32,6 +30,10 @@
 #include <texture_map.h>
 #include <standard_allocator.h>
 #include <simple_phong_lambert_material.h>
+#include <grid_sampler.h>
+#include <random_sampler.h>
+#include <simple_sampler.h>
+#include <standard_camera_ray_emitter_group.h>
 
 namespace manta_demo {
 

@@ -120,9 +120,12 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 	lightSource->setGeometry(&outdoorLightGeometry);
 	lightSource->setDefaultMaterial(&outdoorLight);
 
+	GridSampler sampler;
+	sampler.setGridWidth(3);
+
 	// Create the camera
-	SSCameraRayEmitterGroup camera;
-	camera.setSamplingWidth(3);
+	StandardCameraRayEmitterGroup camera;
+	camera.setSampler(&sampler);
 	camera.setDirection(math::loadVector(-1.0, 0.0, 0.0));
 	camera.setPosition(math::loadVector(5.0, 2.0, 0.0));
 	camera.setUp(math::loadVector(0.0f, 1.0, 0.0));
@@ -130,7 +133,7 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 	camera.setPlaneHeight(1.0f);
 	camera.setResolutionX(resolutionX);
 	camera.setResolutionY(resolutionY);
-	camera.setSamplesPerPixel(samplesPerPixel);
+	camera.setSampleCount(samplesPerPixel);
 
 	// Create the raytracer
 	rayTracer.initialize(1000 * MB, 100 * MB, 12, 10000, true);

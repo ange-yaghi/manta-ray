@@ -104,6 +104,13 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 
 	math::Vector cameraPos = math::loadVector(5.28056, 2.06530, 5.21611);
 	math::Vector target = math::loadVector(-0.45522, 1.27649, 0.82292);
+
+	cameraPos = math::loadVector(-3.70285, 1.59896, 6.71528);
+	target = math::loadVector(-3.70285, 1.34146, 2.49088);
+
+	cameraPos = math::loadVector(3.42581, 5.49441, 5.17956);
+	target = math::loadVector(-4.03742, 1.24095, -2.2882);
+
 	math::Vector dir = math::normalize(math::sub(target, cameraPos));
 
 	LightRay sampleRay;
@@ -169,9 +176,12 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	lens.setSensorWidth(72.0 * (resolutionX / (math::real)resolutionY));
 	lens.update();
 
+	GridSampler sampler;
+	sampler.setGridWidth(3);
+
 	if (regularCamera) {
-		SSCameraRayEmitterGroup *camera = new SSCameraRayEmitterGroup;
-		camera->setSamplingWidth(3);
+		StandardCameraRayEmitterGroup *camera = new StandardCameraRayEmitterGroup;
+		//camera->setSamplingWidth(3);
 		camera->setDirection(dir);
 		camera->setPosition(cameraPos);
 		camera->setUp(up);
@@ -179,7 +189,8 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 		camera->setPlaneHeight(1.0f); // 0.75
 		camera->setResolutionX(resolutionX);
 		camera->setResolutionY(resolutionY);
-		camera->setSamplesPerPixel(samplesPerPixel);
+		camera->setSampleCount(samplesPerPixel);
+		camera->setSampler(&sampler);
 
 		group = camera;
 	}
@@ -192,13 +203,13 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 		lens.setFocus(focusDistance);
 
 		LensCameraRayEmitterGroup *camera = new LensCameraRayEmitterGroup;
+		camera->setSampler(&sampler);
 		camera->setDirection(math::normalize(math::sub(target, cameraPos)));
 		camera->setPosition(cameraPos);
 		camera->setLens(&lens);
 		camera->setResolutionX(resolutionX);
 		camera->setResolutionY(resolutionY);
-		camera->setSamplesPerPixel(1);
-		camera->setExplicitSampleCount(samplesPerPixel);
+		camera->setSampleCount(samplesPerPixel);
 
 		group = camera;
 	}

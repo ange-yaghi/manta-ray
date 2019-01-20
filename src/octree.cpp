@@ -69,7 +69,7 @@ void manta::Octree::analyze(Mesh *mesh, int maxSize) {
 	}
 
 	analyze(mesh, &m_tree, maxSize, allFaces);
-	shrink(&m_tree);
+	//shrink(&m_tree);
 
 	// Copy data from vectors
 	int childListsCount = m_childListsTemp.size();

@@ -247,6 +247,12 @@
     <Filter Include="Source Files\emitter\bsdf-emitter">
       <UniqueIdentifier>{3b1ce557-5269-4765-bc24-32704d4791e3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\emitter\sampler">
+      <UniqueIdentifier>{eecd3da7-f301-462e-bcc4-8c5a297344d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\emitter\sampler">
+      <UniqueIdentifier>{06b4d31e-b294-4cb9-87f4-a7e1c339eb0c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -366,12 +372,6 @@
     <ClCompile Include="..\..\src\raw_file.cpp">
       <Filter>Source Files\output</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\ss_camera_ray_emitter.cpp">
-      <Filter>Source Files\emitter\camera-ray-emitter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\ss_camera_ray_emitter_group.cpp">
-      <Filter>Source Files\emitter\camera-ray-emitter</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\camera_ray_emitter_group.cpp">
       <Filter>Source Files\emitter\camera-ray-emitter</Filter>
     </ClCompile>
@@ -434,6 +434,27 @@
     </ClCompile>
     <ClCompile Include="..\..\src\bsdf_emitter.cpp">
       <Filter>Source Files\emitter\bsdf-emitter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sampler_2d.cpp">
+      <Filter>Source Files\emitter\sampler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\grid_sampler.cpp">
+      <Filter>Source Files\emitter\sampler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\camera_ray_emitter.cpp">
+      <Filter>Source Files\emitter\camera-ray-emitter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\standard_camera_ray_emitter.cpp">
+      <Filter>Source Files\emitter\camera-ray-emitter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\standard_camera_ray_emitter_group.cpp">
+      <Filter>Source Files\emitter\camera-ray-emitter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\random_sampler.cpp">
+      <Filter>Source Files\emitter\sampler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\simple_sampler.cpp">
+      <Filter>Source Files\emitter\sampler</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -584,12 +605,6 @@
     <ClInclude Include="..\..\include\raw_file.h">
       <Filter>Header Files\output</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\ss_camera_ray_emitter.h">
-      <Filter>Header Files\emitter\camera-ray-emitter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\ss_camera_ray_emitter_group.h">
-      <Filter>Header Files\emitter\camera-ray-emitter</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\camera_ray_emitter_group.h">
       <Filter>Header Files\emitter\camera-ray-emitter</Filter>
     </ClInclude>
@@ -667,6 +682,27 @@
     </ClInclude>
     <ClInclude Include="..\..\include\bsdf_emitter.h">
       <Filter>Header Files\emitter\bsdf-emitter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sampler_2d.h">
+      <Filter>Header Files\emitter\sampler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\grid_sampler.h">
+      <Filter>Header Files\emitter\sampler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\standard_camera_ray_emitter.h">
+      <Filter>Header Files\emitter\camera-ray-emitter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\camera_ray_emitter.h">
+      <Filter>Header Files\emitter\camera-ray-emitter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\standard_camera_ray_emitter_group.h">
+      <Filter>Header Files\emitter\camera-ray-emitter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\random_sampler.h">
+      <Filter>Header Files\emitter\sampler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\simple_sampler.h">
+      <Filter>Header Files\emitter\sampler</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

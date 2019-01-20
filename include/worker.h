@@ -10,7 +10,7 @@
 
 #if ENABLE_PATH_RECORDING
 #define PATH_RECORDER_ARG ,&m_pathRecorder
-#define NEW_TREE(name, origin) pathRecorder->startNewTree(name, origin)
+#define NEW_TREE(name, origin) m_pathRecorder.startNewTree(name, origin)
 #define END_TREE()
 #define PATH_RECORDER_OUTPUT(fname) m_pathRecorder.writeObjFile(fname)
 #else
@@ -38,6 +38,7 @@ namespace manta {
 		void destroy();
 
 		unsigned int getMaxMemoryUsage() const { return m_maxMemoryUsage; }
+		std::string getTreeName(int pixelIndex, int sample) const;
 
 	protected:
 		void work();
