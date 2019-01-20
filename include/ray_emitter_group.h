@@ -67,4 +67,3 @@ namespace manta {
 }
 
 #endif /* RAY_EMITTER_GROUP_H */
-

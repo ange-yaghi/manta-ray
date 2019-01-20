@@ -21,11 +21,11 @@ namespace manta {
 		virtual void update();
 
 		virtual math::Vector getSensorElement(int x, int y) const;
-		virtual void lensScan(const math::Vector &sensorElement, LensScanHint *target, int div) const;
+		virtual void lensScan(const math::Vector &sensorElement, LensScanHint *target, int div, math::real span) const;
 		virtual bool generateOutgoingRay(const math::Vector &sensorElement, const LensScanHint *hint, LightRay *targetRay) const;
 
 	protected:
-		void lensScan(const math::Vector &sensorElement, math::real x, math::real y, math::real r, LensScanHint *target, int div) const;
+		void lensScan(const math::Vector &sensorElement, math::real x, math::real y, math::real r, LensScanHint *target, int div, math::real span) const;
 
 		CircularAperture m_aperture;
 		BiconvexLens m_lens;

@@ -2,9 +2,11 @@
 
 #include <light_ray.h>
 #include <lens.h>
+#include <sampler_2d.h>
+#include <stack_allocator.h>
 
 manta::LensCameraRayEmitter::LensCameraRayEmitter() {
-	m_explicitSampleCount = 0;
+
 }
 
 manta::LensCameraRayEmitter::~LensCameraRayEmitter() {
@@ -12,40 +14,25 @@ manta::LensCameraRayEmitter::~LensCameraRayEmitter() {
 }
 
 void manta::LensCameraRayEmitter::generateRays() {
+	int totalRayCount = m_sampler->getTotalSampleCount(m_sampleCount);
+	
 	// Create all rays
-	initializeRays(m_explicitSampleCount);
+	initializeRays(totalRayCount);
 	LightRay *rays = getRays();
+
+	math::Vector *sampleOrigins = (math::Vector *)getStackAllocator()->allocate(sizeof(math::Vector) * totalRayCount, 16);
+	m_sampler->generateSamples(totalRayCount, sampleOrigins);
 
 	LensScanHint hint;
-	m_lens->lensScan(m_position, &hint, 4);
+	m_lens->lensScan(m_position, &hint, 4, m_sampler->getBoundaryWidth());
 
-	for (int i = 0; i < m_explicitSampleCount; i++) {
-		bool result = m_lens->generateOutgoingRay(m_position, &hint, &rays[i]);
+	for (int i = 0; i < totalRayCount; i++) {
+		math::Vector position = math::add(m_position, sampleOrigins[i]);
+
+		bool result = m_lens->generateOutgoingRay(position, &hint, &rays[i]);
 		rays[i].setIntensity(math::constants::Zero);
-	}
-}
-
-void manta::LensCameraRayEmitter::calculateIntensity() {
-	LightRay *rays = getRays();
-	int rayCount = getRayCount();
-
-	math::Vector accum = math::constants::Zero;
-	for (int i = 0; i < rayCount; i++) {
-		math::Vector clamped = rays[i].getWeightedIntensity();
-
-		math::real r = math::getX(clamped);
-		math::real g = math::getY(clamped);
-		math::real b = math::getZ(clamped);
-
-		r = math::clamp(r);
-		g = math::clamp(g);
-		b = math::clamp(b);
-
-		clamped = math::loadVector(r, g, b);
-
-		accum = math::add(accum, clamped);
+		rays[i].setWeight((math::real)1.0);
 	}
 
-	accum = math::div(accum, math::loadScalar((math::real)rayCount));
-	m_intensity = accum;
+	getStackAllocator()->free((void *)sampleOrigins);
 }

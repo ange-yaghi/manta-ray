@@ -98,11 +98,11 @@ manta::math::Vector manta::SimpleLens::getSensorElement(int x, int y) const {
 	return sensorElement;
 }
 
-void manta::SimpleLens::lensScan(const math::Vector &sensorElement, LensScanHint *target, int div) const {
-	lensScan(sensorElement, (math::real)0.0, (math::real)0.0, m_lens.getRadius(), target, div);
+void manta::SimpleLens::lensScan(const math::Vector &sensorElement, LensScanHint *target, int div, math::real span) const {
+	lensScan(sensorElement, (math::real)0.0, (math::real)0.0, m_lens.getRadius(), target, div, span);
 }
 
-void manta::SimpleLens::lensScan(const math::Vector &sensorElement, math::real offsetX, math::real offsetY, math::real r, LensScanHint *target, int div) const {
+void manta::SimpleLens::lensScan(const math::Vector &sensorElement, math::real offsetX, math::real offsetY, math::real r, LensScanHint *target, int div, math::real span) const {
 	constexpr int MIN_SAMPLES = 4;
 	if (div > 128) {
 		// Safely assume that no ray can be found
@@ -181,18 +181,17 @@ void manta::SimpleLens::lensScan(const math::Vector &sensorElement, math::real o
 	}
 	else if (samples >= 1) {
 		math::real safetyRadius = maxWidth / (math::real)2.0 + (math::real)1.5 * incr;
-		lensScan(sensorElement, averageX / samples, averageY / samples, safetyRadius, target, div);
+		lensScan(sensorElement, averageX / samples, averageY / samples, safetyRadius, target, div, span);
 	}
 	else {
-		lensScan(sensorElement, target, div * 2);
+		lensScan(sensorElement, target, div * 2, span);
 	}
 }
 
 bool manta::SimpleLens::generateOutgoingRay(const math::Vector &sensorElement, const LensScanHint *hint, LightRay *targetRay) const {
-	// Try a max of 100000 times
-
 	math::real maxR = hint->radius;
 	
+	// Try a max of 100000 times
 	for (int i = 0; i < 100000; i++) {
 		math::real randTheta = math::uniformRandom(math::constants::TWO_PI);
 		math::real randR = math::uniformRandom(1.0);

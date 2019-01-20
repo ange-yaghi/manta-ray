@@ -66,8 +66,6 @@ namespace manta {
 
 		MaterialManager *getMaterialManager() { return &m_materialManager; }
 
-		std::string getTreeName(int pixelIndex, int sample) const;
-
 	protected:
 		// Multithreading features
 		JobQueue m_jobQueue;
