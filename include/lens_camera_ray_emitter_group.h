@@ -19,19 +19,10 @@ namespace manta {
 
 		LensCameraRayEmitter **m_cameraRayEmitters;
 
-		void setSamplesPerPixel(int s) { m_samplesPerPixel = s; }
-		int getSamplesPerPixel() const { return m_samplesPerPixel; }
-
 		void setLens(Lens *lens) { m_lens = lens; }
 		Lens *getLens() { return m_lens; }
 
-		void setExplicitSampleCount(int s) { m_explicitSampleCount = s; }
-		int getExplicitSampleCount() const { return m_explicitSampleCount; }
-
 	protected:
-		int m_samplesPerPixel;
-		int m_explicitSampleCount;
-
 		Lens *m_lens;
 	};
 

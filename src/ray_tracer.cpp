@@ -120,14 +120,6 @@ void manta::RayTracer::tracePixel(int px, int py, const Scene *scene, CameraRayE
 	waitForWorkers();
 }
 
-std::string manta::RayTracer::getTreeName(int pixelIndex, int sample) const {
-	std::stringstream ss;
-	ss << "PATH_" << pixelIndex << "_S" << sample;
-
-	return ss.str();
-}
-
-
 void manta::RayTracer::traceRayEmitter(const Scene *scene, RayEmitter *emitter, StackAllocator *s /**/ PATH_RECORDER_DECL) const {
 	emitter->generateRays();
 
@@ -140,10 +132,8 @@ void manta::RayTracer::traceRayEmitter(const Scene *scene, RayEmitter *emitter, 
 		math::Vector average = math::constants::Zero;
 		math::Vector samples = math::loadScalar((math::real)emitter->getSamplesPerRay());
 		for (int samp = 0; samp < emitter->getSamplesPerRay(); samp++) {
-			if (emitter->getSamplesPerRay() > 1) NEW_TREE(getTreeName(i, samp), emitter->getPosition());
 			traceRay(scene, ray, emitter->getDegree(), s /**/ PATH_RECORDER_VAR);
 			average = math::add(average, math::div(ray->getWeightedIntensity(), samples));
-			if (emitter->getSamplesPerRay() > 1) END_TREE();
 		}
 		ray->setIntensity(average);
 	}

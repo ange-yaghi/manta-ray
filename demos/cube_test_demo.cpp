@@ -54,9 +54,11 @@ void manta_demo::cubeTestDemo(int samplesPerPixel, int resolutionX, int resoluti
 	//lightSource->setGeometry(&outdoorLightGeometry);
 	//lightSource->setMaterial(&outdoorLight);
 
+	RandomSampler sampler;
+
 	// Create the camera
-	SSCameraRayEmitterGroup camera;
-	camera.setSamplingWidth(1);
+	StandardCameraRayEmitterGroup camera;
+	camera.setSampler(&sampler);
 	camera.setDirection(math::loadVector(-1.0, 0.0, 0.0));
 	camera.setPosition(math::loadVector(7.0, 2.0, 0.0));
 	camera.setUp(math::loadVector(0.0f, 1.0, 0.0));
@@ -64,7 +66,7 @@ void manta_demo::cubeTestDemo(int samplesPerPixel, int resolutionX, int resoluti
 	camera.setPlaneHeight(1.0f);
 	camera.setResolutionX(resolutionX);
 	camera.setResolutionY(resolutionY);
-	camera.setSamplesPerPixel(samplesPerPixel);
+	camera.setSampleCount(samplesPerPixel);
 
 	// Create the raytracer
 	RayTracer rayTracer;

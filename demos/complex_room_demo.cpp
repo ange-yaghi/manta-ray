@@ -176,10 +176,10 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	lens.setSensorWidth(72.0 * (resolutionX / (math::real)resolutionY));
 	lens.update();
 
-	if (regularCamera) {
-		GridSampler sampler;
-		sampler.setGridWidth(3);
+	GridSampler sampler;
+	sampler.setGridWidth(3);
 
+	if (regularCamera) {
 		StandardCameraRayEmitterGroup *camera = new StandardCameraRayEmitterGroup;
 		//camera->setSamplingWidth(3);
 		camera->setDirection(dir);
@@ -203,13 +203,13 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 		lens.setFocus(focusDistance);
 
 		LensCameraRayEmitterGroup *camera = new LensCameraRayEmitterGroup;
+		camera->setSampler(&sampler);
 		camera->setDirection(math::normalize(math::sub(target, cameraPos)));
 		camera->setPosition(cameraPos);
 		camera->setLens(&lens);
 		camera->setResolutionX(resolutionX);
 		camera->setResolutionY(resolutionY);
-		camera->setSamplesPerPixel(1);
-		camera->setExplicitSampleCount(samplesPerPixel);
+		camera->setSampleCount(samplesPerPixel);
 
 		group = camera;
 	}

@@ -104,9 +104,11 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 	lens.setSensorWidth(44.0 * (resolutionX / (math::real)resolutionY));
 	lens.update();
 
+	RandomSampler sampler;
+
 	if (regularCamera) {
-		SSCameraRayEmitterGroup *camera = new SSCameraRayEmitterGroup;
-		camera->setSamplingWidth(3);
+		StandardCameraRayEmitterGroup *camera = new StandardCameraRayEmitterGroup;
+		camera->setSampler(&sampler);
 		camera->setDirection(dir);
 		camera->setPosition(cameraPos);
 		camera->setUp(up);
@@ -114,7 +116,7 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 		camera->setPlaneHeight(1.0f);
 		camera->setResolutionX(resolutionX);
 		camera->setResolutionY(resolutionY);
-		camera->setSamplesPerPixel(samplesPerPixel);
+		camera->setSampleCount(samplesPerPixel);
 
 		group = camera;
 	}
@@ -132,8 +134,8 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 		camera->setLens(&lens);
 		camera->setResolutionX(resolutionX);
 		camera->setResolutionY(resolutionY);
-		camera->setSamplesPerPixel(1);
-		camera->setExplicitSampleCount(samplesPerPixel);
+		camera->setSampleCount(samplesPerPixel);
+		camera->setSampler(&sampler);
 
 		group = camera;
 	}
