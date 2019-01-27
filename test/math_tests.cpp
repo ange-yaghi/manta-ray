@@ -96,3 +96,9 @@ TEST(MathTests, QuaternionIdentityTest) {
 	math::Quaternion id = math::quatMultiply(quat, inv);
 	CHECK_QUAT(id, 1.0f, 0.0f, 0.0f, 0.0f);
 }
+
+TEST(MathTests, PermutationTest) {
+	math::Vector v = math::loadVector((math::real)1.0, (math::real)2.0, (math::real)3.0, (math::real)4.0);
+	v = math::permute(v, 1, 0, 2, 3);
+	CHECK_VEC(v, 2.0, 1.0, 3.0, 4.0);
+}

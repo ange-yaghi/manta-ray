@@ -76,4 +76,7 @@ TEST(OctreeTests, OctreeTestSanityCheck) {
 	octree.destroy();
 	list.destroy();
 	list2.destroy();
+
+	mesh.destroy();
+	teapotObj.destroy();
 }

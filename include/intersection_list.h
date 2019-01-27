@@ -1,6 +1,8 @@
 #ifndef INTERSECTION_LIST_H
 #define INTERSECTION_LIST_H
 
+#include <manta_math.h>
+
 #include <vector>
 
 namespace manta {
@@ -13,7 +15,7 @@ namespace manta {
 	struct CoarseIntersection {
 		SceneObject *sceneObject;
 		const SceneGeometry *sceneGeometry;
-		double depth;
+		math::real depth;
 		int locationHint;
 		int globalHint;
 		bool valid;

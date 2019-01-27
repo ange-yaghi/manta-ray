@@ -24,12 +24,24 @@ namespace manta {
 		void setWeight(math::real weight) { m_weight = weight; }
 		math::real getWeight() const { return m_weight; }
 
+		void calculateTransformations();
+
+		int getKX() const { return m_kx; }
+		int getKY() const { return m_ky; }
+		int getKZ() const { return m_kz; }
+		const math::Vector3 &getShear() const { return m_shear; }
+		math::Vector getPermutedDirection() const { return m_permutedDirection; }
+
 	protected:
 		math::Vector m_direction;
 		math::Vector m_source;
 
 		math::Vector m_intensity;
 		math::real m_weight;
+
+		int m_kx, m_ky, m_kz;
+		math::Vector3 m_shear;
+		math::Vector m_permutedDirection;
 	};
 
 } /* namespace manta */

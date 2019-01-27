@@ -207,6 +207,9 @@ TEST(OpenCLTests, OpenCLIntersectionTeapotTest) {
 	outputFile << "CPU:          " << cpuTime << "ns" << std::endl;
 	outputFile << "Ratio:        " << (double)cpuTime / openCLTime << std::endl;
 	outputFile.close();
+
+	teapotObj.destroy();
+	mesh.destroy();
 }
 
 TEST(OpenCLTests, OpenCLIntersectionHighStressTest) {
@@ -295,6 +298,9 @@ TEST(OpenCLTests, OpenCLIntersectionHighStressTest) {
 	outputFile << "Ratio:      " << (double)cpuTime / openCLTime << std::endl;
 
 	outputFile.close();
+
+	teapotObj.destroy();
+	mesh.destroy();
 }
 
 struct GPUFaceV2 {
@@ -327,140 +333,3 @@ void decode(const int *values, IntersectionList *lists, int rayCount, int faceCo
 	}
 }
 
-TEST(OpenCLTests, OpenCLFullIntersectionTest) {
-	// Load mesh
-	ObjFileLoader teapotObj;
-	bool result = teapotObj.readObjFile("../../../demos/models/teapot.obj");
-
-	Mesh mesh;
-	mesh.loadObjFileData(&teapotObj);
-	mesh.setFastIntersectEnabled(false);
-
-	// Set up opencl device
-	GPUManagerOpenCL gpuManager;
-	gpuManager.initialize("../../../opencl_programs/mantaray.cl");
-
-	int faceCount = mesh.getFaceCount();
-	constexpr int unitCount = 65536;
-
-	int rayCount = 2048;
-
-	GPUMemory *faceInput = gpuManager.createMemoryBuffer(sizeof(GPUFaceV2) * unitCount, GPUMemory::READ_ONLY);
-	GPUMemory *rayInput = gpuManager.createMemoryBuffer(sizeof(GPULightRay) * rayCount, GPUMemory::READ_ONLY);
-	GPUMemory *outputDepths = gpuManager.createMemoryBuffer((rayCount / 32) * sizeof(int) * unitCount, GPUMemory::WRITE_ONLY);
-
-	LightRay ray;
-	ray.setDirection(math::loadVector(1.0, 0.0, 0.0));
-	ray.setSource(math::loadVector(-10, 0.0, 0.0));
-
-	GPUFaceV2 *faceData = new GPUFaceV2[unitCount];
-	GPULightRay *lightRay = new GPULightRay[rayCount];
-
-	const PrecomputedValues *cache = mesh.getPrecomputedValues();
-
-	for (int i = 0; i < faceCount; i++) {
-		faceData[i].edgePlaneVWNormal = math::getVector4(cache[i].edgePlaneVW.normal);
-		faceData[i].edgePlaneVWNormal.w = (float)cache[i].edgePlaneVW.d;
-		faceData[i].edgePlaneWUNormal = math::getVector4(cache[i].edgePlaneWU.normal);
-		faceData[i].edgePlaneWUNormal.w = (float)cache[i].edgePlaneWU.d;
-		faceData[i].normal = math::getVector4(cache[i].normal);
-		faceData[i].p0 = math::getVector4(cache[i].p0);
-		faceData[i].scaleVW = (float)cache->scaleVW;
-		faceData[i].scaleWU = (float)cache->scaleWU;
-		faceData[i].edgePlaneVUNormal = math::getVector4(cache[i].edgePlaneVU.normal);
-	}
-
-	faceInput->write(faceData);
-
-	GPUKernel *kernel = gpuManager.createKernel("mesh_intersection_test_v2");
-
-	int *output = new int[(rayCount / 32)*unitCount];
-	IntersectionList *lists = new IntersectionList[rayCount];
-
-	auto beginOpenCL = std::chrono::high_resolution_clock::now();
-
-	for (int i = 0; i < rayCount; i++) {
-		lightRay[i].rayDir = math::getVector4(ray.getDirection());
-		lightRay[i].rayOrigin = math::getVector4(ray.getSource());
-	}
-
-	kernel->setArgument(0, faceInput);
-	kernel->setArgument(1, rayInput);
-	kernel->setArgument(2, outputDepths);
-
-	rayInput->write(lightRay);
-
-	kernel->run(unitCount);
-
-	outputDepths->read((void *)output);
-
-	decode(output, lists, rayCount, faceCount);
-
-	constexpr manta::math::real epsilon = 1E-2;
-
-	// Post process by CPU
-	for (int i = 0; i < rayCount; i++) {
-		IntersectionList *list = &lists[i];
-
-		const manta::CoarseIntersection *closest = nullptr;
-		LightRay *r = &ray;
-		math::Vector rayDir = r->getDirection();
-		math::Vector raySource = r->getSource();
-
-		for (int j = 0; j < list->getIntersectionCount(); j++) {
-			CoarseCollisionOutput output;
-			math::real depthHint = math::constants::REAL_MAX;
-
-			CoarseIntersection *intersection = list->getIntersection(j);
-			/*if (mesh.detectIntersection(intersection->locationHint, depthHint, rayDir, raySource, 1E-2, &output)) {
-				intersection->depth = output.depth;
-				intersection->sceneObject = nullptr;
-
-				if (closest == nullptr || output.depth < closest->depth) {
-					// Check that the collision is eligible to be a reference
-					//if (detectIntersection(i, output.u, output.v, output.w, 1E-6)) {
-					IntersectionPoint p;
-					if (mesh.detectIntersection(intersection->locationHint, math::constants::REAL_MAX, rayDir, raySource, &p, 1E-6)) {
-						//	detectIntersection(i, output.u, output.v, output.w, 1E-6);
-						//	detectIntersection(i, math::REAL_MAX, rayDir, raySource, &p, 1E-6);
-						//}
-						closest = intersection;
-					}
-					//}
-				}
-			}*/
-		}
-	}
-
-	auto endOpenCL = std::chrono::high_resolution_clock::now();
-
-	auto startCPU = std::chrono::high_resolution_clock::now();
-
-	IntersectionList *cpulists = new IntersectionList [rayCount];
-	for (int i = 0; i < rayCount; i++) {
-		//mesh.coarseIntersection(&ray, &cpulists[i], nullptr, nullptr, 1E-2, nullptr);
-	}
-
-	auto endCPU = std::chrono::high_resolution_clock::now();
-
-	for (int i = 0; i < rayCount; i++) {
-		cpulists[i].destroy();
-	}
-	delete[] cpulists;
-
-	for (int i = 0; i < rayCount; i++) {
-		lists[i].destroy();
-	}
-	delete[] lists;
-
-	std::ofstream outputFile("../../../workspace/test_results/test_results_intersection_opencl_vs_cpu_benchmark_stress_ball_full.txt");
-	outputFile << "Device name: " << gpuManager.getDeviceName() << std::endl;
-	long long openCLTime = std::chrono::duration_cast<std::chrono::nanoseconds>(endOpenCL - beginOpenCL).count();
-	long long cpuTime = std::chrono::duration_cast<std::chrono::nanoseconds>(endCPU - startCPU).count();
-
-	outputFile << "Face Count:   " << faceCount << std::endl;
-	outputFile << "OpenCL:       " << openCLTime << "ns" << std::endl;
-	outputFile << "CPU:          " << cpuTime << "ns" << std::endl;
-	outputFile << "Ratio:        " << (double)cpuTime / openCLTime << std::endl;
-	outputFile.close();
-}
