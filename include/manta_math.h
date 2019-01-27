@@ -196,6 +196,7 @@ namespace manta {
 		Generic mul(const Generic &v1, const Generic &v2);
 		Generic div(const Generic &v1, const Generic &v2);
 
+		Vector abs(const Vector &v);
 		Vector dot(const Vector &v1, const Vector &v2);
 		Vector dot3(const Vector &v1, const Vector &v2);
 		Vector cross(const Vector &v1, const Vector &v2);
@@ -205,6 +206,10 @@ namespace manta {
 		Vector normalize(const Vector &v);
 		Vector negate(const Vector &v);
 		Vector negate3(const Vector &v);
+
+		Generic permute(const Generic &v, int kx, int ky, int kz, int kw = 3);
+		int maxDimension(const Generic &v);
+		int maxDimension3(const Generic &v);
 
 		Vector mask(const Vector &v, const VectorMask &mask);
 		Vector bitOr(const Vector &v1, const Vector &v2);

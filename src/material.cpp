@@ -24,10 +24,6 @@ manta::RayEmitterGroup *manta::Material::generateRayEmittersInternal(const Light
 		return nullptr;
 	}
 
-	if (degree >= 2) {
-		int a = 0;
-	}
-
 	math::Vector perturb = intersectionPoint->m_vertexNormal;
 	math::Vector n_dot_d = math::dot(intersectionPoint->m_vertexNormal, ray->getDirection());
 	perturb = math::mul(perturb, math::add(n_dot_d, n_dot_d)); // Multiply by 2
@@ -42,17 +38,12 @@ manta::RayEmitterGroup *manta::Material::generateRayEmittersInternal(const Light
 }
 
 void manta::Material::integrateRay(LightRay *ray, const RayEmitterGroup *_rayEmitter, const IntersectionPoint *intersectionPoint) const {
+	if (_rayEmitter == nullptr) return;
+
 	SimpleRayEmitterGroup *rayEmitter = (SimpleRayEmitterGroup *)_rayEmitter;
 	LightRay *reflectedRay = rayEmitter->m_simpleRayEmitter->getRay();
 
 	ray->setIntensity(math::add(math::mul(reflectedRay->getWeightedIntensity(), math::loadScalar(0.5)), m_emission));
-
-	math::real r1 = math::getX(ray->getWeightedIntensity());
-	math::real r2 = math::getX(m_emission);
-	if (r2 > r1 && _rayEmitter->getDegree() == 1) {
-		int a = 0;
-	}
-	//ray->setIntensity(m_emission);
 }
 
 void manta::Material::destroyEmitterGroup(RayEmitterGroup *group, StackAllocator *stackAllocator) {

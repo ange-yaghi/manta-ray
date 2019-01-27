@@ -137,7 +137,7 @@ bool manta::Mesh::findClosestIntersection(const LightRay *ray, CoarseIntersectio
 	math::real currentMaxDepth = maxDepth;
 	bool found = false;
 	for (int i = 0; i < m_faceCount; i++) {
-		if (detectIntersection(i, minDepth, currentMaxDepth, rayDir, raySource, 1E-6, &output)) {
+		if (detectIntersection(i, minDepth, currentMaxDepth, ray, &output)) {
 			intersection->depth = output.depth;
 			intersection->locationHint = i; // Face index
 			intersection->sceneGeometry = this;
@@ -553,39 +553,62 @@ bool manta::Mesh::testClosestPointOnFace(int faceIndex, math::real maxDepth, con
 	return true;
 }
 
-bool manta::Mesh::detectIntersection(int faceIndex, math::real minDepth, math::real maxDepth, const math::Vector &rayDir, const math::Vector &rayOrigin, math::real delta, CoarseCollisionOutput *output) const {
-	PrecomputedValues &cache = m_precomputedValues[faceIndex];
+bool manta::Mesh::detectIntersection(int faceIndex, math::real minDepth, math::real maxDepth, const LightRay *ray, CoarseCollisionOutput *output) const {
+	Face &face = m_faces[faceIndex];
 
-	math::Vector denom = math::dot(cache.normal, rayDir);
+	math::Vector v0, v1, v2;
+	v0 = m_vertices[face.u];
+	v1 = m_vertices[face.v];
+	v2 = m_vertices[face.w];
 
-	// The ray is nearly perpendicular to the plane
-	math::real denom_s = math::getScalar(denom);
-	if (denom_s < 1e-6 && denom_s > -1e-6) return false;
+	math::Vector rayOrigin = ray->getSource();
+	math::Vector p0t = math::sub(v0, rayOrigin);
+	math::Vector p1t = math::sub(v1, rayOrigin);
+	math::Vector p2t = math::sub(v2, rayOrigin);
 
-	math::Vector p0r0 = math::sub(cache.p0, rayOrigin);
-	math::Vector d = math::div(math::dot(p0r0, cache.normal), denom);
+	int kz = ray->getKZ();
+	int kx = ray->getKX();
+	int ky = ray->getKY();
+	p0t = math::permute(p0t, kx, ky, kz);
+	p1t = math::permute(p1t, kx, ky, kz);
+	p2t = math::permute(p2t, kx, ky, kz);
 
-	math::real depth_s = math::getScalar(d);
+	const math::Vector3 &shear = ray->getShear();
+	math::real sx = shear.x;
+	math::real sy = shear.y;
+	math::real sz = shear.z;
 
-	// This ray either does not intersect the plane or intersects at a depth that is further than the early exit hint
-	if (depth_s <= (math::real)0.0 || depth_s > maxDepth || depth_s < minDepth) return false;
+	math::Vector s = math::loadVector(sx, sy);
+	math::Vector p0t_z = math::loadScalar(math::getZ(p0t));
+	math::Vector p1t_z = math::loadScalar(math::getZ(p1t));
+	math::Vector p2t_z = math::loadScalar(math::getZ(p2t));
 
-	math::Vector s = math::add(rayOrigin, math::mul(rayDir, d));
+	p0t = math::add(p0t, math::mul(s, p0t_z));
+	p1t = math::add(p1t, math::mul(s, p1t_z));
+	p2t = math::add(p2t, math::mul(s, p2t_z));
 
-	// Compute quasi-barycentric components u, v, w
-	math::real u = math::getScalar(math::dot(s, cache.edgePlaneVW.normal));
-	if (u < (cache.edgePlaneVW.d - delta * cache.scaleVW)) return false;
+	math::real e0 = math::getX(p1t) * math::getY(p2t) - math::getY(p1t) * math::getX(p2t);
+	math::real e1 = math::getX(p2t) * math::getY(p0t) - math::getY(p2t) * math::getX(p0t);
+	math::real e2 = math::getX(p0t) * math::getY(p1t) - math::getY(p0t) * math::getX(p1t);
 
-	math::real v = math::getScalar(math::dot(s, cache.edgePlaneWU.normal));
-	if (v < (cache.edgePlaneWU.d - delta * cache.scaleWU)) return false;
+	if ((e0 < 0 || e1 < 0 || e2 < 0) && (e0 > 0 || e1 > 0 || e2 > 0)) return false;
 
-	math::real w = math::getScalar(math::dot(s, cache.edgePlaneVU.normal));
-	if (w < (cache.edgePlaneVU.d - delta)) return false;
+	math::real det = e0 + e1 + e2;
+	if (det == (math::real)0.0) {
+		return false;
+	}
 
-	output->depth = depth_s;
-	output->u = u;
-	output->v = v;
-	output->w = w;
+	// Compute distance
+	math::real p0t_sz = math::getZ(p0t) * sz;
+	math::real p1t_sz = math::getZ(p1t) * sz;
+	math::real p2t_sz = math::getZ(p2t) * sz;
+
+	math::real t_scaled = math::getScalar(math::dot(math::loadVector(e0, e1, e2), math::loadVector(p0t_sz, p1t_sz, p2t_sz)));
+
+	if (det < 0 && (t_scaled >= 0 || t_scaled < maxDepth * det)) return false;
+	else if (det > 0 && (t_scaled <= 0 || t_scaled > maxDepth *det)) return false;
+
+	output->depth = t_scaled / det;
 
 	return true;
 }
@@ -612,7 +635,7 @@ bool manta::Mesh::findClosestIntersection(int *faceList, int faceCount, const Li
 	math::real currentMaxDepth = maxDepth;
 	bool found = false;
 	for (int i = 0; i < faceCount; i++) {
-		if (detectIntersection(faceList[i], minDepth, currentMaxDepth, rayDir, raySource, 1E-6, &output)) {
+		if (detectIntersection(faceList[i], minDepth, currentMaxDepth, ray, &output)) {
 			intersection->depth = output.depth;
 			intersection->locationHint = faceList[i]; // Face index
 			intersection->sceneGeometry = this;

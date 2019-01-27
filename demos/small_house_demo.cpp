@@ -103,10 +103,10 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 	//tableObject->setDefaultMaterial(&tableMaterial);
 	//tableObject->setName("Table");
 
-	//SceneObject *shuttersObject = scene.createSceneObject();
-	//shuttersObject->setGeometry(&shutters);
-	//shuttersObject->setMaterial(&wallMaterial);
-	//shuttersObject->setName("Shutters");
+	SceneObject *shuttersObject = scene.createSceneObject();
+	shuttersObject->setGeometry(&shutters);
+	shuttersObject->setDefaultMaterial(&wallMaterial);
+	shuttersObject->setName("Shutters");
 
 	SceneObject *ground = scene.createSceneObject();
 	ground->setGeometry(&groundGeometry);

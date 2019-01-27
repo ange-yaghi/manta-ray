@@ -15,12 +15,15 @@ namespace manta {
 		// Vector types
 		struct Generic {
 			union {
-				struct {
-					real x, y, z, w;
+				union {
+					struct {
+						real x, y, z, w;
+					};
+					struct {
+						real qw, qx, qy, qz;
+					};
 				};
-				struct {
-					real qw, qx, qy, qz;
-				};
+				real v[4];
 			};
 		};
 

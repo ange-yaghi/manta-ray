@@ -172,6 +172,10 @@ math::Vector math::negate3(const math::Vector &v) {
 	return { -v.x, -v.y, -v.z, v.w };
 }
 
+math::Generic math::permute(const math::Generic &v, int kx, int ky, int kz, int kw) {
+	return { v.v[kx], v.v[ky], v.v[kz], v.v[kw] };
+}
+
 math::Vector math::quatInvert(const math::Quaternion &q) {
 	return { q.qw, -q.qx, -q.qy, -q.qz };
 }

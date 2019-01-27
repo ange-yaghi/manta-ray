@@ -66,7 +66,7 @@ namespace manta {
 		math::Vector getClosestPointOnFace(int faceIndex, const math::Vector &p) const;
 		void getClosestPointOnFaceBarycentric(int faceIndex, const math::Vector &p, math::real *u, math::real *v, math::real *w) const;
 		bool testClosestPointOnFace(int faceIndex, math::real maxDepth, const math::Vector &p) const;
-		bool detectIntersection(int faceIndex, math::real minDepth, math::real maxDepth, const math::Vector &rayDir, const math::Vector &rayOrigin, math::real delta, CoarseCollisionOutput *output) const;
+		bool detectIntersection(int faceIndex, math::real minDepth, math::real maxDepth, const LightRay *ray, CoarseCollisionOutput *output) const;
 		inline bool detectIntersection(int faceIndex, math::real u, math::real v, math::real w, math::real delta) const;
 
 		bool findClosestIntersection(int *faceList, int faceCount, const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s) const;
