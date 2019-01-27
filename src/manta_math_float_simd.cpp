@@ -147,6 +147,10 @@ math::Generic manta::math::mul(const Generic &v1, const Generic &v2) {
 	return _mm_mul_ps(v1, v2);
 }
 
+math::Vector math::abs(const Vector &v) {
+	return math::componentMax(v, math::negate(v));
+}
+
 math::Vector math::dot(const Vector &v1, const Vector &v2) {
 	Vector t0 = _mm_mul_ps(v1, v2);
 	Vector t1 = _mm_shuffle_ps(t0, t0, _MM_SHUFFLE(1,0,3,2));
@@ -215,11 +219,55 @@ math::Vector math::normalize(const Vector &v) {
 }
 
 math::Vector math::negate(const Vector &v) {
-	return manta::math::mul(v, constants::Negate);
+	return math::mul(v, constants::Negate);
 }
 
-math::Vector manta::math::negate3(const Vector &v) {
-	return manta::math::mul(v, constants::Negate3);
+math::Vector math::negate3(const Vector &v) {
+	return math::mul(v, constants::Negate3);
+}
+
+math::Generic math::permute(const Generic &v, int kx, int ky, int kz, int kw) {
+	return _mm_set_ps(get(v, kw), get(v, kz), get(v, ky), get(v, kx));
+}
+
+int math::maxDimension(const Generic &v) {
+	int max = 0;
+	float maxV = getX(v);
+	float y = getY(v);
+	float z = getZ(v);
+	float w = getW(v);
+
+	if (y > maxV) {
+		max = 1;
+		maxV = y;
+	}
+	if (z > maxV) {
+		max = 2;
+		maxV = z;
+	}
+	if (w > maxV) {
+		max = 3;
+	}
+
+	return max;
+}
+
+int math::maxDimension3(const Generic &v) {
+	int max = 0;
+	float maxV = getX(v);
+	float y = getY(v);
+	float z = getZ(v);
+
+	if (y > maxV) {
+		max = 1;
+		maxV = y;
+	}
+	if (z > maxV) {
+		max = 2;
+		maxV = z;
+	}
+
+	return max;
 }
 
 math::Vector math::mask(const Vector &v, const VectorMask &mask) {

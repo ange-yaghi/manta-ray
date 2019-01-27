@@ -113,6 +113,7 @@ void manta::Worker::doJob(const Job *job) {
 			for (int samp = 0; samp < rayCount; samp++) {
 				NEW_TREE(getTreeName(i, samp), emitter->getPosition());
 				LightRay *ray = &rays[samp];
+				ray->calculateTransformations();
 				math::Vector average = math::constants::Zero;
 				math::Vector samples = math::loadScalar((math::real)emitter->getSamplesPerRay());
 				m_rayTracer->traceRay(job->scene, ray, emitter->getDegree(), m_stack /**/ PATH_RECORDER_ARG);
