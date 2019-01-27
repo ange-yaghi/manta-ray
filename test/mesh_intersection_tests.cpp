@@ -10,32 +10,115 @@
 
 using namespace manta;
 
-TEST(MeshIntersectionTests, MeshIntersectionPerformance) {
-	ObjFileLoader teapotObj;
-	bool result = teapotObj.readObjFile("../../../demos/models/teapot.obj");
+TEST(MeshIntersectionTests, MeshIntersectionSanityCheck) {
+	ObjFileLoader singleTriangleObj;
+	bool result = singleTriangleObj.readObjFile("../../../test/geometry/single_triangle.obj");
 
 	Mesh mesh;
-	mesh.loadObjFileData(&teapotObj);
+	mesh.loadObjFileData(&singleTriangleObj);
+	mesh.setFastIntersectEnabled(false);
+
+	LightRay ray;
+	ray.setDirection(math::loadVector(0.0, 0.0, -1.0));
+	ray.setSource(math::loadVector(0.5, 0.0, 1.0));
+	ray.calculateTransformations();
+
+	CoarseIntersection intersection;
+	bool found = mesh.findClosestIntersection(&ray, &intersection, 0.0, math::constants::REAL_MAX, nullptr);
+
+	EXPECT_EQ(found, true);
+	EXPECT_FLOAT_EQ(intersection.depth, 1.0);
+
+	singleTriangleObj.destroy();
+	mesh.destroy();
+}
+
+TEST(MeshIntersectionTests, MeshIntersectionSanityCheckOppositeSide) {
+	ObjFileLoader singleTriangleObj;
+	bool result = singleTriangleObj.readObjFile("../../../test/geometry/single_triangle.obj");
+
+	Mesh mesh;
+	mesh.loadObjFileData(&singleTriangleObj);
+	mesh.setFastIntersectEnabled(false);
+
+	LightRay ray;
+	ray.setDirection(math::loadVector(0.0, 0.0, 1.0));
+	ray.setSource(math::loadVector(0.5, 0.0, -1.0));
+	ray.calculateTransformations();
+
+	CoarseIntersection intersection;
+	bool found = mesh.findClosestIntersection(&ray, &intersection, 0.0, math::constants::REAL_MAX, nullptr);
+
+	EXPECT_EQ(found, true);
+	EXPECT_FLOAT_EQ(intersection.depth, 1.0);
+
+	singleTriangleObj.destroy();
+	mesh.destroy();
+}
+
+TEST(MeshIntersectionTests, MeshIntersectionSanityCheckNoHit) {
+	ObjFileLoader singleTriangleObj;
+	bool result = singleTriangleObj.readObjFile("../../../test/geometry/single_triangle.obj");
+
+	Mesh mesh;
+	mesh.loadObjFileData(&singleTriangleObj);
+	mesh.setFastIntersectEnabled(false);
+
+	LightRay ray;
+	ray.setDirection(math::loadVector(0.0, 0.0, 1.0));
+	ray.setSource(math::loadVector(5.5, 0.0, -1.0));
+	ray.calculateTransformations();
+
+	CoarseIntersection intersection;
+	bool found = mesh.findClosestIntersection(&ray, &intersection, 0.0, math::constants::REAL_MAX, nullptr);
+
+	EXPECT_EQ(found, false);
+
+	singleTriangleObj.destroy();
+	mesh.destroy();
+}
+
+TEST(MeshIntersectionTests, MeshIntersectionCheckVertex) {
+	ObjFileLoader singleTriangleObj;
+	bool result = singleTriangleObj.readObjFile("../../../test/geometry/single_triangle.obj");
+
+	Mesh mesh;
+	mesh.loadObjFileData(&singleTriangleObj);
+	mesh.setFastIntersectEnabled(false);
+
+	LightRay ray;
+	ray.setDirection(math::loadVector(0.0, 0.0, -1.0));
+	ray.setSource(math::loadVector(1.0, 1.0, 1.0));
+	ray.calculateTransformations();
+
+	CoarseIntersection intersection;
+	bool found = mesh.findClosestIntersection(&ray, &intersection, 0.0, math::constants::REAL_MAX, nullptr);
+
+	EXPECT_EQ(found, true);
+	EXPECT_FLOAT_EQ(intersection.depth, 1.0);
+
+	singleTriangleObj.destroy();
+	mesh.destroy();
+}
+
+TEST(MeshIntersectionTests, MeshIntersectionSideIntersection) {
+	ObjFileLoader singleTriangleObj;
+	bool result = singleTriangleObj.readObjFile("../../../test/geometry/single_triangle.obj");
+
+	Mesh mesh;
+	mesh.loadObjFileData(&singleTriangleObj);
 	mesh.setFastIntersectEnabled(false);
 
 	LightRay ray;
 	ray.setDirection(math::loadVector(1.0, 0.0, 0.0));
-	ray.setSource(math::loadVector(-10, 1.0, 0.0));
+	ray.setSource(math::loadVector(1.0, 0.0, 0.0));
+	ray.calculateTransformations();
 
-	auto begin = std::chrono::high_resolution_clock::now();
+	CoarseIntersection intersection;
+	bool found = mesh.findClosestIntersection(&ray, &intersection, 0.0, math::constants::REAL_MAX, nullptr);
 
-	IntersectionList list;
-	for (int i = 0; i < 100; i++) {
-		//mesh.coarseIntersection(&ray, &list, nullptr, nullptr, 1E-2, nullptr);
-	}
+	EXPECT_EQ(found, false);
 
-	auto end = std::chrono::high_resolution_clock::now();
-
-	std::ofstream outputFile("../../../test_results/test_results_mesh_intersection.txt");
-	if (list.getIntersectionCount() > 0) outputFile << "Intersection detected" << std::endl;
-	outputFile << "Precomputed values struct size: " << sizeof(PrecomputedValues) << std::endl;
-	outputFile << std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count() << "ns" << std::endl;
-	outputFile.close();
-
-	list.destroy();
+	singleTriangleObj.destroy();
+	mesh.destroy();
 }

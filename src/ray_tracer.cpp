@@ -128,6 +128,7 @@ void manta::RayTracer::traceRayEmitter(const Scene *scene, RayEmitter *emitter, 
 
 	for (int i = 0; i < rayCount; i++) {
 		LightRay *ray = &rays[i];
+		ray->calculateTransformations();
 
 		math::Vector average = math::constants::Zero;
 		math::Vector samples = math::loadScalar((math::real)emitter->getSamplesPerRay());
