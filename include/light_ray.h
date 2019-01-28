@@ -31,6 +31,7 @@ namespace manta {
 		int getKZ() const { return m_kz; }
 		const math::Vector3 &getShear() const { return m_shear; }
 		math::Vector getPermutedDirection() const { return m_permutedDirection; }
+		math::Vector getInverseDirection() const { return m_inverseDirection; }
 
 	protected:
 		math::Vector m_direction;
@@ -42,6 +43,7 @@ namespace manta {
 		int m_kx, m_ky, m_kz;
 		math::Vector3 m_shear;
 		math::Vector m_permutedDirection;
+		math::Vector m_inverseDirection;
 	};
 
 } /* namespace manta */

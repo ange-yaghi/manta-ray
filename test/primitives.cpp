@@ -6,6 +6,7 @@
 #include <sphere_primitive.h>
 #include <intersection_point.h>
 #include <intersection_list.h>
+#include <primitives.h>
 
 #include <manta_math.h>
 
@@ -72,4 +73,74 @@ TEST(PrimitiveTests, SphereIntersectionInside) {
 	//EXPECT_TRUE(list.getIntersectionCount() == 1);
 
 	list.destroy();
+}
+
+TEST(PrimitiveTests, AABBSanityCheck) {
+	LightRay ray;
+	ray.setDirection(math::loadVector(-1.0, 0.0, 0.0));
+	ray.setSource(math::loadVector(0.0, 0.0, 0.0));
+	ray.calculateTransformations();
+
+	AABB aabb;
+	aabb.maxPoint = math::loadVector(1.0, 1.0, 1.0);
+	aabb.minPoint = math::loadVector(-1.0, -1.0, -1.0);
+
+	math::real tmin, tmax;
+	bool detected = aabb.rayIntersect(ray, &tmin, &tmax);
+
+	EXPECT_EQ(tmin, 0.0);
+	EXPECT_EQ(tmax, 1.0);
+	EXPECT_TRUE(detected);
+}
+
+TEST(PrimitiveTests, AABBCheck1) {
+	LightRay ray;
+	ray.setDirection(math::loadVector(-1.0, 0.0, 0.0));
+	ray.setSource(math::loadVector(2.0, 0.0, 0.0));
+	ray.calculateTransformations();
+
+	AABB aabb;
+	aabb.maxPoint = math::loadVector(1.0, 1.0, 1.0);
+	aabb.minPoint = math::loadVector(-1.0, -1.0, -1.0);
+
+	math::real tmin, tmax;
+	bool detected = aabb.rayIntersect(ray, &tmin, &tmax);
+
+	EXPECT_EQ(tmin, 1.0);
+	EXPECT_EQ(tmax, 3.0);
+	EXPECT_TRUE(detected);
+}
+
+TEST(PrimitiveTests, AABBEdgeTest) {
+	LightRay ray;
+	ray.setDirection(math::loadVector(-1.0, 0.0, 0.0));
+	ray.setSource(math::loadVector(2.0, 1.0, 1.0));
+	ray.calculateTransformations();
+
+	AABB aabb;
+	aabb.maxPoint = math::loadVector(1.0, 1.0, 1.0);
+	aabb.minPoint = math::loadVector(-1.0, -1.0, -1.0);
+
+	math::real tmin, tmax;
+	bool detected = aabb.rayIntersect(ray, &tmin, &tmax);
+
+	EXPECT_EQ(tmin, 1.0);
+	EXPECT_EQ(tmax, 3.0);
+	EXPECT_TRUE(detected);
+}
+
+TEST(PrimitiveTests, AABBNoHitTest) {
+	LightRay ray;
+	ray.setDirection(math::loadVector(-1.0, 0.0, 0.0));
+	ray.setSource(math::loadVector(2.0, 1.1, 1.0));
+	ray.calculateTransformations();
+
+	AABB aabb;
+	aabb.maxPoint = math::loadVector(1.0, 1.0, 1.0);
+	aabb.minPoint = math::loadVector(-1.0, -1.0, -1.0);
+
+	math::real tmin, tmax;
+	bool detected = aabb.rayIntersect(ray, &tmin, &tmax);
+
+	EXPECT_FALSE(detected);
 }
