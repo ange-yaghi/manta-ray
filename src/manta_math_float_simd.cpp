@@ -115,6 +115,26 @@ float manta::math::getW(const Vector &v) {
 	return v.m128_f32[3];
 }
 
+void math::setX(Vector &v, math::real value) {
+	v.m128_f32[0] = value;
+}
+
+void math::setY(Vector &v, math::real value) {
+	v.m128_f32[1] = value;
+}
+
+void math::setZ(Vector &v, math::real value) {
+	v.m128_f32[2] = value;
+}
+
+void math::setW(Vector &v, math::real value) {
+	v.m128_f32[3] = value;
+}
+
+void math::set(Vector &v, int index, math::real value) {
+	v.m128_f32[index] = value;
+}
+
 float manta::math::getQuatX(const Quaternion &v) {
 	return v.m128_f32[1];
 }

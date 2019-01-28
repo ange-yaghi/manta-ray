@@ -19,4 +19,6 @@ void manta::LightRay::calculateTransformations() {
 	m_shear.x = -math::getX(m_permutedDirection) / dirZ;
 	m_shear.y = -math::getY(m_permutedDirection) / dirZ;
 	m_shear.z = (math::real)1.0 / dirZ;
+
+	m_inverseDirection = math::div(math::constants::One, m_direction);
 }

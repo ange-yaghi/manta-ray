@@ -69,7 +69,11 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	octree.initialize(100.0, math::loadVector(0, 0, 0));
 	octree.analyze(&boxCity, 25);
 
-	octree.writeToObjFile("../../workspace/test_results/box_city_octree.obj", nullptr);
+	KDTree kdtree;
+	kdtree.initialize(100.0, math::constants::Zero);
+	kdtree.analyze(&boxCity, 4);
+
+	kdtree.writeToObjFile("../../workspace/test_results/box_city_kdtree.obj");
 
 	std::cout << "Scene vertices/faces: " << boxCity.getVertexCount() << "/" << boxCity.getFaceCount() << std::endl;
 	std::cout << "Octree faces: " << octree.countFaces() << std::endl;
@@ -78,7 +82,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	constexpr bool useOctree = true;
 
 	SceneObject *boxCityObject = scene.createSceneObject();
-	if (useOctree) boxCityObject->setGeometry(&octree);
+	if (useOctree) boxCityObject->setGeometry(&kdtree);
 	else boxCityObject->setGeometry(&boxCity);
 	boxCityObject->setDefaultMaterial(&wallMaterial);
 
@@ -101,7 +105,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	math::Vector cameraPos = math::loadVector(15.4473, 4.59977, 13.2961);
 	math::Vector target = math::loadVector(2.63987, 3.55547, 2.42282);
 
-	constexpr bool regularCamera = false;
+	constexpr bool regularCamera = true;
 
 	CameraRayEmitterGroup *group;
 
@@ -192,6 +196,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	boxCity.destroy();
 	boxCityObj.destroy();
 	octree.destroy();
+	kdtree.destroy();
 
 	std::cout << "Standard allocator memory leaks:     " << StandardAllocator::Global()->getLedger() << ", " << StandardAllocator::Global()->getCurrentUsage() << std::endl;
 }
