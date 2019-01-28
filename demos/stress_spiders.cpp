@@ -49,6 +49,10 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 	stressSpidersOctree.analyze(&stressSpiders, 25);
 	//stressSpidersOctree.writeToObjFile("../../workspace/test_results/stress_spiders_octree.obj", nullptr);
 
+	KDTree kdtree;
+	kdtree.initialize(32.0, math::constants::Zero);
+	kdtree.analyze(&stressSpiders, 4);
+
 	SpherePrimitive outdoorTopLightGeometry;
 	outdoorTopLightGeometry.setRadius((math::real)10.0);
 	//outdoorTopLightGeometry.setRadius((math::real)20.0);
@@ -63,7 +67,7 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 	// Create scene objects
 	SceneObject *stressSpidersObject = scene.createSceneObject();
 	if (useOctree) {
-		stressSpidersObject->setGeometry(&stressSpidersOctree);
+		stressSpidersObject->setGeometry(&kdtree);
 	}
 	else {
 		stressSpidersObject->setGeometry(&stressSpiders);
@@ -90,7 +94,7 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 	up = math::normalize(up);
 
 	// Create the camera
-	constexpr bool regularCamera = false;
+	constexpr bool regularCamera = true;
 	CameraRayEmitterGroup *group;
 	manta::SimpleLens lens;
 	lens.initialize();
@@ -184,6 +188,7 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 
 	stressSpidersOctree.destroy();
 	stressSpiders.destroy();
+	kdtree.destroy();
 
 	std::cout << "Standard allocator memory leaks:     " << StandardAllocator::Global()->getLedger() << ", " << StandardAllocator::Global()->getCurrentUsage() << std::endl;
 }

@@ -30,6 +30,7 @@
     <ClCompile Include="..\..\src\grid_sampler.cpp" />
     <ClCompile Include="..\..\src\hemi_monte_carlo_emitter.cpp" />
     <ClCompile Include="..\..\src\hemi_monte_carlo_emitter_group.cpp" />
+    <ClCompile Include="..\..\src\kd_tree.cpp" />
     <ClCompile Include="..\..\src\lambertian_bsdf.cpp" />
     <ClCompile Include="..\..\src\manta_math.cpp" />
     <ClCompile Include="..\..\src\material_manager.cpp" />
@@ -37,6 +38,7 @@
     <ClCompile Include="..\..\src\phong_bsdf.cpp" />
     <ClCompile Include="..\..\src\phong_emitter.cpp" />
     <ClCompile Include="..\..\src\phong_emitter_group.cpp" />
+    <ClCompile Include="..\..\src\primitives.cpp" />
     <ClCompile Include="..\..\src\random_sampler.cpp" />
     <ClCompile Include="..\..\src\sampler_2d.cpp" />
     <ClCompile Include="..\..\src\simple_phong_lambert_material.cpp" />
@@ -100,6 +102,7 @@
     <ClInclude Include="..\..\include\grid_sampler.h" />
     <ClInclude Include="..\..\include\hemi_monte_carlo_emitter.h" />
     <ClInclude Include="..\..\include\hemi_monte_carlo_emitter_group.h" />
+    <ClInclude Include="..\..\include\kd_tree.h" />
     <ClInclude Include="..\..\include\lambertian_bsdf.h" />
     <ClInclude Include="..\..\include\material_manager.h" />
     <ClInclude Include="..\..\include\media_interface.h" />
@@ -108,6 +111,7 @@
     <ClInclude Include="..\..\include\phong_bsdf.h" />
     <ClInclude Include="..\..\include\phong_emitter.h" />
     <ClInclude Include="..\..\include\phong_emitter_group.h" />
+    <ClInclude Include="..\..\include\primitives.h" />
     <ClInclude Include="..\..\include\random_sampler.h" />
     <ClInclude Include="..\..\include\simple_phong_lambert_material.h" />
     <ClInclude Include="..\..\include\simple_sampler.h" />

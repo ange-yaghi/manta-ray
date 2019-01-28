@@ -117,13 +117,16 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	sampleRay.setDirection(dir);
 	sampleRay.setSource(cameraPos);
 
-	Octree stressSpidersOctree;
-	stressSpidersOctree.initialize(32, math::constants::Zero);
-	stressSpidersOctree.analyze(&stressSpiders, 10); //25
-	stressSpidersOctree.writeToObjFile("../../workspace/test_results/complex_room_octree.obj", &sampleRay);
+	//Octree stressSpidersOctree;
+	//stressSpidersOctree.initialize(32, math::constants::Zero);
+	//stressSpidersOctree.analyze(&stressSpiders, 10); //25
 
-	std::cout << "Octree faces: " << stressSpidersOctree.countFaces() << std::endl;
-	std::cout << "Leaf count: " << stressSpidersOctree.countLeaves() << std::endl;
+	KDTree kdtree;
+	kdtree.initialize(100.0, math::constants::Zero);
+	kdtree.analyze(&stressSpiders, 4);
+
+	//std::cout << "Octree faces: " << stressSpidersOctree.countFaces() << std::endl;
+	//std::cout << "Leaf count: " << stressSpidersOctree.countLeaves() << std::endl;
 
 	SpherePrimitive outdoorTopLightGeometry;
 	outdoorTopLightGeometry.setRadius((math::real)10.0);
@@ -139,7 +142,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	// Create scene objects
 	SceneObject *stressSpidersObject = scene.createSceneObject();
 	if (useOctree) {
-		stressSpidersObject->setGeometry(&stressSpidersOctree);
+		stressSpidersObject->setGeometry(&kdtree);
 	}
 	else {
 		stressSpidersObject->setGeometry(&stressSpiders);
@@ -179,6 +182,8 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	GridSampler sampler;
 	sampler.setGridWidth(3);
 
+	RandomSampler randomSampler;
+
 	if (regularCamera) {
 		StandardCameraRayEmitterGroup *camera = new StandardCameraRayEmitterGroup;
 		//camera->setSamplingWidth(3);
@@ -190,7 +195,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 		camera->setResolutionX(resolutionX);
 		camera->setResolutionY(resolutionY);
 		camera->setSampleCount(samplesPerPixel);
-		camera->setSampler(&sampler);
+		camera->setSampler(&randomSampler);
 
 		group = camera;
 	}
@@ -257,8 +262,9 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	sceneBuffer.destroy();
 	rayTracer.destroy();
 
-	stressSpidersOctree.destroy();
+	//stressSpidersOctree.destroy();
 	stressSpiders.destroy();
+	kdtree.destroy();
 
 	std::cout << "Standard allocator memory leaks:     " << StandardAllocator::Global()->getLedger() << ", " << StandardAllocator::Global()->getCurrentUsage() << std::endl;
 }

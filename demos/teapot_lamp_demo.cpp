@@ -76,6 +76,10 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	teapotOctree.analyze(&teapot, 25);
 	//teapotOctree.writeToObjFile("../../workspace/test_results/teapot_lamp_octree.obj", nullptr);
 
+	KDTree kdtree;
+	kdtree.initialize(4.0, math::constants::Zero);
+	kdtree.analyze(&teapot, 4);
+
 	SpherePrimitive bulb;
 	bulb.setRadius(0.25);
 	bulb.setPosition(math::loadVector(0.10669, 3.42135, -2.47464));
@@ -108,7 +112,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 
 	SceneObject *teapotObject = scene.createSceneObject();
 	if (useOctree) {
-		teapotObject->setGeometry(&teapotOctree);
+		teapotObject->setGeometry(&kdtree);
 	}
 	else {
 		teapotObject->setGeometry(&teapot);
@@ -164,7 +168,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	// Leaks
 	//rayTracer.tracePixel(1281, 900, &scene, &camera);
 	//rayTracer.tracePixel(1456, 1230, &scene, &camera);
-	//rayTracer.tracePixel(616, 1459, &scene, &camera);
+	//rayTracer.tracePixel(1160, 1017, &scene, &camera);
 
 	rayTracer.traceAll(&scene, &camera);
 
@@ -197,6 +201,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	teapot.destroy();
 	teapotObj.destroy();
 	teapotOctree.destroy();
+	kdtree.destroy();
 
 	std::cout << "Standard allocator memory leaks:     " << StandardAllocator::Global()->getLedger() << ", " << StandardAllocator::Global()->getCurrentUsage() << std::endl;
 }
