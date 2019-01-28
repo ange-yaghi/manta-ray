@@ -79,6 +79,10 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	penOctree.analyze(&pen, 25);
 	penOctree.writeToObjFile("../../workspace/test_results/pen_octree.obj", nullptr);
 
+	KDTree kdtree;
+	kdtree.initialize(150, math::constants::Zero);
+	kdtree.analyze(&pen, 4);
+
 	math::real lightRadius = 10.0;
 
 	SpherePrimitive light1Geometry;
@@ -102,7 +106,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	// Create scene objects
 	SceneObject *penObject = scene.createSceneObject();
 	if (useOctree) {
-		penObject->setGeometry(&penOctree);
+		penObject->setGeometry(&kdtree);
 	}
 	else {
 		penObject->setGeometry(&pen);
@@ -237,6 +241,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	pen.destroy();
 
 	penOctree.destroy();
+	kdtree.destroy();
 
 	std::cout << "Standard allocator memory leaks:     " << StandardAllocator::Global()->getLedger() << ", " << StandardAllocator::Global()->getCurrentUsage() << std::endl;
 }

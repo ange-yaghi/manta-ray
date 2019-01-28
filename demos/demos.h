@@ -34,6 +34,7 @@
 #include <random_sampler.h>
 #include <simple_sampler.h>
 #include <standard_camera_ray_emitter_group.h>
+#include <kd_tree.h>
 
 namespace manta_demo {
 

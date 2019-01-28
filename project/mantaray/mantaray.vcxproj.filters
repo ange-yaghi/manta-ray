@@ -253,6 +253,12 @@
     <Filter Include="Source Files\emitter\sampler">
       <UniqueIdentifier>{06b4d31e-b294-4cb9-87f4-a7e1c339eb0c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\primitives">
+      <UniqueIdentifier>{c9dbeaef-19b1-44fb-80ca-c9cee3f0e6d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\primitives">
+      <UniqueIdentifier>{0dae93d1-ec3c-4227-8f92-af96102ef0ae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -455,6 +461,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\simple_sampler.cpp">
       <Filter>Source Files\emitter\sampler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kd_tree.cpp">
+      <Filter>Source Files\spatial-partitioning</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\primitives.cpp">
+      <Filter>Source Files\primitives</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -703,6 +715,12 @@
     </ClInclude>
     <ClInclude Include="..\..\include\simple_sampler.h">
       <Filter>Header Files\emitter\sampler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\kd_tree.h">
+      <Filter>Header Files\space-partitioning</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\primitives.h">
+      <Filter>Header Files\primitives</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

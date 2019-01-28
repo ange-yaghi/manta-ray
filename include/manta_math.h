@@ -183,6 +183,12 @@ namespace manta {
 		real getZ(const Vector &v);
 		real getW(const Vector &v);
 
+		void setX(Vector &v, math::real value);
+		void setY(Vector &v, math::real value);
+		void setZ(Vector &v, math::real value);
+		void setW(Vector &v, math::real value);
+		void set(Vector &v, int index, math::real value);
+
 		inline real realNAN() { return std::numeric_limits<real>::quiet_NaN(); }
 		real get(const Vector &v, int index);
 
