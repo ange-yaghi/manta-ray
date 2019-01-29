@@ -22,9 +22,8 @@ namespace manta {
 		void setMaxDegree(int degree) { m_maxDegree = degree; }
 		int getMaxDegree() const { return m_maxDegree; }
 
-		virtual void integrateRay(LightRay *ray, const RayEmitterGroup *_rayEmitter, const IntersectionPoint *intersectionPoint) const;
-
-		virtual void configureEmitterGroup(RayEmitterGroup *group, int degree, const LightRay *ray, const IntersectionPoint *intersectionPoint) const;
+		void generateRays(RayContainer *rays, const LightRay &incidentRay, const IntersectionPoint &intersectionPoint, int degree, StackAllocator *stackAllocator = nullptr) const;
+		virtual void integrateRay(LightRay *ray, const RayContainer &rays, const IntersectionPoint &intersectionPoint) const;
 
 		PhongBSDF *getDiffuseBSDF() { return &m_diffuseBSDF; }
 		PhongBSDF *getSpecularBSDF() { return &m_specularBSDF; }
@@ -46,9 +45,6 @@ namespace manta {
 		
 		math::Vector m_specularColor;
 		math::real m_surfaceTransmission;
-
-		virtual RayEmitterGroup *generateRayEmittersInternal(const LightRay *ray, const IntersectionPoint *intersectionPoint, int degree, StackAllocator *stackAllocator) const;
-
 	};
 
 } /* namespace manta */

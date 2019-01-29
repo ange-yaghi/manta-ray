@@ -30,6 +30,12 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	chrome->getSpecularBSDF()->setMediaInterface(&chromeFresnel);
 	//chrome->setSurfaceTransmission(0.95);
 
+	SimpleLambertMaterial *test = rayTracer.getMaterialManager()->newMaterial<SimpleLambertMaterial>();
+	test->setEmission(math::constants::Zero);
+	test->setDiffuseColor(getColor(200, 200, 200));
+	test->setName("PenBodyTest");
+	test->setEmission(getColor(100, 100, 100));
+
 	SimplePhongLambertMaterial *paint = rayTracer.getMaterialManager()->newMaterial<SimplePhongLambertMaterial>();
 	DielectricMediaInterface paintFresnel;
 	paintFresnel.setIorIncident(1.0);
@@ -43,7 +49,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	paint->setSpecularColor(getColor(0xFF, 0x08, 0x14));
 	paint->setSpecularColor(getColor(0xFF, 0xFF, 0xFF));
 	paint->getDiffuseBSDF()->setPower((math::real)1.0);
-	paint->getSpecularBSDF()->setPower((math::real)1024.0);
+	paint->getSpecularBSDF()->setPower((math::real)1.0);
 	paint->getSpecularBSDF()->setMediaInterface(&paintFresnel);
 	//paint->setSurfaceTransmission(0.3);
 	//paint->setSurfaceTransmission(1.0);
@@ -71,10 +77,10 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	groundMaterial->getSpecularBSDF()->setMediaInterface(&groundFresnel);
 	//groundMaterial->setSurfaceTransmission(0.4);
 
-	SimpleSpecularDiffuseMaterial outdoorTopLightMaterial;
+	SimpleLambertMaterial outdoorTopLightMaterial;
 	outdoorTopLightMaterial.setEmission(math::loadVector(2, 2, 2));
 	outdoorTopLightMaterial.setDiffuseColor(math::constants::Zero);
-	outdoorTopLightMaterial.setSpecularColor(math::constants::Zero);
+	//outdoorTopLightMaterial.setSpecularColor(math::constants::Zero);
 
 	// Create all scene geometry
 	Mesh pen;
@@ -160,7 +166,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	cameraPos = math::sub(cameraPos, math::mul(dir, math::loadScalar(3.9))); // 3.9
 
 	// Create the camera
-	constexpr bool regularCamera = false;
+	constexpr bool regularCamera = true;
 	CameraRayEmitterGroup *group;
 	manta::SimpleLens lens;
 	lens.initialize();
@@ -213,7 +219,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	// Create the raytracer
 	rayTracer.initialize(800 * MB, 5 * MB, 12, 10000, true);
 	rayTracer.setBackgroundColor(getColor(0, 0, 0));
-	//rayTracer.setDeterministicSeedMode(true);
+	rayTracer.setDeterministicSeedMode(false);
 	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");
 	//rayTracer.tracePixel(1829, 934, &scene, group);
 	//rayTracer.tracePixel(702, 236, &scene, &camera);

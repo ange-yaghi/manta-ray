@@ -31,7 +31,7 @@ manta::MediaInterface::DIRECTION manta::BSDF::decideDirection(const math::Vector
 }
 
 manta::math::Vector manta::BSDF::transmissionDirection(math::real ior, const math::Vector &incident, const math::Vector &m, const math::Vector &n) const {
-	math::real sgn = ::signbit(math::getScalar(math::dot(incident, n)) ? 1.0 : -1.0);
+	math::real sgn = ::signbit(math::getScalar(math::dot(incident, n))) ? 1.0 : -1.0;
 	math::real c = math::getScalar(math::dot(incident, m));
 	math::real t1 = ior * c - sgn * ::sqrt(1 + ior * (c * c - 1));
 

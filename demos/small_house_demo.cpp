@@ -20,30 +20,30 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 	RayTracer rayTracer;
 
 	// Create all materials
-	SimpleSpecularDiffuseMaterial wallMaterial;
+	SimpleLambertMaterial wallMaterial;
 	wallMaterial.setEmission(math::constants::Zero);
 	wallMaterial.setDiffuseColor(getColor(200, 200, 200));
-	wallMaterial.setSpecularColor(math::constants::Zero);
+	//wallMaterial.setSpecularColor(math::constants::Zero);
 
-	SimpleSpecularDiffuseMaterial outdoorLight;
+	SimpleLambertMaterial outdoorLight;
 	outdoorLight.setEmission(math::loadVector(18, 16, 16));
 	outdoorLight.setDiffuseColor(math::constants::Zero);
-	outdoorLight.setSpecularColor(math::constants::Zero);
+	//outdoorLight.setSpecularColor(math::constants::Zero);
 
-	SimpleSpecularDiffuseMaterial outdoorTopLightMaterial;
+	SimpleLambertMaterial outdoorTopLightMaterial;
 	outdoorTopLightMaterial.setEmission(math::loadVector(20, 20, 22));
 	outdoorTopLightMaterial.setDiffuseColor(math::constants::Zero);
-	outdoorTopLightMaterial.setSpecularColor(math::constants::Zero);
+	//outdoorTopLightMaterial.setSpecularColor(math::constants::Zero);
 
-	SimpleSpecularDiffuseMaterial *tableMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleSpecularDiffuseMaterial>();
+	SimpleLambertMaterial *tableMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleLambertMaterial>();
 	tableMaterial->setEmission(math::constants::Zero);
 	tableMaterial->setDiffuseColor(getColor(78, 46, 40));
-	tableMaterial->setSpecularColor(getColor(100, 100, 100));
+	//tableMaterial->setSpecularColor(getColor(100, 100, 100));
 
-	SimpleSpecularDiffuseMaterial groundMaterial;
+	SimpleLambertMaterial groundMaterial;
 	groundMaterial.setEmission(math::constants::Zero);
 	groundMaterial.setDiffuseColor(math::mul(math::loadVector(78, 46, 40), math::loadScalar(0.001)));
-	groundMaterial.setSpecularColor(math::constants::Zero);
+	//groundMaterial.setSpecularColor(math::constants::Zero);
 
 	// Create all scene geometry
 	Mesh smallHouse;

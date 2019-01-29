@@ -11,9 +11,6 @@
 #include <scene_object.h>
 #include <scene_geometry.h>
 #include <material.h>
-#include <simple_diffuse_material.h>
-#include <simple_specular_diffuse_material.h>
-#include <standard_specular_diffuse_material.h>
 #include <ray_tracer.h>
 #include <image_handling.h>
 #include <memory_management.h>
@@ -36,6 +33,7 @@
 #include <standard_camera_ray_emitter_group.h>
 #include <kd_tree.h>
 #include <media_interface.h>
+#include <simple_lambert_material.h>
 
 namespace manta_demo {
 

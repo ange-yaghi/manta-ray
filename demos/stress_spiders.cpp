@@ -30,10 +30,10 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 	groundMaterial->setSpecularColor(math::constants::Zero);
 	groundMaterial->setSurfaceTransmission((math::real)0.0);
 
-	SimpleSpecularDiffuseMaterial outdoorTopLightMaterial;
+	SimpleLambertMaterial outdoorTopLightMaterial;
 	outdoorTopLightMaterial.setEmission(math::loadVector(5, 5, 5));
 	outdoorTopLightMaterial.setDiffuseColor(math::constants::Zero);
-	outdoorTopLightMaterial.setSpecularColor(math::constants::Zero);
+	//outdoorTopLightMaterial.setSpecularColor(math::constants::Zero);
 
 	// Create all scene geometry
 	Mesh stressSpiders;

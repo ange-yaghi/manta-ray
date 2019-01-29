@@ -2,8 +2,8 @@
 
 #include <material.h>
 #include <light_ray.h>
-#include <ray_emitter.h>
-#include <ray_emitter_group.h>
+#include <camera_ray_emitter.h>
+#include <camera_ray_emitter_group.h>
 #include <scene.h>
 #include <scene_object.h>
 #include <intersection_point.h>
@@ -14,10 +14,9 @@
 #include <intersection_list.h>
 #include <camera_ray_emitter_group.h>
 #include <path_recorder.h>
-#include <simple_scatter_emitter_group.h>
-#include <simple_scatter_emitter.h>
 #include <standard_allocator.h>
 #include <stack_list.h>
+#include <ray_container.h>
 
 #include <iostream>
 #include <thread>
@@ -40,7 +39,6 @@ void manta::RayTracer::traceAll(const Scene *scene, CameraRayEmitterGroup *group
 	auto startTime = std::chrono::system_clock::now();
 
 	// Set up the emitter group
-	group->setDegree(0);
 	group->setStackAllocator(&m_stack);
 	group->createAllEmitters();
 
@@ -102,7 +100,6 @@ void manta::RayTracer::tracePixel(int px, int py, const Scene *scene, CameraRayE
 	int pixelIndex = py * group->getResolutionX() + px;
 
 	// Set up the emitter group
-	group->setDegree(0);
 	group->setStackAllocator(&m_stack);
 	group->createAllEmitters();
 
@@ -120,26 +117,27 @@ void manta::RayTracer::tracePixel(int px, int py, const Scene *scene, CameraRayE
 	waitForWorkers();
 }
 
-void manta::RayTracer::traceRayEmitter(const Scene *scene, RayEmitter *emitter, StackAllocator *s /**/ PATH_RECORDER_DECL) const {
-	emitter->generateRays();
+void manta::RayTracer::traceRayEmitter(const CameraRayEmitter *emitter, RayContainer *container, const Scene *scene, StackAllocator *s /**/ PATH_RECORDER_DECL) const {
+	// Get the target ray container
 
-	LightRay *rays = emitter->getRays();
-	int rayCount = emitter->getRayCount();
+	emitter->generateRays(container);
+
+	LightRay *rays = container->getRays();
+	int rayCount = container->getRayCount();
 
 	for (int i = 0; i < rayCount; i++) {
 		LightRay *ray = &rays[i];
 		ray->calculateTransformations();
 
-		math::Vector average = math::constants::Zero;
-		math::Vector samples = math::loadScalar((math::real)emitter->getSamplesPerRay());
-		for (int samp = 0; samp < emitter->getSamplesPerRay(); samp++) {
-			traceRay(scene, ray, emitter->getDegree(), s /**/ PATH_RECORDER_VAR);
-			average = math::add(average, math::div(ray->getWeightedIntensity(), samples));
-		}
-		ray->setIntensity(average);
+		math::Vector intensity = math::constants::Zero;
+
+		traceRay(scene, ray, 0, s /**/ PATH_RECORDER_VAR);
+		intensity = ray->getWeightedIntensity();
+
+		ray->setIntensity(intensity);
 	}
 
-	emitter->calculateIntensity();
+	container->calculateIntensity();
 }
 
 void manta::RayTracer::initialize(unsigned int stackSize, unsigned int workerStackSize, int threadCount, int renderBlockSize, bool multithreaded) {
@@ -230,19 +228,7 @@ void manta::RayTracer::depthCull(const Scene *scene, const LightRay *ray, SceneO
 		point->m_valid = true;
 		*closestObject = closestIntersection.sceneObject;
 
-		for (int i = 0; i < objectCount; i++) {
-			SceneObject *object = scene->getSceneObject(i);
-			SceneGeometry *geometry = object->getGeometry();
-
-			//geometry->getVicinity(position, (math::real)1E-2, &list, object);
-		}
-
 		refineContact(ray, closestIntersection.depth, &list, point, closestObject, s);
-
-		//if (conflicts < 2) {
-		//	point->m_valid = false;
-		//	*closestObject = nullptr;
-		//}
 	}
 	else {
 		point->m_valid = false;
@@ -253,68 +239,9 @@ void manta::RayTracer::depthCull(const Scene *scene, const LightRay *ray, SceneO
 }
 
 void manta::RayTracer::refineContact(const LightRay *ray, math::real depth, IntersectionList *list, IntersectionPoint *point, SceneObject **closestObject, StackAllocator *s) const {
-	/*int conflicts = list->getIntersectionCount();
-	int contactCount = list->getIntersectionCount();
-	for (int i = 0; i < contactCount; i++) {
-		CoarseIntersection *ci = list->getIntersection(i);
-		if (ci->valid) {
-			for (int j = i + 1; j < contactCount; j++) {
-				CoarseIntersection *cj = list->getIntersection(j);
-				if (cj->valid) {
-					if (ci->globalHint == cj->globalHint && ci->sceneObject == cj->sceneObject) {
-						cj->valid = false;
-						conflicts--;
-					}
-				}
-			}
-		}
-	}*/
-
-	// Determine which contact is the correct one
-	constexpr int samples = 10;
-	constexpr math::real photonRadius = (math::real)1E-3;
-	math::real distance = (math::real)1E-2;
-	math::real step = distance / 10;
-
-	CoarseIntersection *f = nullptr;
-
-	/*
-	for (int i = 0; i < samples; i++) {
-		math::Vector pos = math::sub(point->m_position, math::mul(math::loadScalar(step * i), ray->getDirection()));
-
-		math::real closest = math::constants::REAL_MAX;
-		CoarseIntersection *newInt = nullptr;
-
-		for (int c = 0; c < contactCount; c++) {
-			CoarseIntersection *ci = list->getIntersection(c);
-			if (ci->valid) {
-				math::Vector closestPoint = ci->sceneGeometry->getClosestPoint(ci, pos);
-				math::Vector d = math::sub(closestPoint, pos);
-				math::real dist2 = math::getScalar(math::magnitudeSquared3(d));
-				if (dist2 < distance * distance) {
-					math::real dot = math::getScalar(math::dot(math::normalize(d), ray->getDirection()));
-					if (dot >= 1E-4) {
-						if (dist2 < closest) {
-							newInt = ci;
-						}
-					}
-					if (dist2 < closest) {
-						closest = dist2;
-					}
-				}
-			}
-		}
-
-		if (newInt != nullptr) {
-			f = newInt;
-		}
-	}*/
-
-	if (f != nullptr) f->sceneGeometry->fineIntersection(point->m_position, point, f);
-
 	// Simple bias
 	math::real d = depth;
-	d -= 5E-3;
+	d -= (math::real)5E-3;
 	if (d < (math::real)0.0) {
 		d = (math::real)0.0;
 	}
@@ -333,95 +260,47 @@ void manta::RayTracer::traceRay(const Scene *scene, LightRay *ray, int degree, S
 
 	depthCull(scene, ray, &sceneObject, &point, s);
 
-	math::real scatterDepth = (point.m_intersection) ? point.m_depth : 11.0;
-	if (scatterDepth > 11.0) scatterDepth = 11.0;
-	math::real scatterPDF = 0.03 * scatterDepth; // 10% chance per 10 units travelled
-	math::real scatter = math::uniformRandom(1.0);
-	constexpr bool causticScatter = false;
-	if (causticScatter && scatter < scatterPDF && degree < 5) {
-		// Do a scatter for caustic simulation
-		void *buffer = s->allocate(sizeof(SimpleScatterEmitterGroup), 16);
-		SimpleScatterEmitterGroup *group = new (buffer) SimpleScatterEmitterGroup;
-
-		group->setStackAllocator(s);
-		group->setDegree(degree + 1);
-		group->createAllEmitters();
-
-		constexpr math::real epsilon = 1E-3;
-		math::real depth; 
-		depth = math::uniformRandom(scatterDepth - epsilon) + epsilon;
-
-		math::Vector pos = math::add(ray->getSource(), math::mul(ray->getDirection(), math::loadScalar(depth)));
-		group->m_simpleRayEmitter->setPosition(pos);
-		group->m_simpleRayEmitter->setDirection(ray->getDirection());
-		group->m_simpleRayEmitter->setSamplesPerRay(1);
-
-		START_BRANCH(pos);
-		traceRayEmitterGroup(scene, group, s /**/ PATH_RECORDER_VAR);
-		END_BRANCH();
-
-		// Simple ray integration
-		ray->setIntensity(math::mul(group->m_simpleRayEmitter->getIntensity(), math::loadScalar(1.0)));
-
-		// Data must be freed in reverse order
-		int emitterCount = group->getEmitterCount();
-		for (int i = emitterCount - 1; i >= 0; i--) {
-			group->getEmitters()[i]->destroyRays();
-		}
-
-		group->destroyEmitters();
-		group->~SimpleScatterEmitterGroup();
-		s->free((void *)group);
-	}
-	else {
-		if (sceneObject != nullptr) {
-			START_BRANCH(point.m_position); // For path recording
-			Material *material;
-			if (point.m_material == -1) {
-				material = sceneObject->getDefaultMaterial();
-			}
-			else {
-				material = m_materialManager.getMaterial(point.m_material);
-			}
-			RayEmitterGroup *group = nullptr;
-			if (point.m_valid) group = material->generateRayEmitterGroup(ray, &point, degree + 1, s);
-
-			if (group != nullptr) {
-				traceRayEmitterGroup(scene, group, s /**/ PATH_RECORDER_VAR);
-			}
-
-			material->integrateRay(ray, group, &point);
-
-			if (group != nullptr) {
-				// Destroy rays
-				int emitterCount = group->getEmitterCount();
-				for (int i = 0; i < emitterCount; i++) {
-					group->getEmitter(i)->destroyRays();
-				}
-
-				material->destroyEmitterGroup(group, s);
-			}
-
-			END_BRANCH();
+	if (sceneObject != nullptr) {
+		START_BRANCH(point.m_position); // For path recording
+		Material *material;
+		if (point.m_material == -1) {
+			material = sceneObject->getDefaultMaterial();
 		}
 		else {
-			// The ray hit nothing so it receives the background color
-			ray->setIntensity(m_backgroundColor);
-
-			// Point a ray in the air
-			START_BRANCH(math::add(ray->getSource(), math::mul(ray->getDirection(), math::loadScalar((math::real)1000.0))));
-			END_BRANCH();
+			material = m_materialManager.getMaterial(point.m_material);
 		}
+		
+		// Create a new container
+		RayContainer container;
+		container.setStackAllocator(s);
+		container.setDegree(degree + 1);
+		if (point.m_valid) {
+			material->generateRays(&container, *ray, point, degree + 1, s);
+		}
+
+		traceRays(scene, container, s /**/ PATH_RECORDER_VAR);
+		material->integrateRay(ray, container, point);
+		container.destroyRays();
+
+		END_BRANCH();
+	}
+	else {
+		// The ray hit nothing so it receives the background color
+		ray->setIntensity(m_backgroundColor);
+
+		// Point a ray in the air
+		START_BRANCH(math::add(ray->getSource(), math::mul(ray->getDirection(), math::loadScalar((math::real)1000.0))));
+		END_BRANCH();
 	}
 }
 
-void manta::RayTracer::traceRayEmitterGroup(const Scene *scene, const RayEmitterGroup *rayEmitterGroup, StackAllocator *s /**/ PATH_RECORDER_DECL) const {
-	int emitterCount = rayEmitterGroup->getEmitterCount();
-	RayEmitter **emitters = rayEmitterGroup->getEmitters();
+void manta::RayTracer::traceRays(const Scene *scene, const RayContainer &rayContainer, StackAllocator *s /**/ PATH_RECORDER_DECL) const {
+	int nRays = rayContainer.getRayCount();
 
-	for (int i = 0; i < emitterCount; i++) {
-		RayEmitter *emitter = emitters[i];
-		emitter->setStackAllocator(s);
-		traceRayEmitter(scene, emitter, s /**/ PATH_RECORDER_VAR);
+	for (int i = 0; i < nRays; i++) {
+		LightRay *ray = &rayContainer.getRays()[i];
+		ray->calculateTransformations();
+
+		traceRay(scene, ray, rayContainer.getDegree(), s);
 	}
 }

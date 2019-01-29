@@ -32,10 +32,10 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	wallMaterial->setSurfaceTransmission((math::real)0.7);
 	wallMaterial->getSpecularBSDF()->setMediaInterface(&wallFresnel);
 
-	SimpleSpecularDiffuseMaterial *lampLightMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleSpecularDiffuseMaterial>();
+	SimpleLambertMaterial *lampLightMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleLambertMaterial>();
 	lampLightMaterial->setEmission(math::mul(getColor(255, 197, 143), math::loadScalar(30.0)));
 	lampLightMaterial->setDiffuseColor(math::constants::Zero);
-	lampLightMaterial->setSpecularColor(math::constants::Zero);
+	//lampLightMaterial->setSpecularColor(math::constants::Zero);
 
 	SimplePhongLambertMaterial *teapotMaterial = rayTracer.getMaterialManager()->newMaterial<SimplePhongLambertMaterial>();
 	DielectricMediaInterface teapotFresnel;

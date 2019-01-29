@@ -1,59 +1,9 @@
 #include <material.h>
 
-#include <ray_emitter_group.h>
-#include <intersection_point.h>
-#include <light_ray.h>
-#include <simple_ray_emitter.h>
-#include <simple_ray_emitter_group.h>
-#include <stack_allocator.h>
-
 manta::Material::Material() {
 	m_index = -1;
 }
 
 manta::Material::~Material() {
 
-}
-
-manta::RayEmitterGroup *manta::Material::generateRayEmitterGroup(const LightRay *ray, const IntersectionPoint *intersectionPoint, int degree, StackAllocator *stackAllocator) const {
-	return generateRayEmittersInternal(ray, intersectionPoint, degree, stackAllocator);
-}
-
-manta::RayEmitterGroup *manta::Material::generateRayEmittersInternal(const LightRay *ray, const IntersectionPoint *intersectionPoint, int degree, StackAllocator *stackAllocator) const {
-	if (degree >= 20) {
-		return nullptr;
-	}
-
-	math::Vector perturb = intersectionPoint->m_vertexNormal;
-	math::Vector n_dot_d = math::dot(intersectionPoint->m_vertexNormal, ray->getDirection());
-	perturb = math::mul(perturb, math::add(n_dot_d, n_dot_d)); // Multiply by 2
-	math::Vector finalDirection = math::sub(ray->getDirection(), perturb);
-	finalDirection = math::normalize(finalDirection);
-
-	SimpleRayEmitterGroup *newEmitter = createEmitterGroup<SimpleRayEmitterGroup>(degree, ray, intersectionPoint, stackAllocator);
-	newEmitter->m_simpleRayEmitter->setDirection(finalDirection);
-	newEmitter->m_simpleRayEmitter->setPosition(intersectionPoint->m_position);
-
-	return newEmitter;
-}
-
-void manta::Material::integrateRay(LightRay *ray, const RayEmitterGroup *_rayEmitter, const IntersectionPoint *intersectionPoint) const {
-	if (_rayEmitter == nullptr) return;
-
-	SimpleRayEmitterGroup *rayEmitter = (SimpleRayEmitterGroup *)_rayEmitter;
-	LightRay *reflectedRay = rayEmitter->m_simpleRayEmitter->getRay();
-
-	ray->setIntensity(math::add(math::mul(reflectedRay->getWeightedIntensity(), math::loadScalar(0.5)), m_emission));
-}
-
-void manta::Material::destroyEmitterGroup(RayEmitterGroup *group, StackAllocator *stackAllocator) {
-	group->destroyEmitters();
-	group->~RayEmitterGroup();
-
-	if (stackAllocator == nullptr) {
-		_aligned_free((void *)group);
-	}
-	else {
-		stackAllocator->free((void *)group);
-	}
 }
