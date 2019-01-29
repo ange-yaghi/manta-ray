@@ -46,13 +46,14 @@ manta::math::real manta::PhongBSDF::generateWeight(const math::Vector &normal, c
 manta::math::real manta::PhongBSDF::g1(const math::Vector &normal, const math::Vector &incident, const math::Vector &v, const math::Vector &m) const {
 	math::Vector m_dot_v = math::dot(m, v);
 	
-	if (math::getScalar(math::div(m_dot_v, math::dot(m, normal))) < 0.0) {
+	if (math::getScalar(math::div(m_dot_v, math::dot(v, normal))) < 0.0) {
 		return (math::real)0.0;
 	}
 
 	//math::real a = sqrt(0.5 * m_power + 1) / tan(acos(math::getScalar(m_dot_v)));
 	math::real m_dot_v_s = math::getScalar(m_dot_v);
 	math::real a = ::sqrt((0.5 * m_power + 1) / (1 - m_dot_v_s * m_dot_v_s)) * m_dot_v_s;
+	a = ::abs(a);
 
 	if (a < (math::real)0.0) {
 		a = (math::real)0.0;

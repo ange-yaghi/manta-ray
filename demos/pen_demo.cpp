@@ -49,7 +49,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	paint->setSpecularColor(getColor(0xFF, 0x08, 0x14));
 	paint->setSpecularColor(getColor(0xFF, 0xFF, 0xFF));
 	paint->getDiffuseBSDF()->setPower((math::real)1.0);
-	paint->getSpecularBSDF()->setPower((math::real)1.0);
+	paint->getSpecularBSDF()->setPower((math::real)1024.0);
 	paint->getSpecularBSDF()->setMediaInterface(&paintFresnel);
 	//paint->setSurfaceTransmission(0.3);
 	//paint->setSurfaceTransmission(1.0);
@@ -69,9 +69,9 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	groundFresnel.setIorTransmitted(1.6);
 	groundMaterial->setName("Backdrop");
 	groundMaterial->setEmission(math::constants::Zero);
-	groundMaterial->setDiffuseColor(getColor(255, 255, 255));
+	groundMaterial->setDiffuseColor(getColor(220, 220, 220));
 	//groundMaterial->setDiffuseColor(getColor(0xFF, 0xFD, 0xD0));
-	groundMaterial->setSpecularColor(getColor(210, 210, 210));
+	groundMaterial->setSpecularColor(getColor(220, 220, 220));
 	groundMaterial->getDiffuseBSDF()->setPower((math::real)128.0);
 	groundMaterial->getSpecularBSDF()->setPower((math::real)1024.0);
 	groundMaterial->getSpecularBSDF()->setMediaInterface(&groundFresnel);
@@ -166,7 +166,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	cameraPos = math::sub(cameraPos, math::mul(dir, math::loadScalar(3.9))); // 3.9
 
 	// Create the camera
-	constexpr bool regularCamera = true;
+	constexpr bool regularCamera = false;
 	CameraRayEmitterGroup *group;
 	manta::SimpleLens lens;
 	lens.initialize();
