@@ -21,12 +21,16 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 
 	// Create all materials
 	SimplePhongLambertMaterial *wallMaterial = rayTracer.getMaterialManager()->newMaterial<SimplePhongLambertMaterial>();
+	DielectricMediaInterface wallFresnel;
+	wallFresnel.setIorIncident(1.0);
+	wallFresnel.setIorTransmitted(1.2);
 	wallMaterial->getSpecularBSDF()->setPower((math::real)32.0);
 	//wallMaterial->getSpecularBSDF()->setPower((math::real)1.0);
 	wallMaterial->setEmission(getColor(0, 0, 0));
 	wallMaterial->setDiffuseColor(getColor(255, 255, 255));
 	wallMaterial->setSpecularColor(getColor(255, 255, 255));
 	wallMaterial->setSurfaceTransmission((math::real)0.7);
+	wallMaterial->getSpecularBSDF()->setMediaInterface(&wallFresnel);
 
 	SimpleSpecularDiffuseMaterial *lampLightMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleSpecularDiffuseMaterial>();
 	lampLightMaterial->setEmission(math::mul(getColor(255, 197, 143), math::loadScalar(30.0)));
@@ -34,12 +38,16 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	lampLightMaterial->setSpecularColor(math::constants::Zero);
 
 	SimplePhongLambertMaterial *teapotMaterial = rayTracer.getMaterialManager()->newMaterial<SimplePhongLambertMaterial>();
+	DielectricMediaInterface teapotFresnel;
+	teapotFresnel.setIorIncident(1.0);
+	teapotFresnel.setIorTransmitted(1.6);
 	teapotMaterial->getSpecularBSDF()->setPower((math::real)1024.0);
 	//teapotMaterial->getSpecularBSDF()->setPower((math::real)1.0);
 	teapotMaterial->setEmission(math::constants::Zero);
 	teapotMaterial->setDiffuseColor(getColor(0xFF, 0x08, 0x14));
 	teapotMaterial->setSpecularColor(getColor(255, 255, 255));
 	teapotMaterial->setSurfaceTransmission((math::real)0.85);
+	teapotMaterial->getSpecularBSDF()->setMediaInterface(&teapotFresnel);
 
 	//SimpleSpecularDiffuseMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleSpecularDiffuseMaterial>();
 	//groundMaterial->setEmission(math::constants::Zero);

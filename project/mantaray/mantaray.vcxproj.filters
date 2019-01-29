@@ -468,6 +468,9 @@
     <ClCompile Include="..\..\src\primitives.cpp">
       <Filter>Source Files\primitives</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\bilayer_bsdf.cpp">
+      <Filter>Source Files\material\surface-modeling\bsdf\library</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\sphere_primitive.h">
@@ -721,6 +724,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\primitives.h">
       <Filter>Header Files\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\bilayer_bsdf.h">
+      <Filter>Header Files\material\surface-modeling\bsdf\library</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
