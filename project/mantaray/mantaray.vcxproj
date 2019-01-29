@@ -22,6 +22,7 @@
     <ClCompile Include="..\..\src\batched_monte_carlo_emitter.cpp" />
     <ClCompile Include="..\..\src\batched_monte_carlo_emitter_group.cpp" />
     <ClCompile Include="..\..\src\biconvex_lens.cpp" />
+    <ClCompile Include="..\..\src\bilayer_bsdf.cpp" />
     <ClCompile Include="..\..\src\bsdf_emitter.cpp" />
     <ClCompile Include="..\..\src\bsdf.cpp" />
     <ClCompile Include="..\..\src\camera_ray_emitter.cpp" />
@@ -93,6 +94,7 @@
     <ClInclude Include="..\..\include\aperture.h" />
     <ClInclude Include="..\..\include\batched_monte_carlo_emitter_group.h" />
     <ClInclude Include="..\..\include\biconvex_lens.h" />
+    <ClInclude Include="..\..\include\bilayer_bsdf.h" />
     <ClInclude Include="..\..\include\bsdf_emitter.h" />
     <ClInclude Include="..\..\include\bsdf.h" />
     <ClInclude Include="..\..\include\camera_ray_emitter.h" />

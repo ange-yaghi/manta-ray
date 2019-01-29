@@ -1,4 +1,4 @@
-#include "..\include\lambertian_bsdf.h"
+#include <lambertian_bsdf.h>
 
 manta::LambertianBSDF::LambertianBSDF() {
 }

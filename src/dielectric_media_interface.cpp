@@ -21,8 +21,12 @@ manta::math::real manta::DielectricMediaInterface::fresnelTerm(const math::Vecto
 		no = m_iorIncident;
 	}
 
-	math::real c = math::getScalar(math::dot(i, m));
-	math::real g = ::sqrt(no / ni - (math::real)1.0 + c * c);
+	math::real c = ::abs(math::getScalar(math::dot(i, m)));
+	math::real g_2 = (no * no) / (ni * ni) - (math::real)1.0 + c * c;
+	if (g_2 < (math::real)0.0) {
+		return (math::real)1.0;
+	}
+	math::real g = ::sqrt(g_2);
 
 	// Calculate Fresnel term for dielectrics
 	math::real g_min_c = g - c;
@@ -32,7 +36,7 @@ manta::math::real manta::DielectricMediaInterface::fresnelTerm(const math::Vecto
 	math::real t2_num = c * g_add_c - 1;
 	math::real t2_div = c * g_min_c + 1;
 
-	math::real t2 = t2_num / t2_div + 1;
+	math::real t2 = (t2_num * t2_num) / (t2_div * t2_div) + 1;
 
 	return t1 * t2;
 }
