@@ -10,30 +10,30 @@ void manta_demo::cubeTestDemo(int samplesPerPixel, int resolutionX, int resoluti
 	bool result = cubeObj.readObjFile(MODEL_PATH "cube.obj");
 
 	// Create all materials
-	SimpleSpecularDiffuseMaterial wallMaterial;
+	SimpleLambertMaterial wallMaterial;
 	wallMaterial.setEmission(math::constants::Zero);
 	wallMaterial.setDiffuseColor(getColor(200, 200, 200));
-	wallMaterial.setSpecularColor(math::constants::Zero);
+	//wallMaterial.setSpecularColor(math::constants::Zero);
 
-	SimpleSpecularDiffuseMaterial outdoorLight;
+	SimpleLambertMaterial outdoorLight;
 	outdoorLight.setEmission(math::loadVector(9, 8, 8));
 	outdoorLight.setDiffuseColor(math::constants::Zero);
-	outdoorLight.setSpecularColor(math::constants::Zero);
+	//outdoorLight.setSpecularColor(math::constants::Zero);
 
-	SimpleSpecularDiffuseMaterial outdoorTopLightMaterial;
+	SimpleLambertMaterial outdoorTopLightMaterial;
 	outdoorTopLightMaterial.setEmission(math::loadVector(10, 10, 11));
 	outdoorTopLightMaterial.setDiffuseColor(math::constants::Zero);
-	outdoorTopLightMaterial.setSpecularColor(math::constants::Zero);
+	//outdoorTopLightMaterial.setSpecularColor(math::constants::Zero);
 
-	SimpleSpecularDiffuseMaterial teapotMaterial;
+	SimpleLambertMaterial teapotMaterial;
 	teapotMaterial.setEmission(math::constants::Zero);
 	teapotMaterial.setDiffuseColor(getColor(150, 0, 0));
-	teapotMaterial.setSpecularColor(getColor(100, 100, 100));
+	//teapotMaterial.setSpecularColor(getColor(100, 100, 100));
 
-	SimpleSpecularDiffuseMaterial groundMaterial;
+	SimpleLambertMaterial groundMaterial;
 	groundMaterial.setEmission(math::constants::Zero);
 	groundMaterial.setDiffuseColor(math::constants::Zero);
-	groundMaterial.setSpecularColor(getColor(100, 100, 100));
+	//groundMaterial.setSpecularColor(getColor(100, 100, 100));
 
 	// Create all scene geometry
 	Mesh cube;

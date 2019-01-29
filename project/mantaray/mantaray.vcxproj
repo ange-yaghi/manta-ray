@@ -19,33 +19,26 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\batched_monte_carlo_emitter.cpp" />
-    <ClCompile Include="..\..\src\batched_monte_carlo_emitter_group.cpp" />
     <ClCompile Include="..\..\src\biconvex_lens.cpp" />
     <ClCompile Include="..\..\src\bilayer_bsdf.cpp" />
-    <ClCompile Include="..\..\src\bsdf_emitter.cpp" />
     <ClCompile Include="..\..\src\bsdf.cpp" />
     <ClCompile Include="..\..\src\camera_ray_emitter.cpp" />
     <ClCompile Include="..\..\src\camera_ray_emitter_group.cpp" />
     <ClCompile Include="..\..\src\dielectric_media_interface.cpp" />
     <ClCompile Include="..\..\src\grid_sampler.cpp" />
-    <ClCompile Include="..\..\src\hemi_monte_carlo_emitter.cpp" />
-    <ClCompile Include="..\..\src\hemi_monte_carlo_emitter_group.cpp" />
     <ClCompile Include="..\..\src\kd_tree.cpp" />
     <ClCompile Include="..\..\src\lambertian_bsdf.cpp" />
     <ClCompile Include="..\..\src\manta_math.cpp" />
     <ClCompile Include="..\..\src\material_manager.cpp" />
     <ClCompile Include="..\..\src\octree.cpp" />
     <ClCompile Include="..\..\src\phong_bsdf.cpp" />
-    <ClCompile Include="..\..\src\phong_emitter.cpp" />
-    <ClCompile Include="..\..\src\phong_emitter_group.cpp" />
     <ClCompile Include="..\..\src\primitives.cpp" />
     <ClCompile Include="..\..\src\random_sampler.cpp" />
+    <ClCompile Include="..\..\src\ray_container.cpp" />
     <ClCompile Include="..\..\src\sampler_2d.cpp" />
+    <ClCompile Include="..\..\src\simple_lambert_material.cpp" />
     <ClCompile Include="..\..\src\simple_phong_lambert_material.cpp" />
     <ClCompile Include="..\..\src\simple_sampler.cpp" />
-    <ClCompile Include="..\..\src\simple_scatter_emitter.cpp" />
-    <ClCompile Include="..\..\src\simple_scatter_emitter_group.cpp" />
     <ClCompile Include="..\..\src\circular_aperture.cpp" />
     <ClCompile Include="..\..\src\gpu_kernel_opencl.cpp" />
     <ClCompile Include="..\..\src\gpu_manager_opencl.cpp" />
@@ -62,7 +55,6 @@
     <ClCompile Include="..\..\src\manta_math_single.cpp" />
     <ClCompile Include="..\..\src\material.cpp" />
     <ClCompile Include="..\..\src\mesh.cpp" />
-    <ClCompile Include="..\..\src\monte_carlo_specular_diffuse_group.cpp" />
     <ClCompile Include="..\..\src\obj_file_loader.cpp" />
     <ClCompile Include="..\..\src\path_recorder.cpp" />
     <ClCompile Include="..\..\src\raw_file.cpp" />
@@ -73,37 +65,26 @@
     <ClCompile Include="..\..\src\scene_buffer.cpp" />
     <ClCompile Include="..\..\src\scene_geometry.cpp" />
     <ClCompile Include="..\..\src\scene_object.cpp" />
-    <ClCompile Include="..\..\src\simple_diffuse_material.cpp" />
     <ClCompile Include="..\..\src\simple_lens.cpp" />
-    <ClCompile Include="..\..\src\simple_monte_carlo_emitter.cpp" />
-    <ClCompile Include="..\..\src\simple_monte_carlo_emitter_group.cpp" />
-    <ClCompile Include="..\..\src\simple_ray_emitter.cpp" />
-    <ClCompile Include="..\..\src\simple_ray_emitter_group.cpp" />
-    <ClCompile Include="..\..\src\simple_specular_diffuse_material.cpp" />
     <ClCompile Include="..\..\src\sphere_primitive.cpp" />
     <ClCompile Include="..\..\src\spherical_surface.cpp" />
     <ClCompile Include="..\..\src\standard_allocator.cpp" />
     <ClCompile Include="..\..\src\standard_camera_ray_emitter.cpp" />
     <ClCompile Include="..\..\src\standard_camera_ray_emitter_group.cpp" />
-    <ClCompile Include="..\..\src\standard_specular_diffuse_material.cpp" />
     <ClCompile Include="..\..\src\texture_map.cpp" />
     <ClCompile Include="..\..\src\worker.cpp" />
     <ClCompile Include="stack_allocator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\aperture.h" />
-    <ClInclude Include="..\..\include\batched_monte_carlo_emitter_group.h" />
     <ClInclude Include="..\..\include\biconvex_lens.h" />
     <ClInclude Include="..\..\include\bilayer_bsdf.h" />
-    <ClInclude Include="..\..\include\bsdf_emitter.h" />
     <ClInclude Include="..\..\include\bsdf.h" />
     <ClInclude Include="..\..\include\camera_ray_emitter.h" />
     <ClInclude Include="..\..\include\camera_ray_emitter_group.h" />
     <ClInclude Include="..\..\include\dielectric_media_interface.h" />
     <ClInclude Include="..\..\include\geometry.h" />
     <ClInclude Include="..\..\include\grid_sampler.h" />
-    <ClInclude Include="..\..\include\hemi_monte_carlo_emitter.h" />
-    <ClInclude Include="..\..\include\hemi_monte_carlo_emitter_group.h" />
     <ClInclude Include="..\..\include\kd_tree.h" />
     <ClInclude Include="..\..\include\lambertian_bsdf.h" />
     <ClInclude Include="..\..\include\material_manager.h" />
@@ -111,15 +92,12 @@
     <ClInclude Include="..\..\include\octree.h" />
     <ClInclude Include="..\..\include\opaque_media_interface.h" />
     <ClInclude Include="..\..\include\phong_bsdf.h" />
-    <ClInclude Include="..\..\include\phong_emitter.h" />
-    <ClInclude Include="..\..\include\phong_emitter_group.h" />
     <ClInclude Include="..\..\include\primitives.h" />
     <ClInclude Include="..\..\include\random_sampler.h" />
+    <ClInclude Include="..\..\include\ray_container.h" />
+    <ClInclude Include="..\..\include\simple_lambert_material.h" />
     <ClInclude Include="..\..\include\simple_phong_lambert_material.h" />
     <ClInclude Include="..\..\include\simple_sampler.h" />
-    <ClInclude Include="..\..\include\simple_scatter_emitter.h" />
-    <ClInclude Include="..\..\include\simple_scatter_emitter_group.h" />
-    <ClInclude Include="..\..\include\simple_specular_diffuse_material.h" />
     <ClInclude Include="..\..\include\circular_aperture.h" />
     <ClInclude Include="..\..\include\gpu_kernel.h" />
     <ClInclude Include="..\..\include\gpu_kernel_opencl.h" />
@@ -127,7 +105,6 @@
     <ClInclude Include="..\..\include\gpu_manager_opencl.h" />
     <ClInclude Include="..\..\include\gpu_memory.h" />
     <ClInclude Include="..\..\include\gpu_memory_opencl.h" />
-    <ClInclude Include="..\..\include\batched_monte_carlo_emitter.h" />
     <ClInclude Include="..\..\include\intersection_list.h" />
     <ClInclude Include="..\..\include\job_queue.h" />
     <ClInclude Include="..\..\include\manta.h" />
@@ -147,7 +124,6 @@
     <ClInclude Include="..\..\include\manta_real.h" />
     <ClInclude Include="..\..\include\material.h" />
     <ClInclude Include="..\..\include\memory_management.h" />
-    <ClInclude Include="..\..\include\monte_carlo_specular_diffuse_group.h" />
     <ClInclude Include="..\..\include\obj_file_loader.h" />
     <ClInclude Include="..\..\include\path_recorder.h" />
     <ClInclude Include="..\..\include\pool_allocator.h" />
@@ -159,10 +135,7 @@
     <ClInclude Include="..\..\include\scene_buffer.h" />
     <ClInclude Include="..\..\include\scene_geometry.h" />
     <ClInclude Include="..\..\include\scene_object.h" />
-    <ClInclude Include="..\..\include\simple_diffuse_material.h" />
     <ClInclude Include="..\..\include\simple_lens.h" />
-    <ClInclude Include="..\..\include\simple_monte_carlo_emitter.h" />
-    <ClInclude Include="..\..\include\simple_monte_carlo_emitter_group.h" />
     <ClInclude Include="..\..\include\simple_ray_emitter.h" />
     <ClInclude Include="..\..\include\simple_ray_emitter_group.h" />
     <ClInclude Include="..\..\include\sphere_primitive.h" />
@@ -173,7 +146,6 @@
     <ClInclude Include="..\..\include\standard_allocator.h" />
     <ClInclude Include="..\..\include\standard_camera_ray_emitter.h" />
     <ClInclude Include="..\..\include\standard_camera_ray_emitter_group.h" />
-    <ClInclude Include="..\..\include\standard_specular_diffuse_material.h" />
     <ClInclude Include="..\..\include\texture_map.h" />
     <ClInclude Include="..\..\include\worker.h" />
   </ItemGroup>

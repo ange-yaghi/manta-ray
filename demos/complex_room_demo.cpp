@@ -72,15 +72,15 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	book->getSpecularBSDF()->setPower((math::real)8.0);
 	book->setSurfaceTransmission((math::real)0.4);
 
-	SimpleSpecularDiffuseMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleSpecularDiffuseMaterial>();
+	SimpleLambertMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleLambertMaterial>();
 	groundMaterial->setEmission(math::constants::Zero);
 	groundMaterial->setDiffuseColor(getColor(255, 255, 255));
-	groundMaterial->setSpecularColor(math::constants::Zero);
+	//groundMaterial->setSpecularColor(math::constants::Zero);
 
-	SimpleSpecularDiffuseMaterial outdoorTopLightMaterial;
+	SimpleLambertMaterial outdoorTopLightMaterial;
 	outdoorTopLightMaterial.setEmission(math::loadVector(5, 5, 5));
 	outdoorTopLightMaterial.setDiffuseColor(math::constants::Zero);
-	outdoorTopLightMaterial.setSpecularColor(math::constants::Zero);
+	//outdoorTopLightMaterial.setSpecularColor(math::constants::Zero);
 
 	// Create all scene geometry
 	Mesh stressSpiders;

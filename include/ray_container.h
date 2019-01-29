@@ -1,5 +1,5 @@
-#ifndef RAY_EMITTER_H
-#define RAY_EMITTER_H
+#ifndef RAY_CONTAINER_H
+#define RAY_CONTAINER_H
 
 #include <manta_math.h>
 
@@ -7,21 +7,17 @@ namespace manta {
 
 	class LightRay;
 	class StackAllocator;
-	class RayContainer;
 
-	class RayEmitter {
+	class RayContainer {
 	public:
-		RayEmitter();
-		virtual ~RayEmitter();
+		RayContainer();
+		virtual ~RayContainer();
 
-		virtual void generateRays(RayContainer &rayContainer) const = 0;
+		LightRay *getRays() const { return m_rays; }
+		int getRayCount() const { return m_rayCount; }
+
+		void initializeRays(int count);
 		void destroyRays();
-
-		math::Vector getPosition() const { return m_position; }
-		void setPosition(const math::Vector &v) { m_position = v; }
-
-		math::Vector getDirection() const { return m_direction; }
-		void setDirection(const math::Vector &v) { m_direction = v; }
 
 		int getDegree() const { return m_degree; }
 		void setDegree(int degree) { m_degree = degree; }
@@ -35,9 +31,6 @@ namespace manta {
 		virtual void calculateIntensity();
 		math::Vector getIntensity() const { return m_intensity; }
 
-	protected:
-		void initializeRays(int count);
-
 	private:
 		int m_degree;
 		int m_rayCount;
@@ -46,8 +39,6 @@ namespace manta {
 		LightRay *m_rays;
 
 	protected:
-		math::Vector m_position;
-		math::Vector m_direction;
 		math::Vector m_intensity;
 
 	private:
@@ -56,4 +47,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* RAY_EMITTER_H */
+#endif /* RAY_CONTAINER_H */

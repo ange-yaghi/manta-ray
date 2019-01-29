@@ -3,6 +3,7 @@
 #include <sampler_2d.h>
 #include <light_ray.h>
 #include <stack_allocator.h>
+#include <ray_container.h>
 
 manta::StandardCameraRayEmitter::StandardCameraRayEmitter() {
 }
@@ -10,14 +11,15 @@ manta::StandardCameraRayEmitter::StandardCameraRayEmitter() {
 manta::StandardCameraRayEmitter::~StandardCameraRayEmitter() {
 }
 
-void manta::StandardCameraRayEmitter::generateRays() {
+void manta::StandardCameraRayEmitter::generateRays(RayContainer *rayContainer) const {
 	int nRays = m_sampler->getTotalSampleCount(m_sampleCount);
 	
 	// InitializeRays
-	initializeRays(nRays);
-	LightRay *rays = getRays();
+	rayContainer->initializeRays(nRays);
+	rayContainer->setDegree(0);
+	LightRay *rays = rayContainer->getRays();
 	
-	math::Vector *samplePoints = (math::Vector *)getStackAllocator()->allocate(nRays * sizeof(math::Vector), 16);
+	math::Vector *samplePoints = (math::Vector *)m_stackAllocator->allocate(nRays * sizeof(math::Vector), 16);
 	m_sampler->generateSamples(nRays, samplePoints);
 
 	for (int i = 0; i < nRays; i++) {
@@ -32,5 +34,5 @@ void manta::StandardCameraRayEmitter::generateRays() {
 		ray->setWeight((math::real)1.0);
 	}
 
-	getStackAllocator()->free((void *)samplePoints);
+	m_stackAllocator->free((void *)samplePoints);
 }

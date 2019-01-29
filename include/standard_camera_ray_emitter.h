@@ -7,12 +7,14 @@
 
 namespace manta {
 
+	class RayContainer;
+
 	class StandardCameraRayEmitter : public CameraRayEmitter {
 	public:
 		StandardCameraRayEmitter();
 		virtual ~StandardCameraRayEmitter();
 
-		virtual void generateRays();
+		virtual void generateRays(RayContainer *rayContainer) const;
 
 		void setTargetOrigin(const math::Vector &origin) { m_targetOrigin = origin; }
 		math::Vector getTargetOrigin() const { return m_targetOrigin; }
