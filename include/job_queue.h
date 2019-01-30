@@ -6,11 +6,11 @@
 
 namespace manta {
 
-	class RayEmitterGroup;
+	class CameraRayEmitterGroup;
 	class Scene;
 
 	struct Job {
-		RayEmitterGroup *group;
+		CameraRayEmitterGroup *group;
 		const Scene *scene;
 		int start;
 		int end;

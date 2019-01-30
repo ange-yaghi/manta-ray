@@ -4,6 +4,7 @@
 #include <lens.h>
 #include <sampler_2d.h>
 #include <stack_allocator.h>
+#include <ray_container.h>
 
 manta::LensCameraRayEmitter::LensCameraRayEmitter() {
 
@@ -13,14 +14,15 @@ manta::LensCameraRayEmitter::~LensCameraRayEmitter() {
 
 }
 
-void manta::LensCameraRayEmitter::generateRays() {
+void manta::LensCameraRayEmitter::generateRays(RayContainer *rayContainer) const {
 	int totalRayCount = m_sampler->getTotalSampleCount(m_sampleCount);
 	
 	// Create all rays
-	initializeRays(totalRayCount);
-	LightRay *rays = getRays();
+	rayContainer->initializeRays(totalRayCount);
+	rayContainer->setDegree(0);
+	LightRay *rays = rayContainer->getRays();
 
-	math::Vector *sampleOrigins = (math::Vector *)getStackAllocator()->allocate(sizeof(math::Vector) * totalRayCount, 16);
+	math::Vector *sampleOrigins = (math::Vector *)m_stackAllocator->allocate(sizeof(math::Vector) * totalRayCount, 16);
 	m_sampler->generateSamples(totalRayCount, sampleOrigins);
 
 	LensScanHint hint;
@@ -34,5 +36,5 @@ void manta::LensCameraRayEmitter::generateRays() {
 		rays[i].setWeight((math::real)1.0);
 	}
 
-	getStackAllocator()->free((void *)sampleOrigins);
+	m_stackAllocator->free((void *)sampleOrigins);
 }

@@ -33,7 +33,12 @@ namespace manta {
 		math::Vector getPermutedDirection() const { return m_permutedDirection; }
 		math::Vector getInverseDirection() const { return m_inverseDirection; }
 
+		void setMeta(int meta) { m_meta = meta; }
+		int getMeta() const { return m_meta; }
+
 	protected:
+		int m_meta;
+
 		math::Vector m_direction;
 		math::Vector m_source;
 

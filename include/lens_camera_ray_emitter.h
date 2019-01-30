@@ -6,13 +6,14 @@
 namespace manta {
 
 	class Lens;
+	class RayContainer;
 
 	class LensCameraRayEmitter : public CameraRayEmitter {
 	public:
 		LensCameraRayEmitter();
 		virtual ~LensCameraRayEmitter();
 
-		virtual void generateRays();
+		virtual void generateRays(RayContainer *rayContainer) const;
 
 		void setLens(Lens *lens) { m_lens = lens; }
 		Lens *getLens() const { return m_lens; }

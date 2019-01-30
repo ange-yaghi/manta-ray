@@ -22,7 +22,7 @@
 
 namespace manta {
 
-	class RayEmitterGroup;
+	class CameraRayEmitterGroup;
 	class Scene;
 	class RayTracer;
 	struct Job;

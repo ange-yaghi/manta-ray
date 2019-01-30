@@ -94,15 +94,6 @@
     <Filter Include="Source Files\emitter\lens-camera-ray-emitter">
       <UniqueIdentifier>{793e53dd-56cc-44cc-acf4-7279d0504ed0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\emitter\monte-carlo-specular-diffuse">
-      <UniqueIdentifier>{d42c1e68-7ece-404d-8b0b-7a20f8a724af}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\emitter\simple-monte-carlo-emitter">
-      <UniqueIdentifier>{3d30888e-99a5-4382-96e5-d1c1de7e9c36}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\emitter\simple-ray-emitter">
-      <UniqueIdentifier>{45ad4b94-b02f-479a-ad38-671a106cd733}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\emitter">
       <UniqueIdentifier>{3f640e92-52bf-451a-af62-56c6dc2e9a7e}</UniqueIdentifier>
     </Filter>
@@ -111,12 +102,6 @@
     </Filter>
     <Filter Include="Header Files\emitter\lens-camera-ray-emitter">
       <UniqueIdentifier>{920c74e4-f5c0-47ee-9761-298194848d63}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\emitter\monte-carlo-specular-diffuse">
-      <UniqueIdentifier>{b87e772b-14b9-46f5-bc6c-af9f9ce862e4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\emitter\simple-monte-carlo-emitter">
-      <UniqueIdentifier>{8b1484a0-65aa-4e5f-9ac3-53b7e3eea6e4}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\emitter\simple-ray-emitter">
       <UniqueIdentifier>{162aba01-fefe-4b87-8bb1-c457daae1ff9}</UniqueIdentifier>
@@ -135,12 +120,6 @@
     </Filter>
     <Filter Include="Source Files\hardware-acceleration\opencl">
       <UniqueIdentifier>{bc23332a-d66b-4601-9f6b-c2c5214577c1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\emitter\batched-monte-carlo-emitter">
-      <UniqueIdentifier>{5013209d-d19f-492e-9a15-cb8852d48ce3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\emitter\batched-monte-carlo-emitter">
-      <UniqueIdentifier>{3533b5d3-134c-490d-8027-c5c721d8c61c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\debugging">
       <UniqueIdentifier>{bc21e97a-fde4-4d2b-a2f3-dd5cb8000a99}</UniqueIdentifier>
@@ -180,24 +159,6 @@
     </Filter>
     <Filter Include="Source Files\spatial-partitioning">
       <UniqueIdentifier>{ca2f7598-9ead-4aff-a531-7571c897c85a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\emitter\scatter-emitter">
-      <UniqueIdentifier>{c51e3ae2-bd03-4dbc-b01f-d3a6af2b53ad}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\emitter\scatter-emitter">
-      <UniqueIdentifier>{89adf6f7-4294-4c6a-a18d-65feeb5effa7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\emitter\hemi-monte-carlo-emitter">
-      <UniqueIdentifier>{b0fd3bd7-0d58-4833-8bf5-c9f02f3a54da}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\emitter\hemi-monte-carlo-emitter">
-      <UniqueIdentifier>{8209d65a-0352-4ab7-b195-0c0b841c4134}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\emitter\phong-emitter">
-      <UniqueIdentifier>{bba08006-a46c-41d8-bcd0-9d831d34388f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\emitter\phong-emitter">
-      <UniqueIdentifier>{cf4b3b08-3ee8-40a9-9bde-5fedbf798b38}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\material\surface-modeling">
       <UniqueIdentifier>{489493f0-7612-4940-94ef-a32f113ba235}</UniqueIdentifier>
@@ -241,12 +202,6 @@
     <Filter Include="Header Files\material\surface-modeling\media-interface">
       <UniqueIdentifier>{c6a7a6ee-afee-4419-baff-211150384661}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\emitter\bsdf-emitter">
-      <UniqueIdentifier>{59854376-3457-43ea-9173-40e4e0f705a9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\emitter\bsdf-emitter">
-      <UniqueIdentifier>{3b1ce557-5269-4765-bc24-32704d4791e3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\emitter\sampler">
       <UniqueIdentifier>{eecd3da7-f301-462e-bcc4-8c5a297344d7}</UniqueIdentifier>
     </Filter>
@@ -258,6 +213,12 @@
     </Filter>
     <Filter Include="Source Files\primitives">
       <UniqueIdentifier>{0dae93d1-ec3c-4227-8f92-af96102ef0ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\emitter\ray-container">
+      <UniqueIdentifier>{7a7146ae-f781-47c8-9f7d-415d7bf99e60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\emitter\ray-container">
+      <UniqueIdentifier>{ce1f77b5-50ae-443b-93ed-cd76bf60c8fa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -287,27 +248,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\image_handling.cpp">
       <Filter>Source Files\output</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\simple_ray_emitter_group.cpp">
-      <Filter>Source Files\emitter\simple-ray-emitter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\simple_ray_emitter.cpp">
-      <Filter>Source Files\emitter\simple-ray-emitter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\simple_monte_carlo_emitter.cpp">
-      <Filter>Source Files\emitter\simple-monte-carlo-emitter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\simple_diffuse_material.cpp">
-      <Filter>Source Files\material\interface\library</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\simple_monte_carlo_emitter_group.cpp">
-      <Filter>Source Files\emitter\simple-monte-carlo-emitter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\monte_carlo_specular_diffuse_group.cpp">
-      <Filter>Source Files\emitter\monte-carlo-specular-diffuse</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\simple_specular_diffuse_material.cpp">
-      <Filter>Source Files\material\interface\library</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\manta_math_float_simd.cpp">
       <Filter>Source Files\math</Filter>
@@ -363,9 +303,6 @@
     <ClCompile Include="..\..\src\gpu_kernel_opencl.cpp">
       <Filter>Source Files\hardware-acceleration\opencl</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\batched_monte_carlo_emitter.cpp">
-      <Filter>Source Files\emitter\batched-monte-carlo-emitter</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\intersection_list.cpp">
       <Filter>Source Files\ray-tracer</Filter>
     </ClCompile>
@@ -387,32 +324,8 @@
     <ClCompile Include="..\..\src\manta_math.cpp">
       <Filter>Source Files\math</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\simple_scatter_emitter.cpp">
-      <Filter>Source Files\emitter\scatter-emitter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\simple_scatter_emitter_group.cpp">
-      <Filter>Source Files\emitter\scatter-emitter</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\standard_allocator.cpp">
       <Filter>Source Files\memory-management</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\standard_specular_diffuse_material.cpp">
-      <Filter>Source Files\material\interface\library</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\batched_monte_carlo_emitter_group.cpp">
-      <Filter>Source Files\emitter\batched-monte-carlo-emitter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\hemi_monte_carlo_emitter.cpp">
-      <Filter>Source Files\emitter\hemi-monte-carlo-emitter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\hemi_monte_carlo_emitter_group.cpp">
-      <Filter>Source Files\emitter\hemi-monte-carlo-emitter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\phong_emitter.cpp">
-      <Filter>Source Files\emitter\phong-emitter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\phong_emitter_group.cpp">
-      <Filter>Source Files\emitter\phong-emitter</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\bsdf.cpp">
       <Filter>Source Files\material\surface-modeling\bsdf</Filter>
@@ -437,9 +350,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\simple_phong_lambert_material.cpp">
       <Filter>Source Files\material\interface\library</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\bsdf_emitter.cpp">
-      <Filter>Source Files\emitter\bsdf-emitter</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\sampler_2d.cpp">
       <Filter>Source Files\emitter\sampler</Filter>
@@ -467,6 +377,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\primitives.cpp">
       <Filter>Source Files\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bilayer_bsdf.cpp">
+      <Filter>Source Files\material\surface-modeling\bsdf\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ray_container.cpp">
+      <Filter>Source Files\emitter\ray-container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\simple_lambert_material.cpp">
+      <Filter>Source Files\material\interface\library</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -499,18 +418,6 @@
     </ClInclude>
     <ClInclude Include="..\..\include\simple_ray_emitter_group.h">
       <Filter>Header Files\emitter\simple-ray-emitter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\simple_monte_carlo_emitter.h">
-      <Filter>Header Files\emitter\simple-monte-carlo-emitter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\simple_monte_carlo_emitter_group.h">
-      <Filter>Header Files\emitter\simple-monte-carlo-emitter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\simple_diffuse_material.h">
-      <Filter>Header Files\material\interface\library</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\monte_carlo_specular_diffuse_group.h">
-      <Filter>Header Files\emitter\monte-carlo-specular-diffuse</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\ray_emitter.h">
       <Filter>Header Files\ray-tracer</Filter>
@@ -596,9 +503,6 @@
     <ClInclude Include="..\..\include\gpu_kernel_opencl.h">
       <Filter>Header Files\hardware-acceleration\opencl</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\batched_monte_carlo_emitter.h">
-      <Filter>Header Files\emitter\batched-monte-carlo-emitter</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\intersection_list.h">
       <Filter>Header Files\ray-tracer</Filter>
     </ClInclude>
@@ -626,12 +530,6 @@
     <ClInclude Include="..\..\include\geometry.h">
       <Filter>Header Files\geometry</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\simple_scatter_emitter.h">
-      <Filter>Header Files\emitter\scatter-emitter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\simple_scatter_emitter_group.h">
-      <Filter>Header Files\emitter\scatter-emitter</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\stack_list.h">
       <Filter>Header Files\memory-management</Filter>
     </ClInclude>
@@ -640,27 +538,6 @@
     </ClInclude>
     <ClInclude Include="..\..\include\standard_allocator.h">
       <Filter>Header Files\memory-management</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\standard_specular_diffuse_material.h">
-      <Filter>Header Files\material\interface\library</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\simple_specular_diffuse_material.h">
-      <Filter>Header Files\material\interface\library</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\batched_monte_carlo_emitter_group.h">
-      <Filter>Header Files\emitter\batched-monte-carlo-emitter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\hemi_monte_carlo_emitter.h">
-      <Filter>Header Files\emitter\hemi-monte-carlo-emitter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\hemi_monte_carlo_emitter_group.h">
-      <Filter>Header Files\emitter\hemi-monte-carlo-emitter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\phong_emitter.h">
-      <Filter>Header Files\emitter\phong-emitter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\phong_emitter_group.h">
-      <Filter>Header Files\emitter\phong-emitter</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\intersection_point.h">
       <Filter>Header Files\ray-tracer</Filter>
@@ -692,9 +569,6 @@
     <ClInclude Include="..\..\include\simple_phong_lambert_material.h">
       <Filter>Header Files\material\interface\library</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\bsdf_emitter.h">
-      <Filter>Header Files\emitter\bsdf-emitter</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\sampler_2d.h">
       <Filter>Header Files\emitter\sampler</Filter>
     </ClInclude>
@@ -721,6 +595,15 @@
     </ClInclude>
     <ClInclude Include="..\..\include\primitives.h">
       <Filter>Header Files\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\bilayer_bsdf.h">
+      <Filter>Header Files\material\surface-modeling\bsdf\library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\ray_container.h">
+      <Filter>Header Files\emitter\ray-container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\simple_lambert_material.h">
+      <Filter>Header Files\material\interface\library</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -33,13 +33,12 @@ void manta::LensCameraRayEmitterGroup::createAllEmitters() {
 	for (int i = 0; i < resolutionY; i++) {
 		for (int j = 0; j < resolutionX; j++) {
 			LensCameraRayEmitter *newEmitter = createEmitter<LensCameraRayEmitter>();
-			m_rayEmitters[i * resolutionX + j] = (RayEmitter *)newEmitter;
+			m_rayEmitters[i * resolutionX + j] = (CameraRayEmitter *)newEmitter;
 
 			newEmitter->setLens(m_lens);
 
 			math::Vector sensorElement = m_lens->getSensorElement(j, i);
 			newEmitter->setSampleCount(m_samples);
-			newEmitter->setSamplesPerRay(1);
 			newEmitter->setPosition(sensorElement);
 			newEmitter->setSampler(m_sampler);
 		}

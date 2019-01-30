@@ -2,10 +2,11 @@
 
 #include <job_queue.h>
 #include <ray_tracer.h>
-#include <ray_emitter.h>
-#include <ray_emitter_group.h>
 #include <path_recorder.h>
 #include <light_ray.h>
+#include <camera_ray_emitter_group.h>
+#include <camera_ray_emitter.h>
+#include <ray_container.h>
 
 #include <sstream>
 #include <time.h>
@@ -87,10 +88,10 @@ void manta::Worker::work() {
 }
 
 void manta::Worker::doJob(const Job *job) {
-	RayEmitter **emitters = job->group->getEmitters();
+	CameraRayEmitter **emitters = job->group->getEmitters();
 
 	for (int i = job->start; i <= job->end; i++) {
-		RayEmitter *emitter = emitters[i];
+		CameraRayEmitter *emitter = emitters[i];
 
 		if (m_deterministicSeed) {
 			// Seed the random number generator with the emitter index
@@ -104,25 +105,26 @@ void manta::Worker::doJob(const Job *job) {
 		}
 
 		if (emitter != nullptr) {
-			emitter->setStackAllocator(m_stack);
-			emitter->generateRays();
+			RayContainer *container = &job->group->getBuckets()[i];
+			container->setStackAllocator(m_stack);
 
-			LightRay *rays = emitter->getRays();
-			int rayCount = emitter->getRayCount();
+			emitter->setStackAllocator(m_stack);
+			emitter->generateRays(container);
+
+			LightRay *rays = container->getRays();
+			int rayCount = container->getRayCount();
 
 			for (int samp = 0; samp < rayCount; samp++) {
 				NEW_TREE(getTreeName(i, samp), emitter->getPosition());
 				LightRay *ray = &rays[samp];
 				ray->calculateTransformations();
-				math::Vector average = math::constants::Zero;
-				math::Vector samples = math::loadScalar((math::real)emitter->getSamplesPerRay());
-				m_rayTracer->traceRay(job->scene, ray, emitter->getDegree(), m_stack /**/ PATH_RECORDER_ARG);
-				ray->setIntensity(ray->getWeightedIntensity());
+
+				m_rayTracer->traceRay(job->scene, ray, 0, m_stack /**/ PATH_RECORDER_ARG);
 				END_TREE();
 			}
 
-			emitter->calculateIntensity();			
-			emitter->destroyRays();
+			container->calculateIntensity();
+			container->destroyRays();
 		}
 		m_rayTracer->incrementRayCompletion(job);
 	}
