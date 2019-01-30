@@ -87,7 +87,7 @@ void manta::SimplePhongLambertMaterial::generateRays(RayContainer *rays, const L
 		weight *= m_diffuseBSDF.generateWeight(intersectionPoint.m_vertexNormal, newIncident, m, o);
 	}
 
-	constexpr math::real MAX_WEIGHT = (math::real)2.0;
+	constexpr math::real MAX_WEIGHT = (math::real)10.0;
 
 	if (weight > MAX_WEIGHT) {
 		weight = MAX_WEIGHT;
