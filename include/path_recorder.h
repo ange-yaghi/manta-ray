@@ -49,6 +49,6 @@ namespace manta {
 		void destroyPathSegment(PathSegment *segment);
 	};
 
-}
+} /* namespace manta */
 
 #endif /* PATH_RECORDER_H */

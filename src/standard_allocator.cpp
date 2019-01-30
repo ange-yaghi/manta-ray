@@ -5,12 +5,8 @@
 manta::StandardAllocator *manta::StandardAllocator::s_global = nullptr;
 
 manta::StandardAllocator *manta::StandardAllocator::Global() {
-	if (s_global == nullptr) {
-		return s_global = new StandardAllocator;
-	}
-	else {
-		return s_global;
-	}
+	if (s_global == nullptr) return s_global = new StandardAllocator;
+	else return s_global;
 }
 
 manta::StandardAllocator::StandardAllocator() {

@@ -17,7 +17,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	RayTracer rayTracer;
 
 	// Create all materials
-	SimplePhongLambertMaterial *chrome = rayTracer.getMaterialManager()->newMaterial<SimplePhongLambertMaterial>();
+	PhongPhongBilayerMaterial *chrome = rayTracer.getMaterialManager()->newMaterial<PhongPhongBilayerMaterial>();
 	DielectricMediaInterface chromeFresnel;
 	chromeFresnel.setIorIncident(1.0);
 	chromeFresnel.setIorTransmitted(1.6);
@@ -36,7 +36,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	test->setName("PenBodyTest");
 	test->setEmission(getColor(100, 100, 100));
 
-	SimplePhongLambertMaterial *paint = rayTracer.getMaterialManager()->newMaterial<SimplePhongLambertMaterial>();
+	PhongPhongBilayerMaterial *paint = rayTracer.getMaterialManager()->newMaterial<PhongPhongBilayerMaterial>();
 	DielectricMediaInterface paintFresnel;
 	paintFresnel.setIorIncident(1.0);
 	paintFresnel.setIorTransmitted(1.5);
@@ -63,7 +63,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	//wood->setGloss((math::real)0.3);
 	//wood->setDiffuseMap(&woodTexture);
 
-	SimplePhongLambertMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<SimplePhongLambertMaterial>();
+	PhongPhongBilayerMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<PhongPhongBilayerMaterial>();
 	DielectricMediaInterface groundFresnel;
 	groundFresnel.setIorIncident(1.0);
 	groundFresnel.setIorTransmitted(1.6);
@@ -166,7 +166,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	cameraPos = math::sub(cameraPos, math::mul(dir, math::loadScalar(3.9))); // 3.9
 
 	// Create the camera
-	constexpr bool regularCamera = false;
+	constexpr bool regularCamera = true;
 	CameraRayEmitterGroup *group;
 	manta::SimpleLens lens;
 	lens.initialize();

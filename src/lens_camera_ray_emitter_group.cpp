@@ -5,6 +5,7 @@
 #include <sampler_2d.h>
 
 manta::LensCameraRayEmitterGroup::LensCameraRayEmitterGroup() {
+	m_cameraRayEmitters = nullptr;
 	m_lens = nullptr;
 }
 

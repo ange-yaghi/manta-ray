@@ -189,10 +189,12 @@ void manta::SimpleLens::lensScan(const math::Vector &sensorElement, math::real o
 }
 
 bool manta::SimpleLens::generateOutgoingRay(const math::Vector &sensorElement, const LensScanHint *hint, LightRay *targetRay) const {
+	constexpr int MAX_ATTEMPTS = 100000;
+	
 	math::real maxR = hint->radius;
 	
-	// Try a max of 100000 times
-	for (int i = 0; i < 100000; i++) {
+	// Try to find a suitable outgoing ray MAX_ATTEMPTS times
+	for (int i = 0; i < MAX_ATTEMPTS; i++) {
 		math::real randTheta = math::uniformRandom(math::constants::TWO_PI);
 		math::real randR = math::uniformRandom(1.0);
 

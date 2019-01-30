@@ -7,6 +7,6 @@ namespace manta {
 
 	void SaveImageData(const math::Vector *target, int width, int height, const char *fname);
 
-}
+} /* namespace manta */
 
-#endif
+#endif /* IMAGE_LOAD_H */

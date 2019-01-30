@@ -42,7 +42,7 @@ namespace manta {
 				}
 				else {
 					newObject = (t_alloc *)buffer;
-					for (int i = 0; i < n; i++) {
+					for (unsigned int i = 0; i < n; i++) {
 						new ((t_alloc *)buffer + i) t_alloc;
 					}
 				}
@@ -89,12 +89,12 @@ namespace manta {
 		unsigned int getMaxUsage() const { return m_maxUsage; }
 
 		int getLedger() const { return m_allocationLedger; }
-		int getCurrentUsage() const { return m_currentUsage; }
+		unsigned int getCurrentUsage() const { return m_currentUsage; }
 
 	protected:
 		// Statistics counters
 		int m_allocationLedger;
-		int m_currentUsage;
+		unsigned int m_currentUsage;
 		unsigned int m_maxUsage;
 
 	public:
@@ -103,6 +103,6 @@ namespace manta {
 		static StandardAllocator *Global();
 	};
 
-}
+} /* namespace manta */
 
 #endif /* STANDARD_ALLOCATOR_H */

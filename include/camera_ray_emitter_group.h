@@ -17,7 +17,7 @@ namespace manta {
 		~CameraRayEmitterGroup();
 
 		virtual void createAllEmitters() = 0;
-		void destroyRays(); // Manually destroy all rays
+		void destroyRays(); // Destroy all rays in emitters
 
 		void setUp(const math::Vector &up) { m_up = up; }
 		math::Vector getUp() const { return m_up; }

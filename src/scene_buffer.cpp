@@ -90,7 +90,7 @@ manta::math::Vector manta::SceneBuffer::getAverage() const {
 	int n = 0;
 	for (int x = 0; x < (m_width); x++) {
 		for (int y = 0; y < (m_height); y++) {
-			average = math::add(average, math::div(math::sub(sample(x, y), average), math::loadScalar(R(n))));
+			average = math::add(average, math::div(math::sub(sample(x, y), average), math::loadScalar((math::real)n)));
 		}
 	}
 

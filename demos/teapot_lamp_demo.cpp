@@ -20,7 +20,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	RayTracer rayTracer;
 
 	// Create all materials
-	SimplePhongLambertMaterial *wallMaterial = rayTracer.getMaterialManager()->newMaterial<SimplePhongLambertMaterial>();
+	PhongPhongBilayerMaterial *wallMaterial = rayTracer.getMaterialManager()->newMaterial<PhongPhongBilayerMaterial>();
 	DielectricMediaInterface wallFresnel;
 	wallFresnel.setIorIncident(1.0);
 	wallFresnel.setIorTransmitted(1.2);
@@ -37,7 +37,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	lampLightMaterial->setDiffuseColor(math::constants::Zero);
 	//lampLightMaterial->setSpecularColor(math::constants::Zero);
 
-	SimplePhongLambertMaterial *teapotMaterial = rayTracer.getMaterialManager()->newMaterial<SimplePhongLambertMaterial>();
+	PhongPhongBilayerMaterial *teapotMaterial = rayTracer.getMaterialManager()->newMaterial<PhongPhongBilayerMaterial>();
 	DielectricMediaInterface teapotFresnel;
 	teapotFresnel.setIorIncident(1.0);
 	teapotFresnel.setIorTransmitted(1.6);

@@ -103,9 +103,6 @@
     <Filter Include="Header Files\emitter\lens-camera-ray-emitter">
       <UniqueIdentifier>{920c74e4-f5c0-47ee-9761-298194848d63}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\emitter\simple-ray-emitter">
-      <UniqueIdentifier>{162aba01-fefe-4b87-8bb1-c457daae1ff9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\ray-tracer\utilities">
       <UniqueIdentifier>{4e28975c-2fd5-4d7e-be39-076e95f078b7}</UniqueIdentifier>
     </Filter>
@@ -237,14 +234,8 @@
     <ClCompile Include="..\..\src\ray_tracer.cpp">
       <Filter>Source Files\ray-tracer</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\ray_emitter.cpp">
-      <Filter>Source Files\ray-tracer</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\scene.cpp">
       <Filter>Source Files\scene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\ray_emitter_group.cpp">
-      <Filter>Source Files\ray-tracer</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\image_handling.cpp">
       <Filter>Source Files\output</Filter>
@@ -303,9 +294,6 @@
     <ClCompile Include="..\..\src\gpu_kernel_opencl.cpp">
       <Filter>Source Files\hardware-acceleration\opencl</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\intersection_list.cpp">
-      <Filter>Source Files\ray-tracer</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\path_recorder.cpp">
       <Filter>Source Files\debugging\path-recording</Filter>
     </ClCompile>
@@ -332,9 +320,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\phong_bsdf.cpp">
       <Filter>Source Files\material\surface-modeling\bsdf\library</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\texture_map.cpp">
-      <Filter>Source Files\material\interface</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\material.cpp">
       <Filter>Source Files\material\interface</Filter>
@@ -378,14 +363,14 @@
     <ClCompile Include="..\..\src\primitives.cpp">
       <Filter>Source Files\primitives</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\bilayer_bsdf.cpp">
-      <Filter>Source Files\material\surface-modeling\bsdf\library</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\ray_container.cpp">
       <Filter>Source Files\emitter\ray-container</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\simple_lambert_material.cpp">
       <Filter>Source Files\material\interface\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\texture_map.cpp">
+      <Filter>Source Files\material\interface\texture-mapping</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -401,26 +386,11 @@
     <ClInclude Include="..\..\include\ray_tracer.h">
       <Filter>Header Files\ray-tracer</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\pool_allocator.h">
-      <Filter>Header Files\memory-management</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\scene.h">
       <Filter>Header Files\scene</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\ray_emitter_group.h">
-      <Filter>Header Files\ray-tracer</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\image_handling.h">
       <Filter>Header Files\output</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\simple_ray_emitter.h">
-      <Filter>Header Files\emitter\simple-ray-emitter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\simple_ray_emitter_group.h">
-      <Filter>Header Files\emitter\simple-ray-emitter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\ray_emitter.h">
-      <Filter>Header Files\ray-tracer</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\manta_math_float_simd.h">
       <Filter>Header Files\math</Filter>
@@ -503,16 +473,10 @@
     <ClInclude Include="..\..\include\gpu_kernel_opencl.h">
       <Filter>Header Files\hardware-acceleration\opencl</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\intersection_list.h">
-      <Filter>Header Files\ray-tracer</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\path_recorder.h">
       <Filter>Header Files\debugging\path-recording</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\manta.h">
-      <Filter>Header Files\manta</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\manta_conf.h">
       <Filter>Header Files\manta</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\scene_buffer.h">
@@ -566,9 +530,6 @@
     <ClInclude Include="..\..\include\lambertian_bsdf.h">
       <Filter>Header Files\material\surface-modeling\bsdf\library</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\simple_phong_lambert_material.h">
-      <Filter>Header Files\material\interface\library</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\sampler_2d.h">
       <Filter>Header Files\emitter\sampler</Filter>
     </ClInclude>
@@ -596,14 +557,20 @@
     <ClInclude Include="..\..\include\primitives.h">
       <Filter>Header Files\primitives</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\bilayer_bsdf.h">
-      <Filter>Header Files\material\surface-modeling\bsdf\library</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\ray_container.h">
       <Filter>Header Files\emitter\ray-container</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\simple_lambert_material.h">
       <Filter>Header Files\material\interface\library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\phong_phong_bilayer_material.h">
+      <Filter>Header Files\material\interface\library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\manta_build_conf.h">
+      <Filter>Header Files\manta</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\coarse_intersection.h">
+      <Filter>Header Files\ray-tracer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -3,13 +3,14 @@
 #include <light_ray.h>
 #include <intersection_point.h>
 #include <obj_file_loader.h>
-#include <intersection_list.h>
+#include <coarse_intersection.h>
 #include <standard_allocator.h>
 #include <material.h>
 #include <material_manager.h>
 
 manta::Mesh::Mesh() {
 	m_faces = nullptr;
+	m_auxFaceData = nullptr;
 	m_vertices = nullptr;
 	m_normals = nullptr;
 	m_textureCoords = nullptr;
@@ -29,6 +30,7 @@ manta::Mesh::Mesh() {
 
 manta::Mesh::~Mesh() {
 	assert(m_faces == nullptr);
+	assert(m_auxFaceData == nullptr);
 	assert(m_vertices == nullptr);
 	assert(m_normals == nullptr);
 	assert(m_textureCoords == nullptr);
@@ -37,6 +39,7 @@ manta::Mesh::~Mesh() {
 
 void manta::Mesh::initialize(int faceCount, int vertexCount, int normalCount, int texCoordCount) {
 	m_faces = StandardAllocator::Global()->allocate<Face>(faceCount);
+	m_auxFaceData = StandardAllocator::Global()->allocate<AuxFaceData>(faceCount);
 	m_vertices = StandardAllocator::Global()->allocate<math::Vector>(vertexCount, 16);
 
 	if (normalCount > 0) {
@@ -55,12 +58,14 @@ void manta::Mesh::initialize(int faceCount, int vertexCount, int normalCount, in
 
 void manta::Mesh::destroy() {
 	if (m_faces != nullptr) StandardAllocator::Global()->free(m_faces, m_faceCount);
+	if (m_auxFaceData != nullptr) StandardAllocator::Global()->free(m_auxFaceData, m_faceCount);
 	if (m_vertices != nullptr) StandardAllocator::Global()->aligned_free(m_vertices, m_vertexCount);
 	if (m_normals != nullptr) StandardAllocator::Global()->aligned_free(m_normals, m_normalCount);
 	if (m_textureCoords != nullptr) StandardAllocator::Global()->aligned_free(m_textureCoords, m_texCoordCount);
 	if (m_precomputedValues != nullptr) StandardAllocator::Global()->aligned_free(m_precomputedValues, m_faceCount);
 
 	m_faces = nullptr;
+	m_auxFaceData = nullptr;
 	m_vertices = nullptr;
 	m_normals = nullptr;
 	m_textureCoords = nullptr;
@@ -141,7 +146,6 @@ bool manta::Mesh::findClosestIntersection(const LightRay *ray, CoarseIntersectio
 			intersection->depth = output.depth;
 			intersection->locationHint = i; // Face index
 			intersection->sceneGeometry = this;
-			intersection->globalHint = m_faces[i].globalId;
 
 			currentMaxDepth = output.depth;
 			found = true;
@@ -156,17 +160,7 @@ manta::math::Vector manta::Mesh::getClosestPoint(const CoarseIntersection *hint,
 }
 
 void manta::Mesh::getVicinity(const math::Vector &p, math::real radius, IntersectionList *list, SceneObject *object) const {
-	for (int i = 0; i < m_faceCount; i++) {
-		if (testClosestPointOnFace(i, radius, p)) {
-			CoarseIntersection *intersection = list->newIntersection();
-			intersection->depth = 0.0;
-			intersection->locationHint = i; // Face index
-			intersection->sceneGeometry = this;
-			intersection->globalHint = m_faces[i].globalId;
-			intersection->valid = true;
-			intersection->sceneObject = object;
-		}
-	}
+	/* Deprecated */
 }
 
 void manta::Mesh::fineIntersection(const math::Vector &r, IntersectionPoint *p, const CoarseIntersection *hint) const {
@@ -180,12 +174,12 @@ void manta::Mesh::fineIntersection(const math::Vector &r, IntersectionPoint *p, 
 
 	math::Vector vertexNormal;
 	math::Vector textureCoordinates;
-	const Face &face = m_faces[faceIndex];
+	const AuxFaceData &auxData = m_auxFaceData[faceIndex];
 
 	if (m_perVertexNormals) {
-		math::Vector normalU = m_normals[face.nu];
-		math::Vector normalV = m_normals[face.nv];
-		math::Vector normalW = m_normals[face.nw];
+		math::Vector normalU = m_normals[auxData.nu];
+		math::Vector normalV = m_normals[auxData.nv];
+		math::Vector normalW = m_normals[auxData.nw];
 
 		vertexNormal = math::add(math::mul(normalU, math::loadScalar(u)), math::mul(normalV, math::loadScalar(v)));
 		vertexNormal = math::add(vertexNormal, math::mul(normalW, math::loadScalar(w)));
@@ -196,9 +190,9 @@ void manta::Mesh::fineIntersection(const math::Vector &r, IntersectionPoint *p, 
 	}
 
 	if (m_useTextureCoords) {
-		math::Vector texU = m_textureCoords[face.tu];
-		math::Vector texV = m_textureCoords[face.tv];
-		math::Vector texW = m_textureCoords[face.tw];
+		math::Vector texU = m_textureCoords[auxData.tu];
+		math::Vector texV = m_textureCoords[auxData.tv];
+		math::Vector texW = m_textureCoords[auxData.tw];
 
 		textureCoordinates = math::add(math::mul(texU, math::loadScalar(u)), math::mul(texV, math::loadScalar(v)));
 		textureCoordinates = math::add(textureCoordinates, math::mul(texW, math::loadScalar(w)));
@@ -211,7 +205,7 @@ void manta::Mesh::fineIntersection(const math::Vector &r, IntersectionPoint *p, 
 	p->m_faceNormal = cache.normal;
 	p->m_position = r;
 	p->m_textureCoodinates = textureCoordinates;
-	p->m_material = face.material;
+	p->m_material = auxData.material;
 }
 
 bool manta::Mesh::fastIntersection(const LightRay *ray) const {
@@ -249,33 +243,31 @@ void manta::Mesh::loadObjFileData(ObjFileLoader *data, MaterialManager *material
 		m_faces[i].v = face->v2 - 1;
 		m_faces[i].w = face->v3 - 1;
 
-		m_faces[i].nu = face->vn1 - 1;
-		m_faces[i].nv = face->vn2 - 1;
-		m_faces[i].nw = face->vn3 - 1;
+		m_auxFaceData[i].nu = face->vn1 - 1;
+		m_auxFaceData[i].nv = face->vn2 - 1;
+		m_auxFaceData[i].nw = face->vn3 - 1;
 
-		m_faces[i].tu = face->vt1 - 1;
-		m_faces[i].tv = face->vt2 - 1;
-		m_faces[i].tw = face->vt3 - 1;
-
-		m_faces[i].globalId = globalId + i;
+		m_auxFaceData[i].tu = face->vt1 - 1;
+		m_auxFaceData[i].tv = face->vt2 - 1;
+		m_auxFaceData[i].tw = face->vt3 - 1;
 
 		// Resolve the material reference
 		if (face->material == nullptr) {
-			m_faces[i].material = defaultMaterialIndex;
+			m_auxFaceData[i].material = defaultMaterialIndex;
 		}
 		else {
 			if (materialLibrary != nullptr) {
 				Material *material = materialLibrary->searchByName(face->material->name);
 				if (material != nullptr) {
-					m_faces[i].material = material->getIndex();
+					m_auxFaceData[i].material = material->getIndex();
 				}
 				else {
 					// TODO: raise an error or notification if this happens
-					m_faces[i].material = defaultMaterialIndex;
+					m_auxFaceData[i].material = defaultMaterialIndex;
 				}
 			}
 			else {
-				m_faces[i].material = defaultMaterialIndex;
+				m_auxFaceData[i].material = defaultMaterialIndex;
 			}
 		}
 	}
@@ -317,26 +309,35 @@ void manta::Mesh::merge(const Mesh *mesh) {
 	int newTexCoordCount = m_texCoordCount + mesh->getTexCoordCount();
 
 	Face *newFaces = nullptr;
+	AuxFaceData *newAuxFaceData = nullptr;
 	math::Vector *newVerts = nullptr;
 	math::Vector *newNormals = nullptr;
 	math::Vector *newTexCoords = nullptr;
 
-	if (newFaceCount > 0) newFaces = StandardAllocator::Global()->allocate<Face>(newFaceCount);
+	if (newFaceCount > 0) {
+		newFaces = StandardAllocator::Global()->allocate<Face>(newFaceCount);
+		newAuxFaceData = StandardAllocator::Global()->allocate<AuxFaceData>(newFaceCount);
+	}
+
 	if (newVertexCount > 0) newVerts = StandardAllocator::Global()->allocate<math::Vector>(newVertexCount, 16);
 	if (newNormalCount > 0) newNormals = StandardAllocator::Global()->allocate<math::Vector>(newNormalCount, 16);
 	if (newTexCoordCount > 0) newTexCoords = StandardAllocator::Global()->allocate<math::Vector>(newTexCoordCount, 16);
 
-	if (newFaceCount > 0) memcpy((void *)newFaces, (void *)m_faces, sizeof(Face) * m_faceCount);
+	if (newFaceCount > 0) {
+		memcpy((void *)newFaces, (void *)m_faces, sizeof(Face) * m_faceCount);
+		memcpy((void *)newAuxFaceData, (void *)m_auxFaceData, sizeof(Face) * m_faceCount);
+	}
 	if (newVertexCount > 0) memcpy((void *)newVerts, (void *)m_vertices, sizeof(math::Vector) * m_vertexCount);
 	if (newNormalCount > 0) memcpy((void *)newNormals, (void *)m_normals, sizeof(math::Vector) * m_normalCount);
 	if (newTexCoordCount > 0) memcpy((void *)newTexCoords, (void *)m_textureCoords, sizeof(math::Vector) * m_texCoordCount);
 
 	for (int i = 0; i < mesh->getFaceCount(); i++) {
 		Face &newFace = newFaces[i + m_faceCount];
+		AuxFaceData &auxData = newAuxFaceData[i + m_faceCount];
 		const Face *mergeFace = mesh->getFace(i);
+		const AuxFaceData *mergeAuxData = mesh->getAuxFace(i);
 
-		newFace.material = mergeFace->material;
-		newFace.globalId = mergeFace->globalId;
+		auxData.material = mergeAuxData->material;
 
 		if (newFaceCount > 0) {
 			newFace.u = mergeFace->u + m_vertexCount;
@@ -345,15 +346,15 @@ void manta::Mesh::merge(const Mesh *mesh) {
 		}
 
 		if (newNormalCount > 0) {
-			newFace.nu = mergeFace->nu + m_normalCount;
-			newFace.nv = mergeFace->nv + m_normalCount;
-			newFace.nw = mergeFace->nw + m_normalCount;
+			auxData.nu = mergeAuxData->nu + m_normalCount;
+			auxData.nv = mergeAuxData->nv + m_normalCount;
+			auxData.nw = mergeAuxData->nw + m_normalCount;
 		}
 
 		if (newTexCoordCount > 0) {
-			newFace.tu = mergeFace->tu + m_texCoordCount;
-			newFace.tv = mergeFace->tv + m_texCoordCount;
-			newFace.tw = mergeFace->tw + m_texCoordCount;
+			auxData.tu = mergeAuxData->tu + m_texCoordCount;
+			auxData.tv = mergeAuxData->tv + m_texCoordCount;
+			auxData.tw = mergeAuxData->tw + m_texCoordCount;
 		}
 	}
 
@@ -639,7 +640,6 @@ bool manta::Mesh::findClosestIntersection(int *faceList, int faceCount, const Li
 			intersection->depth = output.depth;
 			intersection->locationHint = faceList[i]; // Face index
 			intersection->sceneGeometry = this;
-			intersection->globalHint = m_faces[faceList[i]].globalId;
 
 			currentMaxDepth = output.depth;
 			found = true;
@@ -650,17 +650,7 @@ bool manta::Mesh::findClosestIntersection(int *faceList, int faceCount, const Li
 }
 
 void manta::Mesh::getVicinity(int *faceList, int faceCount, const math::Vector &p, math::real radius, IntersectionList *list, SceneObject *object) const {
-	for (int i = 0; i < faceCount; i++) {
-		if (testClosestPointOnFace(faceList[i], radius, p)) {
-			CoarseIntersection *intersection = list->newIntersection();
-			intersection->depth = 0.0;
-			intersection->locationHint = faceList[i]; // Face index
-			intersection->sceneGeometry = this;
-			intersection->globalHint = m_faces[faceList[i]].globalId;
-			intersection->valid = true;
-			intersection->sceneObject = object;
-		}
-	}
+	/* Deprecated */
 }
 
 void manta::Mesh::computePlane(const math::Vector &n, const math::Vector &p, Plane *plane) const {

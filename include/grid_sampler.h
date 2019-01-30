@@ -20,6 +20,6 @@ namespace manta {
 		int m_gridWidth;
 	};
 
-}
+} /* namespace manta */
 
 #endif /* GRID_SAMPLER_H */

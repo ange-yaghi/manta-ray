@@ -4,7 +4,7 @@
 #include <stack_allocator.h>
 #include <job_queue.h>
 #include <manta_math.h>
-#include <manta_conf.h>
+#include <manta_build_conf.h>
 #include <material_manager.h>
 
 #include <atomic>
@@ -25,16 +25,15 @@
 
 namespace manta {
 
+	struct IntersectionPoint;
+	struct CoarseIntersection;
 	class LightRay;
 	class Scene;
 	class CameraRayEmitter;
 	class CameraRayEmitterGroup;
 	class SceneObject;
-	struct IntersectionPoint;
-	class IntersectionList;
 	class Worker;
 	class PathRecorder;
-	struct CoarseIntersection;
 	class RayContainer;
 
 	class RayTracer {
@@ -87,7 +86,7 @@ namespace manta {
 	protected:
 		// Ray tracing features
 		void depthCull(const Scene *scene, const LightRay *ray, SceneObject **closestObject, IntersectionPoint *point, StackAllocator *s) const;
-		void refineContact(const LightRay *ray, math::real depth, IntersectionList *list, IntersectionPoint *point, SceneObject **closestObject, StackAllocator *s) const;
+		void refineContact(const LightRay *ray, math::real depth, IntersectionPoint *point, SceneObject **closestObject, StackAllocator *s) const;
 
 		void traceRays(const Scene *scene, const RayContainer &rayContainer, StackAllocator *s /**/ PATH_RECORDER_DECL) const;
 

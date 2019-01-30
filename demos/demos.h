@@ -26,7 +26,7 @@
 #include <simple_lens.h>
 #include <texture_map.h>
 #include <standard_allocator.h>
-#include <simple_phong_lambert_material.h>
+#include <phong_phong_bilayer_material.h>
 #include <grid_sampler.h>
 #include <random_sampler.h>
 #include <simple_sampler.h>

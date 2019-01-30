@@ -3,7 +3,7 @@
 
 #include <stack_allocator.h>
 #include <path_recorder.h>
-#include <manta_conf.h>
+#include <manta_build_conf.h>
 
 #include <thread>
 #include <atomic>
@@ -22,10 +22,10 @@
 
 namespace manta {
 
+	struct Job;
 	class CameraRayEmitterGroup;
 	class Scene;
 	class RayTracer;
-	struct Job;
 
 	class Worker {
 	public:
@@ -66,6 +66,6 @@ namespace manta {
 		unsigned int m_maxMemoryUsage;
 	};
 
-}
+} /* namespace manta */
 
 #endif /* WORKER_H */

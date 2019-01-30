@@ -1,5 +1,5 @@
-#ifndef SIMPLE_PHONG_MATERIAL_H
-#define SIMPLE_PHONG_MATERIAL_H
+#ifndef PHONG_PHONG_BILAYER_MATERIAL_H
+#define PHONG_PHONG_BILAYER_MATERIAL_H
 
 #include <material.h>
 
@@ -9,15 +9,15 @@
 
 namespace manta {
 
-	class SimplePhongLambertMaterial : public Material {
+	class PhongPhongBilayerMaterial : public Material {
 	public:
 		enum EMITTERS {
 			SPECULAR_EMITTER,
 			DIFFUSE_EMITTER
 		};
 	public:
-		SimplePhongLambertMaterial();
-		virtual ~SimplePhongLambertMaterial();
+		PhongPhongBilayerMaterial();
+		virtual ~PhongPhongBilayerMaterial();
 
 		void setMaxDegree(int degree) { m_maxDegree = degree; }
 		int getMaxDegree() const { return m_maxDegree; }
@@ -49,4 +49,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* SIMPLE_PHONG_MATERIAL_H */
+#endif /* PHONG_PHONG_BILAYER_MATERIAL_H */

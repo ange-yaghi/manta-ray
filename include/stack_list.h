@@ -120,6 +120,6 @@ namespace manta {
 		int m_alignment;
 	};
 
-}
+} /* namespace manta */
 
 #endif /* STACK_LIST_H */
