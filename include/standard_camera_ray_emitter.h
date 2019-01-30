@@ -1,8 +1,6 @@
 #ifndef STANDARD_CAMERA_RAY_EMITTER_H
 #define STANDARD_CAMERA_RAY_EMITTER_H
 
-#include <ray_emitter.h>
-
 #include <camera_ray_emitter.h>
 
 namespace manta {

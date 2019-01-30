@@ -7,7 +7,7 @@
 #include <ray_container.h>
 
 manta::LensCameraRayEmitter::LensCameraRayEmitter() {
-
+	m_lens = nullptr;
 }
 
 manta::LensCameraRayEmitter::~LensCameraRayEmitter() {

@@ -1,3 +1,6 @@
+#include <manta_build_conf.h>
+#if INCLUDE_OPENCL_IMPL
+
 #include <gpu_manager_opencl.h>
 
 #include <gpu_memory_opencl.h>
@@ -147,3 +150,5 @@ cl_int manta::GPUManagerOpenCL::runKernel(GPUKernel *_kernel, unsigned int eleme
 	cl_int result = clEnqueueNDRangeKernel(m_commandQueue, kernel->getKernel(), 1, NULL, &globalItemSize, &localItemSize, 0, NULL, NULL);
 	return result;
 }
+
+#endif /* INCLUDE_OPENCL_IMPL */

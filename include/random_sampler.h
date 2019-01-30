@@ -14,6 +14,6 @@ namespace manta {
 		virtual int getTotalSampleCount(int sampleCount) const;
 	};
 
-}
+} /* namespace manta */
 
 #endif /* RANDOM_SAMPLER_H */

@@ -2,7 +2,7 @@
 
 #include <light_ray.h>
 #include <intersection_point.h>
-#include <intersection_list.h>
+#include <coarse_intersection.h>
 
 manta::SpherePrimitive::SpherePrimitive() {
 	m_radius = (math::real)0.0;
@@ -70,18 +70,7 @@ manta::math::Vector manta::SpherePrimitive::getClosestPoint(const CoarseIntersec
 }
 
 void manta::SpherePrimitive::getVicinity(const math::Vector &p, math::real radius, IntersectionList *list, SceneObject *object) const {
-	math::Vector closestPoint = getClosestPoint(nullptr, p);
-	math::Vector d = math::sub(closestPoint, p);
-
-	if (math::getScalar(math::magnitudeSquared3(d)) < (radius * radius)) {
-		CoarseIntersection *newIntersection = list->newIntersection();
-		newIntersection->locationHint = -1;
-		newIntersection->globalHint = -1;
-		newIntersection->depth = (math::real)0.0;
-		newIntersection->sceneObject = object;
-		newIntersection->valid = true;
-		newIntersection->sceneGeometry = this;
-	}
+	/* Deprecated */
 }
 
 void manta::SpherePrimitive::fineIntersection(const math::Vector &r, IntersectionPoint *p, const CoarseIntersection *hint) const {

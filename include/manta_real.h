@@ -37,6 +37,4 @@ namespace manta {
 
 }
 
-#define R(v) ( (manta::math::real)( v ) )
-
 #endif /* MANTA_REAL_H */

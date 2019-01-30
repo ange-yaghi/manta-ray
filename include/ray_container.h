@@ -39,6 +39,7 @@ namespace manta {
 		LightRay *m_rays;
 
 	protected:
+		// Read-only intensity value
 		math::Vector m_intensity;
 
 	private:

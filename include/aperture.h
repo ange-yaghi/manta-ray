@@ -10,6 +10,7 @@ namespace manta {
 		Aperture() {}
 		~Aperture() {}
 
+		// Test whether a point lies inside or outside the aperture
 		virtual bool filter(math::real x, math::real y) const = 0;
 
 		void setRadius(math::real size) { m_radius = size; };

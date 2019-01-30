@@ -11,12 +11,12 @@
 #include <stack_allocator.h>
 #include <memory_management.h>
 #include <worker.h>
-#include <intersection_list.h>
 #include <camera_ray_emitter_group.h>
 #include <path_recorder.h>
 #include <standard_allocator.h>
 #include <stack_list.h>
 #include <ray_container.h>
+#include <coarse_intersection.h>
 
 #include <iostream>
 #include <thread>
@@ -201,9 +201,6 @@ void manta::RayTracer::destroyWorkers() {
 void manta::RayTracer::depthCull(const Scene *scene, const LightRay *ray, SceneObject **closestObject, IntersectionPoint *point, StackAllocator *s) const {
 	int objectCount = scene->getSceneObjectCount();
 
-	IntersectionList list;
-	list.setStack(s);
-
 	CoarseIntersection closestIntersection;
 	math::real closestDepth = math::constants::REAL_MAX;
 
@@ -228,17 +225,15 @@ void manta::RayTracer::depthCull(const Scene *scene, const LightRay *ray, SceneO
 		point->m_valid = true;
 		*closestObject = closestIntersection.sceneObject;
 
-		refineContact(ray, closestIntersection.depth, &list, point, closestObject, s);
+		refineContact(ray, closestIntersection.depth, point, closestObject, s);
 	}
 	else {
 		point->m_valid = false;
 		*closestObject = nullptr;
 	}
-
-	list.destroy();
 }
 
-void manta::RayTracer::refineContact(const LightRay *ray, math::real depth, IntersectionList *list, IntersectionPoint *point, SceneObject **closestObject, StackAllocator *s) const {
+void manta::RayTracer::refineContact(const LightRay *ray, math::real depth, IntersectionPoint *point, SceneObject **closestObject, StackAllocator *s) const {
 	// Simple bias
 	math::real d = depth;
 	d -= (math::real)5E-3;

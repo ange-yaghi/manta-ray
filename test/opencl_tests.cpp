@@ -1,5 +1,8 @@
 #include <pch.h>
 
+#include <manta_build_conf.h>
+#if INCLUDE_OPENCL_IMPL
+
 #include <gpu_manager_opencl.h>
 #include <gpu_kernel_opencl.h>
 #include <gpu_memory_opencl.h>
@@ -7,7 +10,7 @@
 #include <mesh.h>
 #include <light_ray.h>
 #include <intersection_point.h>
-#include <intersection_list.h>
+#include <coarse_intersection.h>
 
 #include <chrono>
 #include <fstream>
@@ -333,3 +336,4 @@ void decode(const int *values, IntersectionList *lists, int rayCount, int faceCo
 	}
 }
 
+#endif /* INCLUDE_OPENCL_IMPL */
