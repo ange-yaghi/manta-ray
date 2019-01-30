@@ -29,7 +29,7 @@ void manta::StandardCameraRayEmitterGroup::createAllEmitters() {
 	for (int i = 0; i < m_resolutionY; i++) {
 		for (int j = 0; j < m_resolutionX; j++) {
 			StandardCameraRayEmitter *newEmitter = createEmitter<StandardCameraRayEmitter>();
-			m_rayEmitters[i * m_resolutionX + j] = (RayEmitter *)newEmitter;
+			m_rayEmitters[i * m_resolutionX + j] = (CameraRayEmitter *)newEmitter;
 
 			float x = xIncrement * j;
 			float y = yIncrement * i;
@@ -39,7 +39,6 @@ void manta::StandardCameraRayEmitterGroup::createAllEmitters() {
 			loc = math::add(loc, planeCenter);
 
 			newEmitter->setPosition(m_position);
-			newEmitter->setSamplesPerRay(1);
 			newEmitter->setTargetOrigin(loc);
 			newEmitter->setSampler(m_sampler);
 			newEmitter->setSampleCount(m_samples);

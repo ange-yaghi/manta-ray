@@ -27,7 +27,7 @@ namespace manta {
 
 	class LightRay;
 	class Scene;
-	class RayEmitter;
+	class CameraRayEmitter;
 	class CameraRayEmitterGroup;
 	class SceneObject;
 	struct IntersectionPoint;
@@ -35,6 +35,7 @@ namespace manta {
 	class Worker;
 	class PathRecorder;
 	struct CoarseIntersection;
+	class RayContainer;
 
 	class RayTracer {
 	public:
@@ -43,7 +44,7 @@ namespace manta {
 
 		void traceAll(const Scene *scene, CameraRayEmitterGroup *rayEmitterGroup);
 		void tracePixel(int px, int py, const Scene *scene, CameraRayEmitterGroup *rayEmitterGroup);
-		void traceRayEmitter(const Scene *scene, RayEmitter *emitter, StackAllocator *s /**/ PATH_RECORDER_DECL) const;
+		void traceRayEmitter(const CameraRayEmitter *emitter, RayContainer *container, const Scene *scene, StackAllocator *s /**/ PATH_RECORDER_DECL) const;
 
 		int getThreadCount() const { return m_threadCount; }
 
@@ -88,7 +89,7 @@ namespace manta {
 		void depthCull(const Scene *scene, const LightRay *ray, SceneObject **closestObject, IntersectionPoint *point, StackAllocator *s) const;
 		void refineContact(const LightRay *ray, math::real depth, IntersectionList *list, IntersectionPoint *point, SceneObject **closestObject, StackAllocator *s) const;
 
-		void traceRayEmitterGroup(const Scene *scene, const RayEmitterGroup *rayEmitterGroup, StackAllocator *s /**/ PATH_RECORDER_DECL) const;
+		void traceRays(const Scene *scene, const RayContainer &rayContainer, StackAllocator *s /**/ PATH_RECORDER_DECL) const;
 
 		math::Vector m_backgroundColor;
 
