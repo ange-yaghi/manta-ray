@@ -5,11 +5,11 @@
 
 namespace manta {
 
+	struct IntersectionPoint;
+	struct CoarseIntersection;
 	class LightRay;
 	class IntersectionList;
-	struct IntersectionPoint;
 	class SceneObject;
-	struct CoarseIntersection;
 	class StackAllocator;
 
 	class SceneGeometry {
@@ -24,7 +24,7 @@ namespace manta {
 		virtual bool fastIntersection(const LightRay *ray) const = 0;
 
 		void setId(int id);
-		int getId();
+		int getId() const;
 
 		void setPosition(const math::Vector &position) { m_position = position; }
 		math::Vector getPosition() const { return m_position; }

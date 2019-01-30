@@ -8,11 +8,10 @@ manta::SceneGeometry::~SceneGeometry() {
 
 }
 
-int manta::SceneGeometry::getId() {
+int manta::SceneGeometry::getId() const {
 	return m_id;
 }
 
 void manta::SceneGeometry::setId(int id) {
 	m_id = id;
 }
-

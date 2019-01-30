@@ -1,6 +1,9 @@
 #ifndef GPU_MANAGER_H
 #define GPU_MANAGER_H
 
+#include <manta_build_conf.h>
+#if INCLUDE_OPENCL_IMPL
+
 #include <gpu_memory.h>
 
 namespace manta {
@@ -23,4 +26,5 @@ namespace manta {
 
 } /* namespace manta */
 
+#endif /* INCLUDE_OPENCL_IMPL */
 #endif /* GPU_MANAGER_H */

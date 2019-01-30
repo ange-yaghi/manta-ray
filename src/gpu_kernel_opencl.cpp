@@ -1,3 +1,6 @@
+#include <manta_build_conf.h>
+#if INCLUDE_OPENCL_IMPL
+
 #include <gpu_kernel_opencl.h>
 
 #include <gpu_manager_opencl.h>
@@ -27,3 +30,5 @@ void manta::GPUKernelOpenCL::run(unsigned int elements) {
 void manta::GPUKernelOpenCL::free() {
 	cl_int result = clReleaseKernel(m_kernel);
 }
+
+#endif /* INCLUDE_OPENCL_IMPL */

@@ -1,12 +1,17 @@
 #include <grid_sampler.h>
 
+#include <assert.h>
+
 manta::GridSampler::GridSampler() {
+	m_gridWidth = 0;
 }
 
 manta::GridSampler::~GridSampler() {
 }
 
 void manta::GridSampler::generateSamples(int sampleCount, math::Vector *target) const {
+	assert(m_gridWidth > 0);
+
 	int latticePoints = m_gridWidth * m_gridWidth;
 	int actualSampleCount = getTotalSampleCount(sampleCount);
 	actualSampleCount /= latticePoints;

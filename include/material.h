@@ -10,9 +10,9 @@
 
 namespace manta {
 
+	struct IntersectionPoint;
 	class RayContainer;
 	class LightRay;
-	struct IntersectionPoint;
 
 	class Material {
 	public:
@@ -43,6 +43,6 @@ namespace manta {
 		int m_index;
 	};
 
-}
+} /* namespace manta */
 
 #endif /* MATERIAL_H */

@@ -9,4 +9,4 @@
 #define MANTA_USE_SIMD			(true)
 #define MANTA_PRECISION			MANTA_PRECISION_FLOAT
 
-#endif /* MATH_CONF_H */
+#endif /* MANTA_MATH_CONF_H */

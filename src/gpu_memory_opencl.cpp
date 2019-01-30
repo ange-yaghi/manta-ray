@@ -1,3 +1,6 @@
+#include <manta_build_conf.h>
+#if INCLUDE_OPENCL_IMPL
+
 #include <gpu_memory_opencl.h>
 
 #include <gpu_manager_opencl.h>
@@ -21,3 +24,5 @@ void manta::GPUMemoryOpenCL::write(const void *data) {
 void manta::GPUMemoryOpenCL::free() {
 	clReleaseMemObject(m_memoryObject);
 }
+
+#endif /* INCLUDE_OPENCL_IMPL */

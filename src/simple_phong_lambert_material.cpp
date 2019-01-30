@@ -1,19 +1,19 @@
-#include <simple_phong_lambert_material.h>
+#include <phong_phong_bilayer_material.h>
 
 #include <ray_container.h>
 
 #include <intersection_point.h>
 #include <light_ray.h>
 
-manta::SimplePhongLambertMaterial::SimplePhongLambertMaterial() {
+manta::PhongPhongBilayerMaterial::PhongPhongBilayerMaterial() {
 	m_maxDegree = 5;
 	m_surfaceTransmission = (math::real)0.5;
 }
 
-manta::SimplePhongLambertMaterial::~SimplePhongLambertMaterial() {
+manta::PhongPhongBilayerMaterial::~PhongPhongBilayerMaterial() {
 }
 
-void manta::SimplePhongLambertMaterial::integrateRay(LightRay *ray, const RayContainer &rays, const IntersectionPoint &intersectionPoint) const {
+void manta::PhongPhongBilayerMaterial::integrateRay(LightRay *ray, const RayContainer &rays, const IntersectionPoint &intersectionPoint) const {
 	math::Vector totalLight = m_emission;
 	
 	if (rays.getRayCount() > 0) {
@@ -41,8 +41,8 @@ void manta::SimplePhongLambertMaterial::integrateRay(LightRay *ray, const RayCon
 	ray->setIntensity(totalLight);
 }
 
-void manta::SimplePhongLambertMaterial::generateRays(RayContainer *rays, const LightRay &incidentRay, const IntersectionPoint &intersectionPoint, int degree, StackAllocator *stackAllocator) const {
-	if (degree >= 5) return;
+void manta::PhongPhongBilayerMaterial::generateRays(RayContainer *rays, const LightRay &incidentRay, const IntersectionPoint &intersectionPoint, int degree, StackAllocator *stackAllocator) const {
+	if (degree > m_maxDegree) return;
 
 	rays->initializeRays(1);
 
@@ -81,7 +81,6 @@ void manta::SimplePhongLambertMaterial::generateRays(RayContainer *rays, const L
 		weight *= m_specularBSDF.generateWeight(intersectionPoint.m_vertexNormal, incident, upper_m, o_transmission);
 
 		math::Vector newIncident = math::negate(o_transmission);
-		//newIncident = incident;
 		m = m_diffuseBSDF.generateMicrosurfaceNormal(intersectionPoint.m_vertexNormal, newIncident, u, v);
 		o = m_diffuseBSDF.reflectionDirection(newIncident, m);
 		weight *= m_diffuseBSDF.generateWeight(intersectionPoint.m_vertexNormal, newIncident, m, o);
@@ -96,7 +95,6 @@ void manta::SimplePhongLambertMaterial::generateRays(RayContainer *rays, const L
 	// Initialize the outgoing ray
 	ray.setDirection(o);
 	ray.setWeight(weight);
-	//ray.setWeight(1.0);
 	ray.setIntensity(math::constants::Zero);
 	ray.setSource(intersectionPoint.m_position);
 }

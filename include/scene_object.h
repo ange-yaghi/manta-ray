@@ -29,6 +29,6 @@ namespace manta {
 		std::string m_name;
 	};
 
-}
+} /* namespace manta */
 
 #endif /* SCENE_OBJECT_H */

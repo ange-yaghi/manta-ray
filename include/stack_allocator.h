@@ -75,6 +75,6 @@ namespace manta {
 		void *m_maxStackPointer;
 	};
 
-}
+} /* namespace manta */
 
 #endif /* STACK_ALLOCATOR_H */

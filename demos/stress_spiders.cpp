@@ -14,7 +14,7 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 	RayTracer rayTracer;
 
 	// Create all materials
-	SimplePhongLambertMaterial *spiderMaterial = rayTracer.getMaterialManager()->newMaterial<SimplePhongLambertMaterial>();
+	PhongPhongBilayerMaterial *spiderMaterial = rayTracer.getMaterialManager()->newMaterial<PhongPhongBilayerMaterial>();
 	spiderMaterial->setEmission(math::mul(getColor(0xFF, 0x08, 0x14), math::loadScalar(0.0)));
 	spiderMaterial->setDiffuseColor(getColor(0xf1, 0xc4, 0x0f));
 	spiderMaterial->setDiffuseColor(getColor(0x1B, 0x23, 0x2E));
@@ -24,7 +24,7 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 	spiderMaterial->getSpecularBSDF()->setPower((math::real)512);
 	//spiderMaterial->setGloss((math::real)0.5);
 
-	SimplePhongLambertMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<SimplePhongLambertMaterial>();
+	PhongPhongBilayerMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<PhongPhongBilayerMaterial>();
 	groundMaterial->setEmission(math::constants::Zero);
 	groundMaterial->setDiffuseColor(getColor(255, 255, 255));
 	groundMaterial->setSpecularColor(math::constants::Zero);

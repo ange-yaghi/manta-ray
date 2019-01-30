@@ -20,7 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\biconvex_lens.cpp" />
-    <ClCompile Include="..\..\src\bilayer_bsdf.cpp" />
     <ClCompile Include="..\..\src\bsdf.cpp" />
     <ClCompile Include="..\..\src\camera_ray_emitter.cpp" />
     <ClCompile Include="..\..\src\camera_ray_emitter_group.cpp" />
@@ -44,7 +43,6 @@
     <ClCompile Include="..\..\src\gpu_manager_opencl.cpp" />
     <ClCompile Include="..\..\src\gpu_memory_opencl.cpp" />
     <ClCompile Include="..\..\src\image_handling.cpp" />
-    <ClCompile Include="..\..\src\intersection_list.cpp" />
     <ClCompile Include="..\..\src\job_queue.cpp" />
     <ClCompile Include="..\..\src\lens.cpp" />
     <ClCompile Include="..\..\src\lens_camera_ray_emitter.cpp" />
@@ -58,8 +56,6 @@
     <ClCompile Include="..\..\src\obj_file_loader.cpp" />
     <ClCompile Include="..\..\src\path_recorder.cpp" />
     <ClCompile Include="..\..\src\raw_file.cpp" />
-    <ClCompile Include="..\..\src\ray_emitter.cpp" />
-    <ClCompile Include="..\..\src\ray_emitter_group.cpp" />
     <ClCompile Include="..\..\src\ray_tracer.cpp" />
     <ClCompile Include="..\..\src\scene.cpp" />
     <ClCompile Include="..\..\src\scene_buffer.cpp" />
@@ -78,10 +74,10 @@
   <ItemGroup>
     <ClInclude Include="..\..\include\aperture.h" />
     <ClInclude Include="..\..\include\biconvex_lens.h" />
-    <ClInclude Include="..\..\include\bilayer_bsdf.h" />
     <ClInclude Include="..\..\include\bsdf.h" />
     <ClInclude Include="..\..\include\camera_ray_emitter.h" />
     <ClInclude Include="..\..\include\camera_ray_emitter_group.h" />
+    <ClInclude Include="..\..\include\coarse_intersection.h" />
     <ClInclude Include="..\..\include\dielectric_media_interface.h" />
     <ClInclude Include="..\..\include\geometry.h" />
     <ClInclude Include="..\..\include\grid_sampler.h" />
@@ -96,7 +92,7 @@
     <ClInclude Include="..\..\include\random_sampler.h" />
     <ClInclude Include="..\..\include\ray_container.h" />
     <ClInclude Include="..\..\include\simple_lambert_material.h" />
-    <ClInclude Include="..\..\include\simple_phong_lambert_material.h" />
+    <ClInclude Include="..\..\include\phong_phong_bilayer_material.h" />
     <ClInclude Include="..\..\include\simple_sampler.h" />
     <ClInclude Include="..\..\include\circular_aperture.h" />
     <ClInclude Include="..\..\include\gpu_kernel.h" />
@@ -105,10 +101,9 @@
     <ClInclude Include="..\..\include\gpu_manager_opencl.h" />
     <ClInclude Include="..\..\include\gpu_memory.h" />
     <ClInclude Include="..\..\include\gpu_memory_opencl.h" />
-    <ClInclude Include="..\..\include\intersection_list.h" />
     <ClInclude Include="..\..\include\job_queue.h" />
     <ClInclude Include="..\..\include\manta.h" />
-    <ClInclude Include="..\..\include\manta_conf.h" />
+    <ClInclude Include="..\..\include\manta_build_conf.h" />
     <ClInclude Include="..\..\include\mesh.h" />
     <ClInclude Include="..\..\include\image_handling.h" />
     <ClInclude Include="..\..\include\lens.h" />
@@ -126,18 +121,13 @@
     <ClInclude Include="..\..\include\memory_management.h" />
     <ClInclude Include="..\..\include\obj_file_loader.h" />
     <ClInclude Include="..\..\include\path_recorder.h" />
-    <ClInclude Include="..\..\include\pool_allocator.h" />
     <ClInclude Include="..\..\include\raw_file.h" />
-    <ClInclude Include="..\..\include\ray_emitter.h" />
-    <ClInclude Include="..\..\include\ray_emitter_group.h" />
     <ClInclude Include="..\..\include\ray_tracer.h" />
     <ClInclude Include="..\..\include\scene.h" />
     <ClInclude Include="..\..\include\scene_buffer.h" />
     <ClInclude Include="..\..\include\scene_geometry.h" />
     <ClInclude Include="..\..\include\scene_object.h" />
     <ClInclude Include="..\..\include\simple_lens.h" />
-    <ClInclude Include="..\..\include\simple_ray_emitter.h" />
-    <ClInclude Include="..\..\include\simple_ray_emitter_group.h" />
     <ClInclude Include="..\..\include\sphere_primitive.h" />
     <ClInclude Include="..\..\include\spherical_surface.h" />
     <ClInclude Include="..\..\include\sampler_2d.h" />

@@ -1,7 +1,7 @@
 #ifndef CAMERA_RAY_EMITTER_H
 #define CAMERA_RAY_EMITTER_H
 
-#include <ray_emitter.h>
+#include <manta_math.h>
 
 namespace manta {
 

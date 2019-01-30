@@ -34,4 +34,4 @@ namespace manta {
 	} /* namespace math */
 } /* namespace manta */
 
-#endif /* MANTA_MATH_H */
+#endif /* MANTA_MATH_FLOAT_SIMD_H */
