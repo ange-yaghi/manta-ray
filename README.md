@@ -1,2 +1,2 @@
-# MantaRay Ray Tracer
-Simple ray tracer.
+# MantaRay Renderer
+An open-source renderer ideal for learning about ray-tracing and computer graphics.
