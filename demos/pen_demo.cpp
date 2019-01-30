@@ -48,7 +48,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	paint->setSpecularColor(getColor(255, 255, 255));
 	paint->setSpecularColor(getColor(0xFF, 0x08, 0x14));
 	paint->setSpecularColor(getColor(0xFF, 0xFF, 0xFF));
-	paint->getDiffuseBSDF()->setPower((math::real)1.0);
+	paint->getDiffuseBSDF()->setPower((math::real)4.0);
 	paint->getSpecularBSDF()->setPower((math::real)1024.0);
 	paint->getSpecularBSDF()->setMediaInterface(&paintFresnel);
 	//paint->setSurfaceTransmission(0.3);
