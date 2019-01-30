@@ -6,9 +6,11 @@
 #include <fstream>
 
 manta::RawFile::RawFile() {
+
 }
 
 manta::RawFile::~RawFile() {
+
 }
 
 bool manta::RawFile::writeRawFile(const char *fname, const SceneBuffer *buffer) const {

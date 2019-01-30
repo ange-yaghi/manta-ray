@@ -10,7 +10,7 @@ namespace manta {
 		CircularAperture();
 		~CircularAperture();
 
-		bool filter(math::real x, math::real y) const;
+		virtual bool filter(math::real x, math::real y) const;
 	};
 
 } /* namespace manta */

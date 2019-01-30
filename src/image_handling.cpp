@@ -1,10 +1,9 @@
 #include <image_handling.h>
 
-#include <SDL.h>
-#include <SDL_image.h>
-
 #include <manta_math.h>
 
+#include <SDL.h>
+#include <SDL_image.h>
 #include <math.h>
 
 Uint32 GetPixel24(SDL_Surface *surface, int x, int y) {

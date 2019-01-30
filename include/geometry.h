@@ -7,7 +7,9 @@ namespace manta {
 		int u;
 		int w;
 		int v;
+	};
 
+	struct AuxFaceData {
 		int nu;
 		int nv;
 		int nw;
@@ -17,7 +19,6 @@ namespace manta {
 		int tw;
 
 		int material;
-		unsigned int globalId;
 	};
 
 	struct Plane {

@@ -10,6 +10,10 @@
 
 namespace math = manta::math;
 
+manta::math::real manta::math::get(const Vector &v, int index) {
+	return v.m128_f32[index];
+}
+
 math::Vector manta::math::uniformRandom4(real range) {
 	real r = (rand() % RAND_MAX) / ((real)(RAND_MAX - 1));
 	return loadScalar(range * r);

@@ -30,8 +30,8 @@ void manta::SimpleLambertMaterial::integrateRay(LightRay *ray, const RayContaine
 }
 
 void manta::SimpleLambertMaterial::generateRays(RayContainer *rays, const LightRay &incidentRay, const IntersectionPoint &intersectionPoint, int degree, StackAllocator *stackAllocator) const {
-	return;
-	if (degree >= 5) return;
+	if (degree > m_maxDegree) return;
+	if (math::getScalar(math::magnitudeSquared3(m_diffuseColor)) < (math::real)1E-6) return; /* Early exit if the diffuse color is black */
 
 	rays->initializeRays(1);
 

@@ -2,7 +2,7 @@
 
 #include <mesh.h>
 #include <standard_allocator.h>
-#include <intersection_list.h>
+#include <coarse_intersection.h>
 
 #include <algorithm>
 
@@ -72,11 +72,13 @@ bool manta::KDTree::findClosestIntersection(const LightRay *ray, CoarseIntersect
 		if (closestHit < tmin) break;
 		if (!node->isLeaf()) {
 			int axis = node->getSplitAxis();
+			math::real split = node->getSplit();
+
 			math::real o_axis = math::get(ray->getSource(), axis);
-			math::real tPlane = (node->getSplit() - o_axis) * math::get(ray->getInverseDirection(), axis);
+			math::real tPlane = (split - o_axis) * math::get(ray->getInverseDirection(), axis);
 
 			const KDTreeNode *firstChild, *secondChild;
-			bool belowFirst = (o_axis < node->getSplit()) || (o_axis == node->getSplit() && math::get(ray->getDirection(), axis) <= 0);
+			bool belowFirst = (o_axis < split) || (o_axis == split && math::get(ray->getDirection(), axis) <= 0);
 
 			if (belowFirst) {
 				firstChild = node + 1;
@@ -154,7 +156,7 @@ bool manta::KDTree::fastIntersection(const LightRay *ray) const {
 }
 
 void manta::KDTree::analyze(Mesh *mesh, int maxSize) {
-	constexpr math::real maxDepth = 64;
+	constexpr int MAX_DEPTH = 64;
 
 	m_mesh = mesh;
 
@@ -192,10 +194,10 @@ void manta::KDTree::analyze(Mesh *mesh, int maxSize) {
 	topNodeBounds.maxPoint = math::loadScalar(m_width);
 
 	int badRefines = 0;
-	analyze(0, &topNodeBounds, faces, badRefines, maxDepth, &workspace);
+	analyze(0, &topNodeBounds, faces, badRefines, MAX_DEPTH, &workspace);
 
 	// Copy faces into a new array
-	int totalFaces = workspace.faces.size();
+	int totalFaces = (int)workspace.faces.size();
 	//m_faceLists = new int[totalFaces];
 	m_faceLists = StandardAllocator::Global()->allocate<int>(totalFaces);
 	m_faceCount = totalFaces;
@@ -365,14 +367,14 @@ int manta::KDTree::createNodeVolume() {
 }
 
 void manta::KDTree::initLeaf(int node, const std::vector<int> &faces, KDTreeWorkspace *workspace) {
-	int primitiveCount = faces.size();
+	int primitiveCount = (int)faces.size();
 	int newNodeVolume = createNodeVolume();
 	m_nodes[node].initLeaf(primitiveCount, newNodeVolume);
 
 	if (primitiveCount > 0) {
 		// Initialize the new volume
 		KDBoundingVolume &volume = m_nodeVolumes[newNodeVolume];
-		volume.faceListOffset = workspace->faces.size();
+		volume.faceListOffset = (int)workspace->faces.size();
 		volume.bounds = workspace->allFaceBounds[faces[0]];
 
 		// Add all primitives to the list
@@ -390,7 +392,6 @@ void manta::KDTree::initLeaf(int node, const std::vector<int> &faces, KDTreeWork
 void manta::KDTree::writeToObjFile(const char *fname) const {
 	std::ofstream f(fname);
 	
-	math::real depth;
 	int nodeCount = m_nodeCount;
 	for (int i = 0; i < nodeCount; i++) {
 		const AABB &bounds = m_nodeBounds[i];

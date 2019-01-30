@@ -30,6 +30,7 @@ namespace manta {
 		math::real getRadius() const { return m_radius; }
 
 		void setUp(const math::Vector &up) { m_up = up; }
+		math::Vector getUp() const { return m_up; }
 
 		virtual void setFocus(math::real dist) = 0;
 		virtual void setFocalLength(math::real focalLength) = 0;

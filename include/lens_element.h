@@ -11,8 +11,8 @@ namespace manta {
 	public:
 		static const math::real IOR_CROWN_GLASS;
 	public:
-		LensElement() { m_ior = IOR_CROWN_GLASS; }
-		virtual ~LensElement() {}
+		LensElement();
+		virtual ~LensElement();
 
 		virtual bool transformLightRay(const LightRay *ray, LightRay *transformed) const = 0;
 		virtual math::real calculateFocalLength() const = 0;

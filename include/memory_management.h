@@ -7,6 +7,6 @@ namespace manta {
 	constexpr unsigned int MB = 1000 * KB;
 	constexpr unsigned int GB = 1000 * MB;
 
-}
+} /* namespace manta */
 
 #endif /* MEMORY_MANAGEMENT_H */

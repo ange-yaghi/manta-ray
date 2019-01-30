@@ -3,7 +3,7 @@
 #include <obj_file_loader.h>
 #include <mesh.h>
 #include <light_ray.h>
-#include <intersection_list.h>
+#include <coarse_intersection.h>
 #include <kd_tree.h>
 #include <scene_object.h>
 

@@ -1,6 +1,9 @@
 #ifndef GPU_MEMORY_OPENCL_H
 #define GPU_MEMORY_OPENCL_H
 
+#include <manta_build_conf.h>
+#if INCLUDE_OPENCL_IMPL
+
 #include <gpu_memory.h>
 
 #include <CL/opencl.h>
@@ -35,4 +38,5 @@ namespace manta {
 
 } /* namespace manta */
 
+#endif /* INCLUDE_OPENCL_IMPL */
 #endif /* GPU_MEMORY_OPENCL_H */

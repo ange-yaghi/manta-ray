@@ -3,7 +3,7 @@
 #include <scene_object.h>
 #include <mesh.h>
 #include <light_ray.h>
-#include <intersection_list.h>
+#include <coarse_intersection.h>
 #include <stack_list.h>
 #include <standard_allocator.h>
 
@@ -69,11 +69,11 @@ void manta::Octree::analyze(Mesh *mesh, int maxSize) {
 	}
 
 	analyze(mesh, &m_tree, maxSize, allFaces);
-	//shrink(&m_tree);
+	shrink(&m_tree);
 
 	// Copy data from vectors
-	int childListsCount = m_childListsTemp.size();
-	int faceListsCount = m_faceListsTemp.size();
+	int childListsCount = (int)m_childListsTemp.size();
+	int faceListsCount = (int)m_faceListsTemp.size();
 
 	m_childLists = StandardAllocator::Global()->allocate<OctreeBV *>(childListsCount);
 	m_faceLists = StandardAllocator::Global()->allocate<int *>(faceListsCount);
@@ -223,7 +223,7 @@ void manta::Octree::getVicinity(const OctreeBV *leaf, const math::Vector &p, mat
 bool manta::Octree::analyze(Mesh *mesh, OctreeBV *leaf, int maxSize, std::vector<int> &facePool) {
 	Face *faces = mesh->getFaces();
 	math::Vector *vertices = mesh->getVertices();
-	int faceCount = facePool.size();
+	int faceCount = (int)facePool.size();
 
 	std::vector<int> enclosedFaces;
 
@@ -240,7 +240,7 @@ bool manta::Octree::analyze(Mesh *mesh, OctreeBV *leaf, int maxSize, std::vector
 		}
 	}
 
-	int enclosedFaceCount = enclosedFaces.size();
+	int enclosedFaceCount = (int)enclosedFaces.size();
 
 	math::Vector halfSize = math::mul(math::sub(leaf->maxPoint, leaf->minPoint), math::constants::Half);
 	math::Vector halfHalfSize = math::mul(halfSize, math::constants::Half);
@@ -251,7 +251,7 @@ bool manta::Octree::analyze(Mesh *mesh, OctreeBV *leaf, int maxSize, std::vector
 		for (int i = 0; i < enclosedFaceCount; i++) {
 			newFaceArray[i] = enclosedFaces[i];
 		}
-		int index = m_faceListsTemp.size();
+		int index = (int)m_faceListsTemp.size();
 		m_faceListsTemp.push_back(newFaceArray);
 
 		leaf->faceList = index;
@@ -271,7 +271,7 @@ bool manta::Octree::analyze(Mesh *mesh, OctreeBV *leaf, int maxSize, std::vector
 				for (int k = 0; k < 2; k++) {
 					OctreeBV newChild;
 					math::Vector offset = math::mul(
-						math::loadVector((2 * i - 1), (2 * j - 1), (2 * k - 1)),
+						math::loadVector((math::real)(2 * i - 1), (math::real)(2 * j - 1), (math::real)(2 * k - 1)),
 						halfHalfSize);
 					math::Vector childPosition = math::add(position, offset);
 
@@ -287,14 +287,14 @@ bool manta::Octree::analyze(Mesh *mesh, OctreeBV *leaf, int maxSize, std::vector
 		}
 
 		constexpr bool MERGE_SINGLE_CHILDREN = true;
-		int childCount = tempChildren.size();
+		int childCount = (int)tempChildren.size();
 		if (childCount == 0) {
 			// Shouldn't happen
 
 		}
 		else if (childCount > 1 || !MERGE_SINGLE_CHILDREN) {
 			OctreeBV *childList = StandardAllocator::Global()->allocate<OctreeBV>(childCount, 16);
-			int childListIndex = m_childListsTemp.size();
+			int childListIndex = (int)m_childListsTemp.size();
 			m_childListsTemp.push_back(childList);
 
 			for (int i = 0; i < childCount; i++) {

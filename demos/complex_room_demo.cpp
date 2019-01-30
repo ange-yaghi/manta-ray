@@ -19,7 +19,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	RayTracer rayTracer;
 
 	// Create all materials
-	SimplePhongLambertMaterial *wallMaterial = rayTracer.getMaterialManager()->newMaterial<SimplePhongLambertMaterial>();
+	PhongPhongBilayerMaterial *wallMaterial = rayTracer.getMaterialManager()->newMaterial<PhongPhongBilayerMaterial>();
 	wallMaterial->setName("WallMaterial");
 	wallMaterial->setEmission(math::constants::Zero);
 	wallMaterial->setDiffuseColor(getColor(0xFF, 0xFF, 0xFF));
@@ -28,7 +28,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	wallMaterial->getSpecularBSDF()->setPower((math::real)4.0);
 	//wallMaterial->setGloss((math::real)0.95);
 
-	SimplePhongLambertMaterial *floorMaterial = rayTracer.getMaterialManager()->newMaterial<SimplePhongLambertMaterial>();
+	PhongPhongBilayerMaterial *floorMaterial = rayTracer.getMaterialManager()->newMaterial<PhongPhongBilayerMaterial>();
 	floorMaterial->setName("FloorMaterial");
 	floorMaterial->setEmission(math::constants::Zero);
 	floorMaterial->setDiffuseColor(getColor(0xFF, 0xFF, 0xFF));
@@ -37,7 +37,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	floorMaterial->setSurfaceTransmission((math::real)0.5);
 	//floorMaterial->setGloss((math::real)0.95);
 
-	SimplePhongLambertMaterial *carpetMaterial = rayTracer.getMaterialManager()->newMaterial<SimplePhongLambertMaterial>();
+	PhongPhongBilayerMaterial *carpetMaterial = rayTracer.getMaterialManager()->newMaterial<PhongPhongBilayerMaterial>();
 	carpetMaterial->setName("CarpetMaterial");
 	carpetMaterial->setEmission(math::constants::Zero);
 	carpetMaterial->setDiffuseColor(getColor(0xdc, 0xb4, 0x84));
@@ -46,7 +46,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	carpetMaterial->setSurfaceTransmission((math::real)0.3);
 	//carpetMaterial->setGloss((math::real)0.95);
 
-	SimplePhongLambertMaterial *tableSteel = rayTracer.getMaterialManager()->newMaterial<SimplePhongLambertMaterial>();
+	PhongPhongBilayerMaterial *tableSteel = rayTracer.getMaterialManager()->newMaterial<PhongPhongBilayerMaterial>();
 	tableSteel->setName("TableSteel");
 	tableSteel->setEmission(math::constants::Zero);
 	tableSteel->setDiffuseColor(getColor(0xCC, 0xCC, 0xCC));
@@ -55,7 +55,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	tableSteel->setSurfaceTransmission(0.95);
 	//tableSteel->setGloss((math::real)0.95);
 
-	SimplePhongLambertMaterial *tableTop = rayTracer.getMaterialManager()->newMaterial<SimplePhongLambertMaterial>();
+	PhongPhongBilayerMaterial *tableTop = rayTracer.getMaterialManager()->newMaterial<PhongPhongBilayerMaterial>();
 	tableTop->setName("TableTop");
 	tableTop->setEmission(math::constants::Zero);
 	tableTop->setDiffuseColor(getColor(0x30, 0x26, 0x21));
@@ -64,7 +64,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	tableTop->setSurfaceTransmission((math::real)0.30);
 	//tableTop->setGloss((math::real)0.95);
 
-	SimplePhongLambertMaterial *book = rayTracer.getMaterialManager()->newMaterial<SimplePhongLambertMaterial>();
+	PhongPhongBilayerMaterial *book = rayTracer.getMaterialManager()->newMaterial<PhongPhongBilayerMaterial>();
 	book->setName("Book");
 	book->setEmission(math::constants::Zero);
 	book->setDiffuseColor(getColor(0xFF, 0xFF, 0xFF));

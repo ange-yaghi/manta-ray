@@ -30,6 +30,6 @@ namespace manta {
 		int m_currentIndex;
 	};
 
-}
+} /* namespace manta */
 
-#endif /* MATERIAL_H */
+#endif /* MATERIAL_MANAGER_H */

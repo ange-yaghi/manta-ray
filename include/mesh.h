@@ -42,11 +42,13 @@ namespace manta {
 		void setUseTexCoords(bool useTexCoords) { m_useTextureCoords = useTexCoords; }
 
 		Face *getFaces() { return m_faces; }
+		AuxFaceData *getAuxFaceData() { return m_auxFaceData; }
 		math::Vector *getVertices() { return m_vertices; }
 		math::Vector *getNormals() { return m_normals; }
 		math::Vector *getTexCoords() { return m_textureCoords; }
 
 		const Face *getFace(int index) const { return &m_faces[index]; }
+		const AuxFaceData *getAuxFace(int index) const { return &m_auxFaceData[index]; }
 		const math::Vector *getVertex(int index) const { return &m_vertices[index]; }
 		const math::Vector *getNormal(int index) const { return &m_normals[index]; }
 		const math::Vector *getTexCoord(int index) const { return &m_textureCoords[index]; }
@@ -76,6 +78,7 @@ namespace manta {
 		void computePlane(const math::Vector &n, const math::Vector &p, Plane *plane) const;
 
 		Face *m_faces;
+		AuxFaceData *m_auxFaceData;
 		math::Vector *m_vertices;
 		math::Vector *m_normals;
 		math::Vector *m_textureCoords;
@@ -97,6 +100,6 @@ namespace manta {
 		bool m_useTextureCoords;
 	};
 
-}
+} /* namespace manta */
 
 #endif /* MESH_H */

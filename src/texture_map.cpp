@@ -47,9 +47,9 @@ manta::math::Vector manta::TextureMap::sample(math::real u, math::real v) {
 
 	Pixel *pixel = &m_imageData[(int)((1.0 - v) * (m_height - 1))][(int)(u * (m_width - 1))];
 
-	math::real rr = pow(pixel->r / 255.0, m_gamma);
-	math::real rg = pow(pixel->g / 255.0, m_gamma);
-	math::real rb = pow(pixel->b / 255.0, m_gamma);
+	math::real rr = pow(pixel->r / (math::real)255.0, m_gamma);
+	math::real rg = pow(pixel->g / (math::real)255.0, m_gamma);
+	math::real rb = pow(pixel->b / (math::real)255.0, m_gamma);
 
 	return math::loadVector(rr, rg, rb);
 }

@@ -21,6 +21,6 @@ namespace manta {
 		std::vector<SceneObject *> m_sceneObjects;
 	};
 
-}
+} /* namespace manta */
 
 #endif /* SCENE_H */

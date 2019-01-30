@@ -33,6 +33,6 @@ namespace manta {
 		Pixel **m_imageData;
 	};
 
-}
+} /* namespace manta */
 
 #endif /* TEXTURE_MAP_H */
