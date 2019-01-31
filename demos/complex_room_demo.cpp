@@ -18,6 +18,10 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 
 	RayTracer rayTracer;
 
+	DielectricMediaInterface glassFresnel;
+	glassFresnel.setIorIncident(1.0);
+	glassFresnel.setIorTransmitted(1.6);
+
 	// Create all materials
 	PhongPhongBilayerMaterial *wallMaterial = rayTracer.getMaterialManager()->newMaterial<PhongPhongBilayerMaterial>();
 	wallMaterial->setName("WallMaterial");
@@ -25,7 +29,9 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	wallMaterial->setDiffuseColor(getColor(0xFF, 0xFF, 0xFF));
 	wallMaterial->setSpecularColor(getColor(0xFF, 0xFF, 0xFF));
 	wallMaterial->setSurfaceTransmission((math::real)0.3);
+	wallMaterial->getDiffuseBSDF()->setPower((math::real)2.0);
 	wallMaterial->getSpecularBSDF()->setPower((math::real)4.0);
+	wallMaterial->getSpecularBSDF()->setMediaInterface(&glassFresnel);
 	//wallMaterial->setGloss((math::real)0.95);
 
 	PhongPhongBilayerMaterial *floorMaterial = rayTracer.getMaterialManager()->newMaterial<PhongPhongBilayerMaterial>();
@@ -33,7 +39,9 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	floorMaterial->setEmission(math::constants::Zero);
 	floorMaterial->setDiffuseColor(getColor(0xFF, 0xFF, 0xFF));
 	floorMaterial->setSpecularColor(getColor(0xFF, 0xFF, 0xFF));
+	floorMaterial->getDiffuseBSDF()->setPower((math::real)2.0);
 	floorMaterial->getSpecularBSDF()->setPower((math::real)32.0);
+	floorMaterial->getSpecularBSDF()->setMediaInterface(&glassFresnel);
 	floorMaterial->setSurfaceTransmission((math::real)0.5);
 	//floorMaterial->setGloss((math::real)0.95);
 
@@ -42,7 +50,9 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	carpetMaterial->setEmission(math::constants::Zero);
 	carpetMaterial->setDiffuseColor(getColor(0xdc, 0xb4, 0x84));
 	carpetMaterial->setSpecularColor(getColor(0xdc, 0xb4, 0x84));
-	carpetMaterial->getSpecularBSDF()->setPower((math::real)2.0);
+	carpetMaterial->getDiffuseBSDF()->setPower((math::real)2.0);
+	carpetMaterial->getSpecularBSDF()->setPower((math::real)4.0);
+	carpetMaterial->getSpecularBSDF()->setMediaInterface(&glassFresnel);
 	carpetMaterial->setSurfaceTransmission((math::real)0.3);
 	//carpetMaterial->setGloss((math::real)0.95);
 
@@ -51,7 +61,9 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	tableSteel->setEmission(math::constants::Zero);
 	tableSteel->setDiffuseColor(getColor(0xCC, 0xCC, 0xCC));
 	tableSteel->setSpecularColor(getColor(0xff, 0xff, 0xff));
-	tableSteel->getSpecularBSDF()->setPower((math::real)1024);
+	tableSteel->getDiffuseBSDF()->setPower((math::real)128.0);
+	tableSteel->getSpecularBSDF()->setPower((math::real)1024.0);
+	tableSteel->getSpecularBSDF()->setMediaInterface(&glassFresnel);
 	tableSteel->setSurfaceTransmission(0.95);
 	//tableSteel->setGloss((math::real)0.95);
 
@@ -60,7 +72,9 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	tableTop->setEmission(math::constants::Zero);
 	tableTop->setDiffuseColor(getColor(0x30, 0x26, 0x21));
 	tableTop->setSpecularColor(getColor(0xff, 0xff, 0xff));
+	tableTop->getDiffuseBSDF()->setPower((math::real)4.0);
 	tableTop->getSpecularBSDF()->setPower((math::real)512.0);
+	tableTop->getSpecularBSDF()->setMediaInterface(&glassFresnel);
 	tableTop->setSurfaceTransmission((math::real)0.30);
 	//tableTop->setGloss((math::real)0.95);
 
@@ -69,7 +83,9 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	book->setEmission(math::constants::Zero);
 	book->setDiffuseColor(getColor(0xFF, 0xFF, 0xFF));
 	book->setSpecularColor(getColor(0xFF, 0xFF, 0xff));
-	book->getSpecularBSDF()->setPower((math::real)8.0);
+	tableTop->getDiffuseBSDF()->setPower((math::real)8.0);
+	tableTop->getSpecularBSDF()->setPower((math::real)512.0);
+	tableTop->getSpecularBSDF()->setMediaInterface(&glassFresnel);
 	book->setSurfaceTransmission((math::real)0.4);
 
 	SimpleLambertMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleLambertMaterial>();
