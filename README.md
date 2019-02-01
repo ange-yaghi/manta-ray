@@ -11,7 +11,7 @@ Only a few steps are required to begin developing on MantaRay:
 3. Open **mantaray.sln** in Microsoft Visual Studio
 4. Right click on **mantaray_demos** and select 'Set as StartUp Project'
 5. Right click on **mantaray_demos** then click 'Properties'
-6. For configuration 'All Configurations' and for platform 'x64', set **Environment** to: ```PATH=%PATH%;$(SolutionDir)\..\dependencies\runtime\x64```
+6. For configuration 'All Configurations' and platform 'x64', navigate to 'Debugging' under 'Configuration Properties' and set **Environment** to: ```PATH=%PATH%;$(SolutionDir)\..\dependencies\runtime\x64```
 -- **Note:** For x86 change this to ```runtime\x86``` (running in 64-bit mode, however, is recommended)
 7. Run the application
 
