@@ -3,6 +3,11 @@
 using namespace manta_demo;
 
 int main() {
+	// Set up all required directories
+	createAllDirectories();
+
+	// Run a demo
+
 	//complexRoomDemo(1000, 1024 * 2, 768 * 2);
 	penDemo(100, 1024 * 2, 768 * 2);
 	//stressSpidersDemo(1, 1024 * 2, 768 * 2); // 871 samples
