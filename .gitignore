@@ -18,8 +18,6 @@
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
-x64/
-x86/
 bld/
 [Bb]in/
 [Oo]bj/
@@ -88,8 +86,10 @@ StyleCopReport.xml
 *.svclog
 *.scc
 *.bmp
+*.exe
 *.dll
-!workspace/dependencies/*.dll
+!dependencies/runtime/x64/*.dll
+!dependencies/runtime/x86/*.dll
 *.blend
 
 # Chutzpah Test files
@@ -340,7 +340,4 @@ ASALocalRun/
 .localhistory/
 
 # Ignore user's workspace
-!workspace/
-
-workspace/**
-!workspace/dependencies/**
+workspace/
