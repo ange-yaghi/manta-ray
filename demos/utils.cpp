@@ -1,10 +1,26 @@
 #include <utils.h>
 
 #include <image_handling.h>
+#include <os_utilities.h>
+#include <settings.h>
 
 #include <sstream>
 #include <time.h>
 #include <iostream>
+
+void manta_demo::createAllDirectories() {
+	std::string baseRenderPath = std::string(RENDER_OUTPUT);
+	std::string baseWorkspacePath = std::string(WORKSPACE_PATH);
+
+	manta::createFolder(baseWorkspacePath.c_str());
+	manta::createFolder((baseWorkspacePath + "diagnostics").c_str());
+
+	manta::createFolder(baseRenderPath.c_str());
+	manta::createFolder(baseRenderPath.c_str());
+	manta::createFolder((baseRenderPath + "bitmap").c_str());
+	manta::createFolder((baseRenderPath + "info").c_str());
+	manta::createFolder((baseRenderPath + "raw").c_str());
+}
 
 manta::math::Vector manta_demo::getColor(int r, int g, int b, manta::math::real gamma) {
 	manta::math::real rr = r / 255.0;

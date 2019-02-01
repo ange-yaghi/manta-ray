@@ -10,9 +10,10 @@
 
 #if EXECUTION_ENV == VISUAL_STUDIO
 
+#define WORKSPACE_PATH "../../workspace/"
 #define MODEL_PATH "../../demos/models/"
 #define TEXTURE_PATH "../../demos/textures/"
-#define RENDER_OUTPUT "../../workspace/render/"
+#define RENDER_OUTPUT (WORKSPACE_PATH "render/")
 
 #elif EXECUTION_ENV == STANDALONE
 
@@ -24,4 +25,4 @@
 
 #endif /* EXECUTION_ENV */
 
-#endif /* CONF_H */
+#endif /* SETTINGS_H */
