@@ -1,4 +1,5 @@
-# This is a short script which increments the build version
+# This is a short script which keeps track of how many local builds were made
+# and the overall line count of the project
 
 import re
 import datetime
@@ -19,7 +20,6 @@ def GetFileLineCount(filename):
     return lineCount
 
 if __name__ == "__main__":
-
     buildVersion = 0
     lineCount = 0
     buildLog = []
@@ -28,33 +28,31 @@ if __name__ == "__main__":
 
     directories = ['src', 'test', 'include', 'scripts', 'opencl_programs', 'demos', 'utilities/src', 'utilities/include']
     
-    f = open(mypath + "/tracking/BuildVersion.txt", "r")
-    
-    if (f):
-    
-        headerLine1 = f.readline()
-        headerLine2 = f.readline()
+    try:
+        with open(mypath + "/workspace/tracking/BuildVersion.txt", "r") as f:    
+            headerLine1 = f.readline()
+            headerLine2 = f.readline()
         
-        fileVersionLine = f.readline()
-        match = re.search("BUILD VERSION:\s*(\d+)", fileVersionLine)
+            fileVersionLine = f.readline()
+            match = re.search("BUILD VERSION:\s*(\d+)", fileVersionLine)
 
-        if match is not None:
-            buildVersion = int(match.group(1))
+            if match is not None:
+                buildVersion = int(match.group(1))
             
-        # Save the build log
-        for line in f:
-            # Check if the line is empty
-            if line.strip():
-                buildLog.append(line)
+            # Save the build log
+            for line in f:
+                # Check if the line is empty
+                if line.strip():
+                    buildLog.append(line)
+    except FileNotFoundError:
+        # File does not currently exist which is okay
+        os.makedirs(mypath + '/workspace/tracking/')
         
     # Increment the build version
     buildVersion += 1
     
-    # Calculate line count
-
-    #sourceFileList = [f for f in listdir(mypath) if isfile(join(mypath, f))]
-    
-    ignoreFiles = ['sqlite3ext.h', 'sqlite3.h', 'shell.c', 'sqlite3.c'];
+    # Calculate line count    
+    ignoreFiles = ['sqlite3ext.h', 'sqlite3.h', 'shell.c', 'sqlite3.c']
 
     for directory in directories:
         for root, subFolders, files in os.walk(mypath + directory):
@@ -64,11 +62,10 @@ if __name__ == "__main__":
                         lineCount += GetFileLineCount(os.path.join(root, fileEntry.strip()))
         
     # Rewrite the file
-       
-    f = open(mypath + "/tracking/BuildVersion.txt", "w")
+    f = open(mypath + "/workspace/tracking/BuildVersion.txt", "w")
     
-    f.write("MantaRay 2018 Build Information\n")
-    f.write("Ange Yaghi | 2018 | Every now and then, some rain must fall\n")
+    f.write("MantaRay 2019 Build Information\n")
+    f.write("Ange Yaghi | 2019 | Every now and then, some rain must fall\n")
     
     f.write("BUILD VERSION: %d\n\n" % (buildVersion))
     
