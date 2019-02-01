@@ -56,7 +56,6 @@ void PlacePixel24(SDL_Surface * surface, int x, int y, const manta::math::Vector
 }
 
 void manta::SaveImageData(const math::Vector *target, int width, int height, const char *fname) {
-
 	/* Create a 32-bit surface with the bytes of each pixel in R,G,B,A order,
 	as expected by OpenGL for textures */
 	SDL_Surface *surface;

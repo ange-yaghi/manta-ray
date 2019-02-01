@@ -49,9 +49,6 @@
     <Filter Include="Source Files\memory-management">
       <UniqueIdentifier>{9a29cc5f-8913-4a5c-8162-d29b2b91d03f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Tracking">
-      <UniqueIdentifier>{bfe51395-0f70-416b-8bbd-d9e4cd965ec4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\camera-emulation">
       <UniqueIdentifier>{fbc96ab6-d910-4226-943b-97fd60797150}</UniqueIdentifier>
     </Filter>
@@ -151,9 +148,6 @@
     <Filter Include="Source Files\output">
       <UniqueIdentifier>{89260930-fc47-4fab-b32c-743311ddf47f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\space-partitioning">
-      <UniqueIdentifier>{7210e93d-c187-4ed9-b708-38c782804c55}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\spatial-partitioning">
       <UniqueIdentifier>{ca2f7598-9ead-4aff-a531-7571c897c85a}</UniqueIdentifier>
     </Filter>
@@ -216,6 +210,15 @@
     </Filter>
     <Filter Include="Header Files\emitter\ray-container">
       <UniqueIdentifier>{ce1f77b5-50ae-443b-93ed-cd76bf60c8fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\spatial-partitioning">
+      <UniqueIdentifier>{7210e93d-c187-4ed9-b708-38c782804c55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\os">
+      <UniqueIdentifier>{fa088081-8ff5-4fb9-9485-b0c70b388c0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\os">
+      <UniqueIdentifier>{df3763e2-a1e5-4c08-aaa4-6785b6d57a7e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -372,6 +375,9 @@
     <ClCompile Include="..\..\src\texture_map.cpp">
       <Filter>Source Files\material\interface\texture-mapping</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\os_utilities.cpp">
+      <Filter>Source Files\os</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\sphere_primitive.h">
@@ -489,7 +495,7 @@
       <Filter>Header Files\emitter\camera-ray-emitter</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\octree.h">
-      <Filter>Header Files\space-partitioning</Filter>
+      <Filter>Header Files\spatial-partitioning</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\geometry.h">
       <Filter>Header Files\geometry</Filter>
@@ -552,7 +558,7 @@
       <Filter>Header Files\emitter\sampler</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\kd_tree.h">
-      <Filter>Header Files\space-partitioning</Filter>
+      <Filter>Header Files\spatial-partitioning</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\primitives.h">
       <Filter>Header Files\primitives</Filter>
@@ -572,11 +578,12 @@
     <ClInclude Include="..\..\include\coarse_intersection.h">
       <Filter>Header Files\ray-tracer</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\..\tracking\BuildVersion.txt">
-      <Filter>Tracking</Filter>
-    </Text>
+    <ClInclude Include="..\..\scripts\new_contributor.py">
+      <Filter>Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\os_utilities.h">
+      <Filter>Header Files\os</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\opencl_programs\mantaray.cl">
