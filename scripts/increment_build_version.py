@@ -46,7 +46,7 @@ if __name__ == "__main__":
                     buildLog.append(line)
     except FileNotFoundError:
         # File does not currently exist which is okay
-        pass
+        os.makedirs(mypath + '/workspace/tracking/')
         
     # Increment the build version
     buildVersion += 1
