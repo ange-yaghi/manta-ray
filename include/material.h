@@ -19,12 +19,6 @@ namespace manta {
 		Material();
 		~Material();
 
-		void setEmission(const math::Vector &emission) { m_emission = emission; }
-		math::Vector getEmission() { return m_emission; }
-
-		void setDiffuseColor(const math::Vector &diffuse) { m_diffuseColor = diffuse; }
-		math::Vector getDiffuseColor() { return m_diffuseColor; }
-
 		void setName(const std::string &name) { m_name = name; }
 		std::string getName() const { return m_name; }
 
@@ -35,8 +29,6 @@ namespace manta {
 		int getIndex() const { return m_index; }
 
 	protected:
-		math::Vector m_diffuseColor;
-		math::Vector m_emission;
 		std::string m_name;
 
 	protected:

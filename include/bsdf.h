@@ -6,26 +6,45 @@
 
 namespace manta {
 
+	struct IntersectionPoint;
+	class StackAllocator;
+
+	struct BSDFInput {
+		math::Vector normal;
+		math::Vector incident;
+
+		math::Vector u;
+		math::Vector v;
+
+		const IntersectionPoint *surfaceInteraction;
+
+		unsigned char cachedParameters[64];
+		void *extraMemory;
+	};
+
 	class BSDF {
 	public:
 		BSDF();
 		~BSDF();
 
-		virtual math::Vector generateMicrosurfaceNormal(const math::Vector &normal, const math::Vector &incident, const math::Vector &u, const math::Vector &v) const = 0;
-		virtual math::real generateWeight(const math::Vector &normal, const math::Vector &incident, const math::Vector &m, const math::Vector &o) const = 0;
-		virtual math::real bidirectionalShadowMasking(const math::Vector &normal, const math::Vector &incident, const math::Vector &o, const math::Vector &m) const;
+		virtual void initialize(BSDFInput *bsdfInput, StackAllocator *s) const;
+		void free(BSDFInput *bsdfInput, StackAllocator *s) const;
 
-		virtual MediaInterface::DIRECTION decideDirection(const math::Vector &incident, const math::Vector &m, MediaInterface::DIRECTION direction) const;
+		virtual math::Vector generateMicrosurfaceNormal(const BSDFInput &bsdfInput) const = 0;
+		virtual math::real generateWeight(const BSDFInput &bsdfInput, const math::Vector &m, const math::Vector &o) const = 0;
+		virtual math::real bidirectionalShadowMasking(const BSDFInput &bsdfInput, const math::Vector &o, const math::Vector &m) const;
 
-		math::Vector transmissionDirection(math::real ior, const math::Vector &incident, const math::Vector &m, const math::Vector &n) const;
-		math::Vector reflectionDirection(const math::Vector &incident, const math::Vector &m) const;
+		virtual MediaInterface::DIRECTION decideDirection(const BSDFInput &bsdfInput, const math::Vector &m, MediaInterface::DIRECTION direction) const;
+
+		math::Vector transmissionDirection(const BSDFInput &bsdfInput, math::real ior, const math::Vector &m) const;
+		math::Vector reflectionDirection(const BSDFInput &bsdfInput, const math::Vector &m) const;
 
 		void setMediaInterface(const MediaInterface *mediaInterface) { m_mediaInterface = mediaInterface; }
 		const MediaInterface *getMediaInterface() const { return m_mediaInterface; }
 
 	protected:
-		math::real smithBidirectionalShadowMasking(const math::Vector &normal, const math::Vector &incident, const math::Vector &o, const math::Vector &m) const;
-		virtual math::real g1(const math::Vector &normal, const math::Vector &incident, const math::Vector &v, const math::Vector &m) const = 0;
+		math::real smithBidirectionalShadowMasking(const BSDFInput &bsdfInput, const math::Vector &o, const math::Vector &m) const;
+		virtual math::real g1(const BSDFInput &bsdfInput, const math::Vector &v, const math::Vector &m) const = 0;
 
 		const MediaInterface *m_mediaInterface;
 	};

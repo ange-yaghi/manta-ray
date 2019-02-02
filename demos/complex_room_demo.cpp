@@ -240,7 +240,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	rayTracer.setBackgroundColor(getColor(255, 255, 255));
 	rayTracer.setDeterministicSeedMode(false);
 	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");
-	//rayTracer.tracePixel(583, 818, &scene, group);
+	//rayTracer.tracePixel(654, 493, &scene, group);
 	//rayTracer.tracePixel(702, 236, &scene, &camera);
 	//rayTracer.tracePixel(809, 211, &scene, &camera);
 	//rayTracer.tracePixel(793, 224, &scene, &camera);

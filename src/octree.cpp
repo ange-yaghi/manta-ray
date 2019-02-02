@@ -392,6 +392,8 @@ void manta::Octree::shrink(OctreeBV *leaf) {
 }
 
 void manta::Octree::destroyBV(const OctreeBV *bv) {
+	if (m_childLists == nullptr) return;
+
 	OctreeBV *childList = m_childLists[bv->childList];
 	for (int i = 0; i < bv->childCount; i++) {
 		destroyBV(&childList[i]);
