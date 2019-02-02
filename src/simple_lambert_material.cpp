@@ -4,9 +4,12 @@
 
 #include <intersection_point.h>
 #include <light_ray.h>
+#include <vector_material_node.h>
 
 manta::SimpleLambertMaterial::SimpleLambertMaterial() {
 	m_maxDegree = 5;
+
+	m_diffuseNode = nullptr;
 }
 
 manta::SimpleLambertMaterial::~SimpleLambertMaterial() {
@@ -15,12 +18,18 @@ manta::SimpleLambertMaterial::~SimpleLambertMaterial() {
 void manta::SimpleLambertMaterial::integrateRay(LightRay *ray, const RayContainer &rays, const IntersectionPoint &intersectionPoint) const {
 	math::Vector totalLight = m_emission;
 
+	math::Vector diffuseColor = m_diffuseColor;
+
+	if (m_diffuseNode != nullptr) {
+		diffuseColor = m_diffuseNode->sample(&intersectionPoint);
+	}
+
 	if (rays.getRayCount() > 0) {
 		const LightRay &mainRay = rays.getRays()[0];
 		totalLight = math::add(totalLight,
 			math::mul(
 				mainRay.getWeightedIntensity(),
-				m_diffuseColor));
+				diffuseColor));
 			//ray->setIntensity(math::loadVector(0.0, 1.0, 0.0));
 	}
 
@@ -31,7 +40,7 @@ void manta::SimpleLambertMaterial::integrateRay(LightRay *ray, const RayContaine
 
 void manta::SimpleLambertMaterial::generateRays(RayContainer *rays, const LightRay &incidentRay, const IntersectionPoint &intersectionPoint, int degree, StackAllocator *stackAllocator) const {
 	if (degree > m_maxDegree) return;
-	if (math::getScalar(math::magnitudeSquared3(m_diffuseColor)) < (math::real)1E-6) return; /* Early exit if the diffuse color is black */
+	if (math::getScalar(math::magnitudeSquared3(m_diffuseColor)) < (math::real)1E-6 && m_diffuseNode == nullptr) return; /* Early exit if the diffuse color is black */
 
 	rays->initializeRays(1);
 

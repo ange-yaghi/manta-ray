@@ -1,13 +1,15 @@
 #include <phong_phong_bilayer_material.h>
 
 #include <ray_container.h>
-
 #include <intersection_point.h>
 #include <light_ray.h>
+#include <vector_material_node.h>
 
 manta::PhongPhongBilayerMaterial::PhongPhongBilayerMaterial() {
 	m_maxDegree = 5;
 	m_surfaceTransmission = (math::real)0.5;
+
+	m_specularBSDF.setMediaInterface(&m_coatingFresnel);
 }
 
 manta::PhongPhongBilayerMaterial::~PhongPhongBilayerMaterial() {
@@ -28,10 +30,16 @@ void manta::PhongPhongBilayerMaterial::integrateRay(LightRay *ray, const RayCont
 			//ray->setIntensity(math::loadVector(1.0, 0.0, 0.0));
 		}
 		else if (mainRay.getMeta() == DIFFUSE_EMITTER) {
+			math::Vector diffuseColor = m_diffuseColor;
+
+			if (m_diffuseNode != nullptr) {
+				diffuseColor = m_diffuseNode->sample(&intersectionPoint);
+			}
+
 			totalLight = math::add(totalLight,
 				math::mul(
 					mainRay.getWeightedIntensity(),
-					m_diffuseColor));
+					diffuseColor));
 			//ray->setIntensity(math::loadVector(0.0, 1.0, 0.0));
 		}
 	}
@@ -80,7 +88,7 @@ void manta::PhongPhongBilayerMaterial::generateRays(RayContainer *rays, const Li
 		// Ray has reflected off of the coating
 		ray.setMeta(SPECULAR_EMITTER);
 		m = upper_m;
-		o = m_specularBSDF.reflectionDirection(u_param, upper_m);
+		o = math::normalize(m_specularBSDF.reflectionDirection(u_param, upper_m));
 		weight *= m_specularBSDF.generateWeight(u_param, upper_m, o);
 	}
 	else {

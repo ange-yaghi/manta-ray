@@ -85,18 +85,24 @@ void manta::Mesh::precomputeValues() {
 		math::Vector normal = math::cross(math::sub(v, u), math::sub(w, u));
 		if (abs(math::getX(normal)) < 1E-9 && abs(math::getY(normal)) < 1E-9 && abs(math::getZ(normal)) < 1E-9) {
 			m_faces[i] = m_faces[actualFaceCount - 1];
+			m_auxFaceData[i] = m_auxFaceData[actualFaceCount - 1];
 			actualFaceCount--;
 			i--;
 		}
 	}
 
 	Face *newFaces = StandardAllocator::Global()->allocate<Face>(actualFaceCount);
+	AuxFaceData *newAuxFaceData = StandardAllocator::Global()->allocate<AuxFaceData>(actualFaceCount);
 	for (int i = 0; i < actualFaceCount; i++) {
 		newFaces[i] = m_faces[i];
+		newAuxFaceData[i] = m_auxFaceData[i];
 	}
 
 	StandardAllocator::Global()->free(m_faces, m_faceCount);
+	StandardAllocator::Global()->free(m_auxFaceData, m_faceCount);
+
 	m_faces = newFaces;
+	m_auxFaceData = newAuxFaceData;
 	m_faceCount = actualFaceCount;
 
 	m_precomputedValues = StandardAllocator::Global()->allocate<PrecomputedValues>(m_faceCount, 16);
@@ -371,12 +377,14 @@ void manta::Mesh::merge(const Mesh *mesh) {
 	}
 
 	if (m_faces != nullptr) StandardAllocator::Global()->free(m_faces, m_faceCount);
+	if (m_auxFaceData != nullptr) StandardAllocator::Global()->free(m_auxFaceData, m_faceCount);
 	if (m_vertices != nullptr) StandardAllocator::Global()->aligned_free(m_vertices, m_vertexCount);
 	if (m_normals != nullptr) StandardAllocator::Global()->aligned_free(m_normals, m_normalCount);
 	if (m_textureCoords != nullptr) StandardAllocator::Global()->aligned_free(m_textureCoords, m_texCoordCount);
 	if (m_precomputedValues != nullptr) StandardAllocator::Global()->aligned_free(m_precomputedValues, m_faceCount);
 
 	m_faces = newFaces;
+	m_auxFaceData = newAuxFaceData;
 	m_vertices = newVerts;
 	m_normals = newNormals;
 	m_textureCoords = newTexCoords;

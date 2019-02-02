@@ -1,6 +1,8 @@
 #ifndef TEXTURE_MAP_H
 #define TEXTURE_MAP_H
 
+#include <vector_material_node.h>
+
 #include <manta_math.h>
 
 struct SDL_Surface;
@@ -13,14 +15,16 @@ namespace manta {
 		unsigned char b;
 	};
 
-	class TextureMap {
+	struct IntersectionPoint;
+
+	class TextureNode : public VectorMaterialNode {
 	public:
-		TextureMap();
-		~TextureMap();
+		TextureNode();
+		virtual ~TextureNode();
 
 		void loadFile(const char *fname, math::real gamma);
 
-		math::Vector sample(math::real u, math::real v);
+		virtual math::Vector sample(const IntersectionPoint *surfaceInteraction) const;
 
 	protected:
 		static void getPixel(const SDL_Surface *surface, int x, int y, Pixel *pixel);
