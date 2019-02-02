@@ -114,6 +114,13 @@ void manta::PhongPhongBilayerMaterial::generateRays(RayContainer *rays, const Li
 		weight *= m_diffuseBSDF.generateWeight(l_param, m, o);
 
 		m_diffuseBSDF.free(&l_param, stackAllocator);
+
+		if (std::isnan(weight)) {
+			int a = 0;
+			m_specularBSDF.generateWeight(u_param, upper_m, o_transmission);
+			upper_m = m_specularBSDF.generateMicrosurfaceNormal(u_param);
+			m_diffuseBSDF.generateWeight(l_param, m, o);
+		}
 	}
 
 	constexpr math::real MAX_WEIGHT = (math::real)10.0;
