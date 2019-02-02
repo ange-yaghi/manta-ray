@@ -4,7 +4,7 @@
 
 manta::PhongBSDF::PhongBSDF() {
 	m_powerNode = nullptr;
-	m_power = (math::real)0.0;
+	m_power = (math::real)1.0;
 }
 
 manta::PhongBSDF::~PhongBSDF() {
@@ -19,7 +19,9 @@ void manta::PhongBSDF::initialize(BSDFInput *bsdfInput, StackAllocator *s) const
 	if (m_powerNode != nullptr) {
 		// Sample the power input and save it in the state container
 		math::real power = math::getScalar(m_powerNode->sample(bsdfInput->surfaceInteraction));
-		memory->power = power;
+		memory->power = power * m_power;
+
+		if (memory->power < (math::real)2.0) memory->power = (math::real)2.0;
 	}
 	else {
 		memory->power = m_power;
@@ -47,17 +49,19 @@ manta::math::Vector manta::PhongBSDF::generateMicrosurfaceNormal(const BSDFInput
 }
 
 manta::math::real manta::PhongBSDF::generateWeight(const BSDFInput &bsdfInput, const math::Vector &m, const math::Vector &o) const {
+	math::real i_dot_m = ::abs(math::getScalar(math::dot(bsdfInput.incident, m)));
+	if (i_dot_m < 1E-6) return (math::real)0.0;
+
 	math::real g = bidirectionalShadowMasking(bsdfInput, o, m);
-	math::real i_dot_m = math::getScalar(math::dot(bsdfInput.incident, m));
+
 	math::real i_dot_n = math::getScalar(math::dot(bsdfInput.incident, bsdfInput.normal));
 	math::real m_dot_n = math::getScalar(math::dot(m, bsdfInput.normal));
 
-	math::real num = ::abs(i_dot_m) * g;
+	math::real num = i_dot_m * g;
 	math::real div = ::abs(i_dot_n) * ::abs(m_dot_n);
 
 	if (div < 1E-6) {
-		if (num < 1E-6) return (math::real)1.0;
-		else return (math::real)0.0;
+		return (math::real)0.0;
 	}
 
 	return num / div;
@@ -73,7 +77,11 @@ manta::math::real manta::PhongBSDF::g1(const BSDFInput &bsdfInput, const math::V
 	}
 
 	math::real m_dot_v_s = math::getScalar(m_dot_v);
-	math::real a = ::sqrt(((math::real)0.5 * memory->power + 1) / (1 - m_dot_v_s * m_dot_v_s)) * m_dot_v_s;
+	math::real m_dot_v_s_2 = m_dot_v_s * m_dot_v_s;
+
+	if (m_dot_v_s_2 >= (math::real)1.0) return 1.0;
+
+	math::real a = ::sqrt(((math::real)0.5 * memory->power + 1) / ((math::real)1.0 - m_dot_v_s * m_dot_v_s)) * m_dot_v_s;
 	a = ::abs(a);
 
 	if (a < (math::real)0.0) {
