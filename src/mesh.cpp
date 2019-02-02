@@ -176,6 +176,14 @@ void manta::Mesh::fineIntersection(const math::Vector &r, IntersectionPoint *p, 
 
 	getClosestPointOnFaceBarycentric(hint->locationHint, r, &u, &v, &w);
 
+	if (std::isnan(u)) {
+		getClosestPointOnFaceBarycentric(hint->locationHint, r, &u, &v, &w);
+	}
+
+	assert(!std::isnan(u));
+	assert(!std::isnan(v));
+	assert(!std::isnan(w));
+
 	p->m_depth = hint->depth;
 
 	math::Vector vertexNormal;
@@ -478,6 +486,7 @@ void manta::Mesh::getClosestPointOnFaceBarycentric(int faceIndex, const math::Ve
 		*bu = (math::real)1.0;
 		*bv = (math::real)0.0;
 		*bw = (math::real)0.0;
+		return;
 	}
 
 	// P in vertex region outside B
@@ -489,6 +498,7 @@ void manta::Mesh::getClosestPointOnFaceBarycentric(int faceIndex, const math::Ve
 		*bu = (math::real)0.0;
 		*bv = (math::real)1.0;
 		*bw = (math::real)0.0;
+		return;
 	}
 
 	// P in edge region of AB
@@ -498,6 +508,7 @@ void manta::Mesh::getClosestPointOnFaceBarycentric(int faceIndex, const math::Ve
 		*bu = (math::real)1.0 - v;
 		*bv = v;
 		*bw = (math::real)0.0;
+		return;
 	}
 
 	// P in vertex region outside C
@@ -508,6 +519,7 @@ void manta::Mesh::getClosestPointOnFaceBarycentric(int faceIndex, const math::Ve
 		*bu = (math::real)0.0;
 		*bv = (math::real)0.0;
 		*bw = (math::real)1.0;
+		return;
 	}
 
 	// P in edge region AC
@@ -518,6 +530,7 @@ void manta::Mesh::getClosestPointOnFaceBarycentric(int faceIndex, const math::Ve
 		*bu = (math::real)1.0 - w;
 		*bv = (math::real)0.0;
 		*bw = w;
+		return;
 	}
 
 	// P in edge region of BC
@@ -528,6 +541,7 @@ void manta::Mesh::getClosestPointOnFaceBarycentric(int faceIndex, const math::Ve
 		*bu = (math::real)0.0;
 		*bv = (math::real)1.0 - w;
 		*bw = w;
+		return;
 	}
 
 	// P inside face region

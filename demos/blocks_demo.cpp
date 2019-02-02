@@ -204,7 +204,7 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 	//rayTracer.setBackgroundColor(getColor(0.0, 0.0, 0.0));
 	//rayTracer.setDeterministicSeedMode(true);
 	rayTracer.traceAll(&scene, group);
-	//rayTracer.tracePixel(817, 689, &scene, &camera);
+	//rayTracer.tracePixel(1286, 1157, &scene, group);
 
 	// Output the results to a scene buffer
 	SceneBuffer sceneBuffer;

@@ -16,7 +16,7 @@ int main() {
 	//teapotDemo(1, 500, 500);
 	//teapotLampDemo(1000, 1024*2, 768*2);
 	//cubeTestDemo(1, 1024, 768);
-	blocksDemo(26830, 1024 * 2, 768 * 2);
+	blocksDemo(250, 1024 * 2, 768 * 2);
 
 	return 0;
 }
