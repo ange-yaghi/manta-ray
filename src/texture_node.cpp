@@ -1,19 +1,21 @@
-#include <texture_map.h>
+#include <texture_node.h>
+
+#include <intersection_point.h>
 
 #include <SDL.h>
 #include <SDL_image.h>
 
-manta::TextureMap::TextureMap() {
+manta::TextureNode::TextureNode() {
 	m_width = 0;
 	m_height = 0;
 	m_imageData = nullptr;
 }
 
-manta::TextureMap::~TextureMap() {
+manta::TextureNode::~TextureNode() {
 
 }
 
-void manta::TextureMap::loadFile(const char *fname, math::real gamma) {
+void manta::TextureNode::loadFile(const char *fname, math::real gamma) {
 	SDL_Surface *image;
 	image = IMG_Load(fname);
 
@@ -37,7 +39,10 @@ void manta::TextureMap::loadFile(const char *fname, math::real gamma) {
 	SDL_free((void *)image);
 }
 
-manta::math::Vector manta::TextureMap::sample(math::real u, math::real v) {
+manta::math::Vector manta::TextureNode::sample(const IntersectionPoint *surfaceInteraction) const {
+	math::real u = math::getX(surfaceInteraction->m_textureCoodinates);
+	math::real v = math::getY(surfaceInteraction->m_textureCoodinates);
+
 	// Simple sampling for now
 	if (u > 1.0) u = 1.0;
 	if (u < 0.0) u = 0.0;
@@ -45,7 +50,15 @@ manta::math::Vector manta::TextureMap::sample(math::real u, math::real v) {
 	if (v > 1.0) v = 1.0;
 	if (v < 0.0) v = 0.0;
 
-	Pixel *pixel = &m_imageData[(int)((1.0 - v) * (m_height - 1))][(int)(u * (m_width - 1))];
+	int pixelY = (int)((1.0 - v) * (m_height - 1));
+	if (pixelY >= m_height) pixelY = m_height - 1;
+	else if (pixelY < 0) pixelY = 0;
+
+	int pixelX = (int)(u * (m_width - 1));
+	if (pixelX >= m_width) pixelX = m_width - 1;
+	else if (pixelX < 0) pixelX = 0;
+
+	Pixel *pixel = &m_imageData[pixelY][pixelX];
 
 	math::real rr = pow(pixel->r / (math::real)255.0, m_gamma);
 	math::real rg = pow(pixel->g / (math::real)255.0, m_gamma);
@@ -54,7 +67,7 @@ manta::math::Vector manta::TextureMap::sample(math::real u, math::real v) {
 	return math::loadVector(rr, rg, rb);
 }
 
-void manta::TextureMap::getPixel(const SDL_Surface *surface, int x, int y, Pixel *pixelOut) {
+void manta::TextureNode::getPixel(const SDL_Surface *surface, int x, int y, Pixel *pixelOut) {
 	Uint32 color = 0;
 
 	Uint8 *pixel = (Uint8*)surface->pixels;

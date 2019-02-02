@@ -29,6 +29,7 @@
     <ClCompile Include="..\..\src\lambertian_bsdf.cpp" />
     <ClCompile Include="..\..\src\manta_math.cpp" />
     <ClCompile Include="..\..\src\material_manager.cpp" />
+    <ClCompile Include="..\..\src\material_node.cpp" />
     <ClCompile Include="..\..\src\octree.cpp" />
     <ClCompile Include="..\..\src\os_utilities.cpp" />
     <ClCompile Include="..\..\src\phong_bsdf.cpp" />
@@ -37,7 +38,7 @@
     <ClCompile Include="..\..\src\ray_container.cpp" />
     <ClCompile Include="..\..\src\sampler_2d.cpp" />
     <ClCompile Include="..\..\src\simple_lambert_material.cpp" />
-    <ClCompile Include="..\..\src\simple_phong_lambert_material.cpp" />
+    <ClCompile Include="..\..\src\phong_phong_bilayer_material.cpp" />
     <ClCompile Include="..\..\src\simple_sampler.cpp" />
     <ClCompile Include="..\..\src\circular_aperture.cpp" />
     <ClCompile Include="..\..\src\gpu_kernel_opencl.cpp" />
@@ -63,12 +64,14 @@
     <ClCompile Include="..\..\src\scene_geometry.cpp" />
     <ClCompile Include="..\..\src\scene_object.cpp" />
     <ClCompile Include="..\..\src\simple_lens.cpp" />
+    <ClCompile Include="..\..\src\single_color_node.cpp" />
     <ClCompile Include="..\..\src\sphere_primitive.cpp" />
     <ClCompile Include="..\..\src\spherical_surface.cpp" />
     <ClCompile Include="..\..\src\standard_allocator.cpp" />
     <ClCompile Include="..\..\src\standard_camera_ray_emitter.cpp" />
     <ClCompile Include="..\..\src\standard_camera_ray_emitter_group.cpp" />
-    <ClCompile Include="..\..\src\texture_map.cpp" />
+    <ClCompile Include="..\..\src\texture_node.cpp" />
+    <ClCompile Include="..\..\src\vector_material_node.cpp" />
     <ClCompile Include="..\..\src\worker.cpp" />
     <ClCompile Include="stack_allocator.cpp" />
   </ItemGroup>
@@ -85,6 +88,7 @@
     <ClInclude Include="..\..\include\kd_tree.h" />
     <ClInclude Include="..\..\include\lambertian_bsdf.h" />
     <ClInclude Include="..\..\include\material_manager.h" />
+    <ClInclude Include="..\..\include\material_node.h" />
     <ClInclude Include="..\..\include\media_interface.h" />
     <ClInclude Include="..\..\include\octree.h" />
     <ClInclude Include="..\..\include\opaque_media_interface.h" />
@@ -130,6 +134,7 @@
     <ClInclude Include="..\..\include\scene_geometry.h" />
     <ClInclude Include="..\..\include\scene_object.h" />
     <ClInclude Include="..\..\include\simple_lens.h" />
+    <ClInclude Include="..\..\include\single_color_node.h" />
     <ClInclude Include="..\..\include\sphere_primitive.h" />
     <ClInclude Include="..\..\include\spherical_surface.h" />
     <ClInclude Include="..\..\include\sampler_2d.h" />
@@ -138,7 +143,8 @@
     <ClInclude Include="..\..\include\standard_allocator.h" />
     <ClInclude Include="..\..\include\standard_camera_ray_emitter.h" />
     <ClInclude Include="..\..\include\standard_camera_ray_emitter_group.h" />
-    <ClInclude Include="..\..\include\texture_map.h" />
+    <ClInclude Include="..\..\include\texture_node.h" />
+    <ClInclude Include="..\..\include\vector_material_node.h" />
     <ClInclude Include="..\..\include\worker.h" />
     <ClInclude Include="..\..\scripts\new_contributor.py" />
   </ItemGroup>
