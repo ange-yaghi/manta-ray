@@ -59,8 +59,17 @@ void manta::PhongPhongBilayerMaterial::generateRays(RayContainer *rays, const Li
 	math::Vector incident = math::negate(incidentRay.getDirection());
 
 	// Try upper layer first
-	math::Vector upper_m = m_specularBSDF.generateMicrosurfaceNormal(intersectionPoint.m_vertexNormal, incident, u, v);
-	MediaInterface::DIRECTION upperRT = m_specularBSDF.decideDirection(incident, upper_m, MediaInterface::DIRECTION_IN);
+	BSDFInput u_param;
+	u_param.incident = incident;
+	u_param.normal = intersectionPoint.m_vertexNormal;
+	u_param.u = u;
+	u_param.v = v;
+	u_param.surfaceInteraction = &intersectionPoint;
+
+	m_specularBSDF.initialize(&u_param, stackAllocator);
+
+	math::Vector upper_m = m_specularBSDF.generateMicrosurfaceNormal(u_param);
+	MediaInterface::DIRECTION upperRT = m_specularBSDF.decideDirection(u_param, upper_m, MediaInterface::DIRECTION_IN);
 
 	math::Vector m, o;
 	math::real weight = 1.0;
@@ -71,19 +80,32 @@ void manta::PhongPhongBilayerMaterial::generateRays(RayContainer *rays, const Li
 		// Ray has reflected off of the coating
 		ray.setMeta(SPECULAR_EMITTER);
 		m = upper_m;
-		o = m_specularBSDF.reflectionDirection(incident, upper_m);
-		weight *= m_specularBSDF.generateWeight(intersectionPoint.m_vertexNormal, incident, upper_m, o);
+		o = m_specularBSDF.reflectionDirection(u_param, upper_m);
+		weight *= m_specularBSDF.generateWeight(u_param, upper_m, o);
 	}
 	else {
 		// Ray has penetrated to the lower layer
 		ray.setMeta(DIFFUSE_EMITTER);
-		math::Vector o_transmission = m_specularBSDF.transmissionDirection(m_coatingFresnel.getIorIncident() / m_coatingFresnel.getIorTransmitted(), incident, upper_m, intersectionPoint.m_vertexNormal);
-		weight *= m_specularBSDF.generateWeight(intersectionPoint.m_vertexNormal, incident, upper_m, o_transmission);
+		math::Vector o_transmission = m_specularBSDF.transmissionDirection(u_param, m_coatingFresnel.getIorIncident() / m_coatingFresnel.getIorTransmitted(), upper_m);
+		weight *= m_specularBSDF.generateWeight(u_param, upper_m, o_transmission);
 
 		math::Vector newIncident = math::negate(o_transmission);
-		m = m_diffuseBSDF.generateMicrosurfaceNormal(intersectionPoint.m_vertexNormal, newIncident, u, v);
-		o = m_diffuseBSDF.reflectionDirection(newIncident, m);
-		weight *= m_diffuseBSDF.generateWeight(intersectionPoint.m_vertexNormal, newIncident, m, o);
+
+		// Generate an outgoing direction from the lower layer
+		BSDFInput l_param;
+		l_param.incident = newIncident;
+		l_param.normal = intersectionPoint.m_vertexNormal;
+		l_param.u = u;
+		l_param.v = v;
+		l_param.surfaceInteraction = &intersectionPoint;
+
+		m_diffuseBSDF.initialize(&l_param, stackAllocator);
+
+		m = m_diffuseBSDF.generateMicrosurfaceNormal(l_param);
+		o = m_diffuseBSDF.reflectionDirection(l_param, m);
+		weight *= m_diffuseBSDF.generateWeight(l_param, m, o);
+
+		m_diffuseBSDF.free(&l_param, stackAllocator);
 	}
 
 	constexpr math::real MAX_WEIGHT = (math::real)10.0;

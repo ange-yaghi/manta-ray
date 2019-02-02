@@ -220,6 +220,18 @@
     <Filter Include="Source Files\os">
       <UniqueIdentifier>{df3763e2-a1e5-4c08-aaa4-6785b6d57a7e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\material\node">
+      <UniqueIdentifier>{5058470b-83f3-4aad-80a8-bee0b7b32d8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\material\node">
+      <UniqueIdentifier>{f8d189d9-f785-4965-9730-f6b3510c5968}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\material\node\library">
+      <UniqueIdentifier>{6bbda7a1-4ed0-4ec7-be11-fac60817253a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\material\node\library">
+      <UniqueIdentifier>{587db5d8-d63a-407c-84d6-8d9ea918eafd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -377,6 +389,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\os_utilities.cpp">
       <Filter>Source Files\os</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\material_node.cpp">
+      <Filter>Source Files\material\node</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\vector_material_node.cpp">
+      <Filter>Source Files\material\node</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\single_color_node.cpp">
+      <Filter>Source Files\material\node\library</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -583,6 +604,15 @@
     </ClInclude>
     <ClInclude Include="..\..\include\os_utilities.h">
       <Filter>Header Files\os</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\material_node.h">
+      <Filter>Header Files\material\node</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\vector_material_node.h">
+      <Filter>Header Files\material\node</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\single_color_node.h">
+      <Filter>Header Files\material\node\library</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

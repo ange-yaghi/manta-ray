@@ -5,20 +5,32 @@
 
 namespace manta {
 
+	class VectorMaterialNode;
+
+	struct PhongMemory {
+		math::real power;
+	};
+
 	class PhongBSDF : public BSDF {
 	public:
 		PhongBSDF();
 		~PhongBSDF();
 
-		virtual math::Vector generateMicrosurfaceNormal(const math::Vector &normal, const math::Vector &incident, const math::Vector &u, const math::Vector &v) const;
-		virtual math::real generateWeight(const math::Vector &n, const math::Vector &i, const math::Vector &m, const math::Vector &o) const;
+		virtual void initialize(BSDFInput *bsdfInput, StackAllocator *s) const;
+
+		virtual math::Vector generateMicrosurfaceNormal(const BSDFInput &bsdfInput) const;
+		virtual math::real generateWeight(const BSDFInput &bsdfInput, const math::Vector &m, const math::Vector &o) const;
 
 		void setPower(math::real power) { m_power = power; }
 		math::real getPower() const { return m_power; }
 
-	protected:
-		virtual math::real g1(const math::Vector &n, const math::Vector &i, const math::Vector &v, const math::Vector &m) const;
+		void setPowerNode(VectorMaterialNode *node) { m_powerNode = node; }
+		VectorMaterialNode *getPowerNode() const { return m_powerNode; }
 
+	protected:
+		virtual math::real g1(const BSDFInput &bsdfInput, const math::Vector &v, const math::Vector &m) const;
+
+		VectorMaterialNode *m_powerNode;
 		math::real m_power;
 	};
 
