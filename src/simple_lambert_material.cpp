@@ -6,10 +6,14 @@
 #include <light_ray.h>
 #include <vector_material_node.h>
 
+
 manta::SimpleLambertMaterial::SimpleLambertMaterial() {
 	m_maxDegree = 5;
 
 	m_diffuseNode = nullptr;
+
+	m_distribution.setPower((math::real)32.0);
+	m_diffuseBSDF.setDistribution(&m_distribution);
 }
 
 manta::SimpleLambertMaterial::~SimpleLambertMaterial() {
@@ -58,6 +62,7 @@ void manta::SimpleLambertMaterial::generateRays(RayContainer *rays, const LightR
 	math::Vector m, o;
 	math::real weight;
 
+	/*
 	BSDFInput b_in;
 	b_in.incident = incidentRay.getDirection();
 	b_in.normal = intersectionPoint.m_vertexNormal;
@@ -78,9 +83,34 @@ void manta::SimpleLambertMaterial::generateRays(RayContainer *rays, const LightR
 	if (weight > MAX_WEIGHT) {
 		weight = MAX_WEIGHT;
 	}
+	*/
+
+	math::Vector incident = math::negate(incidentRay.getDirection());
+
+	// Transform incident ray
+	math::Vector t_dir = math::loadVector(
+		math::getScalar(math::dot(incident, u)),
+		math::getScalar(math::dot(incident, v)),
+		math::getScalar(math::dot(incident, intersectionPoint.m_vertexNormal)));
+
+	math::Vector outgoing_t;
+	math::real pdf;
+	math::Vector reflectance = m_diffuseBSDF.sampleF(t_dir, &outgoing_t, &pdf);
+
+	math::Vector outgoing = math::add(
+		math::mul(u, math::loadScalar(math::getX(outgoing_t))),
+		math::mul(v, math::loadScalar(math::getY(outgoing_t)))
+	);
+	outgoing = math::add(
+		outgoing,
+		math::mul(math::loadScalar(math::getZ(outgoing_t)), intersectionPoint.m_vertexNormal)
+	);
+
+	weight = math::getScalar(reflectance) * ::abs(math::getScalar(math::dot(outgoing, intersectionPoint.m_vertexNormal))) / pdf;
+	weight = (math::real)1.0;
 
 	// Initialize the outgoing ray
-	ray.setDirection(o);
+	ray.setDirection(outgoing);
 	ray.setWeight(weight);
 	ray.setIntensity(math::constants::Zero);
 	ray.setSource(intersectionPoint.m_position);

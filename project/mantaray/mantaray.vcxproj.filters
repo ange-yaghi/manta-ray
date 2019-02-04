@@ -226,6 +226,12 @@
     <Filter Include="Source Files\material\node\library">
       <UniqueIdentifier>{587db5d8-d63a-407c-84d6-8d9ea918eafd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\material\surface-modeling\microfacet-model">
+      <UniqueIdentifier>{eda51e41-f495-457e-a594-0cb7c2378661}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\material\surface-modeling\microfacet-distribution">
+      <UniqueIdentifier>{38f44da1-6469-457c-b9e5-a0af4566f4e7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -392,6 +398,18 @@
     </ClCompile>
     <ClCompile Include="..\..\src\texture_node.cpp">
       <Filter>Source Files\material\node\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\perfect_specular_reflection_bsdf.cpp">
+      <Filter>Source Files\material\surface-modeling\bsdf\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\microfacet_distribution.cpp">
+      <Filter>Source Files\material\surface-modeling\microfacet-model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\phong_distribution.cpp">
+      <Filter>Source Files\material\surface-modeling\microfacet-model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\microfacet_reflection_bsdf.cpp">
+      <Filter>Source Files\material\surface-modeling\bsdf\library</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -607,6 +625,18 @@
     </ClInclude>
     <ClInclude Include="..\..\include\texture_node.h">
       <Filter>Header Files\material\node\library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\perfect_specular_reflection_bsdf.h">
+      <Filter>Header Files\material\surface-modeling\bsdf\library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\microfacet_distribution.h">
+      <Filter>Header Files\material\surface-modeling\microfacet-distribution</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\phong_distribution.h">
+      <Filter>Header Files\material\surface-modeling\microfacet-distribution</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\microfacet_reflection_bsdf.h">
+      <Filter>Header Files\material\surface-modeling\bsdf\library</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

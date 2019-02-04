@@ -16,12 +16,32 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 
 	RayTracer rayTracer;
 
+	SimpleLambertMaterial *test = rayTracer.getMaterialManager()->newMaterial<SimpleLambertMaterial>();
+	test->m_distribution.setPower(16.0);
+	test->setEmission(math::constants::Zero);
+	test->setDiffuseColor(getColor(0xf1, 0xc4, 0x0f));
+	test->setName("Paint");
+
+	SimpleLambertMaterial *test2 = rayTracer.getMaterialManager()->newMaterial<SimpleLambertMaterial>();
+	test2->m_distribution.setPower(1024.0);
+	test2->setEmission(math::constants::Zero);
+	test2->setDiffuseColor(getColor(255, 255, 255));
+	test2->setName("Chrome");
+
+	SimpleLambertMaterial *test3 = rayTracer.getMaterialManager()->newMaterial<SimpleLambertMaterial>();
+	test3->m_distribution.setPower(256.0);
+	test3->setEmission(math::constants::Zero);
+	test3->setDiffuseColor(getColor(255, 255, 255));
+	test3->setName("Backdrop");
+
+	/*
+
 	// Create all materials
 	PhongPhongBilayerMaterial *chrome = rayTracer.getMaterialManager()->newMaterial<PhongPhongBilayerMaterial>();
 	DielectricMediaInterface chromeFresnel;
 	chromeFresnel.setIorIncident(1.0);
 	chromeFresnel.setIorTransmitted(1.6);
-	chrome->setName("Chrome");
+	//chrome->setName("Chrome");
 	chrome->setEmission(math::mul(getColor(0xFF, 0x08, 0x14), math::loadScalar(0.0)));
 	chrome->setDiffuseColor(getColor(240, 240, 240));
 	chrome->setSpecularColor(getColor(255, 255, 255));
@@ -30,17 +50,11 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	chrome->getSpecularBSDF()->setMediaInterface(&chromeFresnel);
 	//chrome->setSurfaceTransmission(0.95);
 
-	SimpleLambertMaterial *test = rayTracer.getMaterialManager()->newMaterial<SimpleLambertMaterial>();
-	test->setEmission(math::constants::Zero);
-	test->setDiffuseColor(getColor(200, 200, 200));
-	test->setName("PenBodyTest");
-	test->setEmission(getColor(100, 100, 100));
-
 	PhongPhongBilayerMaterial *paint = rayTracer.getMaterialManager()->newMaterial<PhongPhongBilayerMaterial>();
 	DielectricMediaInterface paintFresnel;
 	paintFresnel.setIorIncident(1.0);
 	paintFresnel.setIorTransmitted(1.5);
-	paint->setName("PenBody");
+	//paint->setName("PenBodyPaint");
 	paint->setEmission(math::mul(getColor(0xFF, 0x08, 0x14), math::loadScalar(0.0)));
 	paint->setDiffuseColor(getColor(0xf1, 0xc4, 0x0f));
 	paint->setDiffuseColor(getColor(0xFF, 0x08, 0x14));
@@ -67,7 +81,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	DielectricMediaInterface groundFresnel;
 	groundFresnel.setIorIncident(1.0);
 	groundFresnel.setIorTransmitted(1.6);
-	groundMaterial->setName("Backdrop");
+	//groundMaterial->setName("Backdrop");
 	groundMaterial->setEmission(math::constants::Zero);
 	groundMaterial->setDiffuseColor(getColor(220, 220, 220));
 	//groundMaterial->setDiffuseColor(getColor(0xFF, 0xFD, 0xD0));
@@ -77,6 +91,8 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	groundMaterial->getSpecularBSDF()->setMediaInterface(&groundFresnel);
 	//groundMaterial->setSurfaceTransmission(0.4);
 
+	*/
+
 	SimpleLambertMaterial outdoorTopLightMaterial;
 	outdoorTopLightMaterial.setEmission(math::loadVector(2, 2, 2));
 	outdoorTopLightMaterial.setDiffuseColor(math::constants::Zero);
@@ -84,7 +100,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 
 	// Create all scene geometry
 	Mesh pen;
-	pen.loadObjFileData(&penObj, rayTracer.getMaterialManager(), chrome->getIndex(), 0);
+	pen.loadObjFileData(&penObj, rayTracer.getMaterialManager(), test->getIndex(), 0);
 
 	// Destroy file loaders
 	penObj.destroy();
@@ -132,13 +148,13 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	else {
 		penObject->setGeometry(&pen);
 	}
-	penObject->setDefaultMaterial(paint);
+	penObject->setDefaultMaterial(test);
 	penObject->setName("Pen");
 
-	SceneObject *ground = scene.createSceneObject();
-	ground->setGeometry(&groundGeometry);
-	ground->setDefaultMaterial(groundMaterial);
-	ground->setName("Ground");
+	//SceneObject *ground = scene.createSceneObject();
+	//ground->setGeometry(&groundGeometry);
+	//ground->setDefaultMaterial(test);
+	//ground->setName("Ground");
 
 	SceneObject *light1Object = scene.createSceneObject();
 	light1Object->setGeometry(&light1Geometry);

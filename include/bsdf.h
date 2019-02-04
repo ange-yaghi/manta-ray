@@ -30,8 +30,10 @@ namespace manta {
 		virtual void initialize(BSDFInput *bsdfInput, StackAllocator *s) const;
 		void free(BSDFInput *bsdfInput, StackAllocator *s) const;
 
-		virtual math::Vector generateMicrosurfaceNormal(const BSDFInput &bsdfInput) const = 0;
-		virtual math::real generateWeight(const BSDFInput &bsdfInput, const math::Vector &m, const math::Vector &o) const = 0;
+		virtual math::Vector sampleF(const math::Vector &i, math::Vector *o, math::real *pdf) const { return math::Vector(); }
+
+		virtual math::Vector generateMicrosurfaceNormal(const BSDFInput &bsdfInput) const { return math::Vector(); }
+		virtual math::real generateWeight(const BSDFInput &bsdfInput, const math::Vector &m, const math::Vector &o) const { return math::real(); }
 		virtual math::real bidirectionalShadowMasking(const BSDFInput &bsdfInput, const math::Vector &o, const math::Vector &m) const;
 
 		virtual MediaInterface::DIRECTION decideDirection(const BSDFInput &bsdfInput, const math::Vector &m, MediaInterface::DIRECTION direction) const;
@@ -44,7 +46,7 @@ namespace manta {
 
 	protected:
 		math::real smithBidirectionalShadowMasking(const BSDFInput &bsdfInput, const math::Vector &o, const math::Vector &m) const;
-		virtual math::real g1(const BSDFInput &bsdfInput, const math::Vector &v, const math::Vector &m) const = 0;
+		virtual math::real g1(const BSDFInput &bsdfInput, const math::Vector &v, const math::Vector &m) const { return 0.0; }
 
 		const MediaInterface *m_mediaInterface;
 	};
