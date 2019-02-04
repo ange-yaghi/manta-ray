@@ -1,6 +1,7 @@
 #include <phong_bsdf.h>
 
 #include <vector_material_node.h>
+#include <assert.h>
 
 manta::PhongBSDF::PhongBSDF() {
 	m_powerNode = nullptr;
@@ -37,6 +38,9 @@ manta::math::Vector manta::PhongBSDF::generateMicrosurfaceNormal(const BSDFInput
 	math::real rho_m = 2 * math::constants::PI * r2;
 	math::real cos_theta_m = ::pow(r1, (math::real)1.0 / (memory->power + (math::real)2.0));
 	math::real sin_theta_m = ::sqrt((math::real)1.0 - cos_theta_m * cos_theta_m);
+
+	assert(!std::isnan(cos_theta_m));
+	assert(!std::isnan(sin_theta_m));
 
 	math::real x = sin_theta_m * ::cos(rho_m);
 	math::real y = sin_theta_m * ::sin(rho_m);
