@@ -18,11 +18,22 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 
 	// Create all materials
 	SingleColorNode whiteNode(getColor(255, 255, 255));
-	SimpleLambertMaterial *wallMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleLambertMaterial>();
-	wallMaterial->setName("BlockSimple");
-	wallMaterial->setEmission(math::constants::Zero);
-	wallMaterial->setDiffuseNode(&whiteNode);
+	SimpleLambertMaterial *simpleBlockMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleLambertMaterial>();
+	simpleBlockMaterial->setName("Block");
+	simpleBlockMaterial->setEmission(math::constants::Zero);
+	simpleBlockMaterial->setDiffuseNode(&map);
 
+	SimpleLambertMaterial *simpleLetterMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleLambertMaterial>();
+	simpleLetterMaterial->setName("Block");
+	simpleLetterMaterial->setEmission(math::constants::Zero);
+	simpleLetterMaterial->setDiffuseNode(&map);
+
+	SimpleLambertMaterial *simpleGroundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleLambertMaterial>();
+	simpleGroundMaterial->setName("Ground");
+	simpleGroundMaterial->setEmission(math::constants::Zero);
+	simpleGroundMaterial->setDiffuseNode(&whiteNode);
+
+	/*
 	PhongPhongBilayerMaterial *blockMaterialPhong = rayTracer.getMaterialManager()->newMaterial<PhongPhongBilayerMaterial>();
 	DielectricMediaInterface *blockFresnel = blockMaterialPhong->getCoatingFresnel();
 	blockFresnel->setIorIncident(1.0);
@@ -65,6 +76,7 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 	groundMaterialPhong->setSpecularColor(getColor(255, 255, 255));
 	groundMaterialPhong->getDiffuseBSDF()->setPower((math::real)8.0);
 	groundMaterialPhong->getSpecularBSDF()->setPower((math::real)128.0);
+	*/
 
 	SimpleLambertMaterial outdoorLight;
 	outdoorLight.setEmission(math::loadVector(9, 8, 8));
@@ -118,7 +130,7 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 	SceneObject *boxCityObject = scene.createSceneObject();
 	if (useOctree) boxCityObject->setGeometry(&kdtree);
 	else boxCityObject->setGeometry(&boxCity);
-	boxCityObject->setDefaultMaterial(wallMaterial);
+	boxCityObject->setDefaultMaterial(simpleBlockMaterial);
 
 	//SceneObject *ground = scene.createSceneObject();
 	//ground->setGeometry(&groundGeometry);
@@ -201,7 +213,7 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 	// Run the ray tracer
 	rayTracer.initialize(1000 * MB, 50 * MB, 12, 10000, true);
 	rayTracer.setBackgroundColor(getColor(255, 255, 255));
-	//rayTracer.setBackgroundColor(getColor(0.0, 0.0, 0.0));
+	//rayTracer.setBackgroundColor(math::loadVector(255/2, 1 / math::constants::PI, 1 / math::constants::PI));
 	//rayTracer.setDeterministicSeedMode(true);
 	rayTracer.traceAll(&scene, group);
 	//rayTracer.tracePixel(1286, 1157, &scene, group);
@@ -221,7 +233,10 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 
 	RawFile rawFile;
 	rawFile.writeRawFile(rawFname.c_str(), &sceneBuffer);
-	editImage(&sceneBuffer, imageFname);
+	//editImage(&sceneBuffer, imageFname);
+
+	sceneBuffer.applyGammaCurve((math::real)(1.0 / 2.2));
+	manta::SaveImageData(sceneBuffer.getBuffer(), sceneBuffer.getWidth(), sceneBuffer.getHeight(), imageFname.c_str());
 
 	sceneBuffer.destroy();
 	rayTracer.destroy();

@@ -42,10 +42,10 @@ void manta::PhongPhongBilayerMaterial::integrateRay(LightRay *ray, const RayCont
 					diffuseColor));
 			//ray->setIntensity(math::loadVector(0.0, 1.0, 0.0));
 		}
+		//totalLight = math::loadScalar(mainRay.getWeight());
 	}
 
 	//totalLight = math::add(math::mul(intersectionPoint.m_vertexNormal, math::constants::Half), math::loadVector(0.5, 0.5, 0.5));
-
 	ray->setIntensity(totalLight);
 }
 
@@ -114,16 +114,9 @@ void manta::PhongPhongBilayerMaterial::generateRays(RayContainer *rays, const Li
 		weight *= m_diffuseBSDF.generateWeight(l_param, m, o);
 
 		m_diffuseBSDF.free(&l_param, stackAllocator);
-
-		if (std::isnan(weight)) {
-			int a = 0;
-			m_specularBSDF.generateWeight(u_param, upper_m, o_transmission);
-			upper_m = m_specularBSDF.generateMicrosurfaceNormal(u_param);
-			m_diffuseBSDF.generateWeight(l_param, m, o);
-		}
 	}
 
-	constexpr math::real MAX_WEIGHT = (math::real)10.0;
+	constexpr math::real MAX_WEIGHT = (math::real)1000.0;
 
 	if (weight > MAX_WEIGHT) {
 		weight = MAX_WEIGHT;

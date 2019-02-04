@@ -18,6 +18,13 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 
 	RayTracer rayTracer;
 
+	SimpleLambertMaterial *test = rayTracer.getMaterialManager()->newMaterial<SimpleLambertMaterial>();
+	test->setEmission(math::constants::Zero);
+	test->setDiffuseColor(getColor(200, 200, 200));
+	test->setName("TestMaterial");
+	test->m_distribution.setPower(50000);
+
+	/*
 	DielectricMediaInterface glassFresnel;
 	glassFresnel.setIorIncident(1.0);
 	glassFresnel.setIorTransmitted(1.6);
@@ -97,10 +104,11 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	outdoorTopLightMaterial.setEmission(math::loadVector(5, 5, 5));
 	outdoorTopLightMaterial.setDiffuseColor(math::constants::Zero);
 	//outdoorTopLightMaterial.setSpecularColor(math::constants::Zero);
+	*/
 
 	// Create all scene geometry
 	Mesh stressSpiders;
-	stressSpiders.loadObjFileData(&stressSpidersObj, rayTracer.getMaterialManager(), wallMaterial->getIndex());
+	stressSpiders.loadObjFileData(&stressSpidersObj, rayTracer.getMaterialManager(), test->getIndex());
 	stressSpiders.setFastIntersectEnabled(false);
 	//stressSpiders.setFastIntersectRadius((math::real)2.123);
 	//stressSpiders.setFastIntersectPosition(math::loadVector(-0.06430, 1.86833, -2.96564));
@@ -108,7 +116,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	std::cout << "Scene vertices/faces: " << stressSpiders.getVertexCount() << "/" << stressSpiders.getFaceCount() << std::endl;
 
 	Mesh roomShutters;
-	roomShutters.loadObjFileData(&roomShuttersObj, rayTracer.getMaterialManager(), wallMaterial->getIndex());
+	roomShutters.loadObjFileData(&roomShuttersObj, rayTracer.getMaterialManager(), test->getIndex());
 	roomShutters.setFastIntersectEnabled(false);
 
 	//stressSpiders.merge(&roomShutters);
@@ -163,7 +171,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	else {
 		stressSpidersObject->setGeometry(&stressSpiders);
 	}
-	stressSpidersObject->setDefaultMaterial(wallMaterial);
+	stressSpidersObject->setDefaultMaterial(test);
 	stressSpidersObject->setName("StressSpiders");
 
 	//SceneObject *ground = scene.createSceneObject();

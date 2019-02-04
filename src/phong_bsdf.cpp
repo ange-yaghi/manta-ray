@@ -68,7 +68,7 @@ manta::math::real manta::PhongBSDF::generateWeight(const BSDFInput &bsdfInput, c
 		return (math::real)0.0;
 	}
 
-	return num / div;
+	return (num / div);
 }
 
 manta::math::real manta::PhongBSDF::g1(const BSDFInput &bsdfInput, const math::Vector &v, const math::Vector &m) const {

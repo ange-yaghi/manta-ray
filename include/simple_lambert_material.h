@@ -4,6 +4,8 @@
 #include <material.h>
 
 #include <lambertian_bsdf.h>
+#include <microfacet_reflection_bsdf.h>
+#include <phong_distribution.h>
 
 namespace manta {
 
@@ -30,6 +32,7 @@ namespace manta {
 		math::Vector getDiffuseColor() { return m_diffuseColor; }
 
 	protected:
+	public:
 		int m_maxDegree;
 
 		VectorMaterialNode *m_diffuseNode;
@@ -39,7 +42,9 @@ namespace manta {
 		math::Vector m_diffuseColor;
 
 		// BSDF
-		LambertianBSDF m_diffuseBSDF;
+		//LambertianBSDF m_diffuseBSDF;
+		MicrofacetReflectionBSDF m_diffuseBSDF;
+		PhongDistribution m_distribution;
 	};
 
 } /* namespace manta */
