@@ -1,11 +1,13 @@
 #ifndef MEDIA_INTERFACE_H
 #define MEDIA_INTERFACE_H
 
+#include <material_node.h>
+
 #include <manta_math.h>
 
 namespace manta {
 
-	class MediaInterface {
+	class MediaInterface : public MaterialNode {
 	public:
 		enum DIRECTION {
 			DIRECTION_IN,
@@ -17,6 +19,7 @@ namespace manta {
 		~MediaInterface() {}
 
 		virtual math::real fresnelTerm(const math::Vector &i, const math::Vector &m, DIRECTION d) const = 0;
+		virtual math::real fresnelTerm(math::real cosThetaI, math::real *pdf, DIRECTION d) const = 0;
 	};
 
 } /* namespace manta */

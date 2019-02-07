@@ -1,6 +1,8 @@
 #ifndef BSDF_H
 #define BSDF_H
 
+#include <material_node.h>
+
 #include <manta_math.h>
 #include <media_interface.h>
 
@@ -22,15 +24,12 @@ namespace manta {
 		void *extraMemory;
 	};
 
-	class BSDF {
+	class BSDF : public MaterialNode {
 	public:
 		BSDF();
 		~BSDF();
 
-		virtual void initialize(BSDFInput *bsdfInput, StackAllocator *s) const;
-		void free(BSDFInput *bsdfInput, StackAllocator *s) const;
-
-		virtual math::Vector sampleF(const math::Vector &i, math::Vector *o, math::real *pdf) const { return math::Vector(); }
+		virtual math::Vector sampleF(const IntersectionPoint *surfaceInteraction, const math::Vector &i, math::Vector *o, math::real *pdf, StackAllocator *stackAllocator) const { return math::Vector(); }
 
 		virtual math::Vector generateMicrosurfaceNormal(const BSDFInput &bsdfInput) const { return math::Vector(); }
 		virtual math::real generateWeight(const BSDFInput &bsdfInput, const math::Vector &m, const math::Vector &o) const { return math::real(); }

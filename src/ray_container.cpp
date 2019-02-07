@@ -34,7 +34,7 @@ void manta::RayContainer::initializeRays(int count) {
 
 	for (int i = 0; i < m_rayCount; i++) {
 		m_rays[i].setIntensity(math::constants::Zero);
-		m_rays[i].setWeight((math::real)1.0);
+		m_rays[i].setWeight(math::constants::One);
 	}
 }
 

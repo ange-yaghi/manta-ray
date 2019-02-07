@@ -12,8 +12,8 @@ manta::SimpleLambertMaterial::SimpleLambertMaterial() {
 
 	m_diffuseNode = nullptr;
 
-	m_distribution.setPower((math::real)32.0);
-	m_diffuseBSDF.setDistribution(&m_distribution);
+	//m_distribution.setPower((math::real)4.0);
+	//m_diffuseBSDF.setDistribution(&m_distribution);
 }
 
 manta::SimpleLambertMaterial::~SimpleLambertMaterial() {
@@ -27,7 +27,7 @@ void manta::SimpleLambertMaterial::integrateRay(LightRay *ray, const RayContaine
 	if (m_diffuseNode != nullptr) {
 		diffuseColor = m_diffuseNode->sample(&intersectionPoint);
 	}
-
+	//totalLight = math::constants::Zero;
 	if (rays.getRayCount() > 0) {
 		const LightRay &mainRay = rays.getRays()[0];
 		totalLight = math::add(totalLight,
@@ -35,6 +35,7 @@ void manta::SimpleLambertMaterial::integrateRay(LightRay *ray, const RayContaine
 				mainRay.getWeightedIntensity(),
 				diffuseColor));
 			//ray->setIntensity(math::loadVector(0.0, 1.0, 0.0));
+		//totalLight = mainRay.getIntensity();
 	}
 
 	//totalLight = math::add(math::mul(intersectionPoint->m_vertexNormal, math::constants::Half), math::loadVector(0.5, 0.5, 0.5));
@@ -60,7 +61,7 @@ void manta::SimpleLambertMaterial::generateRays(RayContainer *rays, const LightR
 
 	LightRay &ray = rays->getRays()[0];
 	math::Vector m, o;
-	math::real weight;
+	math::Vector weight;
 
 	/*
 	BSDFInput b_in;
@@ -95,7 +96,7 @@ void manta::SimpleLambertMaterial::generateRays(RayContainer *rays, const LightR
 
 	math::Vector outgoing_t;
 	math::real pdf;
-	math::Vector reflectance = m_diffuseBSDF.sampleF(t_dir, &outgoing_t, &pdf);
+	math::Vector reflectance = m_bsdf->sampleF(&intersectionPoint, t_dir, &outgoing_t, &pdf, stackAllocator);
 
 	math::Vector outgoing = math::add(
 		math::mul(u, math::loadScalar(math::getX(outgoing_t))),
@@ -106,8 +107,35 @@ void manta::SimpleLambertMaterial::generateRays(RayContainer *rays, const LightR
 		math::mul(math::loadScalar(math::getZ(outgoing_t)), intersectionPoint.m_vertexNormal)
 	);
 
-	weight = math::getScalar(reflectance) * ::abs(math::getScalar(math::dot(outgoing, intersectionPoint.m_vertexNormal))) / pdf;
-	weight = (math::real)1.0;
+	if (std::isnan(math::getX(outgoing))) {
+		std::cout << "NAN" << std::endl;
+		pdf = 0;
+	}
+
+	if (math::getX(outgoing) == 0.0 && math::getY(outgoing) == 0.0 && math::getZ(outgoing) == 0.0) {
+		std::cout << "HELLO" << std::endl;
+		int a = 0;
+		std::cout << math::getX(outgoing_t) << ", " << math::getY(outgoing_t) << ", " << math::getZ(outgoing_t) << std::endl;
+		if (math::getX(outgoing_t) == 0.0 && math::getY(outgoing_t) == 0.0 && math::getZ(outgoing_t) == 0.0) {
+			std::cout << "HELLO2" << std::endl;
+
+			int a = 0;
+		}
+	}
+
+	if (pdf > 0) {
+		weight = math::mul(reflectance, math::abs(math::dot(outgoing, intersectionPoint.m_vertexNormal)));
+		weight = math::div(weight, math::loadScalar(pdf));
+		//weight = (math::real)1.0;
+	} 
+	else {
+		outgoing = math::loadVector(1, 0, 0);
+		weight = math::constants::Zero;
+	}
+
+	if (std::isnan(math::getX(weight))) {
+		std::cout << "NAN" << std::endl;
+	}
 
 	// Initialize the outgoing ray
 	ray.setDirection(outgoing);

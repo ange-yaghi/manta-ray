@@ -13,7 +13,7 @@ manta::PhongBSDF::~PhongBSDF() {
 }
 
 void manta::PhongBSDF::initialize(BSDFInput *bsdfInput, StackAllocator *s) const {
-	BSDF::initialize(bsdfInput, s);
+	//BSDF::initialize(bsdfInput, s);
 
 	PhongMemory *memory = reinterpret_cast<PhongMemory *>((void *)bsdfInput->cachedParameters);
 

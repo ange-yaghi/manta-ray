@@ -8,8 +8,8 @@ int main() {
 
 	// Run a demo
 
-	complexRoomDemo(40, 1024 * 2, 768 * 2);
-	//penDemo(200, 1024 * 2, 768 * 2);
+	//complexRoomDemo(40, 1024 * 2, 768 * 2);
+	penDemo(13300, 1024 * 2, 768 * 2);
 	//stressSpidersDemo(1, 1024 * 2, 768 * 2);
 	//simpleRoomDemo(1, 1024*2, 768*2);
 	//boxCityDemo(100, 1024*2, 768*2);

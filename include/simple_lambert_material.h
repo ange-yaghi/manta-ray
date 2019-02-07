@@ -31,6 +31,9 @@ namespace manta {
 		void setDiffuseColor(const math::Vector &diffuse) { m_diffuseColor = diffuse; }
 		math::Vector getDiffuseColor() { return m_diffuseColor; }
 
+		void setBSDF(BSDF *bsdf) { m_bsdf = bsdf; }
+		BSDF *getBSDF() { return m_bsdf; }
+
 	protected:
 	public:
 		int m_maxDegree;
@@ -43,8 +46,10 @@ namespace manta {
 
 		// BSDF
 		//LambertianBSDF m_diffuseBSDF;
-		MicrofacetReflectionBSDF m_diffuseBSDF;
-		PhongDistribution m_distribution;
+		//MicrofacetReflectionBSDF m_diffuseBSDF;
+		//PhongDistribution m_distribution;
+
+		BSDF *m_bsdf;
 	};
 
 } /* namespace manta */

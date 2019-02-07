@@ -5,12 +5,18 @@
 
 namespace manta {
 
+	class VectorMaterialNode;
+
+	struct LambertMemory {
+		math::Vector reflectance;
+	};
+
 	class LambertianBSDF : public BSDF {
 	public:
 		LambertianBSDF();
 		~LambertianBSDF();
 
-		virtual math::Vector sampleF(const math::Vector &i, math::Vector *o, math::real *pdf) const;
+		virtual math::Vector sampleF(const IntersectionPoint *surfaceInteraction, const math::Vector &i, math::Vector *o, math::real *pdf, StackAllocator *stackAllocator) const;
 
 		/* TODO: move to microfacet function */
 		virtual math::Vector generateMicrosurfaceNormal(const BSDFInput &bsdfInput) const;

@@ -113,7 +113,7 @@ void manta::PhongPhongBilayerMaterial::generateRays(RayContainer *rays, const Li
 		o = m_diffuseBSDF.reflectionDirection(l_param, m);
 		weight *= m_diffuseBSDF.generateWeight(l_param, m, o);
 
-		m_diffuseBSDF.free(&l_param, stackAllocator);
+		//m_diffuseBSDF.free(&l_param, stackAllocator);
 	}
 
 	constexpr math::real MAX_WEIGHT = (math::real)1000.0;
@@ -124,7 +124,7 @@ void manta::PhongPhongBilayerMaterial::generateRays(RayContainer *rays, const Li
 
 	// Initialize the outgoing ray
 	ray.setDirection(o);
-	ray.setWeight(weight);
+	//ray.setWeight(weight);
 	ray.setIntensity(math::constants::Zero);
 	ray.setSource(intersectionPoint.m_position);
 }

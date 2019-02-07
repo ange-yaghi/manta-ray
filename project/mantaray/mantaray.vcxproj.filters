@@ -411,6 +411,9 @@
     <ClCompile Include="..\..\src\microfacet_reflection_bsdf.cpp">
       <Filter>Source Files\material\surface-modeling\bsdf\library</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\bilayer_bsdf.cpp">
+      <Filter>Source Files\material\surface-modeling\bsdf\library</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\sphere_primitive.h">
@@ -636,6 +639,9 @@
       <Filter>Header Files\material\surface-modeling\microfacet-distribution</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\microfacet_reflection_bsdf.h">
+      <Filter>Header Files\material\surface-modeling\bsdf\library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\bilayer_bsdf.h">
       <Filter>Header Files\material\surface-modeling\bsdf\library</Filter>
     </ClInclude>
   </ItemGroup>

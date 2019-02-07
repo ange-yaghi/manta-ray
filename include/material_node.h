@@ -5,10 +5,21 @@
 
 namespace manta {
 
+	struct IntersectionPoint;
+	class StackAllocator;
+
+	struct MaterialNodeMemory {
+		unsigned char memory[64];
+		void *extraMemory;
+	};
+
 	class MaterialNode {
 	public:
 		MaterialNode();
 		virtual ~MaterialNode();
+
+		virtual void initialize(const IntersectionPoint *surfaceInteraction, MaterialNodeMemory *memory, StackAllocator *stackAllocator) const;
+		void free(MaterialNodeMemory *memory, StackAllocator *stackAllocator) const;
 
 		void setId(int id) { m_id = id; }
 		int getId() const { return m_id; }

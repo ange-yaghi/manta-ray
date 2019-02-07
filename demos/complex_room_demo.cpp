@@ -22,7 +22,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	test->setEmission(math::constants::Zero);
 	test->setDiffuseColor(getColor(200, 200, 200));
 	test->setName("TestMaterial");
-	test->m_distribution.setPower(50000);
+	//test->m_distribution.setPower(50000);
 
 	/*
 	DielectricMediaInterface glassFresnel;
