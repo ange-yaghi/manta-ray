@@ -10,18 +10,6 @@ manta::BSDF::~BSDF() {
 
 }
 
-void manta::BSDF::initialize(BSDFInput *bsdfInput, StackAllocator *s) const {
-	// Clear the auxiliary memory containers
-	bsdfInput->extraMemory = nullptr;
-	memset((void *)bsdfInput->cachedParameters, 0, sizeof(bsdfInput->cachedParameters));
-}
-
-void manta::BSDF::free(BSDFInput *bsdfInput, StackAllocator *s) const {
-	if (bsdfInput->extraMemory != nullptr) {
-		s->free(bsdfInput->extraMemory);
-	}
-}
-
 manta::math::real manta::BSDF::bidirectionalShadowMasking(const BSDFInput &bsdfInput, const math::Vector &o, const math::Vector &m) const {
 	return smithBidirectionalShadowMasking(bsdfInput, o, m);
 }

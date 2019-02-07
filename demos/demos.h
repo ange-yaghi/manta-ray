@@ -35,6 +35,7 @@
 #include <media_interface.h>
 #include <simple_lambert_material.h>
 #include <single_color_node.h>
+#include <bilayer_bsdf.h>
 
 namespace manta_demo {
 

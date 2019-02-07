@@ -1,12 +1,16 @@
 #include <lambertian_bsdf.h>
 
+#include <vector_material_node.h>
+
 manta::LambertianBSDF::LambertianBSDF() {
+
 }
 
 manta::LambertianBSDF::~LambertianBSDF() {
+
 }
 
-manta::math::Vector manta::LambertianBSDF::sampleF(const math::Vector &i, math::Vector *o, math::real *pdf) const {
+manta::math::Vector manta::LambertianBSDF::sampleF(const IntersectionPoint *surfaceInteraction, const math::Vector &i, math::Vector *o, math::real *pdf, StackAllocator *stackAllocator) const {	
 	// Uniformly sample a hemisphere
 	math::real r1 = math::uniformRandom(math::constants::TWO_PI);
 	math::real r2 = math::uniformRandom();

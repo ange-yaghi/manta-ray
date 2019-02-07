@@ -176,8 +176,14 @@ void manta::Mesh::fineIntersection(const math::Vector &r, IntersectionPoint *p, 
 
 	getClosestPointOnFaceBarycentric(hint->locationHint, r, &u, &v, &w);
 
+	if (math::getX(r) == 0.0 && math::getY(r) == 0.0 && math::getZ(r) == 0.0) {
+		int a = 0;
+
+	}
+
 	if (std::isnan(u)) {
 		getClosestPointOnFaceBarycentric(hint->locationHint, r, &u, &v, &w);
+		std::cout << "NAN" << std::endl;
 	}
 
 	assert(!std::isnan(u));

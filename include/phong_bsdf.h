@@ -3,13 +3,11 @@
 
 #include <bsdf.h>
 
+#include <phong_distribution.h>
+
 namespace manta {
 
 	class VectorMaterialNode;
-
-	struct PhongMemory {
-		math::real power;
-	};
 
 	class PhongBSDF : public BSDF {
 	public:

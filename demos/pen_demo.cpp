@@ -15,7 +15,44 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	//result = penGroundObj.readObjFile(MODEL_PATH "pen_ground.obj");
 
 	RayTracer rayTracer;
+	
+	PhongDistribution phongDist;
+	phongDist.setPower(1000);
 
+	PhongDistribution phongDist2;
+	phongDist2.setPower(100);
+
+	MicrofacetReflectionBSDF bsdf2;
+	bsdf2.setDistribution(&phongDist);
+
+	//LambertianBSDF bsdf;
+	LambertianBSDF lambert;
+	//LambertianBSDF bsdf2;
+
+	DielectricMediaInterface fresnel;
+	fresnel.setIorIncident((math::real)1.0);
+	fresnel.setIorTransmitted((math::real)1.5);
+
+	//MicrofacetReflectionBSDF &bsdf = bsdf2;
+	BilayerBSDF paintBsdf;
+	paintBsdf.setDiffuseMaterial(&lambert);
+	paintBsdf.setCoatingDistribution(&phongDist);
+	paintBsdf.setDiffuse(getColor(0xFC, 0xC2, 0x01));
+	paintBsdf.setSpecular(math::loadVector(0.5, 0.5, 0.5));
+
+	BilayerBSDF chromeBSDF;
+	chromeBSDF.setDiffuseMaterial(&lambert);
+	chromeBSDF.setCoatingDistribution(&phongDist);
+	chromeBSDF.setDiffuse(getColor(0, 0, 0));
+	chromeBSDF.setSpecular(math::loadVector(0.95, 0.95, 0.95));
+
+	BilayerBSDF floorBSDF;
+	floorBSDF.setDiffuseMaterial(&lambert);
+	floorBSDF.setCoatingDistribution(&phongDist2);
+	floorBSDF.setDiffuse(getColor(20, 20, 20));
+	floorBSDF.setSpecular(math::loadVector(0.2, 0.2, 0.2));
+
+	/*
 	SimpleLambertMaterial *test = rayTracer.getMaterialManager()->newMaterial<SimpleLambertMaterial>();
 	test->m_distribution.setPower(16.0);
 	test->setEmission(math::constants::Zero);
@@ -33,6 +70,25 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	test3->setEmission(math::constants::Zero);
 	test3->setDiffuseColor(getColor(255, 255, 255));
 	test3->setName("Backdrop");
+	*/
+
+	SimpleLambertMaterial *paintMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleLambertMaterial>();
+	paintMaterial->setBSDF(&paintBsdf);
+	paintMaterial->setEmission(math::constants::Zero);
+	paintMaterial->setDiffuseColor(getColor(0xff, 0xff, 0xff));
+	paintMaterial->setName("PenBody");
+
+	SimpleLambertMaterial *chromeMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleLambertMaterial>();
+	chromeMaterial->setBSDF(&chromeBSDF);
+	chromeMaterial->setEmission(math::constants::Zero);
+	chromeMaterial->setDiffuseColor(getColor(0xff, 0xff, 0xff));
+	chromeMaterial->setName("Chrome");
+
+	SimpleLambertMaterial *floorMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleLambertMaterial>();
+	floorMaterial->setBSDF(&floorBSDF);
+	floorMaterial->setEmission(math::constants::Zero);
+	floorMaterial->setDiffuseColor(getColor(0xff, 0xff, 0xff));
+	floorMaterial->setName("Backdrop");
 
 	/*
 
@@ -100,7 +156,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 
 	// Create all scene geometry
 	Mesh pen;
-	pen.loadObjFileData(&penObj, rayTracer.getMaterialManager(), test->getIndex(), 0);
+	pen.loadObjFileData(&penObj, rayTracer.getMaterialManager(), chromeMaterial->getIndex(), 0);
 
 	// Destroy file loaders
 	penObj.destroy();
@@ -148,7 +204,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	else {
 		penObject->setGeometry(&pen);
 	}
-	penObject->setDefaultMaterial(test);
+	penObject->setDefaultMaterial(chromeMaterial);
 	penObject->setName("Pen");
 
 	//SceneObject *ground = scene.createSceneObject();
@@ -237,7 +293,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	rayTracer.setBackgroundColor(getColor(0, 0, 0));
 	rayTracer.setDeterministicSeedMode(false);
 	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");
-	//rayTracer.tracePixel(1829, 934, &scene, group);
+	//rayTracer.tracePixel(526, 684, &scene, group);
 	//rayTracer.tracePixel(702, 236, &scene, &camera);
 	//rayTracer.tracePixel(809, 211, &scene, &camera);
 	//rayTracer.tracePixel(793, 224, &scene, &camera);

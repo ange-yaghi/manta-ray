@@ -24,7 +24,7 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 	simpleBlockMaterial->setDiffuseNode(&map);
 
 	SimpleLambertMaterial *simpleLetterMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleLambertMaterial>();
-	simpleLetterMaterial->setName("Block");
+	simpleLetterMaterial->setName("Letters");
 	simpleLetterMaterial->setEmission(math::constants::Zero);
 	simpleLetterMaterial->setDiffuseNode(&map);
 
@@ -101,7 +101,7 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 	SpherePrimitive outdoorTopLightGeometry;
 	outdoorTopLightGeometry.setRadius((math::real)10.0);
 	//outdoorTopLightGeometry.setRadius((math::real)20.0);
-	outdoorTopLightGeometry.setPosition(math::loadVector(10, 20.0, -13.5));
+	outdoorTopLightGeometry.setPosition(math::loadVector(10, 20.0, 5.5));
 
 	SpherePrimitive groundGeometry;
 	groundGeometry.setRadius((math::real)500000.01);
@@ -212,7 +212,7 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 
 	// Run the ray tracer
 	rayTracer.initialize(1000 * MB, 50 * MB, 12, 10000, true);
-	rayTracer.setBackgroundColor(getColor(255, 255, 255));
+	rayTracer.setBackgroundColor(getColor(0, 0, 0));
 	//rayTracer.setBackgroundColor(math::loadVector(255/2, 1 / math::constants::PI, 1 / math::constants::PI));
 	//rayTracer.setDeterministicSeedMode(true);
 	rayTracer.traceAll(&scene, group);
