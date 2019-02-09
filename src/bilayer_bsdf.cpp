@@ -3,6 +3,7 @@
 #include <microfacet_reflection_bsdf.h>
 #include <lambertian_bsdf.h>
 #include <microfacet_distribution.h>
+#include <vector_material_node.h>
 
 #include <iostream>
 #include <algorithm>
@@ -20,6 +21,10 @@ manta::BilayerBSDF::~BilayerBSDF() {
 manta::math::Vector manta::BilayerBSDF::sampleF(const IntersectionPoint *surfaceInteraction, const math::Vector &i, math::Vector *o, math::real *pdf, StackAllocator *stackAllocator) const {
 	math::Vector diffuseR = m_diffuse;
 	math::Vector specularR = m_specular;
+
+	if (m_diffuseNode != nullptr) {
+		diffuseR = m_diffuseNode->sample(surfaceInteraction);
+	}
 	
 	math::real u = math::uniformRandom();
 
@@ -36,7 +41,7 @@ manta::math::Vector manta::BilayerBSDF::sampleF(const IntersectionPoint *surface
 		// Ray reflects off of the coating
 		math::Vector m = m_coatingDistribution->generateMicrosurfaceNormal(&specularDistMem);
 		math::Vector ri = math::reflect(i, m);
-		o_dot_m = math::getScalar(math::dot(ri, m));
+		o_dot_m = ::abs(math::getScalar(math::dot(ri, m)));
 
 		*o = ri;
 
@@ -59,7 +64,7 @@ manta::math::Vector manta::BilayerBSDF::sampleF(const IntersectionPoint *surface
 		*o = diffuseO;
 
 		wh = math::normalize(math::add(*o, i));
-		o_dot_m = math::getScalar(math::dot(wh, *o));
+		o_dot_m = ::abs(math::getScalar(math::dot(wh, *o)));
 
 		if (o_dot_m == 0) {
 			coatingPDF = 0.0;
@@ -77,7 +82,7 @@ manta::math::Vector manta::BilayerBSDF::sampleF(const IntersectionPoint *surface
 	math::real absCosThetaI = ::abs(math::getZ(i));
 	math::real absCosThetaO = ::abs(math::getZ(*o));
 
-	math::Vector diffuse = math::loadScalar((math::real)28.0 / (math::real)23.0);
+	math::Vector diffuse = math::loadScalar((math::real)28.0 / ((math::real)23.0 * math::constants::PI));
 	diffuse = math::mul(diffuse, diffuseR);
 	diffuse = math::mul(diffuse, math::sub(math::constants::One, specularR));
 	diffuse = math::mul(diffuse, math::loadScalar(1 - pow5(1 - (math::real)0.5 * absCosThetaI)));
@@ -94,12 +99,13 @@ manta::math::Vector manta::BilayerBSDF::sampleF(const IntersectionPoint *surface
 
 	math::Vector specular;
 	
-	if (o_dot_m == 0) {
+	math::real absCosThetaOI = std::max(absCosThetaI, absCosThetaO);
+	if (o_dot_m == 0 || absCosThetaOI == 0) {
 		specular = math::constants::Zero;
 	}
 	else {
 		specular = math::loadScalar(m_coatingDistribution->calculateDistribution(wh, &specularDistMem));
-		math::Vector specular_div = math::loadScalar(4 * o_dot_m * std::max(absCosThetaI, absCosThetaO));
+		math::Vector specular_div = math::loadScalar(4 * o_dot_m * absCosThetaOI);
 		math::Vector schlickFresnel = math::sub(math::constants::One, specularR);
 		schlickFresnel = math::mul(schlickFresnel, math::loadScalar(pow5(1 - absCosThetaO)));
 		schlickFresnel = math::add(schlickFresnel, specularR);

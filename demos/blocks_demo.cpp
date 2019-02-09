@@ -16,22 +16,56 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 	TextureNode blockSpecular;
 	blockSpecular.loadFile(TEXTURE_PATH "blocks_specular.png", (math::real)2.2);
 
+	PhongDistribution phongDist;
+	phongDist.setPower(4096);
+
+	PhongDistribution phongDist2;
+	phongDist2.setPower(16);
+
+	MicrofacetReflectionBSDF bsdf2;
+	bsdf2.setDistribution(&phongDist);
+
+	//LambertianBSDF bsdf;
+	LambertianBSDF lambert;
+	//LambertianBSDF bsdf2;
+
+	DielectricMediaInterface fresnel;
+	fresnel.setIorIncident((math::real)1.0);
+	fresnel.setIorTransmitted((math::real)1.5);
+
+	//MicrofacetReflectionBSDF &bsdf = bsdf2;
+	BilayerBSDF blockBSDF;
+	blockBSDF.setDiffuseMaterial(&lambert);
+	blockBSDF.setCoatingDistribution(&phongDist);
+	blockBSDF.setDiffuseNode(&map);
+	blockBSDF.setDiffuse(getColor(0xFF, 0xFF, 0xFF));
+	blockBSDF.setSpecular(math::loadVector(0.1, 0.1, 0.1));
+
+	BilayerBSDF floorBSDF;
+	floorBSDF.setDiffuseMaterial(&lambert);
+	floorBSDF.setCoatingDistribution(&phongDist2);
+	floorBSDF.setDiffuse(getColor(0xFF, 0xFF, 0xFF));
+	floorBSDF.setSpecular(math::loadVector(0.75, 0.75, 0.75));
+
 	// Create all materials
 	SingleColorNode whiteNode(getColor(255, 255, 255));
 	SimpleLambertMaterial *simpleBlockMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleLambertMaterial>();
 	simpleBlockMaterial->setName("Block");
 	simpleBlockMaterial->setEmission(math::constants::Zero);
-	simpleBlockMaterial->setDiffuseNode(&map);
+	simpleBlockMaterial->setDiffuseNode(&whiteNode);
+	simpleBlockMaterial->setBSDF(&blockBSDF);
 
 	SimpleLambertMaterial *simpleLetterMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleLambertMaterial>();
 	simpleLetterMaterial->setName("Letters");
 	simpleLetterMaterial->setEmission(math::constants::Zero);
-	simpleLetterMaterial->setDiffuseNode(&map);
+	simpleLetterMaterial->setDiffuseNode(&whiteNode);
+	simpleLetterMaterial->setBSDF(&blockBSDF);
 
 	SimpleLambertMaterial *simpleGroundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleLambertMaterial>();
 	simpleGroundMaterial->setName("Ground");
 	simpleGroundMaterial->setEmission(math::constants::Zero);
 	simpleGroundMaterial->setDiffuseNode(&whiteNode);
+	simpleGroundMaterial->setBSDF(&floorBSDF);
 
 	/*
 	PhongPhongBilayerMaterial *blockMaterialPhong = rayTracer.getMaterialManager()->newMaterial<PhongPhongBilayerMaterial>();
