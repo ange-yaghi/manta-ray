@@ -20,7 +20,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	phongDist.setPower(1000);
 
 	PhongDistribution phongDist2;
-	phongDist2.setPower(100);
+	phongDist2.setPower(128);
 
 	MicrofacetReflectionBSDF bsdf2;
 	bsdf2.setDistribution(&phongDist);
@@ -38,7 +38,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	paintBsdf.setDiffuseMaterial(&lambert);
 	paintBsdf.setCoatingDistribution(&phongDist);
 	paintBsdf.setDiffuse(getColor(0xFC, 0xC2, 0x01));
-	paintBsdf.setSpecular(math::loadVector(0.5, 0.5, 0.5));
+	paintBsdf.setSpecular(math::loadVector(0.0, 0.0, 0.0));
 
 	BilayerBSDF chromeBSDF;
 	chromeBSDF.setDiffuseMaterial(&lambert);
@@ -49,8 +49,8 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	BilayerBSDF floorBSDF;
 	floorBSDF.setDiffuseMaterial(&lambert);
 	floorBSDF.setCoatingDistribution(&phongDist2);
-	floorBSDF.setDiffuse(getColor(20, 20, 20));
-	floorBSDF.setSpecular(math::loadVector(0.2, 0.2, 0.2));
+	floorBSDF.setDiffuse(getColor(0x0, 0x0, 0x0));
+	floorBSDF.setSpecular(math::loadVector(0.5, 0.5, 0.5));
 
 	/*
 	SimpleLambertMaterial *test = rayTracer.getMaterialManager()->newMaterial<SimpleLambertMaterial>();
@@ -238,7 +238,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	cameraPos = math::sub(cameraPos, math::mul(dir, math::loadScalar(3.9))); // 3.9
 
 	// Create the camera
-	constexpr bool regularCamera = true;
+	constexpr bool regularCamera = false;
 	CameraRayEmitterGroup *group;
 	manta::SimpleLens lens;
 	lens.initialize();
@@ -293,7 +293,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	rayTracer.setBackgroundColor(getColor(0, 0, 0));
 	rayTracer.setDeterministicSeedMode(false);
 	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");
-	//rayTracer.tracePixel(526, 684, &scene, group);
+	//rayTracer.tracePixel(179, 1423, &scene, group);
 	//rayTracer.tracePixel(702, 236, &scene, &camera);
 	//rayTracer.tracePixel(809, 211, &scene, &camera);
 	//rayTracer.tracePixel(793, 224, &scene, &camera);

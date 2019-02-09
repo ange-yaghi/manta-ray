@@ -133,7 +133,7 @@ void manta::SimpleLambertMaterial::generateRays(RayContainer *rays, const LightR
 		weight = math::constants::Zero;
 	}
 
-	if (std::isnan(math::getX(weight))) {
+	if (std::isnan(math::getX(weight)) || std::isinf(math::getX(weight))) {
 		std::cout << "NAN" << std::endl;
 	}
 
