@@ -9,59 +9,52 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 
 	// Load all object files
 	ObjFileLoader smallHouseObj;
-	bool result = smallHouseObj.readObjFile(MODEL_PATH "small_house_unsealed.obj");
-
-	ObjFileLoader tableObj;
-	result = tableObj.readObjFile(MODEL_PATH "table.obj");
+	bool result = smallHouseObj.readObjFile(MODEL_PATH "small_house.obj");
 
 	ObjFileLoader shutterObj;
 	result = shutterObj.readObjFile(MODEL_PATH "room_shutters.obj");
 
 	RayTracer rayTracer;
 
+	LambertianBSDF lambert;
+
 	// Create all materials
-	SimpleLambertMaterial wallMaterial;
-	wallMaterial.setEmission(math::constants::Zero);
-	wallMaterial.setDiffuseColor(getColor(200, 200, 200));
-	//wallMaterial.setSpecularColor(math::constants::Zero);
+	SimpleBSDFMaterial *wallMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	wallMaterial->setName("WallMaterial");
+	wallMaterial->setBSDF(&lambert);
+	wallMaterial->setReflectance(getColor(200, 200, 200));
 
-	SimpleLambertMaterial outdoorLight;
+	SimpleBSDFMaterial outdoorLight;
 	outdoorLight.setEmission(math::loadVector(18, 16, 16));
-	outdoorLight.setDiffuseColor(math::constants::Zero);
-	//outdoorLight.setSpecularColor(math::constants::Zero);
+	outdoorLight.setReflectance(math::constants::Zero);
 
-	SimpleLambertMaterial outdoorTopLightMaterial;
+	SimpleBSDFMaterial outdoorTopLightMaterial;
 	outdoorTopLightMaterial.setEmission(math::loadVector(20, 20, 22));
-	outdoorTopLightMaterial.setDiffuseColor(math::constants::Zero);
-	//outdoorTopLightMaterial.setSpecularColor(math::constants::Zero);
+	outdoorTopLightMaterial.setReflectance(math::constants::Zero);
 
-	SimpleLambertMaterial *tableMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleLambertMaterial>();
-	tableMaterial->setEmission(math::constants::Zero);
-	tableMaterial->setDiffuseColor(getColor(78, 46, 40));
-	//tableMaterial->setSpecularColor(getColor(100, 100, 100));
+	SimpleBSDFMaterial *tableMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	tableMaterial->setName("TableMaterial");
+	tableMaterial->setReflectance(getColor(78, 46, 40));
+	tableMaterial->setBSDF(&lambert);
 
-	SimpleLambertMaterial groundMaterial;
-	groundMaterial.setEmission(math::constants::Zero);
-	groundMaterial.setDiffuseColor(math::mul(math::loadVector(78, 46, 40), math::loadScalar(0.001)));
-	//groundMaterial.setSpecularColor(math::constants::Zero);
+	SimpleBSDFMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	groundMaterial->setName("GroundMaterial");
+	groundMaterial->setReflectance(math::mul(math::loadVector(78, 46, 40), math::loadScalar(0.001)));
+	groundMaterial->setBSDF(&lambert);
 
 	// Create all scene geometry
 	Mesh smallHouse;
 	smallHouse.loadObjFileData(&smallHouseObj, rayTracer.getMaterialManager(), -1, 0);
 	smallHouse.setFastIntersectEnabled(false);
-	smallHouse.setFastIntersectRadius((math::real)4.0);
-
-	Mesh table;
-	table.loadObjFileData(&tableObj, rayTracer.getMaterialManager(), tableMaterial->getIndex(), smallHouse.getFaceCount());
-	table.setFastIntersectEnabled(false);
-	table.setFastIntersectRadius((math::real)4.0);
-
-	smallHouse.merge(&table);
-	smallHouse.precomputeValues();
 
 	Octree houseOctree;
 	houseOctree.initialize(8, math::loadVector(0, 0, 0));
 	houseOctree.analyze(&smallHouse, 20);
+
+	KDTree kdtree;
+	kdtree.initialize(100, math::loadVector(0, 0, 0));
+	kdtree.analyze(&smallHouse, 4);
+	kdtree.writeToObjFile("../../workspace/test_results/house_kdtree.obj");
 
 	//houseOctree.writeToObjFile("../../workspace/test_results/house_octree.obj", nullptr);
 
@@ -84,33 +77,19 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 	//outdoorTopLightGeometry.setPosition(math::loadVector(0.0, 4.0, 0));
 	//outdoorTopLightGeometry.setRadius((math::real)0.5);
 
-	SpherePrimitive groundGeometry;
-	groundGeometry.setRadius((math::real)50000.0);
-	groundGeometry.setPosition(math::loadVector(0.0, -50000.1, 0));
-
 	constexpr bool useOctree = true;
 
 	// Create scene objects
 	SceneObject *smallHouseObject = scene.createSceneObject();
 	if (!useOctree) smallHouseObject->setGeometry(&smallHouse);
-	else smallHouseObject->setGeometry(&houseOctree);
-	smallHouseObject->setDefaultMaterial(&wallMaterial);
+	else smallHouseObject->setGeometry(&kdtree);
+	smallHouseObject->setDefaultMaterial(wallMaterial);
 	smallHouseObject->setName("House");
 
-	//SceneObject *tableObject = scene.createSceneObject();
-	//if (!useOctree) tableObject->setGeometry(&table);
-	//else tableObject->setGeometry(&tableOctree);
-	//tableObject->setDefaultMaterial(&tableMaterial);
-	//tableObject->setName("Table");
-
-	SceneObject *shuttersObject = scene.createSceneObject();
-	shuttersObject->setGeometry(&shutters);
-	shuttersObject->setDefaultMaterial(&wallMaterial);
-	shuttersObject->setName("Shutters");
-
-	SceneObject *ground = scene.createSceneObject();
-	ground->setGeometry(&groundGeometry);
-	ground->setDefaultMaterial(&groundMaterial);
+	//SceneObject *shuttersObject = scene.createSceneObject();
+	//shuttersObject->setGeometry(&shutters);
+	//shuttersObject->setDefaultMaterial(&wallMaterial);
+	//shuttersObject->setName("Shutters");
 
 	SceneObject *outdoorTopLightObject = scene.createSceneObject();
 	outdoorTopLightObject->setGeometry(&outdoorTopLightGeometry);
@@ -120,8 +99,7 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 	lightSource->setGeometry(&outdoorLightGeometry);
 	lightSource->setDefaultMaterial(&outdoorLight);
 
-	GridSampler sampler;
-	sampler.setGridWidth(3);
+	SimpleSampler sampler;
 
 	// Create the camera
 	StandardCameraRayEmitterGroup camera;
@@ -141,7 +119,7 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 	//rayTracer.setDeterministicSeedMode(true);
 	rayTracer.traceAll(&scene, &camera);
 	// Leaks
-	//rayTracer.tracePixel(518, 101, &scene, &camera);
+	//rayTracer.tracePixel(1094, 768, &scene, &camera);
 	//rayTracer.tracePixel(495, 122, &scene, &camera);
 	//rayTracer.tracePixel(389, 188, &scene, &camera);
 	//rayTracer.tracePixel(1441, 227, &scene, &camera);
@@ -178,10 +156,9 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 	rayTracer.destroy();
 
 	houseOctree.destroy();
+	kdtree.destroy();
 	smallHouse.destroy();
-	table.destroy();
 	smallHouseObj.destroy();
-	tableObj.destroy();
 	shutterObj.destroy();
 	shutters.destroy();
 

@@ -20,34 +20,35 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	RayTracer rayTracer;
 
 	// Create all materials
-	PhongPhongBilayerMaterial *wallMaterial = rayTracer.getMaterialManager()->newMaterial<PhongPhongBilayerMaterial>();
-	DielectricMediaInterface wallFresnel;
-	wallFresnel.setIorIncident(1.0);
-	wallFresnel.setIorTransmitted(1.2);
-	wallMaterial->getSpecularBSDF()->setPower((math::real)32.0);
-	//wallMaterial->getSpecularBSDF()->setPower((math::real)1.0);
-	wallMaterial->setEmission(getColor(0, 0, 0));
-	wallMaterial->setDiffuseColor(getColor(255, 255, 255));
-	wallMaterial->setSpecularColor(getColor(255, 255, 255));
-	wallMaterial->setSurfaceTransmission((math::real)0.7);
-	wallMaterial->getSpecularBSDF()->setMediaInterface(&wallFresnel);
+	LambertianBSDF lambert;
 
-	SimpleLambertMaterial *lampLightMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleLambertMaterial>();
+	PhongDistribution floorCoating;
+	floorCoating.setPower((math::real)128);
+
+	BilayerBSDF floorBSDF;
+	floorBSDF.setCoatingDistribution(&floorCoating);
+	floorBSDF.setDiffuse(getColor(0xFF, 0xFF, 0xFF));
+	floorBSDF.setDiffuseMaterial(&lambert);
+	floorBSDF.setSpecularAtNormal(math::loadVector(0.0, 0.0, 0.0));
+
+	SimpleBSDFMaterial *floorMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	floorMaterial->setBSDF(&floorBSDF);
+
+	SimpleBSDFMaterial *lampLightMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	lampLightMaterial->setEmission(math::mul(getColor(255, 197, 143), math::loadScalar(30.0)));
-	lampLightMaterial->setDiffuseColor(math::constants::Zero);
-	//lampLightMaterial->setSpecularColor(math::constants::Zero);
+	lampLightMaterial->setReflectance(math::constants::Zero);
 
-	PhongPhongBilayerMaterial *teapotMaterial = rayTracer.getMaterialManager()->newMaterial<PhongPhongBilayerMaterial>();
-	DielectricMediaInterface teapotFresnel;
-	teapotFresnel.setIorIncident(1.0);
-	teapotFresnel.setIorTransmitted(1.6);
-	teapotMaterial->getSpecularBSDF()->setPower((math::real)1024.0);
-	//teapotMaterial->getSpecularBSDF()->setPower((math::real)1.0);
-	teapotMaterial->setEmission(math::constants::Zero);
-	teapotMaterial->setDiffuseColor(getColor(0xFF, 0x08, 0x14));
-	teapotMaterial->setSpecularColor(getColor(255, 255, 255));
-	teapotMaterial->setSurfaceTransmission((math::real)0.85);
-	teapotMaterial->getSpecularBSDF()->setMediaInterface(&teapotFresnel);
+	PhongDistribution teapotCoating;
+	teapotCoating.setPower((math::real)1024);
+
+	BilayerBSDF teapotBSDF;
+	teapotBSDF.setCoatingDistribution(&teapotCoating);
+	teapotBSDF.setDiffuse(getColor(0xFF, 0x08, 0x14));
+	teapotBSDF.setDiffuseMaterial(&lambert);
+	teapotBSDF.setSpecularAtNormal(math::loadVector(0.5, 0.5, 0.5));
+
+	SimpleBSDFMaterial *teapotMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	teapotMaterial->setBSDF(&teapotBSDF);
 
 	//SimpleSpecularDiffuseMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleSpecularDiffuseMaterial>();
 	//groundMaterial->setEmission(math::constants::Zero);
@@ -56,7 +57,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 
 	// Create all scene geometry
 	Mesh lamp;
-	lamp.loadObjFileData(&lampObj, rayTracer.getMaterialManager(), wallMaterial->getIndex());
+	lamp.loadObjFileData(&lampObj, rayTracer.getMaterialManager(), floorMaterial->getIndex());
 	lamp.setFastIntersectEnabled(true);
 	lamp.setFastIntersectRadius((math::real)2.123);
 	lamp.setFastIntersectPosition(math::loadVector(-0.06430, 1.86833, -2.96564));
@@ -130,7 +131,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 
 	SceneObject *ground = scene.createSceneObject();
 	ground->setGeometry(&groundGeometry);
-	ground->setDefaultMaterial(wallMaterial);
+	ground->setDefaultMaterial(floorMaterial);
 	ground->setName("Ground");
 
 	//SceneObject *lampBlockObject = scene.createSceneObject();

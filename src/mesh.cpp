@@ -345,7 +345,7 @@ void manta::Mesh::merge(const Mesh *mesh) {
 
 	if (newFaceCount > 0) {
 		memcpy((void *)newFaces, (void *)m_faces, sizeof(Face) * m_faceCount);
-		memcpy((void *)newAuxFaceData, (void *)m_auxFaceData, sizeof(Face) * m_faceCount);
+		memcpy((void *)newAuxFaceData, (void *)m_auxFaceData, sizeof(AuxFaceData) * m_faceCount);
 	}
 	if (newVertexCount > 0) memcpy((void *)newVerts, (void *)m_vertices, sizeof(math::Vector) * m_vertexCount);
 	if (newNormalCount > 0) memcpy((void *)newNormals, (void *)m_normals, sizeof(math::Vector) * m_normalCount);

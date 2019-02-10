@@ -27,8 +27,8 @@ manta::KDTree::~KDTree() {
 void manta::KDTree::initialize(math::real width, const math::Vector &position) {
 	m_width = width;
 
-	m_bounds.maxPoint = math::loadScalar(width);
-	m_bounds.minPoint = math::loadScalar(-width);
+	m_bounds.maxPoint = math::add(position, math::loadScalar(width));
+	m_bounds.minPoint = math::sub(position, math::loadScalar(width));
 }
 
 void manta::KDTree::destroy() {
@@ -67,8 +67,9 @@ bool manta::KDTree::findClosestIntersection(const LightRay *ray, CoarseIntersect
 	math::real closestHit = std::min(tmax, maxDepth);
 	const KDTreeNode *node = &m_nodes[0];
 	while (node != nullptr) {
-		//int nodeIndex = node - m_nodes;
-
+#ifdef _DEBUG
+		int nodeIndex = node - m_nodes;
+#endif
 		if (closestHit < tmin) break;
 		if (!node->isLeaf()) {
 			int axis = node->getSplitAxis();
@@ -76,6 +77,11 @@ bool manta::KDTree::findClosestIntersection(const LightRay *ray, CoarseIntersect
 
 			math::real o_axis = math::get(ray->getSource(), axis);
 			math::real tPlane = (split - o_axis) * math::get(ray->getInverseDirection(), axis);
+			if (split - o_axis == (math::real)0.0) {
+				// Edge case
+				// Explanation: somtimes inverse direction can be inf. This will result in tPlane being NaN.
+				tPlane = (math::real)0.0;
+			}
 
 			const KDTreeNode *firstChild, *secondChild;
 			bool belowFirst = (o_axis < split) || (o_axis == split && math::get(ray->getDirection(), axis) <= 0);
@@ -96,6 +102,10 @@ bool manta::KDTree::findClosestIntersection(const LightRay *ray, CoarseIntersect
 				node = secondChild;
 			}
 			else {
+#ifdef _DEBUG
+				int secondChildIndex = secondChild - m_nodes;
+#endif
+
 				// Add second child to queue
 				jobs[currentJob].node = secondChild;
 				jobs[currentJob].tmin = tPlane;
@@ -123,7 +133,7 @@ bool manta::KDTree::findClosestIntersection(const LightRay *ray, CoarseIntersect
 				}
 			}
 			else {
-
+				// Nothing in this node
 			}
 
 			if (currentJob > 0) {
@@ -171,12 +181,10 @@ void manta::KDTree::analyze(Mesh *mesh, int maxSize) {
 	workspace.maxPrimitives = maxSize;
 	
 	for (int i = 0; i < 3; i++) {
-		//workspace.edges[i] = new KDBoundEdge[mesh->getFaceCount() * 2];
 		workspace.edges[i] = StandardAllocator::Global()->allocate<KDBoundEdge>(mesh->getFaceCount() * 2);
 	}
 
 	// Generate bounds for all faces
-	//workspace.allFaceBounds = new AABB[nFaces];
 	workspace.allFaceBounds = StandardAllocator::Global()->allocate<AABB>(nFaces, 16);
 	for (int i = 0; i < nFaces; i++) {
 		Face *face = &mesh->getFaces()[i];
@@ -198,7 +206,7 @@ void manta::KDTree::analyze(Mesh *mesh, int maxSize) {
 
 	// Copy faces into a new array
 	int totalFaces = (int)workspace.faces.size();
-	//m_faceLists = new int[totalFaces];
+
 	m_faceLists = StandardAllocator::Global()->allocate<int>(totalFaces);
 	m_faceCount = totalFaces;
 	for (int i = 0; i < totalFaces; i++) {
@@ -362,8 +370,7 @@ int manta::KDTree::createNodeVolume() {
 		m_volumeCapacity = newSize;
 	}
 
-	int newVolume = m_volumeCount++;
-	return newVolume;
+	return m_volumeCount++;
 }
 
 void manta::KDTree::initLeaf(int node, const std::vector<int> &faces, KDTreeWorkspace *workspace) {
@@ -391,6 +398,13 @@ void manta::KDTree::initLeaf(int node, const std::vector<int> &faces, KDTreeWork
 
 void manta::KDTree::writeToObjFile(const char *fname) const {
 	std::ofstream f(fname);
+
+	int width = 0;
+	int nodes = m_nodeCount;
+	while (nodes > 0) {
+		width++; 
+		nodes /= 10;
+	}
 	
 	int nodeCount = m_nodeCount;
 	for (int i = 0; i < nodeCount; i++) {
@@ -400,8 +414,12 @@ void manta::KDTree::writeToObjFile(const char *fname) const {
 		int faceCount = 0;
 		if (node.getSplitAxis() == 0x3) faceCount = node.getPrimitiveCount();
 
-		if (faceCount != 0) f << "o " << "LEAF_" << i << "_N" << faceCount << std::endl;
-		else f << "o " << "LEAF_" << i << "_N" << 0 << std::endl;
+		f << "o " << "LEAF_";
+		f.fill('0');
+		f.width(width);
+		f << std::right << i;
+		f.width(0);
+		f << "_N" << faceCount << std::endl;
 
 		math::Vector minPoint = bounds.minPoint;
 		math::Vector maxPoint = bounds.maxPoint;
@@ -423,4 +441,6 @@ void manta::KDTree::writeToObjFile(const char *fname) const {
 		f << "f " << vertexOffset + 7 << " " << vertexOffset + 6 << " " << vertexOffset + 2 << " " << vertexOffset + 3 << std::endl;
 		f << "f " << vertexOffset + 7 << " " << vertexOffset + 6 << " " << vertexOffset + 4 << " " << vertexOffset + 5 << std::endl;
 	}
+
+	f.close();
 }

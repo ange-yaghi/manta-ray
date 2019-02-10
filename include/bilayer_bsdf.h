@@ -23,8 +23,8 @@ namespace manta {
 		void setDiffuseMaterial(LambertianBSDF *diffuseMaterial) { m_diffuseMaterial = diffuseMaterial; }
 		LambertianBSDF *getDiffuseMaterial() { return m_diffuseMaterial; }
 
-		void setSpecular(const math::Vector &specular) { m_specular = specular; }
-		math::Vector getSpecular() const { return m_specular; }
+		void setSpecularAtNormal(const math::Vector &specular) { m_specular = specular; }
+		math::Vector getSpecularAtNormal() const { return m_specular; }
 
 		void setDiffuse(const math::Vector &diffuse) { m_diffuse = diffuse; }
 		math::Vector getDiffuse() const { return m_diffuse; }
