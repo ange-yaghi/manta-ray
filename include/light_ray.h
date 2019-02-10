@@ -19,10 +19,10 @@ namespace manta {
 		math::Vector getIntensity() const { return m_intensity; }
 		void setIntensity(const math::Vector &intensity) { m_intensity = intensity; }
 
-		math::Vector getWeightedIntensity() const { return math::mul(m_intensity, math::loadScalar(m_weight)); }
+		math::Vector getWeightedIntensity() const { return math::mul(m_intensity, m_weight); }
 
-		void setWeight(math::real weight) { m_weight = weight; }
-		math::real getWeight() const { return m_weight; }
+		void setWeight(math::Vector weight) { m_weight = weight; }
+		math::Vector getWeight() const { return m_weight; }
 
 		void calculateTransformations();
 
@@ -43,7 +43,7 @@ namespace manta {
 		math::Vector m_source;
 
 		math::Vector m_intensity;
-		math::real m_weight;
+		math::Vector m_weight;
 
 		int m_kx, m_ky, m_kz;
 		math::Vector3 m_shear;

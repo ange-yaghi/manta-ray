@@ -33,7 +33,7 @@ void manta::LensCameraRayEmitter::generateRays(RayContainer *rayContainer) const
 
 		bool result = m_lens->generateOutgoingRay(position, &hint, &rays[i]);
 		rays[i].setIntensity(math::constants::Zero);
-		rays[i].setWeight((math::real)1.0);
+		rays[i].setWeight(math::constants::One);
 	}
 
 	m_stackAllocator->free((void *)sampleOrigins);
