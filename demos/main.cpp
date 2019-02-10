@@ -7,14 +7,12 @@ int main() {
 	createAllDirectories();
 
 	// Run a demo
+	constexpr DEMO demo = DEMO::STRESS_SPIDERS;
+	constexpr int samples = 1;
+	constexpr int resolutionX = 2048;
+	constexpr int resolutionY = 1536;
 
-	//complexRoomDemo(40, 1024 * 2, 768 * 2);
-	//penDemo(22000, 1024 * 2, 768 * 2);
-	//stressSpidersDemo(4500, 1024 * 2, 768 * 2);
-	//simpleRoomDemo(1, 1024*2, 768*2);
-	//boxCityDemo(100, 1024*2, 768*2);
-	//teapotLampDemo(200, 1024*2, 768*2);
-	blocksDemo(100, 1024 * 2, 768 * 2);
+	runDemo(demo, samples, resolutionX, resolutionY);
 
 	return 0;
 }

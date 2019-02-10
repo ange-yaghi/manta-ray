@@ -39,6 +39,18 @@
 
 namespace manta_demo {
 
+	enum DEMO {
+		SIMPLE_ROOM,
+		TEAPOT_LAMP,
+		BOX_CITY,
+		BLOCKS,
+		STRESS_SPIDERS,
+		PEN,
+		COMPLEX_ROOM
+	};
+
+	void runDemo(DEMO demo, int samplesPerPixel, int resolutionX, int resolutionY);
+
 	void simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolutionY);
 	void teapotLampDemo(int samplesPerPixel, int resolutionX, int resolutionY);
 	void boxCityDemo(int samplesPerPixel, int resolutionX, int resolutionY);

@@ -5,20 +5,35 @@
 using namespace manta;
 
 void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolutionY) {
+	// Top-level parameters
+	constexpr bool BLOCK_ALL_LIGHT = false;
+	constexpr bool USE_ACCELERATION_STRUCTURE = true;
+	constexpr bool DETERMINISTIC_SEED_MODE = false;
+	constexpr bool TRACE_SINGLE_PIXEL = false;
+	constexpr bool WRITE_KDTREE_TO_FILE = false;
+
 	Scene scene;
+	RayTracer rayTracer;
 
 	// Load all object files
 	ObjFileLoader smallHouseObj;
 	bool result = smallHouseObj.readObjFile(MODEL_PATH "small_house.obj");
 
 	ObjFileLoader shutterObj;
-	result = shutterObj.readObjFile(MODEL_PATH "room_shutters.obj");
+	result &= shutterObj.readObjFile(MODEL_PATH "room_shutters.obj");
 
-	RayTracer rayTracer;
+	if (!result) {
+		std::cout << "Could not open geometry file" << std::endl;
 
-	LambertianBSDF lambert;
+		smallHouseObj.destroy();
+		shutterObj.destroy();
+
+		return;
+	}
 
 	// Create all materials
+	LambertianBSDF lambert;
+	
 	SimpleBSDFMaterial *wallMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	wallMaterial->setName("WallMaterial");
 	wallMaterial->setBSDF(&lambert);
@@ -47,25 +62,21 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 	smallHouse.loadObjFileData(&smallHouseObj, rayTracer.getMaterialManager(), -1, 0);
 	smallHouse.setFastIntersectEnabled(false);
 
-	Octree houseOctree;
-	houseOctree.initialize(8, math::loadVector(0, 0, 0));
-	houseOctree.analyze(&smallHouse, 20);
+	Mesh shutters;
+	shutters.loadObjFileData(&shutterObj);
+	shutters.setFastIntersectEnabled(false);
+
+	if (BLOCK_ALL_LIGHT) {
+		smallHouse.merge(&shutters);
+	}
 
 	KDTree kdtree;
 	kdtree.initialize(100, math::loadVector(0, 0, 0));
 	kdtree.analyze(&smallHouse, 4);
-	kdtree.writeToObjFile("../../workspace/test_results/house_kdtree.obj");
 
-	//houseOctree.writeToObjFile("../../workspace/test_results/house_octree.obj", nullptr);
-
-	//Octree tableOctree;
-	//tableOctree.initialize(1.2, math::loadVector(-1.38, 0, -0.87403));
-	//tableOctree.analyze(&table, 25);
-
-	Mesh shutters;
-	shutters.loadObjFileData(&shutterObj);
-	shutters.setFastIntersectEnabled(false);
-	shutters.setFastIntersectRadius((math::real)4.0);
+	if (WRITE_KDTREE_TO_FILE) {
+		kdtree.writeToObjFile("../../workspace/test_results/house_kdtree.obj");
+	}
 
 	SpherePrimitive outdoorLightGeometry;
 	outdoorLightGeometry.setRadius((math::real)10.0);
@@ -74,22 +85,13 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 	SpherePrimitive outdoorTopLightGeometry;
 	outdoorTopLightGeometry.setRadius((math::real)10.0);
 	outdoorTopLightGeometry.setPosition(math::loadVector(0.0, 25.0, 2));
-	//outdoorTopLightGeometry.setPosition(math::loadVector(0.0, 4.0, 0));
-	//outdoorTopLightGeometry.setRadius((math::real)0.5);
-
-	constexpr bool useOctree = true;
 
 	// Create scene objects
 	SceneObject *smallHouseObject = scene.createSceneObject();
-	if (!useOctree) smallHouseObject->setGeometry(&smallHouse);
+	if (!USE_ACCELERATION_STRUCTURE) smallHouseObject->setGeometry(&smallHouse);
 	else smallHouseObject->setGeometry(&kdtree);
 	smallHouseObject->setDefaultMaterial(wallMaterial);
 	smallHouseObject->setName("House");
-
-	//SceneObject *shuttersObject = scene.createSceneObject();
-	//shuttersObject->setGeometry(&shutters);
-	//shuttersObject->setDefaultMaterial(&wallMaterial);
-	//shuttersObject->setName("Shutters");
 
 	SceneObject *outdoorTopLightObject = scene.createSceneObject();
 	outdoorTopLightObject->setGeometry(&outdoorTopLightGeometry);
@@ -99,7 +101,7 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 	lightSource->setGeometry(&outdoorLightGeometry);
 	lightSource->setDefaultMaterial(&outdoorLight);
 
-	SimpleSampler sampler;
+	RandomSampler sampler;
 
 	// Create the camera
 	StandardCameraRayEmitterGroup camera;
@@ -116,21 +118,14 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 	// Create the raytracer
 	rayTracer.initialize(1000 * MB, 100 * MB, 12, 10000, true);
 	rayTracer.setBackgroundColor(getColor(135, 206, 235));
-	//rayTracer.setDeterministicSeedMode(true);
-	rayTracer.traceAll(&scene, &camera);
-	// Leaks
-	//rayTracer.tracePixel(1094, 768, &scene, &camera);
-	//rayTracer.tracePixel(495, 122, &scene, &camera);
-	//rayTracer.tracePixel(389, 188, &scene, &camera);
-	//rayTracer.tracePixel(1441, 227, &scene, &camera);
-	//rayTracer.tracePixel(459, 358, &scene, &camera);
-	//rayTracer.tracePixel(1160, 566, &scene, &camera);
-	//rayTracer.tracePixel(2020, 739, &scene, &camera);
-	//rayTracer.tracePixel(1094, 910, &scene, &camera);
-	//rayTracer.tracePixel(1829, 1402, &scene, &camera);
-	//rayTracer.tracePixel(839, 1417, &scene, &camera);
-	//rayTracer.tracePixel(2026, 1443, &scene, &camera);
-	//rayTracer.tracePixel(1215, 1511, &scene, &camera);
+	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
+
+	if (TRACE_SINGLE_PIXEL) {
+		rayTracer.tracePixel(1094, 768, &scene, &camera);
+	}
+	else {
+		rayTracer.traceAll(&scene, &camera);
+	}
 
 	// Output the results to a scene buffer
 	SceneBuffer sceneBuffer;
@@ -146,16 +141,14 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 
 	RawFile rawFile;
 	rawFile.writeRawFile(rawFname.c_str(), &sceneBuffer);
-	//editImage(&sceneBuffer, imageFname);
 
 	// Apply gamma correction
 	sceneBuffer.applyGammaCurve((math::real)(1.0 / 2.2));
 	manta::SaveImageData(sceneBuffer.getBuffer(), sceneBuffer.getWidth(), sceneBuffer.getHeight(), imageFname.c_str());
 
+	// Cleanup memory
 	sceneBuffer.destroy();
 	rayTracer.destroy();
-
-	houseOctree.destroy();
 	kdtree.destroy();
 	smallHouse.destroy();
 	smallHouseObj.destroy();

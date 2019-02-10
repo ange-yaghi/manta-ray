@@ -3,11 +3,26 @@
 using namespace manta;
 
 void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutionY) {
+	// Top-level parameters
+	constexpr bool USE_ACCELERATION_STRUCTURE = true;
+	constexpr bool DETERMINISTIC_SEED_MODE = false;
+	constexpr bool TRACE_SINGLE_PIXEL = false;
+	constexpr bool WRITE_KDTREE_TO_FILE = false;
+	constexpr bool LENS_SIMULATION = true;
+
 	Scene scene;
 	RayTracer rayTracer;
 
 	ObjFileLoader boxCityObj;
 	bool result = boxCityObj.readObjFile(MODEL_PATH "box_city.obj");
+
+	if (!result) {
+		std::cout << "Could not open geometry file" << std::endl;
+
+		boxCityObj.destroy();
+
+		return;
+	}
 
 	// Create all materials
 	LambertianBSDF lambert;
@@ -23,15 +38,9 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	blockMaterial->setName("Block");
 	blockMaterial->setBSDF(&blockBSDF);
 
-	SimpleBSDFMaterial outdoorLight;
-	outdoorLight.setEmission(math::loadVector(9, 8, 8));
-	outdoorLight.setReflectance(math::constants::Zero);
-	//outdoorLight.setSpecularColor(math::constants::Zero);
-
 	SimpleBSDFMaterial outdoorTopLightMaterial;
 	outdoorTopLightMaterial.setEmission(math::loadVector(5, 5, 5));
 	outdoorTopLightMaterial.setReflectance(math::constants::Zero);
-	//outdoorTopLightMaterial.setSpecularColor(math::constants::Zero);
 
 	SimpleBSDFMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	groundMaterial->setName("Ground");
@@ -44,36 +53,19 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
 	SpherePrimitive outdoorTopLightGeometry;
 	outdoorTopLightGeometry.setRadius((math::real)10.0);
-	//outdoorTopLightGeometry.setRadius((math::real)20.0);
 	outdoorTopLightGeometry.setPosition(math::loadVector(20, 30.0, -13.5));
 
-	SpherePrimitive groundLightGeometry;
-	groundLightGeometry.setRadius((math::real)50000.0 - 1);
-	groundLightGeometry.setPosition(math::loadVector(0.0, -50000, 0));
-
 	// Create scene objects
-	//SceneObject *smallHouseObject = scene.createSceneObject();
-	//smallHouseObject->setGeometry(&smallHouse);
-	//smallHouseObject->setMaterial(&wallMaterial);
-
-	Octree octree;
-	octree.initialize(100.0, math::loadVector(0, 0, 0));
-	octree.analyze(&boxCity, 25);
-
 	KDTree kdtree;
 	kdtree.initialize(100.0, math::constants::Zero);
 	kdtree.analyze(&boxCity, 4);
 
-	kdtree.writeToObjFile("../../workspace/test_results/box_city_kdtree.obj");
-
-	std::cout << "Scene vertices/faces: " << boxCity.getVertexCount() << "/" << boxCity.getFaceCount() << std::endl;
-	std::cout << "Octree faces: " << octree.countFaces() << std::endl;
-	std::cout << "Leaf count: " << octree.countLeaves() << std::endl;
-
-	constexpr bool useOctree = true;
+	if (WRITE_KDTREE_TO_FILE) {
+		kdtree.writeToObjFile("../../workspace/test_results/box_city_kdtree.obj");
+	}
 
 	SceneObject *boxCityObject = scene.createSceneObject();
-	if (useOctree) boxCityObject->setGeometry(&kdtree);
+	if (USE_ACCELERATION_STRUCTURE) boxCityObject->setGeometry(&kdtree);
 	else boxCityObject->setGeometry(&boxCity);
 	boxCityObject->setDefaultMaterial(blockMaterial);
 
@@ -84,11 +76,8 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	math::Vector cameraPos = math::loadVector(15.4473, 4.59977, 13.2961);
 	math::Vector target = math::loadVector(2.63987, 3.55547, 2.42282);
 
-	constexpr bool regularCamera = false;
-
-	CameraRayEmitterGroup *group;
-
 	// Create the camera
+	CameraRayEmitterGroup *group;
 
 	math::Vector up = math::loadVector(0.0f, 1.0, 0.0);
 	math::Vector dir = math::normalize(math::sub(target, cameraPos));
@@ -109,7 +98,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
 	RandomSampler sampler;
 
-	if (regularCamera) {
+	if (!LENS_SIMULATION) {
 		StandardCameraRayEmitterGroup *camera = new StandardCameraRayEmitterGroup;
 		camera->setDirection(dir);
 		camera->setPosition(cameraPos);
@@ -146,10 +135,14 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	// Initialize and run the ray tracer
 	rayTracer.initialize(1000 * MB, 50 * MB, 12, 10000, true);
 	rayTracer.setBackgroundColor(getColor(255, 255, 255));
-	//rayTracer.setBackgroundColor(getColor(0.0, 0.0, 0.0));
-	//rayTracer.setDeterministicSeedMode(true);
-	rayTracer.traceAll(&scene, group);
-	//rayTracer.tracePixel(519, 1013, &scene, group);
+	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
+	
+	if (TRACE_SINGLE_PIXEL) {
+		rayTracer.tracePixel(519, 1013, &scene, group);
+	}
+	else {
+		rayTracer.traceAll(&scene, group);
+	}
 
 	// Output the results to a scene buffer
 	SceneBuffer sceneBuffer;
@@ -166,14 +159,15 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
 	RawFile rawFile;
 	rawFile.writeRawFile(rawFname.c_str(), &sceneBuffer);
-	editImage(&sceneBuffer, imageFname);
+
+	sceneBuffer.applyGammaCurve((math::real)(1.0 / 2.2));
+	manta::SaveImageData(sceneBuffer.getBuffer(), sceneBuffer.getWidth(), sceneBuffer.getHeight(), imageFname.c_str());
 
 	sceneBuffer.destroy();
 	rayTracer.destroy();
 
 	boxCity.destroy();
 	boxCityObj.destroy();
-	octree.destroy();
 	kdtree.destroy();
 
 	std::cout << "Standard allocator memory leaks:     " << StandardAllocator::Global()->getLedger() << ", " << StandardAllocator::Global()->getCurrentUsage() << std::endl;
