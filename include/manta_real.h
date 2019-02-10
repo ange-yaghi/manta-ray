@@ -21,7 +21,7 @@ namespace manta {
 
 		} /* namespace constants */
 
-#else
+#else /* MANTA_PRECISION == MANTA_PRECISION_DOUBLE */
 
 		typedef double real;
 
@@ -33,8 +33,8 @@ namespace manta {
 
 #endif /* MANTA_PRECISION */
 
-	}
+	} /* namespace math */
 
-}
+} /* namespace manta */
 
 #endif /* MANTA_REAL_H */

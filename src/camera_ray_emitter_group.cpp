@@ -27,11 +27,26 @@ void manta::CameraRayEmitterGroup::destroyRays() {
 }
 
 void manta::CameraRayEmitterGroup::fillSceneBuffer(SceneBuffer *sceneBuffer) const {
+	constexpr math::Vector DEBUG_RED = { (math::real)1.0, (math::real)0.0, (math::real)0.0 };
+	constexpr math::Vector DEBUG_BLUE = { (math::real)0.0, (math::real)0.0, (math::real)1.0 };
+	constexpr math::Vector DEBUG_GREEN = { (math::real)0.0, (math::real)1.0, (math::real)0.0 };
+
 	sceneBuffer->initialize(m_resolutionX, m_resolutionY);
 
 	for (int x = 0; x < m_resolutionX; x++) {
 		for (int y = 0; y < m_resolutionY; y++) {
-			sceneBuffer->set(m_rayBuckets[y * m_resolutionX + x].getIntensity(), x, y);
+			math::Vector intensity = m_rayBuckets[y * m_resolutionX + x].getIntensity();
+			if (std::isnan(math::getX(intensity)) || std::isnan(math::getY(intensity)) || std::isnan(math::getZ(intensity))) {
+				intensity = DEBUG_RED;
+			}
+			else if (std::isinf(math::getX(intensity)) || std::isinf(math::getY(intensity)) || std::isinf(math::getZ(intensity))) {
+				intensity = DEBUG_GREEN;
+			}
+			else if (math::getX(intensity) < 0 || math::getY(intensity) < 0 || math::getZ(intensity) < 0) {
+				intensity = DEBUG_BLUE;
+			}
+
+			sceneBuffer->set(intensity, x, y);
 		}
 	}
 }

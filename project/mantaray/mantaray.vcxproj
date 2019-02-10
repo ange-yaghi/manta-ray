@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\biconvex_lens.cpp" />
+    <ClCompile Include="..\..\src\bilayer_bsdf.cpp" />
     <ClCompile Include="..\..\src\bsdf.cpp" />
     <ClCompile Include="..\..\src\camera_ray_emitter.cpp" />
     <ClCompile Include="..\..\src\camera_ray_emitter_group.cpp" />
@@ -30,15 +31,16 @@
     <ClCompile Include="..\..\src\manta_math.cpp" />
     <ClCompile Include="..\..\src\material_manager.cpp" />
     <ClCompile Include="..\..\src\material_node.cpp" />
+    <ClCompile Include="..\..\src\microfacet_distribution.cpp" />
+    <ClCompile Include="..\..\src\microfacet_reflection_bsdf.cpp" />
     <ClCompile Include="..\..\src\octree.cpp" />
     <ClCompile Include="..\..\src\os_utilities.cpp" />
-    <ClCompile Include="..\..\src\phong_bsdf.cpp" />
+    <ClCompile Include="..\..\src\phong_distribution.cpp" />
     <ClCompile Include="..\..\src\primitives.cpp" />
     <ClCompile Include="..\..\src\random_sampler.cpp" />
     <ClCompile Include="..\..\src\ray_container.cpp" />
     <ClCompile Include="..\..\src\sampler_2d.cpp" />
-    <ClCompile Include="..\..\src\simple_lambert_material.cpp" />
-    <ClCompile Include="..\..\src\phong_phong_bilayer_material.cpp" />
+    <ClCompile Include="..\..\src\simple_bsdf_material.cpp" />
     <ClCompile Include="..\..\src\simple_sampler.cpp" />
     <ClCompile Include="..\..\src\circular_aperture.cpp" />
     <ClCompile Include="..\..\src\gpu_kernel_opencl.cpp" />
@@ -65,6 +67,7 @@
     <ClCompile Include="..\..\src\scene_object.cpp" />
     <ClCompile Include="..\..\src\simple_lens.cpp" />
     <ClCompile Include="..\..\src\single_color_node.cpp" />
+    <ClCompile Include="..\..\src\perfect_specular_reflection_bsdf.cpp" />
     <ClCompile Include="..\..\src\sphere_primitive.cpp" />
     <ClCompile Include="..\..\src\spherical_surface.cpp" />
     <ClCompile Include="..\..\src\standard_allocator.cpp" />
@@ -78,6 +81,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\include\aperture.h" />
     <ClInclude Include="..\..\include\biconvex_lens.h" />
+    <ClInclude Include="..\..\include\bilayer_bsdf.h" />
     <ClInclude Include="..\..\include\bsdf.h" />
     <ClInclude Include="..\..\include\camera_ray_emitter.h" />
     <ClInclude Include="..\..\include\camera_ray_emitter_group.h" />
@@ -90,15 +94,16 @@
     <ClInclude Include="..\..\include\material_manager.h" />
     <ClInclude Include="..\..\include\material_node.h" />
     <ClInclude Include="..\..\include\media_interface.h" />
+    <ClInclude Include="..\..\include\microfacet_distribution.h" />
+    <ClInclude Include="..\..\include\microfacet_reflection_bsdf.h" />
     <ClInclude Include="..\..\include\octree.h" />
     <ClInclude Include="..\..\include\opaque_media_interface.h" />
     <ClInclude Include="..\..\include\os_utilities.h" />
-    <ClInclude Include="..\..\include\phong_bsdf.h" />
+    <ClInclude Include="..\..\include\phong_distribution.h" />
     <ClInclude Include="..\..\include\primitives.h" />
     <ClInclude Include="..\..\include\random_sampler.h" />
     <ClInclude Include="..\..\include\ray_container.h" />
-    <ClInclude Include="..\..\include\simple_lambert_material.h" />
-    <ClInclude Include="..\..\include\phong_phong_bilayer_material.h" />
+    <ClInclude Include="..\..\include\simple_bsdf_material.h" />
     <ClInclude Include="..\..\include\simple_sampler.h" />
     <ClInclude Include="..\..\include\circular_aperture.h" />
     <ClInclude Include="..\..\include\gpu_kernel.h" />
@@ -135,6 +140,7 @@
     <ClInclude Include="..\..\include\scene_object.h" />
     <ClInclude Include="..\..\include\simple_lens.h" />
     <ClInclude Include="..\..\include\single_color_node.h" />
+    <ClInclude Include="..\..\include\perfect_specular_reflection_bsdf.h" />
     <ClInclude Include="..\..\include\sphere_primitive.h" />
     <ClInclude Include="..\..\include\spherical_surface.h" />
     <ClInclude Include="..\..\include\sampler_2d.h" />

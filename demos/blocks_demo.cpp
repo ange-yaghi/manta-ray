@@ -3,12 +3,24 @@
 using namespace manta;
 
 void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolutionY) {
-	Scene scene;
+	// Top-level parameters
+	constexpr bool LENS_SIMULATION = true;
+	constexpr bool USE_ACCELERATION_STRUCTURE = true;
+	constexpr bool DETERMINISTIC_SEED_MODE = false;
+	constexpr bool TRACE_SINGLE_PIXEL = false;
 
+	Scene scene;
 	RayTracer rayTracer;
 
-	ObjFileLoader boxCityObj;
-	bool result = boxCityObj.readObjFile(MODEL_PATH "blocks_floor.obj");
+	ObjFileLoader blocksObj;
+	bool result = blocksObj.readObjFile(MODEL_PATH "blocks_floor.obj");
+
+	if (!result) {
+		std::cout << "Could not open geometry file" << std::endl;
+		blocksObj.destroy();
+
+		return;
+	}
 
 	TextureNode map;
 	map.loadFile(TEXTURE_PATH "blocks.png", (math::real)2.2);
@@ -16,134 +28,86 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 	TextureNode blockSpecular;
 	blockSpecular.loadFile(TEXTURE_PATH "blocks_specular.png", (math::real)2.2);
 
+	PhongDistribution phongDist;
+	phongDist.setPower(4096);
+
+	PhongDistribution phongDist2;
+	phongDist2.setPower(16);
+
+	MicrofacetReflectionBSDF bsdf2;
+	bsdf2.setDistribution(&phongDist);
+
+	LambertianBSDF lambert;
+
+	DielectricMediaInterface fresnel;
+	fresnel.setIorIncident((math::real)1.0);
+	fresnel.setIorTransmitted((math::real)1.5);
+
+	BilayerBSDF blockBSDF;
+	blockBSDF.setDiffuseMaterial(&lambert);
+	blockBSDF.setCoatingDistribution(&phongDist);
+	blockBSDF.setDiffuseNode(&map);
+	blockBSDF.setDiffuse(getColor(0xFF, 0xFF, 0xFF));
+	blockBSDF.setSpecularAtNormal(math::loadVector(0.1, 0.1, 0.1));
+
+	BilayerBSDF floorBSDF;
+	floorBSDF.setDiffuseMaterial(&lambert);
+	floorBSDF.setCoatingDistribution(&phongDist2);
+	floorBSDF.setDiffuse(getColor(0xFF, 0xFF, 0xFF));
+	floorBSDF.setSpecularAtNormal(math::loadVector(0.75, 0.75, 0.75));
+
 	// Create all materials
 	SingleColorNode whiteNode(getColor(255, 255, 255));
-	SimpleLambertMaterial *wallMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleLambertMaterial>();
-	wallMaterial->setName("BlockSimple");
-	wallMaterial->setEmission(math::constants::Zero);
-	wallMaterial->setDiffuseNode(&whiteNode);
+	SimpleBSDFMaterial *simpleBlockMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	simpleBlockMaterial->setName("Block");
+	simpleBlockMaterial->setEmission(math::constants::Zero);
+	simpleBlockMaterial->setReflectanceNode(&whiteNode);
+	simpleBlockMaterial->setBSDF(&blockBSDF);
 
-	PhongPhongBilayerMaterial *blockMaterialPhong = rayTracer.getMaterialManager()->newMaterial<PhongPhongBilayerMaterial>();
-	DielectricMediaInterface *blockFresnel = blockMaterialPhong->getCoatingFresnel();
-	blockFresnel->setIorIncident(1.0);
-	blockFresnel->setIorTransmitted(1.6);
-	blockMaterialPhong->setName("Block");
-	blockMaterialPhong->setEmission(math::constants::Zero);
-	blockMaterialPhong->setDiffuseColor(getColor(255, 255, 255));
-	blockMaterialPhong->setSpecularColor(getColor(255, 255, 255));
-	blockMaterialPhong->getDiffuseBSDF()->setPower((math::real)4.0);
-	blockMaterialPhong->getSpecularBSDF()->setPower((math::real)512.0);
-	blockMaterialPhong->setDiffuseNode(&map);
-	blockMaterialPhong->getSpecularBSDF()->setPowerNode(&blockSpecular);
+	SimpleBSDFMaterial *simpleLetterMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	simpleLetterMaterial->setName("Letters");
+	simpleLetterMaterial->setEmission(math::constants::Zero);
+	simpleLetterMaterial->setReflectanceNode(&whiteNode);
+	simpleLetterMaterial->setBSDF(&blockBSDF);
 
-	PhongPhongBilayerMaterial *letterMaterialPhong = rayTracer.getMaterialManager()->newMaterial<PhongPhongBilayerMaterial>();
-	DielectricMediaInterface *letterFresnel = letterMaterialPhong->getCoatingFresnel();
-	letterFresnel->setIorIncident(1.0);
-	letterFresnel->setIorTransmitted(1.6);
-	letterMaterialPhong->setName("Letters");
-	letterMaterialPhong->setEmission(math::constants::Zero);
-	letterMaterialPhong->setDiffuseColor(getColor(255, 255, 255));
-	letterMaterialPhong->setSpecularColor(getColor(255, 255, 255));
-	letterMaterialPhong->getDiffuseBSDF()->setPower((math::real)4.0);
-	letterMaterialPhong->getSpecularBSDF()->setPower((math::real)32.0);
-	letterMaterialPhong->setDiffuseNode(&map);
-	letterMaterialPhong->getSpecularBSDF()->setPowerNode(&blockSpecular);
+	SimpleBSDFMaterial *simpleGroundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	simpleGroundMaterial->setName("Ground");
+	simpleGroundMaterial->setEmission(math::constants::Zero);
+	simpleGroundMaterial->setReflectanceNode(&whiteNode);
+	simpleGroundMaterial->setBSDF(&floorBSDF);
 
-	SingleColorNode greyNode(getColor(100, 100, 100));
-	SimpleLambertMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleLambertMaterial>();
-	groundMaterial->setName("GroundSimple");
-	groundMaterial->setEmission(math::constants::Zero);
-	groundMaterial->setDiffuseNode(&greyNode);
-
-	PhongPhongBilayerMaterial *groundMaterialPhong = rayTracer.getMaterialManager()->newMaterial<PhongPhongBilayerMaterial>();
-	DielectricMediaInterface *groundFresnel = groundMaterialPhong->getCoatingFresnel();
-	groundFresnel->setIorIncident(1.0);
-	groundFresnel->setIorTransmitted(1.6);
-	groundMaterialPhong->setName("Ground");
-	groundMaterialPhong->setEmission(math::constants::Zero);
-	groundMaterialPhong->setDiffuseColor(getColor(255, 255, 255));
-	groundMaterialPhong->setSpecularColor(getColor(255, 255, 255));
-	groundMaterialPhong->getDiffuseBSDF()->setPower((math::real)8.0);
-	groundMaterialPhong->getSpecularBSDF()->setPower((math::real)128.0);
-
-	SimpleLambertMaterial outdoorLight;
-	outdoorLight.setEmission(math::loadVector(9, 8, 8));
-	outdoorLight.setDiffuseColor(math::constants::Zero);
-	//outdoorLight.setSpecularColor(math::constants::Zero);
-
-	SimpleLambertMaterial outdoorTopLightMaterial;
+	SimpleBSDFMaterial outdoorTopLightMaterial;
 	outdoorTopLightMaterial.setEmission(math::loadVector(5, 5, 5));
-	outdoorTopLightMaterial.setDiffuseColor(math::constants::Zero);
-	//outdoorTopLightMaterial.setSpecularColor(math::constants::Zero);
+	outdoorTopLightMaterial.setReflectance(math::constants::Zero);
 
 	// Create all scene geometry
-	Mesh boxCity;
-	boxCity.loadObjFileData(&boxCityObj, rayTracer.getMaterialManager());
-	boxCity.setFastIntersectEnabled(false);
-	boxCity.setFastIntersectRadius((math::real)4.0);
-
-	SpherePrimitive outdoorLightGeometry;
-	outdoorLightGeometry.setRadius((math::real)10.0);
-	outdoorLightGeometry.setPosition(math::loadVector(20, 30.0, -13.5));
+	Mesh blocks;
+	blocks.loadObjFileData(&blocksObj, rayTracer.getMaterialManager());
+	blocks.setFastIntersectEnabled(false);
 
 	SpherePrimitive outdoorTopLightGeometry;
 	outdoorTopLightGeometry.setRadius((math::real)10.0);
-	//outdoorTopLightGeometry.setRadius((math::real)20.0);
-	outdoorTopLightGeometry.setPosition(math::loadVector(10, 20.0, -13.5));
-
-	SpherePrimitive groundGeometry;
-	groundGeometry.setRadius((math::real)500000.01);
-	groundGeometry.setPosition(math::loadVector(0.0, -500000, 0));
-
-	SpherePrimitive groundLightGeometry;
-	groundLightGeometry.setRadius((math::real)50000.0 - 1);
-	groundLightGeometry.setPosition(math::loadVector(0.0, -50000, 0));
+	outdoorTopLightGeometry.setPosition(math::loadVector(10, 20.0, 5.5));
 
 	// Create scene objects
-	//SceneObject *smallHouseObject = scene.createSceneObject();
-	//smallHouseObject->setGeometry(&smallHouse);
-	//smallHouseObject->setMaterial(&wallMaterial);
-
-	Octree octree;
-	octree.initialize(50.0, math::loadVector(0, 0, 0));
-	//octree.analyze(&boxCity, 50);
-	//octree.writeToObjFile("../../workspace/test_results/blocks_octree.obj", nullptr);
-
 	KDTree kdtree;
 	kdtree.initialize((math::real)500.0, math::constants::Zero);
-	kdtree.analyze(&boxCity, 4);
-
-	constexpr bool useOctree = true;
+	kdtree.analyze(&blocks, 4);
 
 	SceneObject *boxCityObject = scene.createSceneObject();
-	if (useOctree) boxCityObject->setGeometry(&kdtree);
-	else boxCityObject->setGeometry(&boxCity);
-	boxCityObject->setDefaultMaterial(wallMaterial);
-
-	//SceneObject *ground = scene.createSceneObject();
-	//ground->setGeometry(&groundGeometry);
-	//ground->setDefaultMaterial(&groundMaterial);
-
-	//SceneObject *groundLight = scene.createSceneObject();
-	//groundLight->setGeometry(&groundLightGeometry);
-	//groundLight->setMaterial(&outdoorLight);
+	if (USE_ACCELERATION_STRUCTURE) boxCityObject->setGeometry(&kdtree);
+	else boxCityObject->setGeometry(&blocks);
+	boxCityObject->setDefaultMaterial(simpleBlockMaterial);
 
 	SceneObject *outdoorTopLightObject = scene.createSceneObject();
 	outdoorTopLightObject->setGeometry(&outdoorTopLightGeometry);
 	outdoorTopLightObject->setDefaultMaterial(&outdoorTopLightMaterial);
 
-	//SceneObject *lightSource = scene.createSceneObject();
-	//lightSource->setGeometry(&outdoorLightGeometry);
-	//lightSource->setMaterial(&outdoorLight);
-
 	math::Vector cameraPos = math::loadVector(15.4473, 4.59977, 13.2961);
 	math::Vector target = math::loadVector(2.63987, 3.55547, 2.42282);
 
-	constexpr bool regularCamera = false;
-
-	CameraRayEmitterGroup *group;
-
 	// Create the camera
+	CameraRayEmitterGroup *group;
 
 	math::Vector up = math::loadVector(0.0f, 1.0, 0.0);
 	math::Vector dir = math::normalize(math::sub(target, cameraPos));
@@ -164,7 +128,7 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 
 	RandomSampler sampler;
 
-	if (regularCamera) {
+	if (!LENS_SIMULATION) {
 		StandardCameraRayEmitterGroup *camera = new StandardCameraRayEmitterGroup;
 		camera->setSampler(&sampler);
 		camera->setDirection(dir);
@@ -200,11 +164,15 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 
 	// Run the ray tracer
 	rayTracer.initialize(1000 * MB, 50 * MB, 12, 10000, true);
-	rayTracer.setBackgroundColor(getColor(255, 255, 255));
-	//rayTracer.setBackgroundColor(getColor(0.0, 0.0, 0.0));
-	//rayTracer.setDeterministicSeedMode(true);
-	rayTracer.traceAll(&scene, group);
-	//rayTracer.tracePixel(1286, 1157, &scene, group);
+	rayTracer.setBackgroundColor(getColor(0, 0, 0));
+	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
+
+	if (TRACE_SINGLE_PIXEL) {
+		rayTracer.tracePixel(1286, 1157, &scene, group);
+	}
+	else {
+		rayTracer.traceAll(&scene, group);
+	}
 
 	// Output the results to a scene buffer
 	SceneBuffer sceneBuffer;
@@ -221,11 +189,12 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 
 	RawFile rawFile;
 	rawFile.writeRawFile(rawFname.c_str(), &sceneBuffer);
-	editImage(&sceneBuffer, imageFname);
+
+	sceneBuffer.applyGammaCurve((math::real)(1.0 / 2.2));
+	manta::SaveImageData(sceneBuffer.getBuffer(), sceneBuffer.getWidth(), sceneBuffer.getHeight(), imageFname.c_str());
 
 	sceneBuffer.destroy();
 	rayTracer.destroy();
 
 	kdtree.destroy();
-	octree.destroy();
 }

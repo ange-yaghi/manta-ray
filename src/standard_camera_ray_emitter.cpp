@@ -31,7 +31,7 @@ void manta::StandardCameraRayEmitter::generateRays(RayContainer *rayContainer) c
 		ray->setDirection(dir);
 		ray->setSource(m_position);
 		ray->setIntensity(math::constants::Zero);
-		ray->setWeight((math::real)1.0);
+		ray->setWeight(math::constants::One);
 	}
 
 	m_stackAllocator->free((void *)samplePoints);
