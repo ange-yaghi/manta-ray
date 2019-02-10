@@ -9,11 +9,12 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 
 	// Load all object files
 	ObjFileLoader stressSpidersObj;
-	bool result = stressSpidersObj.readObjFile(MODEL_PATH "stress_spiders_v2.obj");
+	bool result = stressSpidersObj.readObjFile(MODEL_PATH "stress_spiders.obj");
 
 	RayTracer rayTracer;
 
 	// Create all materials
+	/*
 	PhongPhongBilayerMaterial *spiderMaterial = rayTracer.getMaterialManager()->newMaterial<PhongPhongBilayerMaterial>();
 	spiderMaterial->setEmission(math::mul(getColor(0xFF, 0x08, 0x14), math::loadScalar(0.0)));
 	spiderMaterial->setDiffuseColor(getColor(0xf1, 0xc4, 0x0f));
@@ -23,44 +24,64 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 	spiderMaterial->setSurfaceTransmission((math::real)0.5);
 	spiderMaterial->getSpecularBSDF()->setPower((math::real)512);
 	//spiderMaterial->setGloss((math::real)0.5);
+	*/
 
+	LambertianBSDF lambert;
+
+	PhongDistribution spiderCoating;
+	spiderCoating.setPower((math::real)8192);
+	BilayerBSDF spiderBSDF;
+	spiderBSDF.setCoatingDistribution(&spiderCoating);
+	spiderBSDF.setDiffuseMaterial(&lambert);
+	spiderBSDF.setDiffuse(getColor(0xf1, 0xc4, 0x0f));
+	spiderBSDF.setSpecularAtNormal(math::loadVector(0.05, 0.05, 0.05));
+	SimpleBSDFMaterial *spiderMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	spiderMaterial->setName("StressSpiders");
+	spiderMaterial->setBSDF(&spiderBSDF);
+
+	PhongDistribution groundCoating;
+	groundCoating.setPower((math::real)64);
+	BilayerBSDF groundBSDF;
+	groundBSDF.setCoatingDistribution(&groundCoating);
+	groundBSDF.setDiffuseMaterial(&lambert);
+	groundBSDF.setDiffuse(getColor(0xFF, 0xFF, 0xFF));
+	groundBSDF.setSpecularAtNormal(math::loadVector(0.1, 0.1, 0.1));
+	SimpleBSDFMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	groundMaterial->setName("Ground");
+	groundMaterial->setBSDF(&groundBSDF);
+
+	/*
 	PhongPhongBilayerMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<PhongPhongBilayerMaterial>();
 	groundMaterial->setEmission(math::constants::Zero);
 	groundMaterial->setDiffuseColor(getColor(255, 255, 255));
 	groundMaterial->setSpecularColor(math::constants::Zero);
-	groundMaterial->setSurfaceTransmission((math::real)0.0);
+	groundMaterial->setSurfaceTransmission((math::real)0.0);*/
 
-	SimpleLambertMaterial outdoorTopLightMaterial;
+	SimpleBSDFMaterial outdoorTopLightMaterial;
 	outdoorTopLightMaterial.setEmission(math::loadVector(5, 5, 5));
-	outdoorTopLightMaterial.setDiffuseColor(math::constants::Zero);
+	outdoorTopLightMaterial.setReflectance(math::constants::Zero);
 	//outdoorTopLightMaterial.setSpecularColor(math::constants::Zero);
 
 	// Create all scene geometry
 	Mesh stressSpiders;
 	stressSpiders.loadObjFileData(&stressSpidersObj, rayTracer.getMaterialManager(), spiderMaterial->getIndex());
-	stressSpiders.setFastIntersectEnabled(true);
-	stressSpiders.setFastIntersectRadius((math::real)2.123);
-	stressSpiders.setFastIntersectPosition(math::loadVector(-0.06430, 1.86833, -2.96564));
+	stressSpiders.setFastIntersectEnabled(false);
 
 	stressSpidersObj.destroy();
 
 	Octree stressSpidersOctree;
 	stressSpidersOctree.initialize(32, math::constants::Zero);
-	stressSpidersOctree.analyze(&stressSpiders, 25);
+	//stressSpidersOctree.analyze(&stressSpiders, 25);
 	//stressSpidersOctree.writeToObjFile("../../workspace/test_results/stress_spiders_octree.obj", nullptr);
 
 	KDTree kdtree;
-	kdtree.initialize(32.0, math::constants::Zero);
+	kdtree.initialize(100.0, math::constants::Zero);
 	kdtree.analyze(&stressSpiders, 4);
 
 	SpherePrimitive outdoorTopLightGeometry;
 	outdoorTopLightGeometry.setRadius((math::real)10.0);
 	//outdoorTopLightGeometry.setRadius((math::real)20.0);
 	outdoorTopLightGeometry.setPosition(math::loadVector(19.45842, 12.42560, -13.78918));
-
-	SpherePrimitive groundGeometry;
-	groundGeometry.setRadius((math::real)50000.0);
-	groundGeometry.setPosition(math::loadVector(0.0, -50000.001, 0));
 
 	constexpr bool useOctree = true;
 
@@ -74,11 +95,6 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 	}
 	stressSpidersObject->setDefaultMaterial(spiderMaterial);
 	stressSpidersObject->setName("StressSpiders");
-
-	SceneObject *ground = scene.createSceneObject();
-	ground->setGeometry(&groundGeometry);
-	ground->setDefaultMaterial(groundMaterial);
-	ground->setName("Ground");
 
 	SceneObject *outdoorTopLightObject = scene.createSceneObject();
 	outdoorTopLightObject->setGeometry(&outdoorTopLightGeometry);
@@ -94,7 +110,7 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 	up = math::normalize(up);
 
 	// Create the camera
-	constexpr bool regularCamera = true;
+	constexpr bool regularCamera = false;
 	CameraRayEmitterGroup *group;
 	manta::SimpleLens lens;
 	lens.initialize();
@@ -186,7 +202,7 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 	sceneBuffer.destroy();
 	rayTracer.destroy();
 
-	stressSpidersOctree.destroy();
+	//stressSpidersOctree.destroy();
 	stressSpiders.destroy();
 	kdtree.destroy();
 

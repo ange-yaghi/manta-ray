@@ -22,12 +22,10 @@
     <ClCompile Include="..\..\demos\blocks_demo.cpp" />
     <ClCompile Include="..\..\demos\box_city_demo.cpp" />
     <ClCompile Include="..\..\demos\complex_room_demo.cpp" />
-    <ClCompile Include="..\..\demos\cube_test_demo.cpp" />
     <ClCompile Include="..\..\demos\main.cpp" />
     <ClCompile Include="..\..\demos\pen_demo.cpp" />
     <ClCompile Include="..\..\demos\small_house_demo.cpp" />
     <ClCompile Include="..\..\demos\stress_spiders.cpp" />
-    <ClCompile Include="..\..\demos\teapot_demo.cpp" />
     <ClCompile Include="..\..\demos\teapot_lamp_demo.cpp" />
     <ClCompile Include="..\..\demos\utils.cpp" />
   </ItemGroup>

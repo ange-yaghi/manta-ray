@@ -39,32 +39,32 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 	blockBSDF.setCoatingDistribution(&phongDist);
 	blockBSDF.setDiffuseNode(&map);
 	blockBSDF.setDiffuse(getColor(0xFF, 0xFF, 0xFF));
-	blockBSDF.setSpecular(math::loadVector(0.1, 0.1, 0.1));
+	blockBSDF.setSpecularAtNormal(math::loadVector(0.1, 0.1, 0.1));
 
 	BilayerBSDF floorBSDF;
 	floorBSDF.setDiffuseMaterial(&lambert);
 	floorBSDF.setCoatingDistribution(&phongDist2);
 	floorBSDF.setDiffuse(getColor(0xFF, 0xFF, 0xFF));
-	floorBSDF.setSpecular(math::loadVector(0.75, 0.75, 0.75));
+	floorBSDF.setSpecularAtNormal(math::loadVector(0.75, 0.75, 0.75));
 
 	// Create all materials
 	SingleColorNode whiteNode(getColor(255, 255, 255));
-	SimpleLambertMaterial *simpleBlockMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleLambertMaterial>();
+	SimpleBSDFMaterial *simpleBlockMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	simpleBlockMaterial->setName("Block");
 	simpleBlockMaterial->setEmission(math::constants::Zero);
-	simpleBlockMaterial->setDiffuseNode(&whiteNode);
+	simpleBlockMaterial->setReflectanceNode(&whiteNode);
 	simpleBlockMaterial->setBSDF(&blockBSDF);
 
-	SimpleLambertMaterial *simpleLetterMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleLambertMaterial>();
+	SimpleBSDFMaterial *simpleLetterMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	simpleLetterMaterial->setName("Letters");
 	simpleLetterMaterial->setEmission(math::constants::Zero);
-	simpleLetterMaterial->setDiffuseNode(&whiteNode);
+	simpleLetterMaterial->setReflectanceNode(&whiteNode);
 	simpleLetterMaterial->setBSDF(&blockBSDF);
 
-	SimpleLambertMaterial *simpleGroundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleLambertMaterial>();
+	SimpleBSDFMaterial *simpleGroundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	simpleGroundMaterial->setName("Ground");
 	simpleGroundMaterial->setEmission(math::constants::Zero);
-	simpleGroundMaterial->setDiffuseNode(&whiteNode);
+	simpleGroundMaterial->setReflectanceNode(&whiteNode);
 	simpleGroundMaterial->setBSDF(&floorBSDF);
 
 	/*
@@ -112,14 +112,14 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 	groundMaterialPhong->getSpecularBSDF()->setPower((math::real)128.0);
 	*/
 
-	SimpleLambertMaterial outdoorLight;
+	SimpleBSDFMaterial outdoorLight;
 	outdoorLight.setEmission(math::loadVector(9, 8, 8));
-	outdoorLight.setDiffuseColor(math::constants::Zero);
+	outdoorLight.setReflectance(math::constants::Zero);
 	//outdoorLight.setSpecularColor(math::constants::Zero);
 
-	SimpleLambertMaterial outdoorTopLightMaterial;
+	SimpleBSDFMaterial outdoorTopLightMaterial;
 	outdoorTopLightMaterial.setEmission(math::loadVector(5, 5, 5));
-	outdoorTopLightMaterial.setDiffuseColor(math::constants::Zero);
+	outdoorTopLightMaterial.setReflectance(math::constants::Zero);
 	//outdoorTopLightMaterial.setSpecularColor(math::constants::Zero);
 
 	// Create all scene geometry

@@ -114,7 +114,7 @@ TEST(BSDFTests, BilayerBSDFEnergyConservation) {
 	bsdf.setDiffuseMaterial(&bsdf2);
 	bsdf.setCoatingDistribution(&phong);
 	bsdf.setDiffuse(math::loadVector(1.0, 1.0, 1.0));
-	bsdf.setSpecular(math::loadVector(1.0, 1.0, 1.0));
+	bsdf.setSpecularAtNormal(math::loadVector(1.0, 1.0, 1.0));
 
 	math::Vector incident = math::loadVector((math::real)0.0, (math::real)0.0, (math::real)1.0);
 	incident = math::normalize(incident);
@@ -142,6 +142,8 @@ TEST(BSDFTests, BilayerBSDFEnergyConservation) {
 	accum = math::div(accum, math::loadScalar((math::real)SAMPLE_COUNT));
 	//accum = math::mul(accum, math::loadScalar(math::constants::PI));
 
-	CHECK_VEC3_EQ(accum, math::constants::One, 5E-3);
+	EXPECT_LE(math::getX(accum), 1.0);
+	EXPECT_LE(math::getY(accum), 1.0);
+	EXPECT_LE(math::getZ(accum), 1.0);
 }
 

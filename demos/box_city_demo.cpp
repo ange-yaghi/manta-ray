@@ -4,57 +4,48 @@ using namespace manta;
 
 void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutionY) {
 	Scene scene;
+	RayTracer rayTracer;
 
 	ObjFileLoader boxCityObj;
 	bool result = boxCityObj.readObjFile(MODEL_PATH "box_city.obj");
 
 	// Create all materials
-	SimpleLambertMaterial wallMaterial;
-	wallMaterial.setEmission(math::constants::Zero);
-	wallMaterial.setDiffuseColor(getColor(0xf1, 0xc4, 0x0f));
-	//wallMaterial.setDiffuseColor(getColor(255, 255, 255));
-	//wallMaterial.setSpecularColor(getColor(50, 50, 50));
-	//wallMaterial.setSpecularColor(getColor(40, 40, 40));
-	//wallMaterial.setDiffuseMap(&map);
+	LambertianBSDF lambert;
 
-	SimpleLambertMaterial outdoorLight;
+	PhongDistribution blockCoating;
+	blockCoating.setPower((math::real)16000);
+	BilayerBSDF blockBSDF;
+	blockBSDF.setCoatingDistribution(&blockCoating);
+	blockBSDF.setDiffuseMaterial(&lambert);
+	blockBSDF.setDiffuse(getColor(0xf1, 0xc4, 0x0f));
+	blockBSDF.setSpecularAtNormal(math::loadVector(0.1, 0.1, 0.1));
+	SimpleBSDFMaterial *blockMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	blockMaterial->setName("Block");
+	blockMaterial->setBSDF(&blockBSDF);
+
+	SimpleBSDFMaterial outdoorLight;
 	outdoorLight.setEmission(math::loadVector(9, 8, 8));
-	outdoorLight.setDiffuseColor(math::constants::Zero);
+	outdoorLight.setReflectance(math::constants::Zero);
 	//outdoorLight.setSpecularColor(math::constants::Zero);
 
-	SimpleLambertMaterial outdoorTopLightMaterial;
+	SimpleBSDFMaterial outdoorTopLightMaterial;
 	outdoorTopLightMaterial.setEmission(math::loadVector(5, 5, 5));
-	outdoorTopLightMaterial.setDiffuseColor(math::constants::Zero);
+	outdoorTopLightMaterial.setReflectance(math::constants::Zero);
 	//outdoorTopLightMaterial.setSpecularColor(math::constants::Zero);
 
-	SimpleLambertMaterial teapotMaterial;
-	teapotMaterial.setEmission(math::constants::Zero);
-	teapotMaterial.setDiffuseColor(getColor(1, 1, 1));
-	//teapotMaterial.setSpecularColor(getColor(100, 100, 100));
-
-	SimpleLambertMaterial groundMaterial;
-	groundMaterial.setEmission(math::constants::Zero);
-	groundMaterial.setDiffuseColor(getColor(255, 255, 255));
-	//groundMaterial.setSpecularColor(math::constants::Zero);
+	SimpleBSDFMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	groundMaterial->setName("Ground");
+	groundMaterial->setBSDF(&lambert);
 
 	// Create all scene geometry
 	Mesh boxCity;
-	boxCity.loadObjFileData(&boxCityObj);
+	boxCity.loadObjFileData(&boxCityObj, rayTracer.getMaterialManager());
 	boxCity.setFastIntersectEnabled(false);
-	boxCity.setFastIntersectRadius((math::real)4.0);
-
-	SpherePrimitive outdoorLightGeometry;
-	outdoorLightGeometry.setRadius((math::real)10.0);
-	outdoorLightGeometry.setPosition(math::loadVector(20, 30.0, -13.5));
 
 	SpherePrimitive outdoorTopLightGeometry;
 	outdoorTopLightGeometry.setRadius((math::real)10.0);
 	//outdoorTopLightGeometry.setRadius((math::real)20.0);
 	outdoorTopLightGeometry.setPosition(math::loadVector(20, 30.0, -13.5));
-
-	SpherePrimitive groundGeometry;
-	groundGeometry.setRadius((math::real)5000.01);
-	groundGeometry.setPosition(math::loadVector(0.0, -5000, 0));
 
 	SpherePrimitive groundLightGeometry;
 	groundLightGeometry.setRadius((math::real)50000.0 - 1);
@@ -84,28 +75,16 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	SceneObject *boxCityObject = scene.createSceneObject();
 	if (useOctree) boxCityObject->setGeometry(&kdtree);
 	else boxCityObject->setGeometry(&boxCity);
-	boxCityObject->setDefaultMaterial(&wallMaterial);
-
-	SceneObject *ground = scene.createSceneObject();
-	ground->setGeometry(&groundGeometry);
-	ground->setDefaultMaterial(&groundMaterial);
-
-	//SceneObject *groundLight = scene.createSceneObject();
-	//groundLight->setGeometry(&groundLightGeometry);
-	//groundLight->setMaterial(&outdoorLight);
+	boxCityObject->setDefaultMaterial(blockMaterial);
 
 	SceneObject *outdoorTopLightObject = scene.createSceneObject();
 	outdoorTopLightObject->setGeometry(&outdoorTopLightGeometry);
 	outdoorTopLightObject->setDefaultMaterial(&outdoorTopLightMaterial);
 
-	//SceneObject *lightSource = scene.createSceneObject();
-	//lightSource->setGeometry(&outdoorLightGeometry);
-	//lightSource->setMaterial(&outdoorLight);
-
 	math::Vector cameraPos = math::loadVector(15.4473, 4.59977, 13.2961);
 	math::Vector target = math::loadVector(2.63987, 3.55547, 2.42282);
 
-	constexpr bool regularCamera = true;
+	constexpr bool regularCamera = false;
 
 	CameraRayEmitterGroup *group;
 
@@ -164,8 +143,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 		group = camera;
 	}
 
-	// Create the raytracer
-	RayTracer rayTracer;
+	// Initialize and run the ray tracer
 	rayTracer.initialize(1000 * MB, 50 * MB, 12, 10000, true);
 	rayTracer.setBackgroundColor(getColor(255, 255, 255));
 	//rayTracer.setBackgroundColor(getColor(0.0, 0.0, 0.0));

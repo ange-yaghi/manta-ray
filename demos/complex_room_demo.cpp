@@ -17,19 +17,20 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	result = roomShuttersObj.readObjFile(MODEL_PATH "complex_room_shutters.obj");
 
 	RayTracer rayTracer;
-
-	SimpleLambertMaterial *test = rayTracer.getMaterialManager()->newMaterial<SimpleLambertMaterial>();
-	test->setEmission(math::constants::Zero);
-	test->setDiffuseColor(getColor(200, 200, 200));
-	test->setName("TestMaterial");
-	//test->m_distribution.setPower(50000);
-
-	/*
+	
 	DielectricMediaInterface glassFresnel;
 	glassFresnel.setIorIncident(1.0);
 	glassFresnel.setIorTransmitted(1.6);
 
 	// Create all materials
+	LambertianBSDF lambert;
+
+	SimpleBSDFMaterial *test = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	test->setBSDF(&lambert);
+	test->setReflectance(getColor(200, 200, 200));
+	test->setName("TestMaterial");
+
+	/*
 	PhongPhongBilayerMaterial *wallMaterial = rayTracer.getMaterialManager()->newMaterial<PhongPhongBilayerMaterial>();
 	wallMaterial->setName("WallMaterial");
 	wallMaterial->setEmission(math::constants::Zero);
@@ -39,8 +40,21 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	wallMaterial->getDiffuseBSDF()->setPower((math::real)2.0);
 	wallMaterial->getSpecularBSDF()->setPower((math::real)4.0);
 	wallMaterial->getSpecularBSDF()->setMediaInterface(&glassFresnel);
-	//wallMaterial->setGloss((math::real)0.95);
+	//wallMaterial->setGloss((math::real)0.95);*/
 
+	// Wall material
+	PhongDistribution wallCoating;
+	wallCoating.setPower((math::real)8.0);
+	BilayerBSDF wallBSDF;
+	wallBSDF.setDiffuse(getColor(0xFF, 0xFF, 0xFF));
+	wallBSDF.setSpecularAtNormal(getColor(0x00, 0x00, 0x00));
+	wallBSDF.setCoatingDistribution(&wallCoating);
+	wallBSDF.setDiffuseMaterial(&lambert);
+	SimpleBSDFMaterial *wallMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	wallMaterial->setName("WallMaterial");
+	wallMaterial->setBSDF(&wallBSDF);
+
+	/*
 	PhongPhongBilayerMaterial *floorMaterial = rayTracer.getMaterialManager()->newMaterial<PhongPhongBilayerMaterial>();
 	floorMaterial->setName("FloorMaterial");
 	floorMaterial->setEmission(math::constants::Zero);
@@ -50,8 +64,21 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	floorMaterial->getSpecularBSDF()->setPower((math::real)32.0);
 	floorMaterial->getSpecularBSDF()->setMediaInterface(&glassFresnel);
 	floorMaterial->setSurfaceTransmission((math::real)0.5);
-	//floorMaterial->setGloss((math::real)0.95);
+	//floorMaterial->setGloss((math::real)0.95);*/
 
+	// Floor material
+	PhongDistribution floorCoating;
+	floorCoating.setPower((math::real)64.0);
+	BilayerBSDF floorBSDF;
+	floorBSDF.setDiffuse(getColor(0xFF, 0xFF, 0xFF));
+	floorBSDF.setSpecularAtNormal(math::loadVector(1.0, 1.0, 1.0));
+	floorBSDF.setCoatingDistribution(&wallCoating);
+	floorBSDF.setDiffuseMaterial(&lambert);
+	SimpleBSDFMaterial *floorMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	floorMaterial->setName("FloorMaterial");
+	floorMaterial->setBSDF(&floorBSDF);
+
+	/*
 	PhongPhongBilayerMaterial *carpetMaterial = rayTracer.getMaterialManager()->newMaterial<PhongPhongBilayerMaterial>();
 	carpetMaterial->setName("CarpetMaterial");
 	carpetMaterial->setEmission(math::constants::Zero);
@@ -61,8 +88,21 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	carpetMaterial->getSpecularBSDF()->setPower((math::real)4.0);
 	carpetMaterial->getSpecularBSDF()->setMediaInterface(&glassFresnel);
 	carpetMaterial->setSurfaceTransmission((math::real)0.3);
-	//carpetMaterial->setGloss((math::real)0.95);
+	//carpetMaterial->setGloss((math::real)0.95);*/
 
+	// Floor material
+	PhongDistribution carpetCoating;
+	carpetCoating.setPower((math::real)4.0);
+	BilayerBSDF carpetBSDF;
+	carpetBSDF.setDiffuse(getColor(0xdc, 0xb4, 0x84));
+	carpetBSDF.setSpecularAtNormal(math::loadVector(0.0, 0.0, 0.0));
+	carpetBSDF.setCoatingDistribution(&wallCoating);
+	carpetBSDF.setDiffuseMaterial(&lambert);
+	SimpleBSDFMaterial *carpetMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	carpetMaterial->setName("CarpetMaterial");
+	carpetMaterial->setBSDF(&carpetBSDF);
+
+	/*
 	PhongPhongBilayerMaterial *tableSteel = rayTracer.getMaterialManager()->newMaterial<PhongPhongBilayerMaterial>();
 	tableSteel->setName("TableSteel");
 	tableSteel->setEmission(math::constants::Zero);
@@ -72,8 +112,21 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	tableSteel->getSpecularBSDF()->setPower((math::real)1024.0);
 	tableSteel->getSpecularBSDF()->setMediaInterface(&glassFresnel);
 	tableSteel->setSurfaceTransmission(0.95);
-	//tableSteel->setGloss((math::real)0.95);
+	//tableSteel->setGloss((math::real)0.95);*/
 
+	// Steel material
+	PhongDistribution tableSteelCoating;
+	tableSteelCoating.setPower((math::real)1024.0);
+	BilayerBSDF tableSteelBSDF;
+	tableSteelBSDF.setDiffuse(getColor(0x00, 0x00, 0x00));
+	tableSteelBSDF.setSpecularAtNormal(math::loadVector(1.0, 1.0, 1.0));
+	tableSteelBSDF.setCoatingDistribution(&tableSteelCoating);
+	tableSteelBSDF.setDiffuseMaterial(&lambert);
+	SimpleBSDFMaterial *tableSteel = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	tableSteel->setName("TableSteel");
+	tableSteel->setBSDF(&tableSteelBSDF);
+
+	/*
 	PhongPhongBilayerMaterial *tableTop = rayTracer.getMaterialManager()->newMaterial<PhongPhongBilayerMaterial>();
 	tableTop->setName("TableTop");
 	tableTop->setEmission(math::constants::Zero);
@@ -83,8 +136,21 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	tableTop->getSpecularBSDF()->setPower((math::real)512.0);
 	tableTop->getSpecularBSDF()->setMediaInterface(&glassFresnel);
 	tableTop->setSurfaceTransmission((math::real)0.30);
-	//tableTop->setGloss((math::real)0.95);
+	//tableTop->setGloss((math::real)0.95);*/
 
+	// Table top material
+	PhongDistribution tableTopCoating;
+	tableTopCoating.setPower((math::real)512.0);
+	BilayerBSDF tableTopBSDF;
+	tableTopBSDF.setDiffuse(getColor(0x30, 0x26, 0x21));
+	tableTopBSDF.setSpecularAtNormal(math::loadVector(0.2, 0.2, 0.2));
+	tableTopBSDF.setCoatingDistribution(&tableTopCoating);
+	tableTopBSDF.setDiffuseMaterial(&lambert);
+	SimpleBSDFMaterial *tableTop = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	tableTop->setName("TableTop");
+	tableTop->setBSDF(&tableTopBSDF);
+
+	/*
 	PhongPhongBilayerMaterial *book = rayTracer.getMaterialManager()->newMaterial<PhongPhongBilayerMaterial>();
 	book->setName("Book");
 	book->setEmission(math::constants::Zero);
@@ -93,27 +159,26 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	tableTop->getDiffuseBSDF()->setPower((math::real)8.0);
 	tableTop->getSpecularBSDF()->setPower((math::real)512.0);
 	tableTop->getSpecularBSDF()->setMediaInterface(&glassFresnel);
-	book->setSurfaceTransmission((math::real)0.4);
+	book->setSurfaceTransmission((math::real)0.4);*/
 
-	SimpleLambertMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleLambertMaterial>();
-	groundMaterial->setEmission(math::constants::Zero);
-	groundMaterial->setDiffuseColor(getColor(255, 255, 255));
-	//groundMaterial->setSpecularColor(math::constants::Zero);
-
-	SimpleLambertMaterial outdoorTopLightMaterial;
-	outdoorTopLightMaterial.setEmission(math::loadVector(5, 5, 5));
-	outdoorTopLightMaterial.setDiffuseColor(math::constants::Zero);
-	//outdoorTopLightMaterial.setSpecularColor(math::constants::Zero);
-	*/
+	// Book material
+	PhongDistribution bookCoating;
+	bookCoating.setPower((math::real)4.0);
+	BilayerBSDF bookBSDF;
+	bookBSDF.setDiffuse(getColor(0xFF, 0xFF, 0xFF));
+	bookBSDF.setSpecularAtNormal(math::loadVector(0.0, 0.0, 0.0));
+	bookBSDF.setCoatingDistribution(&tableTopCoating);
+	bookBSDF.setDiffuseMaterial(&lambert);
+	SimpleBSDFMaterial *book = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	book->setName("Book");
+	book->setBSDF(&bookBSDF);
 
 	// Create all scene geometry
-	Mesh stressSpiders;
-	stressSpiders.loadObjFileData(&stressSpidersObj, rayTracer.getMaterialManager(), test->getIndex());
-	stressSpiders.setFastIntersectEnabled(false);
-	//stressSpiders.setFastIntersectRadius((math::real)2.123);
-	//stressSpiders.setFastIntersectPosition(math::loadVector(-0.06430, 1.86833, -2.96564));
+	Mesh roomGeometry;
+	roomGeometry.loadObjFileData(&stressSpidersObj, rayTracer.getMaterialManager(), test->getIndex());
+	roomGeometry.setFastIntersectEnabled(false);
 
-	std::cout << "Scene vertices/faces: " << stressSpiders.getVertexCount() << "/" << stressSpiders.getFaceCount() << std::endl;
+	std::cout << "Scene vertices/faces: " << roomGeometry.getVertexCount() << "/" << roomGeometry.getFaceCount() << std::endl;
 
 	Mesh roomShutters;
 	roomShutters.loadObjFileData(&roomShuttersObj, rayTracer.getMaterialManager(), test->getIndex());
@@ -147,7 +212,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 
 	KDTree kdtree;
 	kdtree.initialize(100.0, math::constants::Zero);
-	kdtree.analyze(&stressSpiders, 4);
+	kdtree.analyze(&roomGeometry, 4);
 
 	//std::cout << "Octree faces: " << stressSpidersOctree.countFaces() << std::endl;
 	//std::cout << "Leaf count: " << stressSpidersOctree.countLeaves() << std::endl;
@@ -169,7 +234,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 		stressSpidersObject->setGeometry(&kdtree);
 	}
 	else {
-		stressSpidersObject->setGeometry(&stressSpiders);
+		stressSpidersObject->setGeometry(&roomGeometry);
 	}
 	stressSpidersObject->setDefaultMaterial(test);
 	stressSpidersObject->setName("StressSpiders");
@@ -287,7 +352,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	rayTracer.destroy();
 
 	//stressSpidersOctree.destroy();
-	stressSpiders.destroy();
+	roomGeometry.destroy();
 	kdtree.destroy();
 
 	std::cout << "Standard allocator memory leaks:     " << StandardAllocator::Global()->getLedger() << ", " << StandardAllocator::Global()->getCurrentUsage() << std::endl;

@@ -38,19 +38,19 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	paintBsdf.setDiffuseMaterial(&lambert);
 	paintBsdf.setCoatingDistribution(&phongDist);
 	paintBsdf.setDiffuse(getColor(0xFC, 0xC2, 0x01));
-	paintBsdf.setSpecular(math::loadVector(0.0, 0.0, 0.0));
+	paintBsdf.setSpecularAtNormal(math::loadVector(0.0, 0.0, 0.0));
 
 	BilayerBSDF chromeBSDF;
 	chromeBSDF.setDiffuseMaterial(&lambert);
 	chromeBSDF.setCoatingDistribution(&phongDist);
 	chromeBSDF.setDiffuse(getColor(0, 0, 0));
-	chromeBSDF.setSpecular(math::loadVector(0.95, 0.95, 0.95));
+	chromeBSDF.setSpecularAtNormal(math::loadVector(0.95, 0.95, 0.95));
 
 	BilayerBSDF floorBSDF;
 	floorBSDF.setDiffuseMaterial(&lambert);
 	floorBSDF.setCoatingDistribution(&phongDist2);
 	floorBSDF.setDiffuse(getColor(0x0, 0x0, 0x0));
-	floorBSDF.setSpecular(math::loadVector(0.5, 0.5, 0.5));
+	floorBSDF.setSpecularAtNormal(math::loadVector(0.5, 0.5, 0.5));
 
 	/*
 	SimpleLambertMaterial *test = rayTracer.getMaterialManager()->newMaterial<SimpleLambertMaterial>();
@@ -72,22 +72,22 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	test3->setName("Backdrop");
 	*/
 
-	SimpleLambertMaterial *paintMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleLambertMaterial>();
+	SimpleBSDFMaterial *paintMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	paintMaterial->setBSDF(&paintBsdf);
 	paintMaterial->setEmission(math::constants::Zero);
-	paintMaterial->setDiffuseColor(getColor(0xff, 0xff, 0xff));
+	paintMaterial->setReflectance(getColor(0xff, 0xff, 0xff));
 	paintMaterial->setName("PenBody");
 
-	SimpleLambertMaterial *chromeMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleLambertMaterial>();
+	SimpleBSDFMaterial *chromeMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	chromeMaterial->setBSDF(&chromeBSDF);
 	chromeMaterial->setEmission(math::constants::Zero);
-	chromeMaterial->setDiffuseColor(getColor(0xff, 0xff, 0xff));
+	chromeMaterial->setReflectance(getColor(0xff, 0xff, 0xff));
 	chromeMaterial->setName("Chrome");
 
-	SimpleLambertMaterial *floorMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleLambertMaterial>();
+	SimpleBSDFMaterial *floorMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	floorMaterial->setBSDF(&floorBSDF);
 	floorMaterial->setEmission(math::constants::Zero);
-	floorMaterial->setDiffuseColor(getColor(0xff, 0xff, 0xff));
+	floorMaterial->setReflectance(getColor(0xff, 0xff, 0xff));
 	floorMaterial->setName("Backdrop");
 
 	/*
@@ -149,9 +149,9 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 
 	*/
 
-	SimpleLambertMaterial outdoorTopLightMaterial;
+	SimpleBSDFMaterial outdoorTopLightMaterial;
 	outdoorTopLightMaterial.setEmission(math::loadVector(2, 2, 2));
-	outdoorTopLightMaterial.setDiffuseColor(math::constants::Zero);
+	outdoorTopLightMaterial.setReflectance(math::constants::Zero);
 	//outdoorTopLightMaterial.setSpecularColor(math::constants::Zero);
 
 	// Create all scene geometry

@@ -10,6 +10,8 @@
 #include <assert.h>
 
 manta::BilayerBSDF::BilayerBSDF() {
+	m_diffuseNode = nullptr;
+
 	m_diffuse = math::constants::Zero;
 	m_specular = math::constants::Zero;
 }
