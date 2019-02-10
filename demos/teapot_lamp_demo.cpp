@@ -5,17 +5,33 @@
 using namespace manta;
 
 void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolutionY) {
+	// Top-level parameters
+	constexpr bool BLOCK_ALL_LIGHT = false;
+	constexpr bool USE_ACCELERATION_STRUCTURE = true;
+	constexpr bool DETERMINISTIC_SEED_MODE = false;
+	constexpr bool TRACE_SINGLE_PIXEL = false;
+
 	Scene scene;
 
 	// Load all object files
 	ObjFileLoader lampObj;
-	bool result = lampObj.readObjFile(MODEL_PATH "lamp2.obj");
+	bool lampObjResult = lampObj.readObjFile(MODEL_PATH "lamp2.obj");
 
 	ObjFileLoader teapotObj;
-	result = teapotObj.readObjFile(MODEL_PATH "lamp_teapot.obj");
+	bool teapotObjResult = teapotObj.readObjFile(MODEL_PATH "lamp_teapot.obj");
 
 	ObjFileLoader lampBlockObj;
-	result = lampBlockObj.readObjFile(MODEL_PATH "lampblock.obj");
+	bool lampBlockObjResult = lampBlockObj.readObjFile(MODEL_PATH "lampblock.obj");
+
+	if (!lampObjResult || !teapotObjResult || !lampBlockObjResult) {
+		std::cout << "Could not open geometry file" << std::endl;
+
+		lampObj.destroy();
+		teapotObj.destroy();
+		lampBlockObj.destroy();
+
+		return;
+	}
 
 	RayTracer rayTracer;
 
@@ -50,21 +66,12 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	SimpleBSDFMaterial *teapotMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	teapotMaterial->setBSDF(&teapotBSDF);
 
-	//SimpleSpecularDiffuseMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleSpecularDiffuseMaterial>();
-	//groundMaterial->setEmission(math::constants::Zero);
-	//groundMaterial->setDiffuseColor(math::constants::Zero);
-	//groundMaterial->setSpecularColor(getColor(100, 100, 100));
-
 	// Create all scene geometry
 	Mesh lamp;
 	lamp.loadObjFileData(&lampObj, rayTracer.getMaterialManager(), floorMaterial->getIndex());
 	lamp.setFastIntersectEnabled(true);
 	lamp.setFastIntersectRadius((math::real)2.123);
 	lamp.setFastIntersectPosition(math::loadVector(-0.06430, 1.86833, -2.96564));
-
-	//Octree lampOctree;
-	//lampOctree.initialize(2.5, math::loadVector(-0.06430, 1.86833, -2.96564));
-	//lampOctree.analyze(&lamp, 4);
 
 	Mesh lampBlock;
 	lampBlock.loadObjFileData(&lampBlockObj);
@@ -78,12 +85,6 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	teapot.setFastIntersectPosition(math::loadVector(-0.5724, 1.02483, -0.04969));
 
 	teapot.merge(&lamp);
-	//teapot.merge(&lampBlock);
-
-	Octree teapotOctree;
-	teapotOctree.initialize(4, math::constants::Zero);
-	teapotOctree.analyze(&teapot, 25);
-	//teapotOctree.writeToObjFile("../../workspace/test_results/teapot_lamp_octree.obj", nullptr);
 
 	KDTree kdtree;
 	kdtree.initialize(4.0, math::constants::Zero);
@@ -93,39 +94,19 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	bulb.setRadius(0.25);
 	bulb.setPosition(math::loadVector(0.10669, 3.42135, -2.47464));
 
-	SpherePrimitive outdoorLightGeometry;
-	outdoorLightGeometry.setRadius((math::real)10.0);
-	outdoorLightGeometry.setPosition(math::loadVector(10.5, 0.0, -20.5));
-
-	SpherePrimitive outdoorTopLightGeometry;
-	outdoorTopLightGeometry.setRadius((math::real)10.0);
-	outdoorTopLightGeometry.setPosition(math::loadVector(0.0, 25.0, 2));
-
 	SpherePrimitive groundGeometry;
 	groundGeometry.setRadius((math::real)5000.0);
 	groundGeometry.setPosition(math::loadVector(0.0, -5000.001, 0));
 
-	constexpr bool useOctree = true;
-
 	// Create scene objects
-	//SceneObject *lampObject = scene.createSceneObject();
-	//if (useOctree) lampObject->setGeometry(&lampOctree);
-	//else lampObject->setGeometry(&lamp);
-	//lampObject->setDefaultMaterial(wallMaterial);
-	//lampObject->setName("Lamp");
-
 	SceneObject *bulbObject = scene.createSceneObject();
 	bulbObject->setGeometry(&bulb);
 	bulbObject->setDefaultMaterial(lampLightMaterial);
 	bulbObject->setName("Bulb");
 
 	SceneObject *teapotObject = scene.createSceneObject();
-	if (useOctree) {
-		teapotObject->setGeometry(&kdtree);
-	}
-	else {
-		teapotObject->setGeometry(&teapot);
-	}
+	if (USE_ACCELERATION_STRUCTURE) teapotObject->setGeometry(&kdtree);
+	else teapotObject->setGeometry(&teapot);
 	teapotObject->setDefaultMaterial(teapotMaterial);
 	teapotObject->setName("Teapot");
 
@@ -134,19 +115,16 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	ground->setDefaultMaterial(floorMaterial);
 	ground->setName("Ground");
 
-	//SceneObject *lampBlockObject = scene.createSceneObject();
-	//lampBlockObject->setGeometry(&lampBlock);
-	//lampBlockObject->setMaterial(&wallMaterial);
-	//lampBlockObject->setName("LampBlock");
-
-	GridSampler gridSampler;
-	gridSampler.setGridWidth(3);
-
-	RandomSampler randomSampler;
+	if (BLOCK_ALL_LIGHT) {
+		SceneObject *lampBlockObject = scene.createSceneObject();
+		lampBlockObject->setGeometry(&lampBlock);
+		lampBlockObject->setDefaultMaterial(floorMaterial);
+		lampBlockObject->setName("LampBlock");
+	}
 
 	// Create the camera
+	RandomSampler randomSampler;
 	StandardCameraRayEmitterGroup camera;
-	//camera.setSamplingWidth(3);
 	camera.setDirection(math::loadVector(-1.0, 0.0, 0.0));
 	camera.setPosition(math::loadVector(7.0, 2.0, 0.0));
 	camera.setUp(math::loadVector(0.0f, 1.0, 0.0));
@@ -156,30 +134,19 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	camera.setResolutionY(resolutionY);
 	camera.setSampleCount(samplesPerPixel);
 	camera.setSampler(&randomSampler);
-	//camera.setSamplesPerPixel(samplesPerPixel);
 
 	// Create the raytracer
 	rayTracer.initialize(1000 * MB, 100 * MB, 12, 10000, true);
-	rayTracer.setBackgroundColor(getColor(255, 255, 255));
-	//rayTracer.setBackgroundColor(getColor(50, 50, 50));
 	rayTracer.setBackgroundColor(getColor(0, 0, 0));
-	//rayTracer.setDeterministicSeedMode(true);
+	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");
-	//rayTracer.tracePixel(1140, 904, &scene, &camera);
-	//rayTracer.tracePixel(702, 236, &scene, &camera);
-	//rayTracer.tracePixel(809, 211, &scene, &camera);
-	//rayTracer.tracePixel(793, 224, &scene, &camera);
-	//rayTracer.tracePixel(656, 185, &scene, &camera);
-	//rayTracer.tracePixel(769, 318, &scene, &camera);
-	//rayTracer.tracePixel(742, 218, &scene, &camera);
-	//rayTracer.tracePixel(736, 331, &scene, &camera);
 
-	// Leaks
-	//rayTracer.tracePixel(1281, 900, &scene, &camera);
-	//rayTracer.tracePixel(1456, 1230, &scene, &camera);
-	//rayTracer.tracePixel(1160, 1017, &scene, &camera);
-
-	rayTracer.traceAll(&scene, &camera);
+	if (TRACE_SINGLE_PIXEL) {
+		rayTracer.tracePixel(1140, 904, &scene, &camera);
+	}
+	else {
+		rayTracer.traceAll(&scene, &camera);
+	}
 
 	// Output the results to a scene buffer
 	SceneBuffer sceneBuffer;
@@ -195,7 +162,6 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 
 	RawFile rawFile;
 	rawFile.writeRawFile(rawFname.c_str(), &sceneBuffer);
-	//editImage(&sceneBuffer, imageFname);
 
 	sceneBuffer.applyGammaCurve((math::real)(1.0 / 2.2));
 	manta::SaveImageData(sceneBuffer.getBuffer(), sceneBuffer.getWidth(), sceneBuffer.getHeight(), imageFname.c_str());
@@ -209,7 +175,6 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	lampObj.destroy();
 	teapot.destroy();
 	teapotObj.destroy();
-	teapotOctree.destroy();
 	kdtree.destroy();
 
 	std::cout << "Standard allocator memory leaks:     " << StandardAllocator::Global()->getLedger() << ", " << StandardAllocator::Global()->getCurrentUsage() << std::endl;

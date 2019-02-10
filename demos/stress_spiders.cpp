@@ -5,27 +5,28 @@
 using namespace manta;
 
 void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int resolutionY) {
+	// Top-level parameters
+	constexpr bool LENS_SIMULATION = true;
+	constexpr bool USE_ACCELERATION_STRUCTURE = true;
+	constexpr bool DETERMINISTIC_SEED_MODE = false;
+	constexpr bool TRACE_SINGLE_PIXEL = false;
+
 	Scene scene;
+	RayTracer rayTracer;
 
 	// Load all object files
 	ObjFileLoader stressSpidersObj;
 	bool result = stressSpidersObj.readObjFile(MODEL_PATH "stress_spiders.obj");
 
-	RayTracer rayTracer;
+	if (!result) {
+		std::cout << "Could not open geometry file" << std::endl;
+
+		stressSpidersObj.destroy();
+
+		return;
+	}
 
 	// Create all materials
-	/*
-	PhongPhongBilayerMaterial *spiderMaterial = rayTracer.getMaterialManager()->newMaterial<PhongPhongBilayerMaterial>();
-	spiderMaterial->setEmission(math::mul(getColor(0xFF, 0x08, 0x14), math::loadScalar(0.0)));
-	spiderMaterial->setDiffuseColor(getColor(0xf1, 0xc4, 0x0f));
-	spiderMaterial->setDiffuseColor(getColor(0x1B, 0x23, 0x2E));
-	spiderMaterial->setSpecularColor(getColor(70, 70, 70));
-	spiderMaterial->setSpecularColor(getColor(0xFF, 0xFF, 0xFF));
-	spiderMaterial->setSurfaceTransmission((math::real)0.5);
-	spiderMaterial->getSpecularBSDF()->setPower((math::real)512);
-	//spiderMaterial->setGloss((math::real)0.5);
-	*/
-
 	LambertianBSDF lambert;
 
 	PhongDistribution spiderCoating;
@@ -50,29 +51,15 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 	groundMaterial->setName("Ground");
 	groundMaterial->setBSDF(&groundBSDF);
 
-	/*
-	PhongPhongBilayerMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<PhongPhongBilayerMaterial>();
-	groundMaterial->setEmission(math::constants::Zero);
-	groundMaterial->setDiffuseColor(getColor(255, 255, 255));
-	groundMaterial->setSpecularColor(math::constants::Zero);
-	groundMaterial->setSurfaceTransmission((math::real)0.0);*/
-
 	SimpleBSDFMaterial outdoorTopLightMaterial;
 	outdoorTopLightMaterial.setEmission(math::loadVector(5, 5, 5));
 	outdoorTopLightMaterial.setReflectance(math::constants::Zero);
-	//outdoorTopLightMaterial.setSpecularColor(math::constants::Zero);
 
 	// Create all scene geometry
 	Mesh stressSpiders;
 	stressSpiders.loadObjFileData(&stressSpidersObj, rayTracer.getMaterialManager(), spiderMaterial->getIndex());
 	stressSpiders.setFastIntersectEnabled(false);
-
 	stressSpidersObj.destroy();
-
-	Octree stressSpidersOctree;
-	stressSpidersOctree.initialize(32, math::constants::Zero);
-	//stressSpidersOctree.analyze(&stressSpiders, 25);
-	//stressSpidersOctree.writeToObjFile("../../workspace/test_results/stress_spiders_octree.obj", nullptr);
 
 	KDTree kdtree;
 	kdtree.initialize(100.0, math::constants::Zero);
@@ -80,14 +67,11 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 
 	SpherePrimitive outdoorTopLightGeometry;
 	outdoorTopLightGeometry.setRadius((math::real)10.0);
-	//outdoorTopLightGeometry.setRadius((math::real)20.0);
 	outdoorTopLightGeometry.setPosition(math::loadVector(19.45842, 12.42560, -13.78918));
-
-	constexpr bool useOctree = true;
 
 	// Create scene objects
 	SceneObject *stressSpidersObject = scene.createSceneObject();
-	if (useOctree) {
+	if (USE_ACCELERATION_STRUCTURE) {
 		stressSpidersObject->setGeometry(&kdtree);
 	}
 	else {
@@ -163,22 +147,14 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 	// Create the raytracer
 	rayTracer.initialize(1000 * MB, 100 * MB, 12, 10000, true);
 	rayTracer.setBackgroundColor(getColor(255, 255, 255));
-	//rayTracer.setDeterministicSeedMode(true);
-	//rayTracer.tracePixel(819, 199, &scene, &camera);
-	//rayTracer.tracePixel(702, 236, &scene, &camera);
-	//rayTracer.tracePixel(809, 211, &scene, &camera);
-	//rayTracer.tracePixel(793, 224, &scene, &camera);
-	//rayTracer.tracePixel(656, 185, &scene, &camera);
-	//rayTracer.tracePixel(769, 318, &scene, &camera);
-	//rayTracer.tracePixel(742, 218, &scene, &camera);
-	//rayTracer.tracePixel(736, 331, &scene, &camera);
+	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 
-	// Leaks
-	//rayTracer.tracePixel(1281, 900, &scene, &camera);
-	//rayTracer.tracePixel(1456, 1230, &scene, &camera);
-	//rayTracer.tracePixel(616, 1459, &scene, &camera);
-
-	rayTracer.traceAll(&scene, group);
+	if (TRACE_SINGLE_PIXEL) {
+		rayTracer.tracePixel(819, 199, &scene, group);
+	}
+	else {
+		rayTracer.traceAll(&scene, group);
+	}
 
 	// Output the results to a scene buffer
 	SceneBuffer sceneBuffer;
@@ -194,7 +170,6 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 
 	RawFile rawFile;
 	rawFile.writeRawFile(rawFname.c_str(), &sceneBuffer);
-	//editImage(&sceneBuffer, imageFname);
 
 	sceneBuffer.applyGammaCurve((math::real)(1.0 / 2.2));
 	manta::SaveImageData(sceneBuffer.getBuffer(), sceneBuffer.getWidth(), sceneBuffer.getHeight(), imageFname.c_str());
@@ -202,7 +177,6 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 	sceneBuffer.destroy();
 	rayTracer.destroy();
 
-	//stressSpidersOctree.destroy();
 	stressSpiders.destroy();
 	kdtree.destroy();
 
