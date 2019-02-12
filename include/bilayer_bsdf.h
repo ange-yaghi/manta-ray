@@ -32,11 +32,15 @@ namespace manta {
 		void setDiffuseNode(VectorMaterialNode *diffuseNode) { m_diffuseNode = diffuseNode; }
 		VectorMaterialNode *getDiffuseNode() const { return m_diffuseNode; }
 
+		void setSpecularNode(VectorMaterialNode *specularNode) { m_specularNode = specularNode; }
+		VectorMaterialNode *getSpecularNode() const { return m_specularNode; }
+
 	protected:
 		MicrofacetDistribution *m_coatingDistribution;
 		LambertianBSDF *m_diffuseMaterial;
 
 		VectorMaterialNode *m_diffuseNode;
+		VectorMaterialNode *m_specularNode;
 
 		math::Vector m_specular;
 		math::Vector m_diffuse;

@@ -6,6 +6,7 @@
 
 manta::PhongDistribution::PhongDistribution() {
 	m_power = (math::real)1.0;
+	m_minMapPower = (math::real)1.0;
 	m_powerNode = nullptr;
 }
 
@@ -21,9 +22,7 @@ void manta::PhongDistribution::initialize(const IntersectionPoint *surfaceIntera
 	if (m_powerNode != nullptr) {
 		// Sample the power input and save it in the state container
 		math::real power = math::getScalar(m_powerNode->sample(surfaceInteraction));
-		phongMemory->power = power * m_power;
-
-		if (phongMemory->power < (math::real)2.0) phongMemory->power = (math::real)2.0;
+		phongMemory->power = power * (m_power - m_minMapPower) + m_minMapPower;
 	}
 	else {
 		phongMemory->power = m_power;

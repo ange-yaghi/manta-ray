@@ -29,9 +29,13 @@ namespace manta {
 		void setPowerNode(VectorMaterialNode *node) { m_powerNode = node; }
 		VectorMaterialNode *getPowerNode() const { return m_powerNode; }
 
+		void setMinMapPower(math::real power) { m_minMapPower = power; }
+		math::real getMinMapPower() const { return m_minMapPower; }
+
 	protected:
 		VectorMaterialNode *m_powerNode;
 		math::real m_power;
+		math::real m_minMapPower;
 	};
 
 } /* namespace manta */

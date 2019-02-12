@@ -6,7 +6,7 @@ using namespace manta;
 
 void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) {
 	// Top-level parameters
-	constexpr bool LENS_SIMULATION = false;
+	constexpr bool LENS_SIMULATION = true;
 	constexpr bool USE_ACCELERATION_STRUCTURE = true;
 	constexpr bool DETERMINISTIC_SEED_MODE = false;
 	constexpr bool TRACE_SINGLE_PIXEL = false;
@@ -14,73 +14,82 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	RayTracer rayTracer;
 	Scene scene;
 
+	// Load all textures
+	TextureNode texture;
+	texture.loadFile(TEXTURE_PATH "/dark_wood.jpg", 2.2);
+
+	TextureNode woodRoughness;
+	woodRoughness.loadFile(TEXTURE_PATH "/wood_roughness.jpg", 1.0);
+
+	TextureNode chromeRoughness;
+	chromeRoughness.loadFile(TEXTURE_PATH "/chrome_roughness.jpg", 1.0);
+
+	TextureNode floorWood;
+	floorWood.loadFile(TEXTURE_PATH "/light_wood.jpg", 2.2);
+
 	// Load all object files
 	ObjFileLoader penObj;
 	bool result = penObj.readObjFile(MODEL_PATH "pen.obj");
 
 	if (!result) {
 		std::cout << "Could not open geometry file(s)" << std::endl;
-
 		penObj.destroy();
-
 		return;
 	}
 	
 	// Create all materials
-	PhongDistribution phongDist;
-	phongDist.setPower(1000);
-
-	PhongDistribution phongDist2;
-	phongDist2.setPower(128);
-
-	MicrofacetReflectionBSDF bsdf2;
-	bsdf2.setDistribution(&phongDist);
-
 	LambertianBSDF lambert;
 
-	DielectricMediaInterface fresnel;
-	fresnel.setIorIncident((math::real)1.0);
-	fresnel.setIorTransmitted((math::real)1.5);
+	PhongDistribution chromeCoating;
+	chromeCoating.setPower(10000);
+	chromeCoating.setPowerNode(&chromeRoughness);
+	chromeCoating.setMinMapPower((math::real)400.0);
+
+	PhongDistribution woodCoating;
+	woodCoating.setPower(1000);
+	woodCoating.setPowerNode(&woodRoughness);
+	woodCoating.setMinMapPower(2);
+
+	PhongDistribution floorDistribution;
+	floorDistribution.setPower(128);
 
 	BilayerBSDF paintBsdf;
 	paintBsdf.setDiffuseMaterial(&lambert);
-	paintBsdf.setCoatingDistribution(&phongDist);
-	paintBsdf.setDiffuse(getColor(0xFC, 0xC2, 0x01));
+	paintBsdf.setCoatingDistribution(&woodCoating);
+	paintBsdf.setDiffuseNode(&texture);
 	paintBsdf.setSpecularAtNormal(math::loadVector(0.0, 0.0, 0.0));
 
 	BilayerBSDF chromeBSDF;
 	chromeBSDF.setDiffuseMaterial(&lambert);
-	chromeBSDF.setCoatingDistribution(&phongDist);
+	chromeBSDF.setCoatingDistribution(&chromeCoating);
 	chromeBSDF.setDiffuse(getColor(0, 0, 0));
 	chromeBSDF.setSpecularAtNormal(math::loadVector(0.95, 0.95, 0.95));
 
-	BilayerBSDF floorBSDF;
-	floorBSDF.setDiffuseMaterial(&lambert);
-	floorBSDF.setCoatingDistribution(&phongDist2);
-	floorBSDF.setDiffuse(getColor(0x0, 0x0, 0x0));
-	floorBSDF.setSpecularAtNormal(math::loadVector(0.5, 0.5, 0.5));
+	MicrofacetReflectionBSDF floorBSDF;
+	floorBSDF.setDistribution(&floorDistribution);
 
 	SimpleBSDFMaterial *paintMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	paintMaterial->setBSDF(&paintBsdf);
-	paintMaterial->setEmission(math::constants::Zero);
-	paintMaterial->setReflectance(getColor(0xff, 0xff, 0xff));
 	paintMaterial->setName("PenBody");
 
 	SimpleBSDFMaterial *chromeMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	chromeMaterial->setBSDF(&chromeBSDF);
-	chromeMaterial->setEmission(math::constants::Zero);
-	chromeMaterial->setReflectance(getColor(0xff, 0xff, 0xff));
 	chromeMaterial->setName("Chrome");
 
 	SimpleBSDFMaterial *floorMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	floorMaterial->setBSDF(&floorBSDF);
-	floorMaterial->setEmission(math::constants::Zero);
-	floorMaterial->setReflectance(getColor(0xff, 0xff, 0xff));
+	floorMaterial->setReflectanceNode(&floorWood);
 	floorMaterial->setName("Backdrop");
 
-	SimpleBSDFMaterial outdoorTopLightMaterial;
-	outdoorTopLightMaterial.setEmission(math::loadVector(2, 2, 2));
-	outdoorTopLightMaterial.setReflectance(math::constants::Zero);
+	SimpleBSDFMaterial *strongLight = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	strongLight->setEmission(math::loadVector(2.0, 2.0, 2.0));
+	strongLight->setReflectance(math::constants::Zero);
+	strongLight->setName("StrongLight");
+
+	SimpleBSDFMaterial *weakLight = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	weakLight->setEmission(math::loadVector(1.0, 1.0, 1.0));
+	weakLight->setReflectance(math::constants::Zero);
+	weakLight->setName("WeakLight");
 
 	// Create all scene geometry
 	Mesh pen;
@@ -93,20 +102,6 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	kdtree.initialize(150, math::constants::Zero);
 	kdtree.analyze(&pen, 4);
 
-	math::real lightRadius = 10.0;
-
-	SpherePrimitive light1Geometry;
-	light1Geometry.setRadius(lightRadius);
-	light1Geometry.setPosition(math::loadVector(19.45842, 12.42560, -13.78918));
-
-	SpherePrimitive light2Geometry;
-	light2Geometry.setRadius(lightRadius);
-	light2Geometry.setPosition(math::loadVector(-20.255, 16.42560, -16.4256));
-
-	SpherePrimitive light3Geometry;
-	light3Geometry.setRadius(lightRadius);
-	light3Geometry.setPosition(math::loadVector(3.28578, 12.42560, 17.577));
-
 	// Create scene objects
 	SceneObject *penObject = scene.createSceneObject();
 	if (USE_ACCELERATION_STRUCTURE) {
@@ -118,21 +113,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	penObject->setDefaultMaterial(chromeMaterial);
 	penObject->setName("Pen");
 
-	SceneObject *light1Object = scene.createSceneObject();
-	light1Object->setGeometry(&light1Geometry);
-	light1Object->setDefaultMaterial(&outdoorTopLightMaterial);
-	light1Object->setName("Light1");
-
-	SceneObject *light2Object = scene.createSceneObject();
-	light2Object->setGeometry(&light2Geometry);
-	light2Object->setDefaultMaterial(&outdoorTopLightMaterial);
-	light2Object->setName("Light2");
-
-	SceneObject *light3Object = scene.createSceneObject();
-	light3Object->setGeometry(&light3Geometry);
-	light3Object->setDefaultMaterial(&outdoorTopLightMaterial);
-	light3Object->setName("Light3");
-
+	// Create the camera
 	math::Vector cameraPos = math::loadVector(9.436, 1.2, 4.5370);
 	math::Vector target = math::loadVector(1.3, 0.35547, 0.0);
 
@@ -141,9 +122,8 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	up = math::cross(math::cross(dir, up), dir);
 	up = math::normalize(up);
 
-	cameraPos = math::sub(cameraPos, math::mul(dir, math::loadScalar(3.9))); // 3.9
+	cameraPos = math::sub(cameraPos, math::mul(dir, math::loadScalar(3.9)));
 
-	// Create the camera
 	CameraRayEmitterGroup *group;
 	manta::SimpleLens lens;
 	lens.initialize();
@@ -153,8 +133,8 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	lens.setRadius(1.0);
 	lens.setSensorResolutionX(resolutionX);
 	lens.setSensorResolutionY(resolutionY);
-	lens.setSensorHeight(25.0);
-	lens.setSensorWidth(25.0 * (resolutionX / (math::real)resolutionY));
+	lens.setSensorHeight(22.0);
+	lens.setSensorWidth(22.0 * (resolutionX / (math::real)resolutionY));
 	lens.update();
 
 	RandomSampler sampler;
@@ -178,7 +158,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 		math::real focusDistance = 11.0;
 
 		Aperture *aperture = lens.getAperture();
-		aperture->setRadius((math::real)0.015);
+		aperture->setRadius((math::real)0.007);
 		lens.setFocus(focusDistance);
 
 		LensCameraRayEmitterGroup *camera = new LensCameraRayEmitterGroup;
