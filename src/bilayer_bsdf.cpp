@@ -11,8 +11,9 @@
 
 manta::BilayerBSDF::BilayerBSDF() {
 	m_diffuseNode = nullptr;
+	m_specularNode = nullptr;
 
-	m_diffuse = math::constants::Zero;
+	m_diffuse = math::constants::One;
 	m_specular = math::constants::Zero;
 }
 
@@ -25,7 +26,11 @@ manta::math::Vector manta::BilayerBSDF::sampleF(const IntersectionPoint *surface
 	math::Vector specularR = m_specular;
 
 	if (m_diffuseNode != nullptr) {
-		diffuseR = m_diffuseNode->sample(surfaceInteraction);
+		diffuseR = math::mul(m_diffuseNode->sample(surfaceInteraction), diffuseR);
+	}
+
+	if (m_specularNode != nullptr) {
+		specularR = math::mul(m_specularNode->sample(surfaceInteraction), specularR);
 	}
 	
 	math::real u = math::uniformRandom();
