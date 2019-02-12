@@ -4,6 +4,7 @@
 
 #include <SDL.h>
 #include <SDL_image.h>
+#include <assert.h>
 
 manta::TextureNode::TextureNode() {
 	m_width = 0;
@@ -44,19 +45,16 @@ manta::math::Vector manta::TextureNode::sample(const IntersectionPoint *surfaceI
 	math::real v = math::getY(surfaceInteraction->m_textureCoodinates);
 
 	// Simple sampling for now
-	if (u > 1.0) u = 1.0;
-	if (u < 0.0) u = 0.0;
+	int pixelY = (int)(v * (m_height - 1)) % m_height;
+	int pixelX = (int)(u * (m_width - 1)) % m_width;
 
-	if (v > 1.0) v = 1.0;
-	if (v < 0.0) v = 0.0;
+	if (pixelY < 0) pixelY += m_height;
+	if (pixelX < 0) pixelX += m_width;
 
-	int pixelY = (int)((1.0 - v) * (m_height - 1));
-	if (pixelY >= m_height) pixelY = m_height - 1;
-	else if (pixelY < 0) pixelY = 0;
+	pixelY = m_height - pixelY - 1;
 
-	int pixelX = (int)(u * (m_width - 1));
-	if (pixelX >= m_width) pixelX = m_width - 1;
-	else if (pixelX < 0) pixelX = 0;
+	assert(pixelY >= 0 && pixelY < m_height);
+	assert(pixelX >= 0 && pixelX < m_width);
 
 	Pixel *pixel = &m_imageData[pixelY][pixelX];
 
@@ -71,7 +69,7 @@ void manta::TextureNode::getPixel(const SDL_Surface *surface, int x, int y, Pixe
 	Uint32 color = 0;
 
 	Uint8 *pixel = (Uint8*)surface->pixels;
-	pixel += (y * surface->pitch) + (x * sizeof(Uint8) * 4);
+	pixel += (y * surface->pitch) + (x * sizeof(Uint8) * surface->format->BytesPerPixel);
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
 	pixelOut->r = pixel[0];
 	pixelOut->g = pixel[1];
