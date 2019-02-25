@@ -10,7 +10,7 @@ manta::MicrofacetDistribution::~MicrofacetDistribution() {
 
 }
 
-manta::math::real manta::MicrofacetDistribution::calculatePDF(const math::Vector &o, const math::Vector &m, MaterialNodeMemory *mem) const {
+manta::math::real manta::MicrofacetDistribution::calculatePDF(const math::Vector &m, MaterialNodeMemory *mem) const {
 	math::real cos_theta_m = math::getZ(m);
 
 	return calculateDistribution(m, mem) * cos_theta_m;

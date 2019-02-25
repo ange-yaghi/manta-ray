@@ -102,3 +102,17 @@ TEST(MathTests, PermutationTest) {
 	v = math::permute(v, 1, 0, 2, 3);
 	CHECK_VEC(v, 2.0, 1.0, 3.0, 4.0);
 }
+
+TEST(MathTests, ReflectionTest) {
+	math::Vector n = math::loadVector(1, 1, 0);
+	n = math::normalize(n);
+
+	math::Vector v = math::loadVector(0, 1, 1);
+	v = math::normalize(v);
+
+	math::Vector i = math::reflect(v, n);
+
+	math::Vector hs = math::normalize(math::add(i, v));
+
+	CHECK_VEC_EQ(hs, n, 1E-4);
+}

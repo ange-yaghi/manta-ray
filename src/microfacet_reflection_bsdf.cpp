@@ -26,7 +26,12 @@ manta::math::Vector manta::MicrofacetReflectionBSDF::sampleF(const IntersectionP
 
 	*o = ri;
 
-	if (o_dot_m <= (math::real)0.0) {
+	math::real cosThetaO = ::abs(math::getZ(*o));
+	math::real cosThetaI = ::abs(math::getZ(i));
+
+	if (o_dot_m <= (math::real)0.0 || 
+		cosThetaO <= (math::real)0.0 ||
+		cosThetaI <= (math::real)0.0) {
 		// Free all memory
 		m_distribution->free(&s, stackAllocator);
 
@@ -34,16 +39,13 @@ manta::math::Vector manta::MicrofacetReflectionBSDF::sampleF(const IntersectionP
 		return math::constants::Zero;
 	}
 
-	*pdf = m_distribution->calculatePDF(ri, m, &s) / ::abs(4 * o_dot_m);
+	*pdf = m_distribution->calculatePDF(m, &s) / ::abs(4 * o_dot_m);
 
 	// Calculate reflectivity
-	math::real cosThetaI = math::getZ(i);
-	math::real costhetaO = math::getZ(ri);
-
 	math::real F = (math::real)1.0; // TODO: fresnel calculation goes here
 
 	math::Vector reflectivity = math::loadScalar(
-		m_distribution->calculateDistribution(m, &s) * m_distribution->bidirectionalShadowMasking(i, ri, m, &s) * F / (4 * math::getScalar(math::dot(ri, m))));
+		m_distribution->calculateDistribution(m, &s) * m_distribution->bidirectionalShadowMasking(i, *o, m, &s) * F / (4 * cosThetaI * cosThetaO));
 
 	// Free all memory
 	m_distribution->free(&s, stackAllocator);
@@ -59,7 +61,7 @@ manta::math::real manta::MicrofacetReflectionBSDF::calculatePDF(const Intersecti
 	math::Vector wh = math::normalize(math::add(i, o));
 	math::real o_dot_wh = math::getScalar(math::dot(wh, o));
 	
-	math::real pdf = m_distribution->calculatePDF(o, wh, &s) / ::abs(4 * o_dot_wh);
+	math::real pdf = m_distribution->calculatePDF(wh, &s) / ::abs(4 * o_dot_wh);
 
 	// Free all memory
 	m_distribution->free(&s, stackAllocator);

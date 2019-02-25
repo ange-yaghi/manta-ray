@@ -17,7 +17,7 @@ namespace manta {
 		~MicrofacetDistribution();
 
 		virtual math::Vector generateMicrosurfaceNormal(MaterialNodeMemory *mem) const = 0;
-		virtual math::real calculatePDF(const math::Vector &o, const math::Vector &m, MaterialNodeMemory *mem) const;
+		virtual math::real calculatePDF(const math::Vector &m, MaterialNodeMemory *mem) const;
 		virtual math::real calculateDistribution(const math::Vector &m, MaterialNodeMemory *mem) const = 0;
 		virtual math::real calculateG1(const math::Vector &v, const math::Vector &m, MaterialNodeMemory *mem) const = 0;
 		virtual math::real bidirectionalShadowMasking(const math::Vector &i, const math::Vector &o, const math::Vector &m, MaterialNodeMemory *mem) const;

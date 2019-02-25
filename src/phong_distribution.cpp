@@ -61,7 +61,7 @@ manta::math::real manta::PhongDistribution::calculateDistribution(const math::Ve
 manta::math::real manta::PhongDistribution::calculateG1(const math::Vector &v, const math::Vector &m, MaterialNodeMemory *mem) const {
 	PhongMemory *memory = reinterpret_cast<PhongMemory *>((void *)mem->memory);
 	
-	math::real v_dot_m = math::getScalar(math::dot(v, m));
+	math::real v_dot_m = ::abs(math::getScalar(math::dot(v, m)));
 	if (v_dot_m < 0) return (math::real)0.0;
 
 	math::real v_dot_m2 = v_dot_m * v_dot_m;

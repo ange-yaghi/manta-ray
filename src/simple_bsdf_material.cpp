@@ -8,7 +8,7 @@
 
 
 manta::SimpleBSDFMaterial::SimpleBSDFMaterial() {
-	m_maxDegree = 5;
+	m_maxDegree = 8;
 
 	m_emissionNode = nullptr;
 	m_reflectanceNode = nullptr;
@@ -107,5 +107,13 @@ void manta::SimpleBSDFMaterial::generateRays(RayContainer *rays, const LightRay 
 	ray.setDirection(outgoing);
 	ray.setWeight(weight);
 	ray.setIntensity(math::constants::Zero);
-	ray.setSource(intersectionPoint.m_position);
+
+	//std::cout << math::getX(weight) << "," << math::getY(weight) << "," << math::getZ(weight) << std::endl;
+
+	if (math::getScalar(math::dot(outgoing, intersectionPoint.m_vertexNormal)) >= 0) {
+		ray.setSource(intersectionPoint.m_position);
+	}
+	else {
+		ray.setSource(math::add(intersectionPoint.m_position, math::mul(incidentRay.getDirection(), math::loadScalar(1E-2))));
+	}
 }
