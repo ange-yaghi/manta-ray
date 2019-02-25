@@ -2,11 +2,11 @@
 #define INTERSECTION_POINT_H
 
 #include <manta_math.h>
+#include <media_interface.h>
 
 namespace manta {
 
 	struct IntersectionPoint {
-	public:
 		math::Vector m_position;
 		math::Vector m_vertexNormal;
 		math::Vector m_faceNormal;
@@ -17,6 +17,8 @@ namespace manta {
 
 		bool m_intersection;
 		bool m_valid;
+
+		MediaInterface::DIRECTION m_direction;
 	};
 
 } /* namespace manta */

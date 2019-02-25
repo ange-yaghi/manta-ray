@@ -36,6 +36,7 @@
 #include <simple_bsdf_material.h>
 #include <single_color_node.h>
 #include <bilayer_bsdf.h>
+#include <microfacet_transmission_bsdf.h>
 
 namespace manta_demo {
 
@@ -46,7 +47,8 @@ namespace manta_demo {
 		BLOCKS,
 		STRESS_SPIDERS,
 		PEN,
-		COMPLEX_ROOM
+		COMPLEX_ROOM,
+		SAMSUNG_A8
 	};
 
 	void runDemo(DEMO demo, int samplesPerPixel, int resolutionX, int resolutionY);
@@ -58,6 +60,7 @@ namespace manta_demo {
 	void stressSpidersDemo(int samplesPerPixel, int resolutionX, int resolutionY);
 	void penDemo(int samplesPerPixel, int resolutionX, int resolutionY);
 	void complexRoomDemo(int samplesPerPixel, int resolutionX, int resolutionY);
+	void samsungA8Demo(int samplesPerPixel, int resolutionX, int resolutionY);
 
 } /* namespace manta_demo */
 

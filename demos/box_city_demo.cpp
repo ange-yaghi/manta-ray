@@ -8,7 +8,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	constexpr bool DETERMINISTIC_SEED_MODE = false;
 	constexpr bool TRACE_SINGLE_PIXEL = false;
 	constexpr bool WRITE_KDTREE_TO_FILE = false;
-	constexpr bool LENS_SIMULATION = true;
+	constexpr bool LENS_SIMULATION = false;
 
 	Scene scene;
 	RayTracer rayTracer;
@@ -27,6 +27,21 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	// Create all materials
 	LambertianBSDF lambert;
 
+	PhongDistribution phongGlassTemp;
+	phongGlassTemp.setPower(10000);
+
+	DielectricMediaInterface fresnel;
+	fresnel.setIorIncident((math::real)1.0);
+	fresnel.setIorTransmitted((math::real)1.0);
+	MicrofacetTransmissionBSDF simpleGlassBSDF;
+	simpleGlassBSDF.setDistribution(&phongGlassTemp);
+	simpleGlassBSDF.setMediaInterface(&fresnel);
+
+	SimpleBSDFMaterial *tempGlassMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	tempGlassMaterial->setName("Block");
+	tempGlassMaterial->setReflectance(getColor(255, 255, 255));
+	tempGlassMaterial->setBSDF(&simpleGlassBSDF);
+
 	PhongDistribution blockCoating;
 	blockCoating.setPower((math::real)16000);
 	BilayerBSDF blockBSDF;
@@ -35,7 +50,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	blockBSDF.setDiffuse(getColor(0xf1, 0xc4, 0x0f));
 	blockBSDF.setSpecularAtNormal(math::loadVector(0.1, 0.1, 0.1));
 	SimpleBSDFMaterial *blockMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
-	blockMaterial->setName("Block");
+	blockMaterial->setName("Block1");
 	blockMaterial->setBSDF(&blockBSDF);
 
 	SimpleBSDFMaterial outdoorTopLightMaterial;
@@ -67,7 +82,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	SceneObject *boxCityObject = scene.createSceneObject();
 	if (USE_ACCELERATION_STRUCTURE) boxCityObject->setGeometry(&kdtree);
 	else boxCityObject->setGeometry(&boxCity);
-	boxCityObject->setDefaultMaterial(blockMaterial);
+	boxCityObject->setDefaultMaterial(tempGlassMaterial);
 
 	SceneObject *outdoorTopLightObject = scene.createSceneObject();
 	outdoorTopLightObject->setGeometry(&outdoorTopLightGeometry);
@@ -138,7 +153,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 	
 	if (TRACE_SINGLE_PIXEL) {
-		rayTracer.tracePixel(519, 1013, &scene, group);
+		rayTracer.tracePixel(779, 942, &scene, group);
 	}
 	else {
 		rayTracer.traceAll(&scene, group);

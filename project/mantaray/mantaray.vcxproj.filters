@@ -408,6 +408,9 @@
     <ClCompile Include="..\..\src\simple_bsdf_material.cpp">
       <Filter>Source Files\material\interface\library</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\microfacet_transmission_bsdf.cpp">
+      <Filter>Source Files\material\surface-modeling\bsdf\library</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\sphere_primitive.h">
@@ -631,6 +634,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\simple_bsdf_material.h">
       <Filter>Header Files\material\interface\library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\microfacet_transmission_bsdf.h">
+      <Filter>Header Files\material\surface-modeling\bsdf\library</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
