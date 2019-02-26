@@ -45,6 +45,7 @@ void manta::SimpleBSDFMaterial::integrateRay(LightRay *ray, const RayContainer &
 	}
 
 	ray->setIntensity(totalLight);
+	//ray->setIntensity(math::mul(math::constants::Half, math::add(totalLight, math::mul(math::constants::Half, math::add(intersectionPoint.m_vertexNormal, math::constants::One)))));
 }
 
 void manta::SimpleBSDFMaterial::generateRays(RayContainer *rays, const LightRay &incidentRay, const IntersectionPoint &intersectionPoint, int degree, StackAllocator *stackAllocator) const {

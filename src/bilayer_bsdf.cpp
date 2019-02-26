@@ -4,6 +4,7 @@
 #include <lambertian_bsdf.h>
 #include <microfacet_distribution.h>
 #include <vector_material_node.h>
+#include <phong_distribution.h>
 
 #include <iostream>
 #include <algorithm>
@@ -43,9 +44,14 @@ manta::math::Vector manta::BilayerBSDF::sampleF(const IntersectionPoint *surface
 	MaterialNodeMemory specularDistMem;
 	m_coatingDistribution->initialize(surfaceInteraction, &specularDistMem, stackAllocator);
 
+	PhongMemory *memory = reinterpret_cast<PhongMemory *>((void *)specularDistMem.memory);
+	math::real s = memory->power;
+
+	math::Vector m;
+
 	if (u < (math::real)0.5) {
 		// Ray reflects off of the coating
-		math::Vector m = m_coatingDistribution->generateMicrosurfaceNormal(&specularDistMem);
+		m = m_coatingDistribution->generateMicrosurfaceNormal(&specularDistMem);
 		math::Vector ri = math::reflect(i, m);
 		wh = m;
 		*o = ri;
@@ -54,7 +60,8 @@ manta::math::Vector manta::BilayerBSDF::sampleF(const IntersectionPoint *surface
 		// Ray is transmitted through the coating material
 		math::Vector diffuseO;
 		m_diffuseMaterial->sampleF(surfaceInteraction, i, &diffuseO, &diffusePDF, stackAllocator);
-		wh = math::add(*o, i);
+		wh = math::add(diffuseO, i);
+
 		*o = diffuseO;
 	}
 	
@@ -113,6 +120,7 @@ manta::math::Vector manta::BilayerBSDF::sampleF(const IntersectionPoint *surface
 	else {
 		specular = math::loadScalar(m_coatingDistribution->calculateDistribution(wh, &specularDistMem));
 		if (math::getX(specular) < 0 || math::getY(specular) < 0 || math::getZ(specular) < 0) {
+			int a = 0;
 			//std::cout << math::getZ(*o) << "," << math::getZ(i) << "," << math::getZ(wh) << std::endl;
 		}
 
@@ -132,6 +140,11 @@ manta::math::Vector manta::BilayerBSDF::sampleF(const IntersectionPoint *surface
 	math::Vector fr = math::add(diffuse, specular);
 
 	assert(!(::isnan(math::getX(fr)) || ::isnan(math::getY(fr)) || ::isnan(math::getZ(fr))));
+
+	if (math::getX(fr) < 0 || math::getY(fr) < 0 || math::getZ(fr) < 0) {
+		int a = 0;
+		std::cout << math::getZ(*o) << "," << math::getZ(i) << "," << math::getZ(wh) << std::endl;
+	}
 
 	return fr;
 }

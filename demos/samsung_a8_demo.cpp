@@ -32,7 +32,7 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 
 	// Load all object files
 	ObjFileLoader phoneObj;
-	bool result = phoneObj.readObjFile(MODEL_PATH "samsung_a8_reverse.obj");
+	bool result = phoneObj.readObjFile(MODEL_PATH "samsung_a8.obj");
 
 	if (!result) {
 		std::cout << "Could not open geometry file(s)" << std::endl;
@@ -247,7 +247,7 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	phoneObj.destroy();
 
 	KDTree kdtree;
-	kdtree.initialize(150, math::constants::Zero);
+	kdtree.initialize(300, math::constants::Zero);
 	kdtree.analyze(&phone, 4);
 
 	// Create scene objects

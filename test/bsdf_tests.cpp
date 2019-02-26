@@ -165,7 +165,7 @@ TEST(BSDFTests, TransmissionBSDFTest) {
 	fresnel.setIorTransmitted((math::real)1.5);
 	bsdf.setMediaInterface(&fresnel);
 
-	math::Vector incident = math::loadVector((math::real)1000.0, (math::real)0.0, (math::real)1.0);
+	math::Vector incident = math::loadVector((math::real)1.0, (math::real)0.0, (math::real)1.0);
 	incident = math::normalize(incident);
 	math::real pdf;
 	math::Vector normal = math::loadVector((math::real)0.0, (math::real)0.0, (math::real)1.0);
