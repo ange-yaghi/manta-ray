@@ -37,6 +37,7 @@
 #include <single_color_node.h>
 #include <bilayer_bsdf.h>
 #include <microfacet_transmission_bsdf.h>
+#include <microfacet_glass_bsdf.h>
 
 namespace manta_demo {
 

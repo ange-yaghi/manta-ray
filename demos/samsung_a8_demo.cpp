@@ -30,9 +30,12 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	TextureNode backPlateTexture;
 	backPlateTexture.loadFile(TEXTURE_PATH "samsung_a8/back_plate.png", (math::real)2.2);
 
+	TextureNode phoneScreenTexture;
+	phoneScreenTexture.loadFile(TEXTURE_PATH "samsung_a8/phone_screen.jpg", (math::real)2.2);
+
 	// Load all object files
 	ObjFileLoader phoneObj;
-	bool result = phoneObj.readObjFile(MODEL_PATH "samsung_a8.obj");
+	bool result = phoneObj.readObjFile(MODEL_PATH "samsung_a8_front_and_back.obj");
 
 	if (!result) {
 		std::cout << "Could not open geometry file(s)" << std::endl;
@@ -50,7 +53,7 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	phongGlassTemp.setPower(10000);
 
 	PhongDistribution phongBlackPlastic;
-	phongPhoneCase.setPower(2048);
+	phongBlackPlastic.setPower(8000);
 
 	PhongDistribution phongBayDoor;
 	phongBayDoor.setPower(256);
@@ -74,7 +77,7 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	phoneCaseBSDF.setDiffuseMaterial(&lambert);
 	phoneCaseBSDF.setCoatingDistribution(&phongPhoneCase);
 	phoneCaseBSDF.setDiffuse(getColor(0x0, 0x0, 0x0));
-	phoneCaseBSDF.setSpecularAtNormal(math::loadVector(0.0, 0.0, 0.0));
+	phoneCaseBSDF.setSpecularAtNormal(math::loadVector(0.01, 0.01, 0.01));
 
 	BilayerBSDF bayDoorBSDF;
 	bayDoorBSDF.setDiffuseMaterial(&lambert);
@@ -86,20 +89,22 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	speakerGrillBSDF.setDiffuseMaterial(&lambert);
 	speakerGrillBSDF.setCoatingDistribution(&phongBayDoor);
 	speakerGrillBSDF.setDiffuseNode(&speakerGrillTexture);
-	speakerGrillBSDF.setDiffuse(math::loadVector(0.25, 0.25, 0.25));
+	speakerGrillBSDF.setDiffuse(math::loadVector(0.1, 0.1, 0.1));
 	speakerGrillBSDF.setSpecularAtNormal(math::loadVector(0.0, 0.0, 0.0));
 
 	BilayerBSDF blackPlasticBSDF;
+	//blackPlasticBSDF.setDistribution(&phongBlackPlastic);
 	blackPlasticBSDF.setDiffuseMaterial(&lambert);
 	blackPlasticBSDF.setCoatingDistribution(&phongBlackPlastic);
 	blackPlasticBSDF.setDiffuse(getColor(0x0, 0x0, 0x0));
-	blackPlasticBSDF.setSpecularAtNormal(math::loadVector(0.0, 0.0, 0.0));
+	blackPlasticBSDF.setSpecularAtNormal(math::loadVector(0.1, 0.1, 0.1));
 
-	BilayerBSDF mattePlasticBSDF;
-	mattePlasticBSDF.setDiffuseMaterial(&lambert);
-	mattePlasticBSDF.setCoatingDistribution(&mattePlasticPhong);
-	mattePlasticBSDF.setDiffuse(getColor(0xBC, 0xBC, 0xBC));
-	mattePlasticBSDF.setSpecularAtNormal(math::loadVector(0.0, 0.0, 0.0));
+	MicrofacetReflectionBSDF mattePlasticBSDF;
+	mattePlasticBSDF.setDistribution(&mattePlasticPhong);
+	//mattePlasticBSDF.setDiffuseMaterial(&lambert);
+	//mattePlasticBSDF.setCoatingDistribution(&mattePlasticPhong);
+	//mattePlasticBSDF.setDiffuse(getColor(0xBC, 0xBC, 0xBC));
+	//mattePlasticBSDF.setSpecularAtNormal(math::loadVector(0.0, 0.0, 0.0));
 
 	BilayerBSDF floorBSDF;
 	floorBSDF.setDiffuseMaterial(&lambert);
@@ -121,15 +126,15 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 
 	DielectricMediaInterface fresnel;
 	fresnel.setIorIncident((math::real)1.0);
-	fresnel.setIorTransmitted((math::real)1.1);
-	MicrofacetTransmissionBSDF simpleGlassBSDF;
+	fresnel.setIorTransmitted((math::real)1.4);
+	MicrofacetGlassBSDF simpleGlassBSDF;
 	simpleGlassBSDF.setDistribution(&phongGlassTemp);
 	simpleGlassBSDF.setMediaInterface(&fresnel);
 
 	DielectricMediaInterface lensFresnel;
 	lensFresnel.setIorIncident((math::real)1.0);
 	lensFresnel.setIorTransmitted((math::real)1.5);
-	MicrofacetTransmissionBSDF lensGlassBSDF;
+	MicrofacetGlassBSDF lensGlassBSDF;
 	lensGlassBSDF.setDistribution(&phongGlassTemp);
 	lensGlassBSDF.setMediaInterface(&lensFresnel);
 
@@ -206,7 +211,7 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 
 	SimpleBSDFMaterial *mattePlasticMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	mattePlasticMaterial->setName("MattePlastic");
-	mattePlasticMaterial->setReflectance(getColor(255, 255, 255));
+	mattePlasticMaterial->setReflectance(getColor(0x52, 0x4f, 0x51));
 	mattePlasticMaterial->setBSDF(&mattePlasticBSDF);
 
 	SimpleBSDFMaterial *imageSensorMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
@@ -229,8 +234,15 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	backPlateMaterial->setReflectance(getColor(255, 255, 255));
 	backPlateMaterial->setBSDF(&backPlateBSDF);
 
+	SimpleBSDFMaterial *screenMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	screenMaterial->setName("Screen");
+	screenMaterial->setEmissionNode(&phoneScreenTexture);
+	screenMaterial->setEmission(math::loadVector(1.6, 1.6, 1.6));
+	screenMaterial->setReflectance(getColor(3, 3, 3));
+	screenMaterial->setBSDF(&lambert);
+
 	SimpleBSDFMaterial *strongLight = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
-	strongLight->setEmission(math::loadVector(2.0, 2.0, 2.0));
+	strongLight->setEmission(math::loadVector(5.0, 5.0, 5.0));
 	strongLight->setReflectance(math::constants::Zero);
 	strongLight->setName("StrongLight");
 
@@ -267,7 +279,7 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	math::Vector up = math::loadVector(0.0f, 1.0, 0.0);
 
 	if (CAMERA_POSITION == FACE_ON) {
-		cameraPos = math::loadVector(0, 70, 0);
+		cameraPos = math::loadVector(0, 90, 0); // 70
 		up = math::loadVector(0, 0, -1);
 	}
 	else if (CAMERA_POSITION == LEFT_GENERAL) {
@@ -333,7 +345,7 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	}
 
 	// Create the raytracer
-	rayTracer.initialize(800 * MB, 5 * MB, 12, 10000, true);
+	rayTracer.initialize(1000 * MB, 50 * MB, 12, 10000, true);
 	rayTracer.setBackgroundColor(getColor(0, 0, 0));
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");
