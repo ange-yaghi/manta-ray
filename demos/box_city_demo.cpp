@@ -33,7 +33,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	DielectricMediaInterface fresnel;
 	fresnel.setIorIncident((math::real)1.0);
 	fresnel.setIorTransmitted((math::real)1.5);
-	MicrofacetTransmissionBSDF simpleGlassBSDF;
+	MicrofacetGlassBSDF simpleGlassBSDF;
 	simpleGlassBSDF.setDistribution(&phongGlassTemp);
 	simpleGlassBSDF.setMediaInterface(&fresnel);
 

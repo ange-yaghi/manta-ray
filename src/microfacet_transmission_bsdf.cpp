@@ -14,7 +14,7 @@ void manta::MicrofacetTransmissionBSDF::initialize(const IntersectionPoint *surf
 }
 
 manta::math::Vector manta::MicrofacetTransmissionBSDF::sampleF(const IntersectionPoint *surfaceInteraction, const math::Vector &i, math::Vector *o, math::real *pdf, StackAllocator *stackAllocator) const {
-	constexpr math::Vector reflect = { (math::real) - 1.0, (math::real) - 1.0, (math::real)1.0, (math::real)1.0 };
+	constexpr math::Vector reflect = { (math::real)-1.0, (math::real)-1.0, (math::real)1.0, (math::real)1.0 };
 
 	// Allocate required memory
 	MaterialNodeMemory s;
@@ -37,7 +37,6 @@ manta::math::Vector manta::MicrofacetTransmissionBSDF::sampleF(const Intersectio
 		m_distribution->free(&s, stackAllocator);
 
 		*pdf = (math::real)0.0;
-
 		return math::constants::Zero;
 	}
 
@@ -66,7 +65,7 @@ manta::math::Vector manta::MicrofacetTransmissionBSDF::sampleF(const Intersectio
 	math::real cosThetaI = ::abs(math::getZ(i));
 	math::real costhetaO = ::abs(math::getZ(rt));
 
-	math::real F = (math::real)0.0; // TODO: fresnel calculation goes here
+	math::real F = (math::real)m_mediaInterface->fresnelTerm(i, m, surfaceInteraction->m_direction);
 
 	math::real Ft_num = ior * ior * m_distribution->calculateDistribution(m, &s) * m_distribution->bidirectionalShadowMasking(i, rt, m, &s) * (1 - F);
 	Ft_num *= ::abs(o_dot_m * i_dot_m);
@@ -84,6 +83,5 @@ manta::math::Vector manta::MicrofacetTransmissionBSDF::sampleF(const Intersectio
 }
 
 manta::math::real manta::MicrofacetTransmissionBSDF::calculatePDF(const IntersectionPoint *surfaceInteraction, const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) const {
-	// TODO
-	return (math::real)0.0;
+	return math::real();
 }

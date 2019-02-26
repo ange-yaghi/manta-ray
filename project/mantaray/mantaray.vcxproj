@@ -32,6 +32,7 @@
     <ClCompile Include="..\..\src\material_manager.cpp" />
     <ClCompile Include="..\..\src\material_node.cpp" />
     <ClCompile Include="..\..\src\microfacet_distribution.cpp" />
+    <ClCompile Include="..\..\src\microfacet_glass_bsdf.cpp" />
     <ClCompile Include="..\..\src\microfacet_reflection_bsdf.cpp" />
     <ClCompile Include="..\..\src\microfacet_transmission_bsdf.cpp" />
     <ClCompile Include="..\..\src\octree.cpp" />
@@ -96,6 +97,7 @@
     <ClInclude Include="..\..\include\material_node.h" />
     <ClInclude Include="..\..\include\media_interface.h" />
     <ClInclude Include="..\..\include\microfacet_distribution.h" />
+    <ClInclude Include="..\..\include\microfacet_glass_bsdf.h" />
     <ClInclude Include="..\..\include\microfacet_reflection_bsdf.h" />
     <ClInclude Include="..\..\include\microfacet_transmission_bsdf.h" />
     <ClInclude Include="..\..\include\octree.h" />
