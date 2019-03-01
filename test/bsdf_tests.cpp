@@ -9,6 +9,7 @@
 #include <dielectric_media_interface.h>
 #include <phong_distribution.h>
 #include <microfacet_reflection_bsdf.h>
+#include <microfacet_transmission_bsdf.h>
 
 #include <manta_math.h>
 
@@ -58,7 +59,7 @@ TEST(BSDFTests, LambertBSDFEnergyConservation) {
 	CHECK_VEC3_EQ(accum, math::constants::One, 1E-3);
 }
 
-TEST(BSDFTests, PhongBSDFEnergyConservation) {
+TEST(BSDFTests, PhongMicrofacetEnergyConservation) {
 	PhongDistribution dist;
 	dist.setPower((math::real)5.0);
 
@@ -81,7 +82,7 @@ TEST(BSDFTests, PhongBSDFEnergyConservation) {
 		math::Vector m = dist.generateMicrosurfaceNormal(&mem);
 		math::real cos_theta_h = math::getZ(m);
 		math::real D = dist.calculateDistribution(m, &mem);
-		math::real pdf = dist.calculatePDF(math::reflect(incident, m), m, &mem);
+		math::real pdf = dist.calculatePDF(m, &mem);
 
 		if (pdf > 0.0) {
 			accum += D * cos_theta_h / pdf;
@@ -116,7 +117,7 @@ TEST(BSDFTests, BilayerBSDFEnergyConservation) {
 	bsdf.setDiffuse(math::loadVector(1.0, 1.0, 1.0));
 	bsdf.setSpecularAtNormal(math::loadVector(1.0, 1.0, 1.0));
 
-	math::Vector incident = math::loadVector((math::real)0.0, (math::real)0.0, (math::real)1.0);
+	math::Vector incident = math::loadVector((math::real)1000.0, (math::real)0.0, (math::real)1.0);
 	incident = math::normalize(incident);
 	math::real pdf;
 	math::Vector normal = math::loadVector((math::real)0.0, (math::real)0.0, (math::real)1.0);
@@ -131,6 +132,10 @@ TEST(BSDFTests, BilayerBSDFEnergyConservation) {
 	for (int i = 0; i < SAMPLE_COUNT; i++) {
 		math::Vector outgoing;
 		math::Vector reflectance = bsdf.sampleF(nullptr, incident, &outgoing, &pdf, &s);
+
+		EXPECT_GE(math::getX(reflectance), 0.0);
+		EXPECT_GE(math::getY(reflectance), 0.0);
+		EXPECT_GE(math::getZ(reflectance), 0.0);
 
 		if (pdf != 0.0) {
 			math::Vector abs_cos_theta = math::abs(math::dot(outgoing, normal));
@@ -147,3 +152,70 @@ TEST(BSDFTests, BilayerBSDFEnergyConservation) {
 	EXPECT_LE(math::getZ(accum), 1.0);
 }
 
+TEST(BSDFTests, TransmissionBSDFTest) {
+	PhongDistribution phong;
+	phong.setPower((math::real)4.0);
+
+	MicrofacetTransmissionBSDF bsdf;
+	bsdf.setDistribution(&phong);
+	//LambertianBSDF bsdf1;
+	LambertianBSDF bsdf2;
+	DielectricMediaInterface fresnel;
+	fresnel.setIorIncident((math::real)1.0);
+	fresnel.setIorTransmitted((math::real)1.5);
+	bsdf.setMediaInterface(&fresnel);
+
+	math::Vector incident = math::loadVector((math::real)1.0, (math::real)0.0, (math::real)1.0);
+	incident = math::normalize(incident);
+	math::real pdf;
+	math::Vector normal = math::loadVector((math::real)0.0, (math::real)0.0, (math::real)1.0);
+
+	math::Vector accum = math::constants::Zero;
+	constexpr int SAMPLE_COUNT = 20000;
+
+	StackAllocator s;
+	s.initialize(1000);
+
+	IntersectionPoint point;
+	point.m_direction = DielectricMediaInterface::DIRECTION_IN;
+
+	// Calculate rho
+	for (int i = 0; i < SAMPLE_COUNT; i++) {
+		math::Vector outgoing;
+		math::Vector transmitance = bsdf.sampleF(&point, incident, &outgoing, &pdf, &s);
+
+		EXPECT_LT(math::getZ(outgoing), 0.0);
+
+		EXPECT_GE(math::getX(transmitance), 0.0);
+		EXPECT_GE(math::getY(transmitance), 0.0);
+		EXPECT_GE(math::getZ(transmitance), 0.0);
+
+		if (pdf != 0.0) {
+			math::Vector abs_cos_theta = math::abs(math::dot(outgoing, normal));
+			accum = math::add(accum, math::div(math::mul(transmitance, abs_cos_theta), math::loadScalar(pdf))); //  * 1.33333
+			//accum = math::add(accum, math::mul(reflectance, math::abs(math::dot(outgoing, normal))));
+		}
+	}
+
+	accum = math::div(accum, math::loadScalar((math::real)SAMPLE_COUNT));
+	//accum = math::mul(accum, math::loadScalar(math::constants::PI));
+
+	EXPECT_LE(math::getX(accum), 1.0);
+	EXPECT_LE(math::getY(accum), 1.0);
+	EXPECT_LE(math::getZ(accum), 1.0);
+}
+
+TEST(BSDFTests, RefractionTest) {
+	math::Vector n = math::loadVector(0, 1, 0);
+	n = math::normalize(n);
+
+	math::Vector v = math::loadVector(0, 1, 0.8);
+	v = math::normalize(v);
+
+	math::Vector i;
+	BSDF::refract(v, n, 1.5, &i);
+
+	math::real mag = math::getScalar(math::magnitude(i));
+
+	EXPECT_NEAR(mag, 1.0, 1E-5);
+}

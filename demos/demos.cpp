@@ -23,6 +23,9 @@ void manta_demo::runDemo(DEMO demo, int samplesPerPixel, int resolutionX, int re
 	case DEMO::TEAPOT_LAMP:
 		teapotLampDemo(samplesPerPixel, resolutionX, resolutionY);
 		break;
+	case DEMO::SAMSUNG_A8:
+		samsungA8Demo(samplesPerPixel, resolutionX, resolutionY);
+		break;
 	default:
 		std::cout << "Unknown/undefined demo specified" << std::endl;
 		break;

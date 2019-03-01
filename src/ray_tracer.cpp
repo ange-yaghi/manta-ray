@@ -246,6 +246,10 @@ void manta::RayTracer::refineContact(const LightRay *ray, math::real depth, Inte
 	if (math::getScalar(math::dot(point->m_faceNormal, ray->getDirection())) > 0.0) {
 		point->m_faceNormal = math::negate(point->m_faceNormal);
 		point->m_vertexNormal = math::negate(point->m_vertexNormal);
+		point->m_direction = MediaInterface::DIRECTION_OUT;
+	}
+	else {
+		point->m_direction = MediaInterface::DIRECTION_IN;
 	}
 }
 

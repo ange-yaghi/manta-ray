@@ -8,7 +8,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	constexpr bool DETERMINISTIC_SEED_MODE = false;
 	constexpr bool TRACE_SINGLE_PIXEL = false;
 	constexpr bool WRITE_KDTREE_TO_FILE = false;
-	constexpr bool LENS_SIMULATION = true;
+	constexpr bool LENS_SIMULATION = false;
 
 	Scene scene;
 	RayTracer rayTracer;
@@ -28,12 +28,12 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	LambertianBSDF lambert;
 
 	PhongDistribution blockCoating;
-	blockCoating.setPower((math::real)16000);
+	blockCoating.setPower((math::real)300);
 	BilayerBSDF blockBSDF;
 	blockBSDF.setCoatingDistribution(&blockCoating);
 	blockBSDF.setDiffuseMaterial(&lambert);
 	blockBSDF.setDiffuse(getColor(0xf1, 0xc4, 0x0f));
-	blockBSDF.setSpecularAtNormal(math::loadVector(0.1, 0.1, 0.1));
+	blockBSDF.setSpecularAtNormal(math::loadVector(0.02, 0.02, 0.02));
 	SimpleBSDFMaterial *blockMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	blockMaterial->setName("Block");
 	blockMaterial->setBSDF(&blockBSDF);
@@ -138,7 +138,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 	
 	if (TRACE_SINGLE_PIXEL) {
-		rayTracer.tracePixel(519, 1013, &scene, group);
+		rayTracer.tracePixel(779, 942, &scene, group);
 	}
 	else {
 		rayTracer.traceAll(&scene, group);

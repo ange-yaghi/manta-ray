@@ -8,7 +8,7 @@
 
 
 manta::SimpleBSDFMaterial::SimpleBSDFMaterial() {
-	m_maxDegree = 5;
+	m_maxDegree = 8;
 
 	m_emissionNode = nullptr;
 	m_reflectanceNode = nullptr;
@@ -45,6 +45,7 @@ void manta::SimpleBSDFMaterial::integrateRay(LightRay *ray, const RayContainer &
 	}
 
 	ray->setIntensity(totalLight);
+	//ray->setIntensity(math::mul(math::constants::Half, math::add(totalLight, math::mul(math::constants::Half, math::add(intersectionPoint.m_vertexNormal, math::constants::One)))));
 }
 
 void manta::SimpleBSDFMaterial::generateRays(RayContainer *rays, const LightRay &incidentRay, const IntersectionPoint &intersectionPoint, int degree, StackAllocator *stackAllocator) const {
@@ -107,5 +108,13 @@ void manta::SimpleBSDFMaterial::generateRays(RayContainer *rays, const LightRay 
 	ray.setDirection(outgoing);
 	ray.setWeight(weight);
 	ray.setIntensity(math::constants::Zero);
-	ray.setSource(intersectionPoint.m_position);
+
+	if (math::getScalar(math::dot(outgoing, normal)) >= 0) {
+		ray.setSource(intersectionPoint.m_position);
+	}
+	else if (pdf > 0) { 
+		// The light ray is undergoing transmission
+		// NOTE: the pdf is checked so that the ray is not repositioned unnecessarily in degenerate cases
+		ray.setSource(math::add(intersectionPoint.m_position, math::mul(incidentRay.getDirection(), math::loadScalar(1E-2))));
+	}
 }
