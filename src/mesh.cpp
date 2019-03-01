@@ -7,6 +7,7 @@
 #include <standard_allocator.h>
 #include <material.h>
 #include <material_manager.h>
+#include <primitives.h>
 
 manta::Mesh::Mesh() {
 	m_faces = nullptr;
@@ -679,6 +680,22 @@ bool manta::Mesh::findClosestIntersection(int *faceList, int faceCount, const Li
 
 void manta::Mesh::getVicinity(int *faceList, int faceCount, const math::Vector &p, math::real radius, IntersectionList *list, SceneObject *object) const {
 	/* Deprecated */
+}
+
+void manta::Mesh::calculateFaceAABB(int faceIndex, AABB *target) const {
+	const Face *face = &m_faces[faceIndex];
+	math::Vector u = m_vertices[face->u];
+	math::Vector v = m_vertices[face->v];
+	math::Vector w = m_vertices[face->w];
+
+	target->minPoint = u;
+	target->maxPoint = u;
+
+	target->minPoint = math::componentMin(target->minPoint, v);
+	target->minPoint = math::componentMin(target->minPoint, w);
+
+	target->maxPoint = math::componentMax(target->maxPoint, v);
+	target->maxPoint = math::componentMax(target->maxPoint, w);
 }
 
 void manta::Mesh::computePlane(const math::Vector &n, const math::Vector &p, Plane *plane) const {

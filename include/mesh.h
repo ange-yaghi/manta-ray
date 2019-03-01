@@ -10,6 +10,7 @@ namespace manta {
 
 	class ObjFileLoader;
 	class MaterialManager;
+	struct AABB;
 
 	struct CoarseCollisionOutput {
 		math::real depth;
@@ -73,6 +74,8 @@ namespace manta {
 
 		bool findClosestIntersection(int *faceList, int faceCount, const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s) const;
 		void getVicinity(int *faceList, int faceCount, const math::Vector &p, math::real radius, IntersectionList *list, SceneObject *object) const;
+
+		void calculateFaceAABB(int faceIndex, AABB *target) const;
 
 	protected:
 		void computePlane(const math::Vector &n, const math::Vector &p, Plane *plane) const;

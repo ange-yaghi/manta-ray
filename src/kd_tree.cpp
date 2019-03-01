@@ -187,14 +187,7 @@ void manta::KDTree::analyze(Mesh *mesh, int maxSize) {
 	// Generate bounds for all faces
 	workspace.allFaceBounds = StandardAllocator::Global()->allocate<AABB>(nFaces, 16);
 	for (int i = 0; i < nFaces; i++) {
-		Face *face = &mesh->getFaces()[i];
-
-		Triangle triangle;
-		triangle.u = *mesh->getVertex(face->u);
-		triangle.v = *mesh->getVertex(face->v);
-		triangle.w = *mesh->getVertex(face->w);
-
-		calculateAABB(&triangle, &workspace.allFaceBounds[i]);
+		mesh->calculateFaceAABB(i, &workspace.allFaceBounds[i]);
 	}
 
 	AABB topNodeBounds;
