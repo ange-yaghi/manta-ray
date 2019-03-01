@@ -71,7 +71,6 @@ void manta::SimpleBSDFMaterial::generateRays(RayContainer *rays, const LightRay 
 	v = math::cross(normal, u);
 
 	LightRay &ray = rays->getRays()[0];
-	math::Vector m, o;
 	math::Vector weight;
 
 	math::Vector incident = math::negate(incidentRay.getDirection());
@@ -115,6 +114,6 @@ void manta::SimpleBSDFMaterial::generateRays(RayContainer *rays, const LightRay 
 	else if (pdf > 0) { 
 		// The light ray is undergoing transmission
 		// NOTE: the pdf is checked so that the ray is not repositioned unnecessarily in degenerate cases
-		ray.setSource(math::add(intersectionPoint.m_position, math::mul(incidentRay.getDirection(), math::loadScalar(1E-2))));
+		ray.setSource(math::add(intersectionPoint.m_position, math::mul(incidentRay.getDirection(), math::loadScalar((math::real)1E-2))));
 	}
 }
