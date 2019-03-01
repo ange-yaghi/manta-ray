@@ -27,30 +27,15 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	// Create all materials
 	LambertianBSDF lambert;
 
-	PhongDistribution phongGlassTemp;
-	phongGlassTemp.setPower(100);
-
-	DielectricMediaInterface fresnel;
-	fresnel.setIorIncident((math::real)1.0);
-	fresnel.setIorTransmitted((math::real)1.5);
-	MicrofacetGlassBSDF simpleGlassBSDF;
-	simpleGlassBSDF.setDistribution(&phongGlassTemp);
-	simpleGlassBSDF.setMediaInterface(&fresnel);
-
-	SimpleBSDFMaterial *tempGlassMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
-	tempGlassMaterial->setName("Block");
-	tempGlassMaterial->setReflectance(getColor(255, 255, 255));
-	tempGlassMaterial->setBSDF(&simpleGlassBSDF);
-
 	PhongDistribution blockCoating;
-	blockCoating.setPower((math::real)16000);
+	blockCoating.setPower((math::real)300);
 	BilayerBSDF blockBSDF;
 	blockBSDF.setCoatingDistribution(&blockCoating);
 	blockBSDF.setDiffuseMaterial(&lambert);
 	blockBSDF.setDiffuse(getColor(0xf1, 0xc4, 0x0f));
-	blockBSDF.setSpecularAtNormal(math::loadVector(0.1, 0.1, 0.1));
+	blockBSDF.setSpecularAtNormal(math::loadVector(0.02, 0.02, 0.02));
 	SimpleBSDFMaterial *blockMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
-	blockMaterial->setName("Block1");
+	blockMaterial->setName("Block");
 	blockMaterial->setBSDF(&blockBSDF);
 
 	SimpleBSDFMaterial outdoorTopLightMaterial;
@@ -82,7 +67,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	SceneObject *boxCityObject = scene.createSceneObject();
 	if (USE_ACCELERATION_STRUCTURE) boxCityObject->setGeometry(&kdtree);
 	else boxCityObject->setGeometry(&boxCity);
-	boxCityObject->setDefaultMaterial(tempGlassMaterial);
+	boxCityObject->setDefaultMaterial(blockMaterial);
 
 	SceneObject *outdoorTopLightObject = scene.createSceneObject();
 	outdoorTopLightObject->setGeometry(&outdoorTopLightGeometry);

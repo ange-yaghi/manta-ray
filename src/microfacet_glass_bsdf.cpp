@@ -101,7 +101,7 @@ manta::math::Vector manta::MicrofacetGlassBSDF::sampleF(const IntersectionPoint 
 		math::real no = m_mediaInterface->no(surfaceInteraction->m_direction);
 		math::real ni = m_mediaInterface->ni(surfaceInteraction->m_direction);
 		math::real jacobian = no * no * ::abs(o_dot_m);
-		math::real jacobian_div = (ni * ::abs(i_dot_m) + no * ::abs(o_dot_m));
+		math::real jacobian_div = ni * ::abs(i_dot_m) + no * ::abs(o_dot_m);
 		jacobian /= (jacobian_div * jacobian_div);
 
 		tPdf = m_distribution->calculatePDF(m, &s) * jacobian;

@@ -102,8 +102,8 @@ manta::math::Vector manta::BilayerBSDF::sampleF(const IntersectionPoint *surface
 	// Calculate reflectance
 	auto pow5 = [](math::real v) { return (v * v) * (v * v) * v; };
 
-	math::real absCosThetaI = ::abs(math::getZ(i));
-	math::real absCosThetaO = ::abs(math::getZ(*o));
+	math::real absCosThetaI = ::abs(cosThetaI);
+	math::real absCosThetaO = ::abs(cosThetaO);
 
 	math::Vector diffuse = math::loadScalar((math::real)28.0 / ((math::real)23.0 * math::constants::PI));
 	diffuse = math::mul(diffuse, diffuseR);
@@ -119,10 +119,6 @@ manta::math::Vector manta::BilayerBSDF::sampleF(const IntersectionPoint *surface
 	}
 	else {
 		specular = math::loadScalar(m_coatingDistribution->calculateDistribution(wh, &specularDistMem));
-		if (math::getX(specular) < 0 || math::getY(specular) < 0 || math::getZ(specular) < 0) {
-			int a = 0;
-			//std::cout << math::getZ(*o) << "," << math::getZ(i) << "," << math::getZ(wh) << std::endl;
-		}
 
 		math::Vector specular_div = math::loadScalar(4 * abs_o_dot_wh * absCosThetaOI);
 		math::Vector schlickFresnel = math::sub(math::constants::One, specularR);
@@ -140,11 +136,6 @@ manta::math::Vector manta::BilayerBSDF::sampleF(const IntersectionPoint *surface
 	math::Vector fr = math::add(diffuse, specular);
 
 	assert(!(::isnan(math::getX(fr)) || ::isnan(math::getY(fr)) || ::isnan(math::getZ(fr))));
-
-	if (math::getX(fr) < 0 || math::getY(fr) < 0 || math::getZ(fr) < 0) {
-		int a = 0;
-		std::cout << math::getZ(*o) << "," << math::getZ(i) << "," << math::getZ(wh) << std::endl;
-	}
 
 	return fr;
 }

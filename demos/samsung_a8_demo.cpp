@@ -4,21 +4,18 @@
 
 using namespace manta;
 
-// 17:15
-
-enum CAMERA_POSITION {
-	FACE_ON,
-	LEFT_GENERAL,
-	RIGHT_GENERAL
-};
-
 void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolutionY) {
+	enum SCENE {
+		FACE_ON_SCENE,
+		UPRIGHT_SCENE
+	};
+
 	// Top-level parameters
-	constexpr bool LENS_SIMULATION = false;
 	constexpr bool USE_ACCELERATION_STRUCTURE = true;
 	constexpr bool DETERMINISTIC_SEED_MODE = false;
 	constexpr bool TRACE_SINGLE_PIXEL = false;
-	constexpr CAMERA_POSITION CAMERA_POSITION = FACE_ON;
+	constexpr SCENE SCENE = UPRIGHT_SCENE;
+	constexpr bool ENABLE_SMUDGE = true;
 
 	RayTracer rayTracer;
 	Scene scene;
@@ -31,11 +28,24 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	backPlateTexture.loadFile(TEXTURE_PATH "samsung_a8/back_plate.png", (math::real)2.2);
 
 	TextureNode phoneScreenTexture;
-	phoneScreenTexture.loadFile(TEXTURE_PATH "samsung_a8/phone_screen.jpg", (math::real)2.2);
+	phoneScreenTexture.loadFile(TEXTURE_PATH "samsung_a8/phone_screen.png", (math::real)2.2);
+
+	TextureNode groundRoughness;
+	groundRoughness.loadFile(TEXTURE_PATH "chrome_roughness.jpg", (math::real)1.0);
+
+	TextureNode smudgeMap;
+	smudgeMap.loadFile(TEXTURE_PATH "samsung_a8/fingerprints_roughness_map.png", (math::real)1.0);
 
 	// Load all object files
 	ObjFileLoader phoneObj;
-	bool result = phoneObj.readObjFile(MODEL_PATH "samsung_a8_front_and_back.obj");
+	bool result;
+
+	if (SCENE == FACE_ON_SCENE) {
+		result = phoneObj.readObjFile(MODEL_PATH "samsung_a8_face_on_scene.obj");
+	}
+	else if (SCENE == UPRIGHT_SCENE) {
+		result = phoneObj.readObjFile(MODEL_PATH "samsung_a8_upright_scene.obj");
+	}
 
 	if (!result) {
 		std::cout << "Could not open geometry file(s)" << std::endl;
@@ -48,12 +58,16 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 
 	PhongDistribution phongPhoneCase;
 	phongPhoneCase.setPower(1024);
+	phongPhoneCase.setMinMapPower(8);
+	if (ENABLE_SMUDGE && SCENE == UPRIGHT_SCENE) phongPhoneCase.setPowerNode(&smudgeMap);
 
-	PhongDistribution phongGlassTemp;
-	phongGlassTemp.setPower(10000);
+	PhongDistribution phongGlass;
+	phongGlass.setPower(5000);
+	phongGlass.setMinMapPower(800);
+	if (ENABLE_SMUDGE && SCENE == UPRIGHT_SCENE) phongGlass.setPowerNode(&smudgeMap);
 
 	PhongDistribution phongBlackPlastic;
-	phongBlackPlastic.setPower(8000);
+	phongBlackPlastic.setPower(5000);
 
 	PhongDistribution phongBayDoor;
 	phongBayDoor.setPower(256);
@@ -66,6 +80,8 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 
 	PhongDistribution phongFloor;
 	phongFloor.setPower(256);
+	phongFloor.setMinMapPower(240);
+	if (ENABLE_SMUDGE && SCENE == UPRIGHT_SCENE) phongFloor.setPowerNode(&groundRoughness);
 
 	PhongDistribution mattePlasticPhong;
 	mattePlasticPhong.setPower(64);
@@ -81,8 +97,8 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 
 	BilayerBSDF bayDoorBSDF;
 	bayDoorBSDF.setDiffuseMaterial(&lambert);
-	bayDoorBSDF.setCoatingDistribution(&phongPhoneCase);
-	bayDoorBSDF.setDiffuse(getColor(0x10, 0x10, 0x10));
+	bayDoorBSDF.setCoatingDistribution(&phongBayDoor);
+	bayDoorBSDF.setDiffuse(getColor(0x0, 0x0, 0x0));
 	bayDoorBSDF.setSpecularAtNormal(math::loadVector(0.0, 0.0, 0.0));
 
 	BilayerBSDF speakerGrillBSDF;
@@ -93,30 +109,25 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	speakerGrillBSDF.setSpecularAtNormal(math::loadVector(0.0, 0.0, 0.0));
 
 	BilayerBSDF blackPlasticBSDF;
-	//blackPlasticBSDF.setDistribution(&phongBlackPlastic);
 	blackPlasticBSDF.setDiffuseMaterial(&lambert);
 	blackPlasticBSDF.setCoatingDistribution(&phongBlackPlastic);
 	blackPlasticBSDF.setDiffuse(getColor(0x0, 0x0, 0x0));
-	blackPlasticBSDF.setSpecularAtNormal(math::loadVector(0.1, 0.1, 0.1));
+	blackPlasticBSDF.setSpecularAtNormal(math::loadVector(0.05, 0.05, 0.05));
 
 	MicrofacetReflectionBSDF mattePlasticBSDF;
 	mattePlasticBSDF.setDistribution(&mattePlasticPhong);
-	//mattePlasticBSDF.setDiffuseMaterial(&lambert);
-	//mattePlasticBSDF.setCoatingDistribution(&mattePlasticPhong);
-	//mattePlasticBSDF.setDiffuse(getColor(0xBC, 0xBC, 0xBC));
-	//mattePlasticBSDF.setSpecularAtNormal(math::loadVector(0.0, 0.0, 0.0));
 
 	BilayerBSDF floorBSDF;
 	floorBSDF.setDiffuseMaterial(&lambert);
 	floorBSDF.setCoatingDistribution(&phongFloor);
-	floorBSDF.setDiffuse(getColor(255, 255, 255));
-	floorBSDF.setSpecularAtNormal(math::loadVector(0.0, 0.0, 0.0));
-
-	BilayerBSDF tempGlassBSDF;
-	tempGlassBSDF.setDiffuseMaterial(&lambert);
-	tempGlassBSDF.setCoatingDistribution(&phongGlassTemp);
-	tempGlassBSDF.setDiffuse(getColor(0, 0, 0));
-	tempGlassBSDF.setSpecularAtNormal(math::loadVector(0.0, 0.0, 0.0));
+	if (SCENE == UPRIGHT_SCENE) {
+		floorBSDF.setDiffuse(getColor(0, 0, 0));
+		floorBSDF.setSpecularAtNormal(math::loadVector(0.2, 0.2, 0.2));
+	}
+	else if (SCENE == FACE_ON_SCENE) {
+		floorBSDF.setDiffuse(getColor(255, 255, 255));
+		floorBSDF.setSpecularAtNormal(math::loadVector(0.0, 0.0, 0.0));
+	}
 
 	BilayerBSDF backPlateBSDF;
 	backPlateBSDF.setDiffuseMaterial(&lambert);
@@ -128,14 +139,14 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	fresnel.setIorIncident((math::real)1.0);
 	fresnel.setIorTransmitted((math::real)1.4);
 	MicrofacetGlassBSDF simpleGlassBSDF;
-	simpleGlassBSDF.setDistribution(&phongGlassTemp);
+	simpleGlassBSDF.setDistribution(&phongGlass);
 	simpleGlassBSDF.setMediaInterface(&fresnel);
 
 	DielectricMediaInterface lensFresnel;
 	lensFresnel.setIorIncident((math::real)1.0);
 	lensFresnel.setIorTransmitted((math::real)1.5);
 	MicrofacetGlassBSDF lensGlassBSDF;
-	lensGlassBSDF.setDistribution(&phongGlassTemp);
+	lensGlassBSDF.setDistribution(&phongGlass);
 	lensGlassBSDF.setMediaInterface(&lensFresnel);
 
 	MicrofacetReflectionBSDF bronzeBSDF;
@@ -157,6 +168,7 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	SimpleBSDFMaterial *phoneCaseMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	phoneCaseMaterial->setName("PhoneCase");
 	phoneCaseMaterial->setReflectance(getColor(255, 255, 255));
+	phoneCaseMaterial->setReflectanceNode(&smudgeMap);
 	phoneCaseMaterial->setBSDF(&phoneCaseBSDF);
 
 	SimpleBSDFMaterial *bayDoorMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
@@ -189,15 +201,15 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	floorMaterial->setReflectance(getColor(255, 255, 255));
 	floorMaterial->setBSDF(&floorBSDF);
 
-	SimpleBSDFMaterial *tempGlassMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
-	tempGlassMaterial->setName("Glass");
-	tempGlassMaterial->setReflectance(getColor(255, 255, 255));
-	tempGlassMaterial->setBSDF(&simpleGlassBSDF);
+	SimpleBSDFMaterial *glassMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	glassMaterial->setName("Glass");
+	glassMaterial->setReflectance(getColor(255, 255, 255));
+	glassMaterial->setBSDF(&simpleGlassBSDF);
 
-	SimpleBSDFMaterial *tempLensGlassMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
-	tempLensGlassMaterial->setName("LensGlass");
-	tempLensGlassMaterial->setReflectance(getColor(255, 255, 255));
-	tempLensGlassMaterial->setBSDF(&lensGlassBSDF);
+	SimpleBSDFMaterial *lensGlassMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	lensGlassMaterial->setName("LensGlass");
+	lensGlassMaterial->setReflectance(getColor(255, 255, 255));
+	lensGlassMaterial->setBSDF(&lensGlassBSDF);
 
 	SimpleBSDFMaterial *speakerGrillMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	speakerGrillMaterial->setName("SpeakerGrill");
@@ -206,7 +218,7 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 
 	SimpleBSDFMaterial *screenMaskMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	screenMaskMaterial->setName("ScreenMask");
-	screenMaskMaterial->setReflectance(getColor(10, 10, 10));
+	screenMaskMaterial->setReflectance(getColor(5, 5, 5));
 	screenMaskMaterial->setBSDF(&lambert);
 
 	SimpleBSDFMaterial *mattePlasticMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
@@ -242,14 +254,20 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	screenMaterial->setBSDF(&lambert);
 
 	SimpleBSDFMaterial *strongLight = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
-	strongLight->setEmission(math::loadVector(5.0, 5.0, 5.0));
+	if (SCENE == UPRIGHT_SCENE) strongLight->setEmission(math::loadVector(8.0, 8.0, 8.0));
+	else if (SCENE == FACE_ON_SCENE) strongLight->setEmission(math::loadVector(5.0, 5.0, 5.0));
 	strongLight->setReflectance(math::constants::Zero);
 	strongLight->setName("StrongLight");
 
 	SimpleBSDFMaterial *weakLight = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
-	weakLight->setEmission(math::loadVector(1.0, 1.0, 1.0));
+	weakLight->setEmission(math::loadVector(1.9, 1.9, 1.9));
 	weakLight->setReflectance(math::constants::Zero);
 	weakLight->setName("WeakLight");
+
+	SimpleBSDFMaterial *fillLight = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	fillLight->setEmission(math::loadVector(11.4, 11.4, 11.4));
+	fillLight->setReflectance(math::constants::Zero);
+	fillLight->setName("FillLight");
 
 	// Create all scene geometry
 	Mesh phone;
@@ -277,16 +295,16 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	math::Vector cameraPos = math::loadVector(-39.408, 12.216, 45.728);
 	math::Vector target = math::loadVector(0, 0, 0.0);
 	math::Vector up = math::loadVector(0.0f, 1.0, 0.0);
+	math::real cameraPlaneSize = 0.25;
 
-	if (CAMERA_POSITION == FACE_ON) {
-		cameraPos = math::loadVector(0, 90, 0); // 70
+	if (SCENE == FACE_ON_SCENE) {
+		cameraPos = math::loadVector(0, 90, 0);
 		up = math::loadVector(0, 0, -1);
 	}
-	else if (CAMERA_POSITION == LEFT_GENERAL) {
-		cameraPos = math::loadVector(-39.408, 12.216, 45.728);
-	}
-	else if (CAMERA_POSITION == RIGHT_GENERAL) {
-		cameraPos = math::loadVector(+39.408, 12.216, 45.728);
+	else if (SCENE == UPRIGHT_SCENE) {
+		target = math::loadVector(0, 8.8565, -8.9672);
+		cameraPos = math::loadVector(0, 13.786, -28.987);
+		cameraPlaneSize = 0.65;
 	}
 
 	math::Vector dir = math::normalize(math::sub(target, cameraPos));
@@ -296,53 +314,18 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	cameraPos = math::sub(cameraPos, math::mul(dir, math::loadScalar(1.0)));
 
 	CameraRayEmitterGroup *group;
-	manta::SimpleLens lens;
-	lens.initialize();
-	lens.setPosition(cameraPos);
-	lens.setDirection(dir);
-	lens.setUp(up);
-	lens.setRadius(1.0);
-	lens.setSensorResolutionX(resolutionX);
-	lens.setSensorResolutionY(resolutionY);
-	lens.setSensorHeight(22.0);
-	lens.setSensorWidth(22.0 * (resolutionX / (math::real)resolutionY));
-	lens.update();
-
 	RandomSampler sampler;
-	SimpleSampler simpleSampler;
-
-	if (!LENS_SIMULATION) {
-		StandardCameraRayEmitterGroup *camera = new StandardCameraRayEmitterGroup;
-		camera->setSampler(&sampler);
-		camera->setDirection(dir);
-		camera->setPosition(cameraPos);
-		camera->setUp(up);
-		camera->setPlaneDistance(1.0f);
-		camera->setPlaneHeight(0.25f);
-		camera->setResolutionX(resolutionX);
-		camera->setResolutionY(resolutionY);
-		camera->setSampleCount(samplesPerPixel);
-		group = camera;
-	}
-	else {
-		math::real lensHeight = 1.0;
-		math::real focusDistance = 11.0;
-
-		Aperture *aperture = lens.getAperture();
-		aperture->setRadius((math::real)0.007);
-		lens.setFocus(focusDistance);
-
-		LensCameraRayEmitterGroup *camera = new LensCameraRayEmitterGroup;
-		camera->setDirection(math::normalize(math::sub(target, cameraPos)));
-		camera->setPosition(cameraPos);
-		camera->setLens(&lens);
-		camera->setResolutionX(resolutionX);
-		camera->setResolutionY(resolutionY);
-		camera->setSampleCount(samplesPerPixel);
-		camera->setSampler(&sampler);
-
-		group = camera;
-	}
+	StandardCameraRayEmitterGroup *camera = new StandardCameraRayEmitterGroup;
+	camera->setSampler(&sampler);
+	camera->setDirection(dir);
+	camera->setPosition(cameraPos);
+	camera->setUp(up);
+	camera->setPlaneDistance(1.0f);
+	camera->setPlaneHeight(cameraPlaneSize);
+	camera->setResolutionX(resolutionX);
+	camera->setResolutionY(resolutionY);
+	camera->setSampleCount(samplesPerPixel);
+	group = camera;
 
 	// Create the raytracer
 	rayTracer.initialize(1000 * MB, 50 * MB, 12, 10000, true);
