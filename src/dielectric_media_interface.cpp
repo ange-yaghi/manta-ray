@@ -78,3 +78,36 @@ manta::math::real manta::DielectricMediaInterface::fresnelTerm(math::real cosThe
 
 	return (Rparl * Rparl + Rperp * Rperp) / (math::real)2.0;
 }
+
+manta::math::real manta::DielectricMediaInterface::ior(DIRECTION d) {
+	math::real ni, no;
+
+	if (d == DIRECTION_IN) {
+		ni = m_iorIncident;
+		no = m_iorTransmitted;
+	}
+	else if (d == DIRECTION_OUT) {
+		ni = m_iorTransmitted;
+		no = m_iorIncident;
+	}
+
+	return ni / no;
+}
+
+manta::math::real manta::DielectricMediaInterface::no(DIRECTION d) {
+	if (d == DIRECTION_IN) {
+		return m_iorTransmitted;
+	}
+	else if (d == DIRECTION_OUT) {
+		return m_iorIncident;
+	}
+}
+
+manta::math::real manta::DielectricMediaInterface::ni(DIRECTION d) {
+	if (d == DIRECTION_IN) {
+		return m_iorIncident;
+	}
+	else if (d == DIRECTION_OUT) {
+		return m_iorTransmitted;
+	}
+}
