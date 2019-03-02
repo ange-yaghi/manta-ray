@@ -40,7 +40,7 @@ bool manta::SpherePrimitive::findClosestIntersection(const LightRay *ray, Coarse
 
 		if (intersects) {
 			if ((t1_s < maxDepth && t1_s > minDepth) || (t2_s < maxDepth && t2_s > minDepth)) {
-				intersection->locationHint = -1; // Unused for spheres
+				intersection->faceHint = -1; // Unused for spheres
 				intersection->sceneGeometry = this;
 				intersection->globalHint = -1;
 				intersection->valid = true;

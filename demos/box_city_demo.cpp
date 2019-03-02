@@ -50,6 +50,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	Mesh boxCity;
 	boxCity.loadObjFileData(&boxCityObj, rayTracer.getMaterialManager());
 	boxCity.setFastIntersectEnabled(false);
+	//boxCity.findQuads();
 
 	SpherePrimitive outdoorTopLightGeometry;
 	outdoorTopLightGeometry.setRadius((math::real)10.0);
@@ -58,7 +59,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	// Create scene objects
 	KDTree kdtree;
 	kdtree.initialize(100.0, math::constants::Zero);
-	kdtree.analyze(&boxCity, 4);
+	kdtree.analyze(&boxCity, 2);
 
 	if (WRITE_KDTREE_TO_FILE) {
 		kdtree.writeToObjFile("../../workspace/test_results/box_city_kdtree.obj");
