@@ -85,6 +85,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	teapot.setFastIntersectPosition(math::loadVector(-0.5724, 1.02483, -0.04969));
 
 	teapot.merge(&lamp);
+	teapot.findQuads();
 
 	KDTree kdtree;
 	kdtree.initialize(4.0, math::constants::Zero);
