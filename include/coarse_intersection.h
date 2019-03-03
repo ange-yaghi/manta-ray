@@ -12,8 +12,12 @@ namespace manta {
 		SceneObject *sceneObject;
 		const SceneGeometry *sceneGeometry;
 		math::real depth;
-		int locationHint;
+		int faceHint;
+		int subdivisionHint;
 		int globalHint;
+
+		math::real su, sv, sw;
+		
 		bool valid;
 	};
 

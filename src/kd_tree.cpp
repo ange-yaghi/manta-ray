@@ -105,7 +105,6 @@ bool manta::KDTree::findClosestIntersection(const LightRay *ray, CoarseIntersect
 #ifdef _DEBUG
 				int secondChildIndex = secondChild - m_nodes;
 #endif
-
 				// Add second child to queue
 				jobs[currentJob].node = secondChild;
 				jobs[currentJob].tmin = tPlane;
@@ -153,10 +152,6 @@ manta::math::Vector manta::KDTree::getClosestPoint(const CoarseIntersection *hin
 	return math::Vector();
 }
 
-void manta::KDTree::getVicinity(const math::Vector &p, math::real radius, IntersectionList *list, SceneObject *object) const {
-
-}
-
 void manta::KDTree::fineIntersection(const math::Vector &r, IntersectionPoint *p, const CoarseIntersection *hint) const {
 	hint->sceneGeometry->fineIntersection(r, p, hint);
 }
@@ -187,14 +182,7 @@ void manta::KDTree::analyze(Mesh *mesh, int maxSize) {
 	// Generate bounds for all faces
 	workspace.allFaceBounds = StandardAllocator::Global()->allocate<AABB>(nFaces, 16);
 	for (int i = 0; i < nFaces; i++) {
-		Face *face = &mesh->getFaces()[i];
-
-		Triangle triangle;
-		triangle.u = *mesh->getVertex(face->u);
-		triangle.v = *mesh->getVertex(face->v);
-		triangle.w = *mesh->getVertex(face->w);
-
-		calculateAABB(&triangle, &workspace.allFaceBounds[i]);
+		mesh->calculateFaceAABB(i, &workspace.allFaceBounds[i]);
 	}
 
 	AABB topNodeBounds;
@@ -233,7 +221,7 @@ void manta::KDTree::analyze(int currentNode, AABB *nodeBounds, const std::vector
 
 	int primitiveCount = (int)faces.size();
 	if (primitiveCount <= workspace->maxPrimitives || depth == 0) {
-		initLeaf(currentNode, faces, workspace);
+		initLeaf(currentNode, faces, *nodeBounds, workspace);
 		return;
 	}
 
@@ -298,7 +286,7 @@ void manta::KDTree::analyze(int currentNode, AABB *nodeBounds, const std::vector
 
 	if (bestCost > oldCost) ++badRefines;
 	if (((bestCost > 4 * oldCost && primitiveCount < workspace->maxPrimitives) || bestAxis == -1 || badRefines == 3)) {
-		initLeaf(currentNode, faces, workspace);
+		initLeaf(currentNode, faces, *nodeBounds, workspace);
 		return;
 	}
 
@@ -373,12 +361,30 @@ int manta::KDTree::createNodeVolume() {
 	return m_volumeCount++;
 }
 
-void manta::KDTree::initLeaf(int node, const std::vector<int> &faces, KDTreeWorkspace *workspace) {
+void manta::KDTree::initLeaf(int node, const std::vector<int> &faces, const AABB &bounds, KDTreeWorkspace *workspace) {
 	int primitiveCount = (int)faces.size();
+	int filteredPrimitiveCount = 0;
 	int newNodeVolume = createNodeVolume();
-	m_nodes[node].initLeaf(primitiveCount, newNodeVolume);
 
+	constexpr bool ENABLE_FILTERING = true;
+	std::vector<bool> filtered;
+
+	// Filter faces
 	if (primitiveCount > 0) {
+		for (int i = 0; i < primitiveCount; i++) {
+			if (ENABLE_FILTERING && !m_mesh->checkFaceAABB(faces[i], bounds)) {
+				filtered.push_back(true);
+			}
+			else {
+				filtered.push_back(false);
+				filteredPrimitiveCount++;
+			}
+		}
+	}
+
+	m_nodes[node].initLeaf(filteredPrimitiveCount, newNodeVolume);
+
+	if (filteredPrimitiveCount > 0) {
 		// Initialize the new volume
 		KDBoundingVolume &volume = m_nodeVolumes[newNodeVolume];
 		volume.faceListOffset = (int)workspace->faces.size();
@@ -386,12 +392,16 @@ void manta::KDTree::initLeaf(int node, const std::vector<int> &faces, KDTreeWork
 
 		// Add all primitives to the list
 		for (int i = 0; i < primitiveCount; i++) {
-			workspace->faces.push_back(faces[i]);
+			if (!filtered[i]) {
+				workspace->faces.push_back(faces[i]);
+			}
 		}
 
 		// Merge all bounds
 		for (int i = 1; i < primitiveCount; i++) {
-			volume.bounds.merge(workspace->allFaceBounds[faces[i]]);
+			if (!filtered[i]) {
+				volume.bounds.merge(workspace->allFaceBounds[faces[i]]);
+			}
 		}
 	}
 }

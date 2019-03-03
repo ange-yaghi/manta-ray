@@ -42,14 +42,6 @@ bool manta::Octree::findClosestIntersection(const LightRay *ray, CoarseIntersect
 	return findClosestIntersection(&m_tree, ray, ood, intersection, minDepth, maxDepth, s, true);
 }
 
-manta::math::Vector manta::Octree::getClosestPoint(const CoarseIntersection *hint, const math::Vector &p) const {
-	return hint->sceneGeometry->getClosestPoint(hint, p);
-}
-
-void manta::Octree::getVicinity(const math::Vector &p, math::real radius, IntersectionList *list, SceneObject *object) const {
-	getVicinity(&m_tree, p, radius, list, object);
-}
-
 void manta::Octree::fineIntersection(const math::Vector &r, IntersectionPoint *p, const CoarseIntersection *hint) const {
 	hint->sceneGeometry->fineIntersection(r, p, hint);
 }
@@ -207,17 +199,6 @@ bool manta::Octree::findClosestIntersection(const OctreeBV *leaf, const LightRay
 		}
 	}
 	return found;
-}
-
-void manta::Octree::getVicinity(const OctreeBV *leaf, const math::Vector &p, math::real radius, IntersectionList *list, SceneObject *object) const {
-	if (AABBIntersect(leaf, p, radius)) {
-		m_mesh->getVicinity(m_faceLists[leaf->faceList], leaf->faceCount, p, radius, list, object);
-
-		int childList = leaf->childList;
-		for (int i = 0; i < leaf->childCount; i++) {
-			getVicinity(&m_childLists[childList][i], p, radius, list, object);
-		}
-	}
 }
 
 bool manta::Octree::analyze(Mesh *mesh, OctreeBV *leaf, int maxSize, std::vector<int> &facePool) {
