@@ -48,8 +48,6 @@ namespace manta {
 		void destroy();
 
 		virtual bool findClosestIntersection(const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s) const;
-		virtual math::Vector getClosestPoint(const CoarseIntersection *hint, const math::Vector &p) const;
-		virtual void getVicinity(const math::Vector &p, math::real radius, IntersectionList *list, SceneObject *object) const;
 		virtual void fineIntersection(const math::Vector &r, IntersectionPoint *p, const CoarseIntersection *hint) const;
 		virtual bool fastIntersection(const LightRay *ray) const;
 
@@ -66,7 +64,6 @@ namespace manta {
 		int countLeaves(const OctreeBV *leaf) const;
 
 		bool findClosestIntersection(const OctreeBV *leaf, const LightRay *ray, const math::Vector &ood, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s, bool skip=false) const;
-		void getVicinity(const OctreeBV *leaf, const math::Vector &p, math::real radius, IntersectionList *list, SceneObject *object) const;
 
 		bool analyze(Mesh *mesh, OctreeBV *leaf, int maxSize, std::vector<int> &facePool);
 		void shrink(OctreeBV *leaf);

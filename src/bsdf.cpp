@@ -9,4 +9,3 @@ manta::BSDF::BSDF() {
 manta::BSDF::~BSDF() {
 
 }
-
