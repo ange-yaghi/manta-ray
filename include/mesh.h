@@ -30,11 +30,8 @@ namespace manta {
 		void destroy();
 		void filterDegenerateFaces();
 		void findQuads();
-		void precomputeValues();
 
 		virtual bool findClosestIntersection(const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s) const;
-		virtual math::Vector getClosestPoint(const CoarseIntersection *hint, const math::Vector &p) const;
-		virtual void getVicinity(const math::Vector &p, math::real radius, IntersectionList *list, SceneObject *object) const;
 		virtual void fineIntersection(const math::Vector &r, IntersectionPoint *p, const CoarseIntersection *hint) const;
 		virtual bool fastIntersection(const LightRay *ray) const;
 
@@ -67,26 +64,20 @@ namespace manta {
 		void setFastIntersectRadius(math::real radius) { m_fastIntersectRadius = radius; }
 		void setFastIntersectPosition(math::Vector pos) { m_fastIntersectPosition = pos; }
 
-		const PrecomputedValues *getPrecomputedValues() const { return m_precomputedValues; }
-
 		void loadObjFileData(ObjFileLoader *data, MaterialManager *materialLibrary = nullptr, int defaultMaterialIndex = -1, unsigned int globalId = 0);
 
 		void merge(const Mesh *mesh);
 
-		math::Vector getClosestPointOnFace(int faceIndex, const math::Vector &p) const;
-		void getClosestPointOnFaceBarycentric(int faceIndex, const math::Vector &p, math::real *u, math::real *v, math::real *w) const;
-		bool testClosestPointOnFace(int faceIndex, math::real maxDepth, const math::Vector &p) const;
 		bool detectTriangleIntersection(int faceIndex, math::real minDepth, math::real maxDepth, const LightRay *ray, CoarseCollisionOutput *output) const;
 		bool detectQuadIntersection(int faceIndex, math::real minDepth, math::real maxDepth, const LightRay *ray, CoarseCollisionOutput *output) const;
-		inline bool detectIntersection(int faceIndex, math::real u, math::real v, math::real w, math::real delta) const;
 
 		bool findClosestIntersection(int *faceList, int faceCount, const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s) const;
-		void getVicinity(int *faceList, int faceCount, const math::Vector &p, math::real radius, IntersectionList *list, SceneObject *object) const;
 
+		bool checkFaceAABB(int faceIndex, const AABB &bounds) const;
 		void calculateFaceAABB(int faceIndex, AABB *target) const;
 
 	protected:
-		void computePlane(const math::Vector &n, const math::Vector &p, Plane *plane) const;
+		bool checkFaceAABB(const math::Vector &v0, const math::Vector &v1, const math::Vector &v2, const AABB &bounds) const;
 
 		Face *m_faces;
 		AuxFaceData *m_auxFaceData;
@@ -103,9 +94,6 @@ namespace manta {
 		int m_vertexCount;
 		int m_normalCount;
 		int m_texCoordCount;
-
-		// Precomputed values
-		PrecomputedValues *m_precomputedValues;
 
 		math::real m_fastIntersectRadius;
 		math::Vector m_fastIntersectPosition;

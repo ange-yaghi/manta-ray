@@ -18,8 +18,6 @@ namespace manta {
 		~SceneGeometry();
 
 		virtual bool findClosestIntersection(const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s) const = 0;
-		virtual math::Vector getClosestPoint(const CoarseIntersection *hint, const math::Vector &p) const = 0;
-		virtual void getVicinity(const math::Vector &p, math::real radius, IntersectionList *list, SceneObject *object) const = 0;
 		virtual void fineIntersection(const math::Vector &r, IntersectionPoint *p, const CoarseIntersection *hint) const = 0;
 		virtual bool fastIntersection(const LightRay *ray) const = 0;
 

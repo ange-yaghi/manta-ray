@@ -14,19 +14,6 @@ namespace manta {
 	struct IntersectionPoint;
 	class StackAllocator;
 
-	struct BSDFInput {
-		math::Vector normal;
-		math::Vector incident;
-
-		math::Vector u;
-		math::Vector v;
-
-		const IntersectionPoint *surfaceInteraction;
-
-		unsigned char cachedParameters[64];
-		void *extraMemory;
-	};
-
 	class BSDF : public MaterialNode {
 	public:
 		BSDF();

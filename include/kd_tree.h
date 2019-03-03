@@ -132,7 +132,6 @@ namespace manta {
 
 		virtual bool findClosestIntersection(const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s) const;
 		virtual math::Vector getClosestPoint(const CoarseIntersection *hint, const math::Vector &p) const;
-		virtual void getVicinity(const math::Vector &p, math::real radius, IntersectionList *list, SceneObject *object) const;
 		virtual void fineIntersection(const math::Vector &r, IntersectionPoint *p, const CoarseIntersection *hint) const;
 		virtual bool fastIntersection(const LightRay *ray) const;
 
@@ -142,7 +141,7 @@ namespace manta {
 		int createNodeVolume();
 		KDTreeNode *getNode(int index) { return &m_nodes[index]; }
 
-		void initLeaf(int node, const std::vector<int> &faces, KDTreeWorkspace *workspace);
+		void initLeaf(int node, const std::vector<int> &faces, const AABB &bounds, KDTreeWorkspace *workspace);
 
 		void writeToObjFile(const char *fname) const;
 

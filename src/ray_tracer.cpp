@@ -300,6 +300,6 @@ void manta::RayTracer::traceRays(const Scene *scene, const RayContainer &rayCont
 		LightRay *ray = &rayContainer.getRays()[i];
 		ray->calculateTransformations();
 
-		traceRay(scene, ray, rayContainer.getDegree(), s);
+		traceRay(scene, ray, rayContainer.getDegree(), s /**/ PATH_RECORDER_VAR);
 	}
 }
