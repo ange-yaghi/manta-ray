@@ -8,7 +8,7 @@ int main() {
 
 	// Run a demo
 	constexpr DEMO demo = DEMO::MATERIAL_PREVIEW;
-	constexpr int samples = 100000;
+	constexpr int samples = 500;
 	constexpr int resolutionX = 2048;
 	constexpr int resolutionY = 1536;
 

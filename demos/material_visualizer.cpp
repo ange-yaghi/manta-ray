@@ -9,7 +9,7 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
 	constexpr bool USE_ACCELERATION_STRUCTURE = true;
 	constexpr bool DETERMINISTIC_SEED_MODE = false;
 	constexpr bool TRACE_SINGLE_PIXEL = false;
-	constexpr const char *MATERIAL = "Glass";
+	constexpr const char *MATERIAL = "SimpleDarkWood";
 
 	RayTracer rayTracer;
 	Scene scene;
@@ -30,6 +30,8 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
 
 	// Materials ==============================================================
 
+	LambertianBSDF lambert;
+
 	// Glass
 	PhongDistribution phongGlass;
 	phongGlass.setPower(50000);
@@ -46,11 +48,31 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
 	glassMaterial->setReflectance(getColor(255, 255, 255));
 	glassMaterial->setBSDF(&simpleGlassBSDF);
 
+	// Simple Wood
+	TextureNode texture;
+	texture.loadFile(TEXTURE_PATH "/dark_wood.jpg", 2.2);
+
+	TextureNode woodRoughness;
+	woodRoughness.loadFile(TEXTURE_PATH "/wood_roughness.jpg", 1.0);
+
+	PhongDistribution woodCoating;
+	woodCoating.setPower(1000);
+	woodCoating.setPowerNode(&woodRoughness);
+	woodCoating.setMinMapPower(2);
+
+	BilayerBSDF simpleWoodBSDF;
+	simpleWoodBSDF.setDiffuseMaterial(&lambert);
+	simpleWoodBSDF.setCoatingDistribution(&woodCoating);
+	simpleWoodBSDF.setDiffuseNode(&texture);
+	simpleWoodBSDF.setSpecularAtNormal(math::loadVector(0.0, 0.0, 0.0));
+
+	SimpleBSDFMaterial *paintMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	paintMaterial->setBSDF(&simpleWoodBSDF);
+	paintMaterial->setName("SimpleDarkWood");
+
 	// ========================================================================
 
 	// Create all scene materials
-	LambertianBSDF lambert;
-
 	SimpleBSDFMaterial *defaultLambert = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	defaultLambert->setBSDF(&lambert);
 	defaultLambert->setName("Default");
