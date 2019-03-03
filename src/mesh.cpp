@@ -24,8 +24,6 @@ manta::Mesh::Mesh() {
 	m_normalCount = 0;
 	m_texCoordCount = 0;
 
-	m_precomputedValues = nullptr;
-
 	m_fastIntersectEnabled = false;
 	m_fastIntersectRadius = (math::real)0.0;
 
@@ -40,7 +38,6 @@ manta::Mesh::~Mesh() {
 	assert(m_vertices == nullptr);
 	assert(m_normals == nullptr);
 	assert(m_textureCoords == nullptr);
-	assert(m_precomputedValues == nullptr);
 }
 
 void manta::Mesh::initialize(int faceCount, int vertexCount, int normalCount, int texCoordCount) {
@@ -76,7 +73,6 @@ void manta::Mesh::destroy() {
 	if (m_vertices != nullptr) StandardAllocator::Global()->aligned_free(m_vertices, m_vertexCount);
 	if (m_normals != nullptr) StandardAllocator::Global()->aligned_free(m_normals, m_normalCount);
 	if (m_textureCoords != nullptr) StandardAllocator::Global()->aligned_free(m_textureCoords, m_texCoordCount);
-	if (m_precomputedValues != nullptr) StandardAllocator::Global()->aligned_free(m_precomputedValues, m_triangleFaceCount);
 
 	m_faces = nullptr;
 	m_auxFaceData = nullptr;
@@ -85,7 +81,6 @@ void manta::Mesh::destroy() {
 	m_vertices = nullptr;
 	m_normals = nullptr;
 	m_textureCoords = nullptr;
-	m_precomputedValues = nullptr;
 }
 
 void manta::Mesh::filterDegenerateFaces() {
@@ -167,7 +162,6 @@ void manta::Mesh::findQuads() {
 				Face *face2 = &m_faces[connectedFaces[f2]];
 
 				int e0, e1, e0p, e1p;
-				int iv0, iv1;
 				bool attached = face1->isAttached(*face2, &e0, &e1, &e0p, &e1p);
 
 				if (attached) {
@@ -188,7 +182,7 @@ void manta::Mesh::findQuads() {
 					// Faces are nearly coplanar
 					if (d < 1E-5) {
 						// Check handedness (ensure that the first vertex appears on the 'left' of the edge)
-						iv0 = face1->getOther(e0, e1);
+						int iv0 = face1->getOther(e0, e1);
 
 						math::Vector ev0 = m_vertices[face1->indices[e0]];
 						math::Vector ev1 = m_vertices[face1->indices[e1]];
@@ -285,52 +279,14 @@ void manta::Mesh::findQuads() {
 		newAuxData[i] = newAuxFaceDataTemp[i];
 	}
 
-	StandardAllocator::Global()->free(m_faces, m_triangleFaceCount);
-	StandardAllocator::Global()->free(m_auxFaceData, m_triangleFaceCount);
+	StandardAllocator::Global()->free(m_faces, originalTriangleCount);
+	StandardAllocator::Global()->free(m_auxFaceData, originalTriangleCount);
 
 	m_faces = newFaces;
 	m_auxFaceData = newAuxData;
 
 	// Clean up temporary memory
 	StandardAllocator::Global()->free(usedFlags, originalTriangleCount);
-}
-
-void manta::Mesh::precomputeValues() {
-	if (m_precomputedValues != nullptr) StandardAllocator::Global()->aligned_free(m_precomputedValues, m_triangleFaceCount);
-
-	m_precomputedValues = StandardAllocator::Global()->allocate<PrecomputedValues>(m_triangleFaceCount, 16);
-
-	for (int i = 0; i < m_triangleFaceCount; i++) {
-		PrecomputedValues *cache = &m_precomputedValues[i];
-		math::Vector u = m_vertices[m_faces[i].u];
-		math::Vector v = m_vertices[m_faces[i].v];
-		math::Vector w = m_vertices[m_faces[i].w];
-
-		math::Vector normal = math::cross(math::sub(v, u), math::sub(w, u));
-
-		cache->normal = math::normalize(normal);
-
-		computePlane(math::cross(normal, math::sub(w, v)), v, &cache->edgePlaneVW);
-		computePlane(math::cross(normal, math::sub(u, w)), w, &cache->edgePlaneWU);
-		computePlane(math::cross(normal, math::sub(v, u)), u, &cache->edgePlaneVU);
-
-		// Scale the planes such that the computed barycentric coordinates are correct
-		math::Vector scaleVW = math::loadScalar(
-			math::getScalar(math::dot(u, cache->edgePlaneVW.normal)) - cache->edgePlaneVW.d);
-		math::Vector scaleWU = math::loadScalar(
-			math::getScalar(math::dot(v, cache->edgePlaneWU.normal)) - cache->edgePlaneWU.d);
-
-		cache->edgePlaneVW.normal = math::div(cache->edgePlaneVW.normal, scaleVW);
-		cache->edgePlaneVW.d /= math::getScalar(scaleVW);
-
-		cache->edgePlaneWU.normal = math::div(cache->edgePlaneWU.normal, scaleWU);
-		cache->edgePlaneWU.d /= math::getScalar(scaleWU);
-
-		cache->scaleWU = (math::real)1.0 / math::getScalar(scaleWU);
-		cache->scaleVW = (math::real)1.0 / math::getScalar(scaleVW);
-
-		cache->p0 = u;
-	}
 }
 
 bool manta::Mesh::findClosestIntersection(const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s) const {
@@ -375,17 +331,9 @@ bool manta::Mesh::findClosestIntersection(const LightRay *ray, CoarseIntersectio
 	return found;
 }
 
-manta::math::Vector manta::Mesh::getClosestPoint(const CoarseIntersection *hint, const math::Vector &p) const {
-	return getClosestPointOnFace(hint->faceHint, p);
-}
-
-void manta::Mesh::getVicinity(const math::Vector &p, math::real radius, IntersectionList *list, SceneObject *object) const {
-	/* Deprecated */
-}
-
 void manta::Mesh::fineIntersection(const math::Vector &r, IntersectionPoint *p, const CoarseIntersection *hint) const {
 	int faceIndex = hint->faceHint;
-	//PrecomputedValues &cache = m_precomputedValues[faceIndex];
+
 	math::real u, v, w; // Barycentric coordinates
 	u = hint->su;
 	v = hint->sv;
@@ -411,10 +359,6 @@ void manta::Mesh::fineIntersection(const math::Vector &r, IntersectionPoint *p, 
 			data[0] = &auxData->data[0];
 			data[1] = &auxData->data[1];
 			data[2] = &auxData->data[2];
-
-			//math::real temp = w;
-			//w = u;
-			//u = temp;
 
 			material = auxData->materials[0];
 		}
@@ -450,24 +394,6 @@ void manta::Mesh::fineIntersection(const math::Vector &r, IntersectionPoint *p, 
 
 		material = auxData->material;
 	}
-
-	/*
-	getClosestPointOnFaceBarycentric(hint->faceHint, r, &u, &v, &w);
-
-	if (math::getX(r) == 0.0 && math::getY(r) == 0.0 && math::getZ(r) == 0.0) {
-		int a = 0;
-
-	}
-
-	if (std::isnan(u)) {
-		getClosestPointOnFaceBarycentric(hint->faceHint, r, &u, &v, &w);
-		std::cout << "NAN" << std::endl;
-	}
-
-	assert(!std::isnan(u));
-	assert(!std::isnan(v));
-	assert(!std::isnan(w));
-	*/
 
 	p->m_depth = hint->depth;
 
@@ -600,7 +526,7 @@ void manta::Mesh::loadObjFileData(ObjFileLoader *data, MaterialManager *material
 		m_useTextureCoords = false;
 	}
 
-	precomputeValues();
+	filterDegenerateFaces();
 }
 
 void manta::Mesh::merge(const Mesh *mesh) {
@@ -676,7 +602,6 @@ void manta::Mesh::merge(const Mesh *mesh) {
 	if (m_vertices != nullptr) StandardAllocator::Global()->aligned_free(m_vertices, m_vertexCount);
 	if (m_normals != nullptr) StandardAllocator::Global()->aligned_free(m_normals, m_normalCount);
 	if (m_textureCoords != nullptr) StandardAllocator::Global()->aligned_free(m_textureCoords, m_texCoordCount);
-	if (m_precomputedValues != nullptr) StandardAllocator::Global()->aligned_free(m_precomputedValues, m_triangleFaceCount);
 
 	m_faces = newFaces;
 	m_auxFaceData = newAuxFaceData;
@@ -688,179 +613,6 @@ void manta::Mesh::merge(const Mesh *mesh) {
 	m_vertexCount = newVertexCount;
 	m_normalCount = newNormalCount;
 	m_texCoordCount = newTexCoordCount;
-	m_precomputedValues = nullptr;
-
-	precomputeValues();
-}
-
-manta::math::Vector manta::Mesh::getClosestPointOnFace(int faceIndex, const math::Vector &p) const {
-	PrecomputedValues &cache = m_precomputedValues[faceIndex];
-
-	math::Vector a = m_vertices[m_faces[faceIndex].u];
-	math::Vector b = m_vertices[m_faces[faceIndex].v];
-	math::Vector c = m_vertices[m_faces[faceIndex].w];
-
-	math::Vector ab = math::sub(b, a);
-	math::Vector ac = math::sub(c, a);
-	math::Vector ap = math::sub(p, a);
-
-	// P in vertex region outside A
-	math::real d1 = math::getScalar(math::dot(ab, ap));
-	math::real d2 = math::getScalar(math::dot(ac, ap));
-	if (d1 <= (math::real)0.0 && d2 <= 0.0) return a; // Barycentric coordinates: (1, 0, 0)
-
-	// P in vertex region outside B
-	math::Vector bp = math::sub(p, b);
-	math::real d3 = math::getScalar(math::dot(ab, bp));
-	math::real d4 = math::getScalar(math::dot(ac, bp));
-	if (d3 >= (math::real)0.0 && d4 <= d3) return b; // Barycentric coordinates: (0, 1, 0)
-
-	// P in edge region of AB
-	math::real vc = d1 * d4 - d3 * d2;
-	if (vc <= (math::real)0.0 && d1 >= (math::real)0.0 && d3 <= (math::real)0.0) {
-		math::real v = d1 / (d1 - d3);
-		return math::add(a, math::mul(math::loadScalar(v), ab));
-	}
-
-	// P in vertex region outside C
-	math::Vector cp = math::sub(p, c);
-	math::real d5 = math::getScalar(math::dot(ab, cp));
-	math::real d6 = math::getScalar(math::dot(ac, cp));
-	if (d6 >= (math::real)0.0 && d5 <= d6) return c;
-
-	// P in edge region AC
-	math::real vb = d5 * d2 - d1 * d6;
-	if (vb <= (math::real)0.0 && d2 >= (math::real)0.0 && d6 <= (math::real)0.0) {
-		math::real w = d2 / (d2 - d6);
-		return math::add(a, math::mul(math::loadScalar(w), ac)); // Barycentric coordinates (1 - w, 0, w)
-	}
-
-	// P in edge region of BC
-	math::real va = d3 * d6 - d5 * d4;
-	if (va <= (math::real)0.0 && (d4 - d3) >= (math::real)0.0 && (d5 - d6) >= (math::real)0.0) {
-		math::real w = (d4 - d3) / ((d4 - d3) + (d5 - d6));
-		return math::add(b, math::mul(math::loadScalar(w), math::sub(c, b))); // Barycentric coordinates (0, 1 - w, w)
-	}
-
-	// P inside face region
-	math::real denom = (math::real)1.0 / (va + vb + vc);
-	math::real v = vb * denom;
-	math::real w = vc * denom;
-	return
-		math::add(
-			math::add(
-				a,
-				math::mul(ab, math::loadScalar(v))),
-			math::mul(math::loadScalar(w), ac));
-}
-
-void manta::Mesh::getClosestPointOnFaceBarycentric(int faceIndex, const math::Vector &p, math::real *bu, math::real *bv, math::real *bw) const {
-	PrecomputedValues &cache = m_precomputedValues[faceIndex];
-
-	math::Vector a = m_vertices[m_faces[faceIndex].u];
-	math::Vector b = m_vertices[m_faces[faceIndex].v];
-	math::Vector c = m_vertices[m_faces[faceIndex].w];
-
-	math::Vector ab = math::sub(b, a);
-	math::Vector ac = math::sub(c, a);
-	math::Vector ap = math::sub(p, a);
-
-	// P in vertex region outside A
-	math::real d1 = math::getScalar(math::dot(ab, ap));
-	math::real d2 = math::getScalar(math::dot(ac, ap));
-	if (d1 <= (math::real)0.0 && d2 <= 0.0) {
-		// Barycentric coordinates: (1, 0, 0)
-		*bu = (math::real)1.0;
-		*bv = (math::real)0.0;
-		*bw = (math::real)0.0;
-		return;
-	}
-
-	// P in vertex region outside B
-	math::Vector bp = math::sub(p, b);
-	math::real d3 = math::getScalar(math::dot(ab, bp));
-	math::real d4 = math::getScalar(math::dot(ac, bp));
-	if (d3 >= (math::real)0.0 && d4 <= d3) {
-		// Barycentric coordinates: (0, 1, 0)
-		*bu = (math::real)0.0;
-		*bv = (math::real)1.0;
-		*bw = (math::real)0.0;
-		return;
-	}
-
-	// P in edge region of AB
-	math::real vc = d1 * d4 - d3 * d2;
-	if (vc <= (math::real)0.0 && d1 >= (math::real)0.0 && d3 <= (math::real)0.0) {
-		math::real v = d1 / (d1 - d3);
-		*bu = (math::real)1.0 - v;
-		*bv = v;
-		*bw = (math::real)0.0;
-		return;
-	}
-
-	// P in vertex region outside C
-	math::Vector cp = math::sub(p, c);
-	math::real d5 = math::getScalar(math::dot(ab, cp));
-	math::real d6 = math::getScalar(math::dot(ac, cp));
-	if (d6 >= (math::real)0.0 && d5 <= d6) {
-		*bu = (math::real)0.0;
-		*bv = (math::real)0.0;
-		*bw = (math::real)1.0;
-		return;
-	}
-
-	// P in edge region AC
-	math::real vb = d5 * d2 - d1 * d6;
-	if (vb <= (math::real)0.0 && d2 >= (math::real)0.0 && d6 <= (math::real)0.0) {
-		math::real w = d2 / (d2 - d6);
-		// Barycentric coordinates (1 - w, 0, w)
-		*bu = (math::real)1.0 - w;
-		*bv = (math::real)0.0;
-		*bw = w;
-		return;
-	}
-
-	// P in edge region of BC
-	math::real va = d3 * d6 - d5 * d4;
-	if (va <= (math::real)0.0 && (d4 - d3) >= (math::real)0.0 && (d5 - d6) >= (math::real)0.0) {
-		math::real w = (d4 - d3) / ((d4 - d3) + (d5 - d6));
-		// Barycentric coordinates (0, 1 - w, w)
-		*bu = (math::real)0.0;
-		*bv = (math::real)1.0 - w;
-		*bw = w;
-		return;
-	}
-
-	// P inside face region
-	math::real denom = (math::real)1.0 / (va + vb + vc);
-	math::real v = vb * denom;
-	math::real w = vc * denom;
-	
-	*bu = (math::real)1.0 - v - w;
-	*bv = v;
-	*bw = w;
-}
-
-bool manta::Mesh::testClosestPointOnFace(int faceIndex, math::real maxDepth, const math::Vector &p) const {
-	PrecomputedValues &cache = m_precomputedValues[faceIndex];
-
-	math::Vector denom = math::dot(cache.normal, cache.normal);
-
-	math::Vector p0r0 = math::sub(p, cache.p0);
-	math::Vector d = math::div(math::dot(p0r0, cache.normal), math::negate(denom));
-
-	math::real depth_s = math::getScalar(d);
-
-	if (abs(depth_s) > maxDepth) return false;
-
-	math::Vector closestPoint = getClosestPointOnFace(faceIndex, p);
-	math::Vector cp = math::sub(p, closestPoint);
-
-	if (math::getScalar(math::magnitudeSquared3(cp)) > maxDepth * maxDepth) {
-		return false;
-	}
-
-	return true;
 }
 
 bool manta::Mesh::detectTriangleIntersection(int faceIndex, math::real minDepth, math::real maxDepth, const LightRay *ray, CoarseCollisionOutput *output) const {
@@ -934,17 +686,6 @@ bool manta::Mesh::detectQuadIntersection(int faceIndex, math::real minDepth, mat
 	int ky = ray->getKY();
 	int kz = ray->getKZ();
 
-	// First compute the edge function at the meeting edge of the two constituent triangles
-	/*math::Vector v0, v1;
-	if (kx != 2 || ky != 0 || kz != 1) {
-		v1 = m_vertices[face.v];
-		v0 = m_vertices[face.w];
-	}
-	else {
-		v0 = m_vertices[face.v];
-		v1 = m_vertices[face.w];
-	}*/
-
 	math::Vector v0, v1, vu;
 	v0 = m_vertices[face.v];
 	v1 = m_vertices[face.w];
@@ -1006,16 +747,7 @@ bool manta::Mesh::detectQuadIntersection(int faceIndex, math::real minDepth, mat
 		e0 = math::getX(p1t) * math::getY(p2t) - math::getY(p1t) * math::getX(p2t);
 		e1 = math::getX(p2t) * math::getY(p0t) - math::getY(p2t) * math::getX(p0t);
 		e2 = e_half;
-	}
-
-	//math::Vector p3t = math::sub(m_vertices[face.r], rayOrigin);
-	//p3t = math::permute(p3t, kx, ky, kz);
-	//math::Vector p3t_z = math::loadScalar(math::getZ(p3t));
-	//p3t = math::add(p3t, math::mul(s, p3t_z));
-
-	
-	//math::real e1 = math::getX(p2t) * math::getY(p0t) - math::getY(p2t) * math::getX(p0t);
-	
+	}	
 
 	if ((e0 < 0 || e1 < 0 || e2 < 0) && (e0 > 0 || e1 > 0 || e2 > 0)) return false;
 
@@ -1040,20 +772,6 @@ bool manta::Mesh::detectQuadIntersection(int faceIndex, math::real minDepth, mat
 	output->v = e1 * invDet;
 	output->w = e2 * invDet;
 	output->subdivisionHint = subdivision;
-
-	return true;
-}
-
-inline bool manta::Mesh::detectIntersection(int faceIndex, math::real u, math::real v, math::real w, math::real delta) const {
-	PrecomputedValues &cache = m_precomputedValues[faceIndex];
-
-	math::real ru = u - cache.edgePlaneVW.d;
-	math::real rv = v - cache.edgePlaneWU.d;
-
-	// Check quasi-barycentric components u, v, w
-	if (ru < -delta || ru > ((math::real)1.0 + delta)) return false;
-	if (rv < -delta) return false;
-	if (1 - ru - rv < -delta) return false;
 
 	return true;
 }
@@ -1108,8 +826,118 @@ bool manta::Mesh::findClosestIntersection(int *faceList, int faceCount, const Li
 	return found;
 }
 
-void manta::Mesh::getVicinity(int *faceList, int faceCount, const math::Vector &p, math::real radius, IntersectionList *list, SceneObject *object) const {
-	/* Deprecated */
+#define max(a, b) ((a) > (b) ? (a) : (b))
+#define min(a, b) ((a) < (b) ? (a) : (b))
+
+bool manta::Mesh::checkFaceAABB(int faceIndex, const AABB &bounds) const {
+	if (faceIndex >= m_triangleFaceCount) {
+		const QuadFace &face = m_quadFaces[faceIndex - m_triangleFaceCount];
+
+		math::Vector v0 = m_vertices[face.u];
+		math::Vector v1 = m_vertices[face.v];
+		math::Vector v2 = m_vertices[face.w];
+		math::Vector v3 = m_vertices[face.r];
+
+		return checkFaceAABB(v0, v1, v2, bounds) || checkFaceAABB(v3, v1, v2, bounds);
+	}
+	else {
+		const Face &face = m_faces[faceIndex];
+
+		math::Vector v0 = m_vertices[face.u];
+		math::Vector v1 = m_vertices[face.v];
+		math::Vector v2 = m_vertices[face.w];
+
+		return checkFaceAABB(v0, v1, v2, bounds);
+	}
+}
+
+bool manta::Mesh::checkFaceAABB(const math::Vector &v0, const math::Vector &v1, const math::Vector &v2, const AABB &bounds) const {
+	constexpr math::real EPSILON = (math::real)1E-4;
+
+	math::real p0, p1, p2, r;
+
+	math::Vector c = math::mul(math::add(bounds.maxPoint, bounds.minPoint), math::constants::Half);
+	math::Vector extents = math::mul(math::sub(bounds.maxPoint, bounds.minPoint), math::constants::Half);
+	math::real e0 = math::getX(extents) + EPSILON;
+	math::real e1 = math::getY(extents) + EPSILON;
+	math::real e2 = math::getZ(extents) + EPSILON;
+
+	math::Vector v0_rel = math::sub(v0, c);
+	math::Vector v1_rel = math::sub(v1, c);
+	math::Vector v2_rel = math::sub(v2, c);
+
+	math::Vector f0 = math::sub(v1_rel, v0_rel);
+	math::Vector f1 = math::sub(v2_rel, v1_rel);
+	math::Vector f2 = math::sub(v0_rel, v2_rel);
+
+	math::Vector u0 = math::constants::XAxis;
+	math::Vector u1 = math::constants::YAxis;
+	math::Vector u2 = math::constants::ZAxis;
+
+	// Naive implementation for now
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 3; j++) {
+			math::Vector u, f, altF;
+			if (i == 0) u = u0;
+			else if (i == 1) u = u1;
+			else if (i == 2) u = u2;
+
+			if (j == 0) {
+				f = f0;
+				altF = f1;
+			}
+			else if (j == 1) {
+				f = f1;
+				altF = f2;
+			}
+			else if (j == 2) {
+				f = f2;
+				altF = f0;
+			}
+
+			math::Vector a = math::cross(u, f);
+
+			if (abs(math::getX(a)) < 1e-6 && abs(math::getY(a) < 1e-6) && abs(math::getZ(a) < 1e-6)) {
+				math::Vector n = math::cross(f, altF);
+				a = math::cross(n, f);
+			}
+
+			r = e0 * abs(math::getScalar(math::dot(u0, a))) + e1 * abs(math::getScalar(math::dot(u1, a))) + e2 * abs(math::getScalar(math::dot(u2, a)));
+
+			p0 = math::getScalar(math::dot(v0_rel, a));
+			p1 = math::getScalar(math::dot(v1_rel, a));
+			p2 = math::getScalar(math::dot(v2_rel, a));
+
+			math::real maxp = max(max(p0, p1), p2);
+			math::real minp = min(min(p0, p1), p2);
+
+			if (minp > r) return false;
+			if (maxp < -r) return false;
+		}
+	}
+
+	math::real maxX = max(max(math::getX(v0_rel), math::getX(v1_rel)), math::getX(v2_rel));
+	math::real minX = min(min(math::getX(v0_rel), math::getX(v1_rel)), math::getX(v2_rel));
+
+	math::real maxY = max(max(math::getY(v0_rel), math::getY(v1_rel)), math::getY(v2_rel));
+	math::real minY = min(min(math::getY(v0_rel), math::getY(v1_rel)), math::getY(v2_rel));
+
+	math::real maxZ = max(max(math::getZ(v0_rel), math::getZ(v1_rel)), math::getZ(v2_rel));
+	math::real minZ = min(min(math::getZ(v0_rel), math::getZ(v1_rel)), math::getZ(v2_rel));
+
+	if (maxX < -e0 || minX > e0) return false;
+	if (maxY < -e1 || minY > e1) return false;
+	if (maxZ < -e2 || minZ > e2) return false;
+
+	math::Vector planeNormal = math::cross(f0, f1);
+	math::Vector t = math::dot(planeNormal, v0_rel);
+	math::real planeD = math::getScalar(math::dot(planeNormal, v0));
+
+	// Check the plane
+	math::real plane_r = e0 * abs(math::getX(planeNormal)) + e1 * abs(math::getY(planeNormal)) + e2 * abs(math::getZ(planeNormal));
+	math::real s = math::getScalar(math::dot(planeNormal, c)) - planeD;
+
+	return abs(s) <= plane_r;
 }
 
 void manta::Mesh::calculateFaceAABB(int faceIndex, AABB *target) const {
@@ -1146,9 +974,4 @@ void manta::Mesh::calculateFaceAABB(int faceIndex, AABB *target) const {
 		target->maxPoint = math::componentMax(target->maxPoint, w);
 		target->maxPoint = math::componentMax(target->maxPoint, r);
 	}
-}
-
-void manta::Mesh::computePlane(const math::Vector &n, const math::Vector &p, Plane *plane) const {
-	plane->normal = math::normalize(n);
-	plane->d = math::getScalar(math::dot(plane->normal, p));
 }
