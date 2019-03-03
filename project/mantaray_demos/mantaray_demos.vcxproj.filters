@@ -48,6 +48,9 @@
     <ClCompile Include="..\..\demos\samsung_a8_demo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\demos\material_visualizer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\demos\demos.h">
