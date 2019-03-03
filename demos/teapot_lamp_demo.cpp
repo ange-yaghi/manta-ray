@@ -15,7 +15,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	constexpr bool USE_ACCELERATION_STRUCTURE = true;
 	constexpr bool DETERMINISTIC_SEED_MODE = false;
 	constexpr bool TRACE_SINGLE_PIXEL = false;
-	constexpr OBJECT OBJECT = TEAPOT;
+	constexpr OBJECT OBJECT = SPHERE;
 
 	Scene scene;
 
