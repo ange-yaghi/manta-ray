@@ -38,6 +38,7 @@
 #include <bilayer_bsdf.h>
 #include <microfacet_transmission_bsdf.h>
 #include <microfacet_glass_bsdf.h>
+#include <material_pointer.h>
 
 namespace manta_demo {
 
@@ -49,7 +50,8 @@ namespace manta_demo {
 		STRESS_SPIDERS,
 		PEN,
 		COMPLEX_ROOM,
-		SAMSUNG_A8
+		SAMSUNG_A8,
+		MATERIAL_PREVIEW
 	};
 
 	void runDemo(DEMO demo, int samplesPerPixel, int resolutionX, int resolutionY);
@@ -62,6 +64,7 @@ namespace manta_demo {
 	void penDemo(int samplesPerPixel, int resolutionX, int resolutionY);
 	void complexRoomDemo(int samplesPerPixel, int resolutionX, int resolutionY);
 	void samsungA8Demo(int samplesPerPixel, int resolutionX, int resolutionY);
+	void materialVisualizer(int samplesPerPixel, int resolutionX, int resolutionY);
 
 } /* namespace manta_demo */
 

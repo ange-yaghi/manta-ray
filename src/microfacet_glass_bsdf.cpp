@@ -16,7 +16,7 @@ void manta::MicrofacetGlassBSDF::initialize(const IntersectionPoint *surfaceInte
 }
 
 manta::math::Vector manta::MicrofacetGlassBSDF::sampleF(const IntersectionPoint *surfaceInteraction, const math::Vector &i, math::Vector *o, math::real *pdf, StackAllocator *stackAllocator) const {
-	constexpr math::Vector reflect = { (math::real) - 1.0, (math::real) - 1.0, (math::real)1.0, (math::real)1.0 };
+	constexpr math::Vector reflect = { (math::real)-1.0, (math::real)-1.0, (math::real)1.0, (math::real)1.0 };
 	
 	math::real u = math::uniformRandom();
 
@@ -110,10 +110,10 @@ manta::math::Vector manta::MicrofacetGlassBSDF::sampleF(const IntersectionPoint 
 		math::real cosThetaI = ::abs(math::getZ(i));
 		math::real costhetaO = ::abs(math::getZ(rt));
 
-		math::real Ft_num = ior * ior * m_distribution->calculateDistribution(m, &s) * m_distribution->bidirectionalShadowMasking(i, rt, m, &s) * (1 - F);
+		math::real Ft_num = (1 / (ior * ior)) * m_distribution->calculateDistribution(m, &s) * m_distribution->bidirectionalShadowMasking(i, rt, m, &s) * (1 - F);
 		Ft_num *= ::abs(o_dot_m * i_dot_m);
 
-		math::real Ft_div = (i_dot_m + ior * ::abs(o_dot_m));
+		math::real Ft_div = (i_dot_m + (1 / ior) * ::abs(o_dot_m));
 		Ft_div *= Ft_div;
 		Ft_div *= (costhetaO * cosThetaI);
 
@@ -122,7 +122,7 @@ manta::math::Vector manta::MicrofacetGlassBSDF::sampleF(const IntersectionPoint 
 		// Free all memory
 		m_distribution->free(&s, stackAllocator);
 
-		f = transmitance;
+		f = math::mul(transmitance, math::loadScalar((ni * ni) / (no * no)));
 	}
 
 	*pdf = (rPdf + tPdf) / (math::real)2.0;
