@@ -10,12 +10,18 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 		SPHERE
 	};
 
+	enum MATERIAL {
+		ENAMEL,
+		GLASS
+	};
+
 	// Top-level parameters
 	constexpr bool BLOCK_ALL_LIGHT = false;
 	constexpr bool USE_ACCELERATION_STRUCTURE = true;
 	constexpr bool DETERMINISTIC_SEED_MODE = false;
 	constexpr bool TRACE_SINGLE_PIXEL = false;
-	constexpr OBJECT OBJECT = SPHERE;
+	constexpr OBJECT OBJECT = TEAPOT;
+	constexpr MATERIAL MATERIAL = GLASS;
 
 	Scene scene;
 
@@ -27,7 +33,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	bool teapotObjResult;
 	
 	if (OBJECT == TEAPOT) {
-		teapotObjResult = teapotObj.readObjFile(MODEL_PATH "teapot_lamp.obj");
+		teapotObjResult = teapotObj.readObjFile(MODEL_PATH "lamp_teapot.obj");
 	}
 	else if (OBJECT == SPHERE) {
 		teapotObjResult = teapotObj.readObjFile(MODEL_PATH "sphere_lamp.obj");
@@ -109,8 +115,8 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	lampBlock.setFastIntersectRadius((math::real)4.0);
 
 	Material *mainObjectMaterial;
-	if (OBJECT == TEAPOT) mainObjectMaterial = teapotMaterial;
-	else if (OBJECT == SPHERE) mainObjectMaterial = glassMaterial;
+	if (MATERIAL == GLASS) mainObjectMaterial = glassMaterial;
+	else if (MATERIAL == ENAMEL) mainObjectMaterial = teapotMaterial;
 
 	Mesh objectMesh;
 	objectMesh.loadObjFileData(&teapotObj, rayTracer.getMaterialManager(), glassMaterial->getIndex());
