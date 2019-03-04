@@ -7,8 +7,8 @@ int main() {
 	createAllDirectories();
 
 	// Run a demo
-	constexpr DEMO demo = DEMO::MATERIAL_PREVIEW;
-	constexpr int samples = 500;
+	constexpr DEMO demo = DEMO::SAMSUNG_A8;
+	constexpr int samples = 10000;
 	constexpr int resolutionX = 2048;
 	constexpr int resolutionY = 1536;
 

@@ -9,7 +9,7 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
 	constexpr bool USE_ACCELERATION_STRUCTURE = true;
 	constexpr bool DETERMINISTIC_SEED_MODE = false;
 	constexpr bool TRACE_SINGLE_PIXEL = false;
-	constexpr const char *MATERIAL = "SimpleDarkWood";
+	constexpr const char *MATERIAL = "Steel";
 
 	RayTracer rayTracer;
 	Scene scene;
@@ -69,6 +69,18 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
 	SimpleBSDFMaterial *paintMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	paintMaterial->setBSDF(&simpleWoodBSDF);
 	paintMaterial->setName("SimpleDarkWood");
+	
+	// Steel
+	PhongDistribution phongSteel;
+	phongSteel.setPower(1024);
+
+	MicrofacetReflectionBSDF steelBSDF;
+	steelBSDF.setDistribution(&phongSteel);
+
+	SimpleBSDFMaterial *steelMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	steelMaterial->setName("Steel");
+	steelMaterial->setReflectance(getColor(255, 255, 255));
+	steelMaterial->setBSDF(&steelBSDF);
 
 	// ========================================================================
 
