@@ -90,7 +90,13 @@ manta::math::Vector manta::MicrofacetGlassBSDF::sampleF(const IntersectionPoint 
 
 		*o = rt;
 
-		if (i_dot_m <= (math::real)0.0) {
+		math::real cosThetaI = ::abs(math::getZ(i));
+		math::real cosThetaO = ::abs(math::getZ(rt));
+
+		if (i_dot_m <= (math::real)0.0 ||
+			o_dot_m <= (math::real)0.0 ||
+			cosThetaO <= (math::real)0.0 ||
+			cosThetaI <= (math::real)0.0) {
 			// Free all memory
 			m_distribution->free(&s, stackAllocator);
 
@@ -107,15 +113,12 @@ manta::math::Vector manta::MicrofacetGlassBSDF::sampleF(const IntersectionPoint 
 		tPdf = m_distribution->calculatePDF(m, &s) * jacobian;
 
 		// Calculate transmitance
-		math::real cosThetaI = ::abs(math::getZ(i));
-		math::real costhetaO = ::abs(math::getZ(rt));
-
 		math::real Ft_num = (1 / (ior * ior)) * m_distribution->calculateDistribution(m, &s) * m_distribution->bidirectionalShadowMasking(i, rt, m, &s) * (1 - F);
 		Ft_num *= ::abs(o_dot_m * i_dot_m);
 
 		math::real Ft_div = (i_dot_m + (1 / ior) * ::abs(o_dot_m));
 		Ft_div *= Ft_div;
-		Ft_div *= (costhetaO * cosThetaI);
+		Ft_div *= (cosThetaO * cosThetaI);
 
 		math::Vector transmitance = math::loadScalar(Ft_num / Ft_div);
 
