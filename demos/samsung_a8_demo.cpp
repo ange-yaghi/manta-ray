@@ -7,14 +7,15 @@ using namespace manta;
 void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolutionY) {
 	enum SCENE {
 		FACE_ON_SCENE,
-		UPRIGHT_SCENE
+		UPRIGHT_SCENE,
+		BANNER_SCENE
 	};
 
 	// Top-level parameters
 	constexpr bool USE_ACCELERATION_STRUCTURE = true;
 	constexpr bool DETERMINISTIC_SEED_MODE = false;
 	constexpr bool TRACE_SINGLE_PIXEL = false;
-	constexpr SCENE SCENE = UPRIGHT_SCENE;
+	constexpr SCENE SCENE = BANNER_SCENE;
 	constexpr bool ENABLE_SMUDGE = true;
 
 	RayTracer rayTracer;
@@ -46,6 +47,9 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	else if (SCENE == UPRIGHT_SCENE) {
 		result = phoneObj.readObjFile(MODEL_PATH "samsung_a8_upright_scene.obj");
 	}
+	else if (SCENE == BANNER_SCENE) {
+		result = phoneObj.readObjFile(MODEL_PATH "samsung_a8_banner_scene.obj");
+	}
 
 	if (!result) {
 		std::cout << "Could not open geometry file(s)" << std::endl;
@@ -59,12 +63,12 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	PhongDistribution phongPhoneCase;
 	phongPhoneCase.setPower(1024);
 	phongPhoneCase.setMinMapPower(8);
-	if (ENABLE_SMUDGE && SCENE == UPRIGHT_SCENE) phongPhoneCase.setPowerNode(&smudgeMap);
+	if (ENABLE_SMUDGE && (SCENE == UPRIGHT_SCENE || SCENE == BANNER_SCENE)) phongPhoneCase.setPowerNode(&smudgeMap);
 
 	PhongDistribution phongGlass;
 	phongGlass.setPower(5000);
-	phongGlass.setMinMapPower(800);
-	if (ENABLE_SMUDGE && SCENE == UPRIGHT_SCENE) phongGlass.setPowerNode(&smudgeMap);
+	phongGlass.setMinMapPower(200);
+	if (ENABLE_SMUDGE && (SCENE == UPRIGHT_SCENE || SCENE == BANNER_SCENE)) phongGlass.setPowerNode(&smudgeMap);
 
 	PhongDistribution phongBlackPlastic;
 	phongBlackPlastic.setPower(5000);
@@ -81,7 +85,7 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	PhongDistribution phongFloor;
 	phongFloor.setPower(256);
 	phongFloor.setMinMapPower(240);
-	if (ENABLE_SMUDGE && SCENE == UPRIGHT_SCENE) phongFloor.setPowerNode(&groundRoughness);
+	if (ENABLE_SMUDGE && (SCENE == UPRIGHT_SCENE || SCENE == BANNER_SCENE)) phongFloor.setPowerNode(&groundRoughness);
 
 	PhongDistribution mattePlasticPhong;
 	mattePlasticPhong.setPower(64);
@@ -120,9 +124,9 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	BilayerBSDF floorBSDF;
 	floorBSDF.setDiffuseMaterial(&lambert);
 	floorBSDF.setCoatingDistribution(&phongFloor);
-	if (SCENE == UPRIGHT_SCENE) {
+	if (SCENE == UPRIGHT_SCENE || SCENE == BANNER_SCENE) {
 		floorBSDF.setDiffuse(getColor(0, 0, 0));
-		floorBSDF.setSpecularAtNormal(math::loadVector(0.2, 0.2, 0.2));
+		floorBSDF.setSpecularAtNormal(math::loadVector(0.05, 0.05, 0.05));
 	}
 	else if (SCENE == FACE_ON_SCENE) {
 		floorBSDF.setDiffuse(getColor(255, 255, 255));
@@ -254,7 +258,7 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	screenMaterial->setBSDF(&lambert);
 
 	SimpleBSDFMaterial *strongLight = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
-	if (SCENE == UPRIGHT_SCENE) strongLight->setEmission(math::loadVector(8.0, 8.0, 8.0));
+	if (SCENE == UPRIGHT_SCENE || SCENE == BANNER_SCENE) strongLight->setEmission(math::loadVector(8.0, 8.0, 8.0));
 	else if (SCENE == FACE_ON_SCENE) strongLight->setEmission(math::loadVector(5.0, 5.0, 5.0));
 	strongLight->setReflectance(math::constants::Zero);
 	strongLight->setName("StrongLight");
@@ -280,7 +284,7 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	phoneObj.destroy();
 
 	KDTree kdtree;
-	kdtree.initialize(300, math::constants::Zero);
+	kdtree.initialize(1000, math::constants::Zero);
 	kdtree.analyze(&phone, 2);
 
 	// Create scene objects
@@ -309,6 +313,11 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 		cameraPos = math::loadVector(0, 13.786, -28.987);
 		cameraPlaneSize = 0.65;
 	}
+	else if (SCENE == BANNER_SCENE) {
+		target = math::loadVector(7.66829, 7.63167, -18.7725);
+		cameraPos = math::loadVector(8.2166, 8.00816, -31.4485);
+		cameraPlaneSize = 0.4992;
+	}
 
 	math::Vector dir = math::normalize(math::sub(target, cameraPos));
 	up = math::cross(math::cross(dir, up), dir);
@@ -325,8 +334,14 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	camera->setUp(up);
 	camera->setPlaneDistance(1.0f);
 	camera->setPlaneHeight(cameraPlaneSize);
-	camera->setResolutionX(resolutionX);
-	camera->setResolutionY(resolutionY);
+	if (SCENE == BANNER_SCENE) {
+		camera->setResolutionX(1920);
+		camera->setResolutionY(1080);
+	}
+	else {
+		camera->setResolutionX(resolutionX);
+		camera->setResolutionY(resolutionY);
+	}
 	camera->setSampleCount(samplesPerPixel);
 	group = camera;
 
