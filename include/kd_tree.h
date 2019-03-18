@@ -11,7 +11,7 @@
 #include <vector>
 #include <fstream>
 
-#define OPTIMIZED_KD_TREE_NODE (false)
+#define OPTIMIZED_KD_TREE_NODE (true)
 
 namespace manta {
 
