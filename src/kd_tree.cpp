@@ -3,6 +3,7 @@
 #include <mesh.h>
 #include <standard_allocator.h>
 #include <coarse_intersection.h>
+#include <runtime_statistics.h>
 
 #include <algorithm>
 
@@ -53,7 +54,7 @@ void manta::KDTree::destroy() {
 	}
 }
 
-bool manta::KDTree::findClosestIntersection(const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s) const {
+bool manta::KDTree::findClosestIntersection(const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const {
 	math::real tmin, tmax;
 	if (!m_bounds.rayIntersect(*ray, &tmin, &tmax)) {
 		return false;
@@ -68,6 +69,7 @@ bool manta::KDTree::findClosestIntersection(const LightRay *ray, CoarseIntersect
 	const KDTreeNode *node = &m_nodes[0];
 	while (node != nullptr) {
 #ifdef _DEBUG
+		// I've left this here for convenience when debugging
 		int nodeIndex = node - m_nodes;
 #endif
 		if (closestHit < tmin) break;
@@ -103,6 +105,7 @@ bool manta::KDTree::findClosestIntersection(const LightRay *ray, CoarseIntersect
 			}
 			else {
 #ifdef _DEBUG
+				// As above I've left this for convenience when debugging
 				int secondChildIndex = secondChild - m_nodes;
 #endif
 				// Add second child to queue
@@ -124,8 +127,10 @@ bool manta::KDTree::findClosestIntersection(const LightRay *ray, CoarseIntersect
 				faceList = &m_faceLists[bv.faceListOffset];
 
 				math::real t0, t1;
+				INCREMENT_COUNTER(RuntimeStatistics::TOTAL_BV_TESTS);
 				if (bv.bounds.rayIntersect(*ray, &t0, &t1)) {
-					if (m_mesh->findClosestIntersection(faceList, primitiveCount, ray, intersection, minDepth, closestHit, s)) {
+					INCREMENT_COUNTER(RuntimeStatistics::TOTAL_BV_HITS);
+					if (m_mesh->findClosestIntersection(faceList, primitiveCount, ray, intersection, minDepth, closestHit, s /**/ STATISTICS_PARAM_INPUT)) {
 						hit = true;
 						closestHit = intersection->depth;
 					}

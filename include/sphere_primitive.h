@@ -3,6 +3,8 @@
 
 #include <scene_geometry.h>
 
+#include <runtime_statistics.h>
+
 namespace manta {
 
 	class SpherePrimitive : public SceneGeometry {
@@ -16,7 +18,7 @@ namespace manta {
 		SpherePrimitive();
 		~SpherePrimitive();
 
-		virtual bool findClosestIntersection(const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s) const;
+		virtual bool findClosestIntersection(const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const;
 		virtual math::Vector getClosestPoint(const CoarseIntersection *hint, const math::Vector &p) const;
 		virtual void getVicinity(const math::Vector &p, math::real radius, IntersectionList *list, SceneObject *object) const;
 		virtual void fineIntersection(const math::Vector &r, IntersectionPoint *p, const CoarseIntersection *hint) const;

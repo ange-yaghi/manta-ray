@@ -4,6 +4,7 @@
 #include <stack_allocator.h>
 #include <path_recorder.h>
 #include <manta_build_conf.h>
+#include <runtime_statistics.h>
 
 #include <thread>
 #include <atomic>
@@ -40,6 +41,8 @@ namespace manta {
 		unsigned int getMaxMemoryUsage() const { return m_maxMemoryUsage; }
 		std::string getTreeName(int pixelIndex, int sample) const;
 
+		const RuntimeStatistics *getStatistics() const { return &m_statistics; }
+
 	protected:
 		void work();
 		void doJob(const Job *job);
@@ -47,10 +50,12 @@ namespace manta {
 		StackAllocator *m_stack;
 		RayTracer *m_rayTracer;
 
-		std::thread *m_thread;	
+		std::thread *m_thread;
 
 	protected:
 		// Debugging/Path recording
+		RuntimeStatistics m_statistics;
+
 		std::string getObjFname();
 
 		PathRecorder m_pathRecorder;

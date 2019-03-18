@@ -3,5 +3,6 @@
 
 #define ENABLE_PATH_RECORDING (false)
 #define INCLUDE_OPENCL_IMPL (false)
+#define ENABLE_DETAILED_STATISTICS (true)
 
 #endif /* MANTA_BUILD_CONF_H */

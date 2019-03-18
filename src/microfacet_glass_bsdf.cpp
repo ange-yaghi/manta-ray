@@ -94,9 +94,9 @@ manta::math::Vector manta::MicrofacetGlassBSDF::sampleF(const IntersectionPoint 
 		math::real cosThetaO = ::abs(math::getZ(rt));
 
 		if (i_dot_m <= (math::real)0.0 ||
-			o_dot_m <= (math::real)0.0 ||
-			cosThetaO <= (math::real)0.0 ||
-			cosThetaI <= (math::real)0.0) {
+			o_dot_m == (math::real)0.0 ||
+			cosThetaO == (math::real)0.0 ||
+			cosThetaI == (math::real)0.0) {
 			// Free all memory
 			m_distribution->free(&s, stackAllocator);
 
