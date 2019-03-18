@@ -60,7 +60,7 @@ TEST(KDTreeTests, KDTreeIntersectionTest) {
 	kdTree.writeToObjFile("../../../workspace/test_results/kdtree_debug.obj");
 
 	CoarseIntersection c;
-	bool intersect = kdTree.findClosestIntersection(&ray, &c, (math::real)0.0, math::constants::REAL_MAX, nullptr);
+	bool intersect = kdTree.findClosestIntersection(&ray, &c, (math::real)0.0, math::constants::REAL_MAX, nullptr /**/ STATISTICS_NULL_INPUT);
 
 	singleTriangleObj.destroy();
 	mesh.destroy();
@@ -91,7 +91,7 @@ TEST(KDTreeTests, KDTreeCubeTest) {
 	kdTree.writeToObjFile("../../../workspace/test_results/kdtree_debug.obj");
 
 	CoarseIntersection c;
-	bool intersect = kdTree.findClosestIntersection(&ray, &c, (math::real)0.0, math::constants::REAL_MAX, nullptr);
+	bool intersect = kdTree.findClosestIntersection(&ray, &c, (math::real)0.0, math::constants::REAL_MAX, nullptr /**/ STATISTICS_NULL_INPUT);
 
 	singleTriangleObj.destroy();
 	mesh.destroy();
@@ -132,14 +132,14 @@ TEST(KDTreeTests, KDTreeDoubleCubeTest) {
 	kdTree.writeToObjFile("../../../workspace/test_results/kdtree_debug.obj");
 
 	CoarseIntersection c;
-	bool intersect = kdTree.findClosestIntersection(&ray1, &c, (math::real)0.0, math::constants::REAL_MAX, nullptr);
+	bool intersect = kdTree.findClosestIntersection(&ray1, &c, (math::real)0.0, math::constants::REAL_MAX, nullptr /**/ STATISTICS_NULL_INPUT);
 	EXPECT_TRUE(intersect);
 	EXPECT_NEAR(c.depth, 1.0, 1E-5);
 
-	intersect = kdTree.findClosestIntersection(&ray2, &c, (math::real)0.0, math::constants::REAL_MAX, nullptr);
+	intersect = kdTree.findClosestIntersection(&ray2, &c, (math::real)0.0, math::constants::REAL_MAX, nullptr /**/ STATISTICS_NULL_INPUT);
 	EXPECT_FALSE(intersect);
 
-	intersect = kdTree.findClosestIntersection(&ray3, &c, (math::real)0.0, math::constants::REAL_MAX, nullptr);
+	intersect = kdTree.findClosestIntersection(&ray3, &c, (math::real)0.0, math::constants::REAL_MAX, nullptr /**/ STATISTICS_NULL_INPUT);
 	EXPECT_TRUE(intersect);
 	EXPECT_NEAR(c.depth, 1.0, 1E-5);
 
@@ -184,19 +184,19 @@ TEST(KDTreeTests, KDTreeDoubleCubeSideTest) {
 	kdTree.writeToObjFile("../../../workspace/test_results/kdtree_debug.obj");
 
 	CoarseIntersection c;
-	bool intersect = kdTree.findClosestIntersection(&ray1, &c, (math::real)0.0, math::constants::REAL_MAX, nullptr);
+	bool intersect = kdTree.findClosestIntersection(&ray1, &c, (math::real)0.0, math::constants::REAL_MAX, nullptr /**/ STATISTICS_NULL_INPUT);
 	EXPECT_TRUE(intersect);
 	EXPECT_NEAR(c.depth, 1.0, 1E-5);
 
-	intersect = kdTree.findClosestIntersection(&ray2, &c, (math::real)0.0, math::constants::REAL_MAX, nullptr);
+	intersect = kdTree.findClosestIntersection(&ray2, &c, (math::real)0.0, math::constants::REAL_MAX, nullptr /**/ STATISTICS_NULL_INPUT);
 	EXPECT_FALSE(intersect);
 
-	intersect = kdTree.findClosestIntersection(&ray3, &c, (math::real)0.0, math::constants::REAL_MAX, nullptr);
+	intersect = kdTree.findClosestIntersection(&ray3, &c, (math::real)0.0, math::constants::REAL_MAX, nullptr /**/ STATISTICS_NULL_INPUT);
 	EXPECT_TRUE(intersect);
 	EXPECT_NEAR(c.depth, 1.0, 1E-5);
 
-	bool correctIntersect = mesh.findClosestIntersection(&ray4, &c, (math::real)0.0, math::constants::REAL_MAX, nullptr);
-	intersect = kdTree.findClosestIntersection(&ray4, &c, (math::real)0.0, math::constants::REAL_MAX, nullptr);
+	bool correctIntersect = mesh.findClosestIntersection(&ray4, &c, (math::real)0.0, math::constants::REAL_MAX, nullptr /**/ STATISTICS_NULL_INPUT);
+	intersect = kdTree.findClosestIntersection(&ray4, &c, (math::real)0.0, math::constants::REAL_MAX, nullptr /**/ STATISTICS_NULL_INPUT);
 	EXPECT_TRUE(intersect);
 	EXPECT_NEAR(c.depth, 1.0, 1E-5);
 

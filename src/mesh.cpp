@@ -8,6 +8,7 @@
 #include <material.h>
 #include <material_manager.h>
 #include <primitives.h>
+#include <runtime_statistics.h>
 
 manta::Mesh::Mesh() {
 	m_faces = nullptr;
@@ -289,7 +290,7 @@ void manta::Mesh::findQuads() {
 	StandardAllocator::Global()->free(usedFlags, originalTriangleCount);
 }
 
-bool manta::Mesh::findClosestIntersection(const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s) const {
+bool manta::Mesh::findClosestIntersection(const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const {
 	math::Vector rayDir = ray->getDirection();
 	math::Vector raySource = ray->getSource();
 
@@ -297,6 +298,7 @@ bool manta::Mesh::findClosestIntersection(const LightRay *ray, CoarseIntersectio
 	math::real currentMaxDepth = maxDepth;
 	bool found = false;
 	for (int i = 0; i < m_triangleFaceCount; i++) {
+		INCREMENT_COUNTER(RuntimeStatistics::TRIANGLE_TESTS);
 		if (detectTriangleIntersection(i, minDepth, currentMaxDepth, ray, &output)) {
 			intersection->depth = output.depth;
 			intersection->faceHint = i; // Face index
@@ -313,6 +315,7 @@ bool manta::Mesh::findClosestIntersection(const LightRay *ray, CoarseIntersectio
 	}
 
 	for (int i = 0; i < m_quadFaceCount; i++) {
+		INCREMENT_COUNTER(RuntimeStatistics::QUAD_TESTS);
 		if (detectQuadIntersection(i, minDepth, currentMaxDepth, ray, &output)) {
 			intersection->depth = output.depth;
 			intersection->faceHint = i; // Face index
@@ -776,7 +779,7 @@ bool manta::Mesh::detectQuadIntersection(int faceIndex, math::real minDepth, mat
 	return true;
 }
 
-bool manta::Mesh::findClosestIntersection(int *faceList, int faceCount, const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s) const {
+bool manta::Mesh::findClosestIntersection(int *faceList, int faceCount, const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const {
 	math::Vector rayDir = ray->getDirection();
 	math::Vector raySource = ray->getSource();
 
@@ -787,6 +790,7 @@ bool manta::Mesh::findClosestIntersection(int *faceList, int faceCount, const Li
 		int face = faceList[i];
 		if (face < m_triangleFaceCount) {
 			// Face is a triangle
+			INCREMENT_COUNTER(RuntimeStatistics::TRIANGLE_TESTS);
 			if (detectTriangleIntersection(face, minDepth, currentMaxDepth, ray, &output)) {
 				intersection->depth = output.depth;
 				intersection->faceHint = faceList[i]; // Face index
@@ -807,6 +811,7 @@ bool manta::Mesh::findClosestIntersection(int *faceList, int faceCount, const Li
 		int face = faceList[i];
 		if (face >= m_triangleFaceCount) {
 			// Face is a quad
+			INCREMENT_COUNTER(RuntimeStatistics::QUAD_TESTS);
 			if (detectQuadIntersection(face - m_triangleFaceCount, minDepth, currentMaxDepth, ray, &output)) {
 				intersection->depth = output.depth;
 				intersection->faceHint = faceList[i]; // Face index

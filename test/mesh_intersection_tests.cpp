@@ -25,7 +25,7 @@ TEST(MeshIntersectionTests, MeshIntersectionSanityCheck) {
 	ray.calculateTransformations();
 
 	CoarseIntersection intersection;
-	bool found = mesh.findClosestIntersection(&ray, &intersection, 0.0, math::constants::REAL_MAX, nullptr);
+	bool found = mesh.findClosestIntersection(&ray, &intersection, 0.0, math::constants::REAL_MAX, nullptr /**/ STATISTICS_NULL_INPUT);
 
 	EXPECT_EQ(found, true);
 	EXPECT_FLOAT_EQ(intersection.depth, 1.0);
@@ -48,7 +48,7 @@ TEST(MeshIntersectionTests, MeshIntersectionSanityCheckOppositeSide) {
 	ray.calculateTransformations();
 
 	CoarseIntersection intersection;
-	bool found = mesh.findClosestIntersection(&ray, &intersection, 0.0, math::constants::REAL_MAX, nullptr);
+	bool found = mesh.findClosestIntersection(&ray, &intersection, 0.0, math::constants::REAL_MAX, nullptr /**/ STATISTICS_NULL_INPUT);
 
 	EXPECT_EQ(found, true);
 	EXPECT_FLOAT_EQ(intersection.depth, 1.0);
@@ -71,7 +71,7 @@ TEST(MeshIntersectionTests, MeshIntersectionSanityCheckNoHit) {
 	ray.calculateTransformations();
 
 	CoarseIntersection intersection;
-	bool found = mesh.findClosestIntersection(&ray, &intersection, 0.0, math::constants::REAL_MAX, nullptr);
+	bool found = mesh.findClosestIntersection(&ray, &intersection, 0.0, math::constants::REAL_MAX, nullptr /**/ STATISTICS_NULL_INPUT);
 
 	EXPECT_EQ(found, false);
 
@@ -93,7 +93,7 @@ TEST(MeshIntersectionTests, MeshIntersectionCheckVertex) {
 	ray.calculateTransformations();
 
 	CoarseIntersection intersection;
-	bool found = mesh.findClosestIntersection(&ray, &intersection, 0.0, math::constants::REAL_MAX, nullptr);
+	bool found = mesh.findClosestIntersection(&ray, &intersection, 0.0, math::constants::REAL_MAX, nullptr /**/ STATISTICS_NULL_INPUT);
 
 	EXPECT_EQ(found, true);
 	EXPECT_FLOAT_EQ(intersection.depth, 1.0);
@@ -116,7 +116,7 @@ TEST(MeshIntersectionTests, MeshIntersectionSideIntersection) {
 	ray.calculateTransformations();
 
 	CoarseIntersection intersection;
-	bool found = mesh.findClosestIntersection(&ray, &intersection, 0.0, math::constants::REAL_MAX, nullptr);
+	bool found = mesh.findClosestIntersection(&ray, &intersection, 0.0, math::constants::REAL_MAX, nullptr /**/ STATISTICS_NULL_INPUT);
 
 	EXPECT_EQ(found, false);
 
@@ -220,28 +220,28 @@ TEST(MeshIntersectionTests, MeshIntersectionQuadsSanityCheck) {
 	ray4.calculateTransformations();
 
 	CoarseIntersection intersection;
-	bool found = mesh.findClosestIntersection(&ray1, &intersection, 0.0, math::constants::REAL_MAX, nullptr);
+	bool found = mesh.findClosestIntersection(&ray1, &intersection, 0.0, math::constants::REAL_MAX, nullptr /**/ STATISTICS_NULL_INPUT);
 
 	EXPECT_EQ(found, true);
 	EXPECT_EQ(intersection.faceHint, 0);
 	EXPECT_EQ(intersection.subdivisionHint, 1);
 	EXPECT_FLOAT_EQ(intersection.depth, 1.0);
 
-	found = mesh.findClosestIntersection(&ray2, &intersection, 0.0, math::constants::REAL_MAX, nullptr);
+	found = mesh.findClosestIntersection(&ray2, &intersection, 0.0, math::constants::REAL_MAX, nullptr /**/ STATISTICS_NULL_INPUT);
 
 	EXPECT_EQ(found, true);
 	EXPECT_EQ(intersection.faceHint, 0);
 	EXPECT_EQ(intersection.subdivisionHint, 0);
 	EXPECT_FLOAT_EQ(intersection.depth, 1.0);
 
-	found = mesh.findClosestIntersection(&ray3, &intersection, 0.0, math::constants::REAL_MAX, nullptr);
+	found = mesh.findClosestIntersection(&ray3, &intersection, 0.0, math::constants::REAL_MAX, nullptr /**/ STATISTICS_NULL_INPUT);
 
 	EXPECT_EQ(found, true);
 	EXPECT_EQ(intersection.faceHint, 0);
 	EXPECT_EQ(intersection.subdivisionHint, 1);
 	EXPECT_FLOAT_EQ(intersection.depth, 1.0);
 
-	found = mesh.findClosestIntersection(&ray4, &intersection, 0.0, math::constants::REAL_MAX, nullptr);
+	found = mesh.findClosestIntersection(&ray4, &intersection, 0.0, math::constants::REAL_MAX, nullptr /**/ STATISTICS_NULL_INPUT);
 
 	EXPECT_EQ(found, true);
 	EXPECT_EQ(intersection.faceHint, 0);
@@ -280,14 +280,14 @@ TEST(MeshIntersectionTests, MeshIntersectionQuadsObliqueCheck) {
 	ray2.calculateTransformations();
 
 	CoarseIntersection intersection;
-	bool found = mesh.findClosestIntersection(&ray1, &intersection, 0.0, math::constants::REAL_MAX, nullptr);
+	bool found = mesh.findClosestIntersection(&ray1, &intersection, 0.0, math::constants::REAL_MAX, nullptr /**/ STATISTICS_NULL_INPUT);
 
 	EXPECT_EQ(found, true);
 	EXPECT_EQ(intersection.faceHint, 0);
 	EXPECT_EQ(intersection.subdivisionHint, 0);
 	EXPECT_FLOAT_EQ(intersection.depth, 1.0);
 
-	found = mesh.findClosestIntersection(&ray2, &intersection, 0.0, math::constants::REAL_MAX, nullptr);
+	found = mesh.findClosestIntersection(&ray2, &intersection, 0.0, math::constants::REAL_MAX, nullptr /**/ STATISTICS_NULL_INPUT);
 
 	EXPECT_EQ(found, true);
 	EXPECT_EQ(intersection.faceHint, 0);
