@@ -36,6 +36,9 @@ void manta::Worker::initialize(unsigned int stackSize, RayTracer *rayTracer, int
 	m_deterministicSeed = deterministicSeed;
 	m_workerId = workerId;
 	m_pathRecorderOutputDirectory = pathRecorderOutputDirectory;
+
+	// Initialize all statistics
+	m_statistics.reset();
 }
 
 void manta::Worker::start(bool multithreaded) {
@@ -119,7 +122,7 @@ void manta::Worker::doJob(const Job *job) {
 				LightRay *ray = &rays[samp];
 				ray->calculateTransformations();
 
-				m_rayTracer->traceRay(job->scene, ray, 0, m_stack /**/ PATH_RECORDER_ARG);
+				m_rayTracer->traceRay(job->scene, ray, 0, m_stack /**/ PATH_RECORDER_ARG /**/ STATISTICS_ROOT(&m_statistics));
 				END_TREE();
 			}
 

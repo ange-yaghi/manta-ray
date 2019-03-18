@@ -6,6 +6,7 @@
 #include <manta_math.h>
 #include <manta_build_conf.h>
 #include <material_manager.h>
+#include <runtime_statistics.h>
 
 #include <atomic>
 #include <mutex>
@@ -43,7 +44,7 @@ namespace manta {
 
 		void traceAll(const Scene *scene, CameraRayEmitterGroup *rayEmitterGroup);
 		void tracePixel(int px, int py, const Scene *scene, CameraRayEmitterGroup *rayEmitterGroup);
-		void traceRayEmitter(const CameraRayEmitter *emitter, RayContainer *container, const Scene *scene, StackAllocator *s /**/ PATH_RECORDER_DECL) const;
+		void traceRayEmitter(const CameraRayEmitter *emitter, RayContainer *container, const Scene *scene, StackAllocator *s /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const;
 
 		int getThreadCount() const { return m_threadCount; }
 
@@ -55,7 +56,7 @@ namespace manta {
 		// Interface to workers
 		JobQueue *getJobQueue() { return &m_jobQueue; }
 		
-		void traceRay(const Scene *scene, LightRay *ray, int degree, StackAllocator *s /**/ PATH_RECORDER_DECL) const;
+		void traceRay(const Scene *scene, LightRay *ray, int degree, StackAllocator *s /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const;
 		void incrementRayCompletion(const Job *job, int increment = 1);
 
 		void setDeterministicSeedMode(bool enable) { m_deterministicSeed = enable; }
@@ -85,10 +86,10 @@ namespace manta {
 
 	protected:
 		// Ray tracing features
-		void depthCull(const Scene *scene, const LightRay *ray, SceneObject **closestObject, IntersectionPoint *point, StackAllocator *s) const;
+		void depthCull(const Scene *scene, const LightRay *ray, SceneObject **closestObject, IntersectionPoint *point, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const;
 		void refineContact(const LightRay *ray, math::real depth, IntersectionPoint *point, SceneObject **closestObject, StackAllocator *s) const;
 
-		void traceRays(const Scene *scene, const RayContainer &rayContainer, StackAllocator *s /**/ PATH_RECORDER_DECL) const;
+		void traceRays(const Scene *scene, const RayContainer &rayContainer, StackAllocator *s /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const;
 
 		math::Vector m_backgroundColor;
 

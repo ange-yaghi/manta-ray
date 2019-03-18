@@ -68,9 +68,6 @@ manta::math::real manta::DielectricMediaInterface::fresnelTerm(math::real cosThe
 
 	cosThetaT = ::sqrt(std::max((math::real)0.0, 1 - sinThetaT * sinThetaT));
 
-	// Calculate pdf
-	//math::real d_r_parallel = 2 * no * ni / (cosThetaT * (no * cosThetaI + ni * cosThetaT))
-
 	math::real Rparl = ((no * cosThetaI) - (ni * cosThetaT)) /
 		((no * cosThetaI) + (ni * cosThetaT));
 	math::real Rperp = ((ni * cosThetaI) - (no * cosThetaT)) /
@@ -101,6 +98,9 @@ manta::math::real manta::DielectricMediaInterface::no(DIRECTION d) {
 	else if (d == DIRECTION_OUT) {
 		return m_iorIncident;
 	}
+
+	// Shouldn't happen
+	return m_iorTransmitted;
 }
 
 manta::math::real manta::DielectricMediaInterface::ni(DIRECTION d) {
@@ -110,4 +110,7 @@ manta::math::real manta::DielectricMediaInterface::ni(DIRECTION d) {
 	else if (d == DIRECTION_OUT) {
 		return m_iorTransmitted;
 	}
+
+	// Shouldn't happen
+	return m_iorIncident;
 }

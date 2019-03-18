@@ -16,7 +16,7 @@ bool manta::SpherePrimitive::fastIntersection(const LightRay *ray) const {
 	return true;
 }
 
-bool manta::SpherePrimitive::findClosestIntersection(const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s) const {	
+bool manta::SpherePrimitive::findClosestIntersection(const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const {	
 	math::Vector d_pos = math::sub(ray->getSource(), m_position);
 	math::Vector d_dot_dir = math::dot(d_pos, ray->getDirection());
 	math::Vector mag2 = math::magnitudeSquared3(d_pos);

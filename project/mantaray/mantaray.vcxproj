@@ -109,6 +109,7 @@
     <ClInclude Include="..\..\include\primitives.h" />
     <ClInclude Include="..\..\include\random_sampler.h" />
     <ClInclude Include="..\..\include\ray_container.h" />
+    <ClInclude Include="..\..\include\runtime_statistics.h" />
     <ClInclude Include="..\..\include\simple_bsdf_material.h" />
     <ClInclude Include="..\..\include\simple_sampler.h" />
     <ClInclude Include="..\..\include\circular_aperture.h" />

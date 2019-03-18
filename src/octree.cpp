@@ -6,6 +6,7 @@
 #include <coarse_intersection.h>
 #include <stack_list.h>
 #include <standard_allocator.h>
+#include <runtime_statistics.h>
 
 #include <assert.h>
 #include <math.h>
@@ -19,6 +20,7 @@ manta::Octree::Octree() {
 }
 
 manta::Octree::~Octree() {
+
 }
 
 void manta::Octree::initialize(math::real width, const math::Vector &position) {
@@ -37,9 +39,9 @@ void manta::Octree::destroy() {
 	StandardAllocator::Global()->free(m_faceLists, m_faceListsCount);
 }
 
-bool manta::Octree::findClosestIntersection(const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s) const {
+bool manta::Octree::findClosestIntersection(const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const {
 	math::Vector ood = math::div(math::constants::One, ray->getDirection());
-	return findClosestIntersection(&m_tree, ray, ood, intersection, minDepth, maxDepth, s, true);
+	return findClosestIntersection(&m_tree, ray, ood, intersection, minDepth, maxDepth, s /**/ STATISTICS_PARAM_INPUT, true);
 }
 
 void manta::Octree::fineIntersection(const math::Vector &r, IntersectionPoint *p, const CoarseIntersection *hint) const {
@@ -172,16 +174,25 @@ void manta::Octree::writeToObjFile(const OctreeBV *leaf, std::ofstream &f, int &
 	}
 }
 
-bool manta::Octree::findClosestIntersection(const OctreeBV *leaf, const LightRay *ray, const math::Vector &ood, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s, bool skip) const {
+bool manta::Octree::findClosestIntersection(
+	const OctreeBV *leaf, 
+	const LightRay *ray, 
+	const math::Vector &ood, 
+	CoarseIntersection *intersection, 
+	math::real minDepth, 
+	math::real maxDepth, 
+	StackAllocator *s /**/ STATISTICS_PROTOTYPE, bool skip) const {
 	math::real currentMaxDepth = maxDepth;
 	math::real rayDepth = math::constants::REAL_MAX;
 	bool found = false;
 
+	INCREMENT_COUNTER(RuntimeStatistics::TOTAL_BV_TESTS);
 	if (skip || AABBIntersect(leaf, ray, &rayDepth, ood)) {
+		INCREMENT_COUNTER(RuntimeStatistics::TOTAL_BV_HITS);
 		if (!skip && rayDepth > currentMaxDepth) return false;
 
 		if (leaf->faceCount > 0) {
-			bool foundInMesh = m_mesh->findClosestIntersection(m_faceLists[leaf->faceList], leaf->faceCount, ray, intersection, minDepth, currentMaxDepth, s);
+			bool foundInMesh = m_mesh->findClosestIntersection(m_faceLists[leaf->faceList], leaf->faceCount, ray, intersection, minDepth, currentMaxDepth, s /**/ STATISTICS_PARAM_INPUT);
 			if (foundInMesh) {
 				found = true;
 				currentMaxDepth = intersection->depth;
@@ -191,7 +202,7 @@ bool manta::Octree::findClosestIntersection(const OctreeBV *leaf, const LightRay
 		int childCount = leaf->childCount;
 		OctreeBV *childList = m_childLists[leaf->childList];
 		for (int i = 0; i < childCount; i++) {
-			bool foundInChild = findClosestIntersection(&childList[i], ray, ood, intersection, minDepth, currentMaxDepth, s);
+			bool foundInChild = findClosestIntersection(&childList[i], ray, ood, intersection, minDepth, currentMaxDepth, s /**/ STATISTICS_PARAM_INPUT);
 			if (foundInChild) {
 				found = true;
 				currentMaxDepth = intersection->depth;
@@ -271,7 +282,6 @@ bool manta::Octree::analyze(Mesh *mesh, OctreeBV *leaf, int maxSize, std::vector
 		int childCount = (int)tempChildren.size();
 		if (childCount == 0) {
 			// Shouldn't happen
-
 		}
 		else if (childCount > 1 || !MERGE_SINGLE_CHILDREN) {
 			OctreeBV *childList = StandardAllocator::Global()->allocate<OctreeBV>(childCount, 16);
@@ -517,8 +527,8 @@ bool manta::Octree::AABBIntersect(const OctreeBV *leaf, const LightRay *ray, mat
 	math::Vector rayDir = ray->getDirection();
 	math::Vector rayOrigin = ray->getSource();
 
-	math::Vector maxPoint = leaf->maxPoint; //math::add(math::loadScalar(1E-2), m_maxPoint);
-	math::Vector minPoint = leaf->minPoint; //math::sub(m_minPoint, math::loadScalar(1E-2));
+	math::Vector maxPoint = leaf->maxPoint;
+	math::Vector minPoint = leaf->minPoint;
 
 	math::Vector t1_v = math::mul(math::sub(minPoint, rayOrigin), ood);
 	math::Vector t2_v = math::mul(math::sub(maxPoint, rayOrigin), ood);

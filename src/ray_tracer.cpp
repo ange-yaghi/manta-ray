@@ -73,8 +73,36 @@ void manta::RayTracer::traceAll(const Scene *scene, CameraRayEmitterGroup *group
 	waitForWorkers();
 
 	auto endTime = std::chrono::system_clock::now();
-
 	std::chrono::duration<double> diff = endTime - startTime;
+
+#if ENABLE_DETAILED_STATISTICS
+	RuntimeStatistics combinedStatistics;
+	combinedStatistics.reset();
+
+	// Add all statistics from workers
+	for (int i = 0; i < m_threadCount; i++) {
+		combinedStatistics.add(m_workers[i].getStatistics());
+	}
+
+	// Display statistics
+	std::cout <<		"================================================" << std::endl;
+	std::cout <<		"Run-time Statistics" << std::endl;
+	std::cout <<		"------------------------------------------------" << std::endl;
+	int counterCount = RuntimeStatistics::COUNTER_COUNT;
+	for (int i = 0; i < counterCount; i++) {
+		unsigned __int64 counter = combinedStatistics.counters[i];
+		const char *counterName = combinedStatistics.getCounterName((RuntimeStatistics::COUNTER)i);
+		std::stringstream ss;
+		ss << counterName << ":";
+		std::cout << ss.str();
+		for (int j = 0; j < (37 - ss.str().length()); j++) {
+			std::cout << " ";
+		}
+
+		std::cout << counter << std::endl;
+	}
+#endif /* ENABLE_DETAILED_STATISTICS */
+
 	std::cout <<		"================================================" << std::endl;
 	std::cout <<		"Total processing time:               " << diff.count() << " s" << std::endl;
 	std::cout <<		"------------------------------------------------" << std::endl;
@@ -117,7 +145,7 @@ void manta::RayTracer::tracePixel(int px, int py, const Scene *scene, CameraRayE
 	waitForWorkers();
 }
 
-void manta::RayTracer::traceRayEmitter(const CameraRayEmitter *emitter, RayContainer *container, const Scene *scene, StackAllocator *s /**/ PATH_RECORDER_DECL) const {
+void manta::RayTracer::traceRayEmitter(const CameraRayEmitter *emitter, RayContainer *container, const Scene *scene, StackAllocator *s /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const {
 	// Get the target ray container
 
 	emitter->generateRays(container);
@@ -131,7 +159,7 @@ void manta::RayTracer::traceRayEmitter(const CameraRayEmitter *emitter, RayConta
 
 		math::Vector intensity = math::constants::Zero;
 
-		traceRay(scene, ray, 0, s /**/ PATH_RECORDER_VAR);
+		traceRay(scene, ray, 0, s /**/ PATH_RECORDER_VAR /**/ STATISTICS_PARAM_INPUT);
 		intensity = ray->getWeightedIntensity();
 
 		ray->setIntensity(intensity);
@@ -198,7 +226,7 @@ void manta::RayTracer::destroyWorkers() {
 	m_workers = nullptr;
 }
 
-void manta::RayTracer::depthCull(const Scene *scene, const LightRay *ray, SceneObject **closestObject, IntersectionPoint *point, StackAllocator *s) const {
+void manta::RayTracer::depthCull(const Scene *scene, const LightRay *ray, SceneObject **closestObject, IntersectionPoint *point, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const {
 	int objectCount = scene->getSceneObjectCount();
 
 	CoarseIntersection closestIntersection;
@@ -212,7 +240,7 @@ void manta::RayTracer::depthCull(const Scene *scene, const LightRay *ray, SceneO
 
 		if (!geometry->fastIntersection(ray)) continue;
 
-		if (geometry->findClosestIntersection(ray, &closestIntersection, (math::real)0.0, closestDepth, s)) {
+		if (geometry->findClosestIntersection(ray, &closestIntersection, (math::real)0.0, closestDepth, s /**/ STATISTICS_PARAM_INPUT)) {
 			found = true;
 			closestIntersection.sceneObject = object;
 			closestDepth = closestIntersection.depth;
@@ -253,11 +281,11 @@ void manta::RayTracer::refineContact(const LightRay *ray, math::real depth, Inte
 	}
 }
 
-void manta::RayTracer::traceRay(const Scene *scene, LightRay *ray, int degree, StackAllocator *s /**/ PATH_RECORDER_DECL) const {
+void manta::RayTracer::traceRay(const Scene *scene, LightRay *ray, int degree, StackAllocator *s /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const {
 	SceneObject *sceneObject = nullptr;
 	IntersectionPoint point;
 
-	depthCull(scene, ray, &sceneObject, &point, s);
+	depthCull(scene, ray, &sceneObject, &point, s /**/ STATISTICS_PARAM_INPUT);
 
 	if (sceneObject != nullptr) {
 		START_BRANCH(point.m_position); // For path recording
@@ -277,7 +305,7 @@ void manta::RayTracer::traceRay(const Scene *scene, LightRay *ray, int degree, S
 			material->generateRays(&container, *ray, point, degree + 1, s);
 		}
 
-		traceRays(scene, container, s /**/ PATH_RECORDER_VAR);
+		traceRays(scene, container, s /**/ PATH_RECORDER_VAR /**/ STATISTICS_PARAM_INPUT);
 		material->integrateRay(ray, container, point);
 		container.destroyRays();
 
@@ -287,19 +315,21 @@ void manta::RayTracer::traceRay(const Scene *scene, LightRay *ray, int degree, S
 		// The ray hit nothing so it receives the background color
 		ray->setIntensity(m_backgroundColor);
 
-		// Point a ray in the air
-		START_BRANCH(math::add(ray->getSource(), math::mul(ray->getDirection(), math::loadScalar((math::real)1000.0))));
+		// Point a ray at nothing
+		START_BRANCH(math::add(ray->getSource(), math::mul(ray->getDirection(), math::loadScalar((math::real)1.0))));
 		END_BRANCH();
 	}
 }
 
-void manta::RayTracer::traceRays(const Scene *scene, const RayContainer &rayContainer, StackAllocator *s /**/ PATH_RECORDER_DECL) const {
+void manta::RayTracer::traceRays(const Scene *scene, const RayContainer &rayContainer, StackAllocator *s /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const {
 	int nRays = rayContainer.getRayCount();
 
 	for (int i = 0; i < nRays; i++) {
+		INCREMENT_COUNTER(RuntimeStatistics::RAYS_CAST);
+
 		LightRay *ray = &rayContainer.getRays()[i];
 		ray->calculateTransformations();
 
-		traceRay(scene, ray, rayContainer.getDegree(), s /**/ PATH_RECORDER_VAR);
+		traceRay(scene, ray, rayContainer.getDegree(), s /**/ PATH_RECORDER_VAR /**/ STATISTICS_PARAM_INPUT);
 	}
 }
