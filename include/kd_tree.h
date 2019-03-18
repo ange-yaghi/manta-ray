@@ -6,11 +6,12 @@
 #include <scene_geometry.h>
 #include <stack_list.h>
 #include <primitives.h>
+#include <runtime_statistics.h>
 
 #include <vector>
 #include <fstream>
 
-#define OPTIMIZED_KD_TREE_NODE (false)
+#define OPTIMIZED_KD_TREE_NODE (true)
 
 namespace manta {
 
@@ -79,7 +80,7 @@ namespace manta {
 		inline bool isLeaf() const { return flags == 0x3; }
 		inline int getAboveChild() const { return aboveChild; }
 	};
-#endif
+#endif /* OPTIMIZED_KD_TREE_NODE */
 
 	struct KDBoundingVolume {
 		AABB bounds;
@@ -130,7 +131,7 @@ namespace manta {
 		void initialize(math::real width, const math::Vector &position);
 		void destroy();
 
-		virtual bool findClosestIntersection(const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s) const;
+		virtual bool findClosestIntersection(const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const;
 		virtual math::Vector getClosestPoint(const CoarseIntersection *hint, const math::Vector &p) const;
 		virtual void fineIntersection(const math::Vector &r, IntersectionPoint *p, const CoarseIntersection *hint) const;
 		virtual bool fastIntersection(const LightRay *ray) const;

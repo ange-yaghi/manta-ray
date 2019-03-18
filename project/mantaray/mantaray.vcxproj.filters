@@ -232,6 +232,9 @@
     <Filter Include="Header Files\material\surface-modeling\microfacet-distribution">
       <UniqueIdentifier>{38f44da1-6469-457c-b9e5-a0af4566f4e7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\debugging\statistics">
+      <UniqueIdentifier>{26538a91-db05-4c5b-bc3f-8387719b2f16}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -649,6 +652,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\material_pointer.h">
       <Filter>Header Files\material\interface\library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\runtime_statistics.h">
+      <Filter>Header Files\debugging\statistics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

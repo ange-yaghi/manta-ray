@@ -9,7 +9,7 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
 	constexpr bool USE_ACCELERATION_STRUCTURE = true;
 	constexpr bool DETERMINISTIC_SEED_MODE = false;
 	constexpr bool TRACE_SINGLE_PIXEL = false;
-	constexpr const char *MATERIAL = "Steel";
+	constexpr const char *MATERIAL = "Glass";
 
 	RayTracer rayTracer;
 	Scene scene;
