@@ -7,9 +7,9 @@ using namespace manta;
 void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int resolutionY) {
 	// Top-level parameters
 	constexpr bool USE_ACCELERATION_STRUCTURE = true;
-	constexpr bool DETERMINISTIC_SEED_MODE = false;
+	constexpr bool DETERMINISTIC_SEED_MODE = true;
 	constexpr bool TRACE_SINGLE_PIXEL = false;
-	constexpr const char *MATERIAL = "Glass";
+	constexpr const char *MATERIAL = "Steel2";
 
 	RayTracer rayTracer;
 	Scene scene;
@@ -81,6 +81,40 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
 	steelMaterial->setName("Steel");
 	steelMaterial->setReflectance(getColor(255, 255, 255));
 	steelMaterial->setBSDF(&steelBSDF);
+
+	// Steel 2
+	TextureNode fingerprintTexture;
+	fingerprintTexture.loadFile(TEXTURE_PATH "samsung_a8/fingerprints_roughness_map.png", (math::real)1.0);
+
+	TextureNode metalTexture;
+	metalTexture.loadFile(TEXTURE_PATH "stock-scene/metal.jpg", (math::real)2.2);
+
+	RemapNode specularPowerFingerprint(
+		math::loadScalar(0.0f),
+		math::loadScalar(1.0f),
+		new PowerNode(4.0f, &fingerprintTexture));
+
+	RemapNode invFingerprint(
+		math::loadScalar(1.0f),
+		math::loadScalar(0.0f),
+		&fingerprintTexture);
+
+	// Steel
+	PhongDistribution phongSteel2;
+	phongSteel2.setPower(5000);
+	phongSteel2.setPowerNode(&specularPowerFingerprint);
+	phongSteel2.setMinMapPower(8);
+
+	BilayerBSDF steelBSDF2;
+	steelBSDF2.setCoatingDistribution(&phongSteel2);
+	steelBSDF2.setDiffuseMaterial(&lambert);
+	steelBSDF2.setDiffuseNode(&metalTexture);
+	steelBSDF2.setSpecularAtNormal(math::loadVector(1.0f, 1.0f, 1.0f));
+	steelBSDF2.setSpecularNode(&invFingerprint);
+
+	SimpleBSDFMaterial *steel2Material = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	steel2Material->setName("Steel2");
+	steel2Material->setBSDF(&steelBSDF2);
 
 	// ========================================================================
 
@@ -161,7 +195,7 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
 	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");
 
 	if (TRACE_SINGLE_PIXEL) {
-		rayTracer.tracePixel(1044, 1063, &scene, group);
+		rayTracer.tracePixel(369, 462, &scene, group);
 	}
 	else {
 		rayTracer.traceAll(&scene, group);

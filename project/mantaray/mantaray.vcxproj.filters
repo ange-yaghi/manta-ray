@@ -420,6 +420,12 @@
     <ClCompile Include="..\..\src\material_pointer.cpp">
       <Filter>Source Files\material\interface\library</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\remap_node.cpp">
+      <Filter>Source Files\material\interface\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\power_node.cpp">
+      <Filter>Source Files\material\interface\library</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\sphere_primitive.h">
@@ -655,6 +661,12 @@
     </ClInclude>
     <ClInclude Include="..\..\include\runtime_statistics.h">
       <Filter>Header Files\debugging\statistics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\remap_node.h">
+      <Filter>Header Files\material\node\library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\power_node.h">
+      <Filter>Header Files\material\node\library</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
