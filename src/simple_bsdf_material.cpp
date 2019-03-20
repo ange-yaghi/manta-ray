@@ -103,6 +103,10 @@ void manta::SimpleBSDFMaterial::generateRays(RayContainer *rays, const LightRay 
 		weight = math::constants::Zero;
 	}
 
+	if (math::getX(weight) > 1500 || math::getY(weight) > 1500 || math::getZ(weight) > 1500) {
+		int a = 0;
+	}
+
 	// Initialize the outgoing ray
 	ray.setDirection(outgoing);
 	ray.setWeight(weight);

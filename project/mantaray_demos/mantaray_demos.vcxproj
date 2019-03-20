@@ -31,6 +31,7 @@
     <ClCompile Include="..\..\demos\stress_spiders.cpp" />
     <ClCompile Include="..\..\demos\teapot_lamp_demo.cpp" />
     <ClCompile Include="..\..\demos\utils.cpp" />
+    <ClCompile Include="..\..\src\stock_scene_demo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\demos\settings.h" />

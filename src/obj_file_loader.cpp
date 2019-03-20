@@ -192,6 +192,7 @@ bool manta::ObjFileLoader::readFace(std::stringstream &s, ObjFace *face) {
 	int vertexIndex = 0;
 
 	// Initialize all indices
+	// NOTE: 0 corresponds to -1 since the indices will be transformed later
 	for (int i = 0; i < 3; i++) {
 		face->vt[i] = 0;
 		face->vn[i] = 0;
