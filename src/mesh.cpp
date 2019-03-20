@@ -407,25 +407,37 @@ void manta::Mesh::fineIntersection(const math::Vector &r, IntersectionPoint *p, 
 	math::Vector faceNormal = math::normalize(math::cross(math::sub(*vertices[1], *vertices[0]), math::sub(*vertices[2], *vertices[0])));
 
 	if (m_perVertexNormals) {
-		math::Vector normalU = m_normals[data[0]->n];
-		math::Vector normalV = m_normals[data[1]->n];
-		math::Vector normalW = m_normals[data[2]->n];
+		if (data[0]->n != -1 && data[1]->n != -1 && data[2]->n != -1) {
+			math::Vector normalU = m_normals[data[0]->n];
+			math::Vector normalV = m_normals[data[1]->n];
+			math::Vector normalW = m_normals[data[2]->n];
 
-		vertexNormal = math::add(math::mul(normalU, math::loadScalar(u)), math::mul(normalV, math::loadScalar(v)));
-		vertexNormal = math::add(vertexNormal, math::mul(normalW, math::loadScalar(w)));
-		vertexNormal = math::normalize(vertexNormal);
+			vertexNormal = math::add(math::mul(normalU, math::loadScalar(u)), math::mul(normalV, math::loadScalar(v)));
+			vertexNormal = math::add(vertexNormal, math::mul(normalW, math::loadScalar(w)));
+			vertexNormal = math::normalize(vertexNormal);
+		}
+		else {
+			std::cout << "HERE" << std::endl;
+			vertexNormal = faceNormal;
+		}
 	}
 	else {
 		vertexNormal = faceNormal;
 	}
 
 	if (m_useTextureCoords) {
-		math::Vector texU = m_textureCoords[data[0]->t];
-		math::Vector texV = m_textureCoords[data[1]->t];
-		math::Vector texW = m_textureCoords[data[2]->t];
+		if (data[0]->t != -1 && data[1]->t != -1 && data[2]->t != -1) {
+			math::Vector texU = m_textureCoords[data[0]->t];
+			math::Vector texV = m_textureCoords[data[1]->t];
+			math::Vector texW = m_textureCoords[data[2]->t];
 
-		textureCoordinates = math::add(math::mul(texU, math::loadScalar(u)), math::mul(texV, math::loadScalar(v)));
-		textureCoordinates = math::add(textureCoordinates, math::mul(texW, math::loadScalar(w)));
+			textureCoordinates = math::add(math::mul(texU, math::loadScalar(u)), math::mul(texV, math::loadScalar(v)));
+			textureCoordinates = math::add(textureCoordinates, math::mul(texW, math::loadScalar(w)));
+		}
+		else {
+			textureCoordinates = math::constants::Zero;
+		}
+		
 	}
 	else {
 		textureCoordinates = math::constants::Zero;
