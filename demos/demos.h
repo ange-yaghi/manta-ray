@@ -39,6 +39,8 @@
 #include <microfacet_transmission_bsdf.h>
 #include <microfacet_glass_bsdf.h>
 #include <material_pointer.h>
+#include <power_node.h>
+#include <remap_node.h>
 
 namespace manta_demo {
 
@@ -51,7 +53,8 @@ namespace manta_demo {
 		PEN,
 		COMPLEX_ROOM,
 		SAMSUNG_A8,
-		MATERIAL_PREVIEW
+		MATERIAL_PREVIEW,
+		STOCK_SCENE
 	};
 
 	void runDemo(DEMO demo, int samplesPerPixel, int resolutionX, int resolutionY);
@@ -65,6 +68,7 @@ namespace manta_demo {
 	void complexRoomDemo(int samplesPerPixel, int resolutionX, int resolutionY);
 	void samsungA8Demo(int samplesPerPixel, int resolutionX, int resolutionY);
 	void materialVisualizer(int samplesPerPixel, int resolutionX, int resolutionY);
+	void stockSceneDemo(int samplesPerPixel, int resolutionX, int resolutionY);
 
 } /* namespace manta_demo */
 

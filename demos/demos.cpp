@@ -29,6 +29,9 @@ void manta_demo::runDemo(DEMO demo, int samplesPerPixel, int resolutionX, int re
 	case DEMO::MATERIAL_PREVIEW:
 		materialVisualizer(samplesPerPixel, resolutionX, resolutionY);
 		break;
+	case DEMO::STOCK_SCENE:
+		stockSceneDemo(samplesPerPixel, resolutionX, resolutionY);
+		break;
 	default:
 		std::cout << "Unknown/undefined demo specified" << std::endl;
 		break;

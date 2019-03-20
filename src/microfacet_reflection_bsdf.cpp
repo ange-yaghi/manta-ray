@@ -15,6 +15,7 @@ void manta::MicrofacetReflectionBSDF::initialize(const IntersectionPoint *surfac
 
 manta::math::Vector manta::MicrofacetReflectionBSDF::sampleF(const IntersectionPoint *surfaceInteraction, const math::Vector &i, math::Vector *o, math::real *pdf, StackAllocator *stackAllocator) const {
 	constexpr math::Vector reflect = { (math::real)-1.0, (math::real)-1.0, (math::real)1.0, (math::real)1.0 };
+	constexpr math::real EPSILON = (math::real)1E-2;
 
 	// Allocate required memory
 	MaterialNodeMemory s;
@@ -29,13 +30,13 @@ manta::math::Vector manta::MicrofacetReflectionBSDF::sampleF(const IntersectionP
 	math::real cosThetaO = ::abs(math::getZ(*o));
 	math::real cosThetaI = ::abs(math::getZ(i));
 
-	if (o_dot_m <= (math::real)0.0 || 
-		cosThetaO <= (math::real)0.0 ||
-		cosThetaI <= (math::real)0.0) {
+	if (o_dot_m <= EPSILON ||
+		cosThetaO <= EPSILON ||
+		cosThetaI <= EPSILON) {
 		// Free all memory
 		m_distribution->free(&s, stackAllocator);
 
-		*pdf = 0.0;
+		*pdf = (math::real)0.0;
 		return math::constants::Zero;
 	}
 
@@ -46,6 +47,10 @@ manta::math::Vector manta::MicrofacetReflectionBSDF::sampleF(const IntersectionP
 
 	math::Vector reflectivity = math::loadScalar(
 		m_distribution->calculateDistribution(m, &s) * m_distribution->bidirectionalShadowMasking(i, *o, m, &s) * F / (4 * cosThetaI * cosThetaO));
+
+	if (math::getX(reflectivity) > 2000000 || math::getY(reflectivity) > 2000000 || math::getZ(reflectivity) > 2000000) {
+		int a = 0;
+	}
 
 	// Free all memory
 	m_distribution->free(&s, stackAllocator);
