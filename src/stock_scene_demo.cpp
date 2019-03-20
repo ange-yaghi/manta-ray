@@ -107,7 +107,7 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
 	BilayerBSDF paintBSDF;
 	paintBSDF.setCoatingDistribution(&phongGloss);
 	paintBSDF.setDiffuse(getColor(0xE9, 0xE2, 0xDF));
-	paintBSDF.setSpecularAtNormal(math::loadScalar(0.2f));
+	paintBSDF.setSpecularAtNormal(math::loadScalar(0.1f));
 	paintBSDF.setDiffuseMaterial(&lambert);
 
 	SimpleBSDFMaterial *paintMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();

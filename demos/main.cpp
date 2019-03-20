@@ -8,7 +8,7 @@ int main() {
 
 	// Run a demo
 	constexpr DEMO demo = DEMO::STOCK_SCENE;
-	constexpr int samples = 1000;
+	constexpr int samples = 14800;
 	constexpr int resolutionX = 2048;
 	constexpr int resolutionY = 1536;
 
