@@ -155,14 +155,14 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	delete group;
 
 	std::string fname = createUniqueRenderFilename("box_city_demo", samplesPerPixel);
-	std::string imageFname = std::string(RENDER_OUTPUT) + "bitmap/" + fname + ".bmp";
+	std::string imageFname = std::string(RENDER_OUTPUT) + "bitmap/" + fname + ".jpg";
 	std::string rawFname = std::string(RENDER_OUTPUT) + "raw/" + fname + ".fpm";
 
 	RawFile rawFile;
 	rawFile.writeRawFile(rawFname.c_str(), &sceneBuffer);
 
 	sceneBuffer.applyGammaCurve((math::real)(1.0 / 2.2));
-	manta::SaveImageData(sceneBuffer.getBuffer(), sceneBuffer.getWidth(), sceneBuffer.getHeight(), imageFname.c_str());
+	writeJpeg(imageFname.c_str(), &sceneBuffer, 95);
 
 	sceneBuffer.destroy();
 	rayTracer.destroy();
