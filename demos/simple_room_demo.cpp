@@ -136,7 +136,7 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 	camera.destroyEmitters();
 
 	std::string fname = createUniqueRenderFilename("small_house_demo", samplesPerPixel);
-	std::string imageFname = std::string(RENDER_OUTPUT) + "bitmap/" + fname + ".bmp";
+	std::string imageFname = std::string(RENDER_OUTPUT) + "bitmap/" + fname + ".jpg";
 	std::string rawFname = std::string(RENDER_OUTPUT) + "raw/" + fname + ".fpm";
 
 	RawFile rawFile;
@@ -144,7 +144,7 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 
 	// Apply gamma correction
 	sceneBuffer.applyGammaCurve((math::real)(1.0 / 2.2));
-	manta::SaveImageData(sceneBuffer.getBuffer(), sceneBuffer.getWidth(), sceneBuffer.getHeight(), imageFname.c_str());
+	writeJpeg(imageFname.c_str(), &sceneBuffer, 95);
 
 	// Cleanup memory
 	sceneBuffer.destroy();
