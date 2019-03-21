@@ -10,6 +10,7 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
 	constexpr bool DETERMINISTIC_SEED_MODE = false;
 	constexpr bool TRACE_SINGLE_PIXEL = false;
 	constexpr bool LENS_SIMULATION = true;
+	constexpr bool ALT_VERSION = true;
 
 	RayTracer rayTracer;
 	Scene scene;
@@ -28,7 +29,13 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
 	eraserTexture.loadFile(TEXTURE_PATH "stock-scene/eraser.jpg", (math::real)2.2);
 
 	TextureNode floorTexture;
-	floorTexture.loadFile(TEXTURE_PATH "stock-scene/floor.png", (math::real)2.2);
+
+	if (ALT_VERSION) {
+		floorTexture.loadFile(TEXTURE_PATH "stock-scene/floor_alt.png", (math::real)2.2);
+	}
+	else {
+		floorTexture.loadFile(TEXTURE_PATH "stock-scene/floor.png", (math::real)2.2);
+	}
 
 	// Load all object files
 	ObjFileLoader stageObj;
@@ -106,7 +113,8 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
 
 	BilayerBSDF paintBSDF;
 	paintBSDF.setCoatingDistribution(&phongGloss);
-	paintBSDF.setDiffuse(getColor(0xE9, 0xE2, 0xDF));
+	if (ALT_VERSION) paintBSDF.setDiffuse(getColor(0x0F, 0x10, 0x40));
+	else paintBSDF.setDiffuse(getColor(0xE9, 0xE2, 0xDF));
 	paintBSDF.setSpecularAtNormal(math::loadScalar(0.1f));
 	paintBSDF.setDiffuseMaterial(&lambert);
 
