@@ -151,6 +151,7 @@ namespace manta {
 			MATH_CONST real PI = (real)3.141592654;
 			MATH_CONST real TWO_PI = (real)6.2831853071795864769252866;
 			MATH_CONST real SQRT_2 = (real)1.41421356237;
+			MATH_CONST real INV_PI = (real)1.0 / PI;
 
 			// Quaternions
 			MATH_CONST Quaternion QuatIdentity = { (real)1.0, (real)0.0, (real)0.0, (real)0.0 };
