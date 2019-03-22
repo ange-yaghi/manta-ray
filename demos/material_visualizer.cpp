@@ -44,9 +44,22 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
 	simpleGlassBSDF.setMediaInterface(&fresnel);
 
 	SimpleBSDFMaterial *glassMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
-	glassMaterial->setName("Glass");
+	glassMaterial->setName("Phong_Glass");
 	glassMaterial->setReflectance(getColor(255, 255, 255));
 	glassMaterial->setBSDF(&simpleGlassBSDF);
+
+	// GGX Glass
+	GgxDistribution ggxGlass;
+	ggxGlass.setWidth(0.0001f);
+
+	MicrofacetGlassBSDF ggxGlassBSDF;
+	ggxGlassBSDF.setDistribution(&ggxGlass);
+	ggxGlassBSDF.setMediaInterface(&fresnel);
+
+	SimpleBSDFMaterial *ggxGlassMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	ggxGlassMaterial->setName("GGX_Glass");
+	ggxGlassMaterial->setReflectance(getColor(255, 255, 255));
+	ggxGlassMaterial->setBSDF(&ggxGlassBSDF);
 
 	// Simple Wood
 	TextureNode texture;
@@ -115,6 +128,21 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
 	SimpleBSDFMaterial *steel2Material = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	steel2Material->setName("Steel2");
 	steel2Material->setBSDF(&steelBSDF2);
+
+	// GGX Test
+	GgxDistribution ggxTest;
+	ggxTest.setWidth(0.9f);
+
+	PhongDistribution ggxPhongEquiv;
+	ggxPhongEquiv.setPower(10.0f);
+
+	MicrofacetReflectionBSDF ggxTestBDSF;
+	ggxTestBDSF.setDistribution(&ggxPhongEquiv);
+
+	SimpleBSDFMaterial *ggxTestMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	ggxTestMaterial->setName("GGX_Test");
+	ggxTestMaterial->setBSDF(&ggxTestBDSF);
+	ggxTestMaterial->setReflectance(math::constants::One);
 
 	// ========================================================================
 

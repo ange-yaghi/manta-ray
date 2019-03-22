@@ -3,13 +3,10 @@
 
 #include <material.h>
 
-#include <lambertian_bsdf.h>
-#include <microfacet_reflection_bsdf.h>
-#include <phong_distribution.h>
-
 namespace manta {
 
 	class VectorMaterialNode;
+	class BSDF;
 
 	class SimpleBSDFMaterial : public Material {
 	public:
@@ -35,7 +32,7 @@ namespace manta {
 		math::Vector getReflectance() { return m_reflectance; }
 
 		void setBSDF(BSDF *bsdf) { m_bsdf = bsdf; }
-		BSDF *getBSDF() { return m_bsdf; }
+		BSDF *getBSDF() const { return m_bsdf; }
 
 	protected:
 		int m_maxDegree;
