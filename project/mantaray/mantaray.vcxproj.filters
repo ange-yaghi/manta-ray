@@ -438,6 +438,9 @@
     <ClCompile Include="..\..\src\image_handling.cpp">
       <Filter>Source Files\output</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\ggx_distribution.cpp">
+      <Filter>Source Files\material\surface-modeling\microfacet-model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\sphere_primitive.h">
@@ -685,6 +688,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\image_handling.h">
       <Filter>Header Files\output</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\ggx_distribution.h">
+      <Filter>Header Files\material\surface-modeling\microfacet-distribution</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

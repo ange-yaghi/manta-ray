@@ -25,6 +25,7 @@
     <ClCompile Include="..\..\src\camera_ray_emitter.cpp" />
     <ClCompile Include="..\..\src\camera_ray_emitter_group.cpp" />
     <ClCompile Include="..\..\src\dielectric_media_interface.cpp" />
+    <ClCompile Include="..\..\src\ggx_distribution.cpp" />
     <ClCompile Include="..\..\src\grid_sampler.cpp" />
     <ClCompile Include="..\..\src\image_byte_buffer.cpp" />
     <ClCompile Include="..\..\src\image_handling.cpp" />
@@ -95,6 +96,7 @@
     <ClInclude Include="..\..\include\coarse_intersection.h" />
     <ClInclude Include="..\..\include\dielectric_media_interface.h" />
     <ClInclude Include="..\..\include\geometry.h" />
+    <ClInclude Include="..\..\include\ggx_distribution.h" />
     <ClInclude Include="..\..\include\grid_sampler.h" />
     <ClInclude Include="..\..\include\image_byte_buffer.h" />
     <ClInclude Include="..\..\include\image_handling.h" />

@@ -187,6 +187,7 @@ TEST(BSDFTests, TransmissionBSDFTest) {
 
 		EXPECT_LT(math::getZ(outgoing), 0.0);
 
+		EXPECT_GE(pdf, 0.0);
 		EXPECT_GE(math::getX(transmitance), 0.0);
 		EXPECT_GE(math::getY(transmitance), 0.0);
 		EXPECT_GE(math::getZ(transmitance), 0.0);

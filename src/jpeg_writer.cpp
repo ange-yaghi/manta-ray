@@ -49,7 +49,7 @@ bool manta::JpegWriter::write(ImageByteBuffer *buffer, const char *fileName) {
 		return false;
 	}
 
-	result = fwrite((const void *)jpegBuffer, jpegSize, 1, jpegFile);
+	result = (int)fwrite((const void *)jpegBuffer, jpegSize, 1, jpegFile);
 	if (result < 0) return false;
 
 	tjDestroy(tjInstance);

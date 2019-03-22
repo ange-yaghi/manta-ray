@@ -5,7 +5,7 @@
 #include <intersection_point.h>
 #include <light_ray.h>
 #include <vector_material_node.h>
-
+#include <bsdf.h>
 
 manta::SimpleBSDFMaterial::SimpleBSDFMaterial() {
 	m_maxDegree = 8;

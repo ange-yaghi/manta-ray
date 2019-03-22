@@ -35,6 +35,10 @@
 #include <simple_bsdf_material.h>
 #include <single_color_node.h>
 #include <bilayer_bsdf.h>
+#include <phong_distribution.h>
+#include <lambertian_bsdf.h>
+#include <ggx_distribution.h>
+#include <microfacet_reflection_bsdf.h>
 #include <microfacet_transmission_bsdf.h>
 #include <microfacet_glass_bsdf.h>
 #include <material_pointer.h>
