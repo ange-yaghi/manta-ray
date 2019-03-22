@@ -26,6 +26,9 @@
     <ClCompile Include="..\..\src\camera_ray_emitter_group.cpp" />
     <ClCompile Include="..\..\src\dielectric_media_interface.cpp" />
     <ClCompile Include="..\..\src\grid_sampler.cpp" />
+    <ClCompile Include="..\..\src\image_byte_buffer.cpp" />
+    <ClCompile Include="..\..\src\image_handling.cpp" />
+    <ClCompile Include="..\..\src\jpeg_writer.cpp" />
     <ClCompile Include="..\..\src\kd_tree.cpp" />
     <ClCompile Include="..\..\src\lambertian_bsdf.cpp" />
     <ClCompile Include="..\..\src\manta_math.cpp" />
@@ -51,7 +54,6 @@
     <ClCompile Include="..\..\src\gpu_kernel_opencl.cpp" />
     <ClCompile Include="..\..\src\gpu_manager_opencl.cpp" />
     <ClCompile Include="..\..\src\gpu_memory_opencl.cpp" />
-    <ClCompile Include="..\..\src\image_handling.cpp" />
     <ClCompile Include="..\..\src\job_queue.cpp" />
     <ClCompile Include="..\..\src\lens.cpp" />
     <ClCompile Include="..\..\src\lens_camera_ray_emitter.cpp" />
@@ -94,6 +96,9 @@
     <ClInclude Include="..\..\include\dielectric_media_interface.h" />
     <ClInclude Include="..\..\include\geometry.h" />
     <ClInclude Include="..\..\include\grid_sampler.h" />
+    <ClInclude Include="..\..\include\image_byte_buffer.h" />
+    <ClInclude Include="..\..\include\image_handling.h" />
+    <ClInclude Include="..\..\include\jpeg_writer.h" />
     <ClInclude Include="..\..\include\kd_tree.h" />
     <ClInclude Include="..\..\include\lambertian_bsdf.h" />
     <ClInclude Include="..\..\include\material_manager.h" />
@@ -127,7 +132,6 @@
     <ClInclude Include="..\..\include\manta.h" />
     <ClInclude Include="..\..\include\manta_build_conf.h" />
     <ClInclude Include="..\..\include\mesh.h" />
-    <ClInclude Include="..\..\include\image_handling.h" />
     <ClInclude Include="..\..\include\lens.h" />
     <ClInclude Include="..\..\include\lens_camera_ray_emitter.h" />
     <ClInclude Include="..\..\include\lens_camera_ray_emitter_group.h" />
@@ -184,7 +188,7 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -223,22 +227,24 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)\..\..\Common\SDL2-2.0.9\include;$(SolutionDir)\..\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\..\..\Common\SDL2-2.0.9\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\include;$(SolutionDir)\..\..\Common\SDL2-2.0.9\include;$(SolutionDir)\..\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\x86;$(SolutionDir)\..\..\Common\SDL2-2.0.9\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\include;$(SolutionDir)\..\dependencies\libraries\SDL\include;$(SolutionDir)\..\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\lib\x64;$(SolutionDir)\..\dependencies\libraries\SDL\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\include;$(SolutionDir)\..\dependencies\libraries\SDL\include;$(SolutionDir)\..\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\x64;$(SolutionDir)\..\dependencies\libraries\SDL\lib\x64;$(LibraryPath)</LibraryPath>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <LibraryPath>$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\x86;$(SolutionDir)\..\..\Common\SDL2-2.0.9\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\include;$(SolutionDir)\..\..\Common\SDL2-2.0.9\include;$(SolutionDir)\..\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\include;$(SolutionDir)\..\dependencies\libraries\SDL\include;$(SolutionDir)\..\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v10.0\lib\x64;$(SolutionDir)\..\dependencies\libraries\SDL\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\include;$(SolutionDir)\..\dependencies\libraries\SDL\include;$(SolutionDir)\..\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\x64;$(SolutionDir)\..\dependencies\libraries\SDL\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -255,6 +261,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>SDL2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <Lib>
+      <AdditionalDependencies>turbojpeg.lib;SDL2.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -275,7 +284,7 @@
       <Command>python $(TargetDir)..\..\..\scripts\increment_build_version.py</Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalDependencies>SDL2.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>turbojpeg.lib;SDL2.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -296,6 +305,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalDependencies>turbojpeg.lib;SDL2.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -320,7 +332,7 @@
       <Command>python $(TargetDir)..\..\..\scripts\increment_build_version.py</Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalDependencies>SDL2.lib;SDL2_image.lib%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>turbojpeg.lib;SDL2.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

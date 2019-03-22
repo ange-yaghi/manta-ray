@@ -12,7 +12,6 @@
 #include <scene_geometry.h>
 #include <material.h>
 #include <ray_tracer.h>
-#include <image_handling.h>
 #include <memory_management.h>
 #include <mesh.h>
 #include <obj_file_loader.h>

@@ -3,6 +3,8 @@
 #include <image_handling.h>
 #include <os_utilities.h>
 #include <settings.h>
+#include <image_byte_buffer.h>
+#include <jpeg_writer.h>
 
 #include <sstream>
 #include <time.h>
@@ -23,9 +25,9 @@ void manta_demo::createAllDirectories() {
 }
 
 manta::math::Vector manta_demo::getColor(int r, int g, int b, manta::math::real gamma) {
-	manta::math::real rr = r / 255.0;
-	manta::math::real rg = g / 255.0;
-	manta::math::real rb = b / 255.0;
+	manta::math::real rr = r / (manta::math::real)255.0;
+	manta::math::real rg = g / (manta::math::real)255.0;
+	manta::math::real rb = b / (manta::math::real)255.0;
 
 	rr = pow(rr, gamma);
 	rg = pow(rg, gamma);
@@ -49,6 +51,17 @@ std::string manta_demo::createUniqueRenderFilename(const char *jobName, int samp
 	ss << samples;
 
 	return std::string(buffer) + "_" + std::string(jobName) + "_S" + ss.str();
+}
+
+void manta_demo::writeJpeg(const char *fname, manta::SceneBuffer *sceneBuffer, int quality) {
+	manta::ImageByteBuffer byteBuffer;
+	byteBuffer.initialize(sceneBuffer);
+
+	manta::JpegWriter writer;
+	writer.setQuality(quality);
+	writer.write(&byteBuffer, fname);
+
+	byteBuffer.free();
 }
 
 void manta_demo::editImage(manta::SceneBuffer *sceneBuffer, const std::string &outputFname) {

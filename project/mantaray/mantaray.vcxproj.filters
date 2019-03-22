@@ -235,6 +235,12 @@
     <Filter Include="Header Files\debugging\statistics">
       <UniqueIdentifier>{26538a91-db05-4c5b-bc3f-8387719b2f16}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\output\jpeg">
+      <UniqueIdentifier>{d7642a27-f9d5-415a-b864-0998e21f038c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\output\jpeg">
+      <UniqueIdentifier>{7fcfae2e-597d-4da6-a0e0-a2516719cd0c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -254,9 +260,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\scene.cpp">
       <Filter>Source Files\scene</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\image_handling.cpp">
-      <Filter>Source Files\output</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\manta_math_float_simd.cpp">
       <Filter>Source Files\math</Filter>
@@ -426,6 +429,15 @@
     <ClCompile Include="..\..\src\power_node.cpp">
       <Filter>Source Files\material\interface\library</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\jpeg_writer.cpp">
+      <Filter>Source Files\output\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\image_byte_buffer.cpp">
+      <Filter>Source Files\scene-buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\image_handling.cpp">
+      <Filter>Source Files\output</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\sphere_primitive.h">
@@ -442,9 +454,6 @@
     </ClInclude>
     <ClInclude Include="..\..\include\scene.h">
       <Filter>Header Files\scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\image_handling.h">
-      <Filter>Header Files\output</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\manta_math_float_simd.h">
       <Filter>Header Files\math</Filter>
@@ -667,6 +676,15 @@
     </ClInclude>
     <ClInclude Include="..\..\include\power_node.h">
       <Filter>Header Files\material\node\library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\jpeg_writer.h">
+      <Filter>Header Files\output\jpeg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\image_byte_buffer.h">
+      <Filter>Header Files\scene-buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\image_handling.h">
+      <Filter>Header Files\output</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
