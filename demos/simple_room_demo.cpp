@@ -40,11 +40,11 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 	wallMaterial->setReflectance(getColor(200, 200, 200));
 
 	SimpleBSDFMaterial outdoorLight;
-	outdoorLight.setEmission(math::loadVector(18, 16, 16));
+	outdoorLight.setEmission(math::loadVector(18.f, 16.f, 16.f));
 	outdoorLight.setReflectance(math::constants::Zero);
 
 	SimpleBSDFMaterial outdoorTopLightMaterial;
-	outdoorTopLightMaterial.setEmission(math::loadVector(20, 20, 22));
+	outdoorTopLightMaterial.setEmission(math::loadVector(20.f, 20.f, 22.f));
 	outdoorTopLightMaterial.setReflectance(math::constants::Zero);
 
 	SimpleBSDFMaterial *tableMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
@@ -71,7 +71,7 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 	}
 
 	KDTree kdtree;
-	kdtree.initialize(100, math::loadVector(0, 0, 0));
+	kdtree.initialize(100.f, math::loadVector(0, 0, 0));
 	kdtree.analyze(&smallHouse, 4);
 
 	if (WRITE_KDTREE_TO_FILE) {
@@ -80,11 +80,11 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 
 	SpherePrimitive outdoorLightGeometry;
 	outdoorLightGeometry.setRadius((math::real)10.0);
-	outdoorLightGeometry.setPosition(math::loadVector(10.5, 0.0, -20.5));
+	outdoorLightGeometry.setPosition(math::loadVector(10.5f, 0.0f, -20.5f));
 
 	SpherePrimitive outdoorTopLightGeometry;
 	outdoorTopLightGeometry.setRadius((math::real)10.0);
-	outdoorTopLightGeometry.setPosition(math::loadVector(0.0, 25.0, 2));
+	outdoorTopLightGeometry.setPosition(math::loadVector(0.0f, 25.0f, 2.f));
 
 	// Create scene objects
 	SceneObject *smallHouseObject = scene.createSceneObject();
@@ -106,9 +106,9 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 	// Create the camera
 	StandardCameraRayEmitterGroup camera;
 	camera.setSampler(&sampler);
-	camera.setDirection(math::loadVector(-1.0, 0.0, 0.0));
-	camera.setPosition(math::loadVector(5.0, 2.0, 0.0));
-	camera.setUp(math::loadVector(0.0f, 1.0, 0.0));
+	camera.setDirection(math::loadVector(-1.0f, 0.0f, 0.0f));
+	camera.setPosition(math::loadVector(5.0f, 2.0f, 0.0f));
+	camera.setUp(math::loadVector(0.0f, 1.0f, 0.0f));
 	camera.setPlaneDistance(1.0f);
 	camera.setPlaneHeight(1.0f);
 	camera.setResolutionX(resolutionX);
@@ -119,7 +119,7 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 	SceneBuffer sceneBuffer;
 
 	// Create the raytracer
-	rayTracer.initialize(1000 * MB, 100 * MB, 12, 10000, true);
+	rayTracer.initialize(200 * MB, 100 * MB, 12, 100, true);
 	rayTracer.setBackgroundColor(getColor(135, 206, 235));
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 
