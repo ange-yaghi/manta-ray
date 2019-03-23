@@ -16,6 +16,7 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	constexpr bool DETERMINISTIC_SEED_MODE = false;
 	constexpr bool TRACE_SINGLE_PIXEL = false;
 	constexpr SCENE SCENE = BANNER_SCENE;
+	constexpr bool HIGH_RESOLUTION = true;
 	constexpr bool ENABLE_SMUDGE = true;
 
 	RayTracer rayTracer;
@@ -335,8 +336,14 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	camera->setPlaneDistance(1.0f);
 	camera->setPlaneHeight(cameraPlaneSize);
 	if (SCENE == BANNER_SCENE) {
-		camera->setResolutionX(1920);
-		camera->setResolutionY(1080);
+		if (HIGH_RESOLUTION) {
+			camera->setResolutionX(1920 * 3);
+			camera->setResolutionY(1080 * 3);
+		}
+		else {
+			camera->setResolutionX(1920);
+			camera->setResolutionY(1080);
+		}
 	}
 	else {
 		camera->setResolutionX(resolutionX);
@@ -346,7 +353,7 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	group = camera;
 
 	// Create the raytracer
-	rayTracer.initialize(1000 * MB, 50 * MB, 12, 10000, true);
+	rayTracer.initialize(5000 * MB, 50 * MB, 12, 10000, true);
 	rayTracer.setBackgroundColor(getColor(0, 0, 0));
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");

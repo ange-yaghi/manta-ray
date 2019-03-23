@@ -168,7 +168,7 @@ void manta::RayTracer::traceRayEmitter(const CameraRayEmitter *emitter, RayConta
 	container->calculateIntensity();
 }
 
-void manta::RayTracer::initialize(unsigned int stackSize, unsigned int workerStackSize, int threadCount, int renderBlockSize, bool multithreaded) {
+void manta::RayTracer::initialize(mem_size stackSize, mem_size workerStackSize, int threadCount, int renderBlockSize, bool multithreaded) {
 	m_stack.initialize(stackSize);
 	m_renderBlockSize = renderBlockSize;
 	m_multithreaded = multithreaded;

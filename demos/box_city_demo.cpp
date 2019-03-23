@@ -134,7 +134,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	}
 
 	// Initialize and run the ray tracer
-	rayTracer.initialize(1000 * MB, 50 * MB, 12, 10000, true);
+	rayTracer.initialize(5000 * MB, 50 * MB, 12, 10000, true);
 	rayTracer.setBackgroundColor(getColor(255, 255, 255));
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 	

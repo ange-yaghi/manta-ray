@@ -1,6 +1,8 @@
 #ifndef STACK_ALLOCATOR_H
 #define STACK_ALLOCATOR_H
 
+#include <memory_management.h>
+
 #include <assert.h>
 #include <new>
 
@@ -16,9 +18,9 @@ namespace manta {
 		StackAllocator();
 		~StackAllocator();
 
-		void initialize(unsigned int size);
+		void initialize(mem_size size);
 
-		void *allocate(unsigned int size, unsigned int alignment = 1) {
+		void *allocate(mem_size size, unsigned int alignment = 1) {
 #if ENABLE_LEDGER
 			m_allocationLedger++;
 #endif /* ENABLE_LEDGER */
@@ -26,16 +28,16 @@ namespace manta {
 			void *realAddress = m_stackPointer;
 
 			// Find an aligned address
-			unsigned __int64 stackPtr = (unsigned __int64)m_stackPointer;
+			mem_size stackPtr = (mem_size)m_stackPointer;
 			unsigned int mod = (alignment - stackPtr % alignment) % alignment;
 
 			void *basePointer = (void *)((char *)m_stackPointer + mod);
 			void *newObject = basePointer;
 
 #if ENABLE_BOUNDS_CHECKING
-			assert(((unsigned __int64)((char *)newObject) - ((unsigned __int64)(char *)m_buffer) + size) <= m_size);
+			assert(((mem_size)((char *)newObject) - ((mem_size)(char *)m_buffer) + size) <= m_size);
 
-			if (((unsigned __int64)((char *)newObject) - ((unsigned __int64)(char *)m_buffer) + size) > m_size) {
+			if (((mem_size)((char *)newObject) - ((mem_size)(char *)m_buffer) + size) > m_size) {
 				std::cout << "Out of memory! " << m_allocationLedger << std::endl;
 			}
 #endif
@@ -43,7 +45,7 @@ namespace manta {
 			// Update previous block pointers
 			m_stackPointer = (void *)((char *)basePointer + size);
 
-			if ((unsigned __int64)m_stackPointer > (unsigned __int64)m_maxStackPointer) m_maxStackPointer = m_stackPointer;
+			if ((mem_size)m_stackPointer > (mem_size)m_maxStackPointer) m_maxStackPointer = m_stackPointer;
 
 			return newObject;
 		}
@@ -55,20 +57,20 @@ namespace manta {
 #endif
 
 #if ENABLE_BOUNDS_CHECKING
-			assert((unsigned __int64)memory < (unsigned __int64)m_stackPointer);
+			assert((mem_size)memory < (mem_size)m_stackPointer);
 #endif
 
 			// Return the stack pointer to the beginning of the block
 			m_stackPointer = memory;
 		}
 
-		unsigned int getMaxUsage() const { return (unsigned int)((unsigned __int64)m_maxStackPointer - (unsigned __int64)m_buffer); }
+		mem_size getMaxUsage() const { return ((mem_size)m_maxStackPointer - (mem_size)m_buffer); }
 
 	protected:
 		void *m_buffer;
 		void *m_stackPointer;
 
-		unsigned int m_size;
+		mem_size m_size;
 
 		// Statistics counters
 		int m_allocationLedger;
