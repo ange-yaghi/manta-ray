@@ -48,7 +48,7 @@ namespace manta {
 
 		int getThreadCount() const { return m_threadCount; }
 
-		void initialize(unsigned int stackSize, unsigned int workerStackSize, int threadCount, int renderBlockSize, bool multithreaded);
+		void initialize(mem_size stackSize, mem_size workerStackSize, int threadCount, int renderBlockSize, bool multithreaded);
 		void destroy();
 
 		void setBackgroundColor(const math::Vector &color) { m_backgroundColor = color; }
@@ -73,7 +73,7 @@ namespace manta {
 		Worker *m_workers;
 		Worker *m_singleThreadedWorker;
 
-		unsigned long m_workerStackSize;
+		mem_size m_workerStackSize;
 		int m_rayCount;
 		int m_threadCount;
 		int m_renderBlockSize;
