@@ -174,7 +174,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	}
 
 	// Create the raytracer
-	rayTracer.initialize(200 * MB, 5 * MB, 12, 10000, true);
+	rayTracer.initialize(200 * MB, 5 * MB, 12, 100, true);
 	rayTracer.setBackgroundColor(getColor(0, 0, 0));
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");
