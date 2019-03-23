@@ -63,10 +63,10 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
 
 	// Simple Wood
 	TextureNode texture;
-	texture.loadFile(TEXTURE_PATH "/dark_wood.jpg", 2.2);
+	texture.loadFile(TEXTURE_PATH "/dark_wood.jpg", 2.2f);
 
 	TextureNode woodRoughness;
-	woodRoughness.loadFile(TEXTURE_PATH "/wood_roughness.jpg", 1.0);
+	woodRoughness.loadFile(TEXTURE_PATH "/wood_roughness.jpg", 1.0f);
 
 	PhongDistribution woodCoating;
 	woodCoating.setPower(1000);
@@ -191,10 +191,10 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
 	stageObject->setName("Stage");
 
 	// Create the camera
-	math::Vector cameraPos = math::loadVector(0, 2, 9);
-	math::Vector target = math::loadVector(0, 2, 0);
-	math::Vector up = math::loadVector(0.0f, 1.0, 0.0);
-	math::real cameraPlaneSize = 0.55;
+	math::Vector cameraPos = math::loadVector(0.f, 2.f, 9.f);
+	math::Vector target = math::loadVector(0.f, 2.f, 0.f);
+	math::Vector up = math::loadVector(0.0f, 1.0f, 0.0f);
+	math::real cameraPlaneSize = 0.55f;
 
 	math::Vector dir = math::normalize(math::sub(target, cameraPos));
 	up = math::cross(math::cross(dir, up), dir);
@@ -217,25 +217,20 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
 	group = camera;
 
 	// Create the raytracer
-	rayTracer.initialize(1000 * MB, 50 * MB, 12, 10000, true);
+	rayTracer.initialize(200 * MB, 50 * MB, 12, 100, true);
 	rayTracer.setBackgroundColor(getColor(100, 100, 100));
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");
 
-	if (TRACE_SINGLE_PIXEL) {
-		rayTracer.tracePixel(369, 462, &scene, group);
-	}
-	else {
-		rayTracer.traceAll(&scene, group);
-	}
-
 	// Output the results to a scene buffer
 	SceneBuffer sceneBuffer;
-	group->fillSceneBuffer(&sceneBuffer);
 
-	// Clean up the camera
-	group->destroyRays();
-	group->destroyEmitters();
+	if (TRACE_SINGLE_PIXEL) {
+		rayTracer.tracePixel(369, 462, &scene, group, &sceneBuffer);
+	}
+	else {
+		rayTracer.traceAll(&scene, group, &sceneBuffer);
+	}
 
 	std::string fname = createUniqueRenderFilename("material_visualizer", samplesPerPixel);
 	std::string imageFname = std::string(RENDER_OUTPUT) + "bitmap/" + fname + ".jpg";

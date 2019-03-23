@@ -3,9 +3,11 @@
 
 namespace manta {
 
-	constexpr unsigned int KB = 1000;
-	constexpr unsigned int MB = 1000 * KB;
-	constexpr unsigned int GB = 1000 * MB;
+	typedef unsigned __int64 mem_size;
+
+	constexpr mem_size KB = 1000;
+	constexpr mem_size MB = 1000 * KB;
+	constexpr mem_size GB = 1000 * MB;
 
 } /* namespace manta */
 

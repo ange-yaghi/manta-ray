@@ -16,9 +16,6 @@ namespace manta {
 		CameraRayEmitterGroup();
 		~CameraRayEmitterGroup();
 
-		virtual void createAllEmitters() = 0;
-		void destroyRays(); // Destroy all rays in emitters
-
 		void setUp(const math::Vector &up) { m_up = up; }
 		math::Vector getUp() const { return m_up; }
 
@@ -40,42 +37,29 @@ namespace manta {
 		void setDirection(const math::Vector &direction) { m_direction = direction; }
 		math::Vector getDirection() const { return m_direction; }
 
-		virtual void fillSceneBuffer(SceneBuffer *sceneBuffer) const;
-
 		void setSampleCount(int samples) { m_samples = samples; }
 		int getSampleCount() const { return m_samples; }
 
 		void setSampler(Sampler2D *sampler) { m_sampler = sampler; }
 		Sampler2D *getSampler() const { return m_sampler; }
 
-		void initializeEmitters(int count);
-		void destroyEmitters();
+		virtual void initialize() = 0;
 
-		int getEmitterCount() const { return m_rayEmitterCount; }
-		CameraRayEmitter **getEmitters() const { return m_rayEmitters; }
-		CameraRayEmitter *getEmitter(int index = 0) const { return m_rayEmitters[index]; }
-		RayContainer *getBuckets() const { return m_rayBuckets; }
-
-		void setStackAllocator(StackAllocator *allocator) { m_stackAllocator = allocator; }
-		StackAllocator *getStackAllocator() const { return m_stackAllocator; }
-
-		void setMeta(int meta) { m_meta = meta; }
-		int getMeta() const { return m_meta; }
+		virtual CameraRayEmitter *createEmitter(int ix, int iy, StackAllocator *stackAllocator) const = 0;
+		void freeEmitter(CameraRayEmitter *rayEmitter, StackAllocator *stackAllocator) const { stackAllocator->free(rayEmitter); };
 
 	protected:
 		template<typename t_RayEmitterType>
-		t_RayEmitterType *createEmitter() {
+		t_RayEmitterType *allocateEmitter(StackAllocator *stackAllocator) const {
 			t_RayEmitterType *newEmitter = nullptr;
-			if (m_stackAllocator == nullptr) {
+			if (stackAllocator == nullptr) {
 				void *buffer = _aligned_malloc(sizeof(t_RayEmitterType), 16);
 				newEmitter = new(buffer) t_RayEmitterType;
 			}
 			else {
-				void *buffer = m_stackAllocator->allocate(sizeof(t_RayEmitterType), 16);
+				void *buffer = stackAllocator->allocate(sizeof(t_RayEmitterType), 16);
 				newEmitter = new(buffer) t_RayEmitterType;
 			}
-			m_rayEmitters[m_currentRayEmitterCount] = newEmitter;
-			m_currentRayEmitterCount++;
 
 			return newEmitter;
 		}
@@ -93,17 +77,6 @@ namespace manta {
 
 		int m_samples;
 		Sampler2D *m_sampler;
-
-	protected:
-		CameraRayEmitter **m_rayEmitters;
-		RayContainer *m_rayBuckets;
-		int m_rayEmitterCount;
-		int m_currentRayEmitterCount;
-
-		int m_meta;
-
-	private:
-		StackAllocator *m_stackAllocator;
 	};
 
 } /* namespace manta */

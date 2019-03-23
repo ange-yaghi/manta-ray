@@ -107,7 +107,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	lamp.loadObjFileData(&lampObj, rayTracer.getMaterialManager(), floorMaterial->getIndex());
 	lamp.setFastIntersectEnabled(true);
 	lamp.setFastIntersectRadius((math::real)2.123);
-	lamp.setFastIntersectPosition(math::loadVector(-0.06430, 1.86833, -2.96564));
+	lamp.setFastIntersectPosition(math::loadVector(-0.06430f, 1.86833f, -2.96564f));
 
 	Mesh lampBlock;
 	lampBlock.loadObjFileData(&lampBlockObj);
@@ -122,22 +122,22 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	objectMesh.loadObjFileData(&teapotObj, rayTracer.getMaterialManager(), glassMaterial->getIndex());
 	objectMesh.setFastIntersectEnabled(true);
 	objectMesh.setFastIntersectRadius((math::real)2.0);
-	objectMesh.setFastIntersectPosition(math::loadVector(-0.5724, 1.02483, -0.04969));
+	objectMesh.setFastIntersectPosition(math::loadVector(-0.5724f, 1.02483f, -0.04969f));
 
 	objectMesh.merge(&lamp);
 	objectMesh.findQuads();
 
 	KDTree kdtree;
-	kdtree.initialize(4.0, math::constants::Zero);
+	kdtree.initialize(4.0f, math::constants::Zero);
 	kdtree.analyze(&objectMesh, 4);
 
 	SpherePrimitive bulb;
-	bulb.setRadius(0.25);
-	bulb.setPosition(math::loadVector(0.10669, 3.42135, -2.47464));
+	bulb.setRadius(0.25f);
+	bulb.setPosition(math::loadVector(0.10669f, 3.42135f, -2.47464f));
 
 	SpherePrimitive groundGeometry;
 	groundGeometry.setRadius((math::real)5000.0);
-	groundGeometry.setPosition(math::loadVector(0.0, -5000.001, 0));
+	groundGeometry.setPosition(math::loadVector(0.0f, -5000.001f, 0.f));
 
 	// Create scene objects
 	SceneObject *bulbObject = scene.createSceneObject();
@@ -166,9 +166,9 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	// Create the camera
 	RandomSampler randomSampler;
 	StandardCameraRayEmitterGroup camera;
-	camera.setDirection(math::loadVector(-1.0, 0.0, 0.0));
-	camera.setPosition(math::loadVector(7.0, 2.0, 0.0));
-	camera.setUp(math::loadVector(0.0f, 1.0, 0.0));
+	camera.setDirection(math::loadVector(-1.0f, 0.0f, 0.0f));
+	camera.setPosition(math::loadVector(7.0f, 2.0f, 0.0f));
+	camera.setUp(math::loadVector(0.0f, 1.0f, 0.0f));
 	camera.setPlaneDistance(1.0f);
 	camera.setPlaneHeight(1.0f);
 	camera.setResolutionX(resolutionX);
@@ -177,25 +177,20 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	camera.setSampler(&randomSampler);
 
 	// Create the raytracer
-	rayTracer.initialize(1000 * MB, 100 * MB, 12, 10000, true);
+	rayTracer.initialize(200 * MB, 100 * MB, 12, 100, true);
 	rayTracer.setBackgroundColor(getColor(0, 0, 0));
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");
 
-	if (TRACE_SINGLE_PIXEL) {
-		rayTracer.tracePixel(1025, 921, &scene, &camera);
-	}
-	else {
-		rayTracer.traceAll(&scene, &camera);
-	}
-
 	// Output the results to a scene buffer
 	SceneBuffer sceneBuffer;
-	camera.fillSceneBuffer(&sceneBuffer);
 
-	// Clean up the camera
-	camera.destroyRays();
-	camera.destroyEmitters();
+	if (TRACE_SINGLE_PIXEL) {
+		rayTracer.tracePixel(1025, 921, &scene, &camera, &sceneBuffer);
+	}
+	else {
+		rayTracer.traceAll(&scene, &camera, &sceneBuffer);
+	}
 
 	std::string fname = createUniqueRenderFilename("teapot_lamp_demo", samplesPerPixel);
 	std::string imageFname = std::string(RENDER_OUTPUT) + "bitmap/" + fname + ".jpg";

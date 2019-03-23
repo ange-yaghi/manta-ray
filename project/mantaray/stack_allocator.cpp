@@ -21,10 +21,11 @@ manta::StackAllocator::~StackAllocator() {
 	}
 }
 
-void manta::StackAllocator::initialize(unsigned int size) {
+void manta::StackAllocator::initialize(mem_size size) {
 	m_size = size;
 
 	m_buffer = malloc(size);
 	m_stackPointer = m_buffer;
+	m_maxStackPointer = m_stackPointer;
 	m_allocationLedger = 0;
 }

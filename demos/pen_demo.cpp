@@ -16,16 +16,16 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 
 	// Load all textures
 	TextureNode texture;
-	texture.loadFile(TEXTURE_PATH "/dark_wood.jpg", 2.2);
+	texture.loadFile(TEXTURE_PATH "/dark_wood.jpg", 2.2f);
 
 	TextureNode woodRoughness;
-	woodRoughness.loadFile(TEXTURE_PATH "/wood_roughness.jpg", 1.0);
+	woodRoughness.loadFile(TEXTURE_PATH "/wood_roughness.jpg", 1.0f);
 
 	TextureNode chromeRoughness;
-	chromeRoughness.loadFile(TEXTURE_PATH "/chrome_roughness.jpg", 1.0);
+	chromeRoughness.loadFile(TEXTURE_PATH "/chrome_roughness.jpg", 1.0f);
 
 	TextureNode floorWood;
-	floorWood.loadFile(TEXTURE_PATH "/light_wood.jpg", 2.2);
+	floorWood.loadFile(TEXTURE_PATH "/light_wood.jpg", 2.2f);
 
 	// Load all object files
 	ObjFileLoader penObj;
@@ -41,29 +41,29 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	LambertianBSDF lambert;
 
 	PhongDistribution chromeCoating;
-	chromeCoating.setPower(10000);
+	chromeCoating.setPower(10000.f);
 	chromeCoating.setPowerNode(&chromeRoughness);
 	chromeCoating.setMinMapPower((math::real)400.0);
 
 	PhongDistribution woodCoating;
-	woodCoating.setPower(1000);
+	woodCoating.setPower(1000.f);
 	woodCoating.setPowerNode(&woodRoughness);
-	woodCoating.setMinMapPower(2);
+	woodCoating.setMinMapPower(2.f);
 
 	PhongDistribution floorDistribution;
-	floorDistribution.setPower(128);
+	floorDistribution.setPower(128.f);
 
 	BilayerBSDF paintBsdf;
 	paintBsdf.setDiffuseMaterial(&lambert);
 	paintBsdf.setCoatingDistribution(&woodCoating);
 	paintBsdf.setDiffuseNode(&texture);
-	paintBsdf.setSpecularAtNormal(math::loadVector(0.0, 0.0, 0.0));
+	paintBsdf.setSpecularAtNormal(math::loadVector(0.0f, 0.0f, 0.0f));
 
 	BilayerBSDF chromeBSDF;
 	chromeBSDF.setDiffuseMaterial(&lambert);
 	chromeBSDF.setCoatingDistribution(&chromeCoating);
 	chromeBSDF.setDiffuse(getColor(0, 0, 0));
-	chromeBSDF.setSpecularAtNormal(math::loadVector(0.95, 0.95, 0.95));
+	chromeBSDF.setSpecularAtNormal(math::loadVector(0.95f, 0.95f, 0.95f));
 
 	MicrofacetReflectionBSDF floorBSDF;
 	floorBSDF.setDistribution(&floorDistribution);
@@ -82,12 +82,12 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	floorMaterial->setName("Backdrop");
 
 	SimpleBSDFMaterial *strongLight = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
-	strongLight->setEmission(math::loadVector(2.0, 2.0, 2.0));
+	strongLight->setEmission(math::loadVector(2.0f, 2.0f, 2.0f));
 	strongLight->setReflectance(math::constants::Zero);
 	strongLight->setName("StrongLight");
 
 	SimpleBSDFMaterial *weakLight = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
-	weakLight->setEmission(math::loadVector(1.0, 1.0, 1.0));
+	weakLight->setEmission(math::loadVector(1.0f, 1.0f, 1.0f));
 	weakLight->setReflectance(math::constants::Zero);
 	weakLight->setName("WeakLight");
 
@@ -99,7 +99,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	penObj.destroy();
 
 	KDTree kdtree;
-	kdtree.initialize(150, math::constants::Zero);
+	kdtree.initialize(150.f, math::constants::Zero);
 	kdtree.analyze(&pen, 4);
 
 	// Create scene objects
@@ -114,15 +114,15 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	penObject->setName("Pen");
 
 	// Create the camera
-	math::Vector cameraPos = math::loadVector(9.436, 1.2, 4.5370);
-	math::Vector target = math::loadVector(1.3, 0.35547, 0.0);
+	math::Vector cameraPos = math::loadVector(9.436f, 1.2f, 4.5370f);
+	math::Vector target = math::loadVector(1.3f, 0.35547f, 0.0f);
 
-	math::Vector up = math::loadVector(0.0f, 1.0, 0.0);
+	math::Vector up = math::loadVector(0.0f, 1.0f, 0.0f);
 	math::Vector dir = math::normalize(math::sub(target, cameraPos));
 	up = math::cross(math::cross(dir, up), dir);
 	up = math::normalize(up);
 
-	cameraPos = math::sub(cameraPos, math::mul(dir, math::loadScalar(3.9)));
+	cameraPos = math::sub(cameraPos, math::mul(dir, math::loadScalar(3.9f)));
 
 	CameraRayEmitterGroup *group;
 	manta::SimpleLens lens;
@@ -130,11 +130,11 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	lens.setPosition(cameraPos);
 	lens.setDirection(dir);
 	lens.setUp(up);
-	lens.setRadius(1.0);
+	lens.setRadius(1.0f);
 	lens.setSensorResolutionX(resolutionX);
 	lens.setSensorResolutionY(resolutionY);
-	lens.setSensorHeight(22.0);
-	lens.setSensorWidth(22.0 * (resolutionX / (math::real)resolutionY));
+	lens.setSensorHeight(22.0f);
+	lens.setSensorWidth(22.0f * (resolutionX / (math::real)resolutionY));
 	lens.update();
 
 	RandomSampler sampler;
@@ -154,8 +154,8 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 		group = camera;
 	}
 	else {
-		math::real lensHeight = 1.0;
-		math::real focusDistance = 11.0;
+		math::real lensHeight = 1.0f;
+		math::real focusDistance = 11.0f;
 
 		Aperture *aperture = lens.getAperture();
 		aperture->setRadius((math::real)0.007);
@@ -174,25 +174,23 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	}
 
 	// Create the raytracer
-	rayTracer.initialize(800 * MB, 5 * MB, 12, 10000, true);
+	rayTracer.initialize(200 * MB, 5 * MB, 12, 100, true);
 	rayTracer.setBackgroundColor(getColor(0, 0, 0));
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");
 
-	if (TRACE_SINGLE_PIXEL) {
-		rayTracer.tracePixel(179, 1423, &scene, group);
-	}
-	else {
-		rayTracer.traceAll(&scene, group);
-	}
-
 	// Output the results to a scene buffer
 	SceneBuffer sceneBuffer;
-	group->fillSceneBuffer(&sceneBuffer);
+
+	if (TRACE_SINGLE_PIXEL) {
+		rayTracer.tracePixel(179, 1423, &scene, group, &sceneBuffer);
+	}
+	else {
+		rayTracer.traceAll(&scene, group, &sceneBuffer);
+	}
 
 	// Clean up the camera
-	group->destroyRays();
-	group->destroyEmitters();
+	delete group;
 
 	std::string fname = createUniqueRenderFilename("pen_demo", samplesPerPixel);
 	std::string imageFname = std::string(RENDER_OUTPUT) + "bitmap/" + fname + ".jpg";

@@ -33,13 +33,13 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	blockBSDF.setCoatingDistribution(&blockCoating);
 	blockBSDF.setDiffuseMaterial(&lambert);
 	blockBSDF.setDiffuse(getColor(0xf1, 0xc4, 0x0f));
-	blockBSDF.setSpecularAtNormal(math::loadVector(0.02, 0.02, 0.02));
+	blockBSDF.setSpecularAtNormal(math::loadVector(0.02f, 0.02f, 0.02f));
 	SimpleBSDFMaterial *blockMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	blockMaterial->setName("Block");
 	blockMaterial->setBSDF(&blockBSDF);
 
 	SimpleBSDFMaterial outdoorTopLightMaterial;
-	outdoorTopLightMaterial.setEmission(math::loadVector(5, 5, 5));
+	outdoorTopLightMaterial.setEmission(math::loadVector(5.f, 5.f, 5.f));
 	outdoorTopLightMaterial.setReflectance(math::constants::Zero);
 
 	SimpleBSDFMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
@@ -54,11 +54,11 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
 	SpherePrimitive outdoorTopLightGeometry;
 	outdoorTopLightGeometry.setRadius((math::real)10.0);
-	outdoorTopLightGeometry.setPosition(math::loadVector(20, 30.0, -13.5));
+	outdoorTopLightGeometry.setPosition(math::loadVector(20.f, 30.0f, -13.5f));
 
 	// Create scene objects
 	KDTree kdtree;
-	kdtree.initialize(100.0, math::constants::Zero);
+	kdtree.initialize(100.0f, math::constants::Zero);
 	kdtree.analyze(&boxCity, 2);
 
 	if (WRITE_KDTREE_TO_FILE) {
@@ -74,13 +74,13 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	outdoorTopLightObject->setGeometry(&outdoorTopLightGeometry);
 	outdoorTopLightObject->setDefaultMaterial(&outdoorTopLightMaterial);
 
-	math::Vector cameraPos = math::loadVector(15.4473, 4.59977, 13.2961);
-	math::Vector target = math::loadVector(2.63987, 3.55547, 2.42282);
+	math::Vector cameraPos = math::loadVector(15.4473f, 4.59977f, 13.2961f);
+	math::Vector target = math::loadVector(2.63987f, 3.55547f, 2.42282f);
 
 	// Create the camera
 	CameraRayEmitterGroup *group;
 
-	math::Vector up = math::loadVector(0.0f, 1.0, 0.0);
+	math::Vector up = math::loadVector(0.0f, 1.0f, 0.0f);
 	math::Vector dir = math::normalize(math::sub(target, cameraPos));
 	up = math::cross(math::cross(dir, up), dir);
 	up = math::normalize(up);
@@ -90,11 +90,11 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	lens.setPosition(cameraPos);
 	lens.setDirection(dir);
 	lens.setUp(up);
-	lens.setRadius(1.0);
+	lens.setRadius(1.0f);
 	lens.setSensorResolutionX(resolutionX);
 	lens.setSensorResolutionY(resolutionY);
-	lens.setSensorHeight(10.0);
-	lens.setSensorWidth(10.0 * (resolutionX / (math::real)resolutionY));
+	lens.setSensorHeight(10.0f);
+	lens.setSensorWidth(10.0f * (resolutionX / (math::real)resolutionY));
 	lens.update();
 
 	RandomSampler sampler;
@@ -114,8 +114,8 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 		group = camera;
 	}
 	else {
-		math::real lensHeight = 1.0;
-		math::real focusDistance = 22.0;
+		math::real lensHeight = 1.0f;
+		math::real focusDistance = 22.0f;
 
 		Aperture *aperture = lens.getAperture();
 		aperture->setRadius((math::real)0.18);
@@ -133,25 +133,22 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 		group = camera;
 	}
 
+	// Output the results to a scene buffer
+	SceneBuffer sceneBuffer;
+
 	// Initialize and run the ray tracer
-	rayTracer.initialize(1000 * MB, 50 * MB, 12, 10000, true);
+	rayTracer.initialize(200 * MB, 50 * MB, 12, 100, true);
 	rayTracer.setBackgroundColor(getColor(255, 255, 255));
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 	
 	if (TRACE_SINGLE_PIXEL) {
-		rayTracer.tracePixel(779, 942, &scene, group);
+		rayTracer.tracePixel(779, 942, &scene, group, &sceneBuffer);
 	}
 	else {
-		rayTracer.traceAll(&scene, group);
+		rayTracer.traceAll(&scene, group, &sceneBuffer);
 	}
 
-	// Output the results to a scene buffer
-	SceneBuffer sceneBuffer;
-	group->fillSceneBuffer(&sceneBuffer);
-
 	// Clean up the camera
-	group->destroyRays();
-	group->destroyEmitters();
 	delete group;
 
 	std::string fname = createUniqueRenderFilename("box_city_demo", samplesPerPixel);
