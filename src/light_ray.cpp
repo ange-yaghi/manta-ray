@@ -17,6 +17,10 @@ void manta::LightRay::calculateTransformations() {
 	//m_kz = 1;
 	//m_ky = 0;
 
+	if (m_kx < 0 || m_ky < 0 || m_kz < 0) {
+		int a = 0;
+	}
+
 	m_permutedDirection = math::permute(m_direction, m_kx, m_ky, m_kz);
 
 	math::real dirZ = math::getZ(m_permutedDirection);

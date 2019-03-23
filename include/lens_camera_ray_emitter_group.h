@@ -13,9 +13,8 @@ namespace manta {
 		LensCameraRayEmitterGroup();
 		virtual ~LensCameraRayEmitterGroup();
 
-		virtual void createAllEmitters();
-
-		LensCameraRayEmitter **m_cameraRayEmitters;
+		virtual void initialize();
+		virtual CameraRayEmitter *createEmitter(int ix, int iy, StackAllocator *stackAllocator) const;
 
 		void setLens(Lens *lens) { m_lens = lens; }
 		Lens *getLens() { return m_lens; }

@@ -72,7 +72,7 @@ TEST(BSDFTests, PhongMicrofacetEnergyConservation) {
 
 	math::Vector incident = math::loadVector((math::real)0.0, (math::real)0.0, (math::real)1.0);
 	incident = math::normalize(incident);
-	math::real pdf;
+
 	math::Vector normal = math::loadVector((math::real)0.0, (math::real)0.0, (math::real)1.0);
 
 	math::real accum = (math::real)0.0;
@@ -208,18 +208,18 @@ TEST(BSDFTests, TransmissionBSDFTest) {
 }
 
 TEST(BSDFTests, RefractionTest) {
-	math::Vector n = math::loadVector(0, 1, 0);
+	math::Vector n = math::loadVector(0.f, 1.f, 0.f);
 	n = math::normalize(n);
 
-	math::Vector v = math::loadVector(0, 1, 0.8);
+	math::Vector v = math::loadVector(0.f, 1.f, 0.8f);
 	v = math::normalize(v);
 
 	math::Vector i;
-	BSDF::refract(v, n, 1.5, &i);
+	BSDF::refract(v, n, 1.5f, &i);
 
 	math::real mag = math::getScalar(math::magnitude(i));
 
-	EXPECT_NEAR(mag, 1.0, 1E-5);
+	EXPECT_NEAR(mag, 1.0f, 1E-5f);
 }
 
 TEST(BSDFTests, GlassBSDFNANTest) {
@@ -252,9 +252,9 @@ TEST(BSDFTests, GlassBSDFNANTest) {
 		math::Vector outgoing;
 		math::Vector transmitance = bsdf.sampleF(&point, incident, &outgoing, &pdf, &s);
 
-		EXPECT_GE(math::getX(transmitance), 0.0);
-		EXPECT_GE(math::getY(transmitance), 0.0);
-		EXPECT_GE(math::getZ(transmitance), 0.0);
+		EXPECT_GE(math::getX(transmitance), 0.0f);
+		EXPECT_GE(math::getY(transmitance), 0.0f);
+		EXPECT_GE(math::getZ(transmitance), 0.0f);
 
 		EXPECT_FALSE(std::isnan(math::getX(transmitance)));
 		EXPECT_FALSE(std::isnan(math::getY(transmitance)));
@@ -270,9 +270,9 @@ TEST(BSDFTests, GlassBSDFNANTest) {
 		EXPECT_FALSE(std::isnan(math::getY(outgoing)));
 		EXPECT_FALSE(std::isnan(math::getZ(outgoing)));
 
-		EXPECT_GE(pdf, 0.0);
+		EXPECT_GE(pdf, 0.0f);
 
-		if (pdf != 0.0) {
+		if (pdf != 0.0f) {
 			math::Vector abs_cos_theta = math::abs(math::dot(outgoing, normal));
 			accum = math::add(accum, math::div(math::mul(transmitance, abs_cos_theta), math::loadScalar(pdf))); //  * 1.33333
 			//accum = math::add(accum, math::mul(reflectance, math::abs(math::dot(outgoing, normal))));
@@ -282,7 +282,7 @@ TEST(BSDFTests, GlassBSDFNANTest) {
 	accum = math::div(accum, math::loadScalar((math::real)SAMPLE_COUNT));
 	//accum = math::mul(accum, math::loadScalar(math::constants::PI));
 
-	EXPECT_LE(math::getX(accum), 1.0);
-	EXPECT_LE(math::getY(accum), 1.0);
-	EXPECT_LE(math::getZ(accum), 1.0);
+	EXPECT_LE(math::getX(accum), 1.0f);
+	EXPECT_LE(math::getY(accum), 1.0f);
+	EXPECT_LE(math::getZ(accum), 1.0f);
 }

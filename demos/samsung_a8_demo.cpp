@@ -98,26 +98,26 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	phoneCaseBSDF.setDiffuseMaterial(&lambert);
 	phoneCaseBSDF.setCoatingDistribution(&phongPhoneCase);
 	phoneCaseBSDF.setDiffuse(getColor(0x0, 0x0, 0x0));
-	phoneCaseBSDF.setSpecularAtNormal(math::loadVector(0.01, 0.01, 0.01));
+	phoneCaseBSDF.setSpecularAtNormal(math::loadVector(0.01f, 0.01f, 0.01f));
 
 	BilayerBSDF bayDoorBSDF;
 	bayDoorBSDF.setDiffuseMaterial(&lambert);
 	bayDoorBSDF.setCoatingDistribution(&phongBayDoor);
 	bayDoorBSDF.setDiffuse(getColor(0x0, 0x0, 0x0));
-	bayDoorBSDF.setSpecularAtNormal(math::loadVector(0.0, 0.0, 0.0));
+	bayDoorBSDF.setSpecularAtNormal(math::loadVector(0.0f, 0.0f, 0.0f));
 
 	BilayerBSDF speakerGrillBSDF;
 	speakerGrillBSDF.setDiffuseMaterial(&lambert);
 	speakerGrillBSDF.setCoatingDistribution(&phongBayDoor);
 	speakerGrillBSDF.setDiffuseNode(&speakerGrillTexture);
-	speakerGrillBSDF.setDiffuse(math::loadVector(0.1, 0.1, 0.1));
-	speakerGrillBSDF.setSpecularAtNormal(math::loadVector(0.0, 0.0, 0.0));
+	speakerGrillBSDF.setDiffuse(math::loadVector(0.1f, 0.1f, 0.1f));
+	speakerGrillBSDF.setSpecularAtNormal(math::loadVector(0.0f, 0.0f, 0.0f));
 
 	BilayerBSDF blackPlasticBSDF;
 	blackPlasticBSDF.setDiffuseMaterial(&lambert);
 	blackPlasticBSDF.setCoatingDistribution(&phongBlackPlastic);
 	blackPlasticBSDF.setDiffuse(getColor(0x0, 0x0, 0x0));
-	blackPlasticBSDF.setSpecularAtNormal(math::loadVector(0.05, 0.05, 0.05));
+	blackPlasticBSDF.setSpecularAtNormal(math::loadVector(0.05f, 0.05f, 0.05f));
 
 	MicrofacetReflectionBSDF mattePlasticBSDF;
 	mattePlasticBSDF.setDistribution(&mattePlasticPhong);
@@ -127,18 +127,18 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	floorBSDF.setCoatingDistribution(&phongFloor);
 	if (SCENE == UPRIGHT_SCENE || SCENE == BANNER_SCENE) {
 		floorBSDF.setDiffuse(getColor(0, 0, 0));
-		floorBSDF.setSpecularAtNormal(math::loadVector(0.05, 0.05, 0.05));
+		floorBSDF.setSpecularAtNormal(math::loadVector(0.05f, 0.05f, 0.05f));
 	}
 	else if (SCENE == FACE_ON_SCENE) {
 		floorBSDF.setDiffuse(getColor(255, 255, 255));
-		floorBSDF.setSpecularAtNormal(math::loadVector(0.0, 0.0, 0.0));
+		floorBSDF.setSpecularAtNormal(math::loadVector(0.0f, 0.0f, 0.0f));
 	}
 
 	BilayerBSDF backPlateBSDF;
 	backPlateBSDF.setDiffuseMaterial(&lambert);
 	backPlateBSDF.setCoatingDistribution(&phongBlackPlastic);
 	backPlateBSDF.setDiffuseNode(&backPlateTexture);
-	backPlateBSDF.setSpecularAtNormal(math::loadVector(0.0, 0.0, 0.0));
+	backPlateBSDF.setSpecularAtNormal(math::loadVector(0.0f, 0.0f, 0.0f));
 
 	DielectricMediaInterface fresnel;
 	fresnel.setIorIncident((math::real)1.0);
@@ -254,23 +254,23 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	SimpleBSDFMaterial *screenMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	screenMaterial->setName("Screen");
 	screenMaterial->setEmissionNode(&phoneScreenTexture);
-	screenMaterial->setEmission(math::loadVector(1.6, 1.6, 1.6));
+	screenMaterial->setEmission(math::loadVector(1.6f, 1.6f, 1.6f));
 	screenMaterial->setReflectance(getColor(3, 3, 3));
 	screenMaterial->setBSDF(&lambert);
 
 	SimpleBSDFMaterial *strongLight = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
-	if (SCENE == UPRIGHT_SCENE || SCENE == BANNER_SCENE) strongLight->setEmission(math::loadVector(8.0, 8.0, 8.0));
-	else if (SCENE == FACE_ON_SCENE) strongLight->setEmission(math::loadVector(5.0, 5.0, 5.0));
+	if (SCENE == UPRIGHT_SCENE || SCENE == BANNER_SCENE) strongLight->setEmission(math::loadVector(8.0f, 8.0f, 8.0f));
+	else if (SCENE == FACE_ON_SCENE) strongLight->setEmission(math::loadVector(5.0f, 5.0f, 5.0f));
 	strongLight->setReflectance(math::constants::Zero);
 	strongLight->setName("StrongLight");
 
 	SimpleBSDFMaterial *weakLight = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
-	weakLight->setEmission(math::loadVector(1.9, 1.9, 1.9));
+	weakLight->setEmission(math::loadVector(1.9f, 1.9f, 1.9f));
 	weakLight->setReflectance(math::constants::Zero);
 	weakLight->setName("WeakLight");
 
 	SimpleBSDFMaterial *fillLight = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
-	fillLight->setEmission(math::loadVector(11.4, 11.4, 11.4));
+	fillLight->setEmission(math::loadVector(11.4f, 11.4f, 11.4f));
 	fillLight->setReflectance(math::constants::Zero);
 	fillLight->setName("FillLight");
 
@@ -300,24 +300,24 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	phoneObject->setName("Phone");
 
 	// Create the camera
-	math::Vector cameraPos = math::loadVector(-39.408, 12.216, 45.728);
-	math::Vector target = math::loadVector(0, 0, 0.0);
-	math::Vector up = math::loadVector(0.0f, 1.0, 0.0);
-	math::real cameraPlaneSize = 0.25;
+	math::Vector cameraPos = math::loadVector(-39.408f, 12.216f, 45.728f);
+	math::Vector target = math::loadVector(0.f, 0.f, 0.f);
+	math::Vector up = math::loadVector(0.0f, 1.0f, 0.0f);
+	math::real cameraPlaneSize = 0.25f;
 
 	if (SCENE == FACE_ON_SCENE) {
-		cameraPos = math::loadVector(0, 90, 0);
-		up = math::loadVector(0, 0, -1);
+		cameraPos = math::loadVector(0.f, 90.f, 0.f);
+		up = math::loadVector(0.f, 0.f, -1.f);
 	}
 	else if (SCENE == UPRIGHT_SCENE) {
-		target = math::loadVector(0, 8.8565, -8.9672);
-		cameraPos = math::loadVector(0, 13.786, -28.987);
-		cameraPlaneSize = 0.65;
+		target = math::loadVector(0.f, 8.8565f, -8.9672f);
+		cameraPos = math::loadVector(0.f, 13.786f, -28.987f);
+		cameraPlaneSize = 0.65f;
 	}
 	else if (SCENE == BANNER_SCENE) {
-		target = math::loadVector(7.66829, 7.63167, -18.7725);
-		cameraPos = math::loadVector(8.2166, 8.00816, -31.4485);
-		cameraPlaneSize = 0.4992;
+		target = math::loadVector(7.66829f, 7.63167f, -18.7725f);
+		cameraPos = math::loadVector(8.2166f, 8.00816f, -31.4485f);
+		cameraPlaneSize = 0.4992f;
 	}
 
 	math::Vector dir = math::normalize(math::sub(target, cameraPos));
@@ -353,25 +353,20 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	group = camera;
 
 	// Create the raytracer
-	rayTracer.initialize(5000 * MB, 50 * MB, 12, 10000, true);
+	rayTracer.initialize(200 * MB, 50 * MB, 12, 100, true);
 	rayTracer.setBackgroundColor(getColor(0, 0, 0));
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");
 
-	if (TRACE_SINGLE_PIXEL) {
-		rayTracer.tracePixel(1044, 1063, &scene, group);
-	}
-	else {
-		rayTracer.traceAll(&scene, group);
-	}
-
 	// Output the results to a scene buffer
 	SceneBuffer sceneBuffer;
-	group->fillSceneBuffer(&sceneBuffer);
 
-	// Clean up the camera
-	group->destroyRays();
-	group->destroyEmitters();
+	if (TRACE_SINGLE_PIXEL) {
+		rayTracer.tracePixel(1044, 1063, &scene, group, &sceneBuffer);
+	}
+	else {
+		rayTracer.traceAll(&scene, group, &sceneBuffer);
+	}
 
 	std::string fname = createUniqueRenderFilename("samsung_a8_demo", samplesPerPixel);
 	std::string imageFname = std::string(RENDER_OUTPUT) + "bitmap/" + fname + ".jpg";
