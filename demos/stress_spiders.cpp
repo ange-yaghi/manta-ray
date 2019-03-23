@@ -35,7 +35,7 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 	spiderBSDF.setCoatingDistribution(&spiderCoating);
 	spiderBSDF.setDiffuseMaterial(&lambert);
 	spiderBSDF.setDiffuse(getColor(0xf1, 0xc4, 0x0f));
-	spiderBSDF.setSpecularAtNormal(math::loadVector(0.05, 0.05, 0.05));
+	spiderBSDF.setSpecularAtNormal(math::loadVector(0.05f, 0.05f, 0.05f));
 	SimpleBSDFMaterial *spiderMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	spiderMaterial->setName("StressSpiders");
 	spiderMaterial->setBSDF(&spiderBSDF);
@@ -46,13 +46,13 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 	groundBSDF.setCoatingDistribution(&groundCoating);
 	groundBSDF.setDiffuseMaterial(&lambert);
 	groundBSDF.setDiffuse(getColor(0xFF, 0xFF, 0xFF));
-	groundBSDF.setSpecularAtNormal(math::loadVector(0.1, 0.1, 0.1));
+	groundBSDF.setSpecularAtNormal(math::loadVector(0.1f, 0.1f, 0.1f));
 	SimpleBSDFMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	groundMaterial->setName("Ground");
 	groundMaterial->setBSDF(&groundBSDF);
 
 	SimpleBSDFMaterial outdoorTopLightMaterial;
-	outdoorTopLightMaterial.setEmission(math::loadVector(5, 5, 5));
+	outdoorTopLightMaterial.setEmission(math::loadVector(5.f, 5.f, 5.f));
 	outdoorTopLightMaterial.setReflectance(math::constants::Zero);
 
 	// Create all scene geometry
@@ -62,12 +62,12 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 	stressSpidersObj.destroy();
 
 	KDTree kdtree;
-	kdtree.initialize(100.0, math::constants::Zero);
+	kdtree.initialize(100.0f, math::constants::Zero);
 	kdtree.analyze(&stressSpiders, 4);
 
 	SpherePrimitive outdoorTopLightGeometry;
-	outdoorTopLightGeometry.setRadius((math::real)10.0);
-	outdoorTopLightGeometry.setPosition(math::loadVector(19.45842, 12.42560, -13.78918));
+	outdoorTopLightGeometry.setRadius(10.f);
+	outdoorTopLightGeometry.setPosition(math::loadVector(19.45842f, 12.42560f, -13.78918f));
 
 	// Create scene objects
 	SceneObject *stressSpidersObject = scene.createSceneObject();
@@ -85,10 +85,10 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 	outdoorTopLightObject->setDefaultMaterial(&outdoorTopLightMaterial);
 	outdoorTopLightObject->setName("MainLamp");
 
-	math::Vector cameraPos = math::loadVector(7.32725, 2.69770, 10.34150);
-	math::Vector target = math::loadVector(0.0, 1.3, 0.0);
+	math::Vector cameraPos = math::loadVector(7.32725f, 2.69770f, 10.34150f);
+	math::Vector target = math::loadVector(0.0f, 1.3f, 0.0f);
 
-	math::Vector up = math::loadVector(0.0f, 1.0, 0.0);
+	math::Vector up = math::loadVector(0.0f, 1.0f, 0.0f);
 	math::Vector dir = math::normalize(math::sub(target, cameraPos));
 	up = math::cross(math::cross(dir, up), dir);
 	up = math::normalize(up);
@@ -104,8 +104,8 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 	lens.setRadius(1.0);
 	lens.setSensorResolutionX(resolutionX);
 	lens.setSensorResolutionY(resolutionY);
-	lens.setSensorHeight(44.0);
-	lens.setSensorWidth(44.0 * (resolutionX / (math::real)resolutionY));
+	lens.setSensorHeight(44.0f);
+	lens.setSensorWidth(44.0f * (resolutionX / (math::real)resolutionY));
 	lens.update();
 
 	RandomSampler sampler;
@@ -125,11 +125,11 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 		group = camera;
 	}
 	else {
-		math::real lensHeight = 1.0;
-		math::real focusDistance = 11.0;
+		math::real lensHeight = 1.0f;
+		math::real focusDistance = 11.0f;
 
 		Aperture *aperture = lens.getAperture();
-		aperture->setRadius((math::real)0.05);
+		aperture->setRadius((math::real)0.05f);
 		lens.setFocus(focusDistance);
 
 		LensCameraRayEmitterGroup *camera = new LensCameraRayEmitterGroup;
@@ -145,24 +145,19 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 	}
 
 	// Create the raytracer
-	rayTracer.initialize(1000 * MB, 100 * MB, 12, 10000, true);
+	rayTracer.initialize(200 * MB, 100 * MB, 12, 100, true);
 	rayTracer.setBackgroundColor(getColor(255, 255, 255));
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 
-	if (TRACE_SINGLE_PIXEL) {
-		rayTracer.tracePixel(819, 199, &scene, group);
-	}
-	else {
-		rayTracer.traceAll(&scene, group);
-	}
-
 	// Output the results to a scene buffer
 	SceneBuffer sceneBuffer;
-	group->fillSceneBuffer(&sceneBuffer);
 
-	// Clean up the camera
-	group->destroyRays();
-	group->destroyEmitters();
+	if (TRACE_SINGLE_PIXEL) {
+		rayTracer.tracePixel(819, 199, &scene, group, &sceneBuffer);
+	}
+	else {
+		rayTracer.traceAll(&scene, group, &sceneBuffer);
+	}
 
 	std::string fname = createUniqueRenderFilename("stress_spiders_demo", samplesPerPixel);
 	std::string imageFname = std::string(RENDER_OUTPUT) + "bitmap/" + fname + ".jpg";

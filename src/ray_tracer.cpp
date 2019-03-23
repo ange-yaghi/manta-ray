@@ -17,6 +17,7 @@
 #include <stack_list.h>
 #include <ray_container.h>
 #include <coarse_intersection.h>
+#include <scene_buffer.h>
 
 #include <iostream>
 #include <thread>
@@ -34,37 +35,46 @@ manta::RayTracer::~RayTracer() {
 
 }
 
-void manta::RayTracer::traceAll(const Scene *scene, CameraRayEmitterGroup *group) {
+void manta::RayTracer::traceAll(const Scene *scene, CameraRayEmitterGroup *group, SceneBuffer *target) {
 	// Simple performance metrics for now
 	auto startTime = std::chrono::system_clock::now();
 
 	// Set up the emitter group
-	group->setStackAllocator(&m_stack);
-	group->createAllEmitters();
+	group->initialize();
+
+	// Initialize the target
+	int resX = group->getResolutionX();
+	int resY = group->getResolutionY();
+
+	target->initialize(resX, resY);
 
 	// Create jobs
-	int emitterCount = group->getEmitterCount();
+	int emitterCount = group->getResolutionX() * group->getResolutionY();
 	int start = 0;
 	int end = 0;
 	bool done = false;
 
-	while (!done) {
-		end = start + m_renderBlockSize - 1;
+	int horizontalBlocks = resX / m_renderBlockSize + 1;
+	int verticalBlocks = resY / m_renderBlockSize + 1;
 
-		if (end >= emitterCount - 1) {
-			end = emitterCount - 1;
-			done = true;
+	for (int i = 0; i < horizontalBlocks; i++) {
+		for (int j = 0; j < verticalBlocks; j++) {
+			Job newJob;
+			newJob.scene = scene;
+			newJob.group = group;
+			newJob.target = target;
+			newJob.startX = i * m_renderBlockSize;
+			newJob.startY = j * m_renderBlockSize;
+			newJob.endX = (i + 1) * m_renderBlockSize - 1;
+			newJob.endY = (j + 1) * m_renderBlockSize - 1;
+
+			if (newJob.startX >= resX) continue;
+			if (newJob.startY >= resY) continue;
+			if (newJob.endX >= resX) newJob.endX = resX - 1;
+			if (newJob.endY >= resY) newJob.endY = resY - 1;
+
+			m_jobQueue.push(newJob);
 		}
-
-		Job newJob;
-		newJob.scene = scene;
-		newJob.group = group;
-		newJob.start = start;
-		newJob.end = end;
-
-		m_jobQueue.push(newJob);
-
-		start += m_renderBlockSize;
 	}
 
 	// Create and start all threads
@@ -124,18 +134,25 @@ void manta::RayTracer::traceAll(const Scene *scene, CameraRayEmitterGroup *group
 	std::cout <<		"================================================" << std::endl;
 }
 
-void manta::RayTracer::tracePixel(int px, int py, const Scene *scene, CameraRayEmitterGroup *group) {
-	int pixelIndex = py * group->getResolutionX() + px;
-
+void manta::RayTracer::tracePixel(int px, int py, const Scene *scene, CameraRayEmitterGroup *group, SceneBuffer *target) {
 	// Set up the emitter group
-	group->setStackAllocator(&m_stack);
-	group->createAllEmitters();
+	group->initialize();
 
+	// Initialize the target
+	int resX = group->getResolutionX();
+	int resY = group->getResolutionY();
+
+	target->initialize(resX, resY);
+
+	// Create the singular job for the pixel
 	Job job;
 	job.scene = scene;
 	job.group = group;
-	job.start = pixelIndex;
-	job.end = pixelIndex;
+	job.target = target;
+	job.startX = px;
+	job.endX = px;
+	job.startY = py;
+	job.endY = py;
 
 	m_jobQueue.push(job);
 
@@ -168,7 +185,7 @@ void manta::RayTracer::traceRayEmitter(const CameraRayEmitter *emitter, RayConta
 	container->calculateIntensity();
 }
 
-void manta::RayTracer::initialize(unsigned int stackSize, unsigned int workerStackSize, int threadCount, int renderBlockSize, bool multithreaded) {
+void manta::RayTracer::initialize(mem_size stackSize, mem_size workerStackSize, int threadCount, int renderBlockSize, bool multithreaded) {
 	m_stack.initialize(stackSize);
 	m_renderBlockSize = renderBlockSize;
 	m_multithreaded = multithreaded;
@@ -182,7 +199,7 @@ void manta::RayTracer::destroy() {
 
 void manta::RayTracer::incrementRayCompletion(const Job *job, int increment) {
 	m_outputLock.lock();
-	int emitterCount = job->group->getEmitterCount();
+	int emitterCount = job->group->getResolutionX() * job->group->getResolutionY();
 	m_currentRay += increment;
 	if (m_currentRay % 1000 == 0) {
 		std::cout << "Ray " << m_currentRay << "/" << emitterCount << std::endl;

@@ -96,13 +96,13 @@ TEST(PrimitiveTests, AABBCheck1) {
 
 TEST(PrimitiveTests, AABBEdgeTest) {
 	LightRay ray;
-	ray.setDirection(math::loadVector(-1.0, 0.0, 0.0));
-	ray.setSource(math::loadVector(2.0, 1.0, 1.0));
+	ray.setDirection(math::loadVector(-1.0f, 0.0f, 0.0f));
+	ray.setSource(math::loadVector(2.0f, 1.0f, 1.0f));
 	ray.calculateTransformations();
 
 	AABB aabb;
-	aabb.maxPoint = math::loadVector(1.0, 1.0, 1.0);
-	aabb.minPoint = math::loadVector(-1.0, -1.0, -1.0);
+	aabb.maxPoint = math::loadVector(1.0f, 1.0f, 1.0f);
+	aabb.minPoint = math::loadVector(-1.0f, -1.0f, -1.0f);
 
 	math::real tmin, tmax;
 	bool detected = aabb.rayIntersect(ray, &tmin, &tmax);
@@ -114,14 +114,14 @@ TEST(PrimitiveTests, AABBEdgeTest) {
 
 TEST(PrimitiveTests, AABBNoHitTest) {
 	LightRay ray;
-	ray.setDirection(math::loadVector(-1.0, 0.0, 0.0));
-	ray.setSource(math::loadVector(2.0, 1.1, 1.0));
+	ray.setDirection(math::loadVector(-1.0f, 0.0f, 0.0f));
+	ray.setSource(math::loadVector(2.0f, 1.1f, 1.0f));
 	ray.calculateTransformations();
 
 	AABB aabb;
-	aabb.maxPoint = math::loadVector(1.0, 1.0, 1.0);
-	aabb.minPoint = math::loadVector(-1.0, -1.0, -1.0);
-
+	aabb.maxPoint = math::loadVector(1.0f, 1.0f, 1.0f);
+	aabb.minPoint = math::loadVector(-1.0f, -1.0f, -1.0f);
+	
 	math::real tmin, tmax;
 	bool detected = aabb.rayIntersect(ray, &tmin, &tmax);
 

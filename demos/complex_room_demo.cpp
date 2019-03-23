@@ -33,8 +33,8 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	RayTracer rayTracer;
 	
 	DielectricMediaInterface glassFresnel;
-	glassFresnel.setIorIncident(1.0);
-	glassFresnel.setIorTransmitted(1.6);
+	glassFresnel.setIorIncident(1.0f);
+	glassFresnel.setIorTransmitted(1.6f);
 
 	// Create all materials
 	LambertianBSDF lambert;
@@ -56,7 +56,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	floorCoating.setPower((math::real)64.0);
 	BilayerBSDF floorBSDF;
 	floorBSDF.setDiffuse(getColor(0xFF, 0xFF, 0xFF));
-	floorBSDF.setSpecularAtNormal(math::loadVector(1.0, 1.0, 1.0));
+	floorBSDF.setSpecularAtNormal(math::loadVector(1.0f, 1.0f, 1.0f));
 	floorBSDF.setCoatingDistribution(&wallCoating);
 	floorBSDF.setDiffuseMaterial(&lambert);
 	SimpleBSDFMaterial *floorMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
@@ -68,7 +68,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	carpetCoating.setPower((math::real)4.0);
 	BilayerBSDF carpetBSDF;
 	carpetBSDF.setDiffuse(getColor(0xdc, 0xb4, 0x84));
-	carpetBSDF.setSpecularAtNormal(math::loadVector(0.0, 0.0, 0.0));
+	carpetBSDF.setSpecularAtNormal(math::loadVector(0.0f, 0.0f, 0.0f));
 	carpetBSDF.setCoatingDistribution(&wallCoating);
 	carpetBSDF.setDiffuseMaterial(&lambert);
 	SimpleBSDFMaterial *carpetMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
@@ -80,7 +80,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	tableSteelCoating.setPower((math::real)1024.0);
 	BilayerBSDF tableSteelBSDF;
 	tableSteelBSDF.setDiffuse(getColor(0x00, 0x00, 0x00));
-	tableSteelBSDF.setSpecularAtNormal(math::loadVector(1.0, 1.0, 1.0));
+	tableSteelBSDF.setSpecularAtNormal(math::loadVector(1.0f, 1.0f, 1.0f));
 	tableSteelBSDF.setCoatingDistribution(&tableSteelCoating);
 	tableSteelBSDF.setDiffuseMaterial(&lambert);
 	SimpleBSDFMaterial *tableSteel = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
@@ -92,7 +92,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	tableTopCoating.setPower((math::real)512.0);
 	BilayerBSDF tableTopBSDF;
 	tableTopBSDF.setDiffuse(getColor(0x30, 0x26, 0x21));
-	tableTopBSDF.setSpecularAtNormal(math::loadVector(0.2, 0.2, 0.2));
+	tableTopBSDF.setSpecularAtNormal(math::loadVector(0.2f, 0.2f, 0.2f));
 	tableTopBSDF.setCoatingDistribution(&tableTopCoating);
 	tableTopBSDF.setDiffuseMaterial(&lambert);
 	SimpleBSDFMaterial *tableTop = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
@@ -104,7 +104,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	bookCoating.setPower((math::real)4.0);
 	BilayerBSDF bookBSDF;
 	bookBSDF.setDiffuse(getColor(0xFF, 0xFF, 0xFF));
-	bookBSDF.setSpecularAtNormal(math::loadVector(0.0, 0.0, 0.0));
+	bookBSDF.setSpecularAtNormal(math::loadVector(0.0f, 0.0f, 0.0f));
 	bookBSDF.setCoatingDistribution(&tableTopCoating);
 	bookBSDF.setDiffuseMaterial(&lambert);
 	SimpleBSDFMaterial *book = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
@@ -128,14 +128,14 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	complexRoomObj.destroy();
 	roomShuttersObj.destroy();
 
-	math::Vector cameraPos = math::loadVector(5.28056, 2.06530, 5.21611);
-	math::Vector target = math::loadVector(-0.45522, 1.27649, 0.82292);
+	math::Vector cameraPos = math::loadVector(5.28056f, 2.06530f, 5.21611f);
+	math::Vector target = math::loadVector(-0.45522f, 1.27649f, 0.82292f);
 
-	cameraPos = math::loadVector(-3.70285, 1.59896, 6.71528);
-	target = math::loadVector(-3.70285, 1.34146, 2.49088);
+	cameraPos = math::loadVector(-3.70285f, 1.59896f, 6.71528f);
+	target = math::loadVector(-3.70285f, 1.34146f, 2.49088f);
 
-	cameraPos = math::loadVector(3.42581, 5.49441, 5.17956);
-	target = math::loadVector(-4.03742, 1.24095, -2.2882);
+	cameraPos = math::loadVector(3.42581f, 5.49441f, 5.17956f);
+	target = math::loadVector(-4.03742f, 1.24095f, -2.2882f);
 
 	math::Vector dir = math::normalize(math::sub(target, cameraPos));
 
@@ -144,12 +144,12 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	sampleRay.setSource(cameraPos);
 
 	KDTree kdtree;
-	kdtree.initialize(100.0, math::constants::Zero);
+	kdtree.initialize(100.0f, math::constants::Zero);
 	kdtree.analyze(&roomGeometry, 4);
 
 	SpherePrimitive outdoorTopLightGeometry;
 	outdoorTopLightGeometry.setRadius((math::real)10.0);
-	outdoorTopLightGeometry.setPosition(math::loadVector(19.45842, 12.42560, -13.78918));
+	outdoorTopLightGeometry.setPosition(math::loadVector(19.45842f, 12.42560f, -13.78918f));
 
 	// Create scene objects
 	SceneObject *roomObject = scene.createSceneObject();
@@ -160,7 +160,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	roomObject->setName("ComplexRoom");
 
 	// Create the camera
-	math::Vector up = math::loadVector(0.0f, 1.0, 0.0);
+	math::Vector up = math::loadVector(0.0f, 1.0f, 0.0f);
 	up = math::cross(math::cross(dir, up), dir);
 	up = math::normalize(up);
 
@@ -170,11 +170,11 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	lens.setPosition(cameraPos);
 	lens.setDirection(dir);
 	lens.setUp(up);
-	lens.setRadius(1.0);
+	lens.setRadius(1.0f);
 	lens.setSensorResolutionX(resolutionX);
 	lens.setSensorResolutionY(resolutionY);
-	lens.setSensorHeight(72.0);
-	lens.setSensorWidth(72.0 * (resolutionX / (math::real)resolutionY));
+	lens.setSensorHeight(72.0f);
+	lens.setSensorWidth(72.0f * (resolutionX / (math::real)resolutionY));
 	lens.update();
 
 	RandomSampler randomSampler;
@@ -194,8 +194,8 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 		group = camera;
 	}
 	else {
-		math::real lensHeight = 1.0;
-		math::real focusDistance = 11.0;
+		math::real lensHeight = 1.0f;
+		math::real focusDistance = 11.0f;
 
 		Aperture *aperture = lens.getAperture();
 		aperture->setRadius((math::real)0.05);
@@ -214,25 +214,23 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	}
 
 	// Create the raytracer
-	rayTracer.initialize(1000 * MB, 100 * MB, 12, 10000, true);
+	rayTracer.initialize(200 * MB, 100 * MB, 12, 100, true);
 	rayTracer.setBackgroundColor(getColor(255, 255, 255));
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");
 
-	if (TRACE_SINGLE_PIXEL) {
-		rayTracer.tracePixel(616, 1459, &scene, group);
-	}
-	else {
-		rayTracer.traceAll(&scene, group);
-	}
-
 	// Output the results to a scene buffer
 	SceneBuffer sceneBuffer;
-	group->fillSceneBuffer(&sceneBuffer);
+
+	if (TRACE_SINGLE_PIXEL) {
+		rayTracer.tracePixel(616, 1459, &scene, group, &sceneBuffer);
+	}
+	else {
+		rayTracer.traceAll(&scene, group, &sceneBuffer);
+	}
 
 	// Clean up the camera
-	group->destroyRays();
-	group->destroyEmitters();
+	delete group;
 
 	std::string fname = createUniqueRenderFilename("complex_room_demo", samplesPerPixel);
 	std::string imageFname = std::string(RENDER_OUTPUT) + "bitmap/" + fname + ".jpg";
