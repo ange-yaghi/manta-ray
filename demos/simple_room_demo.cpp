@@ -54,7 +54,7 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 
 	SimpleBSDFMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	groundMaterial->setName("GroundMaterial");
-	groundMaterial->setReflectance(math::mul(math::loadVector(78, 46, 40), math::loadScalar(0.001)));
+	groundMaterial->setReflectance(math::mul(math::loadVector(78, 46, 40), math::loadScalar(0.001f)));
 	groundMaterial->setBSDF(&lambert);
 
 	// Create all scene geometry
@@ -115,25 +115,20 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 	camera.setResolutionY(resolutionY);
 	camera.setSampleCount(samplesPerPixel);
 
+	// Output the results to a scene buffer
+	SceneBuffer sceneBuffer;
+
 	// Create the raytracer
 	rayTracer.initialize(1000 * MB, 100 * MB, 12, 10000, true);
 	rayTracer.setBackgroundColor(getColor(135, 206, 235));
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 
 	if (TRACE_SINGLE_PIXEL) {
-		rayTracer.tracePixel(1094, 768, &scene, &camera);
+		rayTracer.tracePixel(1094, 768, &scene, &camera, &sceneBuffer);
 	}
 	else {
-		rayTracer.traceAll(&scene, &camera);
+		rayTracer.traceAll(&scene, &camera, &sceneBuffer);
 	}
-
-	// Output the results to a scene buffer
-	SceneBuffer sceneBuffer;
-	camera.fillSceneBuffer(&sceneBuffer);
-
-	// Clean up the camera
-	camera.destroyRays();
-	camera.destroyEmitters();
 
 	std::string fname = createUniqueRenderFilename("small_house_demo", samplesPerPixel);
 	std::string imageFname = std::string(RENDER_OUTPUT) + "bitmap/" + fname + ".jpg";

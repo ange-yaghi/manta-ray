@@ -5,7 +5,6 @@
 #include <sampler_2d.h>
 
 manta::LensCameraRayEmitterGroup::LensCameraRayEmitterGroup() {
-	m_cameraRayEmitters = nullptr;
 	m_lens = nullptr;
 }
 
@@ -13,9 +12,7 @@ manta::LensCameraRayEmitterGroup::~LensCameraRayEmitterGroup() {
 
 }
 
-void manta::LensCameraRayEmitterGroup::createAllEmitters() {
-	assert(m_lens != nullptr);
-
+void manta::LensCameraRayEmitterGroup::initialize() {
 	int resolutionX = m_lens->getSensorResolutionX();
 	int resolutionY = m_lens->getSensorResolutionY();
 
@@ -28,20 +25,16 @@ void manta::LensCameraRayEmitterGroup::createAllEmitters() {
 	m_sampler->setBoundaryHeight(sensorElementHeight);
 	m_sampler->setAxis1(m_lens->getSensorRight());
 	m_sampler->setAxis2(m_lens->getSensorUp());
+}
 
-	initializeEmitters(nRays);
+manta::CameraRayEmitter *manta::LensCameraRayEmitterGroup::createEmitter(int ix, int iy, StackAllocator *stackAllocator) const {
+	LensCameraRayEmitter *newEmitter = allocateEmitter<LensCameraRayEmitter>(stackAllocator);
 
-	for (int i = 0; i < resolutionY; i++) {
-		for (int j = 0; j < resolutionX; j++) {
-			LensCameraRayEmitter *newEmitter = createEmitter<LensCameraRayEmitter>();
-			m_rayEmitters[i * resolutionX + j] = (CameraRayEmitter *)newEmitter;
+	math::Vector sensorElement = m_lens->getSensorElement(ix, iy);
+	newEmitter->setSampleCount(m_samples);
+	newEmitter->setPosition(sensorElement);
+	newEmitter->setSampler(m_sampler);
+	newEmitter->setLens(m_lens);
 
-			newEmitter->setLens(m_lens);
-
-			math::Vector sensorElement = m_lens->getSensorElement(j, i);
-			newEmitter->setSampleCount(m_samples);
-			newEmitter->setPosition(sensorElement);
-			newEmitter->setSampler(m_sampler);
-		}
-	}
+	return (CameraRayEmitter *)newEmitter;
 }

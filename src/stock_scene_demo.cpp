@@ -189,8 +189,8 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
 	cameraPos = math::sub(cameraPos, math::mul(dir, math::loadScalar(0.0f)));
 
 	// Use a custom resolution
-	resolutionX = 1900;
-	resolutionY = 1268;
+	resolutionX = 1900 * 3;
+	resolutionY = 1268 * 3;
 
 	CameraRayEmitterGroup *group;
 	RandomSampler sampler;
@@ -241,25 +241,23 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
 	}
 
 	// Create the raytracer
-	rayTracer.initialize(1000 * MB, 50 * MB, 12, 10000, true);
+	rayTracer.initialize(200 * MB, 50 * MB, 12, 100, true);
 	rayTracer.setBackgroundColor(getColor(0, 0, 0));
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");
 
-	if (TRACE_SINGLE_PIXEL) {
-		rayTracer.tracePixel(1522, 674, &scene, group);
-	}
-	else {
-		rayTracer.traceAll(&scene, group);
-	}
-
 	// Output the results to a scene buffer
 	SceneBuffer sceneBuffer;
-	group->fillSceneBuffer(&sceneBuffer);
+
+	if (TRACE_SINGLE_PIXEL) {
+		rayTracer.tracePixel(1522, 674, &scene, group, &sceneBuffer);
+	}
+	else {
+		rayTracer.traceAll(&scene, group, &sceneBuffer);
+	}
 
 	// Clean up the camera
-	group->destroyRays();
-	group->destroyEmitters();
+	delete group;
 
 	std::string fname = createUniqueRenderFilename("stock_scene", samplesPerPixel);
 	std::string imageFname = std::string(RENDER_OUTPUT) + "bitmap/" + fname + ".jpg";

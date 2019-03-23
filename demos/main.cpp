@@ -7,8 +7,8 @@ int main() {
 	createAllDirectories();
 
 	// Run a demo
-	constexpr DEMO demo = DEMO::BOX_CITY;
-	constexpr int samples = 10;
+	constexpr DEMO demo = DEMO::BLOCKS;
+	constexpr int samples = 200;
 	constexpr int resolutionX = 6000; // 2048;
 	constexpr int resolutionY = 4000; // 1536;
 

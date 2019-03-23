@@ -7,6 +7,7 @@
 #include <camera_ray_emitter_group.h>
 #include <camera_ray_emitter.h>
 #include <ray_container.h>
+#include <scene_buffer.h>
 
 #include <sstream>
 #include <time.h>
@@ -23,7 +24,7 @@ manta::Worker::~Worker() {
 	assert(m_thread == nullptr);
 }
 
-void manta::Worker::initialize(unsigned int stackSize, RayTracer *rayTracer, int workerId, bool deterministicSeed, const std::string &pathRecorderOutputDirectory) {
+void manta::Worker::initialize(mem_size stackSize, RayTracer *rayTracer, int workerId, bool deterministicSeed, const std::string &pathRecorderOutputDirectory) {
 	if (stackSize > 0) {
 		m_stack = new StackAllocator;
 		m_stack->initialize(stackSize);
@@ -91,45 +92,69 @@ void manta::Worker::work() {
 }
 
 void manta::Worker::doJob(const Job *job) {
-	CameraRayEmitter **emitters = job->group->getEmitters();
+	for (int x = job->startX; x <= job->endX; x++) {
+		for (int y = job->startY; y <= job->endY; y++) {
+			CameraRayEmitter *emitter = job->group->createEmitter(x, y, m_stack);
+			int pixelIndex = job->group->getResolutionX() * y + x;
 
-	for (int i = job->start; i <= job->end; i++) {
-		CameraRayEmitter *emitter = emitters[i];
+			if (m_deterministicSeed) {
+				// Seed the random number generator with the emitter index
+				// This is useful for exactly replicating a run with a different number of pixels
 
-		if (m_deterministicSeed) {
-			// Seed the random number generator with the emitter index
-			// This is useful for exactly replicating a run with a different number of pixels
-
-			// Compute pseudorandom LCG
-			constexpr __int64 a = 1664525;
-			constexpr __int64 c = 1013904223;
-			unsigned __int64 xn = (a * i + c) % 0xFFFFFFFF;
-			srand((unsigned int)xn);
-		}
-
-		if (emitter != nullptr) {
-			RayContainer *container = &job->group->getBuckets()[i];
-			container->setStackAllocator(m_stack);
-
-			emitter->setStackAllocator(m_stack);
-			emitter->generateRays(container);
-
-			LightRay *rays = container->getRays();
-			int rayCount = container->getRayCount();
-
-			for (int samp = 0; samp < rayCount; samp++) {
-				NEW_TREE(getTreeName(i, samp), emitter->getPosition());
-				LightRay *ray = &rays[samp];
-				ray->calculateTransformations();
-
-				m_rayTracer->traceRay(job->scene, ray, 0, m_stack /**/ PATH_RECORDER_ARG /**/ STATISTICS_ROOT(&m_statistics));
-				END_TREE();
+				// Compute pseudorandom LCG
+				constexpr __int64 a = 1664525;
+				constexpr __int64 c = 1013904223;
+				unsigned __int64 xn = (a * pixelIndex + c) % 0xFFFFFFFF;
+				srand((unsigned int)xn);
 			}
 
-			container->calculateIntensity();
-			container->destroyRays();
+			math::Vector result = math::constants::Zero;
+
+			if (emitter != nullptr) {
+				RayContainer container;
+				container.setStackAllocator(m_stack);
+
+				emitter->setStackAllocator(m_stack);
+				emitter->generateRays(&container);
+
+				LightRay *rays = container.getRays();
+				int rayCount = container.getRayCount();
+
+				for (int samp = 0; samp < rayCount; samp++) {
+					NEW_TREE(getTreeName(i, samp), emitter->getPosition());
+					LightRay *ray = &rays[samp];
+					ray->calculateTransformations();
+
+					m_rayTracer->traceRay(job->scene, ray, 0, m_stack /**/ PATH_RECORDER_ARG /**/ STATISTICS_ROOT(&m_statistics));
+					END_TREE();
+				}
+
+				container.calculateIntensity();
+				container.destroyRays();
+
+				result = container.getIntensity();
+			}
+			m_rayTracer->incrementRayCompletion(job);
+
+			job->group->freeEmitter(emitter, m_stack);
+
+			// Add the results to the scene buffer target
+			constexpr math::Vector DEBUG_RED = { (math::real)1.0, (math::real)0.0, (math::real)0.0 };
+			constexpr math::Vector DEBUG_BLUE = { (math::real)0.0, (math::real)0.0, (math::real)1.0 };
+			constexpr math::Vector DEBUG_GREEN = { (math::real)0.0, (math::real)1.0, (math::real)0.0 };
+
+			if (std::isnan(math::getX(result)) || std::isnan(math::getY(result)) || std::isnan(math::getZ(result))) {
+				result = DEBUG_RED;
+			}
+			else if (std::isinf(math::getX(result)) || std::isinf(math::getY(result)) || std::isinf(math::getZ(result))) {
+				result = DEBUG_GREEN;
+			}
+			else if (math::getX(result) < 0 || math::getY(result) < 0 || math::getZ(result) < 0) {
+				result = DEBUG_BLUE;
+			}
+
+			job->target->set(result, x, y);
 		}
-		m_rayTracer->incrementRayCompletion(job);
 	}
 }
 

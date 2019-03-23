@@ -33,12 +33,12 @@ namespace manta {
 		Worker();
 		~Worker();
 
-		void initialize(unsigned int stackSize, RayTracer *rayTracer, int workerId, bool deterministicSeed, const std::string &pathRecorderOutputDirectory);
+		void initialize(mem_size stackSize, RayTracer *rayTracer, int workerId, bool deterministicSeed, const std::string &pathRecorderOutputDirectory);
 		void start(bool multithreaded = true);
 		void join();
 		void destroy();
 
-		unsigned int getMaxMemoryUsage() const { return m_maxMemoryUsage; }
+		mem_size getMaxMemoryUsage() const { return m_maxMemoryUsage; }
 		std::string getTreeName(int pixelIndex, int sample) const;
 
 		const RuntimeStatistics *getStatistics() const { return &m_statistics; }
@@ -68,7 +68,7 @@ namespace manta {
 
 	protected:
 		// Statistics
-		unsigned int m_maxMemoryUsage;
+		mem_size m_maxMemoryUsage;
 	};
 
 } /* namespace manta */
