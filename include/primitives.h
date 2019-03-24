@@ -29,47 +29,37 @@ namespace manta {
 			math::Vector t1_v_temp = math::componentMin(t1_v, t2_v);
 			t2_v = math::componentMax(t1_v, t2_v);
 
+			math::real t1, t2;
+
 			math::real rayDirX = math::getX(rayDir);
-			if (rayDirX < 1E-6 && rayDirX > -1E-6) {
-				if (math::getX(rayOrigin) < math::getX(minPoint) || math::getX(rayOrigin) > math::getX(maxPoint)) return false;
-			}
-			else {
-				math::real t1 = math::getX(t1_v_temp);
-				math::real t2 = math::getX(t2_v);
 
-				tmin = (tmin > t1) ? tmin : t1;
-				tmax = t2;
+			t1 = math::getX(t1_v_temp);
+			t2 = math::getX(t2_v);
 
-				if (tmin > tmax) return false;
-			}
+			tmin = (tmin < t1) ? t1 : tmin;
+			tmax = t2;
+
+			if (tmin > tmax) return false;
 
 			math::real rayDirY = math::getY(rayDir);
-			if (rayDirY < 1E-6 && rayDirY > -1E-6) {
-				if (math::getY(rayOrigin) < math::getY(minPoint) || math::getY(rayOrigin) > math::getY(maxPoint)) return false;
-			}
-			else {
-				math::real t1 = math::getY(t1_v_temp);
-				math::real t2 = math::getY(t2_v);
 
-				tmin = (tmin > t1) ? tmin : t1;
-				tmax = (tmax > t2) ? t2 : tmax;
+			t1 = math::getY(t1_v_temp);
+			t2 = math::getY(t2_v);
 
-				if (tmin > tmax) return false;
-			}
+			tmin = (tmin < t1) ? t1 : tmin;
+			tmax = (tmax > t2) ? t2 : tmax;
+
+			if (tmin > tmax) return false;
 
 			math::real rayDirZ = math::getZ(rayDir);
-			if (rayDirZ < 1E-6 && rayDirZ > -1E-6) {
-				if (math::getZ(rayOrigin) < math::getZ(minPoint) || math::getZ(rayOrigin) > math::getZ(maxPoint)) return false;
-			}
-			else {
-				math::real t1 = math::getZ(t1_v_temp);
-				math::real t2 = math::getZ(t2_v);
 
-				tmin = (tmin > t1) ? tmin : t1;
-				tmax = (tmax > t2) ? t2 : tmax;
+			t1 = math::getZ(t1_v_temp);
+			t2 = math::getZ(t2_v);
 
-				if (tmin > tmax) return false;
-			}
+			tmin = (tmin < t1) ? t1 : tmin;
+			tmax = (tmax > t2) ? t2 : tmax;
+
+			if (tmin > tmax) return false;
 
 			*tmin_out = tmin;
 			*tmax_out = tmax;

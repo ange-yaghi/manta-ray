@@ -5,7 +5,7 @@ using namespace manta;
 void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutionY) {
 	// Top-level parameters
 	constexpr bool USE_ACCELERATION_STRUCTURE = true;
-	constexpr bool DETERMINISTIC_SEED_MODE = false;
+	constexpr bool DETERMINISTIC_SEED_MODE = true;
 	constexpr bool TRACE_SINGLE_PIXEL = false;
 	constexpr bool WRITE_KDTREE_TO_FILE = false;
 	constexpr bool LENS_SIMULATION = false;
