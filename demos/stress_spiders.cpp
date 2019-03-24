@@ -6,7 +6,7 @@ using namespace manta;
 
 void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int resolutionY) {
 	// Top-level parameters
-	constexpr bool LENS_SIMULATION = true;
+	constexpr bool LENS_SIMULATION = false;
 	constexpr bool USE_ACCELERATION_STRUCTURE = true;
 	constexpr bool DETERMINISTIC_SEED_MODE = false;
 	constexpr bool TRACE_SINGLE_PIXEL = false;
@@ -94,7 +94,6 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 	up = math::normalize(up);
 
 	// Create the camera
-	constexpr bool regularCamera = false;
 	CameraRayEmitterGroup *group;
 	manta::SimpleLens lens;
 	lens.initialize();
@@ -110,14 +109,14 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 
 	RandomSampler sampler;
 
-	if (regularCamera) {
+	if (!LENS_SIMULATION) {
 		StandardCameraRayEmitterGroup *camera = new StandardCameraRayEmitterGroup;
 		camera->setSampler(&sampler);
 		camera->setDirection(dir);
 		camera->setPosition(cameraPos);
 		camera->setUp(up);
 		camera->setPlaneDistance(1.0f);
-		camera->setPlaneHeight(1.0f);
+		camera->setPlaneHeight(0.7f);
 		camera->setResolutionX(resolutionX);
 		camera->setResolutionY(resolutionY);
 		camera->setSampleCount(samplesPerPixel);

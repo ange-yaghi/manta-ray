@@ -10,7 +10,7 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
 	constexpr bool DETERMINISTIC_SEED_MODE = false;
 	constexpr bool TRACE_SINGLE_PIXEL = false;
 	constexpr bool LENS_SIMULATION = true;
-	constexpr bool ALT_VERSION = true;
+	constexpr bool ALT_VERSION = false;
 
 	RayTracer rayTracer;
 	Scene scene;

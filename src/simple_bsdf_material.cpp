@@ -8,7 +8,7 @@
 #include <bsdf.h>
 
 manta::SimpleBSDFMaterial::SimpleBSDFMaterial() {
-	m_maxDegree = 8;
+	m_maxDegree = 4;
 
 	m_emissionNode = nullptr;
 	m_reflectanceNode = nullptr;
@@ -51,6 +51,7 @@ void manta::SimpleBSDFMaterial::integrateRay(LightRay *ray, const RayContainer &
 void manta::SimpleBSDFMaterial::generateRays(RayContainer *rays, const LightRay &incidentRay, const IntersectionPoint &intersectionPoint, int degree, StackAllocator *stackAllocator) const {
 	if (degree > m_maxDegree) return;
 	if (math::getScalar(math::magnitudeSquared3(m_reflectance)) < (math::real)1E-6) return; /* Early exit if the diffuse color is black */
+	if (math::getScalar(math::magnitudeSquared3(incidentRay.getWeight())) < (math::real)1E-4) return;
 
 	math::Vector normal = intersectionPoint.m_vertexNormal;
 	math::real d = math::getScalar(math::dot(incidentRay.getDirection(), normal));
@@ -101,10 +102,6 @@ void manta::SimpleBSDFMaterial::generateRays(RayContainer *rays, const LightRay 
 	else {
 		outgoing = math::loadVector(1, 0, 0);
 		weight = math::constants::Zero;
-	}
-
-	if (math::getX(weight) > 1500 || math::getY(weight) > 1500 || math::getZ(weight) > 1500) {
-		int a = 0;
 	}
 
 	// Initialize the outgoing ray

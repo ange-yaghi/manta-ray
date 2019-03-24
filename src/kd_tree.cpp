@@ -134,6 +134,9 @@ bool manta::KDTree::findClosestIntersection(const LightRay *ray, CoarseIntersect
 						hit = true;
 						closestHit = intersection->depth;
 					}
+					else {
+						INCREMENT_COUNTER_EXPLICIT(RuntimeStatistics::UNNECESSARY_PRIMITIVE_TESTS, primitiveCount);
+					}
 				}
 			}
 			else {

@@ -10,10 +10,12 @@
 #define STATISTICS_NULL_INPUT , nullptr
 #define STATISTICS_ROOT(stats) , (stats)
 #define INCREMENT_COUNTER(counter) if (stats != nullptr) { stats->incrementCounter((counter)); }
+#define INCREMENT_COUNTER_EXPLICIT(counter, amount) if (stats != nullptr) { stats->incrementCounter((counter), (amount)); }
 #else
 #define STATISTICS_PROTOTYPE
 #define STATISTICS_PARAM_INPUT
 #define INCREMENT_COUNTER(counter)
+#define INCREMENT_COUNTER_EXPLICIT(counter, amount)
 #define STATISTICS_NULL_INPUT
 #define STATISTICS_ROOT(stats)
 #endif /* ENABLE_DETAILED_STATISTICS */
@@ -28,6 +30,7 @@ namespace manta {
 			RAYS_CAST,
 			TOTAL_BV_TESTS,
 			TOTAL_BV_HITS,
+			UNNECESSARY_PRIMITIVE_TESTS,
 
 			// Special label for counter count
 			COUNTER_COUNT
@@ -35,6 +38,7 @@ namespace manta {
 
 		// Increment an individual counter
 		inline void incrementCounter(COUNTER counter) { counters[(int)counter]++; }
+		inline void incrementCounter(COUNTER counter, int amount) { counters[(int)counter] += amount; }
 		void reset() {
 			for (int i = 0; i < COUNTER_COUNT; i++) {
 				counters[i] = 0;
@@ -59,6 +63,8 @@ namespace manta {
 				return "TOTAL BV HITS";
 			case TOTAL_BV_TESTS:
 				return "TOTAL BV TESTS";
+			case UNNECESSARY_PRIMITIVE_TESTS:
+				return "UNNECESSARY PRIMITIVE TESTS";
 			default:
 				return "UNKNOWN COUNTER";
 			}
