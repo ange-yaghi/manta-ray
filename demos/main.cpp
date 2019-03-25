@@ -7,7 +7,7 @@ int main() {
 	createAllDirectories();
 
 	// Run a demo
-	constexpr DEMO demo = DEMO::STRESS_SPIDERS;
+	constexpr DEMO demo = DEMO::COMPLEX_ROOM;
 	constexpr int samples = 100;
 	constexpr int resolutionX = 2048; // 2048;
 	constexpr int resolutionY = 1536; // 1536;

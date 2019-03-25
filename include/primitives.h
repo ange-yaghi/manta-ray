@@ -31,8 +31,6 @@ namespace manta {
 
 			math::real t1, t2;
 
-			math::real rayDirX = math::getX(rayDir);
-
 			t1 = math::getX(t1_v_temp);
 			t2 = math::getX(t2_v);
 
@@ -41,8 +39,6 @@ namespace manta {
 
 			if (tmin > tmax) return false;
 
-			math::real rayDirY = math::getY(rayDir);
-
 			t1 = math::getY(t1_v_temp);
 			t2 = math::getY(t2_v);
 
@@ -50,8 +46,6 @@ namespace manta {
 			tmax = (tmax > t2) ? t2 : tmax;
 
 			if (tmin > tmax) return false;
-
-			math::real rayDirZ = math::getZ(rayDir);
 
 			t1 = math::getZ(t1_v_temp);
 			t2 = math::getZ(t2_v);
