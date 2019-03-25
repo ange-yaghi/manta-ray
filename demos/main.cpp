@@ -8,7 +8,7 @@ int main() {
 
 	// Run a demo
 	constexpr DEMO demo = DEMO::STRESS_SPIDERS;
-	constexpr int samples = 10;
+	constexpr int samples = 100;
 	constexpr int resolutionX = 2048; // 2048;
 	constexpr int resolutionY = 1536; // 1536;
 
