@@ -18,6 +18,7 @@ manta::Mesh::Mesh() {
 	m_vertices = nullptr;
 	m_normals = nullptr;
 	m_textureCoords = nullptr;
+	m_faceBounds = nullptr;
 
 	m_triangleFaceCount = 0;
 	m_quadFaceCount = 0;
@@ -39,6 +40,7 @@ manta::Mesh::~Mesh() {
 	assert(m_vertices == nullptr);
 	assert(m_normals == nullptr);
 	assert(m_textureCoords == nullptr);
+	assert(m_faceBounds == nullptr);
 }
 
 void manta::Mesh::initialize(int faceCount, int vertexCount, int normalCount, int texCoordCount) {
@@ -74,6 +76,7 @@ void manta::Mesh::destroy() {
 	if (m_vertices != nullptr) StandardAllocator::Global()->aligned_free(m_vertices, m_vertexCount);
 	if (m_normals != nullptr) StandardAllocator::Global()->aligned_free(m_normals, m_normalCount);
 	if (m_textureCoords != nullptr) StandardAllocator::Global()->aligned_free(m_textureCoords, m_texCoordCount);
+	if (m_faceBounds != nullptr) StandardAllocator::Global()->free(m_faceBounds, m_triangleFaceCount);
 
 	m_faces = nullptr;
 	m_auxFaceData = nullptr;
@@ -290,6 +293,16 @@ void manta::Mesh::findQuads() {
 	StandardAllocator::Global()->free(usedFlags, originalTriangleCount);
 }
 
+void manta::Mesh::computeBounds() {
+	m_faceBounds = StandardAllocator::Global()->allocate<AABB>(m_triangleFaceCount);
+
+	for (int i = 0; i < m_triangleFaceCount; i++) {
+		int face = i;
+		AABB *aabb = &m_faceBounds[i];
+		calculateFaceAABB(face, aabb);
+	}
+}
+
 bool manta::Mesh::findClosestIntersection(const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const {
 	math::Vector rayDir = ray->getDirection();
 	math::Vector raySource = ray->getSource();
@@ -417,7 +430,6 @@ void manta::Mesh::fineIntersection(const math::Vector &r, IntersectionPoint *p, 
 			vertexNormal = math::normalize(vertexNormal);
 		}
 		else {
-			std::cout << "HERE" << std::endl;
 			vertexNormal = faceNormal;
 		}
 	}
@@ -542,6 +554,7 @@ void manta::Mesh::loadObjFileData(ObjFileLoader *data, MaterialManager *material
 	}
 
 	filterDegenerateFaces();
+	computeBounds();
 }
 
 void manta::Mesh::merge(const Mesh *mesh) {
@@ -802,20 +815,27 @@ bool manta::Mesh::findClosestIntersection(int *faceList, int faceCount, const Li
 		int face = faceList[i];
 		if (face < m_triangleFaceCount) {
 			// Face is a triangle
-			INCREMENT_COUNTER(RuntimeStatistics::TRIANGLE_TESTS);
+			AABB &aabb = m_faceBounds[face];
 
-			if (detectTriangleIntersection(face, minDepth, currentMaxDepth, ray, &output)) {
-				intersection->depth = output.depth;
-				intersection->faceHint = faceList[i]; // Face index
-				intersection->subdivisionHint = -1; // Not used for triangles
-				intersection->sceneGeometry = this;
+			INCREMENT_COUNTER(RuntimeStatistics::TOTAL_BV_TESTS);
+			math::real tmin, tmax;
+			if (aabb.rayIntersect(*ray, &tmin, &tmax)) {
+				if (tmin > currentMaxDepth || tmax < minDepth) continue;
 
-				intersection->su = output.u;
-				intersection->sv = output.v;
-				intersection->sw = output.w;
+				INCREMENT_COUNTER(RuntimeStatistics::TRIANGLE_TESTS);
+				if (detectTriangleIntersection(face, minDepth, currentMaxDepth, ray, &output)) {
+					intersection->depth = output.depth;
+					intersection->faceHint = faceList[i]; // Face index
+					intersection->subdivisionHint = -1; // Not used for triangles
+					intersection->sceneGeometry = this;
 
-				currentMaxDepth = output.depth;
-				found = true;
+					intersection->su = output.u;
+					intersection->sv = output.v;
+					intersection->sw = output.w;
+
+					currentMaxDepth = output.depth;
+					found = true;
+				}
 			}
 		}
 	}
