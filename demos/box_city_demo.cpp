@@ -5,10 +5,10 @@ using namespace manta;
 void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutionY) {
 	// Top-level parameters
 	constexpr bool USE_ACCELERATION_STRUCTURE = true;
-	constexpr bool DETERMINISTIC_SEED_MODE = true;
+	constexpr bool DETERMINISTIC_SEED_MODE = false;
 	constexpr bool TRACE_SINGLE_PIXEL = false;
 	constexpr bool WRITE_KDTREE_TO_FILE = false;
-	constexpr bool LENS_SIMULATION = false;
+	constexpr bool LENS_SIMULATION = true;
 
 	Scene scene;
 	RayTracer rayTracer;
@@ -86,6 +86,8 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	up = math::normalize(up);
 
 	manta::SimpleLens lens;
+	manta::SquareAperture squareAperture;
+	lens.setAperture(&squareAperture);
 	lens.initialize();
 	lens.setPosition(cameraPos);
 	lens.setDirection(dir);

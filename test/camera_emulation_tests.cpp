@@ -100,3 +100,32 @@ TEST(CameraEmulationTests, SimpleLensSanityCheck) {
 
 	EXPECT_NEAR(math::getY(proj), 0.0f, 0.1f);
 }
+
+TEST(CameraEmulationTests, SimpleLensCacheTest) {
+	manta::SimpleLens lens;
+	lens.initialize();
+	lens.setPosition(math::loadVector(0.0f, 0.0f, 0.0f));
+	lens.setDirection(math::loadVector(1.0f, 0.0f, 0.0f));
+	lens.setUp(math::loadVector(0.0f, 1.0f, 0.0f));
+	lens.setRadius(1.0f);
+	lens.update();
+
+	math::real lensHeight = 1.0f;
+	math::real focusDistance = 50.0f;
+
+	Aperture *aperture = lens.getAperture();
+	aperture->setRadius((math::real)0.05);
+	lens.setFocus(focusDistance);
+
+	math::Vector sensorLocation = lens.getSensorLocation();
+	sensorLocation = math::add(sensorLocation, math::loadVector(0.0f, 10.0f, 0.0f));
+
+	LightRay ray1;
+	ray1.setSource(sensorLocation);
+	ray1.setDirection(math::normalize(math::loadVector(1.0f, 0.5f * lensHeight / -math::getX(sensorLocation), 0.0f)));
+
+	LensScanHint hint;
+	lens.lensScan(sensorLocation, &hint, 4, 1.0f);
+
+	int a = 0;
+}
