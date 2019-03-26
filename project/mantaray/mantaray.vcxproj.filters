@@ -441,6 +441,9 @@
     <ClCompile Include="..\..\src\ggx_distribution.cpp">
       <Filter>Source Files\material\surface-modeling\microfacet-model</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\square_aperture.cpp">
+      <Filter>Source Files\camera-emulation\apertures</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\sphere_primitive.h">
@@ -691,6 +694,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\ggx_distribution.h">
       <Filter>Header Files\material\surface-modeling\microfacet-distribution</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\square_aperture.h">
+      <Filter>Header Files\camera-emulation\apertures</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
