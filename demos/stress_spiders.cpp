@@ -6,7 +6,7 @@ using namespace manta;
 
 void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int resolutionY) {
 	// Top-level parameters
-	constexpr bool LENS_SIMULATION = false;
+	constexpr bool LENS_SIMULATION = true;
 	constexpr bool USE_ACCELERATION_STRUCTURE = true;
 	constexpr bool DETERMINISTIC_SEED_MODE = false;
 	constexpr bool TRACE_SINGLE_PIXEL = false;
@@ -37,7 +37,7 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 	spiderBSDF.setDiffuse(getColor(0xf1, 0xc4, 0x0f));
 	spiderBSDF.setSpecularAtNormal(math::loadVector(0.05f, 0.05f, 0.05f));
 	SimpleBSDFMaterial *spiderMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
-	spiderMaterial->setName("StressSpiders");
+	spiderMaterial->setName("Equipment");
 	spiderMaterial->setBSDF(&spiderBSDF);
 
 	PhongDistribution groundCoating;
