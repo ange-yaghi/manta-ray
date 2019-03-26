@@ -5,6 +5,7 @@ manta::SquareAperture::SquareAperture() {
 }
 
 manta::SquareAperture::~SquareAperture() {
+
 }
 
 bool manta::SquareAperture::filter(math::real x, math::real y) const {

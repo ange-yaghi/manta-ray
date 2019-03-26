@@ -85,6 +85,7 @@ void manta::Mesh::destroy() {
 	m_vertices = nullptr;
 	m_normals = nullptr;
 	m_textureCoords = nullptr;
+	m_faceBounds = nullptr;
 }
 
 void manta::Mesh::filterDegenerateFaces() {

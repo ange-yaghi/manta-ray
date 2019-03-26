@@ -44,6 +44,7 @@
 #include <material_pointer.h>
 #include <power_node.h>
 #include <remap_node.h>
+#include <square_aperture.h>
 
 namespace manta_demo {
 
