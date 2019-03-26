@@ -820,6 +820,8 @@ bool manta::Mesh::findClosestIntersection(int *faceList, int faceCount, const Li
 			INCREMENT_COUNTER(RuntimeStatistics::TOTAL_BV_TESTS);
 			math::real tmin, tmax;
 			if (aabb.rayIntersect(*ray, &tmin, &tmax)) {
+				INCREMENT_COUNTER(RuntimeStatistics::TOTAL_BV_HITS);
+
 				if (tmin > currentMaxDepth || tmax < minDepth) continue;
 
 				INCREMENT_COUNTER(RuntimeStatistics::TRIANGLE_TESTS);
@@ -835,6 +837,9 @@ bool manta::Mesh::findClosestIntersection(int *faceList, int faceCount, const Li
 
 					currentMaxDepth = output.depth;
 					found = true;
+				}
+				else {
+					INCREMENT_COUNTER(RuntimeStatistics::UNNECESSARY_PRIMITIVE_TESTS);
 				}
 			}
 		}
