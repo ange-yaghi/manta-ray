@@ -37,7 +37,7 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 	spiderBSDF.setDiffuse(getColor(0xf1, 0xc4, 0x0f));
 	spiderBSDF.setSpecularAtNormal(math::loadVector(0.05f, 0.05f, 0.05f));
 	SimpleBSDFMaterial *spiderMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
-	spiderMaterial->setName("StressSpiders");
+	spiderMaterial->setName("Equipment");
 	spiderMaterial->setBSDF(&spiderBSDF);
 
 	PhongDistribution groundCoating;
@@ -94,7 +94,6 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 	up = math::normalize(up);
 
 	// Create the camera
-	constexpr bool regularCamera = false;
 	CameraRayEmitterGroup *group;
 	manta::SimpleLens lens;
 	lens.initialize();
@@ -110,14 +109,14 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 
 	RandomSampler sampler;
 
-	if (regularCamera) {
+	if (!LENS_SIMULATION) {
 		StandardCameraRayEmitterGroup *camera = new StandardCameraRayEmitterGroup;
 		camera->setSampler(&sampler);
 		camera->setDirection(dir);
 		camera->setPosition(cameraPos);
 		camera->setUp(up);
 		camera->setPlaneDistance(1.0f);
-		camera->setPlaneHeight(1.0f);
+		camera->setPlaneHeight(0.7f);
 		camera->setResolutionX(resolutionX);
 		camera->setResolutionY(resolutionY);
 		camera->setSampleCount(samplesPerPixel);

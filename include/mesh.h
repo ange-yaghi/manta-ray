@@ -30,6 +30,7 @@ namespace manta {
 		void destroy();
 		void filterDegenerateFaces();
 		void findQuads();
+		void computeBounds();
 
 		virtual bool findClosestIntersection(const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const;
 		virtual void fineIntersection(const math::Vector &r, IntersectionPoint *p, const CoarseIntersection *hint) const;
@@ -83,6 +84,7 @@ namespace manta {
 		AuxFaceData *m_auxFaceData;
 		QuadFace *m_quadFaces;
 		QuadAuxFaceData *m_auxQuadFaceData;
+		AABB *m_faceBounds;
 
 		math::Vector *m_vertices;
 		math::Vector *m_normals;
