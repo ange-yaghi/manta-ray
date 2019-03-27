@@ -1,7 +1,7 @@
 #include <lens.h>
 
 manta::Lens::Lens() {
-	r_aperture = nullptr;
+	m_aperture = nullptr;
 }
 
 manta::Lens::~Lens() {

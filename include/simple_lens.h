@@ -27,8 +27,8 @@ namespace manta {
 	protected:
 		void lensScan(const math::Vector &sensorElement, math::real x, math::real y, math::real r, LensScanHint *target, int div, math::real span) const;
 
-		CircularAperture m_aperture;
 		BiconvexLens m_lens;
+		CircularAperture m_defaultAperture;
 
 		// Internal use only
 		math::Vector m_sensorDeltaX;

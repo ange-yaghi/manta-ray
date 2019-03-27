@@ -43,7 +43,8 @@ namespace manta {
 		virtual void initialize() = 0;
 		virtual void update() = 0;
 
-		Aperture *getAperture() { return r_aperture; }
+		void setAperture(Aperture *aperture) { m_aperture = aperture; }
+		Aperture *getAperture() const { return m_aperture; }
 
 		void setSensorResolutionX(int w) { m_sensorResolutionX = w; }
 		int getSensorResolutionX() const { return m_sensorResolutionX; }
@@ -74,10 +75,7 @@ namespace manta {
 		int m_sensorResolutionX;
 		int m_sensorResolutionY;
 
-		void setAperture(Aperture *aperture) { r_aperture = aperture; }
-
-	private:
-		Aperture *r_aperture;
+		Aperture *m_aperture;
 	};
 
 } /* namespace manta */

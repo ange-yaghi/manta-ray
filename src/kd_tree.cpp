@@ -70,7 +70,7 @@ bool manta::KDTree::findClosestIntersection(const LightRay *ray, CoarseIntersect
 	while (node != nullptr) {
 #ifdef _DEBUG
 		// I've left this here for convenience when debugging
-		int nodeIndex = node - m_nodes;
+		int nodeIndex = (int)(node - m_nodes);
 #endif
 		if (closestHit < tmin) break;
 		if (!node->isLeaf()) {
@@ -106,7 +106,7 @@ bool manta::KDTree::findClosestIntersection(const LightRay *ray, CoarseIntersect
 			else {
 #ifdef _DEBUG
 				// As above I've left this for convenience when debugging
-				int secondChildIndex = secondChild - m_nodes;
+				int secondChildIndex = (int)(secondChild - m_nodes);
 #endif
 				// Add second child to queue
 				jobs[currentJob].node = secondChild;

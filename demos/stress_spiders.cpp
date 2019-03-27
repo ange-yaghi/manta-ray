@@ -96,6 +96,8 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 	// Create the camera
 	CameraRayEmitterGroup *group;
 	manta::SimpleLens lens;
+	manta::SquareAperture squareAperture;
+	lens.setAperture(&squareAperture);
 	lens.initialize();
 	lens.setPosition(cameraPos);
 	lens.setDirection(dir);

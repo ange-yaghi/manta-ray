@@ -5,6 +5,7 @@ manta::CircularAperture::CircularAperture() {
 }
 
 manta::CircularAperture::~CircularAperture() {
+
 }
 
 bool manta::CircularAperture::filter(math::real x, math::real y) const {
