@@ -4,6 +4,7 @@
 #include <manta_math.h>
 
 manta::SimpleLens::SimpleLens() {
+
 }
 
 manta::SimpleLens::~SimpleLens() {
@@ -43,7 +44,6 @@ bool manta::SimpleLens::transformRay(const LightRay *inputRay, LightRay *outputR
 	bool flag;
 
 	flag = m_lens.transformLightRay(inputRay, outputRay);
-
 	if (!flag) return false;
 
 	// Calculate the location of the aperture
@@ -63,15 +63,16 @@ bool manta::SimpleLens::transformRay(const LightRay *inputRay, LightRay *outputR
 	x = math::getScalar(math::magnitude(proj_x));
 	y = math::getScalar(math::magnitude(proj_y));
 
-	flag = m_aperture.filter(x, y);
-
+	flag = m_aperture->filter(x, y);
 	if (!flag) return false;
 
 	return true;
 }
 
 void manta::SimpleLens::initialize() {
-	setAperture((Aperture *)&m_aperture);
+	if (m_aperture == nullptr) {
+		m_aperture = &m_defaultAperture;
+	}
 }
 
 void manta::SimpleLens::update() {
@@ -117,7 +118,6 @@ void manta::SimpleLens::lensScan(const math::Vector &sensorElement, math::real o
 	int samples = 0;
 
 	math::real maxWidth = 0.0;
-	bool foundMaxWidth = false;
 
 	for (int i = -div; i < div; i++) {
 		math::real maxY = -r * 2;
@@ -142,12 +142,8 @@ void manta::SimpleLens::lensScan(const math::Vector &sensorElement, math::real o
 
 			bool success = transformRay(&ray, &targetRay);
 			if (success) {
-				if (y > maxY) {
-					maxY = y;
-				}
-				if (y < minY) {
-					minY = y;
-				}
+				if (y > maxY) maxY = y;
+				if (y < minY) minY = y;
 
 				averageX += x;
 				averageY += y;
@@ -160,14 +156,7 @@ void manta::SimpleLens::lensScan(const math::Vector &sensorElement, math::real o
 			math::real width = maxY - minY;
 			if (width > maxWidth) {
 				maxWidth = width;
-				foundMaxWidth = true;
 			}
-			else if (foundMaxWidth) {
-				break;
-			}
-		}
-		else if (foundMaxWidth) {
-			break;
 		}
 	}
 
@@ -176,11 +165,11 @@ void manta::SimpleLens::lensScan(const math::Vector &sensorElement, math::real o
 		target->centerX = averageX / samples;
 		target->centerY = averageY / samples;
 
-		math::real safetyRadius = maxWidth / (math::real)2.0 + (math::real)1.5 * incr;
+		math::real safetyRadius = 1.5 * maxWidth / (math::real)2.0 + (math::real)1.5 * incr;
 		target->radius = safetyRadius > m_lens.getRadius() ? m_lens.getRadius() : safetyRadius;
 	}
 	else if (samples >= 1) {
-		math::real safetyRadius = maxWidth / (math::real)2.0 + (math::real)1.5 * incr;
+		math::real safetyRadius = 1.5 * maxWidth / (math::real)2.0 + (math::real)1.5 * incr;
 		lensScan(sensorElement, averageX / samples, averageY / samples, safetyRadius, target, div, span);
 	}
 	else {
