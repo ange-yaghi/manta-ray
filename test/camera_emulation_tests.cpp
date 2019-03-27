@@ -4,6 +4,7 @@
 #include <biconvex_lens.h>
 #include <light_ray.h>
 #include <simple_lens.h>
+#include <polygonal_aperture.h>
 
 using namespace manta;
 
@@ -126,6 +127,23 @@ TEST(CameraEmulationTests, SimpleLensCacheTest) {
 
 	LensScanHint hint;
 	lens.lensScan(sensorLocation, &hint, 4, 1.0f);
+}
 
-	int a = 0;
+TEST(CameraEmulationTests, PolygonalApertureTest) {
+	PolygonalAperture aperture;
+	aperture.setRadius(1.0f);
+	aperture.initialize(3, -math::constants::PI / 2); // Triangle
+	bool filtered = aperture.filter(0.0f, 0.0f);
+	EXPECT_TRUE(filtered);
+
+	filtered = aperture.filter(0.99f, 0.0f);
+	EXPECT_TRUE(filtered);
+
+	filtered = aperture.filter(0.0f, 1.0f);
+	EXPECT_FALSE(filtered);
+
+	filtered = aperture.filter(-0.99f, 0.0f);
+	EXPECT_FALSE(filtered);
+
+	aperture.destroy();
 }

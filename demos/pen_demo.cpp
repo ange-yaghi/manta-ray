@@ -6,7 +6,7 @@ using namespace manta;
 
 void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) {
 	// Top-level parameters
-	constexpr bool LENS_SIMULATION = false;
+	constexpr bool LENS_SIMULATION = true;
 	constexpr bool USE_ACCELERATION_STRUCTURE = true;
 	constexpr bool DETERMINISTIC_SEED_MODE = false;
 	constexpr bool TRACE_SINGLE_PIXEL = false;
@@ -57,7 +57,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	paintBsdf.setDiffuseMaterial(&lambert);
 	paintBsdf.setCoatingDistribution(&woodCoating);
 	paintBsdf.setDiffuseNode(&texture);
-	paintBsdf.setSpecularAtNormal(math::loadVector(0.0f, 0.0f, 0.0f));
+	paintBsdf.setSpecularAtNormal(math::loadVector(0.1f, 0.1f, 0.1f));
 
 	BilayerBSDF chromeBSDF;
 	chromeBSDF.setDiffuseMaterial(&lambert);
@@ -158,7 +158,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 		math::real focusDistance = 11.0f;
 
 		Aperture *aperture = lens.getAperture();
-		aperture->setRadius((math::real)0.007);
+		aperture->setRadius((math::real)0.007); // 0.007
 		lens.setFocus(focusDistance);
 
 		LensCameraRayEmitterGroup *camera = new LensCameraRayEmitterGroup;

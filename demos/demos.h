@@ -45,6 +45,7 @@
 #include <power_node.h>
 #include <remap_node.h>
 #include <square_aperture.h>
+#include <polygonal_aperture.h>
 
 namespace manta_demo {
 
@@ -58,7 +59,8 @@ namespace manta_demo {
 		COMPLEX_ROOM,
 		SAMSUNG_A8,
 		MATERIAL_PREVIEW,
-		STOCK_SCENE
+		STOCK_SCENE,
+		APERTURE_DEMO
 	};
 
 	void runDemo(DEMO demo, int samplesPerPixel, int resolutionX, int resolutionY);
@@ -73,6 +75,7 @@ namespace manta_demo {
 	void samsungA8Demo(int samplesPerPixel, int resolutionX, int resolutionY);
 	void materialVisualizer(int samplesPerPixel, int resolutionX, int resolutionY);
 	void stockSceneDemo(int samplesPerPixel, int resolutionX, int resolutionY);
+	void apertureDemo(int samplesPerPixe, int resolutionX, int resolutionY);
 
 } /* namespace manta_demo */
 
