@@ -9,6 +9,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	constexpr bool TRACE_SINGLE_PIXEL = false;
 	constexpr bool WRITE_KDTREE_TO_FILE = false;
 	constexpr bool LENS_SIMULATION = true;
+	constexpr bool SQUARE_APERTURE = false;
 
 	Scene scene;
 	RayTracer rayTracer;
@@ -87,7 +88,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
 	manta::SimpleLens lens;
 	manta::SquareAperture squareAperture;
-	lens.setAperture(&squareAperture);
+	if (SQUARE_APERTURE) lens.setAperture(&squareAperture);
 	lens.initialize();
 	lens.setPosition(cameraPos);
 	lens.setDirection(dir);
