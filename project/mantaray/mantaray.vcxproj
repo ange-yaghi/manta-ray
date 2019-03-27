@@ -43,6 +43,7 @@
     <ClCompile Include="..\..\src\octree.cpp" />
     <ClCompile Include="..\..\src\os_utilities.cpp" />
     <ClCompile Include="..\..\src\phong_distribution.cpp" />
+    <ClCompile Include="..\..\src\polygonal_aperture.cpp" />
     <ClCompile Include="..\..\src\power_node.cpp" />
     <ClCompile Include="..\..\src\primitives.cpp" />
     <ClCompile Include="..\..\src\random_sampler.cpp" />
@@ -116,6 +117,7 @@
     <ClInclude Include="..\..\include\opaque_media_interface.h" />
     <ClInclude Include="..\..\include\os_utilities.h" />
     <ClInclude Include="..\..\include\phong_distribution.h" />
+    <ClInclude Include="..\..\include\polygonal_aperture.h" />
     <ClInclude Include="..\..\include\power_node.h" />
     <ClInclude Include="..\..\include\primitives.h" />
     <ClInclude Include="..\..\include\random_sampler.h" />

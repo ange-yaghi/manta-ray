@@ -9,7 +9,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	constexpr bool TRACE_SINGLE_PIXEL = false;
 	constexpr bool WRITE_KDTREE_TO_FILE = false;
 	constexpr bool LENS_SIMULATION = true;
-	constexpr bool SQUARE_APERTURE = false;
+	constexpr bool POLYGON_APERTURE = true;
 
 	Scene scene;
 	RayTracer rayTracer;
@@ -86,9 +86,14 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	up = math::cross(math::cross(dir, up), dir);
 	up = math::normalize(up);
 
+	// Easy camera position control
+	cameraPos = math::sub(cameraPos, math::mul(dir, math::loadScalar(0.f)));
+
 	manta::SimpleLens lens;
-	manta::SquareAperture squareAperture;
-	if (SQUARE_APERTURE) lens.setAperture(&squareAperture);
+	manta::PolygonalAperture polygonalAperture;
+	polygonalAperture.initialize(6);
+
+	if (POLYGON_APERTURE) lens.setAperture(&polygonalAperture);
 	lens.initialize();
 	lens.setPosition(cameraPos);
 	lens.setDirection(dir);
@@ -170,6 +175,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	boxCity.destroy();
 	boxCityObj.destroy();
 	kdtree.destroy();
+	polygonalAperture.destroy();
 
 	std::cout << "Standard allocator memory leaks:     " << StandardAllocator::Global()->getLedger() << ", " << StandardAllocator::Global()->getCurrentUsage() << std::endl;
 }

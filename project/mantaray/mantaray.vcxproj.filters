@@ -444,6 +444,9 @@
     <ClCompile Include="..\..\src\square_aperture.cpp">
       <Filter>Source Files\camera-emulation\apertures</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\polygonal_aperture.cpp">
+      <Filter>Source Files\camera-emulation\apertures</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\sphere_primitive.h">
@@ -696,6 +699,9 @@
       <Filter>Header Files\material\surface-modeling\microfacet-distribution</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\square_aperture.h">
+      <Filter>Header Files\camera-emulation\apertures</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\polygonal_aperture.h">
       <Filter>Header Files\camera-emulation\apertures</Filter>
     </ClInclude>
   </ItemGroup>
