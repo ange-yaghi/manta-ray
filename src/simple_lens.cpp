@@ -56,12 +56,12 @@ bool manta::SimpleLens::transformRay(const LightRay *inputRay, LightRay *outputR
 
 	math::Vector right = getSensorRight();
 	math::Vector d = math::sub(outputRay->getSource(), apertureLocation);
-	math::Vector proj_x = math::mul(math::dot(d, right), right);
-	math::Vector proj_y = math::mul(math::dot(d, m_up), m_up);
+	math::Vector proj_x = math::dot(d, right);
+	math::Vector proj_y = math::dot(d, m_up);
 
 	math::real x, y;
-	x = math::getScalar(math::magnitude(proj_x));
-	y = math::getScalar(math::magnitude(proj_y));
+	x = math::getScalar(proj_x);
+	y = math::getScalar(proj_y);
 
 	flag = m_aperture->filter(x, y);
 	if (!flag) return false;
@@ -165,11 +165,11 @@ void manta::SimpleLens::lensScan(const math::Vector &sensorElement, math::real o
 		target->centerX = averageX / samples;
 		target->centerY = averageY / samples;
 
-		math::real safetyRadius = 1.5 * maxWidth / (math::real)2.0 + (math::real)1.5 * incr;
+		math::real safetyRadius = (math::real)1.5 * maxWidth / (math::real)2.0 + (math::real)1.5 * incr;
 		target->radius = safetyRadius > m_lens.getRadius() ? m_lens.getRadius() : safetyRadius;
 	}
 	else if (samples >= 1) {
-		math::real safetyRadius = 1.5 * maxWidth / (math::real)2.0 + (math::real)1.5 * incr;
+		math::real safetyRadius = (math::real)1.5 * maxWidth / (math::real)2.0 + (math::real)1.5 * incr;
 		lensScan(sensorElement, averageX / samples, averageY / samples, safetyRadius, target, div, span);
 	}
 	else {
