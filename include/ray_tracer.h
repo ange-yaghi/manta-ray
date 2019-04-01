@@ -36,15 +36,15 @@ namespace manta {
 	class Worker;
 	class PathRecorder;
 	class RayContainer;
-	class SceneBuffer;
+	class ImagePlane;
 
 	class RayTracer {
 	public:
 		RayTracer();
 		~RayTracer();
 
-		void traceAll(const Scene *scene, CameraRayEmitterGroup *rayEmitterGroup, SceneBuffer *target);
-		void tracePixel(int px, int py, const Scene *scene, CameraRayEmitterGroup *rayEmitterGroup, SceneBuffer *target);
+		void traceAll(const Scene *scene, CameraRayEmitterGroup *rayEmitterGroup, ImagePlane *target);
+		void tracePixel(int px, int py, const Scene *scene, CameraRayEmitterGroup *rayEmitterGroup, ImagePlane *target);
 		void traceRayEmitter(const CameraRayEmitter *emitter, RayContainer *container, const Scene *scene, StackAllocator *s /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const;
 
 		int getThreadCount() const { return m_threadCount; }

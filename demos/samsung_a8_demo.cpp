@@ -359,7 +359,7 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");
 
 	// Output the results to a scene buffer
-	SceneBuffer sceneBuffer;
+	ImagePlane sceneBuffer;
 
 	if (TRACE_SINGLE_PIXEL) {
 		rayTracer.tracePixel(1044, 1063, &scene, group, &sceneBuffer);

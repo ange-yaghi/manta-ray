@@ -3,7 +3,7 @@
 #include <sstream>
 
 #include <raw_file.h>
-#include <scene_buffer.h>
+#include <image_plane.h>
 #include <image_handling.h>
 
 int main() {
@@ -13,7 +13,7 @@ int main() {
 	std::cin >> fname;
 
 	manta::RawFile rawFile;
-	manta::SceneBuffer sceneBuffer;
+	manta::ImagePlane sceneBuffer;
 	bool result = rawFile.readRawFile(fname.c_str(), &sceneBuffer);
 
 	if (!result) {
@@ -33,9 +33,9 @@ int main() {
 		}
 	}
 
-	manta::SceneBuffer temp;
+	manta::ImagePlane temp;
 	sceneBuffer.clone(&temp);
-	manta::SceneBuffer prev;
+	manta::ImagePlane prev;
 
 	bool prevValid = false;
 	int iteration = 0;

@@ -1,18 +1,22 @@
-#ifndef SCENE_BUFFER_H
-#define SCENE_BUFFER_H
+#ifndef IMAGE_PLANE_H
+#define IMAGE_PLANE_H
 
 #include <manta_math.h>
 
 namespace manta {
 
-	class SceneBuffer {
-	public:
-		SceneBuffer();
-		~SceneBuffer();
+	// Forward declarations
+	class Convolution;
 
-		void initialize(int width, int height);
+	class ImagePlane {
+	public:
+		ImagePlane();
+		~ImagePlane();
+
+		void initialize(int width, int height, math::real physicalWidth, math::real physicalHeight);
 		void destroy();
 
+		bool checkPixel(int x, int y) const;
 		inline void set(const math::Vector &v, int x, int y);
 		inline math::Vector sample(int x, int y) const;
 
@@ -21,7 +25,9 @@ namespace manta {
 
 		bool isInitialized() const { return m_buffer != nullptr; }
 
-		void clone(SceneBuffer *target) const;
+		void clone(ImagePlane *target) const;
+		void cloneEmpty(ImagePlane *target) const;
+		void clear(const math::Vector &v = math::constants::Zero);
 
 		const math::Vector *getBuffer() const { return m_buffer; }
 
@@ -38,11 +44,18 @@ namespace manta {
 
 		// Apply gamma
 		void applyGammaCurve(math::real gamma);
+
+		void convolution(const Convolution *convolution, ImagePlane *target);
+
+		void add(const ImagePlane *b);
 		
 		// Scale all values in the scene buffer
 		void scale(math::real scale);
 
 	protected:
+		math::real m_physicalWidth;
+		math::real m_physicalHeight;
+
 		int m_width;
 		int m_height;
 		math::Vector *m_buffer;
@@ -50,4 +63,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* SCENE_BUFFER_H */
+#endif /* IMAGE_PLANE_H */

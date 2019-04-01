@@ -8,7 +8,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	constexpr bool DETERMINISTIC_SEED_MODE = false;
 	constexpr bool TRACE_SINGLE_PIXEL = false;
 	constexpr bool WRITE_KDTREE_TO_FILE = false;
-	constexpr bool LENS_SIMULATION = true;
+	constexpr bool LENS_SIMULATION = false;
 	constexpr bool POLYGON_APERTURE = true;
 
 	Scene scene;
@@ -142,7 +142,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	}
 
 	// Output the results to a scene buffer
-	SceneBuffer sceneBuffer;
+	ImagePlane sceneBuffer;
 
 	// Initialize and run the ray tracer
 	rayTracer.initialize(200 * MB, 50 * MB, 12, 100, true);
@@ -165,6 +165,13 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
 	RawFile rawFile;
 	rawFile.writeRawFile(rawFname.c_str(), &sceneBuffer);
+
+	// Try convolution
+	StarburstApproximation cconv;
+	cconv.setColor(math::loadVector(2000.005f, 2000.005f, 2000.005f));
+	cconv.setRadius(0.06f);
+	cconv.setBarWidth(0.001f);
+	//sceneBuffer.applyConvolution(&cconv);
 
 	sceneBuffer.applyGammaCurve((math::real)(1.0 / 2.2));
 	writeJpeg(imageFname.c_str(), &sceneBuffer, 95);

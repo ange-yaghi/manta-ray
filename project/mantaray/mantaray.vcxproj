@@ -24,7 +24,11 @@
     <ClCompile Include="..\..\src\bsdf.cpp" />
     <ClCompile Include="..\..\src\camera_ray_emitter.cpp" />
     <ClCompile Include="..\..\src\camera_ray_emitter_group.cpp" />
+    <ClCompile Include="..\..\src\circle_convolution.cpp" />
+    <ClCompile Include="..\..\src\complex_map_2d.cpp" />
+    <ClCompile Include="..\..\src\convolution.cpp" />
     <ClCompile Include="..\..\src\dielectric_media_interface.cpp" />
+    <ClCompile Include="..\..\src\fraunhofer_diffraction.cpp" />
     <ClCompile Include="..\..\src\ggx_distribution.cpp" />
     <ClCompile Include="..\..\src\grid_sampler.cpp" />
     <ClCompile Include="..\..\src\image_byte_buffer.cpp" />
@@ -33,6 +37,9 @@
     <ClCompile Include="..\..\src\kd_tree.cpp" />
     <ClCompile Include="..\..\src\lambertian_bsdf.cpp" />
     <ClCompile Include="..\..\src\manta_math.cpp" />
+    <ClCompile Include="..\..\src\scalar_map_2d.cpp" />
+    <ClCompile Include="..\..\src\signal_processing.cpp" />
+    <ClCompile Include="..\..\src\vector_map_2d.cpp" />
     <ClCompile Include="..\..\src\material_manager.cpp" />
     <ClCompile Include="..\..\src\material_node.cpp" />
     <ClCompile Include="..\..\src\material_pointer.cpp" />
@@ -71,7 +78,7 @@
     <ClCompile Include="..\..\src\raw_file.cpp" />
     <ClCompile Include="..\..\src\ray_tracer.cpp" />
     <ClCompile Include="..\..\src\scene.cpp" />
-    <ClCompile Include="..\..\src\scene_buffer.cpp" />
+    <ClCompile Include="..\..\src\image_plane.cpp" />
     <ClCompile Include="..\..\src\scene_geometry.cpp" />
     <ClCompile Include="..\..\src\scene_object.cpp" />
     <ClCompile Include="..\..\src\simple_lens.cpp" />
@@ -83,6 +90,7 @@
     <ClCompile Include="..\..\src\standard_allocator.cpp" />
     <ClCompile Include="..\..\src\standard_camera_ray_emitter.cpp" />
     <ClCompile Include="..\..\src\standard_camera_ray_emitter_group.cpp" />
+    <ClCompile Include="..\..\src\starburst_approximation.cpp" />
     <ClCompile Include="..\..\src\texture_node.cpp" />
     <ClCompile Include="..\..\src\vector_material_node.cpp" />
     <ClCompile Include="..\..\src\worker.cpp" />
@@ -95,8 +103,13 @@
     <ClInclude Include="..\..\include\bsdf.h" />
     <ClInclude Include="..\..\include\camera_ray_emitter.h" />
     <ClInclude Include="..\..\include\camera_ray_emitter_group.h" />
+    <ClInclude Include="..\..\include\circle_convolution.h" />
     <ClInclude Include="..\..\include\coarse_intersection.h" />
+    <ClInclude Include="..\..\include\complex_map_2d.h" />
+    <ClInclude Include="..\..\include\complex_math.h" />
+    <ClInclude Include="..\..\include\convolution.h" />
     <ClInclude Include="..\..\include\dielectric_media_interface.h" />
+    <ClInclude Include="..\..\include\fraunhofer_diffraction.h" />
     <ClInclude Include="..\..\include\geometry.h" />
     <ClInclude Include="..\..\include\ggx_distribution.h" />
     <ClInclude Include="..\..\include\grid_sampler.h" />
@@ -105,6 +118,9 @@
     <ClInclude Include="..\..\include\jpeg_writer.h" />
     <ClInclude Include="..\..\include\kd_tree.h" />
     <ClInclude Include="..\..\include\lambertian_bsdf.h" />
+    <ClInclude Include="..\..\include\scalar_map_2d.h" />
+    <ClInclude Include="..\..\include\signal_processing.h" />
+    <ClInclude Include="..\..\include\vector_map_2d.h" />
     <ClInclude Include="..\..\include\material_manager.h" />
     <ClInclude Include="..\..\include\material_node.h" />
     <ClInclude Include="..\..\include\material_pointer.h" />
@@ -155,7 +171,7 @@
     <ClInclude Include="..\..\include\raw_file.h" />
     <ClInclude Include="..\..\include\ray_tracer.h" />
     <ClInclude Include="..\..\include\scene.h" />
-    <ClInclude Include="..\..\include\scene_buffer.h" />
+    <ClInclude Include="..\..\include\image_plane.h" />
     <ClInclude Include="..\..\include\scene_geometry.h" />
     <ClInclude Include="..\..\include\scene_object.h" />
     <ClInclude Include="..\..\include\simple_lens.h" />
@@ -170,6 +186,7 @@
     <ClInclude Include="..\..\include\standard_allocator.h" />
     <ClInclude Include="..\..\include\standard_camera_ray_emitter.h" />
     <ClInclude Include="..\..\include\standard_camera_ray_emitter_group.h" />
+    <ClInclude Include="..\..\include\starburst_approximation.h" />
     <ClInclude Include="..\..\include\texture_node.h" />
     <ClInclude Include="..\..\include\vector_material_node.h" />
     <ClInclude Include="..\..\include\worker.h" />

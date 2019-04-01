@@ -17,7 +17,7 @@
 #include <obj_file_loader.h>
 #include <manta_math.h>
 #include <utils.h>
-#include <scene_buffer.h>
+#include <image_plane.h>
 #include <raw_file.h>
 #include <octree.h>
 #include <lens_camera_ray_emitter.h>
@@ -46,6 +46,12 @@
 #include <remap_node.h>
 #include <square_aperture.h>
 #include <polygonal_aperture.h>
+#include <circle_convolution.h>
+#include <starburst_approximation.h>
+#include <fraunhofer_diffraction.h>
+#include <image_byte_buffer.h>
+#include <jpeg_writer.h>
+#include <complex_map_2d.h>
 
 namespace manta_demo {
 

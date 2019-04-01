@@ -151,7 +151,7 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 
 	// Output the results to a scene buffer
-	SceneBuffer sceneBuffer;
+	ImagePlane sceneBuffer;
 
 	if (TRACE_SINGLE_PIXEL) {
 		rayTracer.tracePixel(819, 199, &scene, group, &sceneBuffer);

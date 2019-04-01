@@ -163,7 +163,7 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 	}
 
 	// Output the results to a scene buffer
-	SceneBuffer sceneBuffer;
+	ImagePlane sceneBuffer;
 
 	// Run the ray tracer
 	rayTracer.initialize(200 * MB, 50 * MB, 12, 100, true);

@@ -3,7 +3,7 @@
 
 namespace manta {
 
-	class SceneBuffer;
+	class ImagePlane;
 
 	class RawFile {
 	public:
@@ -40,15 +40,15 @@ namespace manta {
 		RawFile();
 		~RawFile();
 
-		bool writeRawFile(const char *fname, const SceneBuffer *buffer) const;
-		bool readRawFile(const char *fname, SceneBuffer *buffer) const;
+		bool writeRawFile(const char *fname, const ImagePlane *buffer) const;
+		bool readRawFile(const char *fname, ImagePlane *buffer) const;
 
 	protected:
-		void *generatePixelArray(const SceneBuffer *buffer, int version, int *size) const;
+		void *generatePixelArray(const ImagePlane *buffer, int version, int *size) const;
 		void *generateEmptyPixelArray(void *dataHeader, int version, int *pixelDataSize) const ;
-		bool readPixelArray(void *dataHeader, void *pixelData, SceneBuffer *buffer, int version) const;
+		bool readPixelArray(void *dataHeader, void *pixelData, ImagePlane *buffer, int version) const;
 
-		void *generateDataHeader(const SceneBuffer *buffer, int version, int *size) const;
+		void *generateDataHeader(const ImagePlane *buffer, int version, int *size) const;
 	};
 
 } /* namespace manta */
