@@ -116,7 +116,7 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 	camera.setSampleCount(samplesPerPixel);
 
 	// Output the results to a scene buffer
-	SceneBuffer sceneBuffer;
+	ImagePlane sceneBuffer;
 
 	// Create the raytracer
 	rayTracer.initialize(200 * MB, 100 * MB, 12, 100, true);

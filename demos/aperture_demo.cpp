@@ -24,7 +24,7 @@ void manta_demo::apertureDemo(int samplesPerPixel, int resolutionX, int resoluti
 
 	SimpleBSDFMaterial *brightMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	brightMaterial->setName("Bright");
-	brightMaterial->setEmission(math::loadVector(5.f, 5.f, 5.f));
+	brightMaterial->setEmission(math::loadVector(10.f, 10.f, 10.f));
 	brightMaterial->setReflectance(math::constants::Zero);
 
 	SimpleBSDFMaterial *backdropMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
@@ -62,8 +62,26 @@ void manta_demo::apertureDemo(int samplesPerPixel, int resolutionX, int resoluti
 	up = math::normalize(up);
 
 	manta::SimpleLens lens;
-	manta::PolygonalAperture aperture;
-	aperture.initialize(5, 0.f, false);
+	manta::CircularAperture aperture;
+	aperture.setRadius((math::real)0.25);
+	//aperture.initialize(8, 0.f, false);
+
+	FraunhoferDiffraction testFraun;
+	testFraun.generate(&aperture, 512);
+	ImageByteBuffer byteBuffer;
+	ImageByteBuffer byteBufferDiffraction;
+	testFraun.getApertureFunction()->fillByteBuffer(&byteBuffer);
+	testFraun.getDiffractionPattern()->fillByteBuffer(&byteBufferDiffraction);
+
+	manta::JpegWriter writer;
+	writer.setQuality(95);
+	writer.write(&byteBuffer, (std::string(TMP_PATH) + "aperture_function.jpg").c_str());
+
+	writer.setQuality(95);
+	writer.write(&byteBufferDiffraction, (std::string(TMP_PATH) + "diffraction_function.jpg").c_str());
+
+	byteBuffer.free();
+	byteBufferDiffraction.free();
 
 	lens.setAperture(&aperture);
 	lens.initialize();
@@ -114,7 +132,8 @@ void manta_demo::apertureDemo(int samplesPerPixel, int resolutionX, int resoluti
 	}
 
 	// Output the results to a scene buffer
-	SceneBuffer sceneBuffer;
+	ImagePlane sceneBuffer;
+	ImagePlane planeWaveApproximation;
 
 	// Run the ray tracer
 	rayTracer.initialize(200 * MB, 50 * MB, 12, 100, true);
@@ -125,11 +144,38 @@ void manta_demo::apertureDemo(int samplesPerPixel, int resolutionX, int resoluti
 		rayTracer.tracePixel(1286, 1157, &scene, group, &sceneBuffer);
 	}
 	else {
+		std::cout << "Pass 1 ================================" << std::endl;
 		rayTracer.traceAll(&scene, group, &sceneBuffer);
+
+		if (LENS_SIMULATION) {
+			std::cout << "Pass 2 ================================" << std::endl;
+			group->setSampleCount(samplesPerPixel / 2);
+			lens.getAperture()->setRadius(0.01f);
+			rayTracer.traceAll(&scene, group, &planeWaveApproximation);
+		}
+		else {
+			sceneBuffer.clone(&planeWaveApproximation);
+		}
+
 	}
 
 	// Clean up the camera
 	delete group;
+
+	// Try convolution
+	ComplexMap2D imageMap, imageMapSafe;
+	imageMap.copy(&planeWaveApproximation, 0);
+
+	imageMapSafe.resizeSafe(&imageMapSafe);
+	imageMap.destroy();
+
+	ImageByteBuffer safeBuffer;
+	imageMapSafe.fillByteBuffer(&safeBuffer);
+	imageMapSafe.destroy();
+
+	JpegWriter j;
+	j.setQuality(95);
+	j.write(&safeBuffer, (std::string(TMP_PATH) + "safe.jpg").c_str());
 
 	std::string fname = createUniqueRenderFilename("aperture_demo", samplesPerPixel);
 	std::string imageFname = std::string(RENDER_OUTPUT) + "bitmap/" + fname + ".jpg";
@@ -142,8 +188,9 @@ void manta_demo::apertureDemo(int samplesPerPixel, int resolutionX, int resoluti
 	writeJpeg(imageFname.c_str(), &sceneBuffer, 95);
 
 	sceneBuffer.destroy();
+	planeWaveApproximation.destroy();
 	rayTracer.destroy();
-	aperture.destroy();
+	//aperture.destroy();
 
 	kdtree.destroy();
 }

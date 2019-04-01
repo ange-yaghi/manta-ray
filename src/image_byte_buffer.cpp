@@ -1,7 +1,7 @@
 #include <image_byte_buffer.h>
 
 #include <standard_allocator.h>
-#include <scene_buffer.h>
+#include <image_plane.h>
 
 #include <assert.h>
 #include <cmath>
@@ -17,28 +17,12 @@ manta::ImageByteBuffer::~ImageByteBuffer() {
 	assert(m_buffer == nullptr);
 }
 
-void manta::ImageByteBuffer::initialize(SceneBuffer *sceneBuffer) {
-	m_width = sceneBuffer->getWidth();
-	m_height = sceneBuffer->getHeight();
-	m_pitch = 4;
-
-	m_buffer = StandardAllocator::Global()->allocate<unsigned char>(m_width * m_height * m_pitch);
+void manta::ImageByteBuffer::initialize(const ImagePlane *sceneBuffer) {
 	const math::Vector *raw = sceneBuffer->getBuffer();
-
-	for (int i = 0; i < sceneBuffer->getHeight(); i++) {
-		for (int j = 0; j < sceneBuffer->getWidth(); j++) {
-			Color c;
-			math::Vector v;
-
-			v = raw[i * sceneBuffer->getWidth() + j];
-			convertToColor(v, &c);
-
-			setPixel(i, j, c);
-		}
-	}
+	initialize(raw, sceneBuffer->getWidth(), sceneBuffer->getHeight());
 }
 
-void manta::ImageByteBuffer::initialize(unsigned char *buffer, int width, int height, int pitch) {
+void manta::ImageByteBuffer::initialize(const unsigned char *buffer, int width, int height, int pitch) {
 	m_width = width;
 	m_height = height;
 	m_pitch = pitch;
@@ -46,6 +30,59 @@ void manta::ImageByteBuffer::initialize(unsigned char *buffer, int width, int he
 	m_buffer = StandardAllocator::Global()->allocate<unsigned char>(m_width * m_height * m_pitch);
 
 	memcpy((void *)m_buffer, (void *)buffer, m_width * m_height * m_pitch);
+}
+
+void manta::ImageByteBuffer::initialize(const math::Vector *buffer, int width, int height) {
+	m_width = width;
+	m_height = height;
+	m_pitch = 4;
+
+	m_buffer = StandardAllocator::Global()->allocate<unsigned char>(m_width * m_height * m_pitch);
+
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			Color c;
+			math::Vector v = buffer[i * width + j];
+			convertToColor(v, &c);
+
+			setPixel(i, j, c);
+		}
+	}
+}
+
+void manta::ImageByteBuffer::initialize(const math::real *buffer, int width, int height) {
+	m_width = width;
+	m_height = height;
+	m_pitch = 4;
+
+	m_buffer = StandardAllocator::Global()->allocate<unsigned char>(m_width * m_height * m_pitch);
+
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			Color c;
+			math::real v = buffer[i * width + j];
+			convertToColor(math::loadScalar(v), &c);
+
+			setPixel(i, j, c);
+		}
+	}
+}
+
+void manta::ImageByteBuffer::initialize(int width, int height) {
+	m_width = width;
+	m_height = height;
+	m_pitch = 4;
+
+	m_buffer = StandardAllocator::Global()->allocate<unsigned char>(m_width * m_height * m_pitch);
+
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			Color c;
+			convertToColor(math::constants::Zero, &c);
+
+			setPixel(i, j, c);
+		}
+	}
 }
 
 void manta::ImageByteBuffer::free() {

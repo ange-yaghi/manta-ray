@@ -247,7 +247,7 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
 	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");
 
 	// Output the results to a scene buffer
-	SceneBuffer sceneBuffer;
+	ImagePlane sceneBuffer;
 
 	if (TRACE_SINGLE_PIXEL) {
 		rayTracer.tracePixel(1522, 674, &scene, group, &sceneBuffer);

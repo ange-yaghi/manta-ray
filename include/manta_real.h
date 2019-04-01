@@ -11,9 +11,13 @@ namespace manta {
 
 	namespace math {
 
+		// Standard definitions
+		typedef float real_f;
+		typedef double real_d;
+
 #if MANTA_PRECISION == MANTA_PRECISION_FLOAT
 
-		typedef float real;
+		typedef real_f real;
 
 		namespace constants {
 
@@ -23,7 +27,7 @@ namespace manta {
 
 #else /* MANTA_PRECISION == MANTA_PRECISION_DOUBLE */
 
-		typedef double real;
+		typedef real_d real;
 
 		namespace constants {
 

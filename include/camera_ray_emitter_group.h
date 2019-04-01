@@ -6,7 +6,7 @@
 
 namespace manta {
 
-	class SceneBuffer;
+	class ImagePlane;
 	class Sampler2D;
 	class CameraRayEmitter;
 	class RayContainer;

@@ -17,7 +17,7 @@
 #include <stack_list.h>
 #include <ray_container.h>
 #include <coarse_intersection.h>
-#include <scene_buffer.h>
+#include <image_plane.h>
 
 #include <iostream>
 #include <thread>
@@ -35,9 +35,12 @@ manta::RayTracer::~RayTracer() {
 
 }
 
-void manta::RayTracer::traceAll(const Scene *scene, CameraRayEmitterGroup *group, SceneBuffer *target) {
+void manta::RayTracer::traceAll(const Scene *scene, CameraRayEmitterGroup *group, ImagePlane *target) {
 	// Simple performance metrics for now
 	auto startTime = std::chrono::system_clock::now();
+
+	// Reset counter
+	m_currentRay = 0;
 
 	// Set up the emitter group
 	group->initialize();
@@ -46,7 +49,11 @@ void manta::RayTracer::traceAll(const Scene *scene, CameraRayEmitterGroup *group
 	int resX = group->getResolutionX();
 	int resY = group->getResolutionY();
 
-	target->initialize(resX, resY);
+	// TEMP: initialize physical sensor extents
+	math::real py = (math::real)1.0;
+	math::real px = ((math::real)(resX) / resY);
+
+	target->initialize(resX, resY, px, py);
 
 	// Create jobs
 	int emitterCount = group->getResolutionX() * group->getResolutionY();
@@ -134,7 +141,7 @@ void manta::RayTracer::traceAll(const Scene *scene, CameraRayEmitterGroup *group
 	std::cout <<		"================================================" << std::endl;
 }
 
-void manta::RayTracer::tracePixel(int px, int py, const Scene *scene, CameraRayEmitterGroup *group, SceneBuffer *target) {
+void manta::RayTracer::tracePixel(int px, int py, const Scene *scene, CameraRayEmitterGroup *group, ImagePlane *target) {
 	// Set up the emitter group
 	group->initialize();
 
@@ -142,7 +149,7 @@ void manta::RayTracer::tracePixel(int px, int py, const Scene *scene, CameraRayE
 	int resX = group->getResolutionX();
 	int resY = group->getResolutionY();
 
-	target->initialize(resX, resY);
+	target->initialize(resX, resY, (math::real)0.0, (math::real)0.0);
 
 	// Create the singular job for the pixel
 	Job job;

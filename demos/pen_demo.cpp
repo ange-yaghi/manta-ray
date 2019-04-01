@@ -180,7 +180,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");
 
 	// Output the results to a scene buffer
-	SceneBuffer sceneBuffer;
+	ImagePlane sceneBuffer;
 
 	if (TRACE_SINGLE_PIXEL) {
 		rayTracer.tracePixel(179, 1423, &scene, group, &sceneBuffer);
@@ -191,6 +191,13 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 
 	// Clean up the camera
 	delete group;
+
+	// Try convolution
+	StarburstApproximation cconv;
+	cconv.setColor(math::loadVector(2000.005f, 2000.005f, 2000.005f));
+	cconv.setRadius(0.06f);
+	cconv.setBarWidth(0.001f);
+	//sceneBuffer.applyConvolution(&cconv);
 
 	std::string fname = createUniqueRenderFilename("pen_demo", samplesPerPixel);
 	std::string imageFname = std::string(RENDER_OUTPUT) + "bitmap/" + fname + ".jpg";

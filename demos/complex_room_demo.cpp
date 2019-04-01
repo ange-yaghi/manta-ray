@@ -220,7 +220,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");
 
 	// Output the results to a scene buffer
-	SceneBuffer sceneBuffer;
+	ImagePlane sceneBuffer;
 
 	if (TRACE_SINGLE_PIXEL) {
 		rayTracer.tracePixel(616, 1459, &scene, group, &sceneBuffer);
