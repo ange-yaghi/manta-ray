@@ -17,6 +17,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mantaray_image_utility", "m
 		{97105A24-57B6-4C85-8C7D-0F2FECC8C879} = {97105A24-57B6-4C85-8C7D-0F2FECC8C879}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fraunhofer_simulation", "fraunhofer_simulation\fraunhofer_simulation.vcxproj", "{09CFE3BC-7AC8-4CC3-B4CA-73E2AD24EBAB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{97105A24-57B6-4C85-8C7D-0F2FECC8C879} = {97105A24-57B6-4C85-8C7D-0F2FECC8C879}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -57,6 +62,14 @@ Global
 		{520EB80A-0B99-447E-9A69-670D08D9E146}.Release|x64.Build.0 = Release|x64
 		{520EB80A-0B99-447E-9A69-670D08D9E146}.Release|x86.ActiveCfg = Release|Win32
 		{520EB80A-0B99-447E-9A69-670D08D9E146}.Release|x86.Build.0 = Release|Win32
+		{09CFE3BC-7AC8-4CC3-B4CA-73E2AD24EBAB}.Debug|x64.ActiveCfg = Debug|x64
+		{09CFE3BC-7AC8-4CC3-B4CA-73E2AD24EBAB}.Debug|x64.Build.0 = Debug|x64
+		{09CFE3BC-7AC8-4CC3-B4CA-73E2AD24EBAB}.Debug|x86.ActiveCfg = Debug|Win32
+		{09CFE3BC-7AC8-4CC3-B4CA-73E2AD24EBAB}.Debug|x86.Build.0 = Debug|Win32
+		{09CFE3BC-7AC8-4CC3-B4CA-73E2AD24EBAB}.Release|x64.ActiveCfg = Release|x64
+		{09CFE3BC-7AC8-4CC3-B4CA-73E2AD24EBAB}.Release|x64.Build.0 = Release|x64
+		{09CFE3BC-7AC8-4CC3-B4CA-73E2AD24EBAB}.Release|x86.ActiveCfg = Release|Win32
+		{09CFE3BC-7AC8-4CC3-B4CA-73E2AD24EBAB}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

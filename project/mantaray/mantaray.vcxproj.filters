@@ -483,6 +483,9 @@
     <ClCompile Include="..\..\src\complex_map_2d.cpp">
       <Filter>Source Files\math</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\cft_estimator_2d.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\sphere_primitive.h">
@@ -765,6 +768,12 @@
       <Filter>Header Files\math</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\complex_map_2d.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\margins.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\cft_estimator_2d.h">
       <Filter>Header Files\math</Filter>
     </ClInclude>
   </ItemGroup>

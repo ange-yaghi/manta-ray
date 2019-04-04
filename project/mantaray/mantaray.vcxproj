@@ -24,6 +24,7 @@
     <ClCompile Include="..\..\src\bsdf.cpp" />
     <ClCompile Include="..\..\src\camera_ray_emitter.cpp" />
     <ClCompile Include="..\..\src\camera_ray_emitter_group.cpp" />
+    <ClCompile Include="..\..\src\cft_estimator_2d.cpp" />
     <ClCompile Include="..\..\src\circle_convolution.cpp" />
     <ClCompile Include="..\..\src\complex_map_2d.cpp" />
     <ClCompile Include="..\..\src\convolution.cpp" />
@@ -103,6 +104,7 @@
     <ClInclude Include="..\..\include\bsdf.h" />
     <ClInclude Include="..\..\include\camera_ray_emitter.h" />
     <ClInclude Include="..\..\include\camera_ray_emitter_group.h" />
+    <ClInclude Include="..\..\include\cft_estimator_2d.h" />
     <ClInclude Include="..\..\include\circle_convolution.h" />
     <ClInclude Include="..\..\include\coarse_intersection.h" />
     <ClInclude Include="..\..\include\complex_map_2d.h" />
@@ -118,6 +120,7 @@
     <ClInclude Include="..\..\include\jpeg_writer.h" />
     <ClInclude Include="..\..\include\kd_tree.h" />
     <ClInclude Include="..\..\include\lambertian_bsdf.h" />
+    <ClInclude Include="..\..\include\margins.h" />
     <ClInclude Include="..\..\include\scalar_map_2d.h" />
     <ClInclude Include="..\..\include\signal_processing.h" />
     <ClInclude Include="..\..\include\vector_map_2d.h" />

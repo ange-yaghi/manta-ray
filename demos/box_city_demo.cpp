@@ -8,8 +8,9 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	constexpr bool DETERMINISTIC_SEED_MODE = false;
 	constexpr bool TRACE_SINGLE_PIXEL = false;
 	constexpr bool WRITE_KDTREE_TO_FILE = false;
-	constexpr bool LENS_SIMULATION = false;
+	constexpr bool LENS_SIMULATION = true;
 	constexpr bool POLYGON_APERTURE = true;
+	constexpr bool ENABLE_FRAUNHOFER_DIFFRACTION = true;
 
 	Scene scene;
 	RayTracer rayTracer;
@@ -38,14 +39,22 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	SimpleBSDFMaterial *blockMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	blockMaterial->setName("Block");
 	blockMaterial->setBSDF(&blockBSDF);
+	blockMaterial->setReflectance(math::loadVector(0.3f, 0.3f, 0.3f));
 
 	SimpleBSDFMaterial outdoorTopLightMaterial;
-	outdoorTopLightMaterial.setEmission(math::loadVector(5.f, 5.f, 5.f));
+	outdoorTopLightMaterial.setEmission(math::loadVector(40.f, 40.f, 40.f));
 	outdoorTopLightMaterial.setReflectance(math::constants::Zero);
 
 	SimpleBSDFMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	groundMaterial->setName("Ground");
+	groundMaterial->setReflectance(math::loadVector(0.3f, 0.3f, 0.3f));
 	groundMaterial->setBSDF(&lambert);
+
+	SimpleBSDFMaterial *sunMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	sunMaterial->setName("Sun");
+	sunMaterial->setReflectance(math::loadVector(0.0f, 0.0f, 0.0f));
+	sunMaterial->setEmission(math::loadVector(1000.0f, 1000.0f, 1000.0f));
+	sunMaterial->setBSDF(nullptr);
 
 	// Create all scene geometry
 	Mesh boxCity;
@@ -54,7 +63,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	//boxCity.findQuads();
 
 	SpherePrimitive outdoorTopLightGeometry;
-	outdoorTopLightGeometry.setRadius((math::real)10.0);
+	outdoorTopLightGeometry.setRadius((math::real)1.0);
 	outdoorTopLightGeometry.setPosition(math::loadVector(20.f, 30.0f, -13.5f));
 
 	// Create scene objects
@@ -143,17 +152,34 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
 	// Output the results to a scene buffer
 	ImagePlane sceneBuffer;
+	ImagePlane planeWaveApproximation;
 
 	// Initialize and run the ray tracer
 	rayTracer.initialize(200 * MB, 50 * MB, 12, 100, true);
-	rayTracer.setBackgroundColor(getColor(255, 255, 255));
+	rayTracer.setBackgroundColor(math::loadVector(3.5, 3.5, 3.5));
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 	
 	if (TRACE_SINGLE_PIXEL) {
 		rayTracer.tracePixel(779, 942, &scene, group, &sceneBuffer);
 	}
 	else {
-		rayTracer.traceAll(&scene, group, &sceneBuffer);
+		if (ENABLE_FRAUNHOFER_DIFFRACTION) {
+			std::cout << "Pass 1 ================================" << std::endl;
+			rayTracer.traceAll(&scene, group, &sceneBuffer);
+
+			if (LENS_SIMULATION) {
+				std::cout << "Pass 2 ================================" << std::endl;
+				group->setSampleCount(samplesPerPixel / 2);
+				lens.getAperture()->setRadius(0.01f);
+				rayTracer.traceAll(&scene, group, &planeWaveApproximation);
+			}
+			else {
+				sceneBuffer.clone(&planeWaveApproximation);
+			}
+		}
+		else {
+			rayTracer.traceAll(&scene, group, &sceneBuffer);
+		}
 	}
 
 	// Clean up the camera
@@ -166,17 +192,73 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	RawFile rawFile;
 	rawFile.writeRawFile(rawFname.c_str(), &sceneBuffer);
 
-	// Try convolution
-	StarburstApproximation cconv;
-	cconv.setColor(math::loadVector(2000.005f, 2000.005f, 2000.005f));
-	cconv.setRadius(0.06f);
-	cconv.setBarWidth(0.001f);
-	//sceneBuffer.applyConvolution(&cconv);
+	if (ENABLE_FRAUNHOFER_DIFFRACTION) {
+		// Try convolution
+		ComplexMap2D imageMapR, imageMapG, imageMapB, imageMapRSafe, imageMapGSafe, imageMapBSafe;
+		imageMapR.copy(&planeWaveApproximation, 0);
+		imageMapG.copy(&planeWaveApproximation, 1);
+		imageMapB.copy(&planeWaveApproximation, 2);
+
+		Margins margins;
+		imageMapR.resizeSafe(&imageMapRSafe, &margins); imageMapR.destroy();
+		imageMapG.resizeSafe(&imageMapGSafe, &margins); imageMapG.destroy();
+		imageMapB.resizeSafe(&imageMapBSafe, &margins); imageMapB.destroy();
+
+		polygonalAperture.setRadius(5.5f);
+
+		FraunhoferDiffraction testFraun;
+		testFraun.generate(&polygonalAperture, imageMapRSafe.getWidth(), 0.15f);
+
+		ComplexMap2D diffractionR, diffractionG, diffractionB;
+		diffractionR.initialize(imageMapRSafe.getWidth(), imageMapRSafe.getHeight());
+		diffractionG.initialize(imageMapRSafe.getWidth(), imageMapRSafe.getHeight());
+		diffractionB.initialize(imageMapRSafe.getWidth(), imageMapRSafe.getHeight());
+		for (int i = 0; i < imageMapRSafe.getWidth(); i++) {
+			for (int j = 0; j < imageMapRSafe.getHeight(); j++) {
+				diffractionR.set(math::Complex(math::getX(testFraun.getDiffractionPattern()->get(i, j)), 0.0f), i, j);
+				diffractionG.set(math::Complex(math::getY(testFraun.getDiffractionPattern()->get(i, j)), 0.0f), i, j);
+				diffractionB.set(math::Complex(math::getZ(testFraun.getDiffractionPattern()->get(i, j)), 0.0f), i, j);
+			}
+		}
+
+		ComplexMap2D baseFtR, baseFtG, baseFtB, filterFtR, filterFtG, filterFtB;
+		imageMapRSafe.fft(&baseFtR); imageMapRSafe.destroy();
+		imageMapGSafe.fft(&baseFtG); imageMapGSafe.destroy();
+		imageMapBSafe.fft(&baseFtB); imageMapBSafe.destroy();
+		diffractionR.fft(&filterFtR); diffractionR.destroy();
+		diffractionG.fft(&filterFtG); diffractionG.destroy();
+		diffractionB.fft(&filterFtB); diffractionB.destroy();
+
+		filterFtR.multiply(&baseFtR); baseFtR.destroy();
+		filterFtG.multiply(&baseFtG); baseFtG.destroy();
+		filterFtB.multiply(&baseFtB); baseFtB.destroy();
+
+		ImagePlane output;
+		output.initialize(margins.width, margins.height, 0.f, 0.f);
+		ComplexMap2D tempR, tempG, tempB;
+		filterFtR.inverseFft(&tempR); filterFtR.destroy();
+		filterFtG.inverseFft(&tempG); filterFtG.destroy();
+		filterFtB.inverseFft(&tempB); filterFtB.destroy();
+		for (int i = margins.left; i < margins.left + margins.width; i++) {
+			for (int j = margins.top; j < margins.top + margins.height; j++) {
+				math::Vector fragment = math::loadVector(
+					tempR.get(i, j).r,
+					tempG.get(i, j).r,
+					tempB.get(i, j).r);
+				output.set(fragment, i - margins.left, j - margins.top);
+			}
+		}
+
+		std::cout << "Margins: " << margins.width << " " << margins.height << std::endl;
+
+		sceneBuffer.add(&output);
+	}
 
 	sceneBuffer.applyGammaCurve((math::real)(1.0 / 2.2));
 	writeJpeg(imageFname.c_str(), &sceneBuffer, 95);
 
 	sceneBuffer.destroy();
+	planeWaveApproximation.destroy();
 	rayTracer.destroy();
 
 	boxCity.destroy();
