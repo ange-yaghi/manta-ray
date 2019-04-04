@@ -39,7 +39,7 @@ namespace manta {
 				return { r_part * m, i_part * m };
 			}
 
-			inline Complex conjugate(const Complex &b) const {
+			inline Complex conjugate() const {
 				return { r, -i };
 			}
 		};

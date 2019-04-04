@@ -61,3 +61,40 @@ void manta::VectorMap2D::scale(const math::Vector &s) {
 		m_data[i] = math::mul(s, m_data[i]);
 	}
 }
+
+void manta::VectorMap2D::applyGamma(math::real gamma) {
+	int pCount = m_width * m_height;
+	for (int i = 0; i < pCount; i++) {
+		math::Vector fragment = m_data[i];
+		math::real r = pow(math::getX(fragment), gamma);
+		math::real g = pow(math::getY(fragment), gamma);
+		math::real b = pow(math::getZ(fragment), gamma);
+		m_data[i] = math::loadVector(r, g, b);
+	}
+}
+
+manta::math::real manta::VectorMap2D::getMaxMagnitude() const {
+	math::real maxMagnitude = 0.0;
+	int pCount = m_width * m_height;
+	for (int i = 0; i < pCount; i++) {
+		math::real mag = math::getScalar(math::magnitude(m_data[i]));
+		
+		if (mag > maxMagnitude) maxMagnitude = mag;
+	}
+
+	return maxMagnitude;
+}
+
+void manta::VectorMap2D::roll(VectorMap2D *target) const {
+	target->initialize(m_width, m_height);
+
+	int offsetX = m_width / 2;
+	int offsetY = m_height / 2;
+
+	for (int i = 0; i < m_width; i++) {
+		for (int j = 0; j < m_height; j++) {
+			math::Vector v = get(i, j);
+			target->set(v, (i + offsetX) % m_width, (j + offsetY) % m_height);
+		}
+	}
+}

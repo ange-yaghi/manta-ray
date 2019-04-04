@@ -83,6 +83,6 @@ using namespace manta;
 void writeToJpeg(const ScalarMap2D *scalarMap, const std::string &fname);
 void writeToJpeg(const VectorMap2D *vectorMap, const std::string &fname);
 void writeToJpeg(const ImagePlane *plane, const std::string &fname);
-void writeToJpeg(const ComplexMap2D *plane, const std::string &fname, bool useMargin = true);
+void writeToJpeg(const ComplexMap2D *plane, const std::string &fname, Margins *margins = nullptr);
 
 #endif /* TEST_UTILITIES_H */

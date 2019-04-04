@@ -38,9 +38,9 @@ void writeToJpeg(const ImagePlane *plane, const std::string &fname) {
 	byteBuffer.free();
 }
 
-void writeToJpeg(const ComplexMap2D *plane, const std::string &fname, bool useMargin) {
+void writeToJpeg(const ComplexMap2D *plane, const std::string &fname, Margins *margins) {
 	ImageByteBuffer byteBuffer;
-	plane->fillByteBuffer(&byteBuffer, useMargin);
+	plane->fillByteBuffer(&byteBuffer, margins);
 
 	JpegWriter writer;
 	writer.setQuality(95);

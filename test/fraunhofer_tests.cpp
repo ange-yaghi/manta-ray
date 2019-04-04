@@ -11,40 +11,44 @@
 
 using namespace manta;
 
-TEST(FraunhoferTests, FraunhoferSanityTest) {
+/*
+TEST(FraunhoferTests, FraunhoferFullTest) {
 	//CircularAperture ap;
 	//ap.setRadius(0.25f);
 
 	PolygonalAperture ap;
-	ap.initialize(64);
+	ap.initialize(8);
 	ap.setRadius(1.0f);
 
 	FraunhoferDiffraction conv;
-	conv.generate(&ap, 1024);
+	conv.generate(&ap, 512);
 
-	constexpr int imageWidth = 1920 / 2;
-	constexpr int imageHeight = 1080 / 2;
+	constexpr int imageWidth = 1920 / 4;
+	constexpr int imageHeight = 1080 / 4;
 	constexpr int width = 512;
 
 	ScalarMap2D image;
 	image.initialize(imageWidth, imageHeight, 0.5f);
 
 	// Single pulse at center
-	int pulseWidth = 100;
+	int pulseWidth = 20;
 	int cx = imageWidth / 2;
 	int cy = imageHeight / 2;
 
 	for (int i = -pulseWidth; i < pulseWidth; i++) {
 		for (int j = -pulseWidth; j < pulseWidth; j++) {
-			image.set(0.00002f, cx + i, cy + j);
+			image.set(0.00001f, cx + i, cy + j);
 		}
 	}
 
+	image.set(0.5f, cx, cy);
+
+	Margins margins;
 	ComplexMap2D imageC, imageSafe;
 	imageC.copy(&image);
 	image.destroy();
 
-	imageC.resizeSafe(&imageSafe);
+	imageC.resizeSafe(&imageSafe, &margins);
 	imageC.destroy();
 
 	ComplexMap2D diffractionPattern, diffPatternFit;
@@ -60,7 +64,7 @@ TEST(FraunhoferTests, FraunhoferSanityTest) {
 
 	writeToJpeg(&imageSafe, std::string(TMP_PATH) + "safe.jpg", false);
 	writeToJpeg(&diffPatternFit, std::string(TMP_PATH) + "diffraction.jpg", false);
-	writeToJpeg(&output, std::string(TMP_PATH) + "output.jpg", true);
+	writeToJpeg(&output, std::string(TMP_PATH) + "output.jpg", &margins);
 
 	imageSafe.destroy();
 	diffractionPattern.destroy();
@@ -114,3 +118,32 @@ TEST(FraunhoferTests, FraunhoferPolygonTest) {
 	plane.destroy();
 	ap.destroy();
 }
+
+TEST(FraunhoferTests, FraunhoferSanityTest) {
+	PolygonalAperture ap;
+	ap.initialize(5);
+	ap.setRadius(1.0f);
+
+	//CircularAperture ap;
+	//ap.setRadius(1.0f);
+
+	constexpr int size = 1024;
+
+	FraunhoferDiffraction conv;
+	conv.generate(&ap, size);
+
+	std::stringstream ss;
+	ss << TMP_PATH << "diffraction_5_" << size << ".jpg";
+
+	ComplexMap2D result, resultRolled;
+	result.copy(conv.getDiffractionPattern(), 0);
+	result.roll(&resultRolled);
+
+	writeToJpeg(&resultRolled, ss.str());
+
+	conv.destroy();
+	ap.destroy();
+	result.destroy();
+	resultRolled.destroy();
+}
+*/
