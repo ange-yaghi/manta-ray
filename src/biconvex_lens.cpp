@@ -27,12 +27,6 @@ void manta::BiconvexLens::configure() {
 	m_inputSurface.getSphere()->setPosition(math::add(m_position, math::mul(inputLensDisplacement, m_direction)));
 	m_outputSurface.getSphere()->setPosition(math::add(m_position, math::mul(outputLensDisplacement, m_direction)));
 
-	m_inputSurface.setConvex(true);
-	m_outputSurface.setConvex(false); // The output surface is concave with respect to the light
-
-	m_inputSurface.setInput(true);
-	m_outputSurface.setInput(false);
-
 	m_inputSurface.setIOR(m_ior);
 	m_outputSurface.setIOR(m_ior);
 }
@@ -44,7 +38,7 @@ bool manta::BiconvexLens::transformLightRay(const LightRay *ray, LightRay *trans
 	math::real dist_s;
 
 	// Transform at the input surface
-	flag = m_inputSurface.transformLightRay(ray, &intermediate);
+	flag = m_inputSurface.transformLightRay(ray, &intermediate, true, true);
 
 	if (!flag) {
 		return false;
@@ -62,7 +56,52 @@ bool manta::BiconvexLens::transformLightRay(const LightRay *ray, LightRay *trans
 	}
 
 	// Transform at the output surface
-	flag = m_outputSurface.transformLightRay(&intermediate, transformed);
+	flag = m_outputSurface.transformLightRay(&intermediate, transformed, false, false);
+
+	if (!flag) {
+		return false;
+	}
+
+	// Calculate distance from central axis
+	dist = math::sub(m_position, intermediate.getSource());
+	dist = math::sub(dist, math::mul(m_direction, math::dot(dist, m_direction)));
+	dist = math::magnitude(dist);
+
+	dist_s = math::getScalar(dist);
+
+	if (dist_s > m_radius) {
+		return false;
+	}
+
+	return true;
+}
+
+bool manta::BiconvexLens::transformLightRayReverse(const LightRay *ray, LightRay *transformed) const {
+	LightRay intermediate;
+	bool flag;
+	math::Vector dist;
+	math::real dist_s;
+
+	// Transform at the input surface
+	flag = m_outputSurface.transformLightRay(ray, &intermediate, true, true);
+
+	if (!flag) {
+		return false;
+	}
+
+	// Calculate distance from central axis
+	dist = math::sub(m_position, intermediate.getSource());
+	dist = math::sub(dist, math::mul(m_direction, math::dot(dist, m_direction)));
+	dist = math::magnitude(dist);
+
+	dist_s = math::getScalar(dist);
+
+	if (dist_s > m_radius) {
+		return false;
+	}
+
+	// Transform at the output surface
+	flag = m_inputSurface.transformLightRay(&intermediate, transformed, false, false);
 
 	if (!flag) {
 		return false;

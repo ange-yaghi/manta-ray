@@ -210,13 +210,10 @@ void manta::ComplexMap2D::cft(ComplexMap2D *target, math::real_d physicalWidth, 
 	math::real_d fs_x = horizontalSamples * w_inv;
 	math::real_d fs_y = verticalSamples * h_inv;
 
-	math::real_d fs_inv_s = 1 / (fs_x * fs_y);
+	math::Complex fs_inv_s = math::Complex(1 / (fs_x * fs_y), (math::real_d)0.0);
 
 	int halfHorizontalSamples = horizontalSamples / 2;
 	int halfVerticalSamples = verticalSamples / 2;
-
-	math::real_d halfWidth = physicalWidth / 2;
-	math::real_d halfHeight = physicalHeight / 2;
 
 	for (int kx = -halfHorizontalSamples; kx < halfHorizontalSamples; kx++) {
 		// frequency_x = kx / physicalWidth
@@ -225,11 +222,9 @@ void manta::ComplexMap2D::cft(ComplexMap2D *target, math::real_d physicalWidth, 
 			// frequency_y = ky / physicalHeight
 
 			// phase = exp(2 * pi * (frequency_x * (w / 2) + frequency_y * (h / 2)))
-			math::Complex phaseTransformation;
-			//math::real_d phase = math::constants::TWO_PI * (freq_x * halfWidth + freq_y * halfHeight);
 			int phase = kx + ky;
-			//phaseTransformation.r = ::cos(phase);
-			//phaseTransformation.i = ::sin(phase);
+
+			math::Complex phaseTransformation;
 			phaseTransformation.r = (phase % 2 == 0) ? (math::real_d)1.0 : (math::real_d)-1.0;
 			phaseTransformation.i = (math::real_d)0.0;
 
@@ -237,7 +232,7 @@ void manta::ComplexMap2D::cft(ComplexMap2D *target, math::real_d physicalWidth, 
 			int mapIndexY = (ky + verticalSamples) % verticalSamples;
 
 			math::Complex dftApprox = get(mapIndexX, mapIndexY);
-			dftApprox = dftApprox * phaseTransformation * math::Complex(fs_inv_s, 0.0);
+			dftApprox = dftApprox * phaseTransformation * fs_inv_s;
 
 			target->set(dftApprox, mapIndexX, mapIndexY);
 		}

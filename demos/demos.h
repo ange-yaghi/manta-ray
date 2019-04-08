@@ -23,6 +23,7 @@
 #include <lens_camera_ray_emitter.h>
 #include <lens_camera_ray_emitter_group.h>
 #include <simple_lens.h>
+#include <simple_diffraction_lens.h>
 #include <texture_node.h>
 #include <standard_allocator.h>
 #include <grid_sampler.h>

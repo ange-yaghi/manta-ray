@@ -45,76 +45,92 @@ namespace manta {
 
 
 		// Storage Data Types
-
-		struct Vector2 {
-			Vector2() : x(0), y(0) {}
-			Vector2(float x, float y) : x(x), y(y) {}
-
-			union {
-				struct {
-					float x, y;
-				};
-
-				float vec[2];
-			};
-		};
-
-		struct Vector3 {
-			Vector3() : x(0), y(0), z(0) {}
-			Vector3(float x, float y, float z) : x(x), y(y), z(z) {}
-			Vector3(const Vector2 &v) : x(v.x), y(v.y), z(0) {}
+		template<typename T>
+		struct Vector2_t {
+			Vector2_t() : x(0), y(0) {}
+			Vector2_t(T x, T y) : x(x), y(y) {}
 
 			union {
 				struct {
-					float x, y, z;
+					T x, y;
 				};
 
-				float vec[3];
+				T vec[2];
 			};
 		};
+		typedef Vector2_t<real> Vector2;
 
-		struct Vector4 {
-			Vector4() : x(0), y(0), z(0), w(0) {}
-			Vector4(float x, float y, float z, float w = 0) : x(x), y(y), z(z), w(w) {}
-
-			Vector4(const Vector3 &v) : x(v.x), y(v.y), z(v.z), w(0) {}
-
-			void set(float x, float y, float z, float w) { this->x = x; this->y = y; this->z = z; this->w = w; }
+		template<typename T>
+		struct Vector3_t {
+			Vector3_t() : x(0), y(0), z(0) {}
+			Vector3_t(T x, T y, T z) : x(x), y(y), z(z) {}
+			Vector3_t(const Vector3_t &v) : x(v.x), y(v.y), z(v.z) {}
 
 			union {
 				struct {
-					float x, y, z, w;
+					T x, y, z;
 				};
 
-				float vec[4];
+				T vec[3];
 			};
-		};
 
-		struct Matrix44 {
-			Matrix44() {}
-			~Matrix44() {}
+			Vector3_t<T> operator+(const Vector3_t<T> &b) const {
+				return Vector3_t<T>(x + b.x, y + b.y, z + b.z);
+			}
+
+			Vector3_t<T> operator*(T s) const {
+				return Vector3_t<T>(x * s, y * s, z * s);
+			}
+		};
+		typedef Vector3_t<real> Vector3;
+
+		template<typename T>
+		struct Vector4_t {
+			Vector4_t() : x(0), y(0), z(0), w(0) {}
+			Vector4_t(T x, T y, T z, T w = 0) : x(x), y(y), z(z), w(w) {}
+
+			Vector4_t(const Vector3 &v) : x(v.x), y(v.y), z(v.z), w(0) {}
+
+			void set(T x, T y, T z, T w) { this->x = x; this->y = y; this->z = z; this->w = w; }
 
 			union {
 				struct {
-					Vector4 rows[4];
+					T x, y, z, w;
 				};
 
-				float data[4][4];
+				T vec[4];
 			};
 		};
+		typedef Vector4_t<real> Vector4;
 
-		struct Matrix33 {
-			Matrix33() {}
-			~Matrix33() {}
+		template<typename T>
+		struct Matrix44_t {
+			Matrix44_t() {}
+			~Matrix44_t() {}
 
 			union {
 				struct {
-					Vector3 rows[3];
+					Vector4_t<T> rows[4];
 				};
 
-				float data[3][3];
+				T data[4][4];
 			};
 		};
+		typedef Matrix44_t<real> Matrix44;
+
+		template<typename T>
+		struct Matrix33_t {
+			Matrix33_t() {}
+			Matrix33_t(const Matrix33_t &ref) { rows[0] = ref.rows[0]; rows[1] = ref.rows[1]; rows[2] = ref.rows[2]; }
+			Matrix33_t(const Vector3_t<T> &row1, const Vector3_t<T> &row2, const Vector3_t<T> &row3) { rows[0] = row1; rows[1] = row2; rows[2] = row3; }
+			~Matrix33_t() {}
+
+			union {
+				Vector3_t<T> rows[3];
+				T data[3][3];
+			};
+		};
+		typedef Matrix33_t<real> Matrix33;
 
 		namespace constants {
 			// Masks

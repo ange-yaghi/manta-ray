@@ -1,0 +1,42 @@
+#ifndef SPECTRUM_H
+#define SPECTRUM_H
+
+#include <manta_math.h>
+
+namespace manta {
+
+	class Spectrum {
+	public:
+		Spectrum();
+		~Spectrum();
+
+		void initialize(int dataPoints, math::real startWavelength, math::real endWaveLength, math::real *buffer);
+		void destroy();
+
+		bool loadCsv(const char *fname);
+
+		void add(const Spectrum &b);
+
+		int getPointCount() const { return m_pointCount; }
+		math::real getStep() const { return (m_endWaveLength - m_startWavelength) / (m_pointCount - 1); }
+
+		math::real getValueDiscrete(int index) const;
+		math::real getValueContinuous(math::real wavelength) const;
+
+		math::real getStartWavelength() const { return m_startWavelength; }
+		math::real getEndWavelength() const { return m_endWaveLength; }
+
+	protected:
+		math::real m_startWavelength;
+		math::real m_endWaveLength;
+
+		math::real *m_values;
+		int m_pointCount;
+
+	protected:
+		bool m_externalMemoryAllocation;
+	};
+
+} /* namespace manta */
+
+#endif /* SPECTRUM_H */

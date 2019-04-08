@@ -24,6 +24,12 @@ namespace manta {
 		void setWeight(math::Vector weight) { m_weight = weight; }
 		math::Vector getWeight() const { return m_weight; }
 
+		void setPdf(math::real pdf) { m_pdf = pdf; }
+		math::real getPdf() const { return m_pdf; }
+
+		void setAperturePoint(const math::Vector2 &aperturePoint) { m_aperturePoint = aperturePoint; }
+		math::Vector2 getAperturePoint() const { return m_aperturePoint; }
+
 		void calculateTransformations();
 
 		int getKX() const { return m_kx; }
@@ -39,11 +45,15 @@ namespace manta {
 	protected:
 		int m_meta;
 
+		math::Vector2 m_aperturePoint;
+
 		math::Vector m_direction;
 		math::Vector m_source;
 
 		math::Vector m_intensity;
 		math::Vector m_weight;
+
+		math::real m_pdf;
 
 		int m_kx, m_ky, m_kz;
 		math::Vector3 m_shear;

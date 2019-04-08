@@ -31,6 +31,7 @@ namespace manta {
 		math::real getMaxMagnitude() const;
 
 		void roll(VectorMap2D *target) const;
+		void copy(const VectorMap2D *source);
 
 	protected:
 		math::Vector *m_data;

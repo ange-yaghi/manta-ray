@@ -77,6 +77,7 @@ using namespace manta;
 		EXPECT_NEAR(w, (ew), 1E-7); \
 	}
 
+#define CMF_PATH "../../../demos/cmfs/"
 #define WORKSPACE_PATH "../../../workspace/"
 #define TMP_PATH (WORKSPACE_PATH "tmp/")
 

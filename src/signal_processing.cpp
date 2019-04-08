@@ -29,25 +29,33 @@ void manta::NaiveFFT::fft_inverse(const math::Complex *input, math::Complex *tar
 void manta::NaiveFFT::fft_child(const math::Complex *input, math::Complex *target, int n, int s) {
 	if (n == 1) {
 		target[0] = input[0];
+		return;
+	}
+	else if (n / 2 == 1) {
+		target[0] = input[0];
+		target[n / 2] = input[s];
 	}
 	else {
 		fft_child(input, target, n / 2, 2 * s);
 		fft_child(input + s, target + n / 2, n / 2, 2 * s);
+	}
 
-		for (int k = 0; k < n / 2; k++) {
-			math::Complex t = target[k];
+	for (int k = 0; k < n / 2; k++) {
+		math::Complex t = target[k];
 
-			math::real angle = -math::constants::TWO_PI * k / (math::real)n;
-			math::real cos_angle = ::cos(angle);
-			math::real sin_angle = ::sin(angle);
+		math::real angle = -math::constants::TWO_PI * k / (math::real)n;
+		math::real cos_angle = ::cos(angle);
+		math::real sin_angle = ::sin(angle);
 
-			math::Complex x = target[k + n / 2];
+		math::Complex x = target[k + n / 2];
 
-			target[k].r = t.r + cos_angle * x.r - sin_angle * x.i;
-			target[k].i = t.i + cos_angle * x.i + sin_angle * x.r;
+		const math::real_d s1 = cos_angle * x.r - sin_angle * x.i;
+		const math::real_d s2 = cos_angle * x.i + sin_angle * x.r;
 
-			target[k + n / 2].r = t.r - (cos_angle * x.r - sin_angle * x.i);
-			target[k + n / 2].i = t.i - (cos_angle * x.i + sin_angle * x.r);
-		}
+		target[k].r = t.r + s1;
+		target[k].i = t.i + s2;
+
+		target[k + n / 2].r = t.r - s1;
+		target[k + n / 2].i = t.i - s2;
 	}
 }
