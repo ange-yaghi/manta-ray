@@ -3,6 +3,8 @@
 
 #include <manta_math.h>
 
+#include <fraunhofer_diffraction.h>
+
 namespace manta {
 
 	class Aperture;
@@ -62,6 +64,8 @@ namespace manta {
 		void setSensorHeight(math::real height) { m_sensorHeight = height; }
 		math::real getSensorHeight() const { return m_sensorHeight; }
 
+		FraunhoferDiffraction *getDiffraction() { return &m_diffraction; }
+
 	protected:
 		math::Vector m_position;
 		math::Vector m_direction;
@@ -76,6 +80,8 @@ namespace manta {
 		int m_sensorResolutionY;
 
 		Aperture *m_aperture;
+
+		FraunhoferDiffraction m_diffraction;
 	};
 
 } /* namespace manta */

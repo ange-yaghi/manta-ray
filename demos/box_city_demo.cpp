@@ -34,12 +34,12 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	BilayerBSDF blockBSDF;
 	blockBSDF.setCoatingDistribution(&blockCoating);
 	blockBSDF.setDiffuseMaterial(&lambert);
-	blockBSDF.setDiffuse(getColor(0xf1, 0xc4, 0x0f));
+	blockBSDF.setDiffuse(getColor(0x50, 0x50, 0x50)); // 0xf1, 0xc4, 0x0f
 	blockBSDF.setSpecularAtNormal(math::loadVector(0.02f, 0.02f, 0.02f));
 	SimpleBSDFMaterial *blockMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	blockMaterial->setName("Block");
 	blockMaterial->setBSDF(&blockBSDF);
-	blockMaterial->setReflectance(math::loadVector(0.3f, 0.3f, 0.3f));
+	//blockMaterial->setReflectance(math::loadVector(0.01f, 0.01f, 0.01f));
 
 	SimpleBSDFMaterial outdoorTopLightMaterial;
 	outdoorTopLightMaterial.setEmission(math::loadVector(40.f, 40.f, 40.f));
@@ -47,13 +47,13 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
 	SimpleBSDFMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	groundMaterial->setName("Ground");
-	groundMaterial->setReflectance(math::loadVector(0.3f, 0.3f, 0.3f));
+	//groundMaterial->setReflectance(math::loadVector(0.01f, 0.01f, 0.01f));
 	groundMaterial->setBSDF(&lambert);
 
 	SimpleBSDFMaterial *sunMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	sunMaterial->setName("Sun");
 	sunMaterial->setReflectance(math::loadVector(0.0f, 0.0f, 0.0f));
-	sunMaterial->setEmission(math::loadVector(1000.0f, 1000.0f, 1000.0f));
+	sunMaterial->setEmission(math::loadVector(100.0f, 100.0f, 100.0f));
 	sunMaterial->setBSDF(nullptr);
 
 	// Create all scene geometry
@@ -114,6 +114,11 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	lens.setSensorWidth(10.0f * (resolutionX / (math::real)resolutionY));
 	lens.update();
 
+	std::string fname = createUniqueRenderFilename("box_city_demo", samplesPerPixel);
+	std::string imageFname = std::string(RENDER_OUTPUT) + "bitmap/" + fname + ".jpg";
+	std::string convFname = std::string(RENDER_OUTPUT) + "bitmap/" + fname + "_conv" + ".jpg";
+	std::string rawFname = std::string(RENDER_OUTPUT) + "raw/" + fname + ".fpm";
+
 	RandomSampler sampler;
 
 	if (!LENS_SIMULATION) {
@@ -138,6 +143,26 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 		aperture->setRadius((math::real)0.18);
 		lens.setFocus(focusDistance);
 
+		// Initialize diffraction model
+		//FraunhoferDiffraction::Settings settings;
+		//FraunhoferDiffraction::defaultSettings(&settings);
+		//settings.maxSamples = 4096;
+		//settings.frequencyMultiplier = 3;
+
+		//aperture->setRadius((math::real)5.5);
+		//lens.getDiffractionModel()->generate(aperture, 1024, 0.05f, &settings);
+		//aperture->setRadius((math::real)0.18);
+
+		//JpegWriter writer;
+		//ImageByteBuffer b;
+		//VectorMap2D temp;
+		//temp.copy(lens.getDiffractionModel()->getDiffractionPattern());
+		//temp.scale(math::loadScalar(100000.0f));
+		//temp.fillByteBuffer(&b);
+		//temp.destroy();
+		//writer.write(&b, convFname.c_str());
+		//b.free();
+
 		LensCameraRayEmitterGroup *camera = new LensCameraRayEmitterGroup;
 		camera->setDirection(math::normalize(math::sub(target, cameraPos)));
 		camera->setPosition(cameraPos);
@@ -152,52 +177,30 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
 	// Output the results to a scene buffer
 	ImagePlane sceneBuffer;
-	ImagePlane planeWaveApproximation;
 
 	// Initialize and run the ray tracer
 	rayTracer.initialize(200 * MB, 50 * MB, 12, 100, true);
-	rayTracer.setBackgroundColor(math::loadVector(3.5, 3.5, 3.5));
+	rayTracer.setBackgroundColor(math::loadVector(1.0, 1.0, 1.0));
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 	
 	if (TRACE_SINGLE_PIXEL) {
 		rayTracer.tracePixel(779, 942, &scene, group, &sceneBuffer);
 	}
 	else {
-		if (ENABLE_FRAUNHOFER_DIFFRACTION) {
-			std::cout << "Pass 1 ================================" << std::endl;
-			rayTracer.traceAll(&scene, group, &sceneBuffer);
-
-			if (LENS_SIMULATION) {
-				std::cout << "Pass 2 ================================" << std::endl;
-				group->setSampleCount(samplesPerPixel / 2);
-				lens.getAperture()->setRadius(0.01f);
-				rayTracer.traceAll(&scene, group, &planeWaveApproximation);
-			}
-			else {
-				sceneBuffer.clone(&planeWaveApproximation);
-			}
-		}
-		else {
-			rayTracer.traceAll(&scene, group, &sceneBuffer);
-		}
+		rayTracer.traceAll(&scene, group, &sceneBuffer);
 	}
 
 	// Clean up the camera
 	delete group;
 
-	std::string fname = createUniqueRenderFilename("box_city_demo", samplesPerPixel);
-	std::string imageFname = std::string(RENDER_OUTPUT) + "bitmap/" + fname + ".jpg";
-	std::string rawFname = std::string(RENDER_OUTPUT) + "raw/" + fname + ".fpm";
-
 	RawFile rawFile;
 	rawFile.writeRawFile(rawFname.c_str(), &sceneBuffer);
 
 	if (ENABLE_FRAUNHOFER_DIFFRACTION) {
-		// Try convolution
 		ComplexMap2D imageMapR, imageMapG, imageMapB, imageMapRSafe, imageMapGSafe, imageMapBSafe;
-		imageMapR.copy(&planeWaveApproximation, 0);
-		imageMapG.copy(&planeWaveApproximation, 1);
-		imageMapB.copy(&planeWaveApproximation, 2);
+		imageMapR.copy(&sceneBuffer, 0);
+		imageMapG.copy(&sceneBuffer, 1);
+		imageMapB.copy(&sceneBuffer, 2);
 
 		Margins margins;
 		imageMapR.resizeSafe(&imageMapRSafe, &margins); imageMapR.destroy();
@@ -207,7 +210,22 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 		polygonalAperture.setRadius(5.5f);
 
 		FraunhoferDiffraction testFraun;
-		testFraun.generate(&polygonalAperture, imageMapRSafe.getWidth(), 0.15f);
+		FraunhoferDiffraction::Settings settings;
+		FraunhoferDiffraction::defaultSettings(&settings);
+		settings.frequencyMultiplier = 3.0;
+		settings.maxSamples = 4096;
+
+		testFraun.generate(&polygonalAperture, imageMapRSafe.getWidth(), 0.15f, &settings);
+
+		JpegWriter writer;
+		ImageByteBuffer b;
+		VectorMap2D temp;
+		temp.copy(testFraun.getDiffractionPattern());
+		temp.scale(math::loadScalar(100000.0f));
+		temp.fillByteBuffer(&b);
+		temp.destroy();
+		writer.write(&b, convFname.c_str());
+		b.free();
 
 		ComplexMap2D diffractionR, diffractionG, diffractionB;
 		diffractionR.initialize(imageMapRSafe.getWidth(), imageMapRSafe.getHeight());
@@ -251,14 +269,15 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
 		std::cout << "Margins: " << margins.width << " " << margins.height << std::endl;
 
-		sceneBuffer.add(&output);
+		output.applyGammaCurve((math::real)(1.0 / 2.2));
+		writeJpeg(convFname.c_str(), &output, 95);
+		output.destroy();
 	}
 
 	sceneBuffer.applyGammaCurve((math::real)(1.0 / 2.2));
 	writeJpeg(imageFname.c_str(), &sceneBuffer, 95);
 
 	sceneBuffer.destroy();
-	planeWaveApproximation.destroy();
 	rayTracer.destroy();
 
 	boxCity.destroy();

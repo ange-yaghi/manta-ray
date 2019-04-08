@@ -5,8 +5,6 @@
 #include <lens_element.h>
 
 manta::SphericalSurface::SphericalSurface() {
-	m_convex = true;
-	m_input = true;
 	m_ior = (math::real)0.0;
 }
 
@@ -14,9 +12,9 @@ manta::SphericalSurface::~SphericalSurface() {
 
 }
 
-bool manta::SphericalSurface::transformLightRay(const LightRay *ray, LightRay *outputRay) const {
+bool manta::SphericalSurface::transformLightRay(const LightRay *ray, LightRay *outputRay, bool convex, bool incoming) const {
 	IntersectionPoint point;
-	if (m_convex) {
+	if (convex) {
 		m_sphere.detectIntersection(ray, &point, nullptr);
 	}
 	else {
@@ -29,7 +27,7 @@ bool manta::SphericalSurface::transformLightRay(const LightRay *ray, LightRay *o
 
 	math::real r;
 
-	if (m_input) {
+	if (incoming) {
 		r = (math::real)1.0 / m_ior;
 	}
 	else {

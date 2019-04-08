@@ -14,13 +14,7 @@ namespace manta {
 		SphericalSurface();
 		~SphericalSurface();
 
-		virtual bool transformLightRay(const LightRay *ray, LightRay *transformed) const;
-
-		void setConvex(bool convex) { m_convex = convex; }
-		bool isConvex() const { return m_convex; }
-
-		void setInput(bool input) { m_input = input; }
-		bool isInput() const { return m_input; }
+		virtual bool transformLightRay(const LightRay *ray, LightRay *transformed, bool convex, bool incoming) const;
 
 		SpherePrimitive *getSphere() { return &m_sphere; };
 
@@ -32,9 +26,6 @@ namespace manta {
 	protected:
 		SpherePrimitive m_sphere;
 		math::real m_ior;
-
-		bool m_convex;
-		bool m_input;
 	};
 
 } /* namespace manta */

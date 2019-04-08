@@ -16,6 +16,7 @@ namespace manta {
 		virtual void setFocus(math::real dist);
 		virtual void setFocalLength(math::real focalLength);
 		virtual bool transformRay(const LightRay *inputRay, LightRay *outputRay) const;
+		virtual bool diffractionRay(const math::Vector2 &aperturePoint, math::Vector direction, math::Vector2 *sensorLocation) const;
 		
 		virtual void initialize();
 		virtual void update();
@@ -35,6 +36,8 @@ namespace manta {
 		math::Vector m_sensorDeltaY;
 		math::Vector m_sensorBottomRight;
 		math::Vector m_right;
+
+		math::Vector m_apertureLocation;
 	};
 
 } /* namespace manta */

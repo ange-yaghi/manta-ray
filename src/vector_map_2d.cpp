@@ -18,6 +18,12 @@ void manta::VectorMap2D::initialize(int width, int height, const math::Vector &v
 	m_height = height;
 
 	m_data = StandardAllocator::Global()->allocate<math::Vector>(m_width * m_height, 16);
+
+	for (int i = 0; i < m_width; i++) {
+		for (int j = 0; j < m_height; j++) {
+			set(value, i, j);
+		}
+	}
 }
 
 void manta::VectorMap2D::destroy() {
@@ -34,7 +40,7 @@ manta::math::Vector manta::VectorMap2D::sample(math::real u, math::real v) const
 	int iv = (int)(v * m_height + (math::real)0.5);
 
 	if (iu < 0 || iu >= m_width) return math::constants::Zero;
-	if (iv < 0 || iv >= m_width) return math::constants::Zero;
+	if (iv < 0 || iv >= m_height) return math::constants::Zero;
 
 	return get(iu, iv);
 }
@@ -96,5 +102,13 @@ void manta::VectorMap2D::roll(VectorMap2D *target) const {
 			math::Vector v = get(i, j);
 			target->set(v, (i + offsetX) % m_width, (j + offsetY) % m_height);
 		}
+	}
+}
+
+void manta::VectorMap2D::copy(const VectorMap2D *source) {
+	initialize(source->getWidth(), source->getHeight());
+	int pCount = m_width * m_height;
+	for (int i = 0; i < pCount; i++) {
+		m_data[i] = source->m_data[i];
 	}
 }

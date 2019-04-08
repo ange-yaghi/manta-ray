@@ -147,7 +147,7 @@ math::real blackBodyRadiation(math::real_d wavelength) {
 
 int main() {
 	constexpr int SENSOR_RESOLUTION = 2500;
-	constexpr int MAX_SAMPLES = 4096 * 1;
+	constexpr int MAX_SAMPLES = 4096;
 
 	constexpr math::real_d apertureRadius = 5.5f;
 	constexpr math::real_d sensorWidth = 0.15f; // mm
@@ -253,12 +253,12 @@ int main() {
 	result.initialize(SENSOR_RESOLUTION, SENSOR_RESOLUTION);
 
 	for (int l = 380; l <= 780; l += 2) {
-		math::real blackBodyWeight = blackBodyRadiation((math::real_d)l);
+		math::real blackBodyWeight = 1.0; // blackBodyRadiation((math::real_d)l);
 
 		std::cout << "Adding wavelength " << l << " nm | weight = " << blackBodyWeight << std::endl;
 		addLayer(&result, estimator, sensorElementWidth, sensorWidth, l, 
 			math::mul(
-				wavelengthToRgb((math::real_d)l), 
+				math::normalize(wavelengthToRgb((math::real_d)l)), 
 				math::loadScalar(blackBodyWeight)));
 	}
 

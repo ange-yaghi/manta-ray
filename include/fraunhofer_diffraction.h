@@ -13,17 +13,25 @@ namespace manta {
 	class Aperture;
 	class CftEstimator2D;
 
-	class FraunhoferDiffraction : public Convolution {
+	class FraunhoferDiffraction {
+	public:
+		struct Settings {
+			int maxSamples;
+			int minWaveLength; // nm
+			int maxWaveLength; // nm
+			int wavelengthStep; // nm
+			math::real_d frequencyMultiplier;
+		};
+
 	public:
 		FraunhoferDiffraction();
 		~FraunhoferDiffraction();
 
-		virtual math::real getExtents(const math::Vector &reference) const;
-		virtual math::Vector sample(math::real x, math::real y) const;
-
-		void generate(const Aperture *aperture, int outputResolution, math::real physicalSensorWidth);
+		void generate(const Aperture *aperture, int outputResolution, math::real physicalSensorWidth, const Settings *settings = nullptr);
 		virtual void destroy();
 
+		math::Vector samplePattern(math::real dx, math::real dy) const;
+		math::Vector2 getPerturbance(math::real u, math::real v) const;
 		const VectorMap2D *getDiffractionPattern() const { return &m_diffractionPattern; }
 
 		math::Vector getTotalFlux() const;
@@ -31,6 +39,10 @@ namespace manta {
 
 		static math::Vector wavelengthToRgb(math::real_d wavelength);
 		static math::real_d blackBodyRadiation(math::real_d wavelength);
+
+		static void defaultSettings(Settings *settings);
+
+		math::real getPhysicalSensorWidth() const { return m_physicalSensorWidth; }
 
 	protected:
 		void addLayer(const CftEstimator2D *estimator, math::real_d wavelength, VectorMap2D *target);

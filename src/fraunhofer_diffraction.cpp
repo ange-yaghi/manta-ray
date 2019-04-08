@@ -17,21 +17,15 @@ manta::FraunhoferDiffraction::~FraunhoferDiffraction() {
 
 }
 
-manta::math::real manta::FraunhoferDiffraction::getExtents(const math::Vector &reference) const {
-	if (math::getX(reference) == 0 || math::getY(reference) == 0 || math::getZ(reference) == 0) return (math::real)0.0;
-
-	return (math::real)0.5;
-}
-
-manta::math::Vector manta::FraunhoferDiffraction::sample(math::real x, math::real y) const {
-	return m_diffractionPattern.sample(x / m_physicalSensorWidth + 0.5, y / m_physicalSensorWidth + 0.5);
-}
-
-void manta::FraunhoferDiffraction::generate(const Aperture *aperture, int outputResolution, math::real physicalSensorWidth) {
-	constexpr int MAX_SAMPLES = 4096 / 1;
-	constexpr math::real_d minWavelength = 380;
-	constexpr math::real_d maxWavelength = 780;
-	constexpr int wavelengthStep = 2;
+void manta::FraunhoferDiffraction::generate(const Aperture *aperture, int outputResolution, math::real physicalSensorWidth, const Settings *settingsIn) {
+	Settings settings;
+	if (settingsIn == nullptr) defaultSettings(&settings);
+	else settings = *settingsIn;
+	
+	int MAX_SAMPLES = settings.maxSamples;
+	int minWavelength = settings.minWaveLength;
+	int maxWavelength = settings.maxWaveLength;
+	int wavelengthStep = settings.wavelengthStep;
 
 	math::real apertureRadius = aperture->getRadius();
 	math::real apertureRadius_inv = 1 / apertureRadius;
@@ -48,7 +42,7 @@ void manta::FraunhoferDiffraction::generate(const Aperture *aperture, int output
 	math::real_d sampleWindow = 0.0;
 	math::real_d maxFreq = (sensorWidth / 2) / (minWavelength * 1e-6);
 
-	sampleWindow = CftEstimator2D::getMinPhysicalDim(minFrequencyStep / 3, apertureRadius * 2);
+	sampleWindow = CftEstimator2D::getMinPhysicalDim(minFrequencyStep / settings.frequencyMultiplier, apertureRadius * 2);
 	estimatorSamples = CftEstimator2D::getMinSamples(maxFreq, sampleWindow, MAX_SAMPLES);
 
 	math::real dx = sampleWindow / estimatorSamples;
@@ -73,6 +67,7 @@ void manta::FraunhoferDiffraction::generate(const Aperture *aperture, int output
 			math::real v = (y * apertureRadius_inv) + 0.5;
 
 			a.m_textureCoodinates = math::loadVector(u, v);
+			//math::real dirt = 1.0f;
 			math::real dirt = math::getScalar(dirtTexture.sample(&a));
 
 			if (aperture->filter(x, y)) {
@@ -81,10 +76,6 @@ void manta::FraunhoferDiffraction::generate(const Aperture *aperture, int output
 			else {
 				apertureFunction.set(math::Complex(0.0f, 0.0f), i, j);
 			}
-
-			//if (abs(x) < 0.01 && abs(y) < 0.01) {
-			//	apertureFunction.set(math::Complex(0.0f, 0.0f), i, j);
-			//}
 		}
 	}
 
@@ -101,7 +92,7 @@ void manta::FraunhoferDiffraction::generate(const Aperture *aperture, int output
 
 	VectorMap2D temp;
 	temp.initialize(outputResolution, outputResolution);
-	for (int wavelength = 380; wavelength <= 780; wavelength += wavelengthStep) {
+	for (int wavelength = minWavelength; wavelength <= maxWavelength; wavelength += wavelengthStep) {
 		addLayer(&estimator, wavelength, &temp);
 	}
 
@@ -110,13 +101,34 @@ void manta::FraunhoferDiffraction::generate(const Aperture *aperture, int output
 	estimator.destroy();
 
 	normalize();
-
-	m_diffractionPattern.scale(math::loadScalar(50E-0 * 2));
-	m_diffractionPattern.set(math::constants::Zero, 0, 0);
 }
 
 void manta::FraunhoferDiffraction::destroy() {
 	m_diffractionPattern.destroy();
+}
+
+manta::math::Vector manta::FraunhoferDiffraction::samplePattern(math::real dx, math::real dy) const {
+	math::real u, v;
+
+	u = dx / (m_physicalSensorWidth);
+	v = dy / (m_physicalSensorWidth);
+
+	u /= 64;
+	v /= 64;
+
+	if (u < 0) u += (math::real)1.0;
+	if (v < 0) v += (math::real)1.0;
+
+	return m_diffractionPattern.sample(u, v);
+}
+
+manta::math::Vector2 manta::FraunhoferDiffraction::getPerturbance(math::real u, math::real v) const {
+	math::real dx, dy;
+
+	dx = u * (m_physicalSensorWidth / 2);
+	dy = v * (m_physicalSensorWidth / 2);
+
+	return math::Vector2(dx, dy);
 }
 
 manta::math::Vector manta::FraunhoferDiffraction::getTotalFlux() const {
@@ -144,8 +156,17 @@ manta::math::Vector manta::FraunhoferDiffraction::getTotalFlux() const {
 }
 
 void manta::FraunhoferDiffraction::normalize() {
-	math::Vector totalFlux = getTotalFlux();
-	math::Vector scale = math::div(math::constants::One, totalFlux);
+	math::Vector maxValue = m_diffractionPattern.get(0, 0);
+
+	/*
+	for (int i = 0; i < m_diffractionPattern.getWidth(); i++) {
+		for (int j = 0; j < m_diffractionPattern.getHeight(); j++) {
+			maxValue = math::componentMax(m_diffractionPattern.get(i, j), maxValue);
+		}
+	}*/
+
+	math::Vector scale = math::div(math::constants::One, maxValue);
+	scale = math::mask(scale, math::constants::MaskOffW);
 
 	m_diffractionPattern.scale(scale);
 }
@@ -212,6 +233,14 @@ manta::math::real_d manta::FraunhoferDiffraction::blackBodyRadiation(math::real_
 	math::real_d w_m4 = 1 / (w_2 * w_2);
 
 	return 800000000 * w_m4;
+}
+
+void manta::FraunhoferDiffraction::defaultSettings(Settings *settings) {
+	settings->maxSamples = 4096;
+	settings->maxWaveLength = 780;
+	settings->minWaveLength = 380;
+	settings->wavelengthStep = 5;
+	settings->frequencyMultiplier = 3.0;
 }
 
 #include <iostream>

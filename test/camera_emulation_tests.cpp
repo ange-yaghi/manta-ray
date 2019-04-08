@@ -5,6 +5,7 @@
 #include <light_ray.h>
 #include <simple_lens.h>
 #include <polygonal_aperture.h>
+#include <simple_diffraction_lens.h>
 
 using namespace manta;
 
@@ -146,4 +147,136 @@ TEST(CameraEmulationTests, PolygonalApertureTest) {
 	EXPECT_FALSE(filtered);
 
 	aperture.destroy();
+}
+
+TEST(CameraEmulationTests, DiffractionRayTest) {
+	manta::SimpleLens lens;
+	lens.initialize();
+	lens.setPosition(math::loadVector(0.0f, 0.0f, 0.0f));
+	lens.setDirection(math::loadVector(1.0f, 0.0f, 0.0f));
+	lens.setUp(math::loadVector(0.0f, 1.0f, 0.0f));
+	lens.setRadius(1.0f);
+	lens.update();
+
+	math::real lensHeight = 1.0f;
+	math::real focusDistance = 50.0f;
+
+	Aperture *aperture = lens.getAperture();
+	aperture->setRadius((math::real)0.5);
+	lens.setFocus(focusDistance);
+
+	math::Vector sensorLocation = lens.getSensorLocation();
+
+	math::Vector dir = math::loadVector(1.0f, 0.01f, 0.0f);
+	dir = math::normalize(dir);
+
+	math::Vector origin = math::add(sensorLocation, math::loadVector(0.0f, 0.1f, 0.0f));
+
+	LightRay ray1;
+	ray1.setSource(origin);
+	ray1.setDirection(dir);
+
+	LensScanHint hint;
+	lens.lensScan(sensorLocation, &hint, 4, 1.0f);
+
+	LightRay outputRay;
+	bool result = lens.transformRay(&ray1, &outputRay);
+	EXPECT_TRUE(result);
+
+	math::Vector2 aperturePoint = outputRay.getAperturePoint();
+	math::Vector2 finalSensorLocation;
+	result = lens.diffractionRay(aperturePoint, math::negate(outputRay.getDirection()), &finalSensorLocation);
+	EXPECT_TRUE(result);
+
+	EXPECT_NEAR(finalSensorLocation.x, 0.0f, 1E-3);
+	EXPECT_NEAR(finalSensorLocation.y, 0.1f, 1E-3);
+}
+
+TEST(CameraEmulationTests, DiffractionLensSanityTest) {
+	manta::SimpleDiffractionLens lens;
+	lens.initialize();
+	lens.setPosition(math::loadVector(0.0f, 0.0f, 0.0f));
+	lens.setDirection(math::loadVector(1.0f, 0.0f, 0.0f));
+	lens.setUp(math::loadVector(0.0f, 1.0f, 0.0f));
+	lens.setRadius(1.0f);
+	lens.update();
+
+	math::real lensHeight = 1.0f;
+	math::real focusDistance = 50.0f;
+
+	Aperture *aperture = lens.getAperture();
+	aperture->setRadius((math::real)0.5);
+	lens.setFocus(focusDistance);
+
+	// Initialize diffraction model
+	FraunhoferDiffraction::Settings settings;
+	FraunhoferDiffraction::defaultSettings(&settings);
+	settings.maxSamples = 1024;
+	settings.frequencyMultiplier = 3;
+
+	lens.getDiffractionModel()->generate(aperture, 64, 0.0001f, &settings);
+
+	math::Vector sensorLocation = lens.getSensorLocation();
+
+	math::Vector dir = math::loadVector(1.0f, 0.0f, 0.0f);
+	dir = math::normalize(dir);
+
+	math::Vector origin = math::add(sensorLocation, math::loadVector(0.0f, 0.1f, 0.0f));
+
+	LightRay ray1;
+	ray1.setSource(origin);
+	ray1.setDirection(dir);
+
+	LensScanHint hint;
+	lens.lensScan(sensorLocation, &hint, 4, 1.0f);
+
+	LightRay outputRay;
+	bool result = lens.transformRay(&ray1, &outputRay);
+
+	lens.getDiffractionModel()->destroy();
+	
+	EXPECT_TRUE(result);
+}
+
+TEST(CameraEmulationTests, DiffractionLensOutputTest) {
+	manta::SimpleDiffractionLens lens;
+	lens.initialize();
+	lens.setPosition(math::loadVector(0.0f, 0.0f, 0.0f));
+	lens.setDirection(math::loadVector(1.0f, 0.0f, 0.0f));
+	lens.setUp(math::loadVector(0.0f, 1.0f, 0.0f));
+	lens.setRadius(1.0f);
+	lens.update();
+
+	math::real lensHeight = 1.0f;
+	math::real focusDistance = 50.0f;
+
+	Aperture *aperture = lens.getAperture();
+	aperture->setRadius((math::real)0.5);
+	lens.setFocus(focusDistance);
+
+	// Initialize diffraction model
+	FraunhoferDiffraction::Settings settings;
+	FraunhoferDiffraction::defaultSettings(&settings);
+	settings.maxSamples = 1024;
+	settings.frequencyMultiplier = 3;
+
+	lens.getDiffractionModel()->generate(aperture, 64, 0.0001f, &settings);
+
+	math::Vector sensorLocation = lens.getSensorLocation();
+
+	math::Vector dir = math::loadVector(1.0f, 0.0f, 0.0f);
+	dir = math::normalize(dir);
+
+	math::Vector origin = sensorLocation;
+
+	LightRay ray1;
+	ray1.setSource(origin);
+	ray1.setDirection(dir);
+
+	LightRay outputRay;
+	bool result = lens.transformRay(&ray1, &outputRay);
+
+	lens.getDiffractionModel()->destroy();
+
+	EXPECT_TRUE(result);
 }

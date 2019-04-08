@@ -130,9 +130,8 @@ void manta::Worker::doJob(const Job *job) {
 				}
 
 				container.calculateIntensity();
-				container.destroyRays();
-
 				result = container.getIntensity();
+				container.destroyRays();				
 			}
 			m_rayTracer->incrementRayCompletion(job);
 
