@@ -217,7 +217,7 @@ TEST(SignalProcessingTests, CftApproximationBasicTest) {
 			else sinc2 = ::sin(math::constants::PI * boxHeight * freq_y) / (math::constants::PI * boxHeight * freq_y);
 
 			math::real_d exactFourier = boxWidth * boxHeight * sinc1 * sinc2;
-			math::real_d approxFourier = estimator.sample(freq_x, freq_y).r;
+			math::real_d approxFourier = estimator.sample(freq_x, freq_y, fs_x / SIZE).r;
 
 			math::real_d diff = ::abs(exactFourier - approxFourier);
 			if (diff > maxDiff) maxDiff = diff;

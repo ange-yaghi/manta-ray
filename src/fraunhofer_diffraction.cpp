@@ -4,6 +4,9 @@
 #include <aperture.h>
 #include <complex_map_2d.h>
 #include <cft_estimator_2d.h>
+#include <spectrum.h>
+#include <color.h>
+#include <cmf_table.h>
 
 // Temp
 #include <texture_node.h>
@@ -17,7 +20,7 @@ manta::FraunhoferDiffraction::~FraunhoferDiffraction() {
 
 }
 
-void manta::FraunhoferDiffraction::generate(const Aperture *aperture, int outputResolution, math::real physicalSensorWidth, const Settings *settingsIn) {
+void manta::FraunhoferDiffraction::generate(const Aperture *aperture, const TextureNode *dirtMap, int outputResolution, math::real physicalSensorWidth, CmfTable *colorTable, Spectrum *sourceSpectrum, const Settings *settingsIn) {
 	Settings settings;
 	if (settingsIn == nullptr) defaultSettings(&settings);
 	else settings = *settingsIn;
@@ -34,6 +37,8 @@ void manta::FraunhoferDiffraction::generate(const Aperture *aperture, int output
 
 	m_physicalSensorWidth = physicalSensorWidth;
 	m_sensorElementWidth = sensorElementWidth;
+	m_colorTable = colorTable;
+	m_sourceSpectrum = sourceSpectrum;
 
 	math::real_d minFrequencyStep = sensorElementWidth / (maxWavelength * 1e-6);
 	math::real_d maxFrequencyStep = sensorElementWidth / (minWavelength * 1e-6);
@@ -45,36 +50,35 @@ void manta::FraunhoferDiffraction::generate(const Aperture *aperture, int output
 	sampleWindow = CftEstimator2D::getMinPhysicalDim(minFrequencyStep / settings.frequencyMultiplier, apertureRadius * 2);
 	estimatorSamples = CftEstimator2D::getMinSamples(maxFreq, sampleWindow, MAX_SAMPLES);
 
-	math::real dx = sampleWindow / estimatorSamples;
-	math::real dy = sampleWindow / estimatorSamples;
-	math::real cx = sampleWindow / 2;
-	math::real cy = sampleWindow / 2;
+	math::real dx = (math::real)(sampleWindow / estimatorSamples);
+	math::real dy = (math::real)(sampleWindow / estimatorSamples);
+	math::real cx = (math::real)(sampleWindow / 2);
+	math::real cy = (math::real)(sampleWindow / 2);
 
 	// Generate aperture function
 	ComplexMap2D apertureFunction;
 	apertureFunction.initialize(estimatorSamples, estimatorSamples);
 
-	TextureNode dirtTexture;
-	dirtTexture.loadFile("../../demos/textures/" "dirt.jpg", (math::real)2.2);
-
 	IntersectionPoint a;
 	for (int i = 0; i < estimatorSamples; i++) {
 		math::real x = i * dx - cx;
-		math::real u = (x * apertureRadius_inv) + 0.5;
+		math::real u = (x * apertureRadius_inv) + (math::real)0.5;
 
 		for (int j = 0; j < estimatorSamples; j++) {
 			math::real y = j * dy - cy;
-			math::real v = (y * apertureRadius_inv) + 0.5;
+			math::real v = (y * apertureRadius_inv) + (math::real)0.5;
 
 			a.m_textureCoodinates = math::loadVector(u, v);
-			//math::real dirt = 1.0f;
-			math::real dirt = math::getScalar(dirtTexture.sample(&a));
+
+
+			math::real dirt = (math::real)1.0;
+			if (dirtMap != nullptr) dirt = math::getScalar(dirtMap->sample(&a));
 
 			if (aperture->filter(x, y)) {
-				apertureFunction.set(math::Complex(1.0f * dirt, 0.0f), i, j);
+				apertureFunction.set(math::Complex((math::real_d)1.0 * dirt, (math::real_d)0.0), i, j);
 			}
 			else {
-				apertureFunction.set(math::Complex(0.0f, 0.0f), i, j);
+				apertureFunction.set(math::Complex((math::real_d)0.0, (math::real_d)0.0), i, j);
 			}
 		}
 	}
@@ -92,15 +96,13 @@ void manta::FraunhoferDiffraction::generate(const Aperture *aperture, int output
 
 	VectorMap2D temp;
 	temp.initialize(outputResolution, outputResolution);
-	for (int wavelength = minWavelength; wavelength <= maxWavelength; wavelength += wavelengthStep) {
-		addLayer(&estimator, wavelength, &temp);
-	}
+	generateMap(&estimator, minWavelength, maxWavelength, wavelengthStep, settings.textureSamples, &temp);
 
 	temp.roll(&m_diffractionPattern);
 	temp.destroy();
 	estimator.destroy();
 
-	normalize();
+	normalize(settings.deltaWeight);
 }
 
 void manta::FraunhoferDiffraction::destroy() {
@@ -113,139 +115,55 @@ manta::math::Vector manta::FraunhoferDiffraction::samplePattern(math::real dx, m
 	u = dx / (m_physicalSensorWidth);
 	v = dy / (m_physicalSensorWidth);
 
-	u /= 64;
-	v /= 64;
-
 	if (u < 0) u += (math::real)1.0;
 	if (v < 0) v += (math::real)1.0;
 
 	return m_diffractionPattern.sample(u, v);
 }
 
-manta::math::Vector2 manta::FraunhoferDiffraction::getPerturbance(math::real u, math::real v) const {
-	math::real dx, dy;
+void manta::FraunhoferDiffraction::normalize(math::real_d deltaWeight) {
+	int res = m_diffractionPattern.getWidth();
 
-	dx = u * (m_physicalSensorWidth / 2);
-	dy = v * (m_physicalSensorWidth / 2);
+	// For an accurate flux measurement of the halo, the center point must be 0
+	m_diffractionPattern.set(math::constants::Zero, 0, 0);
 
-	return math::Vector2(dx, dy);
-}
-
-manta::math::Vector manta::FraunhoferDiffraction::getTotalFlux() const {
-	int width = m_diffractionPattern.getWidth();
-	int height = m_diffractionPattern.getHeight();
-
-	math::Vector totalFlux = math::constants::Zero;
-	math::real area = m_physicalSensorWidth * m_physicalSensorWidth;
-
-	for (int i = 0; i < width; i++) {
-		for (int j = 0; j < height; j++) {
-			math::Vector fragment = m_diffractionPattern.get(i, j);
-			math::real r = math::getX(fragment);
-			math::real g = math::getY(fragment);
-			math::real b = math::getZ(fragment);
-
-			//totalFlux += 0.2126 * r + 0.7152 * g + 0.0722 * b;
-			totalFlux = math::add(totalFlux, fragment);
+	math::real_d totalFlux = 0;
+	for (int i = 0; i < res; i++) {
+		for (int j = 0; j < res; j++) {
+			totalFlux += math::getY(m_diffractionPattern.get(i, j));
 		}
 	}
 
-	totalFlux = math::div(totalFlux, math::loadScalar(area));
+	// Normalize
+	math::Vector norm = math::div(math::loadScalar((math::real)(1 - deltaWeight)), math::loadScalar((math::real)totalFlux));
+	for (int i = 0; i < res; i++) {
+		for (int j = 0; j < res; j++) {
+			math::Vector xyzColor = m_diffractionPattern.get(i, j);
+			xyzColor = math::mul(xyzColor, norm);
 
-	return totalFlux;
-}
+			ColorXyz xyzColorT = ColorXyz(math::getX(xyzColor), math::getY(xyzColor), math::getZ(xyzColor));
+			math::Vector rgbColor = m_colorTable->xyzToRgb(xyzColorT);
 
-void manta::FraunhoferDiffraction::normalize() {
-	math::Vector maxValue = m_diffractionPattern.get(0, 0);
-
-	/*
-	for (int i = 0; i < m_diffractionPattern.getWidth(); i++) {
-		for (int j = 0; j < m_diffractionPattern.getHeight(); j++) {
-			maxValue = math::componentMax(m_diffractionPattern.get(i, j), maxValue);
+			m_diffractionPattern.set(rgbColor, i, j);
 		}
-	}*/
-
-	math::Vector scale = math::div(math::constants::One, maxValue);
-	scale = math::mask(scale, math::constants::MaskOffW);
-
-	m_diffractionPattern.scale(scale);
-}
-
-manta::math::Vector manta::FraunhoferDiffraction::wavelengthToRgb(math::real_d wavelength) {
-	math::real_d r = 0, g = 0, b = 0;
-
-	if (wavelength >= 380 && wavelength <= 439) {
-		r = -(wavelength - 440) / (440 - 380);
-		g = 0.0;
-		b = 1.0;
-	}
-	else if (wavelength >= 440 && wavelength <= 489) {
-		r = 0.0;
-		g = (wavelength - 440) / (490 - 440);
-		b = 1.0;
-	}
-	else if (wavelength >= 490 && wavelength <= 509) {
-		r = 0.0;
-		g = 1.0;
-		b = -(wavelength - 510) / (510 - 490);
-	}
-	else if (wavelength >= 510 && wavelength <= 579) {
-		r = (wavelength - 510) / (580 - 510);
-		g = 1.0;
-		b = 0.0;
-	}
-	else if (wavelength >= 580 && wavelength <= 644) {
-		r = 1.0;
-		g = -(wavelength - 645) / (645 - 580);
-		b = 0.0;
-	}
-	else if (wavelength >= 645 && wavelength <= 780) {
-		r = 1.0;
-		g = 0.0;
-		b = 0.0;
-	}
-	else {
-		r = 0.0;
-		g = 0.0;
-		b = 0.0;
 	}
 
-	math::real factor;
-	if (wavelength >= 380 && wavelength <= 419) {
-		factor = 0.3 + 0.7 * (wavelength - 380) / (420 - 380);
-	}
-	else if (wavelength >= 420 && wavelength <= 700) {
-		factor = 1.0;
-	}
-	else if (wavelength >= 701 && wavelength <= 780) {
-		factor = 0.3 + 0.7 * (780 - wavelength) / (780 - 700);
-	}
-	else {
-		factor = 0.0;
-	}
-
-	return math::mul(math::loadVector(r, g, b), math::loadScalar(factor));
-}
-
-manta::math::real_d manta::FraunhoferDiffraction::blackBodyRadiation(math::real_d wavelength) {
-	// Approximate for visible light wavelengths
-	math::real_d w_2 = wavelength * wavelength;
-	math::real_d w_m4 = 1 / (w_2 * w_2);
-
-	return 800000000 * w_m4;
+	m_diffractionPattern.set(math::loadScalar((math::real)deltaWeight), 0, 0);
 }
 
 void manta::FraunhoferDiffraction::defaultSettings(Settings *settings) {
 	settings->maxSamples = 4096;
+	settings->textureSamples = 10;
 	settings->maxWaveLength = 780;
 	settings->minWaveLength = 380;
 	settings->wavelengthStep = 5;
 	settings->frequencyMultiplier = 3.0;
+	settings->deltaWeight = (math::real_d)0.93;
 }
 
 #include <iostream>
 
-void manta::FraunhoferDiffraction::addLayer(const CftEstimator2D *estimator, math::real_d wavelength, VectorMap2D *target) {
+void manta::FraunhoferDiffraction::generateMap(const CftEstimator2D *estimator, int startWavelength, int endWavelength, int wavelengthStep, int textureSamples, VectorMap2D *target) const {
 	int res = target->getWidth();
 
 	math::real_d sdx = m_sensorElementWidth;
@@ -255,28 +173,51 @@ void manta::FraunhoferDiffraction::addLayer(const CftEstimator2D *estimator, mat
 	math::real_d maxFreqX = estimator->getHorizontalFreqRange();
 	math::real_d maxFreqY = estimator->getVerticalFreqRange();
 
-	math::Vector pureColor = wavelengthToRgb((math::real_d)wavelength);
-	math::real blackBodyWeight = blackBodyRadiation(wavelength);
+	int steps = (endWavelength - startWavelength) / wavelengthStep;
+	Spectrum spectrum;
+	spectrum.initialize(steps + 1, (math::real)startWavelength, (math::real)endWavelength, nullptr);
 
 	for (int i = 0; i < res; i++) {
 		math::real_d x = i * sdx - scx;
-		math::real_d freq_x = (x / wavelength) * 1E6;
-
-		if (abs(freq_x) > maxFreqX) continue;
 
 		for (int j = 0; j < res; j++) {
 			math::real_d y = j * sdy - scy;
-			math::real_d freq_y = (y / wavelength) * 1E6;
+			spectrum.clear();
 
-			if (abs(freq_y) > maxFreqY) continue;
+			for (int wavelength = startWavelength; wavelength <= endWavelength; wavelength += wavelengthStep) {
+				math::real_d freqSpace = (sdx * 1E6 / wavelength) * 0.9;
 
-			math::Complex v = estimator->sample(freq_x, freq_y);
-			v = v * v.conjugate();
+				for (int s = 0; s < textureSamples; s++) {
+					math::real randX = math::uniformRandom() - (math::real)0.5;
+					math::real randY = math::uniformRandom() - (math::real)0.5;
 
-			math::real_d intensity = v.r;
-			math::Vector baseColor = target->get(i, j);
+					math::real_d freq_x = ((x * 1E6) / wavelength);
+					math::real_d freq_y = ((y * 1E6) / wavelength);
 
-			target->set(math::add(math::mul(pureColor, math::loadScalar(intensity)), baseColor), i, j);
+					freq_x += randX * freqSpace;
+					freq_y += randY * freqSpace;
+
+					if (abs(freq_x) > maxFreqX) continue;
+					if (abs(freq_y) > maxFreqY) continue;
+
+					math::Complex v = estimator->sample(freq_x, freq_y, (sdx / wavelength) * 1E6);
+					v = v * v.conjugate();
+
+					math::real src = m_sourceSpectrum->getValueContinuous((math::real)wavelength);
+					int wave_i = (int)((wavelength - startWavelength) / (math::real_d)wavelengthStep + 0.5);
+					math::real prev = spectrum.getValueDiscrete(wave_i);
+					spectrum.set(wave_i, prev + src * (math::real)v.r / (wavelength * wavelength));
+				}
+			}
+
+			ColorXyz xyzColor = m_colorTable->spectralToXyz(&spectrum);
+			target->set(
+				math::loadVector(
+					(math::real)xyzColor.x,
+					(math::real)xyzColor.y,
+					(math::real)xyzColor.z), i, j);
 		}
 	}
+
+	spectrum.destroy();
 }

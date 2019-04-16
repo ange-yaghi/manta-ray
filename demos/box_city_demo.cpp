@@ -34,7 +34,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	BilayerBSDF blockBSDF;
 	blockBSDF.setCoatingDistribution(&blockCoating);
 	blockBSDF.setDiffuseMaterial(&lambert);
-	blockBSDF.setDiffuse(getColor(0x50, 0x50, 0x50)); // 0xf1, 0xc4, 0x0f
+	blockBSDF.setDiffuse(getColor(0xf1, 0xc4, 0x0f)); // 0xf1, 0xc4, 0x0f
 	blockBSDF.setSpecularAtNormal(math::loadVector(0.02f, 0.02f, 0.02f));
 	SimpleBSDFMaterial *blockMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	blockMaterial->setName("Block");
@@ -53,7 +53,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	SimpleBSDFMaterial *sunMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	sunMaterial->setName("Sun");
 	sunMaterial->setReflectance(math::loadVector(0.0f, 0.0f, 0.0f));
-	sunMaterial->setEmission(math::loadVector(100.0f, 100.0f, 100.0f));
+	sunMaterial->setEmission(math::loadVector(100000.0f, 100000.0f, 100000.0f));
 	sunMaterial->setBSDF(nullptr);
 
 	// Create all scene geometry
@@ -68,7 +68,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
 	// Create scene objects
 	KDTree kdtree;
-	kdtree.initialize(100.0f, math::constants::Zero);
+	kdtree.initialize(1000.0f, math::constants::Zero);
 	kdtree.analyze(&boxCity, 2);
 
 	if (WRITE_KDTREE_TO_FILE) {
@@ -100,7 +100,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
 	manta::SimpleLens lens;
 	manta::PolygonalAperture polygonalAperture;
-	polygonalAperture.initialize(6);
+	polygonalAperture.initialize(8);
 
 	if (POLYGON_APERTURE) lens.setAperture(&polygonalAperture);
 	lens.initialize();
@@ -116,6 +116,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
 	std::string fname = createUniqueRenderFilename("box_city_demo", samplesPerPixel);
 	std::string imageFname = std::string(RENDER_OUTPUT) + "bitmap/" + fname + ".jpg";
+	std::string fraunFname = std::string(RENDER_OUTPUT) + "bitmap/" + fname + "_fraun" + ".jpg";
 	std::string convFname = std::string(RENDER_OUTPUT) + "bitmap/" + fname + "_conv" + ".jpg";
 	std::string rawFname = std::string(RENDER_OUTPUT) + "raw/" + fname + ".fpm";
 
@@ -180,7 +181,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
 	// Initialize and run the ray tracer
 	rayTracer.initialize(200 * MB, 50 * MB, 12, 100, true);
-	rayTracer.setBackgroundColor(math::loadVector(1.0, 1.0, 1.0));
+	rayTracer.setBackgroundColor(getColor(0xff, 0xff, 0xFF));
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 	
 	if (TRACE_SINGLE_PIXEL) {
@@ -207,7 +208,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 		imageMapG.resizeSafe(&imageMapGSafe, &margins); imageMapG.destroy();
 		imageMapB.resizeSafe(&imageMapBSafe, &margins); imageMapB.destroy();
 
-		polygonalAperture.setRadius(5.5f);
+		polygonalAperture.setRadius(0.5f);
 
 		FraunhoferDiffraction testFraun;
 		FraunhoferDiffraction::Settings settings;
@@ -215,7 +216,12 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 		settings.frequencyMultiplier = 3.0;
 		settings.maxSamples = 4096;
 
-		testFraun.generate(&polygonalAperture, imageMapRSafe.getWidth(), 0.15f, &settings);
+		CmfTable colorTable;
+		Spectrum sourceSpectrum;
+		colorTable.loadCsv(CMF_PATH "xyz_cmf_31.csv");
+		sourceSpectrum.loadCsv(CMF_PATH "d65_lighting.csv");
+
+		testFraun.generate(&polygonalAperture, nullptr, imageMapRSafe.getWidth(), 0.50f, &colorTable, &sourceSpectrum, &settings);
 
 		JpegWriter writer;
 		ImageByteBuffer b;
@@ -224,7 +230,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 		temp.scale(math::loadScalar(100000.0f));
 		temp.fillByteBuffer(&b);
 		temp.destroy();
-		writer.write(&b, convFname.c_str());
+		writer.write(&b, fraunFname.c_str());
 		b.free();
 
 		ComplexMap2D diffractionR, diffractionG, diffractionB;

@@ -42,8 +42,19 @@ TEST(ColorTests, ColorSpaceD65LightingTest) {
 	EXPECT_NEAR(d65.y, 100.0, 1E-1);
 	EXPECT_NEAR(d65.z, 108.883, 1E-1);
 
-	math::Vector rgb = table.xyzToRgb(d65 * (1 / 100.0f));
+	math::Vector rgb = table.xyzToRgb(d65 * (1 / 100.0f) * 200);
 
 	spectrum.destroy();
+	table.destroy();
+}
+
+TEST(ColorTests, ColorSpaceBlueTest) {
+	CmfTable table;
+	bool result = table.loadCsv(CMF_PATH "xyz_cmf_31.csv");
+
+	math::Vector rgb = table.pureToRgb(460);
+
+	EXPECT_TRUE(result);
+
 	table.destroy();
 }

@@ -65,7 +65,7 @@ void manta_demo::apertureDemo(int samplesPerPixel, int resolutionX, int resoluti
 	//manta::CircularAperture aperture;
 	manta::PolygonalAperture aperture;
 	aperture.setRadius((math::real)0.25);
-	aperture.initialize(8, 0.f, false);
+	aperture.initialize(3, 0.f, false);
 
 	lens.setAperture(&aperture);
 	lens.initialize();
@@ -117,7 +117,6 @@ void manta_demo::apertureDemo(int samplesPerPixel, int resolutionX, int resoluti
 
 	// Output the results to a scene buffer
 	ImagePlane sceneBuffer;
-	ImagePlane planeWaveApproximation;
 
 	// Run the ray tracer
 	rayTracer.initialize(200 * MB, 50 * MB, 12, 100, true);
@@ -128,18 +127,7 @@ void manta_demo::apertureDemo(int samplesPerPixel, int resolutionX, int resoluti
 		rayTracer.tracePixel(1286, 1157, &scene, group, &sceneBuffer);
 	}
 	else {
-		std::cout << "Pass 1 ================================" << std::endl;
 		rayTracer.traceAll(&scene, group, &sceneBuffer);
-
-		if (LENS_SIMULATION) {
-			std::cout << "Pass 2 ================================" << std::endl;
-			group->setSampleCount(samplesPerPixel / 2);
-			lens.getAperture()->setRadius(0.01f);
-			rayTracer.traceAll(&scene, group, &planeWaveApproximation);
-		}
-		else {
-			sceneBuffer.clone(&planeWaveApproximation);
-		}
 	}
 
 	// Clean up the camera
@@ -147,7 +135,7 @@ void manta_demo::apertureDemo(int samplesPerPixel, int resolutionX, int resoluti
 
 	// Try convolution
 	ComplexMap2D imageMap, imageMapSafe;
-	imageMap.copy(&planeWaveApproximation, 0);
+	imageMap.copy(&sceneBuffer, 0);
 
 	Margins margins;
 	imageMap.resizeSafe(&imageMapSafe, &margins);
@@ -156,7 +144,12 @@ void manta_demo::apertureDemo(int samplesPerPixel, int resolutionX, int resoluti
 	lens.getAperture()->setRadius(5.5f);
 
 	FraunhoferDiffraction testFraun;
-	testFraun.generate(&aperture, imageMapSafe.getWidth(), 0.15f);
+	CmfTable colorTable;
+	Spectrum sourceSpectrum;
+	colorTable.loadCsv(CMF_PATH "xyz_cmf_31.csv");
+	sourceSpectrum.loadCsv(CMF_PATH "d65_lighting.csv");
+
+	testFraun.generate(&aperture, nullptr, imageMapSafe.getWidth(), 0.25f, &colorTable, &sourceSpectrum, nullptr);
 
 	ComplexMap2D diffractionR, diffractionG, diffractionB;
 	diffractionR.initialize(imageMapSafe.getWidth(), imageMapSafe.getHeight());
@@ -217,7 +210,6 @@ void manta_demo::apertureDemo(int samplesPerPixel, int resolutionX, int resoluti
 	writeJpeg(imageFname.c_str(), &sceneBuffer, 95);
 
 	sceneBuffer.destroy();
-	planeWaveApproximation.destroy();
 	rayTracer.destroy();
 	//aperture.destroy();
 

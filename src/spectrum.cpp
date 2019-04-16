@@ -108,6 +108,30 @@ bool manta::Spectrum::loadCsv(const char *fname) {
 	return true;
 }
 
+void manta::Spectrum::writeCsv(const char *fname) const {
+	assert(m_values != nullptr);
+
+	std::ofstream file(fname);
+
+	math::real wavelengthStep = getStep();
+
+	for (int i = 0; i < m_pointCount; i++) {
+		math::real wavelength = wavelengthStep * i + m_startWavelength;
+		math::real power = m_values[i];
+		file << wavelength << "," << power << std::endl;
+	}
+
+	file.close();
+}
+
+void manta::Spectrum::clear() {
+	assert(m_values != nullptr);
+
+	for (int i = 0; i < m_pointCount; i++) {
+		m_values[i] = (math::real)0.0;
+	}
+}
+
 void manta::Spectrum::add(const Spectrum &b) {
 	assert(b.m_endWaveLength == m_endWaveLength);
 	assert(b.m_startWavelength == m_startWavelength);
@@ -133,8 +157,8 @@ manta::math::real manta::Spectrum::getValueContinuous(math::real wavelength) con
 	math::real indexApprox = (wavelength - m_startWavelength) / step;
 	int prevIndex = (int)indexApprox;
 
-	if (prevIndex < 0) return m_values[0];
-	if (prevIndex >= m_pointCount - 1) return m_values[m_pointCount - 1];
+	if (prevIndex < 0) return (math::real)0.0;
+	if (prevIndex >= m_pointCount - 1) return (math::real)0.0;
 
 	int nextIndex = prevIndex + 1;
 	math::real s = indexApprox - (math::real)prevIndex;

@@ -81,7 +81,8 @@ using namespace manta;
 #define WORKSPACE_PATH "../../../workspace/"
 #define TMP_PATH (WORKSPACE_PATH "tmp/")
 
-void writeToJpeg(const ScalarMap2D *scalarMap, const std::string &fname);
+
+void writeToJpeg(const RealMap2D *scalarMap, const std::string &fname);
 void writeToJpeg(const VectorMap2D *vectorMap, const std::string &fname);
 void writeToJpeg(const ImagePlane *plane, const std::string &fname);
 void writeToJpeg(const ComplexMap2D *plane, const std::string &fname, Margins *margins = nullptr);

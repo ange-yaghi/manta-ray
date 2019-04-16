@@ -59,6 +59,8 @@ namespace manta {
 			};
 		};
 		typedef Vector2_t<real> Vector2;
+		typedef Vector2_t<real_d> Vector2_d;
+		typedef Vector2_t<real_f> Vector2_f;
 
 		template<typename T>
 		struct Vector3_t {
@@ -69,6 +71,10 @@ namespace manta {
 			union {
 				struct {
 					T x, y, z;
+				};
+
+				struct {
+					T r, g, b;
 				};
 
 				T vec[3];
@@ -83,6 +89,8 @@ namespace manta {
 			}
 		};
 		typedef Vector3_t<real> Vector3;
+		typedef Vector3_t<real_d> Vector3_d;
+		typedef Vector3_t<real_f> Vector3_f;
 
 		template<typename T>
 		struct Vector4_t {

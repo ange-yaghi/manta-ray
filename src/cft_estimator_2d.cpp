@@ -27,13 +27,16 @@ void manta::CftEstimator2D::initialize(const ComplexMap2D *spatialFunction, math
 
 	dftApprox.cft(&m_discreteApproximation, phyiscalWidth, physicalHeight);
 	dftApprox.destroy();
+
+	m_mipMap.initialize(&m_discreteApproximation);
 }
 
 void manta::CftEstimator2D::destroy() {
 	m_discreteApproximation.destroy();
+	m_mipMap.destroy();
 }
 
-manta::math::Complex manta::CftEstimator2D::sample(math::real_d freq_x, math::real_d freq_y) const {
+manta::math::Complex manta::CftEstimator2D::sample(math::real_d freq_x, math::real_d freq_y, math::real_d w) const {
 	math::real_d k_x, k_y;
 
 	k_x = freq_x * m_physicalWidth;
@@ -43,7 +46,23 @@ manta::math::Complex manta::CftEstimator2D::sample(math::real_d freq_x, math::re
 	k_x = (k_x < 0) ? m_horizontalSamples + k_x : k_x;
 	k_y = (k_y < 0) ? m_verticalSamples + k_y : k_y;
 
-	return m_discreteApproximation.sampleDiscrete(k_x, k_y);
+	return m_discreteApproximation.sampleDiscrete((int)k_x, (int)k_y);
+
+	// Calculate uv coordinates
+	/*
+	math::real_d u, v, w_scaled;
+	u = (freq_x * m_physicalWidth);
+	v = (freq_y * m_physicalHeight);
+
+	u = (u < 0) ? (math::real_d)m_horizontalSamples + u : u;
+	v = (v < 0) ? (math::real_d)m_verticalSamples + v : v;
+
+	u /= m_horizontalSamples;
+	v /= m_verticalSamples;
+
+	w_scaled = (w * m_physicalWidth) / m_discreteApproximation.getWidth();
+
+	return m_mipMap.sample(u, v, w_scaled);*/
 }
 
 manta::math::real_d manta::CftEstimator2D::getHorizontalFreqRange() const {
@@ -77,8 +96,10 @@ manta::math::real_d manta::CftEstimator2D::getMinPhysicalDim(math::real_d freqSt
 }
 
 int manta::CftEstimator2D::getMinSamples(math::real_d maxFreq, math::real_d physicalDim, int maxSamples) {
-	int firstApprox = maxFreq * physicalDim * 2;
+	// Calculate a rough approximation based on the maximum frequency
+	int firstApprox = (int)(maxFreq * physicalDim * 2);
 
+	// Round to a power of 2
 	int minSamples = 1;
 	while (minSamples < firstApprox && (minSamples < maxSamples || maxSamples < 0)) {
 		minSamples <<= 1;

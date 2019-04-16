@@ -15,6 +15,7 @@
 #define MODEL_PATH "../../demos/models/"
 #define TEXTURE_PATH "../../demos/textures/"
 #define RENDER_OUTPUT (WORKSPACE_PATH "render/")
+#define CMF_PATH "../../demos/cmfs/"
 
 #elif EXECUTION_ENV == STANDALONE
 
