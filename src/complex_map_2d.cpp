@@ -41,6 +41,9 @@ void manta::ComplexMap2D::destroy() {
 manta::math::Complex manta::ComplexMap2D::get(int u, int v) const {
 	assert(m_data != nullptr);
 
+	if (u < 0 || u >= m_width) return math::Complex();
+	if (v < 0 || v >= m_height) return math::Complex();
+
 	return m_data[v * m_width + u];
 }
 
@@ -84,7 +87,7 @@ void manta::ComplexMap2D::fillByteBuffer(ImageByteBuffer *target, Margins *margi
 			ImageByteBuffer::Color color;
 			math::Complex value = get(u + startX, v + startY);
 
-			target->convertToColor(math::loadVector(value.r, (math::real)0.0, value.i), &color);
+			target->convertToColor(math::loadVector((math::real)value.r, (math::real)0.0, (math::real)value.i), &color);
 			target->setPixel(v, u, color);
 		}
 	}
@@ -329,7 +332,7 @@ void manta::ComplexMap2D::copy(const ComplexMap2D *b) {
 	}
 }
 
-void manta::ComplexMap2D::copy(const ScalarMap2D *b) {
+void manta::ComplexMap2D::copy(const RealMap2D *b) {
 	initialize(b->getWidth(), b->getHeight());
 
 	for (int i = 0; i < m_width; i++) {

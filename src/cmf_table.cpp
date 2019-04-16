@@ -54,7 +54,7 @@ bool manta::CmfTable::loadCsv(const char *fname) {
 		return false;
 	}
 
-	m_entryCount = tempEntries.size();
+	m_entryCount = (int)tempEntries.size();
 	m_entries = StandardAllocator::Global()->allocate<Entry>(m_entryCount);
 
 	for (int i = 0; i < m_entryCount; i++) {
@@ -77,15 +77,15 @@ manta::math::Vector manta::CmfTable::pureToRgb(math::real_d wavelength) const {
 	assert(m_entries != nullptr);
 
 	Entry entry = sampleXyz(wavelength);
-	ColorRgb rgb = RgbSpace::convertToSrgb(entry.colorXyz);
-	return math::loadVector(rgb.x, rgb.y, rgb.z);
+	ColorRgb rgb = RgbSpace::srgb.convertToRgb(entry.colorXyz);
+	return math::loadVector((math::real)rgb.x, (math::real)rgb.y, (math::real)rgb.z);
 }
 
 manta::math::Vector manta::CmfTable::xyzToRgb(const ColorXyz &color) const {
 	assert(m_entries != nullptr);
 
-	ColorRgb rgb = RgbSpace::convertToSrgb(color);
-	return math::loadVector(rgb.x, rgb.y, rgb.z);
+	ColorRgb rgb = RgbSpace::srgb.convertToRgb(color);
+	return math::loadVector((math::real)rgb.x, (math::real)rgb.y, (math::real)rgb.z);
 }
 
 manta::CmfTable::Entry manta::CmfTable::sampleXyz(math::real_d wavelength) const {

@@ -39,10 +39,9 @@
     <ClCompile Include="..\..\src\kd_tree.cpp" />
     <ClCompile Include="..\..\src\lambertian_bsdf.cpp" />
     <ClCompile Include="..\..\src\manta_math.cpp" />
+    <ClCompile Include="..\..\src\mipmap.cpp" />
     <ClCompile Include="..\..\src\rgb_space.cpp" />
-    <ClCompile Include="..\..\src\scalar_map_2d.cpp" />
     <ClCompile Include="..\..\src\signal_processing.cpp" />
-    <ClCompile Include="..\..\src\simple_diffraction_lens.cpp" />
     <ClCompile Include="..\..\src\spectrum.cpp" />
     <ClCompile Include="..\..\src\vector_map_2d.cpp" />
     <ClCompile Include="..\..\src\material_manager.cpp" />
@@ -127,10 +126,10 @@
     <ClInclude Include="..\..\include\kd_tree.h" />
     <ClInclude Include="..\..\include\lambertian_bsdf.h" />
     <ClInclude Include="..\..\include\margins.h" />
+    <ClInclude Include="..\..\include\mipmap.h" />
     <ClInclude Include="..\..\include\rgb_space.h" />
     <ClInclude Include="..\..\include\scalar_map_2d.h" />
     <ClInclude Include="..\..\include\signal_processing.h" />
-    <ClInclude Include="..\..\include\simple_diffraction_lens.h" />
     <ClInclude Include="..\..\include\spectrum.h" />
     <ClInclude Include="..\..\include\vector_map_2d.h" />
     <ClInclude Include="..\..\include\material_manager.h" />

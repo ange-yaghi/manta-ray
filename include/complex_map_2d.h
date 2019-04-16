@@ -2,6 +2,7 @@
 #define COMPLEX_MAP_2D_H
 
 #include <manta_math.h>
+#include <scalar_map_2d.h>
 
 #include <complex_math.h>
 #include <margins.h>
@@ -11,7 +12,6 @@ namespace manta {
 	// Forward declarations
 	class ImageByteBuffer;
 	class VectorMap2D;
-	class ScalarMap2D;
 	class ImagePlane;
 
 	class ComplexMap2D {
@@ -53,9 +53,23 @@ namespace manta {
 		// Binary operations
 		void multiply(const ComplexMap2D *b);
 		void copy(const ComplexMap2D *b);
-		void copy(const ScalarMap2D *b);
+		void copy(const RealMap2D *b);
 		void copy(const ImagePlane *b, int channel);
 		void copy(const VectorMap2D *b, int channel);
+
+		// Resampling operations
+		void boxDownsample(ComplexMap2D *target) const {
+			target->initialize(m_width / 2, m_height / 2);
+
+			for (int i = 0; i < m_width; i += 2) {
+				for (int j = 0; j < m_height; j += 2) {
+					math::Complex sum = get(i, j) + get(i + 1, j) + get(i, j + 1) + get(i + 1, j + 1);
+					sum = sum * ((math::real)1.0 / 4);
+
+					target->set(sum, i / 2, j / 2);
+				}
+			}
+		}
 
 	protected:
 		math::Complex *m_data;

@@ -4,6 +4,7 @@
 #include <complex_math.h>
 #include <manta_math.h>
 #include <complex_map_2d.h>
+#include <mipmap.h>
 
 namespace manta {
 
@@ -18,7 +19,7 @@ namespace manta {
 		void initialize(const ComplexMap2D *spatialFunction, math::real_d phyiscalWidth, math::real_d physicalHeight);
 		void destroy();
 
-		math::Complex sample(math::real_d freq_x, math::real_d freq_y) const;
+		math::Complex sample(math::real_d freq_x, math::real_d freq_y, math::real_d w) const;
 
 		const ComplexMap2D *getApproximation() const { return &m_discreteApproximation; }
 
@@ -39,6 +40,7 @@ namespace manta {
 
 	protected:
 		ComplexMap2D m_discreteApproximation;
+		Mipmap<ComplexMap2D, math::Complex> m_mipMap;
 
 		math::real_d m_physicalWidth;
 		math::real_d m_physicalHeight;

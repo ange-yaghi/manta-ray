@@ -5,7 +5,7 @@
 #include <image_byte_buffer.h>
 #include <jpeg_writer.h>
 
-void writeToJpeg(const ScalarMap2D *scalarMap, const std::string &fname) {
+void writeToJpeg(const RealMap2D *scalarMap, const std::string &fname) {
 	ImageByteBuffer byteBuffer;
 	scalarMap->fillByteBuffer(&byteBuffer);
 

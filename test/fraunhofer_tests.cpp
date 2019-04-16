@@ -8,6 +8,9 @@
 #include <polygonal_aperture.h>
 #include <image_byte_buffer.h>
 #include <jpeg_writer.h>
+#include <color.h>
+#include <cmf_table.h>
+#include <spectrum.h>
 
 using namespace manta;
 
@@ -21,17 +24,18 @@ TEST(FraunhoferTests, FraunhoferSampleTest) {
 	settings.frequencyMultiplier = 3;
 
 	FraunhoferDiffraction diff;
-	diff.generate(&aperture, 64, 0.1f, &settings);
+	CmfTable colorTable;
+	Spectrum sourceSpectrum;
+	colorTable.loadCsv(CMF_PATH "xyz_cmf_31.csv");
+	sourceSpectrum.loadCsv(CMF_PATH "d65_lighting.csv");
+
+	diff.generate(&aperture, nullptr, 256, 0.15f, &colorTable, &sourceSpectrum, &settings);
 
 	math::Vector s = diff.samplePattern(0.0, 0.0);
-	math::Vector2 l = diff.getPerturbance(0, 0);
 
-	EXPECT_NEAR(l.x, 0.0f, 1E-4);
-	EXPECT_NEAR(l.y, 0.0f, 1E-4);
+	CHECK_VEC_EQ(s, math::loadScalar(settings.deltaWeight), 1E-3);
 
-	CHECK_VEC_EQ(s, math::loadVector(1.0, 1.0, 1.0), 1E-3);
-
-	math::Vector s2 = diff.samplePattern(0.1, 0.1);
+	math::Vector s2 = diff.samplePattern(0.1f, 0.1f);
 
 	math::real mag_s1 = math::getScalar(math::magnitude(s));
 	math::real mag_s2 = math::getScalar(math::magnitude(s2));
@@ -39,4 +43,6 @@ TEST(FraunhoferTests, FraunhoferSampleTest) {
 	EXPECT_TRUE(mag_s1 > mag_s2);
 
 	diff.destroy();
+	colorTable.destroy();
+	sourceSpectrum.destroy();
 }

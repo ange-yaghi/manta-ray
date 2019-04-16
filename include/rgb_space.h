@@ -6,24 +6,37 @@
 
 namespace manta {
 
-	typedef math::Matrix33_t<math::real_d> RgbXyzMatrix;
-
 	class RgbSpace {
 	public:
-		static const RgbXyzMatrix CieXyzToSrgb;
+		static const RgbSpace srgb;
 
 	public:
-		enum WorkingSpace {
-			SRGB
-		};
+		RgbSpace() {}
+		RgbSpace(const math::Vector3_d &x, const math::Vector3_d &y, const math::Vector2_d whitePoint) { m_x = x; m_y = y; m_whitePoint = whitePoint; }
+		~RgbSpace() {}
 
-	public:
-		static const RgbXyzMatrix &getRgbMatrix(WorkingSpace space);
-
-		static ColorRgb convertToSrgb(const ColorXyz &cieXyz);
-		static math::real_d adjustGammaSrgb(math::real_d u);
+		static math::real_d applyGammaSrgb(math::real_d u);
+		static math::real_d inverseGammaSrgb(math::real_d u);
 
 		static math::real_d clip(math::real_d u);
+
+		void setX(const math::Vector3_d &x) { m_x = x; }
+		math::Vector3_d getX() const { return m_x; }
+
+		void setY(const math::Vector3_d &y) { m_y = y; }
+		math::Vector3_d getY() const { return m_y; }
+
+		void setWhitePoint(const math::Vector2_d &w) { m_whitePoint = w; }
+		math::Vector2_d getWhitePoint() const { return m_whitePoint; }
+
+		ColorRgb convertToRgb(const ColorXyy &col) const;
+
+		static ColorXyy xyzToXyy(const ColorXyz &col);
+
+	protected:
+		math::Vector3_d m_x;
+		math::Vector3_d m_y;
+		math::Vector2_d m_whitePoint;
 	};
 
 } /* namespace manta */

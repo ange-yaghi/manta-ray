@@ -265,6 +265,12 @@
     <Filter Include="Source Files\color">
       <UniqueIdentifier>{2658ff2e-0936-4726-a15e-48f11d4346b6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\math\maps">
+      <UniqueIdentifier>{61cdf03b-ad12-48e5-8bb3-a1933704d404}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\math\maps">
+      <UniqueIdentifier>{d84a2f0b-44d7-4eba-bf6a-20c10a9135a5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -480,16 +486,7 @@
     <ClCompile Include="..\..\src\circle_convolution.cpp">
       <Filter>Source Files\image-plane\convolution\lib</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\vector_map_2d.cpp">
-      <Filter>Source Files\math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\scalar_map_2d.cpp">
-      <Filter>Source Files\math</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\signal_processing.cpp">
-      <Filter>Source Files\math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\complex_map_2d.cpp">
       <Filter>Source Files\math</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\cft_estimator_2d.cpp">
@@ -497,9 +494,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\fraunhofer_diffraction.cpp">
       <Filter>Source Files\camera-emulation\diffraction</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\simple_diffraction_lens.cpp">
-      <Filter>Source Files\camera-emulation\lenses</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\cmf_table.cpp">
       <Filter>Source Files\color</Filter>
@@ -509,6 +503,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\spectrum.cpp">
       <Filter>Source Files\color</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\complex_map_2d.cpp">
+      <Filter>Source Files\math\maps</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\vector_map_2d.cpp">
+      <Filter>Source Files\math\maps</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mipmap.cpp">
+      <Filter>Source Files\math\maps</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -776,19 +779,10 @@
     <ClInclude Include="..\..\include\starburst_approximation.h">
       <Filter>Header Files\image-plane\convolution\lib</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\vector_map_2d.h">
-      <Filter>Header Files\math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\scalar_map_2d.h">
-      <Filter>Header Files\math</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\signal_processing.h">
       <Filter>Header Files\math</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\complex_math.h">
-      <Filter>Header Files\math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\complex_map_2d.h">
       <Filter>Header Files\math</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\margins.h">
@@ -799,9 +793,6 @@
     </ClInclude>
     <ClInclude Include="..\..\include\fraunhofer_diffraction.h">
       <Filter>Header Files\camera-emulation\diffraction</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\simple_diffraction_lens.h">
-      <Filter>Header Files\camera-emulation\lenses</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\cmf_table.h">
       <Filter>Header Files\color</Filter>
@@ -814,6 +805,18 @@
     </ClInclude>
     <ClInclude Include="..\..\include\spectrum.h">
       <Filter>Header Files\color</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\scalar_map_2d.h">
+      <Filter>Header Files\math\maps</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\vector_map_2d.h">
+      <Filter>Header Files\math\maps</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\complex_map_2d.h">
+      <Filter>Header Files\math\maps</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\mipmap.h">
+      <Filter>Header Files\math\maps</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -14,8 +14,12 @@ namespace manta {
 		void destroy();
 
 		bool loadCsv(const char *fname);
+		void writeCsv(const char *fname) const;
 
+		void clear();
 		void add(const Spectrum &b);
+
+		void set(int index, math::real value) { m_values[index] = value; }
 
 		int getPointCount() const { return m_pointCount; }
 		math::real getStep() const { return (m_endWaveLength - m_startWavelength) / (m_pointCount - 1); }

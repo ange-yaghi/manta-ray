@@ -23,7 +23,6 @@
 #include <lens_camera_ray_emitter.h>
 #include <lens_camera_ray_emitter_group.h>
 #include <simple_lens.h>
-#include <simple_diffraction_lens.h>
 #include <texture_node.h>
 #include <standard_allocator.h>
 #include <grid_sampler.h>
@@ -53,6 +52,9 @@
 #include <image_byte_buffer.h>
 #include <jpeg_writer.h>
 #include <complex_map_2d.h>
+#include <cmf_table.h>
+#include <color.h>
+#include <spectrum.h>
 
 namespace manta_demo {
 
