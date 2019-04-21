@@ -11,7 +11,7 @@ manta::MicrofacetGlassBSDF::~MicrofacetGlassBSDF() {
 
 }
 
-void manta::MicrofacetGlassBSDF::initialize(const IntersectionPoint *surfaceInteraction, MaterialNodeMemory *memory, StackAllocator *stackAllocator) const {
+void manta::MicrofacetGlassBSDF::initializeSessionMemory(const IntersectionPoint *surfaceInteraction, NodeSessionMemory *memory, StackAllocator *stackAllocator) const {
 
 }
 
@@ -21,8 +21,8 @@ manta::math::Vector manta::MicrofacetGlassBSDF::sampleF(const IntersectionPoint 
 	math::real u = math::uniformRandom();
 
 	// Allocate required memory
-	MaterialNodeMemory s;
-	m_distribution->initialize(surfaceInteraction, &s, stackAllocator);
+	NodeSessionMemory s;
+	m_distribution->initializeSessionMemory(surfaceInteraction, &s, stackAllocator);
 
 	// Generate microfacet normal
 	math::Vector m = m_distribution->generateMicrosurfaceNormal(&s);
@@ -49,7 +49,7 @@ manta::math::Vector manta::MicrofacetGlassBSDF::sampleF(const IntersectionPoint 
 			cosThetaO <= (math::real)0.0 ||
 			cosThetaI <= (math::real)0.0) {
 			// Free all memory
-			m_distribution->free(&s, stackAllocator);
+			m_distribution->destroySessionMemory(&s, stackAllocator);
 
 			*pdf = 0.0;
 			return math::constants::Zero;
@@ -62,7 +62,7 @@ manta::math::Vector manta::MicrofacetGlassBSDF::sampleF(const IntersectionPoint 
 			m_distribution->calculateDistribution(m, &s) * m_distribution->bidirectionalShadowMasking(i, *o, m, &s) * F / (4 * cosThetaI * cosThetaO));
 
 		// Free all memory
-		m_distribution->free(&s, stackAllocator);
+		m_distribution->destroySessionMemory(&s, stackAllocator);
 
 		f = reflectivity;
 	}
@@ -71,7 +71,7 @@ manta::math::Vector manta::MicrofacetGlassBSDF::sampleF(const IntersectionPoint 
 		math::Vector rt;
 		if (!refract(i, m, ior, &rt)) {
 			// Free all memory
-			m_distribution->free(&s, stackAllocator);
+			m_distribution->destroySessionMemory(&s, stackAllocator);
 
 			*pdf = (math::real)0.0;
 			return math::constants::Zero;
@@ -79,7 +79,7 @@ manta::math::Vector manta::MicrofacetGlassBSDF::sampleF(const IntersectionPoint 
 
 		if ((math::getZ(rt) > 0) == (math::getZ(i) > 0)) {
 			// Free all memory
-			m_distribution->free(&s, stackAllocator);
+			m_distribution->destroySessionMemory(&s, stackAllocator);
 
 			*pdf = (math::real)0.0;
 			return math::constants::Zero;
@@ -98,7 +98,7 @@ manta::math::Vector manta::MicrofacetGlassBSDF::sampleF(const IntersectionPoint 
 			cosThetaO == (math::real)0.0 ||
 			cosThetaI == (math::real)0.0) {
 			// Free all memory
-			m_distribution->free(&s, stackAllocator);
+			m_distribution->destroySessionMemory(&s, stackAllocator);
 
 			*pdf = (math::real)0.0;
 			return math::constants::Zero;
@@ -123,7 +123,7 @@ manta::math::Vector manta::MicrofacetGlassBSDF::sampleF(const IntersectionPoint 
 		math::Vector transmitance = math::loadScalar(Ft_num / Ft_div);
 
 		// Free all memory
-		m_distribution->free(&s, stackAllocator);
+		m_distribution->destroySessionMemory(&s, stackAllocator);
 
 		f = math::mul(transmitance, math::loadScalar((ni * ni) / (no * no)));
 	}

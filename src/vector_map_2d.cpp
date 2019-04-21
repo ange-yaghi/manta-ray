@@ -2,6 +2,7 @@
 
 #include <standard_allocator.h>
 #include <image_byte_buffer.h>
+#include <image_plane.h>
 
 #include <assert.h>
 
@@ -57,8 +58,8 @@ void manta::VectorMap2D::set(const math::Vector &value, int u, int v) {
 	m_data[v * m_width + u] = value;
 }
 
-void manta::VectorMap2D::fillByteBuffer(ImageByteBuffer *target) const {
-	target->initialize(m_data, m_width, m_height);
+void manta::VectorMap2D::fillByteBuffer(ImageByteBuffer *target, bool correctGamma) const {
+	target->initialize(m_data, m_width, m_height, correctGamma);
 }
 
 void manta::VectorMap2D::scale(const math::Vector &s) {
@@ -91,6 +92,53 @@ manta::math::real manta::VectorMap2D::getMaxMagnitude() const {
 	return maxMagnitude;
 }
 
+void manta::VectorMap2D::padSafe(VectorMap2D *target, Margins *margins) const {
+	int minWidth = m_width * 2;
+	int minHeight = m_height * 2;
+
+	int width = 1, height = 1;
+	while (width < minWidth) width *= 2;
+	while (height < minHeight) height *= 2;
+
+	int marginX = (width - m_width) / 2;
+	int marginY = (height - m_height) / 2;
+
+	margins->height = m_height;
+	margins->width = m_width;
+	margins->left = marginX;
+	margins->top = marginY;
+
+	target->initialize(width, height);
+
+	for (int i = 0; i < width; i++) {
+		for (int j = 0; j < height; j++) {
+			if (i >= marginX && (i - marginX) < m_width) {
+				if (j >= marginY && (j - marginY) < m_height) {
+					target->set(get(i - marginX, j - marginY), i, j);
+				}
+			}
+		}
+	}
+}
+
+int manta::VectorMap2D::getSafeWidth() const {
+	int minResize = m_width * 2;
+
+	int size = 1;
+	while (size < minResize) size *= 2;
+	
+	return size;
+}
+
+int manta::VectorMap2D::getSafeHeight() const {
+	int minResize = m_height * 2;
+
+	int size = 1;
+	while (size < minResize) size *= 2;
+
+	return size;
+}
+
 void manta::VectorMap2D::roll(VectorMap2D *target) const {
 	target->initialize(m_width, m_height);
 
@@ -110,5 +158,15 @@ void manta::VectorMap2D::copy(const VectorMap2D *source) {
 	int pCount = m_width * m_height;
 	for (int i = 0; i < pCount; i++) {
 		m_data[i] = source->m_data[i];
+	}
+}
+
+void manta::VectorMap2D::copy(const ImagePlane *plane) {
+	initialize(plane->getWidth(), plane->getHeight());
+
+	for (int i = 0; i < m_width; i++) {
+		for (int j = 0; j < m_height; j++) {
+			set(plane->sample(i, j), i, j);
+		}
 	}
 }

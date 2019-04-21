@@ -64,8 +64,8 @@ TEST(BSDFTests, PhongMicrofacetEnergyConservation) {
 	PhongDistribution dist;
 	dist.setPower((math::real)5.0);
 
-	MaterialNodeMemory mem;
-	dist.initialize(nullptr, &mem, nullptr);
+	Node::NodeSessionMemory mem;
+	dist.initializeSessionMemory(nullptr, &mem, nullptr);
 
 	MicrofacetReflectionBSDF bsdf;
 	bsdf.setDistribution(&dist);

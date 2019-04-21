@@ -35,7 +35,7 @@ namespace manta {
 			inline Complex operator/(const Complex &b) const {
 				real_d r_part = r * b.r + i * b.i;
 				real_d i_part = i * b.r + r * b.i;
-				real_d m = 1 / (r_part * r_part + i_part * i_part);
+				real_d m = 1 / (b.r * b.r + b.i * b.i);
 				return { r_part * m, i_part * m };
 			}
 

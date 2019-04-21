@@ -5,6 +5,7 @@
 
 #include <vector_map_2d.h>
 #include <scalar_map_2d.h>
+#include <complex_map_2d.h>
 
 namespace manta {
 
@@ -29,6 +30,9 @@ namespace manta {
 			// This value controls what percentage of the flux comes from the ideal distribution (ie the center point)
 			// with the remaining flux being contributed by the diffraction halo
 			math::real_d deltaWeight;
+
+			// Debugging flags
+			bool saveApertureFunction;
 		};
 
 	public:
@@ -40,6 +44,7 @@ namespace manta {
 
 		math::Vector samplePattern(math::real dx, math::real dy) const;
 		const VectorMap2D *getDiffractionPattern() const { return &m_diffractionPattern; }
+		const ComplexMap2D *getApertureFunction() const { return &m_apertureFunction; }
 
 		void normalize(math::real_d deltaWeight);
 
@@ -55,6 +60,7 @@ namespace manta {
 
 	protected:
 		VectorMap2D m_diffractionPattern;
+		ComplexMap2D m_apertureFunction;
 		CmfTable *m_colorTable;
 		Spectrum *m_sourceSpectrum;
 

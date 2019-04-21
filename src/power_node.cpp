@@ -8,7 +8,7 @@ manta::PowerNode::PowerNode() {
 	m_inputNode = nullptr;
 }
 
-manta::PowerNode::PowerNode(math::real power, const VectorMaterialNode *input) {
+manta::PowerNode::PowerNode(math::real power, const VectorNode *input) {
 	m_power = power;
 	m_inputNode = input;
 }

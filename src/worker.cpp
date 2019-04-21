@@ -121,7 +121,7 @@ void manta::Worker::doJob(const Job *job) {
 				int rayCount = container.getRayCount();
 
 				for (int samp = 0; samp < rayCount; samp++) {
-					NEW_TREE(getTreeName(i, samp), emitter->getPosition());
+					NEW_TREE(getTreeName(pixelIndex, samp), emitter->getPosition());
 					LightRay *ray = &rays[samp];
 					ray->calculateTransformations();
 

@@ -55,6 +55,9 @@
 #include <cmf_table.h>
 #include <color.h>
 #include <spectrum.h>
+#include <vector_map_wrapper_node.h>
+#include <convolution_node.h>
+#include <image_output_node.h>
 
 namespace manta_demo {
 

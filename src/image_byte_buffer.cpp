@@ -2,6 +2,7 @@
 
 #include <standard_allocator.h>
 #include <image_plane.h>
+#include <rgb_space.h>
 
 #include <assert.h>
 #include <cmath>
@@ -17,9 +18,9 @@ manta::ImageByteBuffer::~ImageByteBuffer() {
 	assert(m_buffer == nullptr);
 }
 
-void manta::ImageByteBuffer::initialize(const ImagePlane *sceneBuffer) {
+void manta::ImageByteBuffer::initialize(const ImagePlane *sceneBuffer, bool correctGamma) {
 	const math::Vector *raw = sceneBuffer->getBuffer();
-	initialize(raw, sceneBuffer->getWidth(), sceneBuffer->getHeight());
+	initialize(raw, sceneBuffer->getWidth(), sceneBuffer->getHeight(), correctGamma);
 }
 
 void manta::ImageByteBuffer::initialize(const unsigned char *buffer, int width, int height, int pitch) {
@@ -32,7 +33,7 @@ void manta::ImageByteBuffer::initialize(const unsigned char *buffer, int width, 
 	memcpy((void *)m_buffer, (void *)buffer, m_width * m_height * m_pitch);
 }
 
-void manta::ImageByteBuffer::initialize(const math::Vector *buffer, int width, int height) {
+void manta::ImageByteBuffer::initialize(const math::Vector *buffer, int width, int height, bool correctGamma) {
 	m_width = width;
 	m_height = height;
 	m_pitch = 4;
@@ -43,14 +44,14 @@ void manta::ImageByteBuffer::initialize(const math::Vector *buffer, int width, i
 		for (int j = 0; j < width; j++) {
 			Color c;
 			math::Vector v = buffer[i * width + j];
-			convertToColor(v, &c);
+			convertToColor(v, &c, correctGamma);
 
 			setPixel(i, j, c);
 		}
 	}
 }
 
-void manta::ImageByteBuffer::initialize(const math::real *buffer, int width, int height) {
+void manta::ImageByteBuffer::initialize(const math::real *buffer, int width, int height, bool correctGamma) {
 	m_width = width;
 	m_height = height;
 	m_pitch = 4;
@@ -61,7 +62,7 @@ void manta::ImageByteBuffer::initialize(const math::real *buffer, int width, int
 		for (int j = 0; j < width; j++) {
 			Color c;
 			math::real v = buffer[i * width + j];
-			convertToColor(math::loadScalar(v), &c);
+			convertToColor(math::loadScalar(v), &c, correctGamma);
 
 			setPixel(i, j, c);
 		}
@@ -78,7 +79,9 @@ void manta::ImageByteBuffer::initialize(int width, int height) {
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
 			Color c;
-			convertToColor(math::constants::Zero, &c);
+			convertToColor(math::constants::Zero, &c, false);
+			// Gamma is not corrected to save         ^^^^^
+			// processing time in this trivial case
 
 			setPixel(i, j, c);
 		}
@@ -103,13 +106,26 @@ void manta::ImageByteBuffer::setPixel(int row, int column, const Color &c) {
 	m_buffer[offset + 3] = c.a;
 }
 
-void manta::ImageByteBuffer::convertToColor(const math::Vector &v, Color *c) const {
-	math::Vector q = math::mul(v, math::loadScalar((math::real)255.0));
+void manta::ImageByteBuffer::convertToColor(const math::Vector &v, Color *c, bool correctGamma) const {
+	math::real vr, vg, vb, va;
+	vr = math::getX(v);
+	vg = math::getY(v);
+	vb = math::getZ(v);
+	va = math::getW(v);
 
-	int r = lround(math::getX(q));
-	int g = lround(math::getY(q));
-	int b = lround(math::getZ(q));
-	int a = lround(math::getW(q));
+	if (correctGamma) {
+		// Default to SRGB
+		// TODO: make gamma correction generic
+		vr = RgbSpace::srgb.applyGammaSrgb(vr);
+		vg = RgbSpace::srgb.applyGammaSrgb(vg);
+		vb = RgbSpace::srgb.applyGammaSrgb(vb);
+		va = RgbSpace::srgb.applyGammaSrgb(va);
+	}
+
+	int r = lround(vr * 255);
+	int g = lround(vg * 255);
+	int b = lround(vb * 255);
+	int a = lround(va * 255);
 
 	if (r > 255) r = 255;
 	if (g > 255) g = 255;

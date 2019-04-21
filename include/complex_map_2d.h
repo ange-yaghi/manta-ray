@@ -40,6 +40,11 @@ namespace manta {
 		void inverseFft(ComplexMap2D *target) const;
 
 		void cft(ComplexMap2D *target, math::real_d physicalWidth, math::real_d physicalHeight) const;
+		void inverseCft(ComplexMap2D *target, math::real_d physicalWidth, math::real_d physicalHeight) const;
+
+		// Performs the following function:
+		// inverseCft(cft(this) * cft(gDft))
+		void cftConvolve(ComplexMap2D *gDft, math::real_d physicalWidth, math::real_d physicalHeight);
 
 		void magnitude();
 		void multiply(const math::Complex &s);

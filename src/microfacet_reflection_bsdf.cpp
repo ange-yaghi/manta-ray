@@ -9,8 +9,8 @@ manta::MicrofacetReflectionBSDF::MicrofacetReflectionBSDF() {
 manta::MicrofacetReflectionBSDF::~MicrofacetReflectionBSDF() {
 }
 
-void manta::MicrofacetReflectionBSDF::initialize(const IntersectionPoint *surfaceInteraction, MaterialNodeMemory *memory, StackAllocator *stackAllocator) const {
-	BSDF::initialize(surfaceInteraction, memory, stackAllocator);
+void manta::MicrofacetReflectionBSDF::initializeSessionMemory(const IntersectionPoint *surfaceInteraction, NodeSessionMemory *memory, StackAllocator *stackAllocator) const {
+	BSDF::initializeSessionMemory(surfaceInteraction, memory, stackAllocator);
 }
 
 manta::math::Vector manta::MicrofacetReflectionBSDF::sampleF(const IntersectionPoint *surfaceInteraction, const math::Vector &i, math::Vector *o, math::real *pdf, StackAllocator *stackAllocator) const {
@@ -18,8 +18,8 @@ manta::math::Vector manta::MicrofacetReflectionBSDF::sampleF(const IntersectionP
 	constexpr math::real MIN_EPSILON = (math::real)0.0;
 
 	// Allocate required memory
-	MaterialNodeMemory s;
-	m_distribution->initialize(surfaceInteraction, &s, stackAllocator);
+	NodeSessionMemory s;
+	m_distribution->initializeSessionMemory(surfaceInteraction, &s, stackAllocator);
 
 	math::Vector m = m_distribution->generateMicrosurfaceNormal(&s);
 	math::Vector ri = math::reflect(i, m);
@@ -34,7 +34,7 @@ manta::math::Vector manta::MicrofacetReflectionBSDF::sampleF(const IntersectionP
 		cosThetaO <= MIN_EPSILON ||
 		cosThetaI <= MIN_EPSILON) {
 		// Free all memory
-		m_distribution->free(&s, stackAllocator);
+		m_distribution->destroySessionMemory(&s, stackAllocator);
 
 		*pdf = (math::real)0.0;
 		return math::constants::Zero;
@@ -49,15 +49,15 @@ manta::math::Vector manta::MicrofacetReflectionBSDF::sampleF(const IntersectionP
 		m_distribution->calculateDistribution(m, &s) * m_distribution->bidirectionalShadowMasking(i, *o, m, &s) * F / (4 * cosThetaI * cosThetaO));
 
 	// Free all memory
-	m_distribution->free(&s, stackAllocator);
+	m_distribution->destroySessionMemory(&s, stackAllocator);
 
 	return reflectivity;
 }
 
 manta::math::real manta::MicrofacetReflectionBSDF::calculatePDF(const IntersectionPoint *surfaceInteraction, const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) const {
 	// Allocate required memory
-	MaterialNodeMemory s;
-	m_distribution->initialize(surfaceInteraction, &s, stackAllocator);
+	NodeSessionMemory s;
+	m_distribution->initializeSessionMemory(surfaceInteraction, &s, stackAllocator);
 
 	math::Vector wh = math::normalize(math::add(i, o));
 	math::real o_dot_wh = math::getScalar(math::dot(wh, o));
@@ -65,7 +65,7 @@ manta::math::real manta::MicrofacetReflectionBSDF::calculatePDF(const Intersecti
 	math::real pdf = m_distribution->calculatePDF(wh, &s) / ::abs(4 * o_dot_wh);
 
 	// Free all memory
-	m_distribution->free(&s, stackAllocator);
+	m_distribution->destroySessionMemory(&s, stackAllocator);
 
 	return pdf;
 }

@@ -17,7 +17,7 @@ manta::FraunhoferDiffraction::FraunhoferDiffraction() {
 }
 
 manta::FraunhoferDiffraction::~FraunhoferDiffraction() {
-
+	/* void */
 }
 
 void manta::FraunhoferDiffraction::generate(const Aperture *aperture, const TextureNode *dirtMap, int outputResolution, math::real physicalSensorWidth, CmfTable *colorTable, Spectrum *sourceSpectrum, const Settings *settingsIn) {
@@ -31,7 +31,7 @@ void manta::FraunhoferDiffraction::generate(const Aperture *aperture, const Text
 	int wavelengthStep = settings.wavelengthStep;
 
 	math::real apertureRadius = aperture->getRadius();
-	math::real apertureRadius_inv = 1 / apertureRadius;
+	math::real apertureRadius_inv = 1 / (2 * apertureRadius);
 	math::real sensorWidth = physicalSensorWidth;
 	math::real sensorElementWidth = physicalSensorWidth / outputResolution;
 
@@ -56,8 +56,7 @@ void manta::FraunhoferDiffraction::generate(const Aperture *aperture, const Text
 	math::real cy = (math::real)(sampleWindow / 2);
 
 	// Generate aperture function
-	ComplexMap2D apertureFunction;
-	apertureFunction.initialize(estimatorSamples, estimatorSamples);
+	m_apertureFunction.initialize(estimatorSamples, estimatorSamples);
 
 	IntersectionPoint a;
 	for (int i = 0; i < estimatorSamples; i++) {
@@ -70,22 +69,21 @@ void manta::FraunhoferDiffraction::generate(const Aperture *aperture, const Text
 
 			a.m_textureCoodinates = math::loadVector(u, v);
 
-
 			math::real dirt = (math::real)1.0;
 			if (dirtMap != nullptr) dirt = math::getScalar(dirtMap->sample(&a));
 
 			if (aperture->filter(x, y)) {
-				apertureFunction.set(math::Complex((math::real_d)1.0 * dirt, (math::real_d)0.0), i, j);
+				m_apertureFunction.set(math::Complex((math::real_d)1.0 * dirt, (math::real_d)0.0), i, j);
 			}
 			else {
-				apertureFunction.set(math::Complex((math::real_d)0.0, (math::real_d)0.0), i, j);
+				m_apertureFunction.set(math::Complex((math::real_d)0.0, (math::real_d)0.0), i, j);
 			}
 		}
 	}
 
 	CftEstimator2D estimator;
-	estimator.initialize(&apertureFunction, sampleWindow, sampleWindow);
-	apertureFunction.destroy();
+	estimator.initialize(&m_apertureFunction, sampleWindow, sampleWindow);
+	if (!settings.saveApertureFunction) m_apertureFunction.destroy();
 
 	math::real_d sdx = sensorElementWidth;
 	math::real_d sdy = sensorElementWidth;
@@ -98,7 +96,8 @@ void manta::FraunhoferDiffraction::generate(const Aperture *aperture, const Text
 	temp.initialize(outputResolution, outputResolution);
 	generateMap(&estimator, minWavelength, maxWavelength, wavelengthStep, settings.textureSamples, &temp);
 
-	temp.roll(&m_diffractionPattern);
+	//temp.roll(&m_diffractionPattern);
+	m_diffractionPattern.copy(&temp);
 	temp.destroy();
 	estimator.destroy();
 
@@ -107,6 +106,7 @@ void manta::FraunhoferDiffraction::generate(const Aperture *aperture, const Text
 
 void manta::FraunhoferDiffraction::destroy() {
 	m_diffractionPattern.destroy();
+	m_apertureFunction.destroy();
 }
 
 manta::math::Vector manta::FraunhoferDiffraction::samplePattern(math::real dx, math::real dy) const {
@@ -124,22 +124,10 @@ manta::math::Vector manta::FraunhoferDiffraction::samplePattern(math::real dx, m
 void manta::FraunhoferDiffraction::normalize(math::real_d deltaWeight) {
 	int res = m_diffractionPattern.getWidth();
 
-	// For an accurate flux measurement of the halo, the center point must be 0
-	m_diffractionPattern.set(math::constants::Zero, 0, 0);
-
-	math::real_d totalFlux = 0;
-	for (int i = 0; i < res; i++) {
-		for (int j = 0; j < res; j++) {
-			totalFlux += math::getY(m_diffractionPattern.get(i, j));
-		}
-	}
-
-	// Normalize
-	math::Vector norm = math::div(math::loadScalar((math::real)(1 - deltaWeight)), math::loadScalar((math::real)totalFlux));
+	// Convert to RGB
 	for (int i = 0; i < res; i++) {
 		for (int j = 0; j < res; j++) {
 			math::Vector xyzColor = m_diffractionPattern.get(i, j);
-			xyzColor = math::mul(xyzColor, norm);
 
 			ColorXyz xyzColorT = ColorXyz(math::getX(xyzColor), math::getY(xyzColor), math::getZ(xyzColor));
 			math::Vector rgbColor = m_colorTable->xyzToRgb(xyzColorT);
@@ -148,7 +136,25 @@ void manta::FraunhoferDiffraction::normalize(math::real_d deltaWeight) {
 		}
 	}
 
-	m_diffractionPattern.set(math::loadScalar((math::real)deltaWeight), 0, 0);
+	math::real ds = 1 / (math::real)res;
+	math::Vector totalFlux = math::constants::Zero;
+	for (int i = 0; i < res; i++) {
+		for (int j = 0; j < res; j++) {
+			totalFlux = math::add(totalFlux, m_diffractionPattern.get(i, j));
+		}
+	}
+	math::Vector totalEnergy = math::loadScalar(1 / (ds * ds));
+
+	// Normalize
+	math::Vector norm = math::div(totalEnergy, totalFlux);
+	for (int i = 0; i < res; i++) {
+		for (int j = 0; j < res; j++) {
+			math::Vector rgbColor = m_diffractionPattern.get(i, j);
+			rgbColor = math::mul(rgbColor, norm);
+
+			m_diffractionPattern.set(rgbColor, i, j);
+		}
+	}
 }
 
 void manta::FraunhoferDiffraction::defaultSettings(Settings *settings) {
@@ -159,9 +165,9 @@ void manta::FraunhoferDiffraction::defaultSettings(Settings *settings) {
 	settings->wavelengthStep = 5;
 	settings->frequencyMultiplier = 3.0;
 	settings->deltaWeight = (math::real_d)0.93;
-}
 
-#include <iostream>
+	settings->saveApertureFunction = false;
+}
 
 void manta::FraunhoferDiffraction::generateMap(const CftEstimator2D *estimator, int startWavelength, int endWavelength, int wavelengthStep, int textureSamples, VectorMap2D *target) const {
 	int res = target->getWidth();

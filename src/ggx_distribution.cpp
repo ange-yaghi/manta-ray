@@ -1,6 +1,6 @@
 #include <ggx_distribution.h>
 
-#include <vector_material_node.h>
+#include <vector_node.h>
 
 #include <assert.h>
 
@@ -14,8 +14,8 @@ manta::GgxDistribution::~GgxDistribution() {
 
 }
 
-void manta::GgxDistribution::initialize(const IntersectionPoint *surfaceInteraction, MaterialNodeMemory *memory, StackAllocator *stackAllocator) const {
-	MicrofacetDistribution::initialize(surfaceInteraction, memory, stackAllocator);
+void manta::GgxDistribution::initializeSessionMemory(const IntersectionPoint *surfaceInteraction, NodeSessionMemory *memory, StackAllocator *stackAllocator) const {
+	MicrofacetDistribution::initializeSessionMemory(surfaceInteraction, memory, stackAllocator);
 
 	GgxMemory *phongMemory = reinterpret_cast<GgxMemory *>((void *)memory->memory);
 
@@ -29,7 +29,7 @@ void manta::GgxDistribution::initialize(const IntersectionPoint *surfaceInteract
 	}
 }
 
-manta::math::Vector manta::GgxDistribution::generateMicrosurfaceNormal(MaterialNodeMemory *mem) const {
+manta::math::Vector manta::GgxDistribution::generateMicrosurfaceNormal(NodeSessionMemory *mem) const {
 	GgxMemory *memory = reinterpret_cast<GgxMemory *>((void *)mem->memory);
 
 	math::real width = memory->width;
@@ -49,7 +49,7 @@ manta::math::Vector manta::GgxDistribution::generateMicrosurfaceNormal(MaterialN
 	return math::mul(t1, t2);
 }
 
-manta::math::real manta::GgxDistribution::calculateDistribution(const math::Vector &m, MaterialNodeMemory *mem) const {
+manta::math::real manta::GgxDistribution::calculateDistribution(const math::Vector &m, NodeSessionMemory *mem) const {
 	GgxMemory *memory = reinterpret_cast<GgxMemory *>((void *)mem->memory);
 
 	math::real cos_theta_m = math::getZ(m);
@@ -67,7 +67,7 @@ manta::math::real manta::GgxDistribution::calculateDistribution(const math::Vect
 	return d_m;
 }
 
-manta::math::real manta::GgxDistribution::calculateG1(const math::Vector &v, const math::Vector &m, MaterialNodeMemory *mem) const {
+manta::math::real manta::GgxDistribution::calculateG1(const math::Vector &v, const math::Vector &m, NodeSessionMemory *mem) const {
 	GgxMemory *memory = reinterpret_cast<GgxMemory *>((void *)mem->memory);
 
 	math::real v_dot_m = math::getScalar(math::dot(v, m));

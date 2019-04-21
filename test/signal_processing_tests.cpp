@@ -252,3 +252,180 @@ TEST(SignalProcessingTests, CftApproximationBasicTest) {
 	apertureFunction.destroy();
 	aperture.destroy();
 }
+
+TEST(SignalProcessingTests, CftConvolutionBasicTest) {
+	constexpr int SAMPLES = 1024;
+
+	ComplexMap2D function;
+	function.initialize(SAMPLES, SAMPLES);
+
+	constexpr math::real ds = (10 / (math::real)SAMPLES);
+
+	math::real total = 0.0;
+	for (int i = -SAMPLES / 2; i < SAMPLES / 2; i++) {
+		for (int j = -SAMPLES / 2; j < SAMPLES / 2; j++) {
+			math::real r2 = ((i * i + j * j) / (math::real)(SAMPLES * SAMPLES)) * 10 * 10;
+
+			int ki = i, kj = j;
+			ki += SAMPLES / 2;
+			kj += SAMPLES / 2;
+
+			constexpr math::real radius = 0.0f;
+
+			if (i == 0 && j == 0 && radius == 0.0) {
+				function.set(math::Complex(1.0 , 0.0), ki, kj);
+				total += 1.0;
+			}
+			else if (r2 < radius * radius) {
+				function.set(math::Complex(1.0, 0.0), ki, kj);
+				total += 1.0;
+			}
+			else {
+				function.set(math::Complex(0.0, 0.0), ki, kj);
+			}
+		}
+	}
+	math::real totalEnergy = 1 / (ds * ds);
+	function.multiply(math::Complex(totalEnergy / total, 0.0f));
+
+	ComplexMap2D functionDft, functionCft;
+	function.fft(&functionDft);
+	functionDft.cft(&functionCft, 10, 10);
+
+	ComplexMap2D conv, convDft, convCft;
+	conv.initialize(SAMPLES, SAMPLES);
+	for (int i = -SAMPLES / 2; i < SAMPLES / 2; i++) {
+		for (int j = -SAMPLES / 2; j < SAMPLES / 2; j++) {
+			int ki = i, kj = j;
+			ki += SAMPLES / 2;
+			kj += SAMPLES / 2;
+
+			if (std::abs(i) * (math::real)10 / SAMPLES < 0.5 &&
+				std::abs(j) * (math::real)10 / SAMPLES < 0.5) {
+				conv.set(math::Complex(1.0, 0.0), ki, kj);
+			}
+			else {
+				conv.set(math::Complex(0.0, 0.0), ki, kj);
+			}
+		}
+	}
+
+	conv.fft(&convDft);
+	convDft.cft(&convCft, 10, 10);
+
+	ComplexMap2D convFreq, convFinal;
+	functionCft.multiply(&convCft);
+
+	functionCft.inverseCft(&convFreq, 10, 10);
+	convFreq.inverseFft(&convFinal);
+
+#if ENABLE_OUTPUT
+	writeToJpeg(&convFinal, std::string(TMP_PATH) + "cft_convolution/conv_final.jpg");
+	writeToJpeg(&function, std::string(TMP_PATH) + "cft_convolution/function.jpg");
+	writeToJpeg(&conv, std::string(TMP_PATH) + "cft_convolution/base.jpg");
+#endif /* ENABLE_OUTPUT */
+
+	for (int i = 0; i < SAMPLES; i++) {
+		for (int j = 0; j < SAMPLES; j++) {
+			math::Complex c = convFinal.get(i, j);
+			math::Complex ref = conv.get(i, j);
+
+			EXPECT_NEAR(c.r, ref.r, 1E-5);
+			EXPECT_NEAR(c.i, ref.i, 1E-5);
+		}
+	}
+
+	function.destroy();
+	functionDft.destroy();
+	functionCft.destroy();
+	conv.destroy();
+	convDft.destroy();
+	convCft.destroy();
+	convFreq.destroy();
+	convFinal.destroy();
+}
+
+TEST(SignalProcessingTests, CftConvolutionSpecificTest) {
+	constexpr int SAMPLES = 1024;
+
+	ComplexMap2D function;
+	function.initialize(SAMPLES, SAMPLES);
+
+	constexpr math::real ds = (10 / (math::real)SAMPLES);
+
+	math::real total = 0.0;
+	for (int i = -SAMPLES / 2; i < SAMPLES / 2; i++) {
+		for (int j = -SAMPLES / 2; j < SAMPLES / 2; j++) {
+			math::real r2 = ((i * i + j * j) / (math::real)(SAMPLES * SAMPLES)) * 10 * 10;
+
+			int ki = i, kj = j;
+			ki += SAMPLES / 2;
+			kj += SAMPLES / 2;
+
+			constexpr math::real radius = 0.0f;
+
+			if (i == 0 && j == 0 && radius == 0.0) {
+				function.set(math::Complex(1.0, 0.0), ki, kj);
+				total += 1.0;
+			}
+			else if (r2 < radius * radius) {
+				function.set(math::Complex(1.0, 0.0), ki, kj);
+				total += 1.0;
+			}
+			else {
+				function.set(math::Complex(0.0, 0.0), ki, kj);
+			}
+		}
+	}
+	math::real totalEnergy = 1 / (ds * ds);
+	function.multiply(math::Complex(totalEnergy / total, 0.0f));
+
+	ComplexMap2D functionDft;
+	function.fft(&functionDft);
+
+	ComplexMap2D conv, convDft;
+	conv.initialize(SAMPLES, SAMPLES);
+	for (int i = -SAMPLES / 2; i < SAMPLES / 2; i++) {
+		for (int j = -SAMPLES / 2; j < SAMPLES / 2; j++) {
+			int ki = i, kj = j;
+			ki += SAMPLES / 2;
+			kj += SAMPLES / 2;
+
+			if (std::abs(i) * (math::real)10 / SAMPLES < 0.5 &&
+				std::abs(j) * (math::real)10 / SAMPLES < 0.5) {
+				conv.set(math::Complex(1.0, 0.0), ki, kj);
+			}
+			else {
+				conv.set(math::Complex(0.0, 0.0), ki, kj);
+			}
+		}
+	}
+
+	conv.fft(&convDft);
+
+	ComplexMap2D convFinal;
+	convDft.cftConvolve(&functionDft, 10.0f, 10.0f);
+	convDft.inverseFft(&convFinal);
+
+#if ENABLE_OUTPUT
+	writeToJpeg(&convFinal, std::string(TMP_PATH) + "cft_convolution/conv_final.jpg");
+	writeToJpeg(&function, std::string(TMP_PATH) + "cft_convolution/function.jpg");
+	writeToJpeg(&conv, std::string(TMP_PATH) + "cft_convolution/base.jpg");
+#endif /* ENABLE_OUTPUT */
+
+	for (int i = 0; i < SAMPLES; i++) {
+		for (int j = 0; j < SAMPLES; j++) {
+			math::Complex c = convFinal.get(i, j);
+			math::Complex ref = conv.get(i, j);
+
+			EXPECT_NEAR(c.r, ref.r, 1E-5);
+			EXPECT_NEAR(c.i, ref.i, 1E-5);
+		}
+	}
+
+	function.destroy();
+	functionDft.destroy();
+	conv.destroy();
+	convDft.destroy();
+	convFinal.destroy();
+}

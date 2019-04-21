@@ -71,8 +71,8 @@ namespace manta {
 			m_data[v * m_width + u] = value;
 		}
 
-		void fillByteBuffer(ImageByteBuffer *target) const {
-			target->initialize(m_data, m_width, m_height);
+		void fillByteBuffer(ImageByteBuffer *target, bool correctGamma) const {
+			target->initialize(m_data, m_width, m_height, correctGamma);
 		}
 
 		int getWidth() const { return m_width; }

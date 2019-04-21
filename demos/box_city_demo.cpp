@@ -53,7 +53,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	SimpleBSDFMaterial *sunMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	sunMaterial->setName("Sun");
 	sunMaterial->setReflectance(math::loadVector(0.0f, 0.0f, 0.0f));
-	sunMaterial->setEmission(math::loadVector(100000.0f, 100000.0f, 100000.0f));
+	sunMaterial->setEmission(math::loadVector(10000.0f, 10000.0f, 10000.0f));
 	sunMaterial->setBSDF(nullptr);
 
 	// Create all scene geometry
@@ -144,26 +144,6 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 		aperture->setRadius((math::real)0.18);
 		lens.setFocus(focusDistance);
 
-		// Initialize diffraction model
-		//FraunhoferDiffraction::Settings settings;
-		//FraunhoferDiffraction::defaultSettings(&settings);
-		//settings.maxSamples = 4096;
-		//settings.frequencyMultiplier = 3;
-
-		//aperture->setRadius((math::real)5.5);
-		//lens.getDiffractionModel()->generate(aperture, 1024, 0.05f, &settings);
-		//aperture->setRadius((math::real)0.18);
-
-		//JpegWriter writer;
-		//ImageByteBuffer b;
-		//VectorMap2D temp;
-		//temp.copy(lens.getDiffractionModel()->getDiffractionPattern());
-		//temp.scale(math::loadScalar(100000.0f));
-		//temp.fillByteBuffer(&b);
-		//temp.destroy();
-		//writer.write(&b, convFname.c_str());
-		//b.free();
-
 		LensCameraRayEmitterGroup *camera = new LensCameraRayEmitterGroup;
 		camera->setDirection(math::normalize(math::sub(target, cameraPos)));
 		camera->setPosition(cameraPos);
@@ -181,11 +161,12 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
 	// Initialize and run the ray tracer
 	rayTracer.initialize(200 * MB, 50 * MB, 12, 100, true);
-	rayTracer.setBackgroundColor(getColor(0xff, 0xff, 0xFF));
+	rayTracer.setBackgroundColor(getColor(0xff, 0xff, 0xff));
+	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 	
 	if (TRACE_SINGLE_PIXEL) {
-		rayTracer.tracePixel(779, 942, &scene, group, &sceneBuffer);
+		rayTracer.tracePixel(915, 985, &scene, group, &sceneBuffer);
 	}
 	else {
 		rayTracer.traceAll(&scene, group, &sceneBuffer);
@@ -198,89 +179,73 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	rawFile.writeRawFile(rawFname.c_str(), &sceneBuffer);
 
 	if (ENABLE_FRAUNHOFER_DIFFRACTION) {
-		ComplexMap2D imageMapR, imageMapG, imageMapB, imageMapRSafe, imageMapGSafe, imageMapBSafe;
-		imageMapR.copy(&sceneBuffer, 0);
-		imageMapG.copy(&sceneBuffer, 1);
-		imageMapB.copy(&sceneBuffer, 2);
+		VectorMap2D base;
+		base.copy(&sceneBuffer);
 
-		Margins margins;
-		imageMapR.resizeSafe(&imageMapRSafe, &margins); imageMapR.destroy();
-		imageMapG.resizeSafe(&imageMapGSafe, &margins); imageMapG.destroy();
-		imageMapB.resizeSafe(&imageMapBSafe, &margins); imageMapB.destroy();
-
-		polygonalAperture.setRadius(0.5f);
+		int safeWidth = base.getSafeWidth();
 
 		FraunhoferDiffraction testFraun;
 		FraunhoferDiffraction::Settings settings;
 		FraunhoferDiffraction::defaultSettings(&settings);
-		settings.frequencyMultiplier = 3.0;
+		settings.frequencyMultiplier = 1.0;
 		settings.maxSamples = 4096;
+		settings.textureSamples = 10;
+
+		TextureNode dirtTexture;
+		dirtTexture.loadFile(TEXTURE_PATH "dirt_very_soft.png", true);
+		dirtTexture.initialize();
+		dirtTexture.evaluate();
 
 		CmfTable colorTable;
 		Spectrum sourceSpectrum;
 		colorTable.loadCsv(CMF_PATH "xyz_cmf_31.csv");
 		sourceSpectrum.loadCsv(CMF_PATH "d65_lighting.csv");
 
-		testFraun.generate(&polygonalAperture, nullptr, imageMapRSafe.getWidth(), 0.50f, &colorTable, &sourceSpectrum, &settings);
+		testFraun.generate(&polygonalAperture, &dirtTexture, safeWidth, 0.5f, &colorTable, &sourceSpectrum, &settings);
 
-		JpegWriter writer;
-		ImageByteBuffer b;
-		VectorMap2D temp;
-		temp.copy(testFraun.getDiffractionPattern());
-		temp.scale(math::loadScalar(100000.0f));
-		temp.fillByteBuffer(&b);
-		temp.destroy();
-		writer.write(&b, fraunFname.c_str());
-		b.free();
+		VectorMapWrapperNode fraunNode(testFraun.getDiffractionPattern());
+		fraunNode.initialize();
+		fraunNode.evaluate();
 
-		ComplexMap2D diffractionR, diffractionG, diffractionB;
-		diffractionR.initialize(imageMapRSafe.getWidth(), imageMapRSafe.getHeight());
-		diffractionG.initialize(imageMapRSafe.getWidth(), imageMapRSafe.getHeight());
-		diffractionB.initialize(imageMapRSafe.getWidth(), imageMapRSafe.getHeight());
-		for (int i = 0; i < imageMapRSafe.getWidth(); i++) {
-			for (int j = 0; j < imageMapRSafe.getHeight(); j++) {
-				diffractionR.set(math::Complex(math::getX(testFraun.getDiffractionPattern()->get(i, j)), 0.0f), i, j);
-				diffractionG.set(math::Complex(math::getY(testFraun.getDiffractionPattern()->get(i, j)), 0.0f), i, j);
-				diffractionB.set(math::Complex(math::getZ(testFraun.getDiffractionPattern()->get(i, j)), 0.0f), i, j);
-			}
-		}
+		ImageOutputNode fraunOutputNode;
+		fraunOutputNode.setJpegQuality(95);
+		fraunOutputNode.setGammaCorrection(true);
+		fraunOutputNode.setOutputFilename(fraunFname);
+		fraunOutputNode.setInputNode(&fraunNode);
+		fraunOutputNode.initialize();
+		fraunOutputNode.evaluate();
+		fraunOutputNode.destroy();
 
-		ComplexMap2D baseFtR, baseFtG, baseFtB, filterFtR, filterFtG, filterFtB;
-		imageMapRSafe.fft(&baseFtR); imageMapRSafe.destroy();
-		imageMapGSafe.fft(&baseFtG); imageMapGSafe.destroy();
-		imageMapBSafe.fft(&baseFtB); imageMapBSafe.destroy();
-		diffractionR.fft(&filterFtR); diffractionR.destroy();
-		diffractionG.fft(&filterFtG); diffractionG.destroy();
-		diffractionB.fft(&filterFtB); diffractionB.destroy();
+		VectorMapWrapperNode baseNode(&base);
+		baseNode.initialize();
+		baseNode.evaluate();
+		baseNode.destroy();
 
-		filterFtR.multiply(&baseFtR); baseFtR.destroy();
-		filterFtG.multiply(&baseFtG); baseFtG.destroy();
-		filterFtB.multiply(&baseFtB); baseFtB.destroy();
+		ConvolutionNode convNode;
+		convNode.setInputs(&baseNode, &fraunNode);
+		convNode.setResize(true);
+		convNode.setClip(true);
+		convNode.initialize();
+		convNode.evaluate();
 
-		ImagePlane output;
-		output.initialize(margins.width, margins.height, 0.f, 0.f);
-		ComplexMap2D tempR, tempG, tempB;
-		filterFtR.inverseFft(&tempR); filterFtR.destroy();
-		filterFtG.inverseFft(&tempG); filterFtG.destroy();
-		filterFtB.inverseFft(&tempB); filterFtB.destroy();
-		for (int i = margins.left; i < margins.left + margins.width; i++) {
-			for (int j = margins.top; j < margins.top + margins.height; j++) {
-				math::Vector fragment = math::loadVector(
-					tempR.get(i, j).r,
-					tempG.get(i, j).r,
-					tempB.get(i, j).r);
-				output.set(fragment, i - margins.left, j - margins.top);
-			}
-		}
+		testFraun.destroy();
+		base.destroy();
 
-		std::cout << "Margins: " << margins.width << " " << margins.height << std::endl;
+		ImageOutputNode outputNode;
+		outputNode.setJpegQuality(95);
+		outputNode.setGammaCorrection(true);
+		outputNode.setOutputFilename(convFname);
+		outputNode.setInputNode(&convNode);
+		outputNode.initialize();
+		outputNode.evaluate();
+		outputNode.destroy();
 
-		output.applyGammaCurve((math::real)(1.0 / 2.2));
-		writeJpeg(convFname.c_str(), &output, 95);
-		output.destroy();
+		colorTable.destroy();
+		sourceSpectrum.destroy();
+		convNode.destroy();
+		dirtTexture.destroy();
 	}
 
-	sceneBuffer.applyGammaCurve((math::real)(1.0 / 2.2));
 	writeJpeg(imageFname.c_str(), &sceneBuffer, 95);
 
 	sceneBuffer.destroy();
