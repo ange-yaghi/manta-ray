@@ -3,12 +3,12 @@
 
 **MantaRay** is an open-source renderer currently under development. It uses modern rendering techniques to generate photorealistic images of complex scenes. 
  
-### Setup Instructions
+### Setup Instructions For Developers
 
 Only a few steps are required to begin developing on MantaRay:
-1. Make sure Python 3 is installed
+1. Install Python 3
 2. Clone the MantaRay repository
-3. Open **mantaray.sln** in Microsoft Visual Studio
+3. Open ```project/mantaray.sln``` in Microsoft Visual Studio
 4. Right click on **mantaray_demos** and select 'Set as StartUp Project'
 5. Right click on **mantaray_demos** then click 'Properties'
 6. For configuration 'All Configurations' and platform 'x64', navigate to 'Debugging' under 'Configuration Properties' and set **Environment** to: ```PATH=$(SolutionDir)\..\dependencies\runtime\x64;%PATH%;```
