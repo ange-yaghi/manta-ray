@@ -7,7 +7,7 @@
 #include <camera_ray_emitter_group.h>
 #include <camera_ray_emitter.h>
 #include <ray_container.h>
-#include <scene_buffer.h>
+#include <image_plane.h>
 
 #include <sstream>
 #include <time.h>
@@ -121,7 +121,7 @@ void manta::Worker::doJob(const Job *job) {
 				int rayCount = container.getRayCount();
 
 				for (int samp = 0; samp < rayCount; samp++) {
-					NEW_TREE(getTreeName(i, samp), emitter->getPosition());
+					NEW_TREE(getTreeName(pixelIndex, samp), emitter->getPosition());
 					LightRay *ray = &rays[samp];
 					ray->calculateTransformations();
 
@@ -130,9 +130,8 @@ void manta::Worker::doJob(const Job *job) {
 				}
 
 				container.calculateIntensity();
-				container.destroyRays();
-
 				result = container.getIntensity();
+				container.destroyRays();				
 			}
 			m_rayTracer->incrementRayCompletion(job);
 

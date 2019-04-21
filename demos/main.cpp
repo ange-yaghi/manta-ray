@@ -7,10 +7,10 @@ int main() {
 	createAllDirectories();
 
 	// Run a demo
-	constexpr DEMO demo = DEMO::APERTURE_DEMO;
-	constexpr int samples = 300;
-	constexpr int resolutionX = 2048;
-	constexpr int resolutionY = 1536;
+	constexpr DEMO demo = DEMO::TEAPOT_LAMP;
+	constexpr int samples = 8000;
+	constexpr int resolutionX = 2048 / 1;
+	constexpr int resolutionY = 1536 / 1;
 
 	runDemo(demo, samples, resolutionX, resolutionY);
 

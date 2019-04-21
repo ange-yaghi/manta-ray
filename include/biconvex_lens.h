@@ -17,6 +17,7 @@ namespace manta {
 
 		void configure();
 		virtual bool transformLightRay(const LightRay *ray, LightRay *transformed) const;
+		virtual bool transformLightRayReverse(const LightRay *ray, LightRay *transformed) const;
 
 		virtual math::real calculateFocalLength() const;
 

@@ -44,6 +44,7 @@ manta::ObjFileLoader::ObjFileLoader() {
 }
 
 manta::ObjFileLoader::~ObjFileLoader() {
+	// TODO: check that object is actually destroyed
 }
 
 bool manta::ObjFileLoader::readObjFile(const char *fname) {

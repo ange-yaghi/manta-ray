@@ -27,17 +27,14 @@ void manta::LensCameraRayEmitter::generateRays(RayContainer *rayContainer) const
 
 	LensScanHint hint;
 	m_lens->lensScan(m_position, &hint, 4, m_sampler->getBoundaryWidth());
-	//hint.centerX = 0;
-	//hint.centerY = 0;
-	//hint.failed = false;
-	//hint.radius = m_lens->getRadius();
 
 	for (int i = 0; i < totalRayCount; i++) {
 		math::Vector position = math::add(m_position, sampleOrigins[i]);
 
-		bool result = m_lens->generateOutgoingRay(position, &hint, &rays[i]);
 		rays[i].setIntensity(math::constants::Zero);
 		rays[i].setWeight(math::constants::One);
+
+		bool result = m_lens->generateOutgoingRay(position, &hint, &rays[i]);
 	}
 
 	m_stackAllocator->free((void *)sampleOrigins);

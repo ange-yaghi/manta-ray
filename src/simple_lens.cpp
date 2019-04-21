@@ -46,17 +46,8 @@ bool manta::SimpleLens::transformRay(const LightRay *inputRay, LightRay *outputR
 	flag = m_lens.transformLightRay(inputRay, outputRay);
 	if (!flag) return false;
 
-	// Calculate the location of the aperture
-	math::Vector apertureLocation = m_position;
-	apertureLocation = math::add(
-		apertureLocation,
-		math::mul(
-			math::loadScalar(m_lens.getDepth() / (math::real)2.0),
-			m_direction));
-
-	math::Vector right = getSensorRight();
-	math::Vector d = math::sub(outputRay->getSource(), apertureLocation);
-	math::Vector proj_x = math::dot(d, right);
+	math::Vector d = math::sub(outputRay->getSource(), m_apertureLocation);
+	math::Vector proj_x = math::dot(d, m_right);
 	math::Vector proj_y = math::dot(d, m_up);
 
 	math::real x, y;
@@ -65,6 +56,42 @@ bool manta::SimpleLens::transformRay(const LightRay *inputRay, LightRay *outputR
 
 	flag = m_aperture->filter(x, y);
 	if (!flag) return false;
+
+	outputRay->setAperturePoint(math::Vector2(x, y));
+
+	return true;
+}
+
+bool manta::SimpleLens::diffractionRay(const math::Vector2 &aperturePoint, math::Vector direction, math::Vector2 *sensorLocation) const {
+	bool flag;
+
+	math::Vector dx = math::mul(math::loadScalar(aperturePoint.x), m_right);
+	math::Vector dy = math::mul(math::loadScalar(aperturePoint.y), m_up);
+
+	math::Vector origin = math::add(m_apertureLocation, dx);
+	origin = math::add(m_apertureLocation, dy);
+
+	LightRay outgoingRay;
+	outgoingRay.setDirection(direction);
+	outgoingRay.setSource(origin);
+
+	LightRay finalRay;
+	flag = m_lens.transformLightRayReverse(&outgoingRay, &finalRay);
+	if (!flag) return false;
+
+	math::Vector dsensor = math::sub(m_sensorLocation, finalRay.getSource());
+	math::Vector d1 = math::dot(dsensor, m_direction);
+	math::Vector d2 = math::dot(m_direction, finalRay.getDirection());
+	math::Vector d = math::div(d1, d2);
+
+	math::Vector intersectionPoint = math::add(math::mul(d, finalRay.getDirection()), finalRay.getSource());
+	math::Vector di = math::sub(intersectionPoint, m_sensorLocation);
+
+	math::real x = math::getScalar(math::dot(di, m_right));
+	math::real y = math::getScalar(math::dot(di, m_up));
+
+	sensorLocation->x = x;
+	sensorLocation->y = y;
 
 	return true;
 }
@@ -84,6 +111,14 @@ void manta::SimpleLens::update() {
 	m_lens.setOutputSurfaceRadius((math::real)10.0);
 	m_lens.setDepth((math::real)0.1);
 	m_lens.configure();
+
+	// Calculate the location of the aperture
+	m_apertureLocation = m_position;
+	m_apertureLocation = math::add(
+		m_apertureLocation,
+		math::mul(
+			math::loadScalar(m_lens.getDepth() / (math::real)2.0),
+			m_direction));
 
 	m_right = getSensorRight();
 }

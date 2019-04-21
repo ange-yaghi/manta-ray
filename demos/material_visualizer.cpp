@@ -7,7 +7,7 @@ using namespace manta;
 void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int resolutionY) {
 	// Top-level parameters
 	constexpr bool USE_ACCELERATION_STRUCTURE = true;
-	constexpr bool DETERMINISTIC_SEED_MODE = true;
+	constexpr bool DETERMINISTIC_SEED_MODE = false;
 	constexpr bool TRACE_SINGLE_PIXEL = false;
 	constexpr const char *MATERIAL = "Steel2";
 
@@ -16,7 +16,9 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
 
 	// Load all textures
 	TextureNode checkerboardTexture;
-	checkerboardTexture.loadFile(TEXTURE_PATH "material_visualizer/checkerboard.png", (math::real)2.2);
+	checkerboardTexture.loadFile(TEXTURE_PATH "material_visualizer/checkerboard.png", true);
+	checkerboardTexture.initialize();
+	checkerboardTexture.evaluate();
 
 	// Load all object files
 	ObjFileLoader stageObj;
@@ -63,10 +65,14 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
 
 	// Simple Wood
 	TextureNode texture;
-	texture.loadFile(TEXTURE_PATH "/dark_wood.jpg", 2.2f);
+	texture.loadFile(TEXTURE_PATH "/dark_wood.jpg", true);
+	texture.initialize();
+	texture.evaluate();
 
 	TextureNode woodRoughness;
 	woodRoughness.loadFile(TEXTURE_PATH "/wood_roughness.jpg", 1.0f);
+	woodRoughness.initialize();
+	woodRoughness.evaluate();
 
 	PhongDistribution woodCoating;
 	woodCoating.setPower(1000);
@@ -97,10 +103,14 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
 
 	// Steel 2
 	TextureNode fingerprintTexture;
-	fingerprintTexture.loadFile(TEXTURE_PATH "samsung_a8/fingerprints_roughness_map.png", (math::real)1.0);
+	fingerprintTexture.loadFile(TEXTURE_PATH "samsung_a8/fingerprints_roughness_map.png", false);
+	fingerprintTexture.initialize();
+	fingerprintTexture.evaluate();
 
 	TextureNode metalTexture;
-	metalTexture.loadFile(TEXTURE_PATH "stock-scene/metal.jpg", (math::real)2.2);
+	metalTexture.loadFile(TEXTURE_PATH "stock-scene/metal.jpg", true);
+	metalTexture.initialize();
+	metalTexture.evaluate();
 
 	RemapNode specularPowerFingerprint(
 		math::loadScalar(0.0f),
@@ -223,7 +233,7 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
 	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");
 
 	// Output the results to a scene buffer
-	SceneBuffer sceneBuffer;
+	ImagePlane sceneBuffer;
 
 	if (TRACE_SINGLE_PIXEL) {
 		rayTracer.tracePixel(369, 462, &scene, group, &sceneBuffer);
@@ -239,9 +249,13 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
 	RawFile rawFile;
 	rawFile.writeRawFile(rawFname.c_str(), &sceneBuffer);
 
-	sceneBuffer.applyGammaCurve((math::real)(1.0 / 2.2));
 	writeJpeg(imageFname.c_str(), &sceneBuffer, 95);
 
+	texture.destroy();
+	woodRoughness.destroy(); 
+	fingerprintTexture.destroy();
+	metalTexture.destroy();
+	checkerboardTexture.destroy();
 	sceneBuffer.destroy();
 	rayTracer.destroy();
 	stage.destroy();

@@ -5,12 +5,12 @@
 
 #include <geometry.h>
 #include <manta_math.h>
+#include <primitives.h>
 
 namespace manta {
 
 	class ObjFileLoader;
 	class MaterialManager;
-	struct AABB;
 
 	struct CoarseCollisionOutput {
 		math::real depth;
@@ -55,6 +55,7 @@ namespace manta {
 		const Face *getFace(int index) const { return &m_faces[index]; }
 		const AuxFaceData *getAuxFace(int index) const { return &m_auxFaceData[index]; }
 		const QuadFace *getQuadFace(int index) const { return &m_quadFaces[index]; }
+		const AABB *getBounds(int index) const { return &m_faceBounds[index]; }
 		const math::Vector *getVertex(int index) const { return &m_vertices[index]; }
 		const math::Vector *getNormal(int index) const { return &m_normals[index]; }
 		const math::Vector *getTexCoord(int index) const { return &m_textureCoords[index]; }

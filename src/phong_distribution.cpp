@@ -1,6 +1,6 @@
 #include <phong_distribution.h>
 
-#include <vector_material_node.h>
+#include <vector_node.h>
 
 #include <assert.h>
 
@@ -14,8 +14,8 @@ manta::PhongDistribution::~PhongDistribution() {
 
 }
 
-void manta::PhongDistribution::initialize(const IntersectionPoint *surfaceInteraction, MaterialNodeMemory *memory, StackAllocator *stackAllocator) const {
-	MicrofacetDistribution::initialize(surfaceInteraction, memory, stackAllocator);
+void manta::PhongDistribution::initializeSessionMemory(const IntersectionPoint *surfaceInteraction, NodeSessionMemory *memory, StackAllocator *stackAllocator) const {
+	MicrofacetDistribution::initializeSessionMemory(surfaceInteraction, memory, stackAllocator);
 
 	PhongMemory *phongMemory = reinterpret_cast<PhongMemory *>((void *)memory->memory);
 
@@ -29,7 +29,7 @@ void manta::PhongDistribution::initialize(const IntersectionPoint *surfaceIntera
 	}
 }
 
-manta::math::Vector manta::PhongDistribution::generateMicrosurfaceNormal(MaterialNodeMemory *mem) const {
+manta::math::Vector manta::PhongDistribution::generateMicrosurfaceNormal(NodeSessionMemory *mem) const {
 	PhongMemory *memory = reinterpret_cast<PhongMemory *>((void *)mem->memory);
 
 	math::real power = memory->power;
@@ -50,7 +50,7 @@ manta::math::Vector manta::PhongDistribution::generateMicrosurfaceNormal(Materia
 	return math::mul(t1, t2);
 }
 
-manta::math::real manta::PhongDistribution::calculateDistribution(const math::Vector &m, MaterialNodeMemory *mem) const {
+manta::math::real manta::PhongDistribution::calculateDistribution(const math::Vector &m, NodeSessionMemory *mem) const {
 	PhongMemory *memory = reinterpret_cast<PhongMemory *>((void *)mem->memory);
 
 	math::real cos_theta_m = math::getZ(m);
@@ -60,7 +60,7 @@ manta::math::real manta::PhongDistribution::calculateDistribution(const math::Ve
 	return d_m;
 }
 
-manta::math::real manta::PhongDistribution::calculateG1(const math::Vector &v, const math::Vector &m, MaterialNodeMemory *mem) const {
+manta::math::real manta::PhongDistribution::calculateG1(const math::Vector &v, const math::Vector &m, NodeSessionMemory *mem) const {
 	PhongMemory *memory = reinterpret_cast<PhongMemory *>((void *)mem->memory);
 	
 	math::real v_dot_m = (math::getScalar(math::dot(v, m)));

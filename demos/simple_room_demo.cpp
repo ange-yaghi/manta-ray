@@ -116,7 +116,7 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 	camera.setSampleCount(samplesPerPixel);
 
 	// Output the results to a scene buffer
-	SceneBuffer sceneBuffer;
+	ImagePlane sceneBuffer;
 
 	// Create the raytracer
 	rayTracer.initialize(200 * MB, 100 * MB, 12, 100, true);
@@ -138,7 +138,6 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 	rawFile.writeRawFile(rawFname.c_str(), &sceneBuffer);
 
 	// Apply gamma correction
-	sceneBuffer.applyGammaCurve((math::real)(1.0 / 2.2));
 	writeJpeg(imageFname.c_str(), &sceneBuffer, 95);
 
 	// Cleanup memory

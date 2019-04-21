@@ -29,6 +29,7 @@ namespace manta {
 		StackAllocator *getStackAllocator() const { return m_stackAllocator; }
 
 		virtual void calculateIntensity();
+		math::Vector weightedAverage() const;
 		math::Vector getIntensity() const { return m_intensity; }
 
 	private:

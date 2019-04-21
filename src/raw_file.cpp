@@ -1,6 +1,6 @@
 #include <raw_file.h>
 
-#include <scene_buffer.h>
+#include <image_plane.h>
 #include <manta_math.h>
 
 #include <fstream>
@@ -13,7 +13,7 @@ manta::RawFile::~RawFile() {
 
 }
 
-bool manta::RawFile::writeRawFile(const char *fname, const SceneBuffer *buffer) const {
+bool manta::RawFile::writeRawFile(const char *fname, const ImagePlane *buffer) const {
 	int dataHeaderSize = 0;
 	void *dataHeader = generateDataHeader(buffer, VERSION, &dataHeaderSize);
 
@@ -46,7 +46,7 @@ bool manta::RawFile::writeRawFile(const char *fname, const SceneBuffer *buffer) 
 	return true;
 }
 
-bool manta::RawFile::readRawFile(const char *fname, SceneBuffer *buffer) const {
+bool manta::RawFile::readRawFile(const char *fname, ImagePlane *buffer) const {
 	std::ifstream file(fname, std::ios::binary);
 
 	MainHeader mainHeader;
@@ -91,7 +91,7 @@ bool manta::RawFile::readRawFile(const char *fname, SceneBuffer *buffer) const {
 	return result;
 }
 
-void *manta::RawFile::generatePixelArray(const SceneBuffer *buffer, int version, int *size) const {
+void *manta::RawFile::generatePixelArray(const ImagePlane *buffer, int version, int *size) const {
 	if (version == 0x1) {
 		size_t s = sizeof(math::real);
 		int width = buffer->getWidth();
@@ -144,10 +144,10 @@ void *manta::RawFile::generateEmptyPixelArray(void *dataHeader, int version, int
 	else return nullptr;
 }
 
-bool manta::RawFile::readPixelArray(void *dataHeader, void *pixelData, SceneBuffer *buffer, int version) const {
+bool manta::RawFile::readPixelArray(void *dataHeader, void *pixelData, ImagePlane *buffer, int version) const {
 	if (version == 0x1) {
 		DataHeader_v1 *header = (DataHeader_v1 *)dataHeader;
-		buffer->initialize(header->width, header->height);
+		buffer->initialize(header->width, header->height, (math::real)0.0, (math::real)0.0);
 
 		if (header->precision == 4) {
 			FloatPixel_v1 *v = (FloatPixel_v1 *)pixelData;
@@ -176,7 +176,7 @@ bool manta::RawFile::readPixelArray(void *dataHeader, void *pixelData, SceneBuff
 	else return false;
 }
 
-void *manta::RawFile::generateDataHeader(const SceneBuffer *buffer, int version, int *size) const {
+void *manta::RawFile::generateDataHeader(const ImagePlane *buffer, int version, int *size) const {
 	if (version == 0x1) {
 		DataHeader_v1 *dataHeader = new DataHeader_v1;
 		dataHeader->width = buffer->getWidth();

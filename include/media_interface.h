@@ -1,13 +1,13 @@
 #ifndef MEDIA_INTERFACE_H
 #define MEDIA_INTERFACE_H
 
-#include <material_node.h>
+#include <node.h>
 
 #include <manta_math.h>
 
 namespace manta {
 
-	class MediaInterface : public MaterialNode {
+	class MediaInterface : public Node {
 	public:
 		enum DIRECTION {
 			DIRECTION_IN,

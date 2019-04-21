@@ -53,9 +53,9 @@ std::string manta_demo::createUniqueRenderFilename(const char *jobName, int samp
 	return std::string(buffer) + "_" + std::string(jobName) + "_S" + ss.str();
 }
 
-void manta_demo::writeJpeg(const char *fname, manta::SceneBuffer *sceneBuffer, int quality) {
+void manta_demo::writeJpeg(const char *fname, manta::ImagePlane *sceneBuffer, int quality) {
 	manta::ImageByteBuffer byteBuffer;
-	byteBuffer.initialize(sceneBuffer);
+	byteBuffer.initialize(sceneBuffer, true);
 
 	manta::JpegWriter writer;
 	writer.setQuality(quality);
@@ -64,11 +64,11 @@ void manta_demo::writeJpeg(const char *fname, manta::SceneBuffer *sceneBuffer, i
 	byteBuffer.free();
 }
 
-void manta_demo::editImage(manta::SceneBuffer *sceneBuffer, const std::string &outputFname) {
+void manta_demo::editImage(manta::ImagePlane *sceneBuffer, const std::string &outputFname) {
 	manta::SaveImageData(sceneBuffer->getBuffer(), sceneBuffer->getWidth(), sceneBuffer->getHeight(), outputFname.c_str());
 
 	// Create a temporary scene buffer
-	manta::SceneBuffer temp;
+	manta::ImagePlane temp;
 
 	std::cout << "**** Image Editing Utility ****" << std::endl;
 	while (true) {

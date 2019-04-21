@@ -11,9 +11,11 @@
 #if EXECUTION_ENV == VISUAL_STUDIO
 
 #define WORKSPACE_PATH "../../workspace/"
+#define TMP_PATH (WORKSPACE_PATH "tmp/")
 #define MODEL_PATH "../../demos/models/"
 #define TEXTURE_PATH "../../demos/textures/"
 #define RENDER_OUTPUT (WORKSPACE_PATH "render/")
+#define CMF_PATH "../../demos/cmfs/"
 
 #elif EXECUTION_ENV == STANDALONE
 

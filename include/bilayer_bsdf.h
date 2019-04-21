@@ -8,7 +8,7 @@ namespace manta {
 	class MediaInterface;
 	class LambertianBSDF;
 	class MicrofacetDistribution;
-	class VectorMaterialNode;
+	class VectorNode;
 
 	class BilayerBSDF : public BSDF {
 	public:
@@ -29,18 +29,18 @@ namespace manta {
 		void setDiffuse(const math::Vector &diffuse) { m_diffuse = diffuse; }
 		math::Vector getDiffuse() const { return m_diffuse; }
 
-		void setDiffuseNode(VectorMaterialNode *diffuseNode) { m_diffuseNode = diffuseNode; }
-		VectorMaterialNode *getDiffuseNode() const { return m_diffuseNode; }
+		void setDiffuseNode(VectorNode *diffuseNode) { m_diffuseNode = diffuseNode; }
+		VectorNode *getDiffuseNode() const { return m_diffuseNode; }
 
-		void setSpecularNode(VectorMaterialNode *specularNode) { m_specularNode = specularNode; }
-		VectorMaterialNode *getSpecularNode() const { return m_specularNode; }
+		void setSpecularNode(VectorNode *specularNode) { m_specularNode = specularNode; }
+		VectorNode *getSpecularNode() const { return m_specularNode; }
 
 	protected:
 		MicrofacetDistribution *m_coatingDistribution;
 		LambertianBSDF *m_diffuseMaterial;
 
-		VectorMaterialNode *m_diffuseNode;
-		VectorMaterialNode *m_specularNode;
+		VectorNode *m_diffuseNode;
+		VectorNode *m_specularNode;
 
 		math::Vector m_specular;
 		math::Vector m_diffuse;

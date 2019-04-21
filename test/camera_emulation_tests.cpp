@@ -147,3 +147,46 @@ TEST(CameraEmulationTests, PolygonalApertureTest) {
 
 	aperture.destroy();
 }
+
+TEST(CameraEmulationTests, DiffractionRayTest) {
+	manta::SimpleLens lens;
+	lens.initialize();
+	lens.setPosition(math::loadVector(0.0f, 0.0f, 0.0f));
+	lens.setDirection(math::loadVector(1.0f, 0.0f, 0.0f));
+	lens.setUp(math::loadVector(0.0f, 1.0f, 0.0f));
+	lens.setRadius(1.0f);
+	lens.update();
+
+	math::real lensHeight = 1.0f;
+	math::real focusDistance = 50.0f;
+
+	Aperture *aperture = lens.getAperture();
+	aperture->setRadius((math::real)0.5);
+	lens.setFocus(focusDistance);
+
+	math::Vector sensorLocation = lens.getSensorLocation();
+
+	math::Vector dir = math::loadVector(1.0f, 0.01f, 0.0f);
+	dir = math::normalize(dir);
+
+	math::Vector origin = math::add(sensorLocation, math::loadVector(0.0f, 0.1f, 0.0f));
+
+	LightRay ray1;
+	ray1.setSource(origin);
+	ray1.setDirection(dir);
+
+	LensScanHint hint;
+	lens.lensScan(sensorLocation, &hint, 4, 1.0f);
+
+	LightRay outputRay;
+	bool result = lens.transformRay(&ray1, &outputRay);
+	EXPECT_TRUE(result);
+
+	math::Vector2 aperturePoint = outputRay.getAperturePoint();
+	math::Vector2 finalSensorLocation;
+	result = lens.diffractionRay(aperturePoint, math::negate(outputRay.getDirection()), &finalSensorLocation);
+	EXPECT_TRUE(result);
+
+	EXPECT_NEAR(finalSensorLocation.x, 0.0f, 1E-3);
+	EXPECT_NEAR(finalSensorLocation.y, 0.1f, 1E-3);
+}

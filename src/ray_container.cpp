@@ -58,3 +58,13 @@ void manta::RayContainer::calculateIntensity() {
 	}
 	m_intensity = math::div(sum, math::loadScalar((math::real)m_rayCount));
 }
+
+manta::math::Vector manta::RayContainer::weightedAverage() const {
+	math::Vector sum = math::constants::Zero;
+	math::Vector totalWeight = math::constants::Zero;
+	for (int i = 0; i < m_rayCount; i++) {
+		sum = math::add(sum, m_rays[i].getWeightedIntensity());
+		totalWeight = math::add(totalWeight, m_rays[i].getWeight());
+	}
+	return math::div(sum, totalWeight);
+}

@@ -8,11 +8,11 @@ namespace manta {
 
 	class CameraRayEmitterGroup;
 	class Scene;
-	class SceneBuffer;
+	class ImagePlane;
 
 	struct Job {
 		CameraRayEmitterGroup *group;
-		SceneBuffer *target;
+		ImagePlane *target;
 		const Scene *scene;
 		int startX;
 		int startY;

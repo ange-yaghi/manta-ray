@@ -6,6 +6,9 @@
 
 manta::PolygonalAperture::PolygonalAperture() {
 	m_radius = (math::real)0.0;
+
+	m_edges = nullptr;
+	m_edgeCount = 0;
 }
 
 manta::PolygonalAperture::~PolygonalAperture() {

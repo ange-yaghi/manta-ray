@@ -116,11 +116,11 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	roomGeometry.loadObjFileData(&complexRoomObj, rayTracer.getMaterialManager());
 	roomGeometry.setFastIntersectEnabled(false);
 
-	Mesh roomShutters;
-	roomShutters.loadObjFileData(&roomShuttersObj, rayTracer.getMaterialManager(), wallMaterial->getIndex());
-	roomShutters.setFastIntersectEnabled(false);
-
 	if (BLOCK_ALL_LIGHT) {
+		Mesh roomShutters;
+		roomShutters.loadObjFileData(&roomShuttersObj, rayTracer.getMaterialManager(), wallMaterial->getIndex());
+		roomShutters.setFastIntersectEnabled(false);
+
 		roomGeometry.merge(&roomShutters);
 		roomShutters.destroy();
 	}
@@ -220,7 +220,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");
 
 	// Output the results to a scene buffer
-	SceneBuffer sceneBuffer;
+	ImagePlane sceneBuffer;
 
 	if (TRACE_SINGLE_PIXEL) {
 		rayTracer.tracePixel(616, 1459, &scene, group, &sceneBuffer);
@@ -239,7 +239,6 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	RawFile rawFile;
 	rawFile.writeRawFile(rawFname.c_str(), &sceneBuffer);
 
-	sceneBuffer.applyGammaCurve((math::real)(1.0 / 2.2));
 	writeJpeg(imageFname.c_str(), &sceneBuffer, 95);
 
 	// Free leftover objects

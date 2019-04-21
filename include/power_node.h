@@ -1,14 +1,14 @@
 #ifndef POWER_NODE_H
 #define POWER_NODE_H
 
-#include <vector_material_node.h>
+#include <vector_node.h>
 
 namespace manta {
 
-	class PowerNode : public VectorMaterialNode {
+	class PowerNode : public VectorNode {
 	public:
 		PowerNode();
-		PowerNode(math::real power, const VectorMaterialNode *input);
+		PowerNode(math::real power, const VectorNode *input);
 		~PowerNode();
 
 		virtual math::Vector sample(const IntersectionPoint *surfaceInteraction) const;
@@ -16,11 +16,11 @@ namespace manta {
 		void setPower(math::real power) { m_power = power; }
 		math::real getPower() const { return m_power; }
 
-		void setInputNode(const VectorMaterialNode *inputNode) { m_inputNode = inputNode; }
-		const VectorMaterialNode *getInputNode() const { return m_inputNode; }
+		void setInputNode(const VectorNode *inputNode) { m_inputNode = inputNode; }
+		const VectorNode *getInputNode() const { return m_inputNode; }
 
 	protected:
-		const VectorMaterialNode *m_inputNode;
+		const VectorNode *m_inputNode;
 
 		math::real m_power;
 	};

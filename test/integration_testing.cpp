@@ -12,7 +12,7 @@
 #include <ray_tracer.h>
 #include <image_handling.h>
 #include <memory_management.h>
-#include <scene_buffer.h>
+#include <image_plane.h>
 #include <standard_camera_ray_emitter_group.h>
 #include <grid_sampler.h>
 
