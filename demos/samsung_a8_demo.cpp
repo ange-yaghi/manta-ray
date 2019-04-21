@@ -385,10 +385,14 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	RawFile rawFile;
 	rawFile.writeRawFile(rawFname.c_str(), &sceneBuffer);
 
-	sceneBuffer.applyGammaCurve((math::real)(1.0 / 2.2));
 	writeJpeg(imageFname.c_str(), &sceneBuffer, 95);
 
 	sceneBuffer.destroy();
+	speakerGrillTexture.destroy();
+	phoneScreenTexture.destroy();
+	backPlateTexture.destroy();
+	groundRoughness.destroy();
+	smudgeMap.destroy();
 	rayTracer.destroy();
 	phone.destroy();
 	kdtree.destroy();

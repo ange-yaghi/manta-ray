@@ -278,17 +278,21 @@ void manta::Mesh::findQuads() {
 	m_triangleFaceCount = (int)newTrianglesTemp.size();
 	Face *newFaces = StandardAllocator::Global()->allocate<Face>(m_triangleFaceCount);
 	AuxFaceData *newAuxData = StandardAllocator::Global()->allocate<AuxFaceData>(m_triangleFaceCount);
+	AABB *newFaceBounds = StandardAllocator::Global()->allocate<AABB>(m_triangleFaceCount);
 
 	for (int i = 0; i < m_triangleFaceCount; i++) {
 		newFaces[i] = newTrianglesTemp[i];
 		newAuxData[i] = newAuxFaceDataTemp[i];
+		newFaceBounds[i] = m_faceBounds[i];
 	}
 
 	StandardAllocator::Global()->free(m_faces, originalTriangleCount);
 	StandardAllocator::Global()->free(m_auxFaceData, originalTriangleCount);
+	StandardAllocator::Global()->free(m_faceBounds, originalTriangleCount);
 
 	m_faces = newFaces;
 	m_auxFaceData = newAuxData;
+	m_faceBounds = newFaceBounds;
 
 	// Clean up temporary memory
 	StandardAllocator::Global()->free(usedFlags, originalTriangleCount);
@@ -569,10 +573,12 @@ void manta::Mesh::merge(const Mesh *mesh) {
 	math::Vector *newVerts = nullptr;
 	math::Vector *newNormals = nullptr;
 	math::Vector *newTexCoords = nullptr;
+	AABB *newFaceBounds = nullptr;
 
 	if (newFaceCount > 0) {
 		newFaces = StandardAllocator::Global()->allocate<Face>(newFaceCount);
 		newAuxFaceData = StandardAllocator::Global()->allocate<AuxFaceData>(newFaceCount);
+		newFaceBounds = StandardAllocator::Global()->allocate<AABB>(newFaceCount);
 	}
 
 	if (newVertexCount > 0) newVerts = StandardAllocator::Global()->allocate<math::Vector>(newVertexCount, 16);
@@ -582,6 +588,7 @@ void manta::Mesh::merge(const Mesh *mesh) {
 	if (newFaceCount > 0) {
 		memcpy((void *)newFaces, (void *)m_faces, sizeof(Face) * m_triangleFaceCount);
 		memcpy((void *)newAuxFaceData, (void *)m_auxFaceData, sizeof(AuxFaceData) * m_triangleFaceCount);
+		memcpy((void *)newFaceBounds, (void *)m_faceBounds, sizeof(AABB) * m_triangleFaceCount);
 	}
 	if (newVertexCount > 0) memcpy((void *)newVerts, (void *)m_vertices, sizeof(math::Vector) * m_vertexCount);
 	if (newNormalCount > 0) memcpy((void *)newNormals, (void *)m_normals, sizeof(math::Vector) * m_normalCount);
@@ -589,10 +596,13 @@ void manta::Mesh::merge(const Mesh *mesh) {
 
 	for (int i = 0; i < mesh->getFaceCount(); i++) {
 		Face &newFace = newFaces[i + m_triangleFaceCount];
+		AABB &newBound = newFaceBounds[i + m_triangleFaceCount];
 		AuxFaceData &auxData = newAuxFaceData[i + m_triangleFaceCount];
 		const Face *mergeFace = mesh->getFace(i);
+		const AABB *mergeBound = mesh->getBounds(i);
 		const AuxFaceData *mergeAuxData = mesh->getAuxFace(i);
 
+		newBound = *mergeBound;
 		auxData.material = mergeAuxData->material;
 
 		if (newFaceCount > 0) {
@@ -627,12 +637,14 @@ void manta::Mesh::merge(const Mesh *mesh) {
 	}
 
 	if (m_faces != nullptr) StandardAllocator::Global()->free(m_faces, m_triangleFaceCount);
+	if (m_faceBounds != nullptr) StandardAllocator::Global()->free(m_faceBounds, m_triangleFaceCount);
 	if (m_auxFaceData != nullptr) StandardAllocator::Global()->free(m_auxFaceData, m_triangleFaceCount);
 	if (m_vertices != nullptr) StandardAllocator::Global()->aligned_free(m_vertices, m_vertexCount);
 	if (m_normals != nullptr) StandardAllocator::Global()->aligned_free(m_normals, m_normalCount);
 	if (m_textureCoords != nullptr) StandardAllocator::Global()->aligned_free(m_textureCoords, m_texCoordCount);
 
 	m_faces = newFaces;
+	m_faceBounds = newFaceBounds;
 	m_auxFaceData = newAuxFaceData;
 	m_vertices = newVerts;
 	m_normals = newNormals;

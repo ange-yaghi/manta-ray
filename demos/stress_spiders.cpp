@@ -10,7 +10,7 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 	constexpr bool USE_ACCELERATION_STRUCTURE = true;
 	constexpr bool DETERMINISTIC_SEED_MODE = false;
 	constexpr bool TRACE_SINGLE_PIXEL = false;
-	constexpr bool ENABLE_FRAUNHOFER_DIFFRACTION = true;
+	constexpr bool ENABLE_FRAUNHOFER_DIFFRACTION = false;
 
 	Scene scene;
 	RayTracer rayTracer;

@@ -7,7 +7,7 @@ using namespace manta;
 void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int resolutionY) {
 	// Top-level parameters
 	constexpr bool USE_ACCELERATION_STRUCTURE = true;
-	constexpr bool DETERMINISTIC_SEED_MODE = true;
+	constexpr bool DETERMINISTIC_SEED_MODE = false;
 	constexpr bool TRACE_SINGLE_PIXEL = false;
 	constexpr const char *MATERIAL = "Steel2";
 
@@ -71,6 +71,8 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
 
 	TextureNode woodRoughness;
 	woodRoughness.loadFile(TEXTURE_PATH "/wood_roughness.jpg", 1.0f);
+	woodRoughness.initialize();
+	woodRoughness.evaluate();
 
 	PhongDistribution woodCoating;
 	woodCoating.setPower(1000);
@@ -102,6 +104,7 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
 	// Steel 2
 	TextureNode fingerprintTexture;
 	fingerprintTexture.loadFile(TEXTURE_PATH "samsung_a8/fingerprints_roughness_map.png", false);
+	fingerprintTexture.initialize();
 	fingerprintTexture.evaluate();
 
 	TextureNode metalTexture;
@@ -246,9 +249,13 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
 	RawFile rawFile;
 	rawFile.writeRawFile(rawFname.c_str(), &sceneBuffer);
 
-	sceneBuffer.applyGammaCurve((math::real)(1.0 / 2.2));
 	writeJpeg(imageFname.c_str(), &sceneBuffer, 95);
 
+	texture.destroy();
+	woodRoughness.destroy(); 
+	fingerprintTexture.destroy();
+	metalTexture.destroy();
+	checkerboardTexture.destroy();
 	sceneBuffer.destroy();
 	rayTracer.destroy();
 	stage.destroy();

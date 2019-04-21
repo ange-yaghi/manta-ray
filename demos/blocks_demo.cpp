@@ -88,6 +88,7 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 	Mesh blocks;
 	blocks.loadObjFileData(&blocksObj, rayTracer.getMaterialManager());
 	blocks.setFastIntersectEnabled(false);
+	blocksObj.destroy();
 
 	SpherePrimitive outdoorTopLightGeometry;
 	outdoorTopLightGeometry.setRadius((math::real)10.0);
@@ -193,8 +194,13 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 
 	writeJpeg(imageFname.c_str(), &sceneBuffer, 95);
 
+	map.destroy();
+	blockSpecular.destroy();
 	sceneBuffer.destroy();
 	rayTracer.destroy();
+	blocks.destroy();
 
 	kdtree.destroy();
+
+	std::cout << "Standard allocator memory leaks:     " << StandardAllocator::Global()->getLedger() << ", " << StandardAllocator::Global()->getCurrentUsage() << std::endl;
 }

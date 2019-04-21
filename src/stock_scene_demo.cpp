@@ -276,11 +276,15 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
 	RawFile rawFile;
 	rawFile.writeRawFile(rawFname.c_str(), &sceneBuffer);
 
-	sceneBuffer.applyGammaCurve((math::real)(1.0 / 2.2));
 	writeJpeg(imageFname.c_str(), &sceneBuffer, 95);
 
 	sceneBuffer.destroy();
 	rayTracer.destroy();
+	fingerprintTexture.destroy();
+	metalTexture.destroy();
+	woodTexture.destroy();
+	eraserTexture.destroy();
+	floorTexture.destroy();
 	stage.destroy();
 	kdtree.destroy();
 
