@@ -7,7 +7,7 @@
 
 namespace manta {
 
-	class SceneBuffer;
+	class ImagePlane;
 
 	class StandardCameraRayEmitterGroup : public CameraRayEmitterGroup {
 	public:

@@ -1,10 +1,9 @@
 #include <simple_bsdf_material.h>
 
 #include <ray_container.h>
-
 #include <intersection_point.h>
 #include <light_ray.h>
-#include <vector_material_node.h>
+#include <vector_node.h>
 #include <bsdf.h>
 
 manta::SimpleBSDFMaterial::SimpleBSDFMaterial() {
@@ -20,6 +19,7 @@ manta::SimpleBSDFMaterial::SimpleBSDFMaterial() {
 }
 
 manta::SimpleBSDFMaterial::~SimpleBSDFMaterial() {
+
 }
 
 void manta::SimpleBSDFMaterial::integrateRay(LightRay *ray, const RayContainer &rays, const IntersectionPoint &intersectionPoint) const {
@@ -50,7 +50,7 @@ void manta::SimpleBSDFMaterial::integrateRay(LightRay *ray, const RayContainer &
 
 void manta::SimpleBSDFMaterial::generateRays(RayContainer *rays, const LightRay &incidentRay, const IntersectionPoint &intersectionPoint, int degree, StackAllocator *stackAllocator) const {
 	if (degree > m_maxDegree) return;
-	if (math::getScalar(math::magnitudeSquared3(m_reflectance)) < (math::real)1E-6) return; /* Early exit if the diffuse color is black */
+	if (math::getScalar(math::magnitudeSquared3(m_reflectance)) < (math::real)1E-6) return; // Early exit if the diffuse color is black
 	if (math::getScalar(math::magnitudeSquared3(incidentRay.getWeight())) < (math::real)1E-4) return;
 
 	math::Vector normal = intersectionPoint.m_vertexNormal;

@@ -1,7 +1,7 @@
 #ifndef BSDF_H
 #define BSDF_H
 
-#include <material_node.h>
+#include <node.h>
 
 #include <manta_math.h>
 #include <media_interface.h>
@@ -14,7 +14,7 @@ namespace manta {
 	struct IntersectionPoint;
 	class StackAllocator;
 
-	class BSDF : public MaterialNode {
+	class BSDF : public Node {
 	public:
 		BSDF();
 		~BSDF();

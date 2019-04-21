@@ -24,19 +24,29 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 
 	// Load all textures
 	TextureNode speakerGrillTexture;
-	speakerGrillTexture.loadFile(TEXTURE_PATH "samsung_a8/speaker_grill.jpg", (math::real)2.2);
+	speakerGrillTexture.loadFile(TEXTURE_PATH "samsung_a8/speaker_grill.jpg", true);
+	speakerGrillTexture.initialize();
+	speakerGrillTexture.evaluate();
 
 	TextureNode backPlateTexture;
-	backPlateTexture.loadFile(TEXTURE_PATH "samsung_a8/back_plate.png", (math::real)2.2);
+	backPlateTexture.loadFile(TEXTURE_PATH "samsung_a8/back_plate.png", true);
+	backPlateTexture.initialize();
+	backPlateTexture.evaluate();
 
 	TextureNode phoneScreenTexture;
-	phoneScreenTexture.loadFile(TEXTURE_PATH "samsung_a8/phone_screen.png", (math::real)2.2);
+	phoneScreenTexture.loadFile(TEXTURE_PATH "samsung_a8/phone_screen.png", true);
+	phoneScreenTexture.initialize();
+	phoneScreenTexture.evaluate();
 
 	TextureNode groundRoughness;
-	groundRoughness.loadFile(TEXTURE_PATH "chrome_roughness.jpg", (math::real)1.0);
+	groundRoughness.loadFile(TEXTURE_PATH "chrome_roughness.jpg", false);
+	groundRoughness.initialize();
+	groundRoughness.evaluate();
 
 	TextureNode smudgeMap;
-	smudgeMap.loadFile(TEXTURE_PATH "samsung_a8/fingerprints_roughness_map.png", (math::real)1.0);
+	smudgeMap.loadFile(TEXTURE_PATH "samsung_a8/fingerprints_roughness_map.png", false);
+	smudgeMap.initialize();
+	smudgeMap.evaluate();
 
 	// Load all object files
 	ObjFileLoader phoneObj;
@@ -359,7 +369,7 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");
 
 	// Output the results to a scene buffer
-	SceneBuffer sceneBuffer;
+	ImagePlane sceneBuffer;
 
 	if (TRACE_SINGLE_PIXEL) {
 		rayTracer.tracePixel(1044, 1063, &scene, group, &sceneBuffer);
@@ -375,10 +385,14 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	RawFile rawFile;
 	rawFile.writeRawFile(rawFname.c_str(), &sceneBuffer);
 
-	sceneBuffer.applyGammaCurve((math::real)(1.0 / 2.2));
 	writeJpeg(imageFname.c_str(), &sceneBuffer, 95);
 
 	sceneBuffer.destroy();
+	speakerGrillTexture.destroy();
+	phoneScreenTexture.destroy();
+	backPlateTexture.destroy();
+	groundRoughness.destroy();
+	smudgeMap.destroy();
 	rayTracer.destroy();
 	phone.destroy();
 	kdtree.destroy();

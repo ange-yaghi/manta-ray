@@ -7,76 +7,41 @@
 #include <assert.h>
 
 manta::TextureNode::TextureNode() {
-	m_width = 0;
-	m_height = 0;
-	m_imageData = nullptr;
+	m_mapInputNode = nullptr;
 }
 
 manta::TextureNode::~TextureNode() {
 
 }
 
-void manta::TextureNode::loadFile(const char *fname, math::real gamma) {
-	SDL_Surface *image;
-	image = IMG_Load(fname);
+void manta::TextureNode::loadFile(const char *fname, bool correctGamma) {
+	m_mapInputNode = &m_defaultNode;
 
-	m_imageData = new Pixel *[image->h];
-
-	for (int i = 0; i < image->h; i++) {
-		m_imageData[i] = new Pixel[image->w];
-	}
-
-	for (int i = 0; i < image->w; i++) {
-		for (int j = 0; j < image->h; j++) {
-			getPixel(image, i, j, &m_imageData[j][i]);
-		}
-	}
-
-	m_width = image->w;
-	m_height = image->h;
-
-	m_gamma = gamma;
-
-	SDL_free((void *)image);
+	m_defaultNode.setFilename(std::string(fname));
+	m_defaultNode.setCorrectGamma(correctGamma);
 }
 
 manta::math::Vector manta::TextureNode::sample(const IntersectionPoint *surfaceInteraction) const {
 	math::real u = math::getX(surfaceInteraction->m_textureCoodinates);
 	math::real v = math::getY(surfaceInteraction->m_textureCoodinates);
 
-	// Simple sampling for now
-	int pixelY = (int)(v * (m_height - 1)) % m_height;
-	int pixelX = (int)(u * (m_width - 1)) % m_width;
+	// Wrap coordinates
+	u = (math::real)fmod(u, (math::real)1.0);
+	v = (math::real)fmod(v, (math::real)1.0);
 
-	if (pixelY < 0) pixelY += m_height;
-	if (pixelX < 0) pixelX += m_width;
+	if (u < 0) u = 1 + u;
+	if (v < 0) v = 1 + v;
 
-	pixelY = m_height - pixelY - 1;
-
-	assert(pixelY >= 0 && pixelY < m_height);
-	assert(pixelX >= 0 && pixelX < m_width);
-
-	Pixel *pixel = &m_imageData[pixelY][pixelX];
-
-	math::real rr = pow(pixel->r / (math::real)255.0, m_gamma);
-	math::real rg = pow(pixel->g / (math::real)255.0, m_gamma);
-	math::real rb = pow(pixel->b / (math::real)255.0, m_gamma);
-
-	return math::loadVector(rr, rg, rb);
+	VectorMap2DNode *node = static_cast<VectorMap2DNode *>(m_mapInputNode);
+	return node->getMap()->sample(u, 1 - v);
 }
 
-void manta::TextureNode::getPixel(const SDL_Surface *surface, int x, int y, Pixel *pixelOut) {
-	Uint32 color = 0;
+void manta::TextureNode::registerDependencies() {
+	registerDependency(&m_mapInputNode, "Map");
+}
 
-	Uint8 *pixel = (Uint8*)surface->pixels;
-	pixel += (y * surface->pitch) + (x * sizeof(Uint8) * surface->format->BytesPerPixel);
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-	pixelOut->r = pixel[0];
-	pixelOut->g = pixel[1];
-	pixelOut->b = pixel[2];
-#else
-	pixelOut->r = pixel[0];
-	pixelOut->g = pixel[1];
-	pixelOut->b = pixel[2];
-#endif
+void manta::TextureNode::_destroy() {
+	VectorNode::_destroy();
+
+	m_defaultNode.destroy();
 }

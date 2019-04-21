@@ -3,7 +3,7 @@
 #include <microfacet_reflection_bsdf.h>
 #include <lambertian_bsdf.h>
 #include <microfacet_distribution.h>
-#include <vector_material_node.h>
+#include <vector_node.h>
 #include <phong_distribution.h>
 
 #include <iostream>
@@ -41,8 +41,8 @@ manta::math::Vector manta::BilayerBSDF::sampleF(const IntersectionPoint *surface
 
 	math::Vector wh;
 
-	MaterialNodeMemory specularDistMem;
-	m_coatingDistribution->initialize(surfaceInteraction, &specularDistMem, stackAllocator);
+	NodeSessionMemory specularDistMem;
+	m_coatingDistribution->initializeSessionMemory(surfaceInteraction, &specularDistMem, stackAllocator);
 
 	PhongMemory *memory = reinterpret_cast<PhongMemory *>((void *)specularDistMem.memory);
 	math::real s = memory->power;
@@ -67,7 +67,7 @@ manta::math::Vector manta::BilayerBSDF::sampleF(const IntersectionPoint *surface
 	
 	if (math::getX(wh) == 0 && math::getY(wh) == 0 && math::getZ(wh) == 0) {
 		// Free all memory
-		m_coatingDistribution->free(&specularDistMem, stackAllocator);
+		m_coatingDistribution->destroySessionMemory(&specularDistMem, stackAllocator);
 
 		*pdf = 0.0;
 		return math::constants::Zero;
@@ -130,7 +130,7 @@ manta::math::Vector manta::BilayerBSDF::sampleF(const IntersectionPoint *surface
 	}
 
 	// Free all memory
-	m_coatingDistribution->free(&specularDistMem, stackAllocator);
+	m_coatingDistribution->destroySessionMemory(&specularDistMem, stackAllocator);
 
 	// Return reflectance
 	math::Vector fr = math::add(diffuse, specular);

@@ -1,14 +1,14 @@
 #ifndef REMAP_NODE_H
 #define REMAP_NODE_H
 
-#include <vector_material_node.h>
+#include <vector_node.h>
 
 namespace manta {
 
-	class RemapNode : public VectorMaterialNode {
+	class RemapNode : public VectorNode {
 	public:
 		RemapNode();
-		RemapNode(const math::Vector &start, const math::Vector &end, const VectorMaterialNode *inputNode);
+		RemapNode(const math::Vector &start, const math::Vector &end, const VectorNode *inputNode);
 		~RemapNode();
 
 		virtual math::Vector sample(const IntersectionPoint *surfaceInteraction) const;
@@ -19,11 +19,11 @@ namespace manta {
 		void setEnd(const math::Vector &end) { m_end = end; }
 		math::Vector getEnd() { return m_end; }
 
-		void setInputNode(const VectorMaterialNode *inputNode) { m_inputNode = inputNode; }
-		const VectorMaterialNode *getInputNode() const { return m_inputNode; }
+		void setInputNode(const VectorNode *inputNode) { m_inputNode = inputNode; }
+		const VectorNode *getInputNode() const { return m_inputNode; }
 
 	protected:
-		const VectorMaterialNode *m_inputNode;
+		const VectorNode *m_inputNode;
 
 		math::Vector m_start;
 		math::Vector m_end;

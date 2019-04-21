@@ -136,12 +136,6 @@
     <Filter Include="OpenCL Programs">
       <UniqueIdentifier>{ff23a991-3a5f-40e8-adfd-7af0899831f2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\scene-buffer">
-      <UniqueIdentifier>{e16ff8e5-1136-4bb3-8b2f-0cf546010d6a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\scene-buffer">
-      <UniqueIdentifier>{988aec5c-3d6c-4273-932b-07c96b1c7169}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\output">
       <UniqueIdentifier>{21a944f2-b8e6-4bf7-b043-4ae32b2b02ee}</UniqueIdentifier>
     </Filter>
@@ -214,18 +208,6 @@
     <Filter Include="Source Files\os">
       <UniqueIdentifier>{df3763e2-a1e5-4c08-aaa4-6785b6d57a7e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\material\node">
-      <UniqueIdentifier>{5058470b-83f3-4aad-80a8-bee0b7b32d8a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\material\node">
-      <UniqueIdentifier>{f8d189d9-f785-4965-9730-f6b3510c5968}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\material\node\library">
-      <UniqueIdentifier>{6bbda7a1-4ed0-4ec7-be11-fac60817253a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\material\node\library">
-      <UniqueIdentifier>{587db5d8-d63a-407c-84d6-8d9ea918eafd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\material\surface-modeling\microfacet-model">
       <UniqueIdentifier>{eda51e41-f495-457e-a594-0cb7c2378661}</UniqueIdentifier>
     </Filter>
@@ -240,6 +222,54 @@
     </Filter>
     <Filter Include="Source Files\output\jpeg">
       <UniqueIdentifier>{7fcfae2e-597d-4da6-a0e0-a2516719cd0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\image-plane">
+      <UniqueIdentifier>{e16ff8e5-1136-4bb3-8b2f-0cf546010d6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\image-plane\convolution">
+      <UniqueIdentifier>{62e92eab-91e2-4add-9cfb-210607981fcb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\image-plane">
+      <UniqueIdentifier>{988aec5c-3d6c-4273-932b-07c96b1c7169}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\image-plane\convolution">
+      <UniqueIdentifier>{6b2418ef-5c17-42fc-9092-f1f57512b3cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\image-plane\convolution\lib">
+      <UniqueIdentifier>{21cfe823-8988-4b67-ba1e-3fd99f243709}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\image-plane\convolution\lib">
+      <UniqueIdentifier>{f5068905-5177-4136-af27-3c6743427983}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\camera-emulation\diffraction">
+      <UniqueIdentifier>{5beac397-109f-4608-b320-a3ca3520661e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\camera-emulation\diffraction">
+      <UniqueIdentifier>{d88be538-9844-422d-97d6-cf0a21d3077b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\color">
+      <UniqueIdentifier>{f30a3f27-b0fb-4411-9765-851784ec6c82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\color">
+      <UniqueIdentifier>{2658ff2e-0936-4726-a15e-48f11d4346b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\math\maps">
+      <UniqueIdentifier>{61cdf03b-ad12-48e5-8bb3-a1933704d404}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\math\maps">
+      <UniqueIdentifier>{d84a2f0b-44d7-4eba-bf6a-20c10a9135a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\nodes">
+      <UniqueIdentifier>{b5a6d8d5-3d50-43fe-ad17-d4ed3e2a3377}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\nodes\library">
+      <UniqueIdentifier>{6bbda7a1-4ed0-4ec7-be11-fac60817253a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\nodes">
+      <UniqueIdentifier>{d495052b-39d0-4eba-952d-84694afada18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\nodes\library">
+      <UniqueIdentifier>{587db5d8-d63a-407c-84d6-8d9ea918eafd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -318,9 +348,6 @@
     <ClCompile Include="..\..\src\path_recorder.cpp">
       <Filter>Source Files\debugging\path-recording</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\scene_buffer.cpp">
-      <Filter>Source Files\scene-buffer</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\raw_file.cpp">
       <Filter>Source Files\output</Filter>
     </ClCompile>
@@ -384,17 +411,11 @@
     <ClCompile Include="..\..\src\os_utilities.cpp">
       <Filter>Source Files\os</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\material_node.cpp">
-      <Filter>Source Files\material\node</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\vector_material_node.cpp">
-      <Filter>Source Files\material\node</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\single_color_node.cpp">
-      <Filter>Source Files\material\node\library</Filter>
+      <Filter>Source Files\nodes\library</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\texture_node.cpp">
-      <Filter>Source Files\material\node\library</Filter>
+      <Filter>Source Files\nodes\library</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\perfect_specular_reflection_bsdf.cpp">
       <Filter>Source Files\material\surface-modeling\bsdf\library</Filter>
@@ -433,7 +454,7 @@
       <Filter>Source Files\output\jpeg</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\image_byte_buffer.cpp">
-      <Filter>Source Files\scene-buffer</Filter>
+      <Filter>Source Files\image-plane</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\image_handling.cpp">
       <Filter>Source Files\output</Filter>
@@ -446,6 +467,60 @@
     </ClCompile>
     <ClCompile Include="..\..\src\polygonal_aperture.cpp">
       <Filter>Source Files\camera-emulation\apertures</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\image_plane.cpp">
+      <Filter>Source Files\image-plane</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\convolution.cpp">
+      <Filter>Source Files\image-plane\convolution</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\starburst_approximation.cpp">
+      <Filter>Source Files\image-plane\convolution\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\circle_convolution.cpp">
+      <Filter>Source Files\image-plane\convolution\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\signal_processing.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cft_estimator_2d.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\fraunhofer_diffraction.cpp">
+      <Filter>Source Files\camera-emulation\diffraction</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cmf_table.cpp">
+      <Filter>Source Files\color</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\rgb_space.cpp">
+      <Filter>Source Files\color</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\spectrum.cpp">
+      <Filter>Source Files\color</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\complex_map_2d.cpp">
+      <Filter>Source Files\math\maps</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\vector_map_2d.cpp">
+      <Filter>Source Files\math\maps</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mipmap.cpp">
+      <Filter>Source Files\math\maps</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\node.cpp">
+      <Filter>Source Files\nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\vector_node.cpp">
+      <Filter>Source Files\nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\image_file_node.cpp">
+      <Filter>Source Files\nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\image_output_node.cpp">
+      <Filter>Source Files\nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\convolution_node.cpp">
+      <Filter>Source Files\nodes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -551,9 +626,6 @@
     <ClInclude Include="..\..\include\manta.h">
       <Filter>Header Files\manta</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\scene_buffer.h">
-      <Filter>Header Files\scene-buffer</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\raw_file.h">
       <Filter>Header Files\output</Filter>
     </ClInclude>
@@ -638,17 +710,11 @@
     <ClInclude Include="..\..\include\os_utilities.h">
       <Filter>Header Files\os</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\material_node.h">
-      <Filter>Header Files\material\node</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\vector_material_node.h">
-      <Filter>Header Files\material\node</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\single_color_node.h">
-      <Filter>Header Files\material\node\library</Filter>
+      <Filter>Header Files\nodes\library</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\texture_node.h">
-      <Filter>Header Files\material\node\library</Filter>
+      <Filter>Header Files\nodes\library</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\perfect_specular_reflection_bsdf.h">
       <Filter>Header Files\material\surface-modeling\bsdf\library</Filter>
@@ -681,16 +747,16 @@
       <Filter>Header Files\debugging\statistics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\remap_node.h">
-      <Filter>Header Files\material\node\library</Filter>
+      <Filter>Header Files\nodes\library</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\power_node.h">
-      <Filter>Header Files\material\node\library</Filter>
+      <Filter>Header Files\nodes\library</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\jpeg_writer.h">
       <Filter>Header Files\output\jpeg</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\image_byte_buffer.h">
-      <Filter>Header Files\scene-buffer</Filter>
+      <Filter>Header Files\image-plane</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\image_handling.h">
       <Filter>Header Files\output</Filter>
@@ -703,6 +769,81 @@
     </ClInclude>
     <ClInclude Include="..\..\include\polygonal_aperture.h">
       <Filter>Header Files\camera-emulation\apertures</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\image_plane.h">
+      <Filter>Header Files\image-plane</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\convolution.h">
+      <Filter>Header Files\image-plane\convolution</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\circle_convolution.h">
+      <Filter>Header Files\image-plane\convolution\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\starburst_approximation.h">
+      <Filter>Header Files\image-plane\convolution\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\signal_processing.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\complex_math.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\margins.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\cft_estimator_2d.h">
+      <Filter>Header Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fraunhofer_diffraction.h">
+      <Filter>Header Files\camera-emulation\diffraction</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\cmf_table.h">
+      <Filter>Header Files\color</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\color.h">
+      <Filter>Header Files\color</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\rgb_space.h">
+      <Filter>Header Files\color</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\spectrum.h">
+      <Filter>Header Files\color</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\scalar_map_2d.h">
+      <Filter>Header Files\math\maps</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\vector_map_2d.h">
+      <Filter>Header Files\math\maps</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\complex_map_2d.h">
+      <Filter>Header Files\math\maps</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\mipmap.h">
+      <Filter>Header Files\math\maps</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\node.h">
+      <Filter>Header Files\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\vector_node.h">
+      <Filter>Header Files\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\map_2d_node.h">
+      <Filter>Header Files\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\image_file_node.h">
+      <Filter>Header Files\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\node_type.h">
+      <Filter>Header Files\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\image_output_node.h">
+      <Filter>Header Files\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\convolution_node.h">
+      <Filter>Header Files\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\vector_map_wrapper_node.h">
+      <Filter>Header Files\nodes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

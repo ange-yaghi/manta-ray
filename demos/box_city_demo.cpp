@@ -10,6 +10,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	constexpr bool WRITE_KDTREE_TO_FILE = false;
 	constexpr bool LENS_SIMULATION = true;
 	constexpr bool POLYGON_APERTURE = true;
+	constexpr bool ENABLE_FRAUNHOFER_DIFFRACTION = true;
 
 	Scene scene;
 	RayTracer rayTracer;
@@ -33,19 +34,27 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	BilayerBSDF blockBSDF;
 	blockBSDF.setCoatingDistribution(&blockCoating);
 	blockBSDF.setDiffuseMaterial(&lambert);
-	blockBSDF.setDiffuse(getColor(0xf1, 0xc4, 0x0f));
+	blockBSDF.setDiffuse(getColor(0xf1, 0xc4, 0x0f)); // 0xf1, 0xc4, 0x0f
 	blockBSDF.setSpecularAtNormal(math::loadVector(0.02f, 0.02f, 0.02f));
 	SimpleBSDFMaterial *blockMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	blockMaterial->setName("Block");
 	blockMaterial->setBSDF(&blockBSDF);
+	//blockMaterial->setReflectance(math::loadVector(0.01f, 0.01f, 0.01f));
 
 	SimpleBSDFMaterial outdoorTopLightMaterial;
-	outdoorTopLightMaterial.setEmission(math::loadVector(5.f, 5.f, 5.f));
+	outdoorTopLightMaterial.setEmission(math::loadVector(40.f, 40.f, 40.f));
 	outdoorTopLightMaterial.setReflectance(math::constants::Zero);
 
 	SimpleBSDFMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	groundMaterial->setName("Ground");
+	//groundMaterial->setReflectance(math::loadVector(0.01f, 0.01f, 0.01f));
 	groundMaterial->setBSDF(&lambert);
+
+	SimpleBSDFMaterial *sunMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	sunMaterial->setName("Sun");
+	sunMaterial->setReflectance(math::loadVector(0.0f, 0.0f, 0.0f));
+	sunMaterial->setEmission(math::loadVector(10000.0f, 10000.0f, 10000.0f));
+	sunMaterial->setBSDF(nullptr);
 
 	// Create all scene geometry
 	Mesh boxCity;
@@ -54,12 +63,12 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	//boxCity.findQuads();
 
 	SpherePrimitive outdoorTopLightGeometry;
-	outdoorTopLightGeometry.setRadius((math::real)10.0);
+	outdoorTopLightGeometry.setRadius((math::real)1.0);
 	outdoorTopLightGeometry.setPosition(math::loadVector(20.f, 30.0f, -13.5f));
 
 	// Create scene objects
 	KDTree kdtree;
-	kdtree.initialize(100.0f, math::constants::Zero);
+	kdtree.initialize(1000.0f, math::constants::Zero);
 	kdtree.analyze(&boxCity, 2);
 
 	if (WRITE_KDTREE_TO_FILE) {
@@ -91,7 +100,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
 	manta::SimpleLens lens;
 	manta::PolygonalAperture polygonalAperture;
-	polygonalAperture.initialize(6);
+	polygonalAperture.initialize(8);
 
 	if (POLYGON_APERTURE) lens.setAperture(&polygonalAperture);
 	lens.initialize();
@@ -104,6 +113,12 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	lens.setSensorHeight(10.0f);
 	lens.setSensorWidth(10.0f * (resolutionX / (math::real)resolutionY));
 	lens.update();
+
+	std::string fname = createUniqueRenderFilename("box_city_demo", samplesPerPixel);
+	std::string imageFname = std::string(RENDER_OUTPUT) + "bitmap/" + fname + ".jpg";
+	std::string fraunFname = std::string(RENDER_OUTPUT) + "bitmap/" + fname + "_fraun" + ".jpg";
+	std::string convFname = std::string(RENDER_OUTPUT) + "bitmap/" + fname + "_conv" + ".jpg";
+	std::string rawFname = std::string(RENDER_OUTPUT) + "raw/" + fname + ".fpm";
 
 	RandomSampler sampler;
 
@@ -142,15 +157,16 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	}
 
 	// Output the results to a scene buffer
-	SceneBuffer sceneBuffer;
+	ImagePlane sceneBuffer;
 
 	// Initialize and run the ray tracer
 	rayTracer.initialize(200 * MB, 50 * MB, 12, 100, true);
-	rayTracer.setBackgroundColor(getColor(255, 255, 255));
+	rayTracer.setBackgroundColor(getColor(0xff, 0xff, 0xff));
+	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 	
 	if (TRACE_SINGLE_PIXEL) {
-		rayTracer.tracePixel(779, 942, &scene, group, &sceneBuffer);
+		rayTracer.tracePixel(915, 985, &scene, group, &sceneBuffer);
 	}
 	else {
 		rayTracer.traceAll(&scene, group, &sceneBuffer);
@@ -159,14 +175,77 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	// Clean up the camera
 	delete group;
 
-	std::string fname = createUniqueRenderFilename("box_city_demo", samplesPerPixel);
-	std::string imageFname = std::string(RENDER_OUTPUT) + "bitmap/" + fname + ".jpg";
-	std::string rawFname = std::string(RENDER_OUTPUT) + "raw/" + fname + ".fpm";
-
 	RawFile rawFile;
 	rawFile.writeRawFile(rawFname.c_str(), &sceneBuffer);
 
-	sceneBuffer.applyGammaCurve((math::real)(1.0 / 2.2));
+	if (ENABLE_FRAUNHOFER_DIFFRACTION) {
+		VectorMap2D base;
+		base.copy(&sceneBuffer);
+
+		int safeWidth = base.getSafeWidth();
+
+		FraunhoferDiffraction testFraun;
+		FraunhoferDiffraction::Settings settings;
+		FraunhoferDiffraction::defaultSettings(&settings);
+		settings.frequencyMultiplier = 1.0;
+		settings.maxSamples = 4096;
+		settings.textureSamples = 10;
+
+		TextureNode dirtTexture;
+		dirtTexture.loadFile(TEXTURE_PATH "dirt_very_soft.png", true);
+		dirtTexture.initialize();
+		dirtTexture.evaluate();
+
+		CmfTable colorTable;
+		Spectrum sourceSpectrum;
+		colorTable.loadCsv(CMF_PATH "xyz_cmf_31.csv");
+		sourceSpectrum.loadCsv(CMF_PATH "d65_lighting.csv");
+
+		testFraun.generate(&polygonalAperture, &dirtTexture, safeWidth, 0.5f, &colorTable, &sourceSpectrum, &settings);
+
+		VectorMapWrapperNode fraunNode(testFraun.getDiffractionPattern());
+		fraunNode.initialize();
+		fraunNode.evaluate();
+
+		ImageOutputNode fraunOutputNode;
+		fraunOutputNode.setJpegQuality(95);
+		fraunOutputNode.setGammaCorrection(true);
+		fraunOutputNode.setOutputFilename(fraunFname);
+		fraunOutputNode.setInputNode(&fraunNode);
+		fraunOutputNode.initialize();
+		fraunOutputNode.evaluate();
+		fraunOutputNode.destroy();
+
+		VectorMapWrapperNode baseNode(&base);
+		baseNode.initialize();
+		baseNode.evaluate();
+		baseNode.destroy();
+
+		ConvolutionNode convNode;
+		convNode.setInputs(&baseNode, &fraunNode);
+		convNode.setResize(true);
+		convNode.setClip(true);
+		convNode.initialize();
+		convNode.evaluate();
+
+		testFraun.destroy();
+		base.destroy();
+
+		ImageOutputNode outputNode;
+		outputNode.setJpegQuality(95);
+		outputNode.setGammaCorrection(true);
+		outputNode.setOutputFilename(convFname);
+		outputNode.setInputNode(&convNode);
+		outputNode.initialize();
+		outputNode.evaluate();
+		outputNode.destroy();
+
+		colorTable.destroy();
+		sourceSpectrum.destroy();
+		convNode.destroy();
+		dirtTexture.destroy();
+	}
+
 	writeJpeg(imageFname.c_str(), &sceneBuffer, 95);
 
 	sceneBuffer.destroy();

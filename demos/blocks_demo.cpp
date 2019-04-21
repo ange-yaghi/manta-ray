@@ -23,10 +23,14 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 	}
 
 	TextureNode map;
-	map.loadFile(TEXTURE_PATH "blocks.png", (math::real)2.2);
+	map.loadFile(TEXTURE_PATH "blocks.png", true);
+	map.initialize();
+	map.evaluate();
 
 	TextureNode blockSpecular;
-	blockSpecular.loadFile(TEXTURE_PATH "blocks_specular.png", (math::real)2.2);
+	blockSpecular.loadFile(TEXTURE_PATH "blocks_specular.png", true);
+	blockSpecular.initialize();
+	blockSpecular.evaluate();
 
 	PhongDistribution phongDist;
 	phongDist.setPower(4096);
@@ -84,6 +88,7 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 	Mesh blocks;
 	blocks.loadObjFileData(&blocksObj, rayTracer.getMaterialManager());
 	blocks.setFastIntersectEnabled(false);
+	blocksObj.destroy();
 
 	SpherePrimitive outdoorTopLightGeometry;
 	outdoorTopLightGeometry.setRadius((math::real)10.0);
@@ -163,7 +168,7 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 	}
 
 	// Output the results to a scene buffer
-	SceneBuffer sceneBuffer;
+	ImagePlane sceneBuffer;
 
 	// Run the ray tracer
 	rayTracer.initialize(200 * MB, 50 * MB, 12, 100, true);
@@ -187,11 +192,15 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 	RawFile rawFile;
 	rawFile.writeRawFile(rawFname.c_str(), &sceneBuffer);
 
-	sceneBuffer.applyGammaCurve((math::real)(1.0 / 2.2));
 	writeJpeg(imageFname.c_str(), &sceneBuffer, 95);
 
+	map.destroy();
+	blockSpecular.destroy();
 	sceneBuffer.destroy();
 	rayTracer.destroy();
+	blocks.destroy();
 
 	kdtree.destroy();
+
+	std::cout << "Standard allocator memory leaks:     " << StandardAllocator::Global()->getLedger() << ", " << StandardAllocator::Global()->getCurrentUsage() << std::endl;
 }

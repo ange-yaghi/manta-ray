@@ -10,6 +10,7 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 	constexpr bool USE_ACCELERATION_STRUCTURE = true;
 	constexpr bool DETERMINISTIC_SEED_MODE = false;
 	constexpr bool TRACE_SINGLE_PIXEL = false;
+	constexpr bool ENABLE_FRAUNHOFER_DIFFRACTION = false;
 
 	Scene scene;
 	RayTracer rayTracer;
@@ -151,7 +152,7 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 
 	// Output the results to a scene buffer
-	SceneBuffer sceneBuffer;
+	ImagePlane sceneBuffer;
 
 	if (TRACE_SINGLE_PIXEL) {
 		rayTracer.tracePixel(819, 199, &scene, group, &sceneBuffer);
@@ -162,12 +163,82 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 
 	std::string fname = createUniqueRenderFilename("stress_spiders_demo", samplesPerPixel);
 	std::string imageFname = std::string(RENDER_OUTPUT) + "bitmap/" + fname + ".jpg";
+	std::string fraunFname = std::string(RENDER_OUTPUT) + "bitmap/" + fname + "_fraun" + ".jpg";
+	std::string convFname = std::string(RENDER_OUTPUT) + "bitmap/" + fname + "_conv" + ".jpg";
 	std::string rawFname = std::string(RENDER_OUTPUT) + "raw/" + fname + ".fpm";
+
+	if (ENABLE_FRAUNHOFER_DIFFRACTION) {
+		VectorMap2D base;
+		base.copy(&sceneBuffer);
+
+		int safeWidth = base.getSafeWidth();
+
+		FraunhoferDiffraction testFraun;
+		FraunhoferDiffraction::Settings settings;
+		FraunhoferDiffraction::defaultSettings(&settings);
+		settings.frequencyMultiplier = 1.0;
+		settings.maxSamples = 4096;
+		settings.textureSamples = 10;
+
+		TextureNode dirtTexture;
+		dirtTexture.loadFile(TEXTURE_PATH "dirt_very_soft.png", true);
+		dirtTexture.initialize();
+		dirtTexture.evaluate();
+
+		CmfTable colorTable;
+		Spectrum sourceSpectrum;
+		colorTable.loadCsv(CMF_PATH "xyz_cmf_31.csv");
+		sourceSpectrum.loadCsv(CMF_PATH "d65_lighting.csv");
+		
+		squareAperture.setRadius(0.5f);
+		testFraun.generate(&squareAperture, &dirtTexture, safeWidth, 2.0f, &colorTable, &sourceSpectrum, &settings);
+
+		VectorMapWrapperNode fraunNode(testFraun.getDiffractionPattern());
+		fraunNode.initialize();
+		fraunNode.evaluate();
+
+		ImageOutputNode fraunOutputNode;
+		fraunOutputNode.setJpegQuality(95);
+		fraunOutputNode.setGammaCorrection(true);
+		fraunOutputNode.setOutputFilename(fraunFname);
+		fraunOutputNode.setInputNode(&fraunNode);
+		fraunOutputNode.initialize();
+		fraunOutputNode.evaluate();
+		fraunOutputNode.destroy();
+
+		VectorMapWrapperNode baseNode(&base);
+		baseNode.initialize();
+		baseNode.evaluate();
+		baseNode.destroy();
+
+		ConvolutionNode convNode;
+		convNode.setInputs(&baseNode, &fraunNode);
+		convNode.setResize(true);
+		convNode.setClip(true);
+		convNode.initialize();
+		convNode.evaluate();
+
+		testFraun.destroy();
+		base.destroy();
+
+		ImageOutputNode outputNode;
+		outputNode.setJpegQuality(95);
+		outputNode.setGammaCorrection(true);
+		outputNode.setOutputFilename(convFname);
+		outputNode.setInputNode(&convNode);
+		outputNode.initialize();
+		outputNode.evaluate();
+		outputNode.destroy();
+
+		colorTable.destroy();
+		sourceSpectrum.destroy();
+		convNode.destroy();
+		dirtTexture.destroy();
+	}
 
 	RawFile rawFile;
 	rawFile.writeRawFile(rawFname.c_str(), &sceneBuffer);
 
-	sceneBuffer.applyGammaCurve((math::real)(1.0 / 2.2));
 	writeJpeg(imageFname.c_str(), &sceneBuffer, 95);
 
 	sceneBuffer.destroy();

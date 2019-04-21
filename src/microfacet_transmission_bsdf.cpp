@@ -9,16 +9,16 @@ manta::MicrofacetTransmissionBSDF::MicrofacetTransmissionBSDF() {
 manta::MicrofacetTransmissionBSDF::~MicrofacetTransmissionBSDF() {
 }
 
-void manta::MicrofacetTransmissionBSDF::initialize(const IntersectionPoint *surfaceInteraction, MaterialNodeMemory *memory, StackAllocator *stackAllocator) const {
-	BSDF::initialize(surfaceInteraction, memory, stackAllocator);
+void manta::MicrofacetTransmissionBSDF::initializeSessionMemory(const IntersectionPoint *surfaceInteraction, NodeSessionMemory *memory, StackAllocator *stackAllocator) const {
+	BSDF::initializeSessionMemory(surfaceInteraction, memory, stackAllocator);
 }
 
 manta::math::Vector manta::MicrofacetTransmissionBSDF::sampleF(const IntersectionPoint *surfaceInteraction, const math::Vector &i, math::Vector *o, math::real *pdf, StackAllocator *stackAllocator) const {
 	constexpr math::Vector reflect = { (math::real)-1.0, (math::real)-1.0, (math::real)1.0, (math::real)1.0 };
 
 	// Allocate required memory
-	MaterialNodeMemory s;
-	m_distribution->initialize(surfaceInteraction, &s, stackAllocator);
+	NodeSessionMemory s;
+	m_distribution->initializeSessionMemory(surfaceInteraction, &s, stackAllocator);
 
 	math::real ior = m_mediaInterface->ior(surfaceInteraction->m_direction);
 	math::Vector m = m_distribution->generateMicrosurfaceNormal(&s);
@@ -26,7 +26,7 @@ manta::math::Vector manta::MicrofacetTransmissionBSDF::sampleF(const Intersectio
 
 	if (!refract(i, m, ior, &rt)) {
 		// Free all memory
-		m_distribution->free(&s, stackAllocator);
+		m_distribution->destroySessionMemory(&s, stackAllocator);
 
 		*pdf = (math::real)0.0;
 		return math::constants::Zero;
@@ -34,7 +34,7 @@ manta::math::Vector manta::MicrofacetTransmissionBSDF::sampleF(const Intersectio
 
 	if ((math::getZ(rt) > 0) == (math::getZ(i) > 0)) {
 		// Free all memory
-		m_distribution->free(&s, stackAllocator);
+		m_distribution->destroySessionMemory(&s, stackAllocator);
 
 		*pdf = (math::real)0.0;
 		return math::constants::Zero;
@@ -47,7 +47,7 @@ manta::math::Vector manta::MicrofacetTransmissionBSDF::sampleF(const Intersectio
 
 	if (i_dot_m <= (math::real)0.0) {
 		// Free all memory
-		m_distribution->free(&s, stackAllocator);
+		m_distribution->destroySessionMemory(&s, stackAllocator);
 
 		*pdf = (math::real)0.0;
 		return math::constants::Zero;
@@ -77,7 +77,7 @@ manta::math::Vector manta::MicrofacetTransmissionBSDF::sampleF(const Intersectio
 	math::Vector transmitance = math::loadScalar(Ft_num / Ft_div);
 
 	// Free all memory
-	m_distribution->free(&s, stackAllocator);
+	m_distribution->destroySessionMemory(&s, stackAllocator);
 
 	return transmitance;
 }

@@ -1,6 +1,18 @@
 #ifndef TEST_UTILITIES_H
 #define TEST_UTILITIES_H
 
+#include <pch.h>
+
+#include <scalar_map_2d.h>
+#include <complex_map_2d.h>
+#include <image_plane.h>
+#include <complex_map_2d.h>
+#include <vector_map_2d.h>
+
+#include <string>
+
+using namespace manta;
+
 #define CHECK_VEC(v, ex, ey, ez, ew) {\
 		math::real x = math::getX((v)); \
 		math::real y = math::getY((v)); \
@@ -64,5 +76,15 @@
 		EXPECT_NEAR(z, (ez), 1E-7); \
 		EXPECT_NEAR(w, (ew), 1E-7); \
 	}
+
+#define CMF_PATH "../../../demos/cmfs/"
+#define WORKSPACE_PATH "../../../workspace/"
+#define TMP_PATH (WORKSPACE_PATH "tmp/")
+
+
+void writeToJpeg(const RealMap2D *scalarMap, const std::string &fname);
+void writeToJpeg(const VectorMap2D *vectorMap, const std::string &fname);
+void writeToJpeg(const ImagePlane *plane, const std::string &fname);
+void writeToJpeg(const ComplexMap2D *plane, const std::string &fname, Margins *margins = nullptr);
 
 #endif /* TEST_UTILITIES_H */

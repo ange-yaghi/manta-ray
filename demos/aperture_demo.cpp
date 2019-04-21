@@ -24,7 +24,7 @@ void manta_demo::apertureDemo(int samplesPerPixel, int resolutionX, int resoluti
 
 	SimpleBSDFMaterial *brightMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	brightMaterial->setName("Bright");
-	brightMaterial->setEmission(math::loadVector(5.f, 5.f, 5.f));
+	brightMaterial->setEmission(math::loadVector(100.f, 100.f, 100.f));
 	brightMaterial->setReflectance(math::constants::Zero);
 
 	SimpleBSDFMaterial *backdropMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
@@ -35,6 +35,7 @@ void manta_demo::apertureDemo(int samplesPerPixel, int resolutionX, int resoluti
 	Mesh blocks;
 	blocks.loadObjFileData(&blocksObj, rayTracer.getMaterialManager());
 	blocks.setFastIntersectEnabled(false);
+	blocksObj.destroy();
 
 	SpherePrimitive outdoorTopLightGeometry;
 	outdoorTopLightGeometry.setRadius((math::real)10.0);
@@ -63,7 +64,8 @@ void manta_demo::apertureDemo(int samplesPerPixel, int resolutionX, int resoluti
 
 	manta::SimpleLens lens;
 	manta::PolygonalAperture aperture;
-	aperture.initialize(5, 0.f, false);
+	aperture.setRadius((math::real)0.25);
+	aperture.initialize(3, 0.f, false);
 
 	lens.setAperture(&aperture);
 	lens.initialize();
@@ -114,7 +116,7 @@ void manta_demo::apertureDemo(int samplesPerPixel, int resolutionX, int resoluti
 	}
 
 	// Output the results to a scene buffer
-	SceneBuffer sceneBuffer;
+	ImagePlane sceneBuffer;
 
 	// Run the ray tracer
 	rayTracer.initialize(200 * MB, 50 * MB, 12, 100, true);
@@ -138,12 +140,14 @@ void manta_demo::apertureDemo(int samplesPerPixel, int resolutionX, int resoluti
 	RawFile rawFile;
 	rawFile.writeRawFile(rawFname.c_str(), &sceneBuffer);
 
-	sceneBuffer.applyGammaCurve((math::real)(1.0 / 2.2));
 	writeJpeg(imageFname.c_str(), &sceneBuffer, 95);
 
+	blocks.destroy();
 	sceneBuffer.destroy();
 	rayTracer.destroy();
 	aperture.destroy();
 
 	kdtree.destroy();
+
+	std::cout << "Standard allocator memory leaks:     " << StandardAllocator::Global()->getLedger() << ", " << StandardAllocator::Global()->getCurrentUsage() << std::endl;
 }
