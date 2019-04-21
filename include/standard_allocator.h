@@ -23,7 +23,8 @@ namespace manta {
 			m_allocationLedger++;
 #endif /* STD_ALLOC_ENABLE_LEDGER */
 
-			m_currentUsage += sizeof(t_alloc) * n;
+			unsigned int usage = sizeof(t_alloc) * n;
+			m_currentUsage += usage;
 			if (m_currentUsage > m_maxUsage) m_maxUsage = m_currentUsage;
 			t_alloc *newObject;
 
@@ -53,6 +54,8 @@ namespace manta {
 
 		template <typename t_alloc>
 		void free(t_alloc *memory, int n = 1) {
+			if (memory == nullptr) return;
+
 #ifdef STD_ALLOC_ENABLE_LEDGER
 			m_allocationLedger--;
 			assert(m_allocationLedger >= 0);
@@ -71,6 +74,8 @@ namespace manta {
 
 		template <typename t_alloc>
 		void aligned_free(t_alloc *memory, int n = 1) {
+			if (memory == nullptr) return;
+
 #ifdef STD_ALLOC_ENABLE_LEDGER
 			m_allocationLedger--;
 			assert(m_allocationLedger >= 0);

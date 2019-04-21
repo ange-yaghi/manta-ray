@@ -138,7 +138,6 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 	rawFile.writeRawFile(rawFname.c_str(), &sceneBuffer);
 
 	// Apply gamma correction
-	sceneBuffer.applyGammaCurve((math::real)(1.0 / 2.2));
 	writeJpeg(imageFname.c_str(), &sceneBuffer, 95);
 
 	// Cleanup memory

@@ -286,6 +286,11 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	writeJpeg(imageFname.c_str(), &sceneBuffer, 95);
 
 	sceneBuffer.destroy();
+	polygonalAperture.destroy();
+	texture.destroy();
+	woodRoughness.destroy();
+	chromeRoughness.destroy();
+	floorWood.destroy();
 	rayTracer.destroy();
 	pen.destroy();
 	kdtree.destroy();

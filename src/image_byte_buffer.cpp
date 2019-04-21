@@ -116,10 +116,10 @@ void manta::ImageByteBuffer::convertToColor(const math::Vector &v, Color *c, boo
 	if (correctGamma) {
 		// Default to SRGB
 		// TODO: make gamma correction generic
-		vr = RgbSpace::srgb.applyGammaSrgb(vr);
-		vg = RgbSpace::srgb.applyGammaSrgb(vg);
-		vb = RgbSpace::srgb.applyGammaSrgb(vb);
-		va = RgbSpace::srgb.applyGammaSrgb(va);
+		vr = (math::real)RgbSpace::srgb.applyGammaSrgb(vr);
+		vg = (math::real)RgbSpace::srgb.applyGammaSrgb(vg);
+		vb = (math::real)RgbSpace::srgb.applyGammaSrgb(vb);
+		va = (math::real)RgbSpace::srgb.applyGammaSrgb(va);
 	}
 
 	int r = lround(vr * 255);
