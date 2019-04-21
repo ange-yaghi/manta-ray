@@ -8,9 +8,9 @@ int main() {
 
 	// Run a demo
 	constexpr DEMO demo = DEMO::TEAPOT_LAMP;
-	constexpr int samples = 1;
-	constexpr int resolutionX = 2048 / 16;
-	constexpr int resolutionY = 1536 / 16;
+	constexpr int samples = 8000;
+	constexpr int resolutionX = 2048 / 1;
+	constexpr int resolutionY = 1536 / 1;
 
 	runDemo(demo, samples, resolutionX, resolutionY);
 

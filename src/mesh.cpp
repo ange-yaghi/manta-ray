@@ -268,10 +268,12 @@ void manta::Mesh::findQuads() {
 	// Update triangle list
 	std::vector<Face> newTrianglesTemp;
 	std::vector<AuxFaceData> newAuxFaceDataTemp;
+	std::vector<AABB> newFaceBoundsTemp;
 	for (int i = 0; i < m_triangleFaceCount; i++) {
 		if (!usedFlags[i]) {
 			newTrianglesTemp.push_back(m_faces[i]);
 			newAuxFaceDataTemp.push_back(m_auxFaceData[i]);
+			newFaceBoundsTemp.push_back(m_faceBounds[i]);
 		}
 	}
 
@@ -283,7 +285,7 @@ void manta::Mesh::findQuads() {
 	for (int i = 0; i < m_triangleFaceCount; i++) {
 		newFaces[i] = newTrianglesTemp[i];
 		newAuxData[i] = newAuxFaceDataTemp[i];
-		newFaceBounds[i] = m_faceBounds[i];
+		newFaceBounds[i] = newFaceBoundsTemp[i];
 	}
 
 	StandardAllocator::Global()->free(m_faces, originalTriangleCount);
