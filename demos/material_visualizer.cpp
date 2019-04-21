@@ -16,7 +16,9 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
 
 	// Load all textures
 	TextureNode checkerboardTexture;
-	checkerboardTexture.loadFile(TEXTURE_PATH "material_visualizer/checkerboard.png", (math::real)2.2);
+	checkerboardTexture.loadFile(TEXTURE_PATH "material_visualizer/checkerboard.png", true);
+	checkerboardTexture.initialize();
+	checkerboardTexture.evaluate();
 
 	// Load all object files
 	ObjFileLoader stageObj;
@@ -63,7 +65,9 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
 
 	// Simple Wood
 	TextureNode texture;
-	texture.loadFile(TEXTURE_PATH "/dark_wood.jpg", 2.2f);
+	texture.loadFile(TEXTURE_PATH "/dark_wood.jpg", true);
+	texture.initialize();
+	texture.evaluate();
 
 	TextureNode woodRoughness;
 	woodRoughness.loadFile(TEXTURE_PATH "/wood_roughness.jpg", 1.0f);
@@ -97,10 +101,13 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
 
 	// Steel 2
 	TextureNode fingerprintTexture;
-	fingerprintTexture.loadFile(TEXTURE_PATH "samsung_a8/fingerprints_roughness_map.png", (math::real)1.0);
+	fingerprintTexture.loadFile(TEXTURE_PATH "samsung_a8/fingerprints_roughness_map.png", false);
+	fingerprintTexture.evaluate();
 
 	TextureNode metalTexture;
-	metalTexture.loadFile(TEXTURE_PATH "stock-scene/metal.jpg", (math::real)2.2);
+	metalTexture.loadFile(TEXTURE_PATH "stock-scene/metal.jpg", true);
+	metalTexture.initialize();
+	metalTexture.evaluate();
 
 	RemapNode specularPowerFingerprint(
 		math::loadScalar(0.0f),

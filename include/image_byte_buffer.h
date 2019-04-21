@@ -18,10 +18,10 @@ namespace manta {
 		ImageByteBuffer();
 		~ImageByteBuffer();
 
-		void initialize(const ImagePlane *sceneBuffer);
+		void initialize(const ImagePlane *sceneBuffer, bool correctGamma);
 		void initialize(const unsigned char *buffer, int width, int height, int pitch);
-		void initialize(const math::Vector *buffer, int width, int height);
-		void initialize(const math::real *buffer, int width, int height);
+		void initialize(const math::Vector *buffer, int width, int height, bool correctGamma);
+		void initialize(const math::real *buffer, int width, int height, bool correctGamma);
 		void initialize(int width, int height);
 		void free();
 
@@ -32,7 +32,7 @@ namespace manta {
 		int getHeight() const { return m_height; }
 
 		void setPixel(int row, int column, const Color &c);
-		void convertToColor(const math::Vector &v, Color *c) const;
+		void convertToColor(const math::Vector &v, Color *c, bool correctGamma) const;
 
 	protected:
 		int m_pitch;

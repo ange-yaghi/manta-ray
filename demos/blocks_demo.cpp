@@ -23,10 +23,14 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 	}
 
 	TextureNode map;
-	map.loadFile(TEXTURE_PATH "blocks.png", (math::real)2.2);
+	map.loadFile(TEXTURE_PATH "blocks.png", true);
+	map.initialize();
+	map.evaluate();
 
 	TextureNode blockSpecular;
-	blockSpecular.loadFile(TEXTURE_PATH "blocks_specular.png", (math::real)2.2);
+	blockSpecular.loadFile(TEXTURE_PATH "blocks_specular.png", true);
+	blockSpecular.initialize();
+	blockSpecular.evaluate();
 
 	PhongDistribution phongDist;
 	phongDist.setPower(4096);
@@ -187,7 +191,6 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 	RawFile rawFile;
 	rawFile.writeRawFile(rawFname.c_str(), &sceneBuffer);
 
-	sceneBuffer.applyGammaCurve((math::real)(1.0 / 2.2));
 	writeJpeg(imageFname.c_str(), &sceneBuffer, 95);
 
 	sceneBuffer.destroy();

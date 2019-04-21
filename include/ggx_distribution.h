@@ -5,8 +5,7 @@
 
 namespace manta {
 
-	struct MaterialNodeMemory;
-	class VectorMaterialNode;
+	class VectorNode;
 
 	struct GgxMemory {
 		math::real width;
@@ -17,23 +16,23 @@ namespace manta {
 		GgxDistribution();
 		~GgxDistribution();
 
-		virtual void initialize(const IntersectionPoint *surfaceInteraction, MaterialNodeMemory *memory, StackAllocator *stackAllocator) const;
+		virtual void initializeSessionMemory(const IntersectionPoint *surfaceInteraction, NodeSessionMemory *memory, StackAllocator *stackAllocator) const;
 
-		virtual math::Vector generateMicrosurfaceNormal(MaterialNodeMemory *mem) const;
-		virtual math::real calculateDistribution(const math::Vector &m, MaterialNodeMemory *mem) const;
-		virtual math::real calculateG1(const math::Vector &v, const math::Vector &m, MaterialNodeMemory *mem) const;
+		virtual math::Vector generateMicrosurfaceNormal(NodeSessionMemory *mem) const;
+		virtual math::real calculateDistribution(const math::Vector &m, NodeSessionMemory *mem) const;
+		virtual math::real calculateG1(const math::Vector &v, const math::Vector &m, NodeSessionMemory *mem) const;
 
 		void setWidth(math::real width) { m_width = width; }
 		math::real getWidth() const { return m_width; }
 
-		void setWidthNode(VectorMaterialNode *node) { m_widthNode = node; }
-		VectorMaterialNode *getWidthNode() const { return m_widthNode; }
+		void setWidthNode(VectorNode *node) { m_widthNode = node; }
+		VectorNode *getWidthNode() const { return m_widthNode; }
 
 		void setMinMapWidth(math::real power) { m_minMapWidth = power; }
 		math::real getMinMapWidth() const { return m_minMapWidth; }
 
 	protected:
-		VectorMaterialNode *m_widthNode;
+		VectorNode *m_widthNode;
 		math::real m_width;
 		math::real m_minMapWidth;
 	};

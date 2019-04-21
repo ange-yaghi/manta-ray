@@ -208,18 +208,6 @@
     <Filter Include="Source Files\os">
       <UniqueIdentifier>{df3763e2-a1e5-4c08-aaa4-6785b6d57a7e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\material\node">
-      <UniqueIdentifier>{5058470b-83f3-4aad-80a8-bee0b7b32d8a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\material\node">
-      <UniqueIdentifier>{f8d189d9-f785-4965-9730-f6b3510c5968}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\material\node\library">
-      <UniqueIdentifier>{6bbda7a1-4ed0-4ec7-be11-fac60817253a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\material\node\library">
-      <UniqueIdentifier>{587db5d8-d63a-407c-84d6-8d9ea918eafd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\material\surface-modeling\microfacet-model">
       <UniqueIdentifier>{eda51e41-f495-457e-a594-0cb7c2378661}</UniqueIdentifier>
     </Filter>
@@ -270,6 +258,18 @@
     </Filter>
     <Filter Include="Source Files\math\maps">
       <UniqueIdentifier>{d84a2f0b-44d7-4eba-bf6a-20c10a9135a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\nodes">
+      <UniqueIdentifier>{b5a6d8d5-3d50-43fe-ad17-d4ed3e2a3377}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\nodes\library">
+      <UniqueIdentifier>{6bbda7a1-4ed0-4ec7-be11-fac60817253a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\nodes">
+      <UniqueIdentifier>{d495052b-39d0-4eba-952d-84694afada18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\nodes\library">
+      <UniqueIdentifier>{587db5d8-d63a-407c-84d6-8d9ea918eafd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -411,17 +411,11 @@
     <ClCompile Include="..\..\src\os_utilities.cpp">
       <Filter>Source Files\os</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\material_node.cpp">
-      <Filter>Source Files\material\node</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\vector_material_node.cpp">
-      <Filter>Source Files\material\node</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\single_color_node.cpp">
-      <Filter>Source Files\material\node\library</Filter>
+      <Filter>Source Files\nodes\library</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\texture_node.cpp">
-      <Filter>Source Files\material\node\library</Filter>
+      <Filter>Source Files\nodes\library</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\perfect_specular_reflection_bsdf.cpp">
       <Filter>Source Files\material\surface-modeling\bsdf\library</Filter>
@@ -512,6 +506,21 @@
     </ClCompile>
     <ClCompile Include="..\..\src\mipmap.cpp">
       <Filter>Source Files\math\maps</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\node.cpp">
+      <Filter>Source Files\nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\vector_node.cpp">
+      <Filter>Source Files\nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\image_file_node.cpp">
+      <Filter>Source Files\nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\image_output_node.cpp">
+      <Filter>Source Files\nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\convolution_node.cpp">
+      <Filter>Source Files\nodes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -701,17 +710,11 @@
     <ClInclude Include="..\..\include\os_utilities.h">
       <Filter>Header Files\os</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\material_node.h">
-      <Filter>Header Files\material\node</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\vector_material_node.h">
-      <Filter>Header Files\material\node</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\single_color_node.h">
-      <Filter>Header Files\material\node\library</Filter>
+      <Filter>Header Files\nodes\library</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\texture_node.h">
-      <Filter>Header Files\material\node\library</Filter>
+      <Filter>Header Files\nodes\library</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\perfect_specular_reflection_bsdf.h">
       <Filter>Header Files\material\surface-modeling\bsdf\library</Filter>
@@ -744,10 +747,10 @@
       <Filter>Header Files\debugging\statistics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\remap_node.h">
-      <Filter>Header Files\material\node\library</Filter>
+      <Filter>Header Files\nodes\library</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\power_node.h">
-      <Filter>Header Files\material\node\library</Filter>
+      <Filter>Header Files\nodes\library</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\jpeg_writer.h">
       <Filter>Header Files\output\jpeg</Filter>
@@ -817,6 +820,30 @@
     </ClInclude>
     <ClInclude Include="..\..\include\mipmap.h">
       <Filter>Header Files\math\maps</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\node.h">
+      <Filter>Header Files\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\vector_node.h">
+      <Filter>Header Files\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\map_2d_node.h">
+      <Filter>Header Files\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\image_file_node.h">
+      <Filter>Header Files\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\node_type.h">
+      <Filter>Header Files\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\image_output_node.h">
+      <Filter>Header Files\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\convolution_node.h">
+      <Filter>Header Files\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\vector_map_wrapper_node.h">
+      <Filter>Header Files\nodes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

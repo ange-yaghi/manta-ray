@@ -87,7 +87,7 @@ void manta::ComplexMap2D::fillByteBuffer(ImageByteBuffer *target, Margins *margi
 			ImageByteBuffer::Color color;
 			math::Complex value = get(u + startX, v + startY);
 
-			target->convertToColor(math::loadVector((math::real)value.r, (math::real)0.0, (math::real)value.i), &color);
+			target->convertToColor(math::loadVector((math::real)value.r, (math::real)0.0, (math::real)value.i), &color, true);
 			target->setPixel(v, u, color);
 		}
 	}
@@ -238,6 +238,86 @@ void manta::ComplexMap2D::cft(ComplexMap2D *target, math::real_d physicalWidth, 
 			dftApprox = dftApprox * phaseTransformation * fs_inv_s;
 
 			target->set(dftApprox, mapIndexX, mapIndexY);
+		}
+	}
+}
+
+void manta::ComplexMap2D::inverseCft(ComplexMap2D *target, math::real_d physicalWidth, math::real_d physicalHeight) const {
+	target->initialize(m_width, m_height);
+
+	int horizontalSamples = m_width;
+	int verticalSamples = m_height;
+
+	math::real_d w_inv = 1 / physicalWidth;
+	math::real_d h_inv = 1 / physicalHeight;
+
+	math::real_d fs_x = horizontalSamples * w_inv;
+	math::real_d fs_y = verticalSamples * h_inv;
+
+	math::Complex fs_inv_s = math::Complex(1 / (fs_x * fs_y), (math::real_d)0.0);
+
+	int halfHorizontalSamples = horizontalSamples / 2;
+	int halfVerticalSamples = verticalSamples / 2;
+
+	for (int kx = -halfHorizontalSamples; kx < halfHorizontalSamples; kx++) {
+		// frequency_x = kx / physicalWidth
+
+		for (int ky = -halfVerticalSamples; ky < halfVerticalSamples; ky++) {
+			// frequency_y = ky / physicalHeight
+
+			// phase = exp(2 * pi * (frequency_x * (w / 2) + frequency_y * (h / 2)))
+			int phase = kx + ky;
+
+			math::Complex phaseTransformation;
+			phaseTransformation.r = (phase % 2 == 0) ? (math::real_d)1.0 : (math::real_d) -1.0;
+			phaseTransformation.i = (math::real_d)0.0;
+
+			int mapIndexX = (kx + horizontalSamples) % horizontalSamples;
+			int mapIndexY = (ky + verticalSamples) % verticalSamples;
+
+			math::Complex dftApprox = get(mapIndexX, mapIndexY);
+			dftApprox = dftApprox / (phaseTransformation * fs_inv_s);
+
+			target->set(dftApprox, mapIndexX, mapIndexY);
+		}
+	}
+}
+
+void manta::ComplexMap2D::cftConvolve(ComplexMap2D *gDft, math::real_d physicalWidth, math::real_d physicalHeight) {
+	int horizontalSamples = m_width;
+	int verticalSamples = m_height;
+
+	math::real_d w_inv = 1 / physicalWidth;
+	math::real_d h_inv = 1 / physicalHeight;
+
+	math::real_d fs_x = horizontalSamples * w_inv;
+	math::real_d fs_y = verticalSamples * h_inv;
+
+	math::Complex fs_inv_s = math::Complex(1 / (fs_x * fs_y), (math::real_d)0.0);
+
+	int halfHorizontalSamples = horizontalSamples / 2;
+	int halfVerticalSamples = verticalSamples / 2;
+
+	for (int kx = -halfHorizontalSamples; kx < halfHorizontalSamples; kx++) {
+		// frequency_x = kx / physicalWidth
+
+		for (int ky = -halfVerticalSamples; ky < halfVerticalSamples; ky++) {
+			// frequency_y = ky / physicalHeight
+
+			// phase = exp(2 * pi * (frequency_x * (w / 2) + frequency_y * (h / 2)))
+			int phase = kx + ky;
+
+			math::Complex phaseTransformation;
+			phaseTransformation.r = (phase % 2 == 0) ? (math::real_d)1.0 : (math::real_d) -1.0;
+			phaseTransformation.i = (math::real_d)0.0;
+
+			int mapIndexX = (kx + horizontalSamples) % horizontalSamples;
+			int mapIndexY = (ky + verticalSamples) % verticalSamples;
+
+			math::Complex dftApprox = get(mapIndexX, mapIndexY) * gDft->get(mapIndexX, mapIndexY);
+			dftApprox = fs_inv_s * dftApprox * phaseTransformation;
+
+			set(dftApprox, mapIndexX, mapIndexY);
 		}
 	}
 }

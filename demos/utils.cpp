@@ -55,7 +55,7 @@ std::string manta_demo::createUniqueRenderFilename(const char *jobName, int samp
 
 void manta_demo::writeJpeg(const char *fname, manta::ImagePlane *sceneBuffer, int quality) {
 	manta::ImageByteBuffer byteBuffer;
-	byteBuffer.initialize(sceneBuffer);
+	byteBuffer.initialize(sceneBuffer, true);
 
 	manta::JpegWriter writer;
 	writer.setQuality(quality);

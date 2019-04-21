@@ -29,12 +29,15 @@
     <ClCompile Include="..\..\src\cmf_table.cpp" />
     <ClCompile Include="..\..\src\complex_map_2d.cpp" />
     <ClCompile Include="..\..\src\convolution.cpp" />
+    <ClCompile Include="..\..\src\convolution_node.cpp" />
     <ClCompile Include="..\..\src\dielectric_media_interface.cpp" />
     <ClCompile Include="..\..\src\fraunhofer_diffraction.cpp" />
     <ClCompile Include="..\..\src\ggx_distribution.cpp" />
     <ClCompile Include="..\..\src\grid_sampler.cpp" />
     <ClCompile Include="..\..\src\image_byte_buffer.cpp" />
+    <ClCompile Include="..\..\src\image_file_node.cpp" />
     <ClCompile Include="..\..\src\image_handling.cpp" />
+    <ClCompile Include="..\..\src\image_output_node.cpp" />
     <ClCompile Include="..\..\src\jpeg_writer.cpp" />
     <ClCompile Include="..\..\src\kd_tree.cpp" />
     <ClCompile Include="..\..\src\lambertian_bsdf.cpp" />
@@ -45,7 +48,7 @@
     <ClCompile Include="..\..\src\spectrum.cpp" />
     <ClCompile Include="..\..\src\vector_map_2d.cpp" />
     <ClCompile Include="..\..\src\material_manager.cpp" />
-    <ClCompile Include="..\..\src\material_node.cpp" />
+    <ClCompile Include="..\..\src\node.cpp" />
     <ClCompile Include="..\..\src\material_pointer.cpp" />
     <ClCompile Include="..\..\src\microfacet_distribution.cpp" />
     <ClCompile Include="..\..\src\microfacet_glass_bsdf.cpp" />
@@ -96,7 +99,7 @@
     <ClCompile Include="..\..\src\standard_camera_ray_emitter_group.cpp" />
     <ClCompile Include="..\..\src\starburst_approximation.cpp" />
     <ClCompile Include="..\..\src\texture_node.cpp" />
-    <ClCompile Include="..\..\src\vector_material_node.cpp" />
+    <ClCompile Include="..\..\src\vector_node.cpp" />
     <ClCompile Include="..\..\src\worker.cpp" />
     <ClCompile Include="stack_allocator.cpp" />
   </ItemGroup>
@@ -121,19 +124,24 @@
     <ClInclude Include="..\..\include\ggx_distribution.h" />
     <ClInclude Include="..\..\include\grid_sampler.h" />
     <ClInclude Include="..\..\include\image_byte_buffer.h" />
+    <ClInclude Include="..\..\include\image_file_node.h" />
     <ClInclude Include="..\..\include\image_handling.h" />
+    <ClInclude Include="..\..\include\image_output_node.h" />
     <ClInclude Include="..\..\include\jpeg_writer.h" />
     <ClInclude Include="..\..\include\kd_tree.h" />
     <ClInclude Include="..\..\include\lambertian_bsdf.h" />
     <ClInclude Include="..\..\include\margins.h" />
+    <ClInclude Include="..\..\include\convolution_node.h" />
     <ClInclude Include="..\..\include\mipmap.h" />
+    <ClInclude Include="..\..\include\node_type.h" />
     <ClInclude Include="..\..\include\rgb_space.h" />
     <ClInclude Include="..\..\include\scalar_map_2d.h" />
     <ClInclude Include="..\..\include\signal_processing.h" />
+    <ClInclude Include="..\..\include\vector_map_wrapper_node.h" />
     <ClInclude Include="..\..\include\spectrum.h" />
     <ClInclude Include="..\..\include\vector_map_2d.h" />
     <ClInclude Include="..\..\include\material_manager.h" />
-    <ClInclude Include="..\..\include\material_node.h" />
+    <ClInclude Include="..\..\include\node.h" />
     <ClInclude Include="..\..\include\material_pointer.h" />
     <ClInclude Include="..\..\include\media_interface.h" />
     <ClInclude Include="..\..\include\microfacet_distribution.h" />
@@ -199,7 +207,8 @@
     <ClInclude Include="..\..\include\standard_camera_ray_emitter_group.h" />
     <ClInclude Include="..\..\include\starburst_approximation.h" />
     <ClInclude Include="..\..\include\texture_node.h" />
-    <ClInclude Include="..\..\include\vector_material_node.h" />
+    <ClInclude Include="..\..\include\map_2d_node.h" />
+    <ClInclude Include="..\..\include\vector_node.h" />
     <ClInclude Include="..\..\include\worker.h" />
     <ClInclude Include="..\..\scripts\new_contributor.py" />
   </ItemGroup>

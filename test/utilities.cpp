@@ -7,7 +7,7 @@
 
 void writeToJpeg(const RealMap2D *scalarMap, const std::string &fname) {
 	ImageByteBuffer byteBuffer;
-	scalarMap->fillByteBuffer(&byteBuffer);
+	scalarMap->fillByteBuffer(&byteBuffer, true);
 
 	JpegWriter writer;
 	writer.setQuality(95);
@@ -18,7 +18,7 @@ void writeToJpeg(const RealMap2D *scalarMap, const std::string &fname) {
 
 void writeToJpeg(const VectorMap2D *vectorMap, const std::string &fname) {
 	ImageByteBuffer byteBuffer;
-	vectorMap->fillByteBuffer(&byteBuffer);
+	vectorMap->fillByteBuffer(&byteBuffer, true);
 
 	JpegWriter writer;
 	writer.setQuality(95);
@@ -29,7 +29,7 @@ void writeToJpeg(const VectorMap2D *vectorMap, const std::string &fname) {
 
 void writeToJpeg(const ImagePlane *plane, const std::string &fname) {
 	ImageByteBuffer byteBuffer;
-	byteBuffer.initialize(plane);
+	byteBuffer.initialize(plane, true);
 
 	JpegWriter writer;
 	writer.setQuality(95);
@@ -43,7 +43,7 @@ void writeToJpeg(const ComplexMap2D *plane, const std::string &fname, Margins *m
 	plane->fillByteBuffer(&byteBuffer, margins);
 
 	JpegWriter writer;
-	writer.setQuality(95);
+	writer.setQuality(100);
 	writer.write(&byteBuffer, fname.c_str());
 
 	byteBuffer.free();

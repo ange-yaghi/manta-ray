@@ -3,10 +3,13 @@
 
 #include <manta_math.h>
 
+#include <margins.h>
+
 namespace manta {
 
 	// Forward declarations
 	class ImageByteBuffer;
+	class ImagePlane;
 
 	class VectorMap2D {
 	public:
@@ -20,7 +23,7 @@ namespace manta {
 		math::Vector get(int u, int v) const;
 		void set(const math::Vector &value, int u, int v);
 
-		void fillByteBuffer(ImageByteBuffer *target) const;
+		void fillByteBuffer(ImageByteBuffer *target, bool correctGamma) const;
 
 		int getWidth() const { return m_width; }
 		int getHeight() const { return m_height; }
@@ -30,8 +33,13 @@ namespace manta {
 
 		math::real getMaxMagnitude() const;
 
+		void padSafe(VectorMap2D *target, Margins *margins) const;
+		int getSafeWidth() const;
+		int getSafeHeight() const;
+
 		void roll(VectorMap2D *target) const;
 		void copy(const VectorMap2D *source);
+		void copy(const ImagePlane *plane);
 
 	protected:
 		math::Vector *m_data;

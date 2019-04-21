@@ -17,25 +17,35 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
 
 	// Load all textures
 	TextureNode fingerprintTexture;
-	fingerprintTexture.loadFile(TEXTURE_PATH "samsung_a8/fingerprints_roughness_map.png", (math::real)1.0);
+	fingerprintTexture.loadFile(TEXTURE_PATH "samsung_a8/fingerprints_roughness_map.png", false);
+	fingerprintTexture.initialize();
+	fingerprintTexture.evaluate();
 
 	TextureNode metalTexture;
-	metalTexture.loadFile(TEXTURE_PATH "stock-scene/metal.jpg", (math::real)2.2);
+	metalTexture.loadFile(TEXTURE_PATH "stock-scene/metal.jpg", true);
+	metalTexture.initialize();
+	metalTexture.evaluate();
 
 	TextureNode woodTexture;
-	woodTexture.loadFile(TEXTURE_PATH "light_wood.jpg", (math::real)2.2);
+	woodTexture.loadFile(TEXTURE_PATH "light_wood.jpg", true);
+	woodTexture.initialize();
+	woodTexture.evaluate();
 
 	TextureNode eraserTexture;
-	eraserTexture.loadFile(TEXTURE_PATH "stock-scene/eraser.jpg", (math::real)2.2);
+	eraserTexture.loadFile(TEXTURE_PATH "stock-scene/eraser.jpg", true);
+	eraserTexture.initialize();
+	eraserTexture.evaluate();
 
 	TextureNode floorTexture;
 
 	if (ALT_VERSION) {
-		floorTexture.loadFile(TEXTURE_PATH "stock-scene/floor_alt.png", (math::real)2.2);
+		floorTexture.loadFile(TEXTURE_PATH "stock-scene/floor_alt.png", true);
 	}
 	else {
-		floorTexture.loadFile(TEXTURE_PATH "stock-scene/floor.png", (math::real)2.2);
+		floorTexture.loadFile(TEXTURE_PATH "stock-scene/floor.png", true);
 	}
+	floorTexture.initialize();
+	floorTexture.evaluate();
 
 	// Load all object files
 	ObjFileLoader stageObj;

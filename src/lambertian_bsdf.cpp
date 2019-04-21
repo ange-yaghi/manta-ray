@@ -1,6 +1,6 @@
 #include <lambertian_bsdf.h>
 
-#include <vector_material_node.h>
+#include <vector_node.h>
 
 manta::LambertianBSDF::LambertianBSDF() {
 

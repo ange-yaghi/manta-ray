@@ -24,19 +24,29 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 
 	// Load all textures
 	TextureNode speakerGrillTexture;
-	speakerGrillTexture.loadFile(TEXTURE_PATH "samsung_a8/speaker_grill.jpg", (math::real)2.2);
+	speakerGrillTexture.loadFile(TEXTURE_PATH "samsung_a8/speaker_grill.jpg", true);
+	speakerGrillTexture.initialize();
+	speakerGrillTexture.evaluate();
 
 	TextureNode backPlateTexture;
-	backPlateTexture.loadFile(TEXTURE_PATH "samsung_a8/back_plate.png", (math::real)2.2);
+	backPlateTexture.loadFile(TEXTURE_PATH "samsung_a8/back_plate.png", true);
+	backPlateTexture.initialize();
+	backPlateTexture.evaluate();
 
 	TextureNode phoneScreenTexture;
-	phoneScreenTexture.loadFile(TEXTURE_PATH "samsung_a8/phone_screen.png", (math::real)2.2);
+	phoneScreenTexture.loadFile(TEXTURE_PATH "samsung_a8/phone_screen.png", true);
+	phoneScreenTexture.initialize();
+	phoneScreenTexture.evaluate();
 
 	TextureNode groundRoughness;
-	groundRoughness.loadFile(TEXTURE_PATH "chrome_roughness.jpg", (math::real)1.0);
+	groundRoughness.loadFile(TEXTURE_PATH "chrome_roughness.jpg", false);
+	groundRoughness.initialize();
+	groundRoughness.evaluate();
 
 	TextureNode smudgeMap;
-	smudgeMap.loadFile(TEXTURE_PATH "samsung_a8/fingerprints_roughness_map.png", (math::real)1.0);
+	smudgeMap.loadFile(TEXTURE_PATH "samsung_a8/fingerprints_roughness_map.png", false);
+	smudgeMap.initialize();
+	smudgeMap.evaluate();
 
 	// Load all object files
 	ObjFileLoader phoneObj;

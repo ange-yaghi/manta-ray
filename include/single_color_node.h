@@ -1,11 +1,11 @@
 #ifndef SINGLE_COLOR_NODE_H
 #define SINGLE_COLOR_NODE_H
 
-#include <vector_material_node.h>
+#include <vector_node.h>
 
 namespace manta {
 
-	class SingleColorNode : public VectorMaterialNode {
+	class SingleColorNode : public VectorNode {
 	public:
 		SingleColorNode();
 		SingleColorNode(const math::Vector &color);

@@ -9,7 +9,7 @@ manta::RemapNode::RemapNode() {
 	m_inputNode = nullptr;
 }
 
-manta::RemapNode::RemapNode(const math::Vector &start, const math::Vector &end, const VectorMaterialNode *inputNode) {
+manta::RemapNode::RemapNode(const math::Vector &start, const math::Vector &end, const VectorNode *inputNode) {
 	m_start = start;
 	m_end = end;
 
