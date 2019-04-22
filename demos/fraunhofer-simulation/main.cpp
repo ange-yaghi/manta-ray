@@ -48,7 +48,7 @@ void writeToJpeg(const VectorMap2D *vectorMap, const std::string &fname) {
 }
 
 int main() {
-	constexpr int SENSOR_RESOLUTION = 1024;
+	constexpr int SENSOR_RESOLUTION = 4096;
 	constexpr int MAX_SAMPLES = 4096;
 
 	constexpr math::real_d apertureRadius = 0.18f;
