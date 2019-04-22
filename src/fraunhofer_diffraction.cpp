@@ -12,6 +12,8 @@
 #include <texture_node.h>
 #include <intersection_point.h>
 
+#include <thread>
+
 manta::FraunhoferDiffraction::FraunhoferDiffraction() {
 	m_physicalSensorWidth = (math::real)1.0;
 }
@@ -26,8 +28,8 @@ void manta::FraunhoferDiffraction::generate(const Aperture *aperture, const Text
 	else settings = *settingsIn;
 	
 	int MAX_SAMPLES = settings.maxSamples;
-	int minWavelength = settings.minWaveLength;
-	int maxWavelength = settings.maxWaveLength;
+	int minWavelength = settings.minWavelength;
+	int maxWavelength = settings.maxWavelength;
 	int wavelengthStep = settings.wavelengthStep;
 
 	math::real apertureRadius = aperture->getRadius();
@@ -94,7 +96,7 @@ void manta::FraunhoferDiffraction::generate(const Aperture *aperture, const Text
 
 	VectorMap2D temp;
 	temp.initialize(outputResolution, outputResolution);
-	generateMap(&estimator, minWavelength, maxWavelength, wavelengthStep, settings.textureSamples, &temp);
+	generateMap(&estimator, &settings, 12, &temp);
 
 	//temp.roll(&m_diffractionPattern);
 	m_diffractionPattern.copy(&temp);
@@ -160,8 +162,8 @@ void manta::FraunhoferDiffraction::normalize(math::real_d deltaWeight) {
 void manta::FraunhoferDiffraction::defaultSettings(Settings *settings) {
 	settings->maxSamples = 4096;
 	settings->textureSamples = 10;
-	settings->maxWaveLength = 780;
-	settings->minWaveLength = 380;
+	settings->maxWavelength = 780;
+	settings->minWavelength = 380;
 	settings->wavelengthStep = 5;
 	settings->frequencyMultiplier = 3.0;
 	settings->deltaWeight = (math::real_d)0.93;
@@ -169,7 +171,44 @@ void manta::FraunhoferDiffraction::defaultSettings(Settings *settings) {
 	settings->saveApertureFunction = false;
 }
 
-void manta::FraunhoferDiffraction::generateMap(const CftEstimator2D *estimator, int startWavelength, int endWavelength, int wavelengthStep, int textureSamples, VectorMap2D *target) const {
+void manta::FraunhoferDiffraction::generateMap(const CftEstimator2D *estimator, const Settings *settings, int threadCount, VectorMap2D *target) const {
+	int size = target->getHeight();
+
+	int div = size / threadCount;
+	if (div == 0) div = size;
+
+	std::thread **threads = StandardAllocator::Global()->allocate<std::thread *>(threadCount);
+
+	// Distribute to threads
+	for (int i = 0; i < threadCount; i++) {
+		int start = i * div;
+		int end = (i + 1) * div;
+
+		if (end >= size || i == (threadCount - 1)) {
+			end = size;
+		}
+
+		if (start < end) {
+			threads[i] = new std::thread(&FraunhoferDiffraction::_generateMap, this, estimator, settings, start, end, target);
+		}
+		else {
+			threads[i] = nullptr;
+		}
+	}
+
+	// Wait for all threads to complete
+	for (int i = 0; i < threadCount; i++) {
+		if (threads[i] != nullptr) {
+			threads[i]->join();
+			delete threads[i];
+		}
+	}
+
+	// Free temporary memory
+	StandardAllocator::Global()->free(threads, threadCount);
+}
+
+void manta::FraunhoferDiffraction::_generateMap(const CftEstimator2D *estimator, const Settings *settings, int startRow, int endRow, VectorMap2D *target) const {
 	int res = target->getWidth();
 
 	math::real_d sdx = m_sensorElementWidth;
@@ -179,11 +218,16 @@ void manta::FraunhoferDiffraction::generateMap(const CftEstimator2D *estimator, 
 	math::real_d maxFreqX = estimator->getHorizontalFreqRange();
 	math::real_d maxFreqY = estimator->getVerticalFreqRange();
 
-	int steps = (endWavelength - startWavelength) / wavelengthStep;
-	Spectrum spectrum;
-	spectrum.initialize(steps + 1, (math::real)startWavelength, (math::real)endWavelength, nullptr);
+	int startWavelength = settings->minWavelength;
+	int endWavelength = settings->maxWavelength;
+	int wavelengthStep = settings->wavelengthStep;
+	int textureSamples = settings->textureSamples;
 
-	for (int i = 0; i < res; i++) {
+	int steps = (endWavelength - startWavelength) / settings->wavelengthStep + 1;
+	Spectrum spectrum;
+	spectrum.initialize(steps, (math::real)startWavelength, (math::real)endWavelength, nullptr);
+
+	for (int i = startRow; i < endRow; i++) {
 		math::real_d x = i * sdx - scx;
 
 		for (int j = 0; j < res; j++) {

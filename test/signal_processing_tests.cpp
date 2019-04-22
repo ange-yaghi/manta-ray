@@ -72,6 +72,36 @@ TEST(SignalProcessingTests, FourierTransform2D) {
 	parity.destroy();
 }
 
+TEST(SignalProcessingTests, FourierTransform2DMultithreaded) {
+	constexpr int SIZE = 2048;
+
+	ComplexMap2D input, output, parity;
+	input.initialize(SIZE, SIZE);
+
+	for (int i = 0; i < SIZE; i++) {
+		for (int j = 0; j < SIZE; j++) {
+			input.set(math::Complex(rand() % 100, 0.f), i, j);
+		}
+	}
+
+	input.fft_multithreaded(&output, 12);
+	output.fft_multithreaded(&parity, 12, true);
+
+	for (int i = 0; i < SIZE; i++) {
+		for (int j = 0; j < SIZE; j++) {
+			math::Complex ref = input.get(i, j);
+			math::Complex v = parity.get(i, j);
+
+			EXPECT_NEAR(v.r, ref.r, 1E-4);
+			EXPECT_NEAR(v.i, ref.i, 1E-4);
+		}
+	}
+
+	input.destroy();
+	output.destroy();
+	parity.destroy();
+}
+
 TEST(SignalProcessingTests, ConvolutionTestNoOp) {
 	constexpr int SIZE = 1024;
 

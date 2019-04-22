@@ -37,6 +37,9 @@ namespace manta {
 		void roll(ComplexMap2D *target) const;
 
 		void fft(ComplexMap2D *target) const;
+		void fft_multithreaded(ComplexMap2D *target, int threadCount, bool inverse = false) const;
+		void fftHorizontal(ComplexMap2D *target, bool inverse, int startRow, int endRow) const;
+		void fftVertical(ComplexMap2D *target, bool inverse, int startColumn, int endColumn) const;
 		void inverseFft(ComplexMap2D *target) const;
 
 		void cft(ComplexMap2D *target, math::real_d physicalWidth, math::real_d physicalHeight) const;
