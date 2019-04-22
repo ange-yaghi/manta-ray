@@ -11,7 +11,7 @@ manta::TextureNode::TextureNode() {
 }
 
 manta::TextureNode::~TextureNode() {
-
+	/* void */
 }
 
 void manta::TextureNode::loadFile(const char *fname, bool correctGamma) {

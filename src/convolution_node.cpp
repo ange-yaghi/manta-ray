@@ -60,17 +60,17 @@ void manta::ConvolutionNode::_evaluate() {
 
 	for (int i = 0; i < 3; i++) {
 		a_c.copy(a_map, i);
-		a_c.fft(&a_ft); 
+		a_c.fft_multithreaded(&a_ft, 12); 
 		a_c.destroy();
 
 		b_c.copy(b_map, i);
-		b_c.fft(&b_ft); 
+		b_c.fft_multithreaded(&b_ft, 12); 
 		b_c.destroy();
 
 		a_ft.cftConvolve(&b_ft, (math::real_d)1.0, (math::real_d)1.0); 
 		b_ft.destroy();
 
-		a_ft.inverseFft(&b_ft);
+		a_ft.fft_multithreaded(&b_ft, 12, true);
 		a_ft.destroy();
 
 		for (int u = margins.left; u < margins.left + margins.width; u++) {
