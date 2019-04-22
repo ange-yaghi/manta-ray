@@ -22,8 +22,8 @@ namespace manta {
 		struct Settings {
 			int maxSamples;
 			int textureSamples;
-			int minWaveLength; // nm
-			int maxWaveLength; // nm
+			int minWavelength; // nm
+			int maxWavelength; // nm
 			int wavelengthStep; // nm
 			math::real_d frequencyMultiplier;
 
@@ -48,15 +48,13 @@ namespace manta {
 
 		void normalize(math::real_d deltaWeight);
 
-		static math::Vector wavelengthToRgb(math::real_d wavelength);
-		static math::real_d blackBodyRadiation(math::real_d wavelength);
-
 		static void defaultSettings(Settings *settings);
 
 		math::real getPhysicalSensorWidth() const { return m_physicalSensorWidth; }
 
 	protected:
-		void generateMap(const CftEstimator2D *estimator, int startwavelength, int endwavelength, int wavelengthStep, int textureSamples, VectorMap2D *target) const;
+		void generateMap(const CftEstimator2D *estimator, const Settings *settings, int threadCount, VectorMap2D *target) const;
+		void _generateMap(const CftEstimator2D *estimator, const Settings *settings, int startRow, int endRow, VectorMap2D *target) const;
 
 	protected:
 		VectorMap2D m_diffractionPattern;

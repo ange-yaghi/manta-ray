@@ -71,7 +71,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	floorMaterial->setBSDF(&floorBSDF);
 
 	SimpleBSDFMaterial *lampLightMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
-	lampLightMaterial->setEmission(math::mul(getColor(255, 197, 143), math::loadScalar(30.0)));
+	lampLightMaterial->setEmission(math::mul(getColor(255, 197, 143), math::loadScalar(100.0))); // 30
 	lampLightMaterial->setReflectance(math::constants::Zero);
 
 	PhongDistribution teapotCoating;
@@ -81,7 +81,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	teapotBSDF.setCoatingDistribution(&teapotCoating);
 	teapotBSDF.setDiffuse(getColor(0xFF, 0x08, 0x14));
 	teapotBSDF.setDiffuseMaterial(&lambert);
-	teapotBSDF.setSpecularAtNormal(math::loadVector(0.5, 0.5, 0.5));
+	teapotBSDF.setSpecularAtNormal(math::loadVector(0.2, 0.2, 0.2));
 
 	SimpleBSDFMaterial *teapotMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	teapotMaterial->setBSDF(&teapotBSDF);
@@ -213,7 +213,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 		settings.textureSamples = 10;
 
 		TextureNode dirtTexture;
-		dirtTexture.loadFile(TEXTURE_PATH "dirt_very_soft.png", true);
+		dirtTexture.loadFile(TEXTURE_PATH "dirt_composite.png", true);
 		dirtTexture.initialize();
 		dirtTexture.evaluate();
 
@@ -225,7 +225,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 		PolygonalAperture aperture;
 		aperture.initialize(6);
 		aperture.setRadius(0.18f);
-		testFraun.generate(&aperture, &dirtTexture, safeWidth, 8.0f, &colorTable, &sourceSpectrum, &settings);
+		testFraun.generate(&aperture, &dirtTexture, safeWidth, 16.0f, &colorTable, &sourceSpectrum, &settings);
 		aperture.destroy();
 
 		VectorMapWrapperNode fraunNode(testFraun.getDiffractionPattern());

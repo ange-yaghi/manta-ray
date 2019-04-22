@@ -53,7 +53,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	SimpleBSDFMaterial *sunMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	sunMaterial->setName("Sun");
 	sunMaterial->setReflectance(math::loadVector(0.0f, 0.0f, 0.0f));
-	sunMaterial->setEmission(math::loadVector(10000.0f, 10000.0f, 10000.0f));
+	sunMaterial->setEmission(math::loadVector(100000.0f, 100000.0f, 100000.0f));
 	sunMaterial->setBSDF(nullptr);
 
 	// Create all scene geometry
@@ -100,7 +100,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
 	manta::SimpleLens lens;
 	manta::PolygonalAperture polygonalAperture;
-	polygonalAperture.initialize(8);
+	polygonalAperture.initialize(12);
 
 	if (POLYGON_APERTURE) lens.setAperture(&polygonalAperture);
 	lens.initialize();
@@ -201,7 +201,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 		colorTable.loadCsv(CMF_PATH "xyz_cmf_31.csv");
 		sourceSpectrum.loadCsv(CMF_PATH "d65_lighting.csv");
 
-		testFraun.generate(&polygonalAperture, &dirtTexture, safeWidth, 0.5f, &colorTable, &sourceSpectrum, &settings);
+		testFraun.generate(&polygonalAperture, &dirtTexture, safeWidth, 5.0f, &colorTable, &sourceSpectrum, &settings);
 
 		VectorMapWrapperNode fraunNode(testFraun.getDiffractionPattern());
 		fraunNode.initialize();

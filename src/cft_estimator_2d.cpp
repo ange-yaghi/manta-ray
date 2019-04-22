@@ -23,7 +23,7 @@ void manta::CftEstimator2D::initialize(const ComplexMap2D *spatialFunction, math
 	m_horizontalSamples = spatialFunction->getHeight();
 
 	ComplexMap2D dftApprox;
-	spatialFunction->fft(&dftApprox);
+	spatialFunction->fft_multithreaded(&dftApprox, 12);
 
 	dftApprox.cft(&m_discreteApproximation, phyiscalWidth, physicalHeight);
 	dftApprox.destroy();

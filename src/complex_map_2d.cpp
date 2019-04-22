@@ -7,6 +7,7 @@
 #include <image_plane.h>
 #include <vector_map_2d.h>
 
+#include <thread>
 #include <assert.h>
 
 manta::ComplexMap2D::ComplexMap2D() {
@@ -117,14 +118,13 @@ void manta::ComplexMap2D::fft(ComplexMap2D *target) const {
 	math::Complex *inputBuffer = StandardAllocator::Global()->allocate<math::Complex>(minSpace);
 	math::Complex *outputBuffer = StandardAllocator::Global()->allocate<math::Complex>(minSpace);
 
-	/* Transform the rows */
+	// Transform the rows
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
 			math::Complex val = get(i, j);
 			inputBuffer[i] = val;
 		}
 
-		//calculateFFT1D(realBuffer, imaginaryBuffer, width);
 		NaiveFFT::fft(inputBuffer, outputBuffer, width);
 		for (int i = 0; i < width; i++) {
 			math::Complex result;
@@ -134,14 +134,13 @@ void manta::ComplexMap2D::fft(ComplexMap2D *target) const {
 		}
 	}
 
-	/* Transform the columns */
+	// Transform the columns
 	for (int i = 0; i < width; i++) {
 		for (int j = 0; j < height; j++) {
 			math::Complex val = target->get(i, j);
 			inputBuffer[j] = val;
 		}
 
-		//calculateFFT1D(realBuffer, imaginaryBuffer, height);
 		NaiveFFT::fft(inputBuffer, outputBuffer, height);
 		for (int j = 0; j < height; j++) {
 			math::Complex result;
@@ -153,6 +152,119 @@ void manta::ComplexMap2D::fft(ComplexMap2D *target) const {
 
 	StandardAllocator::Global()->free(inputBuffer, minSpace);
 	StandardAllocator::Global()->free(outputBuffer, minSpace);
+}
+
+void manta::ComplexMap2D::fft_multithreaded(ComplexMap2D *target, int threadCount, bool inverse) const {
+	target->initialize(m_width, m_height);
+
+	int divVertical = m_height / threadCount;
+	int divHorizontal = m_width / threadCount;
+
+	if (divVertical == 0) divVertical = m_height;
+	if (divHorizontal == 0) divHorizontal = m_width;
+
+	std::thread **threads = StandardAllocator::Global()->allocate<std::thread *>(threadCount);
+
+	// Horizontal FFTs
+	for (int i = 0; i < threadCount; i++) {
+		int start = i * divVertical;
+		int end = (i + 1) * divVertical;
+
+		if (end >= m_height || i == (threadCount - 1)) {
+			end = m_height;
+		}
+
+		if (start < end) {
+			threads[i] = new std::thread(&ComplexMap2D::fftHorizontal, this, target, inverse, start, end);
+		}
+		else {
+			threads[i] = nullptr;
+		}
+	}
+
+	// Wait for all threads to complete
+	for (int i = 0; i < threadCount; i++) {
+		if (threads[i] != nullptr) {
+			threads[i]->join();
+			delete threads[i];
+		}
+	}
+
+	// Vertical FFTs
+	for (int i = 0; i < threadCount; i++) {
+		int start = i * divHorizontal;
+		int end = (i + 1) * divHorizontal;
+
+		if (end >= m_width || i == (threadCount - 1)) {
+			end = m_width;
+		}
+
+		if (start < end) {
+			threads[i] = new std::thread(&ComplexMap2D::fftVertical, this, target, inverse, start, end);
+		}
+		else {
+			threads[i] = nullptr;
+		}
+	}
+
+	// Wait for all threads to complete
+	for (int i = 0; i < threadCount; i++) {
+		if (threads[i] != nullptr) {
+			threads[i]->join();
+			delete threads[i];
+		}
+	}
+
+	// Free temporary memory
+	StandardAllocator::Global()->free(threads, threadCount);
+}
+
+void manta::ComplexMap2D::fftHorizontal(ComplexMap2D *target, bool inverse, int startRow, int endRow) const {
+	math::Complex *inputBuffer = new math::Complex[m_width];
+	math::Complex *outputBuffer = new math::Complex[m_width];
+
+	for (int j = startRow; j < endRow; j++) {
+		for (int i = 0; i < m_width; i++) {
+			math::Complex val = get(i, j);
+			inputBuffer[i] = val;
+		}
+
+		if (!inverse) NaiveFFT::fft(inputBuffer, outputBuffer, m_width);
+		else NaiveFFT::fft_inverse(inputBuffer, outputBuffer, m_width);
+		for (int i = 0; i < m_width; i++) {
+			math::Complex result;
+			result = outputBuffer[i];
+
+			target->set(result, i, j);
+		}
+	}
+
+	delete[] inputBuffer;
+	delete[] outputBuffer;
+}
+
+void manta::ComplexMap2D::fftVertical(ComplexMap2D *target, bool inverse, int startColumn, int endColumn) const {
+	math::Complex *inputBuffer = new math::Complex[m_height];
+	math::Complex *outputBuffer = new math::Complex[m_height];
+
+	for (int i = startColumn; i < endColumn; i++) {
+		for (int j = 0; j < m_height; j++) {
+			math::Complex val = target->get(i, j);
+			inputBuffer[j] = val;
+		}
+
+		if (!inverse) NaiveFFT::fft(inputBuffer, outputBuffer, m_height);
+		else NaiveFFT::fft_inverse(inputBuffer, outputBuffer, m_height);
+		for (int j = 0; j < m_height; j++) {
+			math::Complex result;
+			result = outputBuffer[j];
+
+			target->set(result, i, j);
+		}
+	}
+
+	delete[] inputBuffer;
+	delete[] outputBuffer;
 }
 
 void manta::ComplexMap2D::inverseFft(ComplexMap2D *target) const {
