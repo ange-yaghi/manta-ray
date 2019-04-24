@@ -40,7 +40,6 @@ namespace manta {
 
 	protected:
 		ComplexMap2D m_discreteApproximation;
-		Mipmap<ComplexMap2D, math::Complex> m_mipMap;
 
 		math::real_d m_physicalWidth;
 		math::real_d m_physicalHeight;

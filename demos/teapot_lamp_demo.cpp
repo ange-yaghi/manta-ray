@@ -71,7 +71,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	floorMaterial->setBSDF(&floorBSDF);
 
 	SimpleBSDFMaterial *lampLightMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
-	lampLightMaterial->setEmission(math::mul(getColor(255, 197, 143), math::loadScalar(100.0))); // 30
+	lampLightMaterial->setEmission(math::mul(getColor(255, 197, 143), math::loadScalar(50.0)));
 	lampLightMaterial->setReflectance(math::constants::Zero);
 
 	PhongDistribution teapotCoating;
@@ -79,9 +79,9 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 
 	BilayerBSDF teapotBSDF;
 	teapotBSDF.setCoatingDistribution(&teapotCoating);
-	teapotBSDF.setDiffuse(getColor(0xFF, 0x08, 0x14));
+	teapotBSDF.setDiffuse(getColor(0x89, 0xCF, 0xF0));
 	teapotBSDF.setDiffuseMaterial(&lambert);
-	teapotBSDF.setSpecularAtNormal(math::loadVector(0.2, 0.2, 0.2));
+	teapotBSDF.setSpecularAtNormal(math::loadVector(0.5, 0.5, 0.5));
 
 	SimpleBSDFMaterial *teapotMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	teapotMaterial->setBSDF(&teapotBSDF);
@@ -240,6 +240,23 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 		fraunOutputNode.initialize();
 		fraunOutputNode.evaluate();
 		fraunOutputNode.destroy();
+
+		for (int i = 0; i < base.getWidth(); i++) {
+			for (int j = 0; j < base.getHeight(); j++) {
+				math::Vector v = base.get(i, j);
+
+				v = math::add(
+					v, 
+					math::mul(
+						math::componentMax(
+							math::sub(
+								v, 
+								math::loadVector(1.0, 1.0, 1.0)),
+							math::constants::Zero),
+						math::loadScalar(5)));
+				base.set(v, i, j);
+			}
+		}
 
 		VectorMapWrapperNode baseNode(&base);
 		baseNode.initialize();
