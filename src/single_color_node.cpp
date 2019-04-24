@@ -9,7 +9,7 @@ manta::SingleColorNode::SingleColorNode(const math::Vector &color) {
 }
 
 manta::SingleColorNode::~SingleColorNode() {
-
+	/* void */
 }
 
 manta::math::Vector manta::SingleColorNode::sample(const IntersectionPoint *) const {
