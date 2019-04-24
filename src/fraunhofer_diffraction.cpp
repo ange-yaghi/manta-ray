@@ -208,6 +208,8 @@ void manta::FraunhoferDiffraction::generateMap(const CftEstimator2D *estimator, 
 	StandardAllocator::Global()->free(threads, threadCount);
 }
 
+#include <iostream>
+
 void manta::FraunhoferDiffraction::_generateMap(const CftEstimator2D *estimator, const Settings *settings, int startRow, int endRow, VectorMap2D *target) const {
 	int res = target->getWidth();
 
@@ -235,7 +237,7 @@ void manta::FraunhoferDiffraction::_generateMap(const CftEstimator2D *estimator,
 			spectrum.clear();
 
 			for (int wavelength = startWavelength; wavelength <= endWavelength; wavelength += wavelengthStep) {
-				math::real_d freqSpace = (sdx * 1E6 / wavelength) * 0.9;
+				math::real_d freqSpace = (sdx * 1E6 / wavelength) * 1.0;
 
 				for (int s = 0; s < textureSamples; s++) {
 					math::real randX = math::uniformRandom() - (math::real)0.5;
@@ -254,9 +256,10 @@ void manta::FraunhoferDiffraction::_generateMap(const CftEstimator2D *estimator,
 					v = v * v.conjugate();
 
 					math::real src = m_sourceSpectrum->getValueContinuous((math::real)wavelength);
+					src = 1.0;
 					int wave_i = (int)((wavelength - startWavelength) / (math::real_d)wavelengthStep + 0.5);
 					math::real prev = spectrum.getValueDiscrete(wave_i);
-					spectrum.set(wave_i, prev + src * (math::real)v.r / (wavelength * wavelength));
+					spectrum.set(wave_i, prev + src * (math::real)v.r);
 				}
 			}
 
@@ -266,6 +269,11 @@ void manta::FraunhoferDiffraction::_generateMap(const CftEstimator2D *estimator,
 					(math::real)xyzColor.x,
 					(math::real)xyzColor.y,
 					(math::real)xyzColor.z), i, j);
+
+			if (i == 2078 && j == 2017) {
+				spectrum.writeCsv("../../workspace/tmp/test.csv");
+				std::cout << xyzColor.x << ", " << xyzColor.y << ", " << xyzColor.z << std::endl;
+			}
 		}
 	}
 

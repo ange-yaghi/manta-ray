@@ -69,7 +69,7 @@ int main() {
 	estimatorSamples = CftEstimator2D::getMinSamples(maxFreq, sampleWindow, MAX_SAMPLES);
 
 	TextureNode dirtTexture;
-	dirtTexture.loadFile(TEXTURE_PATH "dirt_composite.png", true);
+	dirtTexture.loadFile(TEXTURE_PATH "dirt_very_soft.png", true);
 	dirtTexture.initialize();
 	dirtTexture.evaluate();
 	TextureNode *texture = &dirtTexture;
@@ -95,6 +95,10 @@ int main() {
 	settings.frequencyMultiplier = (math::real_d)1.0;
 	settings.maxSamples = MAX_SAMPLES;
 	settings.saveApertureFunction = true;
+	settings.textureSamples = 10;
+	//settings.minWavelength = 500;
+	//settings.maxWavelength = 600;
+	settings.wavelengthStep = 5;
 
 	CmfTable table;
 	table.loadCsv(CMF_PATH "xyz_cmf_31.csv");
