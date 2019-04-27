@@ -51,12 +51,12 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 
 	PhongDistribution chromeCoating;
 	chromeCoating.setPower(10000.f);
-	chromeCoating.setPowerNode(&chromeRoughness);
+	chromeCoating.setPowerNode(chromeRoughness.getMainOutput());
 	chromeCoating.setMinMapPower((math::real)400.0);
 
 	PhongDistribution woodCoating;
 	woodCoating.setPower(1000.f);
-	woodCoating.setPowerNode(&woodRoughness);
+	woodCoating.setPowerNode(woodRoughness.getMainOutput());
 	woodCoating.setMinMapPower(2.f);
 
 	PhongDistribution floorDistribution;
@@ -64,13 +64,13 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 
 	BilayerBSDF paintBsdf;
 	paintBsdf.setDiffuseMaterial(&lambert);
-	paintBsdf.setCoatingDistribution(&woodCoating);
-	paintBsdf.setDiffuseNode(&texture);
+	paintBsdf.setCoatingDistribution(woodCoating.getMainOutput());
+	paintBsdf.setDiffuseNode(texture.getMainOutput());
 	paintBsdf.setSpecularAtNormal(math::loadVector(0.1f, 0.1f, 0.1f));
 
 	BilayerBSDF chromeBSDF;
 	chromeBSDF.setDiffuseMaterial(&lambert);
-	chromeBSDF.setCoatingDistribution(&chromeCoating);
+	chromeBSDF.setCoatingDistribution(chromeCoating.getMainOutput());
 	chromeBSDF.setDiffuse(getColor(0, 0, 0));
 	chromeBSDF.setSpecularAtNormal(math::loadVector(0.95f, 0.95f, 0.95f));
 
@@ -87,7 +87,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 
 	SimpleBSDFMaterial *floorMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	floorMaterial->setBSDF(&floorBSDF);
-	floorMaterial->setReflectanceNode(&floorWood);
+	floorMaterial->setReflectanceNode(floorWood.getMainOutput());
 	floorMaterial->setName("Backdrop");
 
 	SimpleBSDFMaterial *strongLight = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
@@ -245,7 +245,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 		fraunOutputNode.setJpegQuality(95);
 		fraunOutputNode.setGammaCorrection(true);
 		fraunOutputNode.setOutputFilename(fraunFname);
-		fraunOutputNode.setInputNode(&fraunNode);
+		fraunOutputNode.setInput(fraunNode.getMainOutput());
 		fraunOutputNode.initialize();
 		fraunOutputNode.evaluate();
 		fraunOutputNode.destroy();
@@ -256,7 +256,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 		baseNode.destroy();
 
 		ConvolutionNode convNode;
-		convNode.setInputs(&baseNode, &fraunNode);
+		convNode.setInputs(baseNode.getMainOutput(), fraunNode.getMainOutput());
 		convNode.setResize(true);
 		convNode.setClip(true);
 		convNode.initialize();
@@ -269,7 +269,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 		outputNode.setJpegQuality(95);
 		outputNode.setGammaCorrection(true);
 		outputNode.setOutputFilename(convFname);
-		outputNode.setInputNode(&convNode);
+		outputNode.setInput(convNode.getMainOutput());
 		outputNode.initialize();
 		outputNode.evaluate();
 		outputNode.destroy();

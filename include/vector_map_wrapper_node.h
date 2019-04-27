@@ -3,11 +3,11 @@
 
 #include <node.h>
 
-#include <map_2d_node.h>
+#include <vector_map_2d_node_output.h>
 
 namespace manta {
 
-	class VectorMapWrapperNode : public VectorMap2DNode {
+	class VectorMapWrapperNode : public Node {
 	public:
 		VectorMapWrapperNode(const VectorMap2D *map) {
 			m_map = map;
@@ -16,6 +16,22 @@ namespace manta {
 		virtual ~VectorMapWrapperNode() {
 			/* void */
 		}
+
+		const VectorMap2DNodeOutput *getMainOutput() const { return &m_output; }
+
+	protected:
+		virtual void _evaluate() {
+			m_output.setMap(m_map);
+		}
+
+	protected:
+		virtual void registerOutputs() {
+			registerOutput(&m_output, "Output");
+		}
+
+		VectorMap2DNodeOutput m_output;
+
+		const VectorMap2D *m_map;
 	};
 
 } /* namespace manta */

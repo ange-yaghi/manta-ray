@@ -3,7 +3,7 @@
 #include <ray_container.h>
 #include <intersection_point.h>
 #include <light_ray.h>
-#include <vector_node.h>
+#include <vector_node_output.h>
 #include <bsdf.h>
 
 manta::SimpleBSDFMaterial::SimpleBSDFMaterial() {
@@ -19,7 +19,7 @@ manta::SimpleBSDFMaterial::SimpleBSDFMaterial() {
 }
 
 manta::SimpleBSDFMaterial::~SimpleBSDFMaterial() {
-
+	/* void */
 }
 
 void manta::SimpleBSDFMaterial::integrateRay(LightRay *ray, const RayContainer &rays, const IntersectionPoint &intersectionPoint) const {
@@ -27,11 +27,17 @@ void manta::SimpleBSDFMaterial::integrateRay(LightRay *ray, const RayContainer &
 	math::Vector reflectance = m_reflectance;
 
 	if (m_emissionNode != nullptr) {
-		emission = math::mul(emission, m_emissionNode->sample(&intersectionPoint));
+		math::Vector e;
+		m_emissionNode->sample(&intersectionPoint, (void *)&e);
+
+		emission = math::mul(emission, e);
 	}
 
 	if (m_reflectanceNode != nullptr) {
-		reflectance = math::mul(reflectance, m_reflectanceNode->sample(&intersectionPoint));
+		math::Vector r;
+		m_reflectanceNode->sample(&intersectionPoint, (void *)&r);
+
+		reflectance = math::mul(reflectance, r);
 	}
 	
 	math::Vector totalLight = emission;

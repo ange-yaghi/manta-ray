@@ -22,7 +22,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	constexpr bool TRACE_SINGLE_PIXEL = false;
 	constexpr OBJECT OBJECT = TEAPOT;
 	constexpr MATERIAL MATERIAL = ENAMEL;
-	constexpr bool ENABLE_FRAUNHOFER_DIFFRACTION = true;
+	constexpr bool ENABLE_FRAUNHOFER_DIFFRACTION = false;
 
 	Scene scene;
 
@@ -62,7 +62,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	floorCoating.setPower((math::real)128);
 
 	BilayerBSDF floorBSDF;
-	floorBSDF.setCoatingDistribution(&floorCoating);
+	floorBSDF.setCoatingDistribution(floorCoating.getMainOutput());
 	floorBSDF.setDiffuse(getColor(0xFF, 0xFF, 0xFF));
 	floorBSDF.setDiffuseMaterial(&lambert);
 	floorBSDF.setSpecularAtNormal(math::loadVector(0.0, 0.0, 0.0));
@@ -78,7 +78,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	teapotCoating.setPower((math::real)1024);
 
 	BilayerBSDF teapotBSDF;
-	teapotBSDF.setCoatingDistribution(&teapotCoating);
+	teapotBSDF.setCoatingDistribution(teapotCoating.getMainOutput());
 	teapotBSDF.setDiffuse(getColor(0x89, 0xCF, 0xF0));
 	teapotBSDF.setDiffuseMaterial(&lambert);
 	teapotBSDF.setSpecularAtNormal(math::loadVector(0.5, 0.5, 0.5));
@@ -236,7 +236,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 		fraunOutputNode.setJpegQuality(95);
 		fraunOutputNode.setGammaCorrection(true);
 		fraunOutputNode.setOutputFilename(fraunFname);
-		fraunOutputNode.setInputNode(&fraunNode);
+		fraunOutputNode.setInput(fraunNode.getMainOutput());
 		fraunOutputNode.initialize();
 		fraunOutputNode.evaluate();
 		fraunOutputNode.destroy();
@@ -264,7 +264,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 		baseNode.destroy();
 
 		ConvolutionNode convNode;
-		convNode.setInputs(&baseNode, &fraunNode);
+		convNode.setInputs(baseNode.getMainOutput(), fraunNode.getMainOutput());
 		convNode.setResize(true);
 		convNode.setClip(true);
 		convNode.initialize();
@@ -277,7 +277,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 		outputNode.setJpegQuality(95);
 		outputNode.setGammaCorrection(true);
 		outputNode.setOutputFilename(convFname);
-		outputNode.setInputNode(&convNode);
+		outputNode.setInput(convNode.getMainOutput());
 		outputNode.initialize();
 		outputNode.evaluate();
 		outputNode.destroy();

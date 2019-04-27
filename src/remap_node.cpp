@@ -9,24 +9,31 @@ manta::RemapNode::RemapNode() {
 	m_inputNode = nullptr;
 }
 
-manta::RemapNode::RemapNode(const math::Vector &start, const math::Vector &end, const VectorNode *inputNode) {
+manta::RemapNode::RemapNode(const math::Vector &start, const math::Vector &end, const VectorNodeOutput *inputNode) {
 	m_start = start;
 	m_end = end;
 
 	m_inputNode = inputNode;
+
+	m_output.setEnd(m_end);
+	m_output.setStart(m_start);
+	m_output.setInput(m_inputNode);
 }
 
 manta::RemapNode::~RemapNode() {
-
+	/* void */
 }
 
-manta::math::Vector manta::RemapNode::sample(const IntersectionPoint *surfaceInteraction) const {
-	assert(m_inputNode != nullptr);
+void manta::RemapNode::_evaluate() {
+	m_output.setEnd(m_end);
+	m_output.setStart(m_start);
+	m_output.setInput(m_inputNode);
+}
 
-	math::Vector raw = m_inputNode->sample(surfaceInteraction);
-	math::Vector remapped = math::add(
-		math::mul(m_start, math::sub(math::constants::One, raw)), 
-		math::mul(m_end, raw));
+void manta::RemapNode::registerInputs() {
+	registerInput((const NodeOutput **)&m_inputNode, "Input");
+}
 
-	return remapped;
+void manta::RemapNode::registerOutputs() {
+	registerOutput(&m_output, "Output");
 }

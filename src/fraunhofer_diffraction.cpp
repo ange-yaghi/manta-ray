@@ -72,7 +72,11 @@ void manta::FraunhoferDiffraction::generate(const Aperture *aperture, const Text
 			a.m_textureCoodinates = math::loadVector(u, v);
 
 			math::real dirt = (math::real)1.0;
-			if (dirtMap != nullptr) dirt = math::getScalar(dirtMap->sample(&a));
+			if (dirtMap != nullptr) {
+				math::Vector dirtV;
+				dirtMap->getMainOutput()->sample(&a, (void *)&dirtV);
+				dirt = math::getScalar(dirtV);
+			}
 
 			if (aperture->filter(x, y)) {
 				m_apertureFunction.set(math::Complex((math::real_d)1.0 * dirt, (math::real_d)0.0), i, j);

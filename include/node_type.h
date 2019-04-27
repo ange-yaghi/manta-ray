@@ -7,8 +7,11 @@ namespace manta {
 
 	class NodeType {
 	public:
-		NodeType(const char *type) { m_typeString = type; m_hash = generateHash(type); }
+		NodeType() { initialize(""); }
+		NodeType(const char *type) { initialize(type); }
 		~NodeType() {}
+
+		void initialize(const char *type) { m_typeString = type; m_hash = generateHash(type); }
 
 	public:
 		const char *getType() const { return m_typeString; }

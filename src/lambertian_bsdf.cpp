@@ -1,13 +1,11 @@
 #include <lambertian_bsdf.h>
 
-#include <vector_node.h>
-
 manta::LambertianBSDF::LambertianBSDF() {
-
+	/* void */
 }
 
 manta::LambertianBSDF::~LambertianBSDF() {
-
+	/* void */
 }
 
 manta::math::Vector manta::LambertianBSDF::sampleF(const IntersectionPoint *surfaceInteraction, const math::Vector &i, math::Vector *o, math::real *pdf, StackAllocator *stackAllocator) const {	
