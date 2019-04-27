@@ -5,13 +5,14 @@
 
 namespace manta {
 
-	class VectorNode;
-
-	struct PhongMemory {
-		math::real power;
-	};
+	class VectorNodeOutput;
 
 	class PhongDistribution : public MicrofacetDistribution {
+	public:
+		struct PhongMemory {
+			math::real power;
+		};
+
 	public:
 		PhongDistribution();
 		~PhongDistribution();
@@ -25,14 +26,17 @@ namespace manta {
 		void setPower(math::real power) { m_power = power; }
 		math::real getPower() const { return m_power; }
 
-		void setPowerNode(VectorNode *node) { m_powerNode = node; }
-		VectorNode *getPowerNode() const { return m_powerNode; }
+		void setPowerNode(const VectorNodeOutput *node) { m_powerNode = node; }
+		const VectorNodeOutput *getPowerNode() const { return m_powerNode; }
 
 		void setMinMapPower(math::real power) { m_minMapPower = power; }
 		math::real getMinMapPower() const { return m_minMapPower; }
 
 	protected:
-		VectorNode *m_powerNode;
+		virtual void registerInputs();
+
+	protected:
+		const VectorNodeOutput *m_powerNode;
 		math::real m_power;
 		math::real m_minMapPower;
 	};

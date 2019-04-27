@@ -1,6 +1,6 @@
 #include <ggx_distribution.h>
 
-#include <vector_node.h>
+#include <vector_node_output.h>
 
 #include <assert.h>
 
@@ -11,7 +11,7 @@ manta::GgxDistribution::GgxDistribution() {
 }
 
 manta::GgxDistribution::~GgxDistribution() {
-
+	/* void */
 }
 
 void manta::GgxDistribution::initializeSessionMemory(const IntersectionPoint *surfaceInteraction, NodeSessionMemory *memory, StackAllocator *stackAllocator) const {
@@ -21,7 +21,10 @@ void manta::GgxDistribution::initializeSessionMemory(const IntersectionPoint *su
 
 	if (m_widthNode != nullptr) {
 		// Sample the power input and save it in the state container
-		math::real width = math::getScalar(m_widthNode->sample(surfaceInteraction));
+		math::Vector rawWidth;
+		m_widthNode->sample(surfaceInteraction, (void *)&rawWidth);
+
+		math::real width = math::getScalar(rawWidth);
 		phongMemory->width = width * (m_width - m_minMapWidth) + m_minMapWidth;
 	}
 	else {
@@ -83,4 +86,8 @@ manta::math::real manta::GgxDistribution::calculateG1(const math::Vector &v, con
 	math::real s1 = 1 + ::sqrt(1 + memory->width * memory->width * tan2_theta_v);
 
 	return (math::real)2.0 / s1;
+}
+
+void manta::GgxDistribution::registerInputs() {
+	registerInput((const NodeOutput **)&m_widthNode, "Width");
 }

@@ -5,6 +5,7 @@
 
 #include <manta_math.h>
 #include <intersection_point.h>
+#include <microfacet_distribution_node_output.h>
 
 namespace manta {
 
@@ -22,6 +23,13 @@ namespace manta {
 		virtual math::real bidirectionalShadowMasking(const math::Vector &i, const math::Vector &o, const math::Vector &m, NodeSessionMemory *mem) const;
 
 		math::real smithBidirectionalShadowMasking(const math::Vector &i, const math::Vector &o, const math::Vector &m, NodeSessionMemory *mem) const;
+
+		const MicrofacetDistributionNodeOutput *getMainOutput() const { return &m_output; }
+
+	protected:
+		MicrofacetDistributionNodeOutput m_output;
+
+		virtual void registerOutputs();
 	};
 
 } /* namespace manta */

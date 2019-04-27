@@ -49,14 +49,14 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 
 	BilayerBSDF blockBSDF;
 	blockBSDF.setDiffuseMaterial(&lambert);
-	blockBSDF.setCoatingDistribution(&phongDist);
-	blockBSDF.setDiffuseNode(&map);
+	blockBSDF.setCoatingDistribution(phongDist.getMainOutput());
+	blockBSDF.setDiffuseNode(map.getMainOutput());
 	blockBSDF.setDiffuse(getColor(0xFF, 0xFF, 0xFF));
 	blockBSDF.setSpecularAtNormal(math::loadVector(0.1f, 0.1f, 0.1f));
 
 	BilayerBSDF floorBSDF;
 	floorBSDF.setDiffuseMaterial(&lambert);
-	floorBSDF.setCoatingDistribution(&phongDist2);
+	floorBSDF.setCoatingDistribution(phongDist2.getMainOutput());
 	floorBSDF.setDiffuse(getColor(0xFF, 0xFF, 0xFF));
 	floorBSDF.setSpecularAtNormal(math::loadVector(0.75f, 0.75f, 0.75f));
 
@@ -65,19 +65,19 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 	SimpleBSDFMaterial *simpleBlockMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	simpleBlockMaterial->setName("Block");
 	simpleBlockMaterial->setEmission(math::constants::Zero);
-	simpleBlockMaterial->setReflectanceNode(&whiteNode);
+	simpleBlockMaterial->setReflectanceNode(whiteNode.getMainOutput());
 	simpleBlockMaterial->setBSDF(&blockBSDF);
 
 	SimpleBSDFMaterial *simpleLetterMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	simpleLetterMaterial->setName("Letters");
 	simpleLetterMaterial->setEmission(math::constants::Zero);
-	simpleLetterMaterial->setReflectanceNode(&whiteNode);
+	simpleLetterMaterial->setReflectanceNode(whiteNode.getMainOutput());
 	simpleLetterMaterial->setBSDF(&blockBSDF);
 
 	SimpleBSDFMaterial *simpleGroundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	simpleGroundMaterial->setName("Ground");
 	simpleGroundMaterial->setEmission(math::constants::Zero);
-	simpleGroundMaterial->setReflectanceNode(&whiteNode);
+	simpleGroundMaterial->setReflectanceNode(whiteNode.getMainOutput());
 	simpleGroundMaterial->setBSDF(&floorBSDF);
 
 	SimpleBSDFMaterial outdoorTopLightMaterial;

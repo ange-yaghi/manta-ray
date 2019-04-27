@@ -5,7 +5,7 @@
 
 namespace manta {
 
-	class VectorNode;
+	class VectorNodeOutput;
 	class BSDF;
 
 	class SimpleBSDFMaterial : public Material {
@@ -19,11 +19,11 @@ namespace manta {
 		void generateRays(RayContainer *rays, const LightRay &incidentRay, const IntersectionPoint &intersectionPoint, int degree, StackAllocator *stackAllocator = nullptr) const;
 		virtual void integrateRay(LightRay *ray, const RayContainer &rays, const IntersectionPoint &intersectionPoint) const;
 
-		void setReflectanceNode(VectorNode *node) { m_reflectanceNode = node; }
-		VectorNode *getReflectanceNode() const { return m_reflectanceNode; }
+		void setReflectanceNode(const VectorNodeOutput *node) { m_reflectanceNode = node; }
+		const VectorNodeOutput *getReflectanceNode() const { return m_reflectanceNode; }
 
-		void setEmissionNode(VectorNode *node) { m_emissionNode = node; }
-		VectorNode *getEmissionNode() const { return m_emissionNode; }
+		void setEmissionNode(const VectorNodeOutput *node) { m_emissionNode = node; }
+		const VectorNodeOutput *getEmissionNode() const { return m_emissionNode; }
 
 		void setEmission(const math::Vector &emission) { m_emission = emission; }
 		math::Vector getEmission() { return m_emission; }
@@ -37,8 +37,8 @@ namespace manta {
 	protected:
 		int m_maxDegree;
 
-		VectorNode *m_reflectanceNode;
-		VectorNode *m_emissionNode;
+		const VectorNodeOutput *m_reflectanceNode;
+		const VectorNodeOutput *m_emissionNode;
 
 		// Fixed parameters
 		math::Vector m_emission;

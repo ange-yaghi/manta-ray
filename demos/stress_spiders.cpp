@@ -33,7 +33,7 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 	PhongDistribution spiderCoating;
 	spiderCoating.setPower((math::real)8192);
 	BilayerBSDF spiderBSDF;
-	spiderBSDF.setCoatingDistribution(&spiderCoating);
+	spiderBSDF.setCoatingDistribution(spiderCoating.getMainOutput());
 	spiderBSDF.setDiffuseMaterial(&lambert);
 	spiderBSDF.setDiffuse(getColor(0xf1, 0xc4, 0x0f));
 	spiderBSDF.setSpecularAtNormal(math::loadVector(0.05f, 0.05f, 0.05f));
@@ -44,7 +44,7 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 	PhongDistribution groundCoating;
 	groundCoating.setPower((math::real)64);
 	BilayerBSDF groundBSDF;
-	groundBSDF.setCoatingDistribution(&groundCoating);
+	groundBSDF.setCoatingDistribution(groundCoating.getMainOutput());
 	groundBSDF.setDiffuseMaterial(&lambert);
 	groundBSDF.setDiffuse(getColor(0xFF, 0xFF, 0xFF));
 	groundBSDF.setSpecularAtNormal(math::loadVector(0.1f, 0.1f, 0.1f));
@@ -201,7 +201,7 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 		fraunOutputNode.setJpegQuality(95);
 		fraunOutputNode.setGammaCorrection(true);
 		fraunOutputNode.setOutputFilename(fraunFname);
-		fraunOutputNode.setInputNode(&fraunNode);
+		fraunOutputNode.setInput(fraunNode.getMainOutput());
 		fraunOutputNode.initialize();
 		fraunOutputNode.evaluate();
 		fraunOutputNode.destroy();
@@ -212,7 +212,7 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 		baseNode.destroy();
 
 		ConvolutionNode convNode;
-		convNode.setInputs(&baseNode, &fraunNode);
+		convNode.setInputs(baseNode.getMainOutput(), fraunNode.getMainOutput());
 		convNode.setResize(true);
 		convNode.setClip(true);
 		convNode.initialize();
@@ -225,7 +225,7 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 		outputNode.setJpegQuality(95);
 		outputNode.setGammaCorrection(true);
 		outputNode.setOutputFilename(convFname);
-		outputNode.setInputNode(&convNode);
+		outputNode.setInput(convNode.getMainOutput());
 		outputNode.initialize();
 		outputNode.evaluate();
 		outputNode.destroy();

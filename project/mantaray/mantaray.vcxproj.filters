@@ -271,6 +271,24 @@
     <Filter Include="Source Files\nodes\library">
       <UniqueIdentifier>{587db5d8-d63a-407c-84d6-8d9ea918eafd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\nodes\output-ports">
+      <UniqueIdentifier>{0e8cb533-eb43-461e-96a6-abebbdc54fc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\nodes\output-ports">
+      <UniqueIdentifier>{b90e59bd-f9d0-4512-9e59-faf14721699d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\nodes\output-ports\operations">
+      <UniqueIdentifier>{0f797a0f-03af-4393-a684-988a578907a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\nodes\output-ports\objects">
+      <UniqueIdentifier>{5b859a31-5064-4dc2-b15b-fa6f49f7bc94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\nodes\output-ports\objects">
+      <UniqueIdentifier>{3a91b852-5ade-482a-83b0-344a5f0b6556}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\nodes\output-ports\operations">
+      <UniqueIdentifier>{f142cbcd-03f8-4292-b817-5637529626ab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -510,9 +528,6 @@
     <ClCompile Include="..\..\src\node.cpp">
       <Filter>Source Files\nodes</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\vector_node.cpp">
-      <Filter>Source Files\nodes</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\image_file_node.cpp">
       <Filter>Source Files\nodes</Filter>
     </ClCompile>
@@ -521,6 +536,33 @@
     </ClCompile>
     <ClCompile Include="..\..\src\convolution_node.cpp">
       <Filter>Source Files\nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\vector_map_2d_node_output.cpp">
+      <Filter>Source Files\nodes\output-ports</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\single_vector_node_output.cpp">
+      <Filter>Source Files\nodes\output-ports</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\include\media_interface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\power_node_output.cpp">
+      <Filter>Source Files\nodes\output-ports\operations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\remap_node_output.cpp">
+      <Filter>Source Files\nodes\output-ports\operations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\vector_node_output.cpp">
+      <Filter>Source Files\nodes\output-ports</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bsdf_node_output.cpp">
+      <Filter>Source Files\nodes\output-ports\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\media_interface_node_output.cpp">
+      <Filter>Source Files\nodes\output-ports\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\microfacet_distribution_node_output.cpp">
+      <Filter>Source Files\nodes\output-ports\objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -824,15 +866,6 @@
     <ClInclude Include="..\..\include\node.h">
       <Filter>Header Files\nodes</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\vector_node.h">
-      <Filter>Header Files\nodes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\map_2d_node.h">
-      <Filter>Header Files\nodes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\image_file_node.h">
-      <Filter>Header Files\nodes</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\node_type.h">
       <Filter>Header Files\nodes</Filter>
     </ClInclude>
@@ -844,6 +877,36 @@
     </ClInclude>
     <ClInclude Include="..\..\include\vector_map_wrapper_node.h">
       <Filter>Header Files\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\vector_node_output.h">
+      <Filter>Header Files\nodes\output-ports</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\image_file_node.h">
+      <Filter>Header Files\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\vector_map_2d_node_output.h">
+      <Filter>Header Files\nodes\output-ports</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\node_output.h">
+      <Filter>Header Files\nodes\output-ports</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\single_vector_node_output.h">
+      <Filter>Header Files\nodes\output-ports</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\bsdf_node_output.h">
+      <Filter>Header Files\nodes\output-ports\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\media_interface_node_output.h">
+      <Filter>Header Files\nodes\output-ports\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\microfacet_distribution_node_output.h">
+      <Filter>Header Files\nodes\output-ports\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\power_node_output.h">
+      <Filter>Header Files\nodes\output-ports\operations</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\remap_node_output.h">
+      <Filter>Header Files\nodes\output-ports\operations</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

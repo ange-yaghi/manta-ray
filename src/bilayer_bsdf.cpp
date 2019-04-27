@@ -3,7 +3,7 @@
 #include <microfacet_reflection_bsdf.h>
 #include <lambertian_bsdf.h>
 #include <microfacet_distribution.h>
-#include <vector_node.h>
+#include <microfacet_distribution_node_output.h>
 #include <phong_distribution.h>
 
 #include <iostream>
@@ -19,7 +19,7 @@ manta::BilayerBSDF::BilayerBSDF() {
 }
 
 manta::BilayerBSDF::~BilayerBSDF() {
-
+	/* void */
 }
 
 manta::math::Vector manta::BilayerBSDF::sampleF(const IntersectionPoint *surfaceInteraction, const math::Vector &i, math::Vector *o, math::real *pdf, StackAllocator *stackAllocator) const {
@@ -27,11 +27,15 @@ manta::math::Vector manta::BilayerBSDF::sampleF(const IntersectionPoint *surface
 	math::Vector specularR = m_specular;
 
 	if (m_diffuseNode != nullptr) {
-		diffuseR = math::mul(m_diffuseNode->sample(surfaceInteraction), diffuseR);
+		math::Vector diffuse;
+		m_diffuseNode->sample(surfaceInteraction, (void *)&diffuse);
+		diffuseR = math::mul(diffuse, diffuseR);
 	}
 
 	if (m_specularNode != nullptr) {
-		specularR = math::mul(m_specularNode->sample(surfaceInteraction), specularR);
+		math::Vector specular;
+		m_specularNode->sample(surfaceInteraction, (void *)&specular);
+		specularR = math::mul(specular, specularR);
 	}
 	
 	math::real u = math::uniformRandom();
@@ -41,17 +45,18 @@ manta::math::Vector manta::BilayerBSDF::sampleF(const IntersectionPoint *surface
 
 	math::Vector wh;
 
+	const MicrofacetDistribution *distribution = m_coatingDistribution->getDistribution();
 	NodeSessionMemory specularDistMem;
-	m_coatingDistribution->initializeSessionMemory(surfaceInteraction, &specularDistMem, stackAllocator);
+	distribution->initializeSessionMemory(surfaceInteraction, &specularDistMem, stackAllocator);
 
-	PhongMemory *memory = reinterpret_cast<PhongMemory *>((void *)specularDistMem.memory);
+	PhongDistribution::PhongMemory *memory = reinterpret_cast<PhongDistribution::PhongMemory *>((void *)specularDistMem.memory);
 	math::real s = memory->power;
 
 	math::Vector m;
 
 	if (u < (math::real)0.5) {
 		// Ray reflects off of the coating
-		m = m_coatingDistribution->generateMicrosurfaceNormal(&specularDistMem);
+		m = distribution->generateMicrosurfaceNormal(&specularDistMem);
 		math::Vector ri = math::reflect(i, m);
 		wh = m;
 		*o = ri;
@@ -67,7 +72,7 @@ manta::math::Vector manta::BilayerBSDF::sampleF(const IntersectionPoint *surface
 	
 	if (math::getX(wh) == 0 && math::getY(wh) == 0 && math::getZ(wh) == 0) {
 		// Free all memory
-		m_coatingDistribution->destroySessionMemory(&specularDistMem, stackAllocator);
+		distribution->destroySessionMemory(&specularDistMem, stackAllocator);
 
 		*pdf = 0.0;
 		return math::constants::Zero;
@@ -92,7 +97,7 @@ manta::math::Vector manta::BilayerBSDF::sampleF(const IntersectionPoint *surface
 		coatingPDF = 0.0;
 	}
 	else {
-		coatingPDF = m_coatingDistribution->calculatePDF(wh, &specularDistMem) / ((math::real)4 * o_dot_wh);
+		coatingPDF = distribution->calculatePDF(wh, &specularDistMem) / ((math::real)4 * o_dot_wh);
 	}
 
 	diffusePDF = (math::real)1.0 / math::constants::TWO_PI;
@@ -118,7 +123,7 @@ manta::math::Vector manta::BilayerBSDF::sampleF(const IntersectionPoint *surface
 		specular = math::constants::Zero;
 	}
 	else {
-		specular = math::loadScalar(m_coatingDistribution->calculateDistribution(wh, &specularDistMem));
+		specular = math::loadScalar(distribution->calculateDistribution(wh, &specularDistMem));
 
 		math::Vector specular_div = math::loadScalar(4 * abs_o_dot_wh * absCosThetaOI);
 		math::Vector schlickFresnel = math::sub(math::constants::One, specularR);
@@ -130,7 +135,7 @@ manta::math::Vector manta::BilayerBSDF::sampleF(const IntersectionPoint *surface
 	}
 
 	// Free all memory
-	m_coatingDistribution->destroySessionMemory(&specularDistMem, stackAllocator);
+	distribution->destroySessionMemory(&specularDistMem, stackAllocator);
 
 	// Return reflectance
 	math::Vector fr = math::add(diffuse, specular);
@@ -138,4 +143,10 @@ manta::math::Vector manta::BilayerBSDF::sampleF(const IntersectionPoint *surface
 	assert(!(::isnan(math::getX(fr)) || ::isnan(math::getY(fr)) || ::isnan(math::getZ(fr))));
 
 	return fr;
+}
+
+void manta::BilayerBSDF::registerInputs() {
+	registerInput((const NodeOutput **)&m_coatingDistribution, "Coating");
+	registerInput((const NodeOutput **)&m_diffuseNode, "Diffuse");
+	registerInput((const NodeOutput **)&m_specularNode, "Specular");
 }

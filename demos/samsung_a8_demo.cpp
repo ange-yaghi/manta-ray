@@ -74,12 +74,12 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	PhongDistribution phongPhoneCase;
 	phongPhoneCase.setPower(1024);
 	phongPhoneCase.setMinMapPower(8);
-	if (ENABLE_SMUDGE && (SCENE == UPRIGHT_SCENE || SCENE == BANNER_SCENE)) phongPhoneCase.setPowerNode(&smudgeMap);
+	if (ENABLE_SMUDGE && (SCENE == UPRIGHT_SCENE || SCENE == BANNER_SCENE)) phongPhoneCase.setPowerNode(smudgeMap.getMainOutput());
 
 	PhongDistribution phongGlass;
 	phongGlass.setPower(5000);
 	phongGlass.setMinMapPower(200);
-	if (ENABLE_SMUDGE && (SCENE == UPRIGHT_SCENE || SCENE == BANNER_SCENE)) phongGlass.setPowerNode(&smudgeMap);
+	if (ENABLE_SMUDGE && (SCENE == UPRIGHT_SCENE || SCENE == BANNER_SCENE)) phongGlass.setPowerNode(smudgeMap.getMainOutput());
 
 	PhongDistribution phongBlackPlastic;
 	phongBlackPlastic.setPower(5000);
@@ -96,7 +96,7 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	PhongDistribution phongFloor;
 	phongFloor.setPower(256);
 	phongFloor.setMinMapPower(240);
-	if (ENABLE_SMUDGE && (SCENE == UPRIGHT_SCENE || SCENE == BANNER_SCENE)) phongFloor.setPowerNode(&groundRoughness);
+	if (ENABLE_SMUDGE && (SCENE == UPRIGHT_SCENE || SCENE == BANNER_SCENE)) phongFloor.setPowerNode(groundRoughness.getMainOutput());
 
 	PhongDistribution mattePlasticPhong;
 	mattePlasticPhong.setPower(64);
@@ -106,26 +106,26 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 
 	BilayerBSDF phoneCaseBSDF;
 	phoneCaseBSDF.setDiffuseMaterial(&lambert);
-	phoneCaseBSDF.setCoatingDistribution(&phongPhoneCase);
+	phoneCaseBSDF.setCoatingDistribution(phongPhoneCase.getMainOutput());
 	phoneCaseBSDF.setDiffuse(getColor(0x0, 0x0, 0x0));
 	phoneCaseBSDF.setSpecularAtNormal(math::loadVector(0.01f, 0.01f, 0.01f));
 
 	BilayerBSDF bayDoorBSDF;
 	bayDoorBSDF.setDiffuseMaterial(&lambert);
-	bayDoorBSDF.setCoatingDistribution(&phongBayDoor);
+	bayDoorBSDF.setCoatingDistribution(phongBayDoor.getMainOutput());
 	bayDoorBSDF.setDiffuse(getColor(0x0, 0x0, 0x0));
 	bayDoorBSDF.setSpecularAtNormal(math::loadVector(0.0f, 0.0f, 0.0f));
 
 	BilayerBSDF speakerGrillBSDF;
 	speakerGrillBSDF.setDiffuseMaterial(&lambert);
-	speakerGrillBSDF.setCoatingDistribution(&phongBayDoor);
-	speakerGrillBSDF.setDiffuseNode(&speakerGrillTexture);
+	speakerGrillBSDF.setCoatingDistribution(phongBayDoor.getMainOutput());
+	speakerGrillBSDF.setDiffuseNode(speakerGrillTexture.getMainOutput());
 	speakerGrillBSDF.setDiffuse(math::loadVector(0.1f, 0.1f, 0.1f));
 	speakerGrillBSDF.setSpecularAtNormal(math::loadVector(0.0f, 0.0f, 0.0f));
 
 	BilayerBSDF blackPlasticBSDF;
 	blackPlasticBSDF.setDiffuseMaterial(&lambert);
-	blackPlasticBSDF.setCoatingDistribution(&phongBlackPlastic);
+	blackPlasticBSDF.setCoatingDistribution(phongBlackPlastic.getMainOutput());
 	blackPlasticBSDF.setDiffuse(getColor(0x0, 0x0, 0x0));
 	blackPlasticBSDF.setSpecularAtNormal(math::loadVector(0.05f, 0.05f, 0.05f));
 
@@ -134,7 +134,7 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 
 	BilayerBSDF floorBSDF;
 	floorBSDF.setDiffuseMaterial(&lambert);
-	floorBSDF.setCoatingDistribution(&phongFloor);
+	floorBSDF.setCoatingDistribution(phongFloor.getMainOutput());
 	if (SCENE == UPRIGHT_SCENE || SCENE == BANNER_SCENE) {
 		floorBSDF.setDiffuse(getColor(0, 0, 0));
 		floorBSDF.setSpecularAtNormal(math::loadVector(0.05f, 0.05f, 0.05f));
@@ -146,8 +146,8 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 
 	BilayerBSDF backPlateBSDF;
 	backPlateBSDF.setDiffuseMaterial(&lambert);
-	backPlateBSDF.setCoatingDistribution(&phongBlackPlastic);
-	backPlateBSDF.setDiffuseNode(&backPlateTexture);
+	backPlateBSDF.setCoatingDistribution(phongBlackPlastic.getMainOutput());
+	backPlateBSDF.setDiffuseNode(backPlateTexture.getMainOutput());
 	backPlateBSDF.setSpecularAtNormal(math::loadVector(0.0f, 0.0f, 0.0f));
 
 	DielectricMediaInterface fresnel;
@@ -183,7 +183,7 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	SimpleBSDFMaterial *phoneCaseMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	phoneCaseMaterial->setName("PhoneCase");
 	phoneCaseMaterial->setReflectance(getColor(255, 255, 255));
-	phoneCaseMaterial->setReflectanceNode(&smudgeMap);
+	phoneCaseMaterial->setReflectanceNode(smudgeMap.getMainOutput());
 	phoneCaseMaterial->setBSDF(&phoneCaseBSDF);
 
 	SimpleBSDFMaterial *bayDoorMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
@@ -263,7 +263,7 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 
 	SimpleBSDFMaterial *screenMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	screenMaterial->setName("Screen");
-	screenMaterial->setEmissionNode(&phoneScreenTexture);
+	screenMaterial->setEmissionNode(phoneScreenTexture.getMainOutput());
 	screenMaterial->setEmission(math::loadVector(1.6f, 1.6f, 1.6f));
 	screenMaterial->setReflectance(getColor(3, 3, 3));
 	screenMaterial->setBSDF(&lambert);

@@ -4,27 +4,39 @@
 
 manta::PowerNode::PowerNode() {
 	m_power = (math::real)1.0;
-
 	m_inputNode = nullptr;
+	m_powerNode = nullptr;
+
+	m_output.setDefaultPower(m_power);
+	m_output.setInput(m_inputNode);
+	m_output.setPowerNode(m_powerNode);
 }
 
-manta::PowerNode::PowerNode(math::real power, const VectorNode *input) {
+manta::PowerNode::PowerNode(math::real power, const VectorNodeOutput *input) {
 	m_power = power;
 	m_inputNode = input;
+	m_powerNode = nullptr;
+
+	m_output.setDefaultPower(m_power);
+	m_output.setInput(m_inputNode);
+	m_output.setPowerNode(m_powerNode);
 }
 
 manta::PowerNode::~PowerNode() {
-
+	/* void */
 }
 
-manta::math::Vector manta::PowerNode::sample(const IntersectionPoint *surfaceInteraction) const {
-	assert(m_inputNode != nullptr);
+void manta::PowerNode::_initialize() {
+	m_output.setDefaultPower(m_power);
+	m_output.setInput(m_inputNode);
+	m_output.setPowerNode(m_powerNode);
+}
 
-	math::Vector raw = m_inputNode->sample(surfaceInteraction);
-	
-	math::real x_pow = ::pow(math::getX(raw), m_power);
-	math::real y_pow = ::pow(math::getY(raw), m_power);
-	math::real z_pow = ::pow(math::getZ(raw), m_power);
+void manta::PowerNode::registerInputs() {
+	registerInput((const NodeOutput **)&m_inputNode, "Input");
+	registerInput((const NodeOutput **)&m_powerNode, "Power");
+}
 
-	return math::loadVector(x_pow, y_pow, z_pow);
+void manta::PowerNode::registerOutputs() {
+	registerOutput(&m_output, "Output");
 }
