@@ -76,13 +76,13 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
 
 	PhongDistribution woodCoating;
 	woodCoating.setPower(1000);
-	woodCoating.setPowerNode(&woodRoughness);
+	woodCoating.setPowerNode(woodRoughness.getMainOutput());
 	woodCoating.setMinMapPower(2);
 
 	BilayerBSDF simpleWoodBSDF;
 	simpleWoodBSDF.setDiffuseMaterial(&lambert);
-	simpleWoodBSDF.setCoatingDistribution(&woodCoating);
-	simpleWoodBSDF.setDiffuseNode(&texture);
+	simpleWoodBSDF.setCoatingDistribution(woodCoating.getMainOutput());
+	simpleWoodBSDF.setDiffuseNode(texture.getMainOutput());
 	simpleWoodBSDF.setSpecularAtNormal(math::loadVector(0.0, 0.0, 0.0));
 
 	SimpleBSDFMaterial *paintMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
@@ -112,28 +112,29 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
 	metalTexture.initialize();
 	metalTexture.evaluate();
 
+	PowerNode fingerprintPower(4.0f, fingerprintTexture.getMainOutput());
 	RemapNode specularPowerFingerprint(
 		math::loadScalar(0.0f),
 		math::loadScalar(1.0f),
-		new PowerNode(4.0f, &fingerprintTexture));
+		fingerprintPower.getMainOutput());
 
 	RemapNode invFingerprint(
 		math::loadScalar(1.0f),
 		math::loadScalar(0.0f),
-		&fingerprintTexture);
+		fingerprintTexture.getMainOutput());
 
 	// Steel
 	PhongDistribution phongSteel2;
 	phongSteel2.setPower(5000);
-	phongSteel2.setPowerNode(&specularPowerFingerprint);
+	phongSteel2.setPowerNode(specularPowerFingerprint.getMainOutput());
 	phongSteel2.setMinMapPower(8);
 
 	BilayerBSDF steelBSDF2;
-	steelBSDF2.setCoatingDistribution(&phongSteel2);
+	steelBSDF2.setCoatingDistribution(phongSteel2.getMainOutput());
 	steelBSDF2.setDiffuseMaterial(&lambert);
-	steelBSDF2.setDiffuseNode(&metalTexture);
+	steelBSDF2.setDiffuseNode(metalTexture.getMainOutput());
 	steelBSDF2.setSpecularAtNormal(math::loadVector(1.0f, 1.0f, 1.0f));
-	steelBSDF2.setSpecularNode(&invFingerprint);
+	steelBSDF2.setSpecularNode(invFingerprint.getMainOutput());
 
 	SimpleBSDFMaterial *steel2Material = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	steel2Material->setName("Steel2");
@@ -163,7 +164,7 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
 
 	SimpleBSDFMaterial *backdropTexture = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	backdropTexture->setBSDF(&lambert);
-	backdropTexture->setReflectanceNode(&checkerboardTexture);
+	backdropTexture->setReflectanceNode(checkerboardTexture.getMainOutput());
 	backdropTexture->setName("Backdrop");
 
 	SimpleBSDFMaterial *lightMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();

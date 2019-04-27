@@ -45,7 +45,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	BilayerBSDF wallBSDF;
 	wallBSDF.setDiffuse(getColor(0xFF, 0xFF, 0xFF));
 	wallBSDF.setSpecularAtNormal(getColor(0x00, 0x00, 0x00));
-	wallBSDF.setCoatingDistribution(&wallCoating);
+	wallBSDF.setCoatingDistribution(wallCoating.getMainOutput());
 	wallBSDF.setDiffuseMaterial(&lambert);
 	SimpleBSDFMaterial *wallMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	wallMaterial->setName("WallMaterial");
@@ -57,7 +57,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	BilayerBSDF floorBSDF;
 	floorBSDF.setDiffuse(getColor(0xFF, 0xFF, 0xFF));
 	floorBSDF.setSpecularAtNormal(math::loadVector(1.0f, 1.0f, 1.0f));
-	floorBSDF.setCoatingDistribution(&wallCoating);
+	floorBSDF.setCoatingDistribution(wallCoating.getMainOutput());
 	floorBSDF.setDiffuseMaterial(&lambert);
 	SimpleBSDFMaterial *floorMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	floorMaterial->setName("FloorMaterial");
@@ -69,7 +69,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	BilayerBSDF carpetBSDF;
 	carpetBSDF.setDiffuse(getColor(0xdc, 0xb4, 0x84));
 	carpetBSDF.setSpecularAtNormal(math::loadVector(0.0f, 0.0f, 0.0f));
-	carpetBSDF.setCoatingDistribution(&wallCoating);
+	carpetBSDF.setCoatingDistribution(wallCoating.getMainOutput());
 	carpetBSDF.setDiffuseMaterial(&lambert);
 	SimpleBSDFMaterial *carpetMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	carpetMaterial->setName("CarpetMaterial");
@@ -81,7 +81,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	BilayerBSDF tableSteelBSDF;
 	tableSteelBSDF.setDiffuse(getColor(0x00, 0x00, 0x00));
 	tableSteelBSDF.setSpecularAtNormal(math::loadVector(1.0f, 1.0f, 1.0f));
-	tableSteelBSDF.setCoatingDistribution(&tableSteelCoating);
+	tableSteelBSDF.setCoatingDistribution(tableSteelCoating.getMainOutput());
 	tableSteelBSDF.setDiffuseMaterial(&lambert);
 	SimpleBSDFMaterial *tableSteel = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	tableSteel->setName("TableSteel");
@@ -93,7 +93,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	BilayerBSDF tableTopBSDF;
 	tableTopBSDF.setDiffuse(getColor(0x30, 0x26, 0x21));
 	tableTopBSDF.setSpecularAtNormal(math::loadVector(0.2f, 0.2f, 0.2f));
-	tableTopBSDF.setCoatingDistribution(&tableTopCoating);
+	tableTopBSDF.setCoatingDistribution(tableTopCoating.getMainOutput());
 	tableTopBSDF.setDiffuseMaterial(&lambert);
 	SimpleBSDFMaterial *tableTop = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	tableTop->setName("TableTop");
@@ -105,7 +105,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	BilayerBSDF bookBSDF;
 	bookBSDF.setDiffuse(getColor(0xFF, 0xFF, 0xFF));
 	bookBSDF.setSpecularAtNormal(math::loadVector(0.0f, 0.0f, 0.0f));
-	bookBSDF.setCoatingDistribution(&tableTopCoating);
+	bookBSDF.setCoatingDistribution(tableTopCoating.getMainOutput());
 	bookBSDF.setDiffuseMaterial(&lambert);
 	SimpleBSDFMaterial *book = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	book->setName("Book");

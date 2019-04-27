@@ -1,5 +1,8 @@
 #include <convolution_node.h>
 
+#include <complex_map_2d.h>
+#include <vector_map_2d_node_output.h>
+
 manta::ConvolutionNode::ConvolutionNode() {
 	m_base = nullptr;
 	m_filter = nullptr;
@@ -18,8 +21,8 @@ void manta::ConvolutionNode::_initialize() {
 
 void manta::ConvolutionNode::_evaluate() {
 	// Cast inputs
-	VectorMap2DNode *a = static_cast<VectorMap2DNode *>(m_base);
-	VectorMap2DNode *b = static_cast<VectorMap2DNode *>(m_filter);
+	const VectorMap2DNodeOutput *a = m_base;
+	const VectorMap2DNodeOutput *b = m_filter;
 
 	Margins margins;
 	VectorMap2D a_mapSafe;
@@ -91,16 +94,18 @@ void manta::ConvolutionNode::_evaluate() {
 		a_mapSafe.destroy();
 	}
 
-	setMap(&m_outputMap);
+	m_output.setMap(&m_outputMap);
 }
 
 void manta::ConvolutionNode::_destroy() {
-	VectorMap2DNode::_destroy();
-
 	m_outputMap.destroy();
 }
 
-void manta::ConvolutionNode::registerDependencies() {
-	registerDependency(&m_base, "Base");
-	registerDependency(&m_filter, "Filter");
+void manta::ConvolutionNode::registerInputs() {
+	registerInput((const NodeOutput **)&m_base, "Base");
+	registerInput((const NodeOutput **)&m_filter, "Filter");
+}
+
+void manta::ConvolutionNode::registerOutputs() {
+	registerOutput(&m_output, "Output");
 }

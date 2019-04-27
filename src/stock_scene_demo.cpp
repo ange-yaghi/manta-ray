@@ -61,31 +61,32 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
 
 	LambertianBSDF lambert;
 
+	PowerNode texturePower(4.0f, fingerprintTexture.getMainOutput());
 	RemapNode specularPowerFingerprint(
 		math::loadScalar(0.0f),
 		math::loadScalar(1.0f),
-		new PowerNode(4.0f, &fingerprintTexture));
+		texturePower.getMainOutput());
 
 	RemapNode invFingerprint(
 		math::loadScalar(1.0f),
 		math::loadScalar(0.5f),
-		new PowerNode(4.0f, &fingerprintTexture));
+		texturePower.getMainOutput());
 
 	// Steel
 	PhongDistribution phongSteel;
 	phongSteel.setPower(10000.0f);
-	phongSteel.setPowerNode(&specularPowerFingerprint);
+	phongSteel.setPowerNode(specularPowerFingerprint.getMainOutput());
 	phongSteel.setMinMapPower(16.0f);
 
 	PhongDistribution phongShinySteel;
 	phongShinySteel.setPower(5000.0f);
 
 	BilayerBSDF steelBSDF;
-	steelBSDF.setCoatingDistribution(&phongSteel);
+	steelBSDF.setCoatingDistribution(phongSteel.getMainOutput());
 	steelBSDF.setDiffuseMaterial(&lambert);
-	steelBSDF.setDiffuseNode(&metalTexture);
+	steelBSDF.setDiffuseNode(metalTexture.getMainOutput());
 	steelBSDF.setSpecularAtNormal(math::loadVector(1.0f, 1.0f, 1.0f));
-	steelBSDF.setSpecularNode(&invFingerprint);
+	steelBSDF.setSpecularNode(invFingerprint.getMainOutput());
 
 	MicrofacetReflectionBSDF shinySteelBSDF;
 	shinySteelBSDF.setDistribution(&phongShinySteel);
@@ -118,11 +119,11 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
 	// Pencil paint
 	PhongDistribution phongGloss;
 	phongGloss.setPower(1024);
-	phongGloss.setPowerNode(&fingerprintTexture);
+	phongGloss.setPowerNode(fingerprintTexture.getMainOutput());
 	phongGloss.setMinMapPower(256);
 
 	BilayerBSDF paintBSDF;
-	paintBSDF.setCoatingDistribution(&phongGloss);
+	paintBSDF.setCoatingDistribution(phongGloss.getMainOutput());
 	if (ALT_VERSION) paintBSDF.setDiffuse(getColor(0x0F, 0x10, 0x40));
 	else paintBSDF.setDiffuse(getColor(0xE9, 0xE2, 0xDF));
 	paintBSDF.setSpecularAtNormal(math::loadScalar(0.1f));
@@ -140,18 +141,18 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
 	rubber->setBSDF(&lambert);
 	rubber->setName("Eraser");
 	rubber->setReflectance(getColor(0xFF, 0xFF, 0xFF));
-	rubber->setReflectanceNode(&eraserTexture);
+	rubber->setReflectanceNode(eraserTexture.getMainOutput());
 
 	SimpleBSDFMaterial *wood = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	wood->setBSDF(&lambert);
 	wood->setName("Wood");
 	wood->setReflectance(getColor(0xFF, 0xFF, 0xFF));
-	wood->setReflectanceNode(&woodTexture);
+	wood->setReflectanceNode(woodTexture.getMainOutput());
 
 	SimpleBSDFMaterial *floorMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	floorMaterial->setBSDF(&lambert);
 	floorMaterial->setName("Floor");
-	floorMaterial->setReflectanceNode(&floorTexture);
+	floorMaterial->setReflectanceNode(floorTexture.getMainOutput());
 
 	SimpleBSDFMaterial *mainLight = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	mainLight->setBSDF(nullptr);
@@ -199,8 +200,8 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
 	cameraPos = math::sub(cameraPos, math::mul(dir, math::loadScalar(0.0f)));
 
 	// Use a custom resolution
-	resolutionX = 1900 * 3;
-	resolutionY = 1268 * 3;
+	resolutionX = 1900 * 1;
+	resolutionY = 1268 * 1;
 
 	CameraRayEmitterGroup *group;
 	RandomSampler sampler;

@@ -1,6 +1,6 @@
 #include <phong_distribution.h>
 
-#include <vector_node.h>
+#include <vector_node_output.h>
 
 #include <assert.h>
 
@@ -21,7 +21,10 @@ void manta::PhongDistribution::initializeSessionMemory(const IntersectionPoint *
 
 	if (m_powerNode != nullptr) {
 		// Sample the power input and save it in the state container
-		math::real power = math::getScalar(m_powerNode->sample(surfaceInteraction));
+		math::Vector rawPower;
+		m_powerNode->sample(surfaceInteraction, (void *)&rawPower);
+
+		math::real power = math::getScalar(rawPower);
 		phongMemory->power = power * (m_power - m_minMapPower) + m_minMapPower;
 	}
 	else {
@@ -85,4 +88,8 @@ manta::math::real manta::PhongDistribution::calculateG1(const math::Vector &v, c
 	assert(secondTerm >= 0);
 
 	return secondTerm;
+}
+
+void manta::PhongDistribution::registerInputs() {
+	registerInput((const NodeOutput **)m_powerNode, "Power");
 }

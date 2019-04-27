@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -19,9 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\include\media_interface.cpp" />
     <ClCompile Include="..\..\src\biconvex_lens.cpp" />
     <ClCompile Include="..\..\src\bilayer_bsdf.cpp" />
     <ClCompile Include="..\..\src\bsdf.cpp" />
+    <ClCompile Include="..\..\src\bsdf_node_output.cpp" />
     <ClCompile Include="..\..\src\camera_ray_emitter.cpp" />
     <ClCompile Include="..\..\src\camera_ray_emitter_group.cpp" />
     <ClCompile Include="..\..\src\cft_estimator_2d.cpp" />
@@ -42,9 +44,14 @@
     <ClCompile Include="..\..\src\kd_tree.cpp" />
     <ClCompile Include="..\..\src\lambertian_bsdf.cpp" />
     <ClCompile Include="..\..\src\manta_math.cpp" />
+    <ClCompile Include="..\..\src\media_interface_node_output.cpp" />
+    <ClCompile Include="..\..\src\microfacet_distribution_node_output.cpp" />
     <ClCompile Include="..\..\src\mipmap.cpp" />
+    <ClCompile Include="..\..\src\power_node_output.cpp" />
+    <ClCompile Include="..\..\src\remap_node_output.cpp" />
     <ClCompile Include="..\..\src\rgb_space.cpp" />
     <ClCompile Include="..\..\src\signal_processing.cpp" />
+    <ClCompile Include="..\..\src\single_vector_node_output.cpp" />
     <ClCompile Include="..\..\src\spectrum.cpp" />
     <ClCompile Include="..\..\src\vector_map_2d.cpp" />
     <ClCompile Include="..\..\src\material_manager.cpp" />
@@ -99,7 +106,8 @@
     <ClCompile Include="..\..\src\standard_camera_ray_emitter_group.cpp" />
     <ClCompile Include="..\..\src\starburst_approximation.cpp" />
     <ClCompile Include="..\..\src\texture_node.cpp" />
-    <ClCompile Include="..\..\src\vector_node.cpp" />
+    <ClCompile Include="..\..\src\vector_map_2d_node_output.cpp" />
+    <ClCompile Include="..\..\src\vector_node_output.cpp" />
     <ClCompile Include="..\..\src\worker.cpp" />
     <ClCompile Include="stack_allocator.cpp" />
   </ItemGroup>
@@ -108,6 +116,7 @@
     <ClInclude Include="..\..\include\biconvex_lens.h" />
     <ClInclude Include="..\..\include\bilayer_bsdf.h" />
     <ClInclude Include="..\..\include\bsdf.h" />
+    <ClInclude Include="..\..\include\bsdf_node_output.h" />
     <ClInclude Include="..\..\include\camera_ray_emitter.h" />
     <ClInclude Include="..\..\include\camera_ray_emitter_group.h" />
     <ClInclude Include="..\..\include\cft_estimator_2d.h" />
@@ -132,11 +141,16 @@
     <ClInclude Include="..\..\include\lambertian_bsdf.h" />
     <ClInclude Include="..\..\include\margins.h" />
     <ClInclude Include="..\..\include\convolution_node.h" />
+    <ClInclude Include="..\..\include\media_interface_node_output.h" />
+    <ClInclude Include="..\..\include\microfacet_distribution_node_output.h" />
     <ClInclude Include="..\..\include\mipmap.h" />
     <ClInclude Include="..\..\include\node_type.h" />
+    <ClInclude Include="..\..\include\power_node_output.h" />
+    <ClInclude Include="..\..\include\remap_node_output.h" />
     <ClInclude Include="..\..\include\rgb_space.h" />
     <ClInclude Include="..\..\include\scalar_map_2d.h" />
     <ClInclude Include="..\..\include\signal_processing.h" />
+    <ClInclude Include="..\..\include\single_vector_node_output.h" />
     <ClInclude Include="..\..\include\vector_map_wrapper_node.h" />
     <ClInclude Include="..\..\include\spectrum.h" />
     <ClInclude Include="..\..\include\vector_map_2d.h" />
@@ -207,8 +221,9 @@
     <ClInclude Include="..\..\include\standard_camera_ray_emitter_group.h" />
     <ClInclude Include="..\..\include\starburst_approximation.h" />
     <ClInclude Include="..\..\include\texture_node.h" />
-    <ClInclude Include="..\..\include\map_2d_node.h" />
-    <ClInclude Include="..\..\include\vector_node.h" />
+    <ClInclude Include="..\..\include\vector_map_2d_node_output.h" />
+    <ClInclude Include="..\..\include\node_output.h" />
+    <ClInclude Include="..\..\include\vector_node_output.h" />
     <ClInclude Include="..\..\include\worker.h" />
     <ClInclude Include="..\..\scripts\new_contributor.py" />
   </ItemGroup>

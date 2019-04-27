@@ -1,17 +1,33 @@
 #include <single_color_node.h>
 
 manta::SingleColorNode::SingleColorNode() {
-	m_color = math::constants::Zero;
+	/* void */
 }
 
 manta::SingleColorNode::SingleColorNode(const math::Vector &color) {
-	m_color = color;
+	m_output.setValue(color);
 }
 
 manta::SingleColorNode::~SingleColorNode() {
 	/* void */
 }
 
-manta::math::Vector manta::SingleColorNode::sample(const IntersectionPoint *) const {
-	return m_color;
+void manta::SingleColorNode::_initialize() {
+	/* void */
+}
+
+void manta::SingleColorNode::_evaluate() {
+	/* void */
+}
+
+void manta::SingleColorNode::_destroy() {
+	/* void */
+}
+
+void manta::SingleColorNode::registerOutputs() {
+	registerOutput(&m_output, "Color");
+}
+
+void manta::SingleColorNode::registerInputs() {
+	/* void */
 }

@@ -10,6 +10,7 @@ namespace manta {
 
 	struct IntersectionPoint;
 	class StackAllocator;
+	class NodeOutput;
 
 	class Node {
 	public:
@@ -18,8 +19,13 @@ namespace manta {
 			void *extraMemory;
 		};
 
-		struct NodeInput {
-			Node **node;
+		struct NodeInputPort {
+			const NodeOutput **input;
+			const char *name;
+		};
+
+		struct NodeOutputPort {
+			NodeOutput *output;
 			const char *name;
 		};
 
@@ -27,7 +33,6 @@ namespace manta {
 		Node();
 		virtual ~Node();
 
-		virtual void initializeSessionMemory(const IntersectionPoint *surfaceInteraction, NodeSessionMemory *memory, StackAllocator *stackAllocator) const;
 		void destroySessionMemory(NodeSessionMemory *memory, StackAllocator *stackAllocator) const;
 
 		void initialize();
@@ -40,25 +45,37 @@ namespace manta {
 		void setName(const std::string &name) { m_name = name; }
 		std::string getName() const { return m_name; }
 
-		void connectInput(Node **node, const char *name);
-		int getDependencyCount() const { return (int)m_dependencies.size(); }
+		void connectInput(const NodeOutput *node, const char *name);
+		int getInputCount() const { return (int)m_inputs.size(); }
+
+		NodeOutput *getOutput(const char *name) const;
+		int getOutputCount() const { return (int)m_outputs.size(); }
 
 		bool isInitialized() const { return m_initialized; }
 		bool isEvaluated() const { return m_evaluated; }
+
+		// Main Interface
+	public:
+		virtual void initializeSessionMemory(const IntersectionPoint *surfaceInteraction, NodeSessionMemory *memory, StackAllocator *stackAllocator) const;
 
 	protected:
 		virtual void _initialize();
 		virtual void _evaluate();
 		virtual void _destroy();
 
+		virtual void registerOutputs();
+		virtual void registerInputs();
+
 	protected:
 		int m_id;
 		std::string m_name;
 
 	protected:
-		std::vector<NodeInput> m_dependencies;
-		virtual void registerDependencies();
-		void registerDependency(Node **node, const char *name) { m_dependencies.push_back({node, name}); }
+		std::vector<NodeInputPort> m_inputs;
+		void registerInput(const NodeOutput **node, const char *name) { m_inputs.push_back({node, name}); }
+
+		std::vector<NodeOutputPort> m_outputs;
+		void registerOutput(NodeOutput *node, const char *name);
 
 	private:
 		// State variables

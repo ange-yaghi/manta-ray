@@ -5,13 +5,15 @@
 
 namespace manta {
 
-	class VectorNode;
-
-	struct GgxMemory {
-		math::real width;
-	};
+	// Forward declarations
+	class VectorNodeOutput;
 
 	class GgxDistribution : public MicrofacetDistribution {
+	public:
+		struct GgxMemory {
+			math::real width;
+		};
+
 	public:
 		GgxDistribution();
 		~GgxDistribution();
@@ -25,14 +27,17 @@ namespace manta {
 		void setWidth(math::real width) { m_width = width; }
 		math::real getWidth() const { return m_width; }
 
-		void setWidthNode(VectorNode *node) { m_widthNode = node; }
-		VectorNode *getWidthNode() const { return m_widthNode; }
+		void setWidthNode(VectorNodeOutput *node) { m_widthNode = node; }
+		VectorNodeOutput *getWidthNode() const { return m_widthNode; }
 
 		void setMinMapWidth(math::real power) { m_minMapWidth = power; }
 		math::real getMinMapWidth() const { return m_minMapWidth; }
 
 	protected:
-		VectorNode *m_widthNode;
+		virtual void registerInputs();
+
+	protected:
+		VectorNodeOutput *m_widthNode;
 		math::real m_width;
 		math::real m_minMapWidth;
 	};
