@@ -1,13 +1,15 @@
 #ifndef IMAGE_FILE_NODE_H
 #define IMAGE_FILE_NODE_H
 
-#include <map_2d_node.h>
+#include <node.h>
+
+#include <vector_map_2d.h>
 
 struct SDL_Surface;
 
 namespace manta {
 
-	class ImageFileNode : public VectorMap2DNode {
+	class ImageFileNode : public Node {
 	public:
 		struct Pixel {
 			unsigned char r;
@@ -24,6 +26,8 @@ namespace manta {
 
 		void setCorrectGamma(bool correctGamma) { m_correctGamma = correctGamma; }
 		bool getCorrectGamma() const { return m_correctGamma; }
+
+		const VectorMap2D *getMap() const { return &m_imageMap; }
 
 	protected:
 		virtual void _evaluate();

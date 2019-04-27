@@ -1,17 +1,20 @@
 #ifndef REMAP_NODE_H
 #define REMAP_NODE_H
 
-#include <vector_node.h>
+#include <node.h>
+
+#include <remap_node_output.h>
+#include <manta_math.h>
 
 namespace manta {
 
-	class RemapNode : public VectorNode {
+	class VectorNodeOutput;
+
+	class RemapNode : public Node {
 	public:
 		RemapNode();
-		RemapNode(const math::Vector &start, const math::Vector &end, const VectorNode *inputNode);
+		RemapNode(const math::Vector &start, const math::Vector &end, const VectorNodeOutput *inputNode);
 		~RemapNode();
-
-		virtual math::Vector sample(const IntersectionPoint *surfaceInteraction) const;
 
 		void setStart(const math::Vector &start) { m_start = start; }
 		math::Vector getStart() { return m_start; }
@@ -19,11 +22,19 @@ namespace manta {
 		void setEnd(const math::Vector &end) { m_end = end; }
 		math::Vector getEnd() { return m_end; }
 
-		void setInputNode(const VectorNode *inputNode) { m_inputNode = inputNode; }
-		const VectorNode *getInputNode() const { return m_inputNode; }
+		const VectorNodeOutput *getMainOutput() const { return &m_output; }
+
+		void setInputNode(const VectorNodeOutput *inputNode) { m_inputNode = inputNode; }
+		const VectorNodeOutput *getInputNode() const { return m_inputNode; }
 
 	protected:
-		const VectorNode *m_inputNode;
+		virtual void _evaluate();
+
+		virtual void registerInputs();
+		virtual void registerOutputs();
+
+		const VectorNodeOutput *m_inputNode;
+		RemapNodeOutput m_output;
 
 		math::Vector m_start;
 		math::Vector m_end;

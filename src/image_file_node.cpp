@@ -17,8 +17,6 @@ manta::ImageFileNode::~ImageFileNode() {
 }
 
 void manta::ImageFileNode::_evaluate() {
-	VectorMap2DNode::_evaluate();
-
 	SDL_Surface *image;
 	image = IMG_Load(m_filename.c_str());
 
@@ -65,12 +63,10 @@ void manta::ImageFileNode::_evaluate() {
 	// Free the SDL image
 	SDL_free((void *)image);
 
-	setMap(&m_imageMap);
+	//setMap(&m_imageMap);
 }
 
 void manta::ImageFileNode::_destroy() {
-	Map2DNode::_destroy();
-
 	m_imageMap.destroy();
 }
 

@@ -1,5 +1,6 @@
 #include <node.h>
 
+#include <node_output.h>
 #include <stack_allocator.h>
 
 manta::Node::Node() {
@@ -11,7 +12,7 @@ manta::Node::Node() {
 }
 
 manta::Node::~Node() {
-
+	/* void */
 }
 
 void manta::Node::initialize() {
@@ -20,7 +21,8 @@ void manta::Node::initialize() {
 	// Set initialized flag
 	m_initialized = true;
 
-	registerDependencies();
+	registerInputs();
+	registerOutputs();
 
 	// Initialize
 	_initialize();
@@ -33,12 +35,12 @@ void manta::Node::evaluate() {
 	m_evaluated = true;
 
 	// First evaluate all dependencies
-	int dependencyCount = getDependencyCount();
+	int inputCount = getInputCount();
 
-	for (int i = 0; i < dependencyCount; i++) {
-		Node **node = m_dependencies[i].node;
-		if (node != nullptr) {
-			(*node)->evaluate();
+	for (int i = 0; i < inputCount; i++) {
+		const NodeOutput **node = m_inputs[i].input;
+		if (node != nullptr && *node != nullptr) {
+			(*node)->getParentNode()->evaluate();
 		}
 	}
 
@@ -64,17 +66,27 @@ void manta::Node::destroySessionMemory(NodeSessionMemory *memory, StackAllocator
 	}
 }
 
-void manta::Node::connectInput(Node **node, const char *name) {
-	int dependencyCount = getDependencyCount();
+void manta::Node::connectInput(const NodeOutput *nodeOutput, const char *name) {
+	int inputCount = getInputCount();
 
-	for (int i = 0; i < dependencyCount; i++) {
-		const char *inputName = m_dependencies[i].name;
+	for (int i = 0; i < inputCount; i++) {
+		const char *inputName = m_inputs[i].name;
 		if (strcmp(inputName, name) == 0) {
-			m_dependencies[i].node = node;
+			*m_inputs[i].input = nodeOutput;
 			break;
 		}
 	}
+}
 
+manta::NodeOutput *manta::Node::getOutput(const char *name) const {
+	int outputCount = getOutputCount();
+
+	for (int i = 0; i < outputCount; i++) {
+		const char *outputName = m_outputs[i].name;
+		if (strcmp(outputName, name) == 0) {
+			return m_outputs[i].output;
+		}
+	}
 }
 
 void manta::Node::_initialize() {
@@ -89,6 +101,15 @@ void manta::Node::_destroy() {
 	/* void */
 }
 
-void manta::Node::registerDependencies() {
+void manta::Node::registerInputs() {
+	/* void */
+}
+
+void manta::Node::registerOutput(NodeOutput *node, const char *name) {
+	m_outputs.push_back({ node, name });
+	node->setParentNode(this);
+}
+
+void manta::Node::registerOutputs() {
 	/* void */
 }

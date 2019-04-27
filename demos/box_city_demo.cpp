@@ -32,7 +32,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	PhongDistribution blockCoating;
 	blockCoating.setPower((math::real)300);
 	BilayerBSDF blockBSDF;
-	blockBSDF.setCoatingDistribution(&blockCoating);
+	blockBSDF.setCoatingDistribution(blockCoating.getMainOutput());
 	blockBSDF.setDiffuseMaterial(&lambert);
 	blockBSDF.setDiffuse(getColor(0xf1, 0xc4, 0x0f)); // 0xf1, 0xc4, 0x0f
 	blockBSDF.setSpecularAtNormal(math::loadVector(0.02f, 0.02f, 0.02f));
@@ -211,7 +211,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 		fraunOutputNode.setJpegQuality(95);
 		fraunOutputNode.setGammaCorrection(true);
 		fraunOutputNode.setOutputFilename(fraunFname);
-		fraunOutputNode.setInputNode(&fraunNode);
+		fraunOutputNode.setInput(fraunNode.getMainOutput());
 		fraunOutputNode.initialize();
 		fraunOutputNode.evaluate();
 		fraunOutputNode.destroy();
@@ -222,7 +222,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 		baseNode.destroy();
 
 		ConvolutionNode convNode;
-		convNode.setInputs(&baseNode, &fraunNode);
+		convNode.setInputs(baseNode.getMainOutput(), fraunNode.getMainOutput());
 		convNode.setResize(true);
 		convNode.setClip(true);
 		convNode.initialize();
@@ -235,7 +235,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 		outputNode.setJpegQuality(95);
 		outputNode.setGammaCorrection(true);
 		outputNode.setOutputFilename(convFname);
-		outputNode.setInputNode(&convNode);
+		outputNode.setInput(convNode.getMainOutput());
 		outputNode.initialize();
 		outputNode.evaluate();
 		outputNode.destroy();

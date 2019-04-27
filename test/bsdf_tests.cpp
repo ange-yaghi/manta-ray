@@ -114,7 +114,7 @@ TEST(BSDFTests, BilayerBSDFEnergyConservation) {
 
 	BilayerBSDF bsdf;
 	bsdf.setDiffuseMaterial(&bsdf2);
-	bsdf.setCoatingDistribution(&phong);
+	bsdf.setCoatingDistribution(phong.getMainOutput());
 	bsdf.setDiffuse(math::loadVector(1.0, 1.0, 1.0));
 	bsdf.setSpecularAtNormal(math::loadVector(1.0, 1.0, 1.0));
 

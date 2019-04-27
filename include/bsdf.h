@@ -5,6 +5,7 @@
 
 #include <manta_math.h>
 #include <media_interface.h>
+#include <bsdf_node_output.h>
 
 #include <algorithm>
 #include <math.h>
@@ -39,6 +40,11 @@ namespace manta {
 
 			return true;
 		}
+
+	protected:
+		BSDFNodeOutput m_output;
+
+		virtual void registerOutputs();
 	};
 
 } /* namespace manta */

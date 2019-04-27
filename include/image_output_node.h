@@ -3,6 +3,9 @@
 
 #include <node.h>
 
+#include <node_output.h>
+#include <vector_map_2d_node_output.h>
+
 namespace manta {
 
 	class ImageOutputNode : public Node {
@@ -19,22 +22,22 @@ namespace manta {
 		void setJpegQuality(int quality) { m_jpegQuality = quality; }
 		int getJpegQuality() const { return m_jpegQuality; }
 
-		void setInputNode(Node *inputNode) { m_inputNode = inputNode; }
+		void setInput(const VectorMap2DNodeOutput *inputNode) { m_input = inputNode; }
 
 	protected:
 		virtual void _initialize();
 		virtual void _evaluate();
 		virtual void _destroy();
 
-		virtual void registerDependencies();
+		virtual void registerInputs();
+		virtual void registerOutputs();
 
 	protected:
 		int m_jpegQuality;
 		std::string m_outputFilename;
 		bool m_gammaCorrection;
 
-	protected:
-		Node *m_inputNode;
+		const VectorMap2DNodeOutput *m_input;
 	};
 
 } /* namespace manta */
