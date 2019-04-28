@@ -10,7 +10,7 @@ namespace manta {
 	class VectorMapWrapperNode : public Node {
 	public:
 		VectorMapWrapperNode(const VectorMap2D *map) {
-			m_map = map;
+			m_output.setMap(map);
 		}
 
 		virtual ~VectorMapWrapperNode() {
@@ -21,7 +21,7 @@ namespace manta {
 
 	protected:
 		virtual void _evaluate() {
-			m_output.setMap(m_map);
+			/* void */
 		}
 
 	protected:
@@ -30,8 +30,6 @@ namespace manta {
 		}
 
 		VectorMap2DNodeOutput m_output;
-
-		const VectorMap2D *m_map;
 	};
 
 } /* namespace manta */

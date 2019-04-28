@@ -22,7 +22,7 @@ namespace manta {
 		void setJpegQuality(int quality) { m_jpegQuality = quality; }
 		int getJpegQuality() const { return m_jpegQuality; }
 
-		void setInput(const VectorMap2DNodeOutput *inputNode) { m_input = inputNode; }
+		void setInput(pNodeInput inputNode) { m_input = inputNode; }
 
 	protected:
 		virtual void _initialize();
@@ -37,7 +37,7 @@ namespace manta {
 		std::string m_outputFilename;
 		bool m_gammaCorrection;
 
-		const VectorMap2DNodeOutput *m_input;
+		pNodeInput m_input;
 	};
 
 } /* namespace manta */

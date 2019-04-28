@@ -42,7 +42,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	//blockMaterial->setReflectance(math::loadVector(0.01f, 0.01f, 0.01f));
 
 	SimpleBSDFMaterial outdoorTopLightMaterial;
-	outdoorTopLightMaterial.setEmission(math::loadVector(40.f, 40.f, 40.f));
+	outdoorTopLightMaterial.setEmission(math::loadVector(10.f, 10.f, 10.f));
 	outdoorTopLightMaterial.setReflectance(math::constants::Zero);
 
 	SimpleBSDFMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
@@ -53,7 +53,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	SimpleBSDFMaterial *sunMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	sunMaterial->setName("Sun");
 	sunMaterial->setReflectance(math::loadVector(0.0f, 0.0f, 0.0f));
-	sunMaterial->setEmission(math::loadVector(100000.0f, 100000.0f, 100000.0f));
+	sunMaterial->setEmission(math::loadVector(1000.0f, 1000.0f, 1000.0f));
 	sunMaterial->setBSDF(nullptr);
 
 	// Create all scene geometry
@@ -63,7 +63,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	//boxCity.findQuads();
 
 	SpherePrimitive outdoorTopLightGeometry;
-	outdoorTopLightGeometry.setRadius((math::real)1.0);
+	outdoorTopLightGeometry.setRadius((math::real)10.0);
 	outdoorTopLightGeometry.setPosition(math::loadVector(20.f, 30.0f, -13.5f));
 
 	// Create scene objects
@@ -100,7 +100,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
 	manta::SimpleLens lens;
 	manta::PolygonalAperture polygonalAperture;
-	polygonalAperture.initialize(12);
+	polygonalAperture.initialize(6);
 
 	if (POLYGON_APERTURE) lens.setAperture(&polygonalAperture);
 	lens.initialize();
@@ -161,7 +161,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
 	// Initialize and run the ray tracer
 	rayTracer.initialize(200 * MB, 50 * MB, 12, 100, true);
-	rayTracer.setBackgroundColor(getColor(0xff, 0xff, 0xff));
+	rayTracer.setBackgroundColor(getColor(0x0, 0x0, 0x0));
 	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 	
@@ -192,7 +192,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 		settings.textureSamples = 10;
 
 		TextureNode dirtTexture;
-		dirtTexture.loadFile(TEXTURE_PATH "dirt_very_soft.png", true);
+		dirtTexture.loadFile(TEXTURE_PATH "dirt_soft.png", true);
 		dirtTexture.initialize();
 		dirtTexture.evaluate();
 
@@ -201,7 +201,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 		colorTable.loadCsv(CMF_PATH "xyz_cmf_31.csv");
 		sourceSpectrum.loadCsv(CMF_PATH "d65_lighting.csv");
 
-		testFraun.generate(&polygonalAperture, &dirtTexture, safeWidth, 5.0f, &colorTable, &sourceSpectrum, &settings);
+		testFraun.generate(&polygonalAperture, &dirtTexture, safeWidth, 3.0f, &colorTable, &sourceSpectrum, &settings);
 
 		VectorMapWrapperNode fraunNode(testFraun.getDiffractionPattern());
 		fraunNode.initialize();
@@ -216,16 +216,30 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 		fraunOutputNode.evaluate();
 		fraunOutputNode.destroy();
 
-		VectorMapWrapperNode baseNode(&base);
-		baseNode.initialize();
-		baseNode.evaluate();
-		baseNode.destroy();
+		VectorMapWrapperNode mantaOutput(&base);
+		mantaOutput.initialize();
+		mantaOutput.evaluate();
+		mantaOutput.destroy();
+
+		RampNode ramp;
+		ramp.initialize();
+		ramp.getMainOutput()->setDefaultDc(math::constants::One);
+		ramp.getMainOutput()->setDefaultFoot(math::constants::One);
+		ramp.getMainOutput()->setDefaultSlope(math::loadScalar(0.5f));
+		ramp.getMainOutput()->setInput(mantaOutput.getMainOutput());
+		ramp.evaluate();
+
+		MultiplyNode mulNode;
+		mulNode.initialize();
+		mulNode.getMainOutput()->setInputA(ramp.getMainOutput());
+		mulNode.getMainOutput()->setInputB(mantaOutput.getMainOutput());
+		mulNode.evaluate();
 
 		ConvolutionNode convNode;
-		convNode.setInputs(baseNode.getMainOutput(), fraunNode.getMainOutput());
+		convNode.initialize();
+		convNode.setInputs(mulNode.getMainOutput(), fraunNode.getMainOutput());
 		convNode.setResize(true);
 		convNode.setClip(true);
-		convNode.initialize();
 		convNode.evaluate();
 
 		testFraun.destroy();

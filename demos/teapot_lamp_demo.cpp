@@ -22,7 +22,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	constexpr bool TRACE_SINGLE_PIXEL = false;
 	constexpr OBJECT OBJECT = TEAPOT;
 	constexpr MATERIAL MATERIAL = ENAMEL;
-	constexpr bool ENABLE_FRAUNHOFER_DIFFRACTION = false;
+	constexpr bool ENABLE_FRAUNHOFER_DIFFRACTION = true;
 
 	Scene scene;
 
@@ -241,33 +241,30 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 		fraunOutputNode.evaluate();
 		fraunOutputNode.destroy();
 
-		for (int i = 0; i < base.getWidth(); i++) {
-			for (int j = 0; j < base.getHeight(); j++) {
-				math::Vector v = base.get(i, j);
+		VectorMapWrapperNode mantaOutput(&base);
+		mantaOutput.initialize();
+		mantaOutput.evaluate();
+		mantaOutput.destroy();
 
-				v = math::add(
-					v, 
-					math::mul(
-						math::componentMax(
-							math::sub(
-								v, 
-								math::loadVector(1.0, 1.0, 1.0)),
-							math::constants::Zero),
-						math::loadScalar(5)));
-				base.set(v, i, j);
-			}
-		}
+		RampNode ramp;
+		ramp.initialize();
+		ramp.getMainOutput()->setDefaultDc(math::constants::One);
+		ramp.getMainOutput()->setDefaultFoot(math::constants::One);
+		ramp.getMainOutput()->setDefaultSlope(math::loadScalar(1.0f));
+		ramp.getMainOutput()->setInput(mantaOutput.getMainOutput());
+		ramp.evaluate();
 
-		VectorMapWrapperNode baseNode(&base);
-		baseNode.initialize();
-		baseNode.evaluate();
-		baseNode.destroy();
+		MultiplyNode mulNode;
+		mulNode.initialize();
+		mulNode.getMainOutput()->setInputA(ramp.getMainOutput());
+		mulNode.getMainOutput()->setInputB(mantaOutput.getMainOutput());
+		mulNode.evaluate();
 
 		ConvolutionNode convNode;
-		convNode.setInputs(baseNode.getMainOutput(), fraunNode.getMainOutput());
+		convNode.initialize();
+		convNode.setInputs(mulNode.getMainOutput(), fraunNode.getMainOutput());
 		convNode.setResize(true);
 		convNode.setClip(true);
-		convNode.initialize();
 		convNode.evaluate();
 
 		testFraun.destroy();

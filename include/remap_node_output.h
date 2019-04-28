@@ -28,8 +28,8 @@ namespace manta {
 		virtual void discreteSample2D(int x, int y, void *target) const;
 		virtual void fullOutput(const void **target) const;
 
-		void setInput(const VectorNodeOutput *input) { m_input = input; }
-		const VectorNodeOutput *getInput() const { return m_input; }
+		void setInput(pNodeInput input) { m_input = input; }
+		pNodeInput getInput() const { return m_input; }
 
 		void setStart(const math::Vector &start) { m_start = start; }
 		math::Vector getStart() const { return m_start; }
@@ -37,11 +37,13 @@ namespace manta {
 		void setEnd(const math::Vector &end) { m_end = end; }
 		math::Vector getEnd() const { return m_end; }
 
+		pNodeInput *getInputConnection() { return &m_input; }
+
 	protected:
 		math::Vector remap(const math::Vector &s) const;
 
 	protected:
-		const VectorNodeOutput *m_input;
+		pNodeInput m_input;
 
 		math::Vector m_start;
 		math::Vector m_end;

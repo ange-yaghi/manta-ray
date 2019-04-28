@@ -3,21 +3,15 @@
 #include <assert.h>
 
 manta::RemapNode::RemapNode() {
-	m_start = math::constants::One;
-	m_end = math::constants::Zero;
-
-	m_inputNode = nullptr;
+	m_output.setEnd(math::constants::One);
+	m_output.setStart(math::constants::Zero);
+	m_output.setInput(nullptr);
 }
 
-manta::RemapNode::RemapNode(const math::Vector &start, const math::Vector &end, const VectorNodeOutput *inputNode) {
-	m_start = start;
-	m_end = end;
-
-	m_inputNode = inputNode;
-
-	m_output.setEnd(m_end);
-	m_output.setStart(m_start);
-	m_output.setInput(m_inputNode);
+manta::RemapNode::RemapNode(const math::Vector &start, const math::Vector &end, pNodeInput inputNode) {
+	m_output.setEnd(end);
+	m_output.setStart(start);
+	m_output.setInput(inputNode);
 }
 
 manta::RemapNode::~RemapNode() {
@@ -25,13 +19,11 @@ manta::RemapNode::~RemapNode() {
 }
 
 void manta::RemapNode::_evaluate() {
-	m_output.setEnd(m_end);
-	m_output.setStart(m_start);
-	m_output.setInput(m_inputNode);
+	/* void */
 }
 
 void manta::RemapNode::registerInputs() {
-	registerInput((const NodeOutput **)&m_inputNode, "Input");
+	registerInput(m_output.getInputConnection(), "Input");
 }
 
 void manta::RemapNode::registerOutputs() {
