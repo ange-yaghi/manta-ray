@@ -184,6 +184,7 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 		dirtTexture.loadFile(TEXTURE_PATH "dirt_very_soft.png", true);
 		dirtTexture.initialize();
 		dirtTexture.evaluate();
+		const VectorMap2D *dirtTextureMap = dirtTexture.getMainOutput()->getMap();
 
 		CmfTable colorTable;
 		Spectrum sourceSpectrum;
@@ -191,7 +192,7 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 		sourceSpectrum.loadCsv(CMF_PATH "d65_lighting.csv");
 		
 		squareAperture.setRadius(0.5f);
-		testFraun.generate(&squareAperture, &dirtTexture, safeWidth, 2.0f, &colorTable, &sourceSpectrum, &settings);
+		testFraun.generate(&squareAperture, dirtTextureMap, safeWidth, 2.0f, &colorTable, &sourceSpectrum, &settings);
 
 		VectorMapWrapperNode fraunNode(testFraun.getDiffractionPattern());
 		fraunNode.initialize();

@@ -20,7 +20,9 @@ namespace manta {
 		void destroy();
 
 		math::Vector sample(math::real u, math::real v) const;
+		math::Vector triangleSample(math::real u, math::real v) const;
 		math::Vector get(int u, int v) const;
+		math::Vector getClip(int u, int v) const;
 		void set(const math::Vector &value, int u, int v);
 
 		void fillByteBuffer(ImageByteBuffer *target, bool correctGamma) const;
