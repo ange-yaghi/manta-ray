@@ -39,11 +39,19 @@ manta::math::Complex manta::CftEstimator2D::sample(math::real_d freq_x, math::re
 	k_x = freq_x * m_physicalWidth;
 	k_y = freq_y * m_physicalHeight;
 
-	// Wrap indices
-	k_x = (k_x < 0) ? m_horizontalSamples + k_x : k_x;
-	k_y = (k_y < 0) ? m_verticalSamples + k_y : k_y;
+	int i = (int)k_x;
+	int j = (int)k_y;
 
-	return m_discreteApproximation.sampleDiscrete((int)k_x, (int)k_y);
+	// Wrap indices
+	i = (i < 0) ? m_horizontalSamples + i : i;
+	j = (j < 0) ? m_verticalSamples + j : j;
+
+	if (i >= m_horizontalSamples) return math::Complex();
+	if (j >= m_verticalSamples) return math::Complex();
+	if (i < 0) return math::Complex();
+	if (j < 0) return math::Complex();
+
+	return m_discreteApproximation.sampleDiscrete(i, j);
 }
 
 manta::math::real_d manta::CftEstimator2D::getHorizontalFreqRange() const {
