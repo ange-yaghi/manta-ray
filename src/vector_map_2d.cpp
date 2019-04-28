@@ -46,8 +46,40 @@ manta::math::Vector manta::VectorMap2D::sample(math::real u, math::real v) const
 	return get(iu, iv);
 }
 
+manta::math::Vector manta::VectorMap2D::triangleSample(math::real u, math::real v) const {
+	math::real s = u * m_width - (math::real)0.5;
+	math::real t = v * m_height - (math::real)0.5;
+	int s0 = (int)std::floor(s), t0 = (int)std::floor(t);
+	math::real ds = s - s0, dt = t - t0;
+
+	math::Vector s1 = math::mul(getClip(s0, t0), math::loadScalar((1 - ds) * (1 - dt)));
+	math::Vector s2 = math::mul(getClip(s0, t0 + 1), math::loadScalar((1 - ds) * dt));
+	math::Vector s3 = math::mul(getClip(s0 + 1, t0), math::loadScalar(ds * (1 - dt)));
+	math::Vector s4 = math::mul(getClip(s0 + 1, t0 + 1), math::loadScalar(ds * dt));
+
+	return math::add(
+		math::add(
+			s1,
+			s2
+		),
+		math::add(
+			s3,
+			s4
+		)
+	);
+}
+
 manta::math::Vector manta::VectorMap2D::get(int u, int v) const {
 	assert(m_data != nullptr);
+
+	return m_data[v * m_width + u];
+}
+
+manta::math::Vector manta::VectorMap2D::getClip(int u, int v) const {
+	assert(m_data != nullptr);
+
+	if (u < 0 || u >= m_width) return math::constants::Zero;
+	if (v < 0 || v >= m_height) return math::constants::Zero;
 
 	return m_data[v * m_width + u];
 }
