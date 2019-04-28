@@ -8,9 +8,9 @@ int main() {
 
 	// Run a demo
 	constexpr DEMO demo = DEMO::BOX_CITY;
-	constexpr int samples = 25100;
-	constexpr int resolutionX = 2048 / 1;
-	constexpr int resolutionY = 1536 / 1;
+	constexpr int samples = 100;
+	constexpr int resolutionX = 2048 / 4;
+	constexpr int resolutionY = 1536 / 4;
 
 	runDemo(demo, samples, resolutionX, resolutionY);
 

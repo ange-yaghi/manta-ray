@@ -23,6 +23,8 @@ manta::FraunhoferDiffraction::~FraunhoferDiffraction() {
 }
 
 void manta::FraunhoferDiffraction::generate(const Aperture *aperture, const TextureNode *dirtMap, int outputResolution, math::real physicalSensorWidth, CmfTable *colorTable, Spectrum *sourceSpectrum, const Settings *settingsIn) {
+	constexpr math::real SAFETY_FACTOR = (math::real)1.1;
+	
 	Settings settings;
 	if (settingsIn == nullptr) defaultSettings(&settings);
 	else settings = *settingsIn;
@@ -49,8 +51,10 @@ void manta::FraunhoferDiffraction::generate(const Aperture *aperture, const Text
 	math::real_d sampleWindow = 0.0;
 	math::real_d maxFreq = (sensorWidth / 2) / (minWavelength * 1e-6);
 
-	sampleWindow = CftEstimator2D::getMinPhysicalDim(minFrequencyStep / settings.frequencyMultiplier, apertureRadius * 2);
+	sampleWindow = CftEstimator2D::getMinPhysicalDim(minFrequencyStep / settings.frequencyMultiplier, apertureRadius * 2 * SAFETY_FACTOR);
+	sampleWindow = 0.5;
 	estimatorSamples = CftEstimator2D::getMinSamples(maxFreq, sampleWindow, MAX_SAMPLES);
+	estimatorSamples = 4096 * 1;
 
 	math::real dx = (math::real)(sampleWindow / estimatorSamples);
 	math::real dy = (math::real)(sampleWindow / estimatorSamples);
@@ -91,20 +95,8 @@ void manta::FraunhoferDiffraction::generate(const Aperture *aperture, const Text
 	estimator.initialize(&m_apertureFunction, sampleWindow, sampleWindow);
 	if (!settings.saveApertureFunction) m_apertureFunction.destroy();
 
-	math::real_d sdx = sensorElementWidth;
-	math::real_d sdy = sensorElementWidth;
-	math::real_d scx = sensorWidth / 2;
-	math::real_d scy = sensorWidth / 2;
-	math::real_d maxFreqX = estimator.getHorizontalFreqRange();
-	math::real_d maxFreqY = estimator.getVerticalFreqRange();
-
-	VectorMap2D temp;
-	temp.initialize(outputResolution, outputResolution);
-	generateMap(&estimator, &settings, 12, &temp);
-
-	//temp.roll(&m_diffractionPattern);
-	m_diffractionPattern.copy(&temp);
-	temp.destroy();
+	m_diffractionPattern.initialize(outputResolution, outputResolution);
+	generateMap(&estimator, &settings, 12, &m_diffractionPattern);
 	estimator.destroy();
 
 	normalize();
