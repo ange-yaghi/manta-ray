@@ -58,6 +58,8 @@
 #include <vector_map_wrapper_node.h>
 #include <convolution_node.h>
 #include <image_output_node.h>
+#include <multiply_node.h>
+#include <ramp_node.h>
 
 namespace manta_demo {
 

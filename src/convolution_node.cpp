@@ -21,17 +21,32 @@ void manta::ConvolutionNode::_initialize() {
 
 void manta::ConvolutionNode::_evaluate() {
 	// Cast inputs
-	const VectorMap2DNodeOutput *a = m_base;
-	const VectorMap2DNodeOutput *b = m_filter;
+	const NodeOutput *a = m_base;
+	const NodeOutput *b = m_filter;
 
 	Margins margins;
 	VectorMap2D a_mapSafe;
 	const VectorMap2D *a_map, *b_map;
+	VectorMap2D a_computed, b_computed;
 
-	b_map = b->getMap();
+	a->getDataReference((const void **)&a_map);
+	b->getDataReference((const void **)&b_map);
+
+	bool computedA = false, computedB = false;
+
+	if (a_map == nullptr) {
+		a->fullCompute((void *)&a_computed);
+		a_map = &a_computed;
+		computedA = true;
+	}
+	if (b_map == nullptr) {
+		b->fullCompute((void *)&b_computed);
+		b_map = &b_computed;
+		computedB = true;
+	}
 
 	if (m_resize) {
-		a->getMap()->padSafe(&a_mapSafe, &margins);
+		a_map->padSafe(&a_mapSafe, &margins);
 		a_map = &a_mapSafe;
 
 		if (!m_clip) {
@@ -44,8 +59,6 @@ void manta::ConvolutionNode::_evaluate() {
 		}
 	}
 	else {
-		a_map = a->getMap();
-
 		margins.width = a_map->getWidth();
 		margins.height = a_map->getHeight();
 		margins.left = 0;
@@ -94,6 +107,9 @@ void manta::ConvolutionNode::_evaluate() {
 		a_mapSafe.destroy();
 	}
 
+	if (computedA) a_computed.destroy();
+	if (computedB) b_computed.destroy();
+
 	m_output.setMap(&m_outputMap);
 }
 
@@ -102,8 +118,8 @@ void manta::ConvolutionNode::_destroy() {
 }
 
 void manta::ConvolutionNode::registerInputs() {
-	registerInput((const NodeOutput **)&m_base, "Base");
-	registerInput((const NodeOutput **)&m_filter, "Filter");
+	registerInput(&m_base, "Base");
+	registerInput(&m_filter, "Filter");
 }
 
 void manta::ConvolutionNode::registerOutputs() {

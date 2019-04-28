@@ -2,6 +2,7 @@
 #define NODE_H
 
 #include <node_type.h>
+#include <node_output.h>
 
 #include <string>
 #include <vector>
@@ -10,7 +11,6 @@ namespace manta {
 
 	struct IntersectionPoint;
 	class StackAllocator;
-	class NodeOutput;
 
 	class Node {
 	public:
@@ -20,7 +20,7 @@ namespace manta {
 		};
 
 		struct NodeInputPort {
-			const NodeOutput **input;
+			pNodeInput *input;
 			const char *name;
 		};
 
@@ -45,7 +45,7 @@ namespace manta {
 		void setName(const std::string &name) { m_name = name; }
 		std::string getName() const { return m_name; }
 
-		void connectInput(const NodeOutput *node, const char *name);
+		void connectInput(pNodeInput input, const char *name);
 		int getInputCount() const { return (int)m_inputs.size(); }
 
 		NodeOutput *getOutput(const char *name) const;
@@ -72,7 +72,8 @@ namespace manta {
 
 	protected:
 		std::vector<NodeInputPort> m_inputs;
-		void registerInput(const NodeOutput **node, const char *name) { m_inputs.push_back({node, name}); }
+
+		void registerInput(pNodeInput *node, const char *name) { m_inputs.push_back({node, name}); }
 
 		std::vector<NodeOutputPort> m_outputs;
 		void registerOutput(NodeOutput *node, const char *name);
