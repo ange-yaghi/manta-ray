@@ -6,16 +6,19 @@ void manta::VectorMap2DNodeOutput::sample(const IntersectionPoint *surfaceIntera
 	math::Vector *target = reinterpret_cast<math::Vector *>(_target);
 
 	math::real u = math::getX(surfaceInteraction->m_textureCoodinates);
-	math::real v = math::getY(surfaceInteraction->m_textureCoodinates);
+	math::real v = 1 - math::getY(surfaceInteraction->m_textureCoodinates);
 
 	// Wrap coordinates
-	u = (math::real)fmod(u, (math::real)1.0);
-	v = (math::real)fmod(v, (math::real)1.0);
+	int i_u = u * m_map->getWidth();
+	int i_v = v * m_map->getHeight();
 
-	if (u < 0) u = 1 + u;
-	if (v < 0) v = 1 + v;
+	i_u %= m_map->getWidth();
+	i_v %= m_map->getHeight();
 
-	*target = m_map->sample(u, 1 - v);
+	if (i_u < 0) i_u = m_map->getWidth() + i_u;
+	if (i_v < 0) i_v = m_map->getHeight() + i_v;
+
+	*target = m_map->get(i_u, i_v);
 }
 
 void manta::VectorMap2DNodeOutput::discreteSample2D(int x, int y, void *_target) const {
