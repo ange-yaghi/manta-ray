@@ -60,6 +60,7 @@
 #include <image_output_node.h>
 #include <multiply_node.h>
 #include <ramp_node.h>
+#include <step_node.h>
 
 namespace manta_demo {
 
