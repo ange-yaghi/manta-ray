@@ -226,6 +226,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 		PolygonalAperture aperture;
 		aperture.initialize(6);
 		aperture.setRadius(0.18f);
+		aperture.setBladeCurvature(0.3f);
 		testFraun.generate(&aperture, dirtTextureMap, safeWidth, 16.0f, &colorTable, &sourceSpectrum, &settings);
 		aperture.destroy();
 
@@ -247,17 +248,17 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 		mantaOutput.evaluate();
 		mantaOutput.destroy();
 
-		RampNode ramp;
-		ramp.initialize();
-		ramp.getMainOutput()->setDefaultDc(math::constants::One);
-		ramp.getMainOutput()->setDefaultFoot(math::constants::One);
-		ramp.getMainOutput()->setDefaultSlope(math::loadScalar(1.0f));
-		ramp.getMainOutput()->setInput(mantaOutput.getMainOutput());
-		ramp.evaluate();
+		StepNode step;
+		step.initialize();
+		step.getMainOutput()->setDefaultDc(math::constants::One);
+		step.getMainOutput()->setDefaultFoot(math::constants::One);
+		step.getMainOutput()->setDefaultStep(math::loadScalar(100.0f));
+		step.getMainOutput()->setInput(mantaOutput.getMainOutput());
+		step.evaluate();
 
 		MultiplyNode mulNode;
 		mulNode.initialize();
-		mulNode.getMainOutput()->setInputA(ramp.getMainOutput());
+		mulNode.getMainOutput()->setInputA(step.getMainOutput());
 		mulNode.getMainOutput()->setInputB(mantaOutput.getMainOutput());
 		mulNode.evaluate();
 

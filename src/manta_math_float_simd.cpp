@@ -155,6 +155,12 @@ float manta::math::getQuatW(const Quaternion &v) {
 	return v.m128_f32[0];
 }
 
+math::Generic manta::math::gt(const Generic &v1, const Generic &v2) {
+	return _mm_and_ps(
+		math::constants::One, 
+		_mm_cmpgt_ps(v1, v2));
+}
+
 math::Generic manta::math::add(const Generic &v1, const Generic &v2) {
 	return _mm_add_ps(v1, v2);
 }
