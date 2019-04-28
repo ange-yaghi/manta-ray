@@ -8,24 +8,15 @@
 
 namespace manta {
 
-	class VectorNodeOutput;
+	class NodeOutput;
 
 	class RemapNode : public Node {
 	public:
 		RemapNode();
-		RemapNode(const math::Vector &start, const math::Vector &end, const VectorNodeOutput *inputNode);
+		RemapNode(const math::Vector &start, const math::Vector &end, pNodeInput inputNode);
 		~RemapNode();
 
-		void setStart(const math::Vector &start) { m_start = start; }
-		math::Vector getStart() { return m_start; }
-
-		void setEnd(const math::Vector &end) { m_end = end; }
-		math::Vector getEnd() { return m_end; }
-
-		const VectorNodeOutput *getMainOutput() const { return &m_output; }
-
-		void setInputNode(const VectorNodeOutput *inputNode) { m_inputNode = inputNode; }
-		const VectorNodeOutput *getInputNode() const { return m_inputNode; }
+		const NodeOutput *getMainOutput() const { return &m_output; }
 
 	protected:
 		virtual void _evaluate();
@@ -33,11 +24,7 @@ namespace manta {
 		virtual void registerInputs();
 		virtual void registerOutputs();
 
-		const VectorNodeOutput *m_inputNode;
 		RemapNodeOutput m_output;
-
-		math::Vector m_start;
-		math::Vector m_end;
 	};
 
 } /* namespace manta */

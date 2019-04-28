@@ -71,9 +71,9 @@ manta::ColorRgb manta::RgbSpace::convertToRgb(const ColorXyy &col) const {
 	output.b = (bx * col.x) + (by * col.y) + (bz * col.z);
 
 	// Constrain the RGB color within the RGB gamut
-	//output.r = clip(output.r);
-	//output.g = clip(output.g);
-	//output.b = clip(output.b);
+	output.r = clip(output.r);
+	output.g = clip(output.g);
+	output.b = clip(output.b);
 
 	return output;
 }

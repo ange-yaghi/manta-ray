@@ -1,10 +1,10 @@
 #ifndef NODE_OUTPUT_H
 #define NODE_OUTPUT_H
 
-#include <node.h>
 #include <node_type.h>
-
 #include <manta_math.h>
+
+#include <string>
 
 namespace manta {
 
@@ -16,12 +16,15 @@ namespace manta {
 		static const int MAX_DIMENSIONS = 4;
 
 	public:
-		NodeOutput(const NodeType *singleType) { m_singleType = singleType; }
+		NodeOutput(const NodeType *singleType) { m_singleType = singleType; m_dimensionsEvaluated = false; }
 		virtual ~NodeOutput() {}
 
-		virtual void sample(const IntersectionPoint *surfaceInteraction, void *target) const {};
-		virtual void discreteSample2D(int x, int y, void *target) const {};
-		virtual void fullOutput(const void **target) const {};
+		const NodeType *getType() const { return m_singleType; }
+
+		virtual void sample(const IntersectionPoint *surfaceInteraction, void *target) const {}
+		virtual void discreteSample2D(int x, int y, void *target) const {}
+		virtual void fullCompute(void *target) const {}
+		virtual void getDataReference(const void **target) const { *target = nullptr; }
 
 		int getSize(int dim) const { return m_dimensions[dim]; }
 		int getDimensions() const { return m_dimensionCount; }
@@ -32,9 +35,19 @@ namespace manta {
 		void setParentNode(Node *parentNode) { m_parentNode = parentNode; }
 		Node *getParentNode() const { return m_parentNode; }
 
+		void evaluateDimensions() {
+			if (m_dimensionsEvaluated) return;
+			_evaluateDimensions();
+			m_dimensionsEvaluated = true;
+		}
+
+		bool areDimensionsEvaluated() const { return m_dimensionsEvaluated; }
+
 	protected:
 		void setDimensionSize(int dim, int size) { m_dimensions[dim] = size; }
 		void setDimensions(int dimensionCount) { m_dimensionCount = dimensionCount; }
+
+		virtual void _evaluateDimensions() { setDimensions(1); setDimensionSize(0, 1); };
 
 	private:
 		int m_dimensions[MAX_DIMENSIONS];
@@ -44,7 +57,12 @@ namespace manta {
 		std::string m_name;
 
 		Node *m_parentNode;
+
+		bool m_dimensionsEvaluated;
 	};
+
+	// Type to reduce confusion
+	typedef const NodeOutput * pNodeInput;
 
 } /* namespace manta */
 

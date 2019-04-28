@@ -13,8 +13,6 @@ namespace manta {
 	public:
 		VectorMap2DNodeOutput() {
 			m_map = nullptr;
-
-			setDimensions(2);
 		}
 
 		virtual ~VectorMap2DNodeOutput() {
@@ -27,6 +25,9 @@ namespace manta {
 
 		const VectorMap2D *getMap() const { return m_map; }
 		void setMap(const VectorMap2D *map);
+
+	protected:
+		virtual void _evaluateDimensions();
 
 	protected:
 		const VectorMap2D *m_map;

@@ -47,7 +47,11 @@
     <ClCompile Include="..\..\src\media_interface_node_output.cpp" />
     <ClCompile Include="..\..\src\microfacet_distribution_node_output.cpp" />
     <ClCompile Include="..\..\src\mipmap.cpp" />
+    <ClCompile Include="..\..\src\multiply_node.cpp" />
+    <ClCompile Include="..\..\src\multiply_node_output.cpp" />
     <ClCompile Include="..\..\src\power_node_output.cpp" />
+    <ClCompile Include="..\..\src\ramp_node.cpp" />
+    <ClCompile Include="..\..\src\ramp_node_output.cpp" />
     <ClCompile Include="..\..\src\remap_node_output.cpp" />
     <ClCompile Include="..\..\src\rgb_space.cpp" />
     <ClCompile Include="..\..\src\signal_processing.cpp" />
@@ -144,8 +148,12 @@
     <ClInclude Include="..\..\include\media_interface_node_output.h" />
     <ClInclude Include="..\..\include\microfacet_distribution_node_output.h" />
     <ClInclude Include="..\..\include\mipmap.h" />
+    <ClInclude Include="..\..\include\multiply_node.h" />
+    <ClInclude Include="..\..\include\multiply_node_output.h" />
     <ClInclude Include="..\..\include\node_type.h" />
     <ClInclude Include="..\..\include\power_node_output.h" />
+    <ClInclude Include="..\..\include\ramp_node.h" />
+    <ClInclude Include="..\..\include\ramp_node_output.h" />
     <ClInclude Include="..\..\include\remap_node_output.h" />
     <ClInclude Include="..\..\include\rgb_space.h" />
     <ClInclude Include="..\..\include\scalar_map_2d.h" />
