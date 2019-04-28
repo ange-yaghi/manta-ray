@@ -32,7 +32,10 @@ void manta::VectorMap2DNodeOutput::fullOutput(const void **_target) const {
 
 void manta::VectorMap2DNodeOutput::setMap(const VectorMap2D *map) {
 	m_map = map;
+}
 
-	setDimensionSize(0, map->getWidth());
-	setDimensionSize(1, map->getHeight());
+void manta::VectorMap2DNodeOutput::_evaluateDimensions() {
+	setDimensions(2); 
+	setDimensionSize(0, m_map->getWidth()); 
+	setDimensionSize(1, m_map->getHeight());
 }

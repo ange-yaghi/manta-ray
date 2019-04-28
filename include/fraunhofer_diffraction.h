@@ -27,10 +27,6 @@ namespace manta {
 			int wavelengthStep; // nm
 			math::real_d frequencyMultiplier;
 
-			// This value controls what percentage of the flux comes from the ideal distribution (ie the center point)
-			// with the remaining flux being contributed by the diffraction halo
-			math::real_d deltaWeight;
-
 			// Debugging flags
 			bool saveApertureFunction;
 		};
@@ -46,7 +42,7 @@ namespace manta {
 		const VectorMap2D *getDiffractionPattern() const { return &m_diffractionPattern; }
 		const ComplexMap2D *getApertureFunction() const { return &m_apertureFunction; }
 
-		void normalize(math::real_d deltaWeight);
+		void normalize();
 
 		static void defaultSettings(Settings *settings);
 

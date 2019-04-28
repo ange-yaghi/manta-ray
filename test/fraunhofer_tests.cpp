@@ -31,10 +31,24 @@ TEST(FraunhoferTests, FraunhoferSampleTest) {
 
 	diff.generate(&aperture, nullptr, 256, 0.15f, &colorTable, &sourceSpectrum, &settings);
 
-	math::Vector s = diff.samplePattern(0.0, 0.0);
+	const VectorMap2D *pattern = diff.getDiffractionPattern();
+	int width = pattern->getWidth();
+	int height = pattern->getHeight();
+	for (int i = 0; i < width; i++) {
+		for (int j = 0; j < height; j++) {
+			math::Vector v = pattern->get(i, j);
+			math::real r, g, b;
+			r = math::getX(v);
+			g = math::getY(v);
+			b = math::getZ(v);
 
-	CHECK_VEC_EQ(s, math::loadScalar(settings.deltaWeight), 1E-3);
+			EXPECT_GE(r, 0.0f);
+			EXPECT_GE(g, 0.0f);
+			EXPECT_GE(b, 0.0f);
+		}
+	}
 
+	math::Vector s = diff.samplePattern(0.0f, 0.0f);
 	math::Vector s2 = diff.samplePattern(0.1f, 0.1f);
 
 	math::real mag_s1 = math::getScalar(math::magnitude(s));

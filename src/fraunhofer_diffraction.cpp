@@ -107,7 +107,7 @@ void manta::FraunhoferDiffraction::generate(const Aperture *aperture, const Text
 	temp.destroy();
 	estimator.destroy();
 
-	normalize(settings.deltaWeight);
+	normalize();
 }
 
 void manta::FraunhoferDiffraction::destroy() {
@@ -118,22 +118,33 @@ void manta::FraunhoferDiffraction::destroy() {
 manta::math::Vector manta::FraunhoferDiffraction::samplePattern(math::real dx, math::real dy) const {
 	math::real u, v;
 
-	u = dx / (m_physicalSensorWidth);
-	v = dy / (m_physicalSensorWidth);
-
-	if (u < 0) u += (math::real)1.0;
-	if (v < 0) v += (math::real)1.0;
+	u = dx / (m_physicalSensorWidth) + (math::real)0.5;
+	v = dy / (m_physicalSensorWidth) + (math::real)0.5;
 
 	return m_diffractionPattern.sample(u, v);
 }
 
-void manta::FraunhoferDiffraction::normalize(math::real_d deltaWeight) {
+void manta::FraunhoferDiffraction::normalize() {
 	int res = m_diffractionPattern.getWidth();
+
+	math::real maxY = (math::real)0.0;
+	for (int i = 0; i < res; i++) {
+		for (int j = 0; j < res; j++) {
+			math::Vector xyzColor = m_diffractionPattern.get(i, j);
+			math::real Y = math::getY(xyzColor);
+			if (Y > maxY) {
+				maxY = Y;
+			}
+		}
+	}
+
+	if (maxY == (math::real)0.0) return;
 
 	// Convert to RGB
 	for (int i = 0; i < res; i++) {
 		for (int j = 0; j < res; j++) {
 			math::Vector xyzColor = m_diffractionPattern.get(i, j);
+			xyzColor = math::mul(math::loadScalar(1 / maxY), xyzColor);
 
 			ColorXyz xyzColorT = ColorXyz(math::getX(xyzColor), math::getY(xyzColor), math::getZ(xyzColor));
 			math::Vector rgbColor = m_colorTable->xyzToRgb(xyzColorT);
@@ -157,6 +168,7 @@ void manta::FraunhoferDiffraction::normalize(math::real_d deltaWeight) {
 		for (int j = 0; j < res; j++) {
 			math::Vector rgbColor = m_diffractionPattern.get(i, j);
 			rgbColor = math::mul(rgbColor, norm);
+			rgbColor = math::mask(rgbColor, math::constants::MaskOffW);
 
 			m_diffractionPattern.set(rgbColor, i, j);
 		}
@@ -170,7 +182,6 @@ void manta::FraunhoferDiffraction::defaultSettings(Settings *settings) {
 	settings->minWavelength = 380;
 	settings->wavelengthStep = 5;
 	settings->frequencyMultiplier = 3.0;
-	settings->deltaWeight = (math::real_d)0.93;
 
 	settings->saveApertureFunction = false;
 }
@@ -273,11 +284,6 @@ void manta::FraunhoferDiffraction::_generateMap(const CftEstimator2D *estimator,
 					(math::real)xyzColor.x,
 					(math::real)xyzColor.y,
 					(math::real)xyzColor.z), i, j);
-
-			if (i == 2078 && j == 2017) {
-				spectrum.writeCsv("../../workspace/tmp/test.csv");
-				std::cout << xyzColor.x << ", " << xyzColor.y << ", " << xyzColor.z << std::endl;
-			}
 		}
 	}
 

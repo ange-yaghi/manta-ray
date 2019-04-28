@@ -21,6 +21,8 @@ namespace manta {
 		virtual ~VectorNodeOutput() {
 			/* void */
 		}
+
+		virtual void fullCompute(void *target) const;
 	};
 
 } /* namespace manta */

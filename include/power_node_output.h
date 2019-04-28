@@ -28,18 +28,18 @@ namespace manta {
 		virtual void discreteSample2D(int x, int y, void *target) const;
 		virtual void fullOutput(const void **target) const;
 
-		void setInput(const VectorNodeOutput *input) { m_input = input; }
-		const VectorNodeOutput *getInput() const { return m_input; }
+		void setInput(pNodeInput input) { m_input = input; }
+		pNodeInput getInput() const { return m_input; }
 
-		void setPowerNode(const VectorNodeOutput *powerNode) { m_powerNode = powerNode; }
-		const VectorNodeOutput *getPowerNode() const { return m_powerNode; }
+		void setPowerNode(pNodeInput powerNode) { m_powerNode = powerNode; }
+		pNodeInput getPowerNode() const { return m_powerNode; }
 
 		void setDefaultPower(math::real defaultPower) { m_defaultPower = defaultPower; }
 		math::real getDefaultPower() const { return m_defaultPower; }
 
 	protected:
-		const VectorNodeOutput *m_input;
-		const VectorNodeOutput *m_powerNode;
+		pNodeInput m_input;
+		pNodeInput m_powerNode;
 		math::real m_defaultPower;
 	};
 

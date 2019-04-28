@@ -36,9 +36,8 @@ void manta::Node::evaluate() {
 
 	// First evaluate all dependencies
 	int inputCount = getInputCount();
-
 	for (int i = 0; i < inputCount; i++) {
-		const NodeOutput **node = m_inputs[i].input;
+		pNodeInput *node = m_inputs[i].input;
 		if (node != nullptr && *node != nullptr) {
 			(*node)->getParentNode()->evaluate();
 		}
@@ -46,6 +45,14 @@ void manta::Node::evaluate() {
 
 	// Node can now self-evaluate
 	_evaluate();
+
+	// All dependencies are evaluated so outputs can now determine their
+	// dimensions
+	int outputCount = getOutputCount();
+	for (int i = 0; i < outputCount; i++) {
+		NodeOutput *node = m_outputs[i].output;
+		node->evaluateDimensions();
+	}
 }
 
 void manta::Node::destroy() {
@@ -66,13 +73,13 @@ void manta::Node::destroySessionMemory(NodeSessionMemory *memory, StackAllocator
 	}
 }
 
-void manta::Node::connectInput(const NodeOutput *nodeOutput, const char *name) {
+void manta::Node::connectInput(pNodeInput input, const char *name) {
 	int inputCount = getInputCount();
 
 	for (int i = 0; i < inputCount; i++) {
 		const char *inputName = m_inputs[i].name;
 		if (strcmp(inputName, name) == 0) {
-			*m_inputs[i].input = nodeOutput;
+			*m_inputs[i].input = input;
 			break;
 		}
 	}
@@ -87,6 +94,8 @@ manta::NodeOutput *manta::Node::getOutput(const char *name) const {
 			return m_outputs[i].output;
 		}
 	}
+
+	return nullptr;
 }
 
 void manta::Node::_initialize() {

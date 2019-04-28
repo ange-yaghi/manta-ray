@@ -30,11 +30,11 @@ namespace manta {
 		void setDiffuse(const math::Vector &diffuse) { m_diffuse = diffuse; }
 		math::Vector getDiffuse() const { return m_diffuse; }
 
-		void setDiffuseNode(const VectorNodeOutput *diffuseNode) { m_diffuseNode = diffuseNode; }
-		const VectorNodeOutput *getDiffuseNode() const { return m_diffuseNode; }
+		void setDiffuseNode(pNodeInput diffuseNode) { m_diffuseNode = diffuseNode; }
+		pNodeInput getDiffuseNode() const { return m_diffuseNode; }
 
-		void setSpecularNode(const VectorNodeOutput *specularNode) { m_specularNode = specularNode; }
-		const VectorNodeOutput *getSpecularNode() const { return m_specularNode; }
+		void setSpecularNode(pNodeInput specularNode) { m_specularNode = specularNode; }
+		pNodeInput getSpecularNode() const { return m_specularNode; }
 
 	protected:
 		virtual void registerInputs();
@@ -43,8 +43,8 @@ namespace manta {
 		const MicrofacetDistributionNodeOutput *m_coatingDistribution;
 		LambertianBSDF *m_diffuseMaterial;
 
-		const VectorNodeOutput *m_diffuseNode;
-		const VectorNodeOutput *m_specularNode;
+		pNodeInput m_diffuseNode;
+		pNodeInput m_specularNode;
 
 		math::Vector m_specular;
 		math::Vector m_diffuse;

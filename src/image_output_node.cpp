@@ -1,5 +1,6 @@
 #include <image_output_node.h>
 
+#include <vector_node_output.h>
 #include <image_byte_buffer.h>
 #include <jpeg_writer.h>
 
@@ -19,7 +20,20 @@ void manta::ImageOutputNode::_initialize() {
 
 void manta::ImageOutputNode::_evaluate() {
 	ImageByteBuffer byteBuffer;
-	m_input->getMap()->fillByteBuffer(&byteBuffer, m_gammaCorrection);
+
+	// Resolve the input data
+	const VectorMap2D *map = nullptr;
+	m_input->getDataReference((const void **)&map);
+	if (map != nullptr) {
+		map->fillByteBuffer(&byteBuffer, m_gammaCorrection);
+	}
+	else {
+		// Map needs to be generated
+		VectorMap2D generatedMap;
+		m_input->fullCompute((void *)&generatedMap);
+		generatedMap.fillByteBuffer(&byteBuffer, m_gammaCorrection);
+		generatedMap.destroy();
+	}
 
 	JpegWriter jpegWriter;
 	jpegWriter.setQuality(m_jpegQuality);
