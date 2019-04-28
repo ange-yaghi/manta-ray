@@ -216,6 +216,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 		dirtTexture.loadFile(TEXTURE_PATH "dirt_composite.png", true);
 		dirtTexture.initialize();
 		dirtTexture.evaluate();
+		const VectorMap2D *dirtTextureMap = dirtTexture.getMainOutput()->getMap();
 
 		CmfTable colorTable;
 		Spectrum sourceSpectrum;
@@ -225,7 +226,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 		PolygonalAperture aperture;
 		aperture.initialize(6);
 		aperture.setRadius(0.18f);
-		testFraun.generate(&aperture, &dirtTexture, safeWidth, 16.0f, &colorTable, &sourceSpectrum, &settings);
+		testFraun.generate(&aperture, dirtTextureMap, safeWidth, 16.0f, &colorTable, &sourceSpectrum, &settings);
 		aperture.destroy();
 
 		VectorMapWrapperNode fraunNode(testFraun.getDiffractionPattern());

@@ -228,6 +228,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 		dirtTexture.loadFile(TEXTURE_PATH "dirt_very_soft.png", true);
 		dirtTexture.initialize();
 		dirtTexture.evaluate();
+		const VectorMap2D *dirtTextureMap = dirtTexture.getMainOutput()->getMap();
 
 		CmfTable colorTable;
 		Spectrum sourceSpectrum;
@@ -235,7 +236,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 		sourceSpectrum.loadCsv(CMF_PATH "d65_lighting.csv");
 
 		lens.getAperture()->setRadius((math::real)0.18);
-		testFraun.generate(lens.getAperture(), &dirtTexture, safeWidth, 8.0f, &colorTable, &sourceSpectrum, &settings);
+		testFraun.generate(lens.getAperture(), dirtTextureMap, safeWidth, 8.0f, &colorTable, &sourceSpectrum, &settings);
 
 		VectorMapWrapperNode fraunNode(testFraun.getDiffractionPattern());
 		fraunNode.initialize();
