@@ -10,6 +10,7 @@ namespace manta {
 		struct Edge {
 			math::Vector2 reference;
 			math::Vector2 direction;
+			math::real cache;
 		};
 
 	public:
@@ -21,9 +22,14 @@ namespace manta {
 
 		virtual bool filter(math::real x, math::real y) const;
 
+		void setBladeCurvature(math::real bladeCurvature) { m_bladeCurvature = bladeCurvature; }
+		math::real getBladeCurvature() const { return m_bladeCurvature; }
+
 	protected:
 		Edge *m_edges;
 		int m_edgeCount;
+
+		math::real m_bladeCurvature;
 	};
 
 } /* namespace manta */

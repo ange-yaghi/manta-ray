@@ -48,7 +48,7 @@ void writeToJpeg(const VectorMap2D *vectorMap, const std::string &fname) {
 }
 
 int main() {
-	constexpr int SENSOR_RESOLUTION = 4096;
+	constexpr int SENSOR_RESOLUTION = 1024;
 	constexpr int MAX_SAMPLES = 4096;
 
 	constexpr math::real_d apertureRadius = 0.18f;
@@ -69,13 +69,15 @@ int main() {
 	estimatorSamples = CftEstimator2D::getMinSamples(maxFreq, sampleWindow, MAX_SAMPLES);
 
 	TextureNode dirtTexture;
-	dirtTexture.loadFile(TEXTURE_PATH "dirt_very_soft.png", true);
+	dirtTexture.loadFile(TEXTURE_PATH "chrome_roughness.jpg", true);
 	dirtTexture.initialize();
 	dirtTexture.evaluate();
 	TextureNode *texture = &dirtTexture;
+	//texture = nullptr;
 
 	PolygonalAperture aperture;
 	aperture.setRadius(apertureRadius);
+	aperture.setBladeCurvature(0.0f);
 	aperture.initialize(6, math::constants::PI / 2);
 
 	int maxResolution = (int)((CftEstimator2D::getFreqRange(estimatorSamples, sampleWindow) * maxWavelength + sensorWidth / 2) / sensorElementWidth);
@@ -92,12 +94,12 @@ int main() {
 	FraunhoferDiffraction::Settings settings;
 	fraun.defaultSettings(&settings);
 
-	settings.frequencyMultiplier = (math::real_d)1.0;
+	settings.frequencyMultiplier = (math::real_d)8.0;
 	settings.maxSamples = MAX_SAMPLES;
 	settings.saveApertureFunction = true;
 	settings.textureSamples = 10;
-	//settings.minWavelength = 500;
-	//settings.maxWavelength = 600;
+	settings.minWavelength = 500;
+	settings.maxWavelength = 505;
 	settings.wavelengthStep = 5;
 
 	CmfTable table;
