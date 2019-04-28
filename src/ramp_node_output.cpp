@@ -48,14 +48,10 @@ void manta::RampNodeOutput::discreteSample2D(int x, int y, void *_target) const 
 	}
 
 	if (m_slope != nullptr) {
-		m_input->discreteSample2D(x, y, (void *)&slope);
+		m_slope->discreteSample2D(x, y, (void *)&slope);
 	}
 
 	*target = ramp(input, dc, foot, slope);
-}
-
-void manta::RampNodeOutput::fullOutput(const void **_target) const {
-	*_target = nullptr;
 }
 
 manta::math::Vector manta::RampNodeOutput::ramp(const math::Vector &input, const math::Vector &dc, const math::Vector &foot, const math::Vector &slope) {

@@ -222,6 +222,8 @@ namespace manta {
 		real getQuatZ(const Quaternion &v);
 		real getQuatW(const Quaternion &v);
 
+		Generic gt(const Generic &v1, const Generic &v2);
+
 		Generic add(const Generic &v1, const Generic &v2);
 		Generic sub(const Generic &v1, const Generic &v2);
 		Generic mul(const Generic &v1, const Generic &v2);

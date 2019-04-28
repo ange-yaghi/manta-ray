@@ -57,6 +57,8 @@
     <ClCompile Include="..\..\src\signal_processing.cpp" />
     <ClCompile Include="..\..\src\single_vector_node_output.cpp" />
     <ClCompile Include="..\..\src\spectrum.cpp" />
+    <ClCompile Include="..\..\src\step_node.cpp" />
+    <ClCompile Include="..\..\src\step_node_output.cpp" />
     <ClCompile Include="..\..\src\vector_map_2d.cpp" />
     <ClCompile Include="..\..\src\material_manager.cpp" />
     <ClCompile Include="..\..\src\node.cpp" />
@@ -159,6 +161,8 @@
     <ClInclude Include="..\..\include\scalar_map_2d.h" />
     <ClInclude Include="..\..\include\signal_processing.h" />
     <ClInclude Include="..\..\include\single_vector_node_output.h" />
+    <ClInclude Include="..\..\include\step_node.h" />
+    <ClInclude Include="..\..\include\step_node_output.h" />
     <ClInclude Include="..\..\include\vector_map_wrapper_node.h" />
     <ClInclude Include="..\..\include\spectrum.h" />
     <ClInclude Include="..\..\include\vector_map_2d.h" />
