@@ -7,6 +7,7 @@
 #include <spectrum.h>
 #include <color.h>
 #include <cmf_table.h>
+#include <mipmap.h>
 
 // Temp
 #include <texture_node.h>
@@ -22,7 +23,7 @@ manta::FraunhoferDiffraction::~FraunhoferDiffraction() {
 	/* void */
 }
 
-void manta::FraunhoferDiffraction::generate(const Aperture *aperture, const TextureNode *dirtMap, int outputResolution, math::real physicalSensorWidth, CmfTable *colorTable, Spectrum *sourceSpectrum, const Settings *settingsIn) {
+void manta::FraunhoferDiffraction::generate(const Aperture *aperture, const VectorMap2D *dirtMap, int outputResolution, math::real physicalSensorWidth, CmfTable *colorTable, Spectrum *sourceSpectrum, const Settings *settingsIn) {
 	constexpr math::real SAFETY_FACTOR = (math::real)1.1;
 	
 	Settings settings;
@@ -78,16 +79,24 @@ void manta::FraunhoferDiffraction::generate(const Aperture *aperture, const Text
 			math::real dirt = (math::real)1.0;
 			if (dirtMap != nullptr) {
 				math::Vector dirtV;
-				dirtMap->getMainOutput()->sample(&a, (void *)&dirtV);
+				dirtV = dirtMap->triangleSample(u, v);
 				dirt = math::getScalar(dirtV);
 			}
 
-			if (aperture->filter(x, y)) {
-				m_apertureFunction.set(math::Complex((math::real_d)1.0 * dirt, (math::real_d)0.0), i, j);
+			// Super-sampling
+			int samplesInFilter = 0;
+			int totalSamples = 0;
+			for (int si = -2; si <= 2; si++) {
+				for (int sj = -2; sj <= 2; sj++) {
+					totalSamples++;
+					if (aperture->filter(x + si * (dx / 4), y + sj * (dy / 4))) {
+						samplesInFilter++;
+					}
+				}
 			}
-			else {
-				m_apertureFunction.set(math::Complex((math::real_d)0.0, (math::real_d)0.0), i, j);
-			}
+
+			math::real_d apF = (math::real_d)samplesInFilter / totalSamples;
+			m_apertureFunction.set(math::Complex(apF * dirt, (math::real_d)0.0), i, j);
 		}
 	}
 
