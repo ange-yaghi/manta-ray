@@ -564,9 +564,6 @@
     <ClCompile Include="..\..\src\ramp_node.cpp">
       <Filter>Source Files\nodes\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\include\media_interface.cpp">
-      <Filter>Source Files\material\surface-modeling\media-interface</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\remap_node.cpp">
       <Filter>Source Files\nodes</Filter>
     </ClCompile>
@@ -574,6 +571,15 @@
       <Filter>Source Files\nodes\output-ports\operations</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\multiply_node.cpp">
+      <Filter>Source Files\nodes\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\media_interface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\step_node_output.cpp">
+      <Filter>Source Files\nodes\output-ports\operations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\step_node.cpp">
       <Filter>Source Files\nodes\library</Filter>
     </ClCompile>
   </ItemGroup>
@@ -930,6 +936,12 @@
       <Filter>Header Files\nodes\output-ports\operations</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\multiply_node.h">
+      <Filter>Header Files\nodes\library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\step_node_output.h">
+      <Filter>Header Files\nodes\output-ports\operations</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\step_node.h">
       <Filter>Header Files\nodes\library</Filter>
     </ClInclude>
   </ItemGroup>
