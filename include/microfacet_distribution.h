@@ -9,6 +9,7 @@
 
 namespace manta {
 
+	// Forward declarations
 	class StackAllocator;
 
 	class MicrofacetDistribution : public Node {
@@ -19,8 +20,10 @@ namespace manta {
 		virtual math::Vector generateMicrosurfaceNormal(NodeSessionMemory *mem) const = 0;
 		virtual math::real calculatePDF(const math::Vector &m, NodeSessionMemory *mem) const;
 		virtual math::real calculateDistribution(const math::Vector &m, NodeSessionMemory *mem) const = 0;
-		virtual math::real calculateG1(const math::Vector &v, const math::Vector &m, NodeSessionMemory *mem) const = 0;
-		virtual math::real bidirectionalShadowMasking(const math::Vector &i, const math::Vector &o, const math::Vector &m, NodeSessionMemory *mem) const;
+		virtual math::real calculateG1(const math::Vector &v, const math::Vector &m, 
+			NodeSessionMemory *mem) const = 0;
+		virtual math::real bidirectionalShadowMasking(const math::Vector &i, 
+			const math::Vector &o, const math::Vector &m, NodeSessionMemory *mem) const;
 
 		math::real smithBidirectionalShadowMasking(const math::Vector &i, const math::Vector &o, const math::Vector &m, NodeSessionMemory *mem) const;
 

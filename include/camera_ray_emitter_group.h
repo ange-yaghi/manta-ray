@@ -46,7 +46,7 @@ namespace manta {
 		virtual void initialize() = 0;
 
 		virtual CameraRayEmitter *createEmitter(int ix, int iy, StackAllocator *stackAllocator) const = 0;
-		void freeEmitter(CameraRayEmitter *rayEmitter, StackAllocator *stackAllocator) const { stackAllocator->free(rayEmitter); };
+		void freeEmitter(CameraRayEmitter *rayEmitter, StackAllocator *stackAllocator) const;
 
 	protected:
 		template<typename t_RayEmitterType>

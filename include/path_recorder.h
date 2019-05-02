@@ -9,21 +9,22 @@
 
 namespace manta {
 
-	struct PathSegment {
-		math::Vector position;
-
-		PathSegment *parent;
-		std::vector<PathSegment *>children;
-
-		int vertexIndex;
-	};
-
-	struct Tree {
-		PathSegment *path;
-		std::string name;
-	};
-
 	class PathRecorder {
+	public:
+		struct PathSegment {
+			math::Vector position;
+
+			PathSegment *parent;
+			std::vector<PathSegment *>children;
+
+			int vertexIndex;
+		};
+
+		struct Tree {
+			PathSegment *path;
+			std::string name;
+		};
+
 	public:
 		PathRecorder();
 		~PathRecorder();

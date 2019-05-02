@@ -4,11 +4,11 @@
 #include <manta_math.h>
 
 manta::SimpleLens::SimpleLens() {
-
+	/* void */
 }
 
 manta::SimpleLens::~SimpleLens() {
-
+	/* void */
 }
 
 void manta::SimpleLens::setFocus(math::real dist) {
@@ -37,7 +37,7 @@ void manta::SimpleLens::setFocus(math::real dist) {
 }
 
 void manta::SimpleLens::setFocalLength(math::real focalLength) {
-
+	/* void */
 }
 
 bool manta::SimpleLens::transformRay(const LightRay *inputRay, LightRay *outputRay) const {
@@ -106,7 +106,7 @@ void manta::SimpleLens::update() {
 	m_lens.setPosition(m_position);
 	m_lens.setDirection(m_direction);
 	m_lens.setRadius(m_radius);
-	m_lens.setIOR(LensElement::IOR_CROWN_GLASS);
+	m_lens.setIor(LensElement::IOR_CROWN_GLASS);
 	m_lens.setInputSurfaceRadius((math::real)10.0);
 	m_lens.setOutputSurfaceRadius((math::real)10.0);
 	m_lens.setDepth((math::real)0.1);
@@ -134,11 +134,13 @@ manta::math::Vector manta::SimpleLens::getSensorElement(int x, int y) const {
 	return sensorElement;
 }
 
-void manta::SimpleLens::lensScan(const math::Vector &sensorElement, LensScanHint *target, int div, math::real span) const {
+void manta::SimpleLens::lensScan(const math::Vector &sensorElement, 
+		int div, math::real span, LensScanHint *target) const {
 	lensScan(sensorElement, (math::real)0.0, (math::real)0.0, m_lens.getRadius(), target, div, span);
 }
 
-void manta::SimpleLens::lensScan(const math::Vector &sensorElement, math::real offsetX, math::real offsetY, math::real r, LensScanHint *target, int div, math::real span) const {
+void manta::SimpleLens::lensScan(const math::Vector &sensorElement, 
+		math::real offsetX, math::real offsetY, math::real r, LensScanHint *target, int div, math::real span) const {
 	constexpr int MIN_SAMPLES = 4;
 	if (div > 128) {
 		// Safely assume that no ray can be found
@@ -208,7 +210,7 @@ void manta::SimpleLens::lensScan(const math::Vector &sensorElement, math::real o
 		lensScan(sensorElement, averageX / samples, averageY / samples, safetyRadius, target, div, span);
 	}
 	else {
-		lensScan(sensorElement, target, div * 2, span);
+		lensScan(sensorElement, div * 2, span, target);
 	}
 }
 

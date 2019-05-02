@@ -19,7 +19,7 @@ TEST(FraunhoferTests, FraunhoferSampleTest) {
 	aperture.setRadius(5.0f);
 
 	FraunhoferDiffraction::Settings settings;
-	FraunhoferDiffraction::defaultSettings(&settings);
+	FraunhoferDiffraction::setDefaultSettings(&settings);
 	settings.maxSamples = 1024;
 	settings.frequencyMultiplier = 3;
 

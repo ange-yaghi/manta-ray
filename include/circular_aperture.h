@@ -8,7 +8,7 @@ namespace manta {
 	class CircularAperture : public Aperture {
 	public:
 		CircularAperture();
-		~CircularAperture();
+		virtual ~CircularAperture();
 
 		virtual bool filter(math::real x, math::real y) const;
 	};

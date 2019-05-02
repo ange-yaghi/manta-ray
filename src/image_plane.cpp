@@ -59,17 +59,17 @@ manta::math::Vector manta::ImagePlane::sample(int x, int y) const {
 	return m_buffer[y * m_width + x];
 }
 
-void manta::ImagePlane::clone(ImagePlane *target) const {
-	target->initialize(m_width, m_height, m_physicalWidth, m_physicalHeight);
+void manta::ImagePlane::copyFrom(const ImagePlane *source) {
+	initialize(m_width, m_height, m_physicalWidth, m_physicalHeight);
 	for (int x = 0; x < (m_width); x++) {
 		for (int y = 0; y < (m_height); y++) {
-			target->set(sample(x, y), x, y);
+			set(sample(x, y), x, y);
 		}
 	}
 }
 
-void manta::ImagePlane::cloneEmpty(ImagePlane *target) const {
-	target->initialize(m_width, m_height, m_physicalWidth, m_physicalHeight);
+void manta::ImagePlane::createEmptyFrom(const ImagePlane *source) {
+	initialize(source->m_width, source->m_height, source->m_physicalWidth, source->m_physicalHeight);
 }
 
 void manta::ImagePlane::clear(const math::Vector &v) {
@@ -129,50 +129,6 @@ void manta::ImagePlane::applyGammaCurve(math::real gamma) {
 			math::real b = pow(math::getZ(fragment), gamma);
 			set(math::loadVector(r, g, b), x, y);
 		}
-	}
-}
-
-void manta::ImagePlane::convolution(const Convolution *convolution, ImagePlane *target) {
-	cloneEmpty(target);
-	target->clear();
-
-	math::real px = m_physicalWidth / m_width;
-	math::real py = m_physicalHeight / m_height;
-	math::real minR = (px < py) ? px : py;
-
-	for (int x = 0; x < m_width; x++) {
-		for (int y = 0; y < m_height; y++) {
-			math::Vector fragment = sample(x, y);
-
-			math::real extents = convolution->getExtents(fragment);
-			if (extents < minR) continue;
-
-			int pex = (int)(extents / px + (math::real)0.5);
-			int pey = (int)(extents / py + (math::real)0.5);
-
-			for (int ex = -pex; ex <= pex; ex++) {
-				for (int ey = -pey; ey <= pey; ey++) {
-					if (ex == 0 && ey == 0) continue;
-
-					int pixelX = ex + x;
-					int pixelY = ey + y;
-
-					if (pixelX < 0 || pixelX >= m_width) continue;
-					if (pixelY < 0 || pixelY >= m_height) continue;
-
-					math::real ds = px * py;
-					//ds = 1.0;
-
-					math::Vector convolutionMul = math::mul(convolution->sample(ex * px, ey * py), math::loadScalar(ds));
-					math::Vector base = target->sample(pixelX, pixelY);
-
-					target->set(math::add(base, math::mul(convolutionMul, fragment)), pixelX, pixelY);
-				}
-			}
-		}
-		
-		int pixelsProcessed = x * m_height;
-		std::cout << "Post process: " << pixelsProcessed << "/" << (m_width * m_height) << std::endl;
 	}
 }
 

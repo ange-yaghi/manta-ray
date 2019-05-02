@@ -25,8 +25,8 @@ namespace manta {
 
 		bool isInitialized() const { return m_buffer != nullptr; }
 
-		void clone(ImagePlane *target) const;
-		void cloneEmpty(ImagePlane *target) const;
+		void copyFrom(const ImagePlane *source);
+		void createEmptyFrom(const ImagePlane *source);
 		void clear(const math::Vector &v = math::constants::Zero);
 
 		const math::Vector *getBuffer() const { return m_buffer; }
@@ -44,8 +44,6 @@ namespace manta {
 
 		// Apply gamma
 		void applyGammaCurve(math::real gamma);
-
-		void convolution(const Convolution *convolution, ImagePlane *target);
 
 		void add(const ImagePlane *b);
 		

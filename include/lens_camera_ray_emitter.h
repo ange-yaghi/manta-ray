@@ -5,6 +5,7 @@
 
 namespace manta {
 
+	// Forward declarations
 	class Lens;
 	class RayContainer;
 
@@ -15,11 +16,11 @@ namespace manta {
 
 		virtual void generateRays(RayContainer *rayContainer) const;
 
-		void setLens(Lens *lens) { m_lens = lens; }
-		Lens *getLens() const { return m_lens; }
+		void setLens(const Lens *lens) { m_lens = lens; }
+		const Lens *getLens() const { return m_lens; }
 
 	protected:
-		Lens *m_lens;
+		const Lens *m_lens;
 	};
 
 } /* namespace manta */

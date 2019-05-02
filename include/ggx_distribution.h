@@ -18,7 +18,8 @@ namespace manta {
 		GgxDistribution();
 		~GgxDistribution();
 
-		virtual void initializeSessionMemory(const IntersectionPoint *surfaceInteraction, NodeSessionMemory *memory, StackAllocator *stackAllocator) const;
+		virtual void initializeSessionMemory(const IntersectionPoint *surfaceInteraction, 
+			NodeSessionMemory *memory, StackAllocator *stackAllocator) const;
 
 		virtual math::Vector generateMicrosurfaceNormal(NodeSessionMemory *mem) const;
 		virtual math::real calculateDistribution(const math::Vector &m, NodeSessionMemory *mem) const;
@@ -27,8 +28,8 @@ namespace manta {
 		void setWidth(math::real width) { m_width = width; }
 		math::real getWidth() const { return m_width; }
 
-		void setWidthNode(VectorNodeOutput *node) { m_widthNode = node; }
-		VectorNodeOutput *getWidthNode() const { return m_widthNode; }
+		void setWidthNode(pNodeInput node) { m_widthNode = node; }
+		pNodeInput getWidthNode() const { return m_widthNode; }
 
 		void setMinMapWidth(math::real power) { m_minMapWidth = power; }
 		math::real getMinMapWidth() const { return m_minMapWidth; }
@@ -37,7 +38,7 @@ namespace manta {
 		virtual void registerInputs();
 
 	protected:
-		VectorNodeOutput *m_widthNode;
+		pNodeInput m_widthNode;
 		math::real m_width;
 		math::real m_minMapWidth;
 	};

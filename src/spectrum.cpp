@@ -144,12 +144,6 @@ void manta::Spectrum::add(const Spectrum &b) {
 	}
 }
 
-manta::math::real manta::Spectrum::getValueDiscrete(int index) const {
-	assert(m_values != nullptr);
-
-	return m_values[index];
-}
-
 manta::math::real manta::Spectrum::getValueContinuous(math::real wavelength) const {
 	assert(m_values != nullptr);
 
