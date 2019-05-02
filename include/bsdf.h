@@ -18,9 +18,10 @@ namespace manta {
 	class BSDF : public Node {
 	public:
 		BSDF();
-		~BSDF();
+		virtual ~BSDF();
 
-		virtual math::Vector sampleF(const IntersectionPoint *surfaceInteraction, const math::Vector &i, math::Vector *o, math::real *pdf, StackAllocator *stackAllocator) const = 0;
+		virtual math::Vector sampleF(const IntersectionPoint *surfaceInteraction, 
+			const math::Vector &i, math::Vector *o, math::real *pdf, StackAllocator *stackAllocator) const = 0;
 
 		static inline bool refract(const math::Vector &i, const math::Vector &n, math::real ior, math::Vector *t) {
 			math::real cosThetaI = math::getScalar(math::dot(n, i));

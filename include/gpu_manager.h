@@ -8,6 +8,7 @@
 
 namespace manta {
 
+	// Forward declarations
 	class GPUKernel;
 
 	class GPUManager {

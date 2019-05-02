@@ -16,17 +16,21 @@ namespace manta {
 		virtual void setFocus(math::real dist);
 		virtual void setFocalLength(math::real focalLength);
 		virtual bool transformRay(const LightRay *inputRay, LightRay *outputRay) const;
-		virtual bool diffractionRay(const math::Vector2 &aperturePoint, math::Vector direction, math::Vector2 *sensorLocation) const;
+		virtual bool diffractionRay(const math::Vector2 &aperturePoint, 
+			math::Vector direction, math::Vector2 *sensorLocation) const;
 		
 		virtual void initialize();
 		virtual void update();
 
 		virtual math::Vector getSensorElement(int x, int y) const;
-		virtual void lensScan(const math::Vector &sensorElement, LensScanHint *target, int div, math::real span) const;
-		virtual bool generateOutgoingRay(const math::Vector &sensorElement, const LensScanHint *hint, LightRay *targetRay) const;
+		virtual void lensScan(const math::Vector &sensorElement, int div, 
+			math::real span, LensScanHint *target) const;
+		virtual bool generateOutgoingRay(const math::Vector &sensorElement, 
+			const LensScanHint *hint, LightRay *targetRay) const;
 
 	protected:
-		void lensScan(const math::Vector &sensorElement, math::real x, math::real y, math::real r, LensScanHint *target, int div, math::real span) const;
+		void lensScan(const math::Vector &sensorElement, math::real x, math::real y, 
+			math::real r, LensScanHint *target, int div, math::real span) const;
 
 		BiconvexLens m_lens;
 		CircularAperture m_defaultAperture;

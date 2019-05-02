@@ -26,6 +26,7 @@ namespace manta {
 			int maxWavelength; // nm
 			int wavelengthStep; // nm
 			math::real_d frequencyMultiplier;
+			math::real_d safetyFactor;
 
 			// Debugging flags
 			bool saveApertureFunction;
@@ -35,22 +36,28 @@ namespace manta {
 		FraunhoferDiffraction();
 		~FraunhoferDiffraction();
 
-		void generate(const Aperture *aperture, const VectorMap2D *dirtMap, int outputResolution, math::real physicalSensorWidth, CmfTable *colorTable, Spectrum *sourceSpectrum, const Settings *settings = nullptr);
+		void generate(const Aperture *aperture, const VectorMap2D *dirtMap, 
+			int outputResolution, math::real physicalSensorWidth, 
+			CmfTable *colorTable, Spectrum *sourceSpectrum, 
+			const Settings *settings = nullptr);
 		virtual void destroy();
 
 		math::Vector samplePattern(math::real dx, math::real dy) const;
+
 		const VectorMap2D *getDiffractionPattern() const { return &m_diffractionPattern; }
 		const ComplexMap2D *getApertureFunction() const { return &m_apertureFunction; }
-
-		void normalize();
-
-		static void defaultSettings(Settings *settings);
-
 		math::real getPhysicalSensorWidth() const { return m_physicalSensorWidth; }
+		math::real getSensorElementWidth() const { return m_sensorElementWidth; }
+
+		static void setDefaultSettings(Settings *settings);
 
 	protected:
-		void generateMap(const CftEstimator2D *estimator, const Settings *settings, int threadCount, VectorMap2D *target) const;
-		void _generateMap(const CftEstimator2D *estimator, const Settings *settings, int startRow, int endRow, VectorMap2D *target) const;
+		void normalize();
+
+		void generateMap(const CftEstimator2D *estimator, const Settings *settings, 
+			int threadCount, VectorMap2D *target) const;
+		void _generateMap(const CftEstimator2D *estimator, const Settings *settings, 
+			int startRow, int endRow, VectorMap2D *target) const;
 
 	protected:
 		VectorMap2D m_diffractionPattern;

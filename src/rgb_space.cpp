@@ -8,6 +8,21 @@ const manta::RgbSpace manta::RgbSpace::srgb = {
 	{(math::real_d)0.3127, (math::real_d)0.3290} // White point
 };
 
+manta::RgbSpace::RgbSpace() {
+	/* void */
+}
+
+manta::RgbSpace::RgbSpace(
+		const math::Vector3_d &x, const math::Vector3_d &y, const math::Vector2_d &whitePoint){
+	m_x = x;
+	m_y = y; 
+	m_whitePoint = whitePoint;
+}
+
+manta::RgbSpace::~RgbSpace() {
+	/* void */
+}
+
 manta::math::real_d manta::RgbSpace::applyGammaSrgb(math::real_d u) {
 	static constexpr math::real_d MIN_SRGB_POWER_POINT = (math::real_d)0.0031308;
 

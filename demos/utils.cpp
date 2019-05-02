@@ -76,7 +76,7 @@ void manta_demo::editImage(manta::ImagePlane *sceneBuffer, const std::string &ou
 		std::cout << "Edit image? (y/n) ";
 		std::cin >> command;
 		if (command == 'y' || command == 'Y') {
-			sceneBuffer->clone(&temp);
+			temp.copyFrom(sceneBuffer);
 
 			manta::math::real scale;
 

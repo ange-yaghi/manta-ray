@@ -582,6 +582,9 @@
     <ClCompile Include="..\..\src\step_node.cpp">
       <Filter>Source Files\nodes\library</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\aperture.cpp">
+      <Filter>Source Files\camera-emulation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\sphere_primitive.h">

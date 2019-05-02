@@ -15,7 +15,7 @@ namespace manta {
 
 	public:
 		PolygonalAperture();
-		~PolygonalAperture();
+		virtual ~PolygonalAperture();
 
 		void initialize(int edges, math::real angle = (math::real)0.0, bool halfOffset=false);
 		void destroy();

@@ -92,7 +92,7 @@ int main() {
 
 	FraunhoferDiffraction fraun;
 	FraunhoferDiffraction::Settings settings;
-	fraun.defaultSettings(&settings);
+	fraun.setDefaultSettings(&settings);
 
 	settings.frequencyMultiplier = (math::real_d)8.0;
 	settings.maxSamples = MAX_SAMPLES;

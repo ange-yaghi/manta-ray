@@ -24,7 +24,7 @@ namespace manta {
 		int getPointCount() const { return m_pointCount; }
 		math::real getStep() const { return (m_endWaveLength - m_startWavelength) / (m_pointCount - 1); }
 
-		math::real getValueDiscrete(int index) const;
+		math::real getValueDiscrete(int index) const { return m_values[index]; }
 		math::real getValueContinuous(math::real wavelength) const;
 
 		math::real getStartWavelength() const { return m_startWavelength; }

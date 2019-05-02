@@ -9,7 +9,8 @@
 #include <CL/opencl.h>
 
 namespace manta {
-
+	
+	// Forward declarations
 	class GPUManagerOpenCL;
 
 	class GPUMemoryOpenCL : GPUMemory {

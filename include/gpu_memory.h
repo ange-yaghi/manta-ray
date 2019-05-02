@@ -12,6 +12,7 @@ namespace manta {
 			READ_ONLY,
 			WRITE_ONLY
 		};
+
 	public:
 		GPUMemory() {}
 		virtual ~GPUMemory() {}

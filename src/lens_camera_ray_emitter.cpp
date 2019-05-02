@@ -26,7 +26,7 @@ void manta::LensCameraRayEmitter::generateRays(RayContainer *rayContainer) const
 	m_sampler->generateSamples(totalRayCount, sampleOrigins);
 
 	LensScanHint hint;
-	m_lens->lensScan(m_position, &hint, 4, m_sampler->getBoundaryWidth());
+	m_lens->lensScan(m_position, 4, m_sampler->getBoundaryWidth(), &hint);
 
 	for (int i = 0; i < totalRayCount; i++) {
 		math::Vector position = math::add(m_position, sampleOrigins[i]);

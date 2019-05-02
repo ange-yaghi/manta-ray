@@ -3,10 +3,9 @@
 
 #include <manta_math.h>
 
-#include <fraunhofer_diffraction.h>
-
 namespace manta {
 
+	// Forward declarations
 	class Aperture;
 	class LightRay;
 
@@ -39,7 +38,7 @@ namespace manta {
 		virtual bool transformRay(const LightRay *inputRay, LightRay *outputRay) const = 0;
 
 		math::Vector getSensorLocation() const { return m_sensorLocation; }
-		math::Vector getSensorUp() const;
+		math::Vector getSensorUp() const { return m_up; }
 		math::Vector getSensorRight() const;
 
 		virtual void initialize() = 0;
@@ -55,16 +54,16 @@ namespace manta {
 		int getSensorResolutionY() const { return m_sensorResolutionY; }
 
 		virtual math::Vector getSensorElement(int x, int y) const = 0;
-		virtual void lensScan(const math::Vector &sensorElement, LensScanHint *target, int div, math::real span) const = 0;
-		virtual bool generateOutgoingRay(const math::Vector &sensorElement, const LensScanHint *hint, LightRay *targetRay) const = 0;
+		virtual void lensScan(const math::Vector &sensorElement,
+			int div, math::real span, LensScanHint *target) const = 0;
+		virtual bool generateOutgoingRay(const math::Vector &sensorElement,
+			const LensScanHint *hint, LightRay *targetRay) const = 0;
 
 		void setSensorWidth(math::real width) { m_sensorWidth = width; }
 		math::real getSensorWidth() const { return m_sensorWidth; }
 
 		void setSensorHeight(math::real height) { m_sensorHeight = height; }
 		math::real getSensorHeight() const { return m_sensorHeight; }
-
-		FraunhoferDiffraction *getDiffraction() { return &m_diffraction; }
 
 	protected:
 		math::Vector m_position;
@@ -80,8 +79,6 @@ namespace manta {
 		int m_sensorResolutionY;
 
 		Aperture *m_aperture;
-
-		FraunhoferDiffraction m_diffraction;
 	};
 
 } /* namespace manta */
