@@ -573,9 +573,6 @@
     <ClCompile Include="..\..\src\multiply_node.cpp">
       <Filter>Source Files\nodes\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\media_interface.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\step_node_output.cpp">
       <Filter>Source Files\nodes\output-ports\operations</Filter>
     </ClCompile>
@@ -586,6 +583,9 @@
       <Filter>Source Files\camera-emulation</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\opaque_media_interface.cpp">
+      <Filter>Source Files\material\surface-modeling\media-interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\media_interface.cpp">
       <Filter>Source Files\material\surface-modeling\media-interface</Filter>
     </ClCompile>
   </ItemGroup>
