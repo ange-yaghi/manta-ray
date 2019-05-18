@@ -14,9 +14,11 @@ namespace manta {
 	class LambertianBSDF : public BSDF {
 	public:
 		LambertianBSDF();
-		~LambertianBSDF();
+		virtual ~LambertianBSDF();
 
-		virtual math::Vector sampleF(const IntersectionPoint *surfaceInteraction, const math::Vector &i, math::Vector *o, math::real *pdf, StackAllocator *stackAllocator) const;
+		virtual math::Vector sampleF(const IntersectionPoint *surfaceInteraction, 
+			const math::Vector &i, math::Vector *o, math::real *pdf, 
+			StackAllocator *stackAllocator) const;
 	};
 
 } /* namespace manta */

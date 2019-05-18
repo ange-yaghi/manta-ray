@@ -5,6 +5,7 @@
 
 namespace manta {
 
+	// Forward declarations
 	class LightRay;
 	class StackAllocator;
 

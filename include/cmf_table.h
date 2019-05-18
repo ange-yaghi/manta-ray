@@ -2,7 +2,6 @@
 #define CMF_TABLE_H
 
 #include <manta_math.h>
-
 #include <color.h>
 
 namespace manta {
@@ -29,6 +28,8 @@ namespace manta {
 		Entry sampleXyz(math::real_d wavelength) const;
 
 		ColorXyz spectralToXyz(const Spectrum *spectrum) const;
+
+		int getEntryCount() const { return m_entryCount; }
 
 	protected:
 		Entry *m_entries;

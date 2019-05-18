@@ -14,7 +14,7 @@ namespace manta {
 	public:
 		RemapNode();
 		RemapNode(const math::Vector &start, const math::Vector &end, pNodeInput inputNode);
-		~RemapNode();
+		virtual ~RemapNode();
 
 		const NodeOutput *getMainOutput() const { return &m_output; }
 

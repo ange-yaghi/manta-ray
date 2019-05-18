@@ -6,6 +6,7 @@
 
 namespace manta {
 
+	// Forward declarations
 	class GPUMemory;
 
 	class GPUKernel {

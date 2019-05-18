@@ -5,6 +5,7 @@
 
 namespace manta {
 
+	// Forward declarations
 	class LightRay;
 
 	class LensElement {
@@ -30,8 +31,8 @@ namespace manta {
 		void setRadius(math::real radius) { m_radius = radius; }
 		math::real getRadius() const { return m_radius; }
 
-		virtual void setIOR(math::real ior) { m_ior = ior; }
-		math::real getIOR() const { return m_ior; }
+		virtual void setIor(math::real ior) { m_ior = ior; }
+		math::real getIor() const { return m_ior; }
 
 	protected:
 		math::real m_ior;
@@ -42,6 +43,6 @@ namespace manta {
 		math::real m_radius;
 	};
 
-} /*namespace manta */
+} /* namespace manta */
 
 #endif /* LENS_ELEMENT_H */

@@ -1,11 +1,11 @@
 #include <perfect_specular_reflection_bsdf.h>
 
 manta::PerfectSpecularReflectionBSDF::PerfectSpecularReflectionBSDF() {
-
+	/* void */
 }
 
 manta::PerfectSpecularReflectionBSDF::~PerfectSpecularReflectionBSDF() {
-
+	/* void */
 }
 
 manta::math::Vector manta::PerfectSpecularReflectionBSDF::sampleF(const IntersectionPoint *surfaceInteraction, const math::Vector &i, math::Vector *o, math::real *pdf, StackAllocator *stackAllocator) const {

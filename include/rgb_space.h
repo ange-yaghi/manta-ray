@@ -11,9 +11,9 @@ namespace manta {
 		static const RgbSpace srgb;
 
 	public:
-		RgbSpace() {}
-		RgbSpace(const math::Vector3_d &x, const math::Vector3_d &y, const math::Vector2_d whitePoint) { m_x = x; m_y = y; m_whitePoint = whitePoint; }
-		~RgbSpace() {}
+		RgbSpace();
+		RgbSpace(const math::Vector3_d &x, const math::Vector3_d &y, const math::Vector2_d &whitePoint);
+		~RgbSpace();
 
 		static math::real_d applyGammaSrgb(math::real_d u);
 		static math::real_d inverseGammaSrgb(math::real_d u);
@@ -30,7 +30,6 @@ namespace manta {
 		math::Vector2_d getWhitePoint() const { return m_whitePoint; }
 
 		ColorRgb convertToRgb(const ColorXyy &col) const;
-
 		static ColorXyy xyzToXyy(const ColorXyz &col);
 
 	protected:

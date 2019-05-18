@@ -9,27 +9,28 @@
 
 namespace manta {
 
-	struct ObjMaterial {
-		std::string name;
-	};
-
-	struct ObjFace {
-		union {
-			struct {
-				int v1, v2, v3;
-				int vn1, vn2, vn3;
-				int vt1, vt2, vt3;
-			};
-			struct {
-				int v[3];
-				int vn[3];
-				int vt[3];
-			};
-		};
-		ObjMaterial *material;
-	};
-
 	class ObjFileLoader {
+	public:
+		struct ObjMaterial {
+			std::string name;
+		};
+
+		struct ObjFace {
+			union {
+				struct {
+					int v1, v2, v3;
+					int vn1, vn2, vn3;
+					int vt1, vt2, vt3;
+				};
+				struct {
+					int v[3];
+					int vn[3];
+					int vt[3];
+				};
+			};
+			ObjMaterial *material;
+		};
+
 	public:
 		ObjFileLoader();
 		~ObjFileLoader();

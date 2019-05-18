@@ -15,7 +15,8 @@ namespace manta {
 		virtual ~StandardCameraRayEmitterGroup();
 
 		virtual void initialize();
-		virtual CameraRayEmitter *createEmitter(int ix, int iy, StackAllocator *stackAllocator) const;
+		virtual CameraRayEmitter *createEmitter(int ix, int iy, 
+			StackAllocator *stackAllocator) const;
 
 	protected:
 		math::real m_planeWidth;

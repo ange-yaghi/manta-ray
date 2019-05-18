@@ -43,13 +43,17 @@ namespace manta {
 		RayTracer();
 		~RayTracer();
 
-		void traceAll(const Scene *scene, CameraRayEmitterGroup *rayEmitterGroup, ImagePlane *target);
-		void tracePixel(int px, int py, const Scene *scene, CameraRayEmitterGroup *rayEmitterGroup, ImagePlane *target);
-		void traceRayEmitter(const CameraRayEmitter *emitter, RayContainer *container, const Scene *scene, StackAllocator *s /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const;
+		void traceAll(const Scene *scene, CameraRayEmitterGroup *rayEmitterGroup, 
+			ImagePlane *target);
+		void tracePixel(int px, int py, const Scene *scene, 
+			CameraRayEmitterGroup *rayEmitterGroup, ImagePlane *target);
+		void traceRayEmitter(const CameraRayEmitter *emitter, RayContainer *container, 
+			const Scene *scene, StackAllocator *s /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const;
 
 		int getThreadCount() const { return m_threadCount; }
 
-		void initialize(mem_size stackSize, mem_size workerStackSize, int threadCount, int renderBlockSize, bool multithreaded);
+		void initialize(mem_size stackSize, mem_size workerStackSize, int threadCount, 
+			int renderBlockSize, bool multithreaded);
 		void destroy();
 
 		void setBackgroundColor(const math::Vector &color) { m_backgroundColor = color; }
@@ -57,7 +61,8 @@ namespace manta {
 		// Interface to workers
 		JobQueue *getJobQueue() { return &m_jobQueue; }
 		
-		void traceRay(const Scene *scene, LightRay *ray, int degree, StackAllocator *s /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const;
+		void traceRay(const Scene *scene, LightRay *ray, int degree, 
+			StackAllocator *s /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const;
 		void incrementRayCompletion(const Job *job, int increment = 1);
 
 		void setDeterministicSeedMode(bool enable) { m_deterministicSeed = enable; }
@@ -87,10 +92,13 @@ namespace manta {
 
 	protected:
 		// Ray tracing features
-		void depthCull(const Scene *scene, const LightRay *ray, SceneObject **closestObject, IntersectionPoint *point, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const;
-		void refineContact(const LightRay *ray, math::real depth, IntersectionPoint *point, SceneObject **closestObject, StackAllocator *s) const;
+		void depthCull(const Scene *scene, const LightRay *ray, SceneObject **closestObject, 
+			IntersectionPoint *point, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const;
+		void refineContact(const LightRay *ray, math::real depth, IntersectionPoint *point, 
+			SceneObject **closestObject, StackAllocator *s) const;
 
-		void traceRays(const Scene *scene, const RayContainer &rayContainer, StackAllocator *s /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const;
+		void traceRays(const Scene *scene, const RayContainer &rayContainer, 
+			StackAllocator *s /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const;
 
 		math::Vector m_backgroundColor;
 

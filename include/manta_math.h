@@ -128,9 +128,15 @@ namespace manta {
 
 		template<typename T>
 		struct Matrix33_t {
-			Matrix33_t() {}
-			Matrix33_t(const Matrix33_t &ref) { rows[0] = ref.rows[0]; rows[1] = ref.rows[1]; rows[2] = ref.rows[2]; }
-			Matrix33_t(const Vector3_t<T> &row1, const Vector3_t<T> &row2, const Vector3_t<T> &row3) { rows[0] = row1; rows[1] = row2; rows[2] = row3; }
+			Matrix33_t() { /* void */ }
+			Matrix33_t(const Matrix33_t &ref) { 
+				rows[0] = ref.rows[0]; rows[1] = ref.rows[1]; rows[2] = ref.rows[2]; 
+			}
+
+			Matrix33_t(const Vector3_t<T> &row1, const Vector3_t<T> &row2, 
+					const Vector3_t<T> &row3) { 
+				rows[0] = row1; rows[1] = row2; rows[2] = row3; 
+			}
 			~Matrix33_t() {}
 
 			union {
@@ -142,15 +148,23 @@ namespace manta {
 
 		namespace constants {
 			// Masks
-			MATH_CONST VectorMask MaskOffW = { (int)0xFFFFFFFF,(int)0xFFFFFFFF,(int)0xFFFFFFFF, (int)0x00000000 };
-			MATH_CONST VectorMask MaskOffZ = { (int)0xFFFFFFFF, (int)0xFFFFFFFF, (int)0x00000000, (int)0xFFFFFFFF };
-			MATH_CONST VectorMask MaskOffY = { (int)0xFFFFFFFF, (int)0x00000000, (int)0xFFFFFFFF, (int)0xFFFFFFFF };
-			MATH_CONST VectorMask MaskOffX = { (int)0x00000000, (int)0xFFFFFFFF, (int)0xFFFFFFFF, (int)0xFFFFFFFF };
+			MATH_CONST VectorMask MaskOffW = 
+				{ (int)0xFFFFFFFF,(int)0xFFFFFFFF,(int)0xFFFFFFFF, (int)0x00000000 };
+			MATH_CONST VectorMask MaskOffZ = 
+				{ (int)0xFFFFFFFF, (int)0xFFFFFFFF, (int)0x00000000, (int)0xFFFFFFFF };
+			MATH_CONST VectorMask MaskOffY = 
+				{ (int)0xFFFFFFFF, (int)0x00000000, (int)0xFFFFFFFF, (int)0xFFFFFFFF };
+			MATH_CONST VectorMask MaskOffX = 
+				{ (int)0x00000000, (int)0xFFFFFFFF, (int)0xFFFFFFFF, (int)0xFFFFFFFF };
 
-			MATH_CONST VectorMask MaskKeepW = { (int)0x00000000, (int)0x00000000, (int)0x00000000, (int)0xFFFFFFFF };
-			MATH_CONST VectorMask MaskKeepZ = { (int)0x00000000, (int)0x00000000, (int)0xFFFFFFFF, (int)0x00000000 };
-			MATH_CONST VectorMask MaskKeepY = { (int)0x00000000, (int)0xFFFFFFFF, (int)0x00000000, (int)0x00000000 };
-			MATH_CONST VectorMask MaskKeepX = { (int)0xFFFFFFFF, (int)0x00000000, (int)0x00000000, (int)0x00000000 };
+			MATH_CONST VectorMask MaskKeepW = 
+				{ (int)0x00000000, (int)0x00000000, (int)0x00000000, (int)0xFFFFFFFF };
+			MATH_CONST VectorMask MaskKeepZ = 
+				{ (int)0x00000000, (int)0x00000000, (int)0xFFFFFFFF, (int)0x00000000 };
+			MATH_CONST VectorMask MaskKeepY = 
+				{ (int)0x00000000, (int)0xFFFFFFFF, (int)0x00000000, (int)0x00000000 };
+			MATH_CONST VectorMask MaskKeepX = 
+				{ (int)0xFFFFFFFF, (int)0x00000000, (int)0x00000000, (int)0x00000000 };
 
 			// Axes
 			MATH_CONST Vector XAxis = { (real)1.0, (real)0.0, (real)0.0, (real)0.0 };
@@ -261,7 +275,8 @@ namespace manta {
 		Matrix loadMatrix(const Vector &r1, const Vector &r2, const Vector &r3, const Vector &r4);
 		Matrix loadMatrix(const Quaternion &quat);
 		Matrix loadMatrix(const Quaternion &quat, const Vector &origin);
-		void loadMatrix(const Quaternion &quat, const Vector &origin, Matrix *full, Matrix *orientation);
+		void loadMatrix(const Quaternion &quat, const Vector &origin, Matrix *full, 
+			Matrix *orientation);
 
 		Matrix transpose(const Matrix &m);
 		Matrix orthogonalInverse(const Matrix &m);

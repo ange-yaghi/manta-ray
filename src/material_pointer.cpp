@@ -5,6 +5,7 @@ manta::MaterialPointer::MaterialPointer() {
 }
 
 manta::MaterialPointer::~MaterialPointer() {
+	/* void */
 }
 
 void manta::MaterialPointer::generateRays(RayContainer *rays, const LightRay &incidentRay, const IntersectionPoint &intersectionPoint, int degree, StackAllocator *stackAllocator) const {

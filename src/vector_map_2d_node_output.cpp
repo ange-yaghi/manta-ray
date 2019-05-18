@@ -9,8 +9,8 @@ void manta::VectorMap2DNodeOutput::sample(const IntersectionPoint *surfaceIntera
 	math::real v = 1 - math::getY(surfaceInteraction->m_textureCoodinates);
 
 	// Wrap coordinates
-	int i_u = u * m_map->getWidth();
-	int i_v = v * m_map->getHeight();
+	int i_u = (int)(u * m_map->getWidth());
+	int i_v = (int)(v * m_map->getHeight());
 
 	i_u %= m_map->getWidth();
 	i_v %= m_map->getHeight();

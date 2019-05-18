@@ -10,9 +10,11 @@ namespace manta {
 	class PerfectSpecularReflectionBSDF : public BSDF {
 	public:
 		PerfectSpecularReflectionBSDF();
-		~PerfectSpecularReflectionBSDF();
+		virtual ~PerfectSpecularReflectionBSDF();
 
-		virtual math::Vector sampleF(const IntersectionPoint *surfaceInteraction, const math::Vector &i, math::Vector *o, math::real *pdf, StackAllocator *stackAllocator) const;
+		virtual math::Vector sampleF(const IntersectionPoint *surfaceInteraction, 
+			const math::Vector &i, math::Vector *o, math::real *pdf, 
+			StackAllocator *stackAllocator) const;
 	};
 
 } /* namespace manta */

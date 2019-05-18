@@ -7,7 +7,7 @@ manta::MaterialManager::MaterialManager() {
 }
 
 manta::MaterialManager::~MaterialManager() {
-
+	/* void */
 }
 
 manta::Material *manta::MaterialManager::searchByName(const std::string &name) const {

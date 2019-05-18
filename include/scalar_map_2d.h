@@ -113,7 +113,8 @@ namespace manta {
 
 			for (int i = 0; i < m_width; i += 2) {
 				for (int j = 0; j < m_height; j += 2) {
-					math::real sum = get(i, j) + get(i + 1, j) + get(i, j + 1) + get(i + 1, j + 1);
+					math::real sum = 
+						get(i, j) + get(i + 1, j) + get(i, j + 1) + get(i + 1, j + 1);
 					sum /= 4;
 
 					target->set(sum, i / 2, j / 2);

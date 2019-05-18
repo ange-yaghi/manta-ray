@@ -12,7 +12,7 @@ namespace manta {
 	class RampNode : public Node {
 	public:
 		RampNode();
-		~RampNode();
+		virtual ~RampNode();
 
 		RampNodeOutput *getMainOutput() { return &m_output; }
 

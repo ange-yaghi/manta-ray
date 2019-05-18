@@ -5,11 +5,7 @@ manta::Lens::Lens() {
 }
 
 manta::Lens::~Lens() {
-
-}
-
-manta::math::Vector manta::Lens::getSensorUp() const {
-	return m_up;
+	/* void */
 }
 
 manta::math::Vector manta::Lens::getSensorRight() const {

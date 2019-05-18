@@ -3,13 +3,11 @@
 #include <light_ray.h>
 
 manta::BiconvexLens::BiconvexLens() {
-	m_depth = (math::real)0.0;
-	m_direction = math::constants::Zero;
-	m_position = math::constants::Zero;
+	/* void */
 }
 
 manta::BiconvexLens::~BiconvexLens() {
-
+	/* void */
 }
 
 void manta::BiconvexLens::setInputSurfaceRadius(math::real radius) {
@@ -21,14 +19,18 @@ void manta::BiconvexLens::setOutputSurfaceRadius(math::real radius) {
 }
 
 void manta::BiconvexLens::configure() {
-	math::Vector inputLensDisplacement = math::loadScalar(-m_depth / (math::real)2.0 + m_inputSurface.getSphere()->getRadius());
-	math::Vector outputLensDisplacement = math::loadScalar(m_depth / (math::real)2.0 - m_inputSurface.getSphere()->getRadius());
+	math::Vector inputLensDisplacement = 
+		math::loadScalar(-m_depth / (math::real)2.0 + m_inputSurface.getSphere()->getRadius());
+	math::Vector outputLensDisplacement = 
+		math::loadScalar(m_depth / (math::real)2.0 - m_inputSurface.getSphere()->getRadius());
 
-	m_inputSurface.getSphere()->setPosition(math::add(m_position, math::mul(inputLensDisplacement, m_direction)));
-	m_outputSurface.getSphere()->setPosition(math::add(m_position, math::mul(outputLensDisplacement, m_direction)));
+	m_inputSurface.getSphere()->setPosition(
+		math::add(m_position, math::mul(inputLensDisplacement, m_direction)));
+	m_outputSurface.getSphere()->setPosition(
+		math::add(m_position, math::mul(outputLensDisplacement, m_direction)));
 
-	m_inputSurface.setIOR(m_ior);
-	m_outputSurface.setIOR(m_ior);
+	m_inputSurface.setIor(m_ior);
+	m_outputSurface.setIor(m_ior);
 }
 
 bool manta::BiconvexLens::transformLightRay(const LightRay *ray, LightRay *transformed) const {
@@ -38,7 +40,7 @@ bool manta::BiconvexLens::transformLightRay(const LightRay *ray, LightRay *trans
 	math::real dist_s;
 
 	// Transform at the input surface
-	flag = m_inputSurface.transformLightRay(ray, &intermediate, true, true);
+	flag = m_inputSurface.transformLightRay(ray, true, true, &intermediate);
 
 	if (!flag) {
 		return false;
@@ -56,7 +58,7 @@ bool manta::BiconvexLens::transformLightRay(const LightRay *ray, LightRay *trans
 	}
 
 	// Transform at the output surface
-	flag = m_outputSurface.transformLightRay(&intermediate, transformed, false, false);
+	flag = m_outputSurface.transformLightRay(&intermediate, false, false, transformed);
 
 	if (!flag) {
 		return false;
@@ -83,7 +85,7 @@ bool manta::BiconvexLens::transformLightRayReverse(const LightRay *ray, LightRay
 	math::real dist_s;
 
 	// Transform at the input surface
-	flag = m_outputSurface.transformLightRay(ray, &intermediate, true, true);
+	flag = m_outputSurface.transformLightRay(ray, true, true, &intermediate);
 
 	if (!flag) {
 		return false;
@@ -101,7 +103,7 @@ bool manta::BiconvexLens::transformLightRayReverse(const LightRay *ray, LightRay
 	}
 
 	// Transform at the output surface
-	flag = m_inputSurface.transformLightRay(&intermediate, transformed, false, false);
+	flag = m_inputSurface.transformLightRay(&intermediate, false, false, transformed);
 
 	if (!flag) {
 		return false;
@@ -126,7 +128,8 @@ manta::math::real manta::BiconvexLens::calculateFocalLength() const {
 	math::real R2 = -m_outputSurface.getRadius();
 	math::real d = m_depth;
 
-	math::real inv_f = (m_ior - (math::real)1.0) * ((math::real)1.0 / R1 - (math::real)1.0 / R2 + (m_ior - (math::real)1.0) / (m_ior * R1 * R2));
+	math::real inv_f = (m_ior - (math::real)1.0) * 
+		((math::real)1.0 / R1 - (math::real)1.0 / R2 + (m_ior - (math::real)1.0) / (m_ior * R1 * R2));
 
 	return (math::real)1.0 / inv_f;
 }

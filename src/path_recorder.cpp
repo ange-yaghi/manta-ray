@@ -76,7 +76,8 @@ bool manta::PathRecorder::writeObjFile(const std::string &fname) {
 	return true;
 }
 
-int manta::PathRecorder::writePathSegmentVertices(std::ofstream &f, PathSegment *segment, int currentVertexOffset) {
+int manta::PathRecorder::writePathSegmentVertices(std::ofstream &f, PathSegment *segment, 
+		int currentVertexOffset) {
 	int newVertexOffset = currentVertexOffset + 1;
 	segment->vertexIndex = currentVertexOffset;
 
@@ -96,7 +97,8 @@ int manta::PathRecorder::writePathSegmentVertices(std::ofstream &f, PathSegment 
 
 void manta::PathRecorder::writePathSegmentLines(std::ofstream &f, PathSegment *segment) {
 	if (segment->parent != nullptr) {
-		f << "l " << segment->vertexIndex + 1 << " " << segment->parent->vertexIndex + 1 << std::endl;
+		f << "l " << segment->vertexIndex + 1 << " " << 
+			segment->parent->vertexIndex + 1 << std::endl;
 	}
 	
 	int childCount = (int)segment->children.size();

@@ -16,7 +16,8 @@ namespace manta {
 		VectorMap2D();
 		~VectorMap2D();
 
-		void initialize(int width, int height, const math::Vector &value = math::constants::Zero);
+		void initialize(int width, int height, 
+			const math::Vector &value = math::constants::Zero);
 		void destroy();
 
 		math::Vector sample(math::real u, math::real v) const;

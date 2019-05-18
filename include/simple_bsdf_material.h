@@ -5,6 +5,7 @@
 
 namespace manta {
 
+	// Forward declarations
 	class VectorNodeOutput;
 	class BSDF;
 
@@ -16,8 +17,11 @@ namespace manta {
 		void setMaxDegree(int degree) { m_maxDegree = degree; }
 		int getMaxDegree() const { return m_maxDegree; }
 
-		void generateRays(RayContainer *rays, const LightRay &incidentRay, const IntersectionPoint &intersectionPoint, int degree, StackAllocator *stackAllocator = nullptr) const;
-		virtual void integrateRay(LightRay *ray, const RayContainer &rays, const IntersectionPoint &intersectionPoint) const;
+		void generateRays(RayContainer *rays, const LightRay &incidentRay, 
+			const IntersectionPoint &intersectionPoint, int degree, 
+			StackAllocator *stackAllocator = nullptr) const;
+		virtual void integrateRay(LightRay *ray, const RayContainer &rays, 
+			const IntersectionPoint &intersectionPoint) const;
 
 		void setReflectanceNode(const VectorNodeOutput *node) { m_reflectanceNode = node; }
 		const VectorNodeOutput *getReflectanceNode() const { return m_reflectanceNode; }
@@ -31,8 +35,8 @@ namespace manta {
 		void setReflectance(const math::Vector &reflectance) { m_reflectance = reflectance; }
 		math::Vector getReflectance() { return m_reflectance; }
 
-		void setBSDF(BSDF *bsdf) { m_bsdf = bsdf; }
-		BSDF *getBSDF() const { return m_bsdf; }
+		void setBSDF(const BSDF *bsdf) { m_bsdf = bsdf; }
+		const BSDF *getBSDF() const { return m_bsdf; }
 
 	protected:
 		int m_maxDegree;
@@ -45,7 +49,7 @@ namespace manta {
 		math::Vector m_reflectance;
 
 		// Single BSDF
-		BSDF *m_bsdf;
+		const BSDF *m_bsdf;
 	};
 
 } /* namespace manta */

@@ -9,14 +9,16 @@ manta::SpherePrimitive::SpherePrimitive() {
 }
 
 manta::SpherePrimitive::~SpherePrimitive() {
-
+	/* void */
 }
 
 bool manta::SpherePrimitive::fastIntersection(const LightRay *ray) const {
 	return true;
 }
 
-bool manta::SpherePrimitive::findClosestIntersection(const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const {	
+bool manta::SpherePrimitive::findClosestIntersection(const LightRay *ray, 
+		CoarseIntersection *intersection, math::real minDepth, 
+		math::real maxDepth, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const {	
 	math::Vector d_pos = math::sub(ray->getSource(), m_position);
 	math::Vector d_dot_dir = math::dot(d_pos, ray->getDirection());
 	math::Vector mag2 = math::magnitudeSquared3(d_pos);
@@ -65,11 +67,13 @@ bool manta::SpherePrimitive::findClosestIntersection(const LightRay *ray, Coarse
 
 manta::math::Vector manta::SpherePrimitive::getClosestPoint(const CoarseIntersection *hint, const math::Vector &p) const {
 	math::Vector p_p0 = math::sub(p, m_position);
-	math::Vector closestPoint = math::add(math::mul(math::normalize(p_p0), math::loadScalar(m_radius)), m_position);
+	math::Vector closestPoint = 
+		math::add(math::mul(math::normalize(p_p0), math::loadScalar(m_radius)), m_position);
 	return closestPoint;
 }
 
-void manta::SpherePrimitive::getVicinity(const math::Vector &p, math::real radius, IntersectionList *list, SceneObject *object) const {
+void manta::SpherePrimitive::getVicinity(const math::Vector &p, math::real radius, 
+	IntersectionList *list, SceneObject *object) const {
 	/* Deprecated */
 }
 
@@ -91,7 +95,8 @@ void manta::SpherePrimitive::fineIntersection(const math::Vector &r, Intersectio
 	p->m_intersection = true;
 }
 
-void manta::SpherePrimitive::detectIntersection(const LightRay *ray, IntersectionPoint *convex, IntersectionPoint *concave) const {
+void manta::SpherePrimitive::detectIntersection(const LightRay *ray, IntersectionPoint *convex, 
+		IntersectionPoint *concave) const {
 	math::Vector d_pos = math::sub(ray->getSource(), m_position);
 	math::Vector d_dot_dir = math::dot(d_pos, ray->getDirection());
 	math::Vector mag2 = math::magnitudeSquared3(d_pos);

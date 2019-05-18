@@ -1,9 +1,11 @@
 #include <random_sampler.h>
 
 manta::RandomSampler::RandomSampler() {
+	/* void */
 }
 
 manta::RandomSampler::~RandomSampler() {
+	/* void */
 }
 
 void manta::RandomSampler::generateSamples(int sampleCount, math::Vector *target) const {
