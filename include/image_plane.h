@@ -13,7 +13,8 @@ namespace manta {
 		ImagePlane();
 		~ImagePlane();
 
-		void initialize(int width, int height, math::real physicalWidth, math::real physicalHeight);
+		void initialize(int width, int height, math::real physicalWidth, 
+			math::real physicalHeight);
 		void destroy();
 
 		bool checkPixel(int x, int y) const;

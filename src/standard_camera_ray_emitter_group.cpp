@@ -4,11 +4,11 @@
 #include <sampler_2d.h>
 
 manta::StandardCameraRayEmitterGroup::StandardCameraRayEmitterGroup() {
-
+	/* void */
 }
 
 manta::StandardCameraRayEmitterGroup::~StandardCameraRayEmitterGroup() {
-
+	/* void */
 }
 
 void manta::StandardCameraRayEmitterGroup::initialize() {
@@ -26,7 +26,8 @@ void manta::StandardCameraRayEmitterGroup::initialize() {
 	m_sampler->setBoundaryWidth(m_xIncrement);
 }
 
-manta::CameraRayEmitter *manta::StandardCameraRayEmitterGroup::createEmitter(int ix, int iy, StackAllocator *stackAllocator) const {
+manta::CameraRayEmitter *manta::StandardCameraRayEmitterGroup::createEmitter(int ix, int iy, 
+		StackAllocator *stackAllocator) const {
 	StandardCameraRayEmitter *newEmitter = allocateEmitter<StandardCameraRayEmitter>(stackAllocator);
 
 	math::real x = ix * m_xIncrement;

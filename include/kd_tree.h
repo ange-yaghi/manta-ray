@@ -131,9 +131,13 @@ namespace manta {
 		void initialize(math::real width, const math::Vector &position);
 		void destroy();
 
-		virtual bool findClosestIntersection(const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const;
-		virtual math::Vector getClosestPoint(const CoarseIntersection *hint, const math::Vector &p) const;
-		virtual void fineIntersection(const math::Vector &r, IntersectionPoint *p, const CoarseIntersection *hint) const;
+		virtual bool findClosestIntersection(const LightRay *ray, 
+			CoarseIntersection *intersection, math::real minDepth, 
+			math::real maxDepth, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const;
+		virtual math::Vector getClosestPoint(const CoarseIntersection *hint, 
+			const math::Vector &p) const;
+		virtual void fineIntersection(const math::Vector &r, IntersectionPoint *p, 
+			const CoarseIntersection *hint) const;
 		virtual bool fastIntersection(const LightRay *ray) const;
 
 		void analyze(Mesh *mesh, int maxSize);
@@ -142,12 +146,14 @@ namespace manta {
 		int createNodeVolume();
 		KDTreeNode *getNode(int index) { return &m_nodes[index]; }
 
-		void initLeaf(int node, const std::vector<int> &faces, const AABB &bounds, KDTreeWorkspace *workspace);
+		void initLeaf(int node, const std::vector<int> &faces, const AABB &bounds, 
+			KDTreeWorkspace *workspace);
 
 		void writeToObjFile(const char *fname) const;
 
 	protected:
-		void analyze(int currentNode, AABB *nodeBounds, const std::vector<int> &faces, int badRefines, int depth, KDTreeWorkspace *workspace);
+		void analyze(int currentNode, AABB *nodeBounds, const std::vector<int> &faces, 
+			int badRefines, int depth, KDTreeWorkspace *workspace);
 
 		Mesh *m_mesh;
 

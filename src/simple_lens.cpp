@@ -214,7 +214,8 @@ void manta::SimpleLens::lensScan(const math::Vector &sensorElement,
 	}
 }
 
-bool manta::SimpleLens::generateOutgoingRay(const math::Vector &sensorElement, const LensScanHint *hint, LightRay *targetRay) const {
+bool manta::SimpleLens::generateOutgoingRay(const math::Vector &sensorElement, 
+		const LensScanHint *hint, LightRay *targetRay) const {
 	constexpr int MAX_ATTEMPTS = 100000;
 	
 	math::real maxR = hint->radius;

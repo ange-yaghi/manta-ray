@@ -32,22 +32,27 @@ namespace manta {
 		// require interpolation
 		math::Complex sampleDiscrete(math::real_d ku, math::real_d kv) const;
 
-		void fillByteBuffer(ImageByteBuffer *target, Margins *margins = nullptr) const;
+		void fillByteBuffer(ImageByteBuffer *target, bool realOnly = true, const Margins *margins = nullptr) const;
 
 		void roll(ComplexMap2D *target) const;
 
 		void fft(ComplexMap2D *target) const;
-		void fft_multithreaded(ComplexMap2D *target, int threadCount, bool inverse = false) const;
+		void fft_multithreaded(ComplexMap2D *target, int threadCount, 
+			bool inverse = false) const;
 		void fftHorizontal(ComplexMap2D *target, bool inverse, int startRow, int endRow) const;
-		void fftVertical(ComplexMap2D *target, bool inverse, int startColumn, int endColumn) const;
+		void fftVertical(ComplexMap2D *target, bool inverse, int startColumn, 
+			int endColumn) const;
 		void inverseFft(ComplexMap2D *target) const;
 
-		void cft(ComplexMap2D *target, math::real_d physicalWidth, math::real_d physicalHeight) const;
-		void inverseCft(ComplexMap2D *target, math::real_d physicalWidth, math::real_d physicalHeight) const;
+		void cft(ComplexMap2D *target, math::real_d physicalWidth, 
+			math::real_d physicalHeight) const;
+		void inverseCft(ComplexMap2D *target, math::real_d physicalWidth, 
+			math::real_d physicalHeight) const;
 
 		// Performs the following function:
 		// inverseCft(cft(this) * cft(gDft))
-		void cftConvolve(ComplexMap2D *gDft, math::real_d physicalWidth, math::real_d physicalHeight);
+		void cftConvolve(ComplexMap2D *gDft, math::real_d physicalWidth, 
+			math::real_d physicalHeight);
 
 		void magnitude();
 		void multiply(const math::Complex &s);
@@ -56,7 +61,8 @@ namespace manta {
 		int getHeight() const { return m_height; }
 
 		void resizeSafe(ComplexMap2D *target, Margins *margins) const;
-		void resize(int width, int height, ComplexMap2D *target, Margins *margins = nullptr) const;
+		void resize(int width, int height, ComplexMap2D *target, 
+			Margins *margins = nullptr) const;
 
 		// Binary operations
 		void multiply(const ComplexMap2D *b);
@@ -71,7 +77,8 @@ namespace manta {
 
 			for (int i = 0; i < m_width; i += 2) {
 				for (int j = 0; j < m_height; j += 2) {
-					math::Complex sum = get(i, j) + get(i + 1, j) + get(i, j + 1) + get(i + 1, j + 1);
+					math::Complex sum = 
+						get(i, j) + get(i + 1, j) + get(i, j + 1) + get(i + 1, j + 1);
 					sum = sum * ((math::real)1.0 / 4);
 
 					target->set(sum, i / 2, j / 2);

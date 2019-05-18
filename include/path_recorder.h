@@ -43,7 +43,8 @@ namespace manta {
 		PathSegment *m_currentPath;
 
 	protected:
-		int writePathSegmentVertices(std::ofstream &f, PathSegment *segment, int currentVertexOffset);
+		int writePathSegmentVertices(std::ofstream &f, PathSegment *segment, 
+			int currentVertexOffset);
 		void writePathSegmentLines(std::ofstream &f, PathSegment *segment);
 
 		void destroyTree(Tree *tree);

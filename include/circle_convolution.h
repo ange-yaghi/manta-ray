@@ -10,7 +10,7 @@ namespace manta {
 	class CircleConvolution : public Convolution {
 	public:
 		CircleConvolution();
-		~CircleConvolution();
+		virtual ~CircleConvolution();
 
 		virtual math::real getExtents(const math::Vector &reference) const;
 		virtual math::Vector sample(math::real x, math::real y) const;

@@ -6,7 +6,7 @@
 namespace manta {
 
 	class PolygonalAperture : public Aperture {
-	public:
+	protected:
 		struct Edge {
 			math::Vector2 reference;
 			math::Vector2 direction;

@@ -56,7 +56,8 @@ namespace manta {
 
 		// Main Interface
 	public:
-		virtual void initializeSessionMemory(const IntersectionPoint *surfaceInteraction, NodeSessionMemory *memory, StackAllocator *stackAllocator) const;
+		virtual void initializeSessionMemory(const IntersectionPoint *surfaceInteraction, 
+			NodeSessionMemory *memory, StackAllocator *stackAllocator) const;
 
 	protected:
 		virtual void _initialize();
@@ -72,7 +73,6 @@ namespace manta {
 
 	protected:
 		std::vector<NodeInputPort> m_inputs;
-
 		void registerInput(pNodeInput *node, const char *name) { m_inputs.push_back({node, name}); }
 
 		std::vector<NodeOutputPort> m_outputs;

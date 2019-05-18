@@ -35,7 +35,9 @@ namespace manta {
 			void *newObject = basePointer;
 
 #if ENABLE_BOUNDS_CHECKING
-			assert(((mem_size)((char *)newObject) - ((mem_size)(char *)m_buffer) + size) <= m_size);
+			bool outOfMemory =
+				((mem_size)((char *)newObject) - ((mem_size)(char *)m_buffer) + size) <= m_size;
+			assert(outOfMemory == false);
 
 			if (((mem_size)((char *)newObject) - ((mem_size)(char *)m_buffer) + size) > m_size) {
 				std::cout << "Out of memory! " << m_allocationLedger << std::endl;
@@ -45,7 +47,8 @@ namespace manta {
 			// Update previous block pointers
 			m_stackPointer = (void *)((char *)basePointer + size);
 
-			if ((mem_size)m_stackPointer > (mem_size)m_maxStackPointer) m_maxStackPointer = m_stackPointer;
+			if ((mem_size)m_stackPointer > (mem_size)m_maxStackPointer) 
+				m_maxStackPointer = m_stackPointer;
 
 			return newObject;
 		}

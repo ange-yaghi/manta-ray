@@ -9,11 +9,15 @@ manta::MicrofacetTransmissionBSDF::MicrofacetTransmissionBSDF() {
 manta::MicrofacetTransmissionBSDF::~MicrofacetTransmissionBSDF() {
 }
 
-void manta::MicrofacetTransmissionBSDF::initializeSessionMemory(const IntersectionPoint *surfaceInteraction, NodeSessionMemory *memory, StackAllocator *stackAllocator) const {
+void manta::MicrofacetTransmissionBSDF::initializeSessionMemory(
+		const IntersectionPoint *surfaceInteraction, 
+		NodeSessionMemory *memory, StackAllocator *stackAllocator) const {
 	BSDF::initializeSessionMemory(surfaceInteraction, memory, stackAllocator);
 }
 
-manta::math::Vector manta::MicrofacetTransmissionBSDF::sampleF(const IntersectionPoint *surfaceInteraction, const math::Vector &i, math::Vector *o, math::real *pdf, StackAllocator *stackAllocator) const {
+manta::math::Vector manta::MicrofacetTransmissionBSDF::sampleF(
+		const IntersectionPoint *surfaceInteraction, const math::Vector &i, math::Vector *o, 
+		math::real *pdf, StackAllocator *stackAllocator) const {
 	constexpr math::Vector reflect = { (math::real)-1.0, (math::real)-1.0, (math::real)1.0, (math::real)1.0 };
 
 	// Allocate required memory
@@ -82,6 +86,8 @@ manta::math::Vector manta::MicrofacetTransmissionBSDF::sampleF(const Intersectio
 	return transmitance;
 }
 
-manta::math::real manta::MicrofacetTransmissionBSDF::calculatePDF(const IntersectionPoint *surfaceInteraction, const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) const {
+manta::math::real manta::MicrofacetTransmissionBSDF::calculatePDF(
+		const IntersectionPoint *surfaceInteraction, 
+		const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) const {
 	return math::real();
 }

@@ -12,7 +12,7 @@ namespace manta {
 	class MultiplyNode : public Node {
 	public:
 		MultiplyNode();
-		~MultiplyNode();
+		virtual ~MultiplyNode();
 
 		MultiplyNodeOutput *getMainOutput() { return &m_output; }
 

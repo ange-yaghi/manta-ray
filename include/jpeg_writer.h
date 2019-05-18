@@ -11,6 +11,7 @@ namespace manta {
 	class JpegWriter {
 	public:
 		static const int DEFAULT_QUALITY = 95;
+
 	public:
 		JpegWriter();
 		~JpegWriter();

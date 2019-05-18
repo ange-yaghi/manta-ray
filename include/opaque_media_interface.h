@@ -7,10 +7,11 @@ namespace manta {
 
 	class OpaqueMediaInterface {
 	public:
-		OpaqueMediaInterface() {}
-		~OpaqueMediaInterface() {}
+		OpaqueMediaInterface();
+		virtual ~OpaqueMediaInterface();
 
-		virtual math::real fresnelTerm(const math::Vector &i, const math::Vector &m) const { return (math::real)1.0; /* Perfect reflection */ }
+		virtual math::real fresnelTerm(const math::Vector &i, const math::Vector &m) const 
+			{ return (math::real)1.0; /* Perfect reflection */ }
 	};
 
 } /* namespace manta */

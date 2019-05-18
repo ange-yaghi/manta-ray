@@ -9,14 +9,14 @@ namespace manta {
 	class Aperture;
 	class LightRay;
 
-	struct LensScanHint {
-		math::real centerX;
-		math::real centerY;
-		math::real radius;
-		bool failed;
-	};
-
 	class Lens {
+	public:
+		struct LensScanHint {
+			math::real centerX;
+			math::real centerY;
+			math::real radius;
+			bool failed;
+		};
 	public:
 		Lens();
 		virtual ~Lens();

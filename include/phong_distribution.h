@@ -16,13 +16,14 @@ namespace manta {
 
 	public:
 		PhongDistribution();
-		~PhongDistribution();
+		virtual ~PhongDistribution();
 
 		virtual void initializeSessionMemory(const IntersectionPoint *surfaceInteraction, 
 			NodeSessionMemory *memory, StackAllocator *stackAllocator) const;
 
 		virtual math::Vector generateMicrosurfaceNormal(NodeSessionMemory *mem) const;
-		virtual math::real calculateDistribution(const math::Vector &m, NodeSessionMemory *mem) const;
+		virtual math::real calculateDistribution(const math::Vector &m, 
+			NodeSessionMemory *mem) const;
 		virtual math::real calculateG1(const math::Vector &v, const math::Vector &m, 
 			NodeSessionMemory *mem) const;
 

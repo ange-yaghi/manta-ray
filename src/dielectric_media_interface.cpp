@@ -11,7 +11,8 @@ manta::DielectricMediaInterface::~DielectricMediaInterface() {
 	/* void */
 }
 
-manta::math::real manta::DielectricMediaInterface::fresnelTerm(const math::Vector &i, const math::Vector &m, DIRECTION d) const {
+manta::math::real manta::DielectricMediaInterface::fresnelTerm(const math::Vector &i, 
+		const math::Vector &m, DIRECTION d) const {
 	math::real ni, no;
 
 	if (d == DIRECTION_IN) {
@@ -43,7 +44,8 @@ manta::math::real manta::DielectricMediaInterface::fresnelTerm(const math::Vecto
 	return t1 * t2;
 }
 
-manta::math::real manta::DielectricMediaInterface::fresnelTerm(math::real cosThetaI, math::real *pdf, DIRECTION d) const {
+manta::math::real manta::DielectricMediaInterface::fresnelTerm(math::real cosThetaI, 
+		math::real *pdf, DIRECTION d) const {
 	math::real ni, no;
 
 	if (d == DIRECTION_IN) {

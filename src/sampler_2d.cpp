@@ -9,4 +9,5 @@ manta::Sampler2D::Sampler2D() {
 }
 
 manta::Sampler2D::~Sampler2D() {
+	/* void */
 }

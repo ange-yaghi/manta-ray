@@ -9,7 +9,7 @@ manta::LensCameraRayEmitterGroup::LensCameraRayEmitterGroup() {
 }
 
 manta::LensCameraRayEmitterGroup::~LensCameraRayEmitterGroup() {
-
+	/* void */
 }
 
 void manta::LensCameraRayEmitterGroup::initialize() {
@@ -27,7 +27,8 @@ void manta::LensCameraRayEmitterGroup::initialize() {
 	m_sampler->setAxis2(m_lens->getSensorUp());
 }
 
-manta::CameraRayEmitter *manta::LensCameraRayEmitterGroup::createEmitter(int ix, int iy, StackAllocator *stackAllocator) const {
+manta::CameraRayEmitter *manta::LensCameraRayEmitterGroup::createEmitter(int ix, int iy, 
+	StackAllocator *stackAllocator) const {
 	LensCameraRayEmitter *newEmitter = allocateEmitter<LensCameraRayEmitter>(stackAllocator);
 
 	math::Vector sensorElement = m_lens->getSensorElement(ix, iy);

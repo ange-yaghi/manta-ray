@@ -12,7 +12,7 @@ namespace manta {
 	public:
 		SingleColorNode();
 		SingleColorNode(const math::Vector &color);
-		~SingleColorNode();
+		virtual ~SingleColorNode();
 
 		void setColor(const math::Vector &color) { m_output.setValue(color); }
 		math::Vector getColor() const { return m_output.getValue(); }

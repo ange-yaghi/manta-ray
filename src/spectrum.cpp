@@ -21,7 +21,8 @@ manta::Spectrum::~Spectrum() {
 	assert(m_values == nullptr);
 }
 
-void manta::Spectrum::initialize(int dataPoints, math::real startWavelength, math::real endWaveLength, math::real *buffer) {
+void manta::Spectrum::initialize(int dataPoints, math::real startWavelength, 
+		math::real endWaveLength, math::real *buffer) {
 	if (buffer != nullptr) {
 		m_values = buffer;
 		m_externalMemoryAllocation = true;
@@ -142,6 +143,10 @@ void manta::Spectrum::add(const Spectrum &b) {
 	for (int i = 0; i < m_pointCount; i++) {
 		m_values[i] += b.m_values[i];
 	}
+}
+
+manta::math::real manta::Spectrum::getStep() const {
+	return (m_endWaveLength - m_startWavelength) / (m_pointCount - 1);
 }
 
 manta::math::real manta::Spectrum::getValueContinuous(math::real wavelength) const {

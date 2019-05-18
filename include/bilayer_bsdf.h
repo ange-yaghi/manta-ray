@@ -14,14 +14,19 @@ namespace manta {
 	class BilayerBSDF : public BSDF {
 	public:
 		BilayerBSDF();
-		~BilayerBSDF();
+		virtual ~BilayerBSDF();
 
-		virtual math::Vector sampleF(const IntersectionPoint *surfaceInteraction, const math::Vector &i, math::Vector *o, math::real *pdf, StackAllocator *stackAllocator) const;
+		virtual math::Vector sampleF(const IntersectionPoint *surfaceInteraction, 
+			const math::Vector &i, math::Vector *o, math::real *pdf, 
+			StackAllocator *stackAllocator) const;
 
-		void setCoatingDistribution(const MicrofacetDistributionNodeOutput *coatingMaterial) { m_coatingDistribution = coatingMaterial; }
-		const MicrofacetDistributionNodeOutput *getCoatingDistribution() { return m_coatingDistribution; }
+		void setCoatingDistribution(const MicrofacetDistributionNodeOutput *coatingMaterial) 
+			{ m_coatingDistribution = coatingMaterial; }
+		const MicrofacetDistributionNodeOutput *getCoatingDistribution() 
+			{ return m_coatingDistribution; }
 
-		void setDiffuseMaterial(LambertianBSDF *diffuseMaterial) { m_diffuseMaterial = diffuseMaterial; }
+		void setDiffuseMaterial(LambertianBSDF *diffuseMaterial) 
+			{ m_diffuseMaterial = diffuseMaterial; }
 		LambertianBSDF *getDiffuseMaterial() { return m_diffuseMaterial; }
 
 		void setSpecularAtNormal(const math::Vector &specular) { m_specular = specular; }
