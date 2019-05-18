@@ -16,7 +16,8 @@ namespace manta {
 		CftEstimator2D();
 		~CftEstimator2D();
 
-		void initialize(const ComplexMap2D *spatialFunction, math::real_d phyiscalWidth, math::real_d physicalHeight);
+		void initialize(const ComplexMap2D *spatialFunction, math::real_d phyiscalWidth, 
+			math::real_d physicalHeight);
 		void destroy();
 
 		math::Complex sample(math::real_d freq_x, math::real_d freq_y, math::real_d w) const;
@@ -36,7 +37,8 @@ namespace manta {
 		static math::real_d getFreqStep(math::real_d physicalDim);
 
 		static math::real_d getMinPhysicalDim(math::real_d freqStep, math::real_d minDim);
-		static int getMinSamples(math::real_d maxFreq, math::real_d physicalDim, int maxSamples = -1);
+		static int getMinSamples(math::real_d maxFreq, math::real_d physicalDim, 
+			int maxSamples = -1);
 
 	protected:
 		ComplexMap2D m_discreteApproximation;

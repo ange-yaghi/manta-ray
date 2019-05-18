@@ -10,7 +10,8 @@ namespace manta {
 		Spectrum();
 		~Spectrum();
 
-		void initialize(int dataPoints, math::real startWavelength, math::real endWaveLength, math::real *buffer);
+		void initialize(int dataPoints, math::real startWavelength, math::real endWaveLength, 
+			math::real *buffer);
 		void destroy();
 
 		bool loadCsv(const char *fname);
@@ -22,7 +23,7 @@ namespace manta {
 		void set(int index, math::real value) { m_values[index] = value; }
 
 		int getPointCount() const { return m_pointCount; }
-		math::real getStep() const { return (m_endWaveLength - m_startWavelength) / (m_pointCount - 1); }
+		math::real getStep() const;
 
 		math::real getValueDiscrete(int index) const { return m_values[index]; }
 		math::real getValueContinuous(math::real wavelength) const;

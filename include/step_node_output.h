@@ -50,7 +50,8 @@ namespace manta {
 		void setDefaultDc(const math::Vector &v) { m_defaultDc = v; }
 		math::Vector getDefaultDc() const { return m_defaultDc; }
 
-		static math::Vector stepFunction(const math::Vector &input, const math::Vector &dc, const math::Vector &foot, const math::Vector &step);
+		static math::Vector stepFunction(const math::Vector &input, const math::Vector &dc, 
+			const math::Vector &foot, const math::Vector &step);
 
 		pNodeInput *getInputConnection() { return &m_input; }
 		pNodeInput *getFootConnection() { return &m_foot; }

@@ -15,7 +15,8 @@ namespace manta {
 
 		math::real surfaceArea();
 		void merge(const AABB &b);
-		inline bool rayIntersect(const LightRay &ray, math::real *tmin_out, math::real *tmax_out) const {
+		inline bool rayIntersect(const LightRay &ray, 
+				math::real *tmin_out, math::real *tmax_out) const {
 			math::real tmin = (math::real)0.0;
 			math::real tmax = math::constants::REAL_MAX;
 

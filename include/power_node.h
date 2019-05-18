@@ -13,7 +13,7 @@ namespace manta {
 	public:
 		PowerNode();
 		PowerNode(math::real power, const VectorNodeOutput *input);
-		~PowerNode();
+		virtual ~PowerNode();
 
 		void setPower(math::real power) { m_power = power; }
 		math::real getPower() const { return m_power; }

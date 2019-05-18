@@ -32,8 +32,11 @@ namespace manta {
 		void findQuads();
 		void computeBounds();
 
-		virtual bool findClosestIntersection(const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const;
-		virtual void fineIntersection(const math::Vector &r, IntersectionPoint *p, const CoarseIntersection *hint) const;
+		virtual bool findClosestIntersection(const LightRay *ray, 
+			CoarseIntersection *intersection, math::real minDepth, 
+			math::real maxDepth, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const;
+		virtual void fineIntersection(const math::Vector &r, IntersectionPoint *p, 
+			const CoarseIntersection *hint) const;
 		virtual bool fastIntersection(const LightRay *ray) const;
 
 		int getFaceCount() const { return m_triangleFaceCount + m_quadFaceCount; }
@@ -66,20 +69,26 @@ namespace manta {
 		void setFastIntersectRadius(math::real radius) { m_fastIntersectRadius = radius; }
 		void setFastIntersectPosition(math::Vector pos) { m_fastIntersectPosition = pos; }
 
-		void loadObjFileData(ObjFileLoader *data, MaterialManager *materialLibrary = nullptr, int defaultMaterialIndex = -1, unsigned int globalId = 0);
+		void loadObjFileData(ObjFileLoader *data, MaterialManager *materialLibrary = nullptr, 
+			int defaultMaterialIndex = -1, unsigned int globalId = 0);
 
 		void merge(const Mesh *mesh);
 
-		bool detectTriangleIntersection(int faceIndex, math::real minDepth, math::real maxDepth, const LightRay *ray, CoarseCollisionOutput *output) const;
-		bool detectQuadIntersection(int faceIndex, math::real minDepth, math::real maxDepth, const LightRay *ray, CoarseCollisionOutput *output) const;
+		bool detectTriangleIntersection(int faceIndex, math::real minDepth, 
+			math::real maxDepth, const LightRay *ray, CoarseCollisionOutput *output) const;
+		bool detectQuadIntersection(int faceIndex, math::real minDepth, 
+			math::real maxDepth, const LightRay *ray, CoarseCollisionOutput *output) const;
 
-		bool findClosestIntersection(int *faceList, int faceCount, const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const;
+		bool findClosestIntersection(int *faceList, int faceCount, const LightRay *ray, 
+			CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, 
+			StackAllocator *s /**/ STATISTICS_PROTOTYPE) const;
 
 		bool checkFaceAABB(int faceIndex, const AABB &bounds) const;
 		void calculateFaceAABB(int faceIndex, AABB *target) const;
 
 	protected:
-		bool checkFaceAABB(const math::Vector &v0, const math::Vector &v1, const math::Vector &v2, const AABB &bounds) const;
+		bool checkFaceAABB(const math::Vector &v0, const math::Vector &v1, 
+			const math::Vector &v2, const AABB &bounds) const;
 
 		Face *m_faces;
 		AuxFaceData *m_auxFaceData;

@@ -132,9 +132,12 @@ manta::ColorXyz manta::CmfTable::spectralToXyz(const Spectrum *spectrum) const {
 		ColorXyz response0 = sampleXyz(wavelength).colorXyz;
 		ColorXyz response1 = sampleXyz(wavelength + step).colorXyz;
 
-		reimannSumX += (spectrum->getValueDiscrete(i) * response0.x + spectrum->getValueDiscrete(i + 1) * response1.x);
-		reimannSumY += (spectrum->getValueDiscrete(i) * response0.y + spectrum->getValueDiscrete(i + 1) * response1.y);
-		reimannSumZ += (spectrum->getValueDiscrete(i) * response0.z + spectrum->getValueDiscrete(i + 1) * response1.z);
+		reimannSumX += (spectrum->getValueDiscrete(i) * response0.x + 
+			spectrum->getValueDiscrete(i + 1) * response1.x);
+		reimannSumY += (spectrum->getValueDiscrete(i) * response0.y + 
+			spectrum->getValueDiscrete(i + 1) * response1.y);
+		reimannSumZ += (spectrum->getValueDiscrete(i) * response0.z + 
+			spectrum->getValueDiscrete(i + 1) * response1.z);
 	}
 
 	reimannSumX *= (step / 2);

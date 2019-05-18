@@ -585,6 +585,9 @@
     <ClCompile Include="..\..\src\aperture.cpp">
       <Filter>Source Files\camera-emulation</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\opaque_media_interface.cpp">
+      <Filter>Source Files\material\surface-modeling\media-interface</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\sphere_primitive.h">

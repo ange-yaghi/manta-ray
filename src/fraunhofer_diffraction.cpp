@@ -229,7 +229,8 @@ void manta::FraunhoferDiffraction::generateMap(const CftEstimator2D *estimator, 
 	StandardAllocator::Global()->free(threads, threadCount);
 }
 
-void manta::FraunhoferDiffraction::_generateMap(const CftEstimator2D *estimator, const Settings *settings, int startRow, int endRow, VectorMap2D *target) const {
+void manta::FraunhoferDiffraction::_generateMap(const CftEstimator2D *estimator, 
+		const Settings *settings, int startRow, int endRow, VectorMap2D *target) const {
 	int res = target->getWidth();
 
 	math::real_d sdx = m_sensorElementWidth;
@@ -255,7 +256,8 @@ void manta::FraunhoferDiffraction::_generateMap(const CftEstimator2D *estimator,
 			math::real_d y = j * sdy - scy;
 			spectrum.clear();
 
-			for (int wavelength = startWavelength; wavelength <= endWavelength; wavelength += wavelengthStep) {
+			for (int wavelength = startWavelength; 
+					wavelength <= endWavelength; wavelength += wavelengthStep) {
 				math::real_d freqSpace = (sdx * 1E6 / wavelength) * 1.0;
 
 				for (int s = 0; s < textureSamples; s++) {

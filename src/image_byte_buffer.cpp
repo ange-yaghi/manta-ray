@@ -23,7 +23,8 @@ void manta::ImageByteBuffer::initialize(const ImagePlane *sceneBuffer, bool corr
 	initialize(raw, sceneBuffer->getWidth(), sceneBuffer->getHeight(), correctGamma);
 }
 
-void manta::ImageByteBuffer::initialize(const unsigned char *buffer, int width, int height, int pitch) {
+void manta::ImageByteBuffer::initialize(const unsigned char *buffer, 
+		int width, int height, int pitch) {
 	m_width = width;
 	m_height = height;
 	m_pitch = pitch;
@@ -33,7 +34,8 @@ void manta::ImageByteBuffer::initialize(const unsigned char *buffer, int width, 
 	memcpy((void *)m_buffer, (void *)buffer, m_width * m_height * m_pitch);
 }
 
-void manta::ImageByteBuffer::initialize(const math::Vector *buffer, int width, int height, bool correctGamma) {
+void manta::ImageByteBuffer::initialize(const math::Vector *buffer, 
+		int width, int height, bool correctGamma) {
 	m_width = width;
 	m_height = height;
 	m_pitch = 4;
@@ -44,14 +46,15 @@ void manta::ImageByteBuffer::initialize(const math::Vector *buffer, int width, i
 		for (int j = 0; j < width; j++) {
 			Color c;
 			math::Vector v = buffer[i * width + j];
-			convertToColor(v, &c, correctGamma);
+			convertToColor(v, correctGamma, &c);
 
 			setPixel(i, j, c);
 		}
 	}
 }
 
-void manta::ImageByteBuffer::initialize(const math::real *buffer, int width, int height, bool correctGamma) {
+void manta::ImageByteBuffer::initialize(const math::real *buffer, 
+		int width, int height, bool correctGamma) {
 	m_width = width;
 	m_height = height;
 	m_pitch = 4;
@@ -62,7 +65,7 @@ void manta::ImageByteBuffer::initialize(const math::real *buffer, int width, int
 		for (int j = 0; j < width; j++) {
 			Color c;
 			math::real v = buffer[i * width + j];
-			convertToColor(math::loadScalar(v), &c, correctGamma);
+			convertToColor(math::loadScalar(v), correctGamma, &c);
 
 			setPixel(i, j, c);
 		}
@@ -79,8 +82,8 @@ void manta::ImageByteBuffer::initialize(int width, int height) {
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
 			Color c;
-			convertToColor(math::constants::Zero, &c, false);
-			// Gamma is not corrected to save         ^^^^^
+			convertToColor(math::constants::Zero, false, &c);
+			// Gamma is not corrected to save     ^^^^^
 			// processing time in this trivial case
 
 			setPixel(i, j, c);
@@ -106,7 +109,7 @@ void manta::ImageByteBuffer::setPixel(int row, int column, const Color &c) {
 	m_buffer[offset + 3] = c.a;
 }
 
-void manta::ImageByteBuffer::convertToColor(const math::Vector &v, Color *c, bool correctGamma) const {
+void manta::ImageByteBuffer::convertToColor(const math::Vector &v, bool correctGamma, Color *c) const {
 	math::real vr, vg, vb, va;
 	vr = math::getX(v);
 	vg = math::getY(v);

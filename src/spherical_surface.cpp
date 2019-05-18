@@ -12,7 +12,8 @@ manta::SphericalSurface::~SphericalSurface() {
 
 }
 
-bool manta::SphericalSurface::transformLightRay(const LightRay *ray, bool convex, bool incoming, LightRay *outputRay) const {
+bool manta::SphericalSurface::transformLightRay(const LightRay *ray, bool convex, 
+		bool incoming, LightRay *outputRay) const {
 	IntersectionPoint point;
 	if (convex) {
 		m_sphere.detectIntersection(ray, &point, nullptr);

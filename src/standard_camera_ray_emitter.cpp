@@ -6,9 +6,11 @@
 #include <ray_container.h>
 
 manta::StandardCameraRayEmitter::StandardCameraRayEmitter() {
+	/* void */
 }
 
 manta::StandardCameraRayEmitter::~StandardCameraRayEmitter() {
+	/* void */
 }
 
 void manta::StandardCameraRayEmitter::generateRays(RayContainer *rayContainer) const {
@@ -19,7 +21,8 @@ void manta::StandardCameraRayEmitter::generateRays(RayContainer *rayContainer) c
 	rayContainer->setDegree(0);
 	LightRay *rays = rayContainer->getRays();
 	
-	math::Vector *samplePoints = (math::Vector *)m_stackAllocator->allocate(nRays * sizeof(math::Vector), 16);
+	math::Vector *samplePoints = 
+		(math::Vector *)m_stackAllocator->allocate(nRays * sizeof(math::Vector), 16);
 	m_sampler->generateSamples(nRays, samplePoints);
 
 	for (int i = 0; i < nRays; i++) {

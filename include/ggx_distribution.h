@@ -16,14 +16,16 @@ namespace manta {
 
 	public:
 		GgxDistribution();
-		~GgxDistribution();
+		virtual ~GgxDistribution();
 
 		virtual void initializeSessionMemory(const IntersectionPoint *surfaceInteraction, 
 			NodeSessionMemory *memory, StackAllocator *stackAllocator) const;
 
 		virtual math::Vector generateMicrosurfaceNormal(NodeSessionMemory *mem) const;
-		virtual math::real calculateDistribution(const math::Vector &m, NodeSessionMemory *mem) const;
-		virtual math::real calculateG1(const math::Vector &v, const math::Vector &m, NodeSessionMemory *mem) const;
+		virtual math::real calculateDistribution(const math::Vector &m, 
+			NodeSessionMemory *mem) const;
+		virtual math::real calculateG1(const math::Vector &v, const math::Vector &m, 
+			NodeSessionMemory *mem) const;
 
 		void setWidth(math::real width) { m_width = width; }
 		math::real getWidth() const { return m_width; }

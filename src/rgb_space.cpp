@@ -70,9 +70,12 @@ manta::ColorRgb manta::RgbSpace::convertToRgb(const ColorXyy &col) const {
 	math::real_d bz = (m_x.r * m_y.g) - (m_x.g * m_y.r);
 
 	// Compute the RGB luminance scaling factor
-	math::real_d rw = ((rx * m_whitePoint.x) + (ry * m_whitePoint.y) + (rz * zw)) / m_whitePoint.y;
-	math::real_d gw = ((gx * m_whitePoint.x) + (gy * m_whitePoint.y) + (gz * zw)) / m_whitePoint.y;
-	math::real_d bw = ((bx * m_whitePoint.x) + (by * m_whitePoint.y) + (bz * zw)) / m_whitePoint.y;
+	math::real_d rw = ((rx * m_whitePoint.x) + (ry * m_whitePoint.y) + 
+		(rz * zw)) / m_whitePoint.y;
+	math::real_d gw = ((gx * m_whitePoint.x) + (gy * m_whitePoint.y) + 
+		(gz * zw)) / m_whitePoint.y;
+	math::real_d bw = ((bx * m_whitePoint.x) + (by * m_whitePoint.y) + 
+		(bz * zw)) / m_whitePoint.y;
 
 	// Scale the XYZ to RGB matrix to white
 	rx = rx / rw;  ry = ry / rw;  rz = rz / rw;

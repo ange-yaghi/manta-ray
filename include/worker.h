@@ -33,7 +33,8 @@ namespace manta {
 		Worker();
 		~Worker();
 
-		void initialize(mem_size stackSize, RayTracer *rayTracer, int workerId, bool deterministicSeed, const std::string &pathRecorderOutputDirectory);
+		void initialize(mem_size stackSize, RayTracer *rayTracer, int workerId, 
+			bool deterministicSeed, const std::string &pathRecorderOutputDirectory);
 		void start(bool multithreaded = true);
 		void join();
 		void destroy();

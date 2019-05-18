@@ -47,8 +47,11 @@ namespace manta {
 		void initialize(math::real width, const math::Vector &position);
 		void destroy();
 
-		virtual bool findClosestIntersection(const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const;
-		virtual void fineIntersection(const math::Vector &r, IntersectionPoint *p, const CoarseIntersection *hint) const;
+		virtual bool findClosestIntersection(const LightRay *ray, 
+			CoarseIntersection *intersection, math::real minDepth, 
+			math::real maxDepth, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const;
+		virtual void fineIntersection(const math::Vector &r, IntersectionPoint *p, 
+			const CoarseIntersection *hint) const;
 		virtual bool fastIntersection(const LightRay *ray) const;
 
 		void analyze(Mesh *mesh, int maxSize);
@@ -63,7 +66,10 @@ namespace manta {
 		int countFaces(const OctreeBV *leaf) const;
 		int countLeaves(const OctreeBV *leaf) const;
 
-		bool findClosestIntersection(const OctreeBV *leaf, const LightRay *ray, const math::Vector &ood, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s /**/ STATISTICS_PROTOTYPE, bool skip = false) const;
+		bool findClosestIntersection(const OctreeBV *leaf, const LightRay *ray, 
+			const math::Vector &ood, CoarseIntersection *intersection,
+			math::real minDepth, math::real maxDepth, 
+			StackAllocator *s /**/ STATISTICS_PROTOTYPE, bool skip = false) const;
 
 		bool analyze(Mesh *mesh, OctreeBV *leaf, int maxSize, std::vector<int> &facePool);
 		void shrink(OctreeBV *leaf);
@@ -72,12 +78,15 @@ namespace manta {
 
 		bool checkVertex(const OctreeBV *leaf, const math::Vector &v, math::real epsilon) const;
 		bool checkPlane(const OctreeBV *leaf, const math::Vector &n, math::real d) const;
-		bool checkTriangle(const OctreeBV *leaf, const math::Vector &v0, const math::Vector &v1, const math::Vector &v2) const;
+		bool checkTriangle(const OctreeBV *leaf, const math::Vector &v0, 
+			const math::Vector &v1, const math::Vector &v2) const;
 
-		bool AABBIntersect(const OctreeBV *leaf, const LightRay *ray, math::real *depth, const math::Vector &ood) const;
+		bool AABBIntersect(const OctreeBV *leaf, const LightRay *ray, math::real *depth, 
+			const math::Vector &ood) const;
 		bool AABBIntersect(const OctreeBV *leaf, const math::Vector &p, math::real radius) const;
 
-		void writeToObjFile(const OctreeBV *leaf, std::ofstream &f, int &currentLeaf, const LightRay *ray, const math::Vector &ood) const;
+		void writeToObjFile(const OctreeBV *leaf, std::ofstream &f, int &currentLeaf, 
+			const LightRay *ray, const math::Vector &ood) const;
 
 		Mesh *m_mesh;
 		OctreeBV m_tree;

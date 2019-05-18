@@ -10,7 +10,7 @@ namespace manta {
 	class StarburstApproximation : public Convolution {
 	public:
 		StarburstApproximation();
-		~StarburstApproximation();
+		virtual ~StarburstApproximation();
 
 		virtual math::real getExtents(const math::Vector &reference) const;
 		virtual math::Vector sample(math::real x, math::real y) const;
