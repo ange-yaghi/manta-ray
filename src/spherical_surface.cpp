@@ -12,7 +12,8 @@ manta::SphericalSurface::~SphericalSurface() {
 
 }
 
-bool manta::SphericalSurface::transformLightRay(const LightRay *ray, LightRay *outputRay, bool convex, bool incoming) const {
+bool manta::SphericalSurface::transformLightRay(const LightRay *ray, bool convex, 
+		bool incoming, LightRay *outputRay) const {
 	IntersectionPoint point;
 	if (convex) {
 		m_sphere.detectIntersection(ray, &point, nullptr);
@@ -35,7 +36,6 @@ bool manta::SphericalSurface::transformLightRay(const LightRay *ray, LightRay *o
 	}
 
 	math::real c = -math::getScalar(math::dot(ray->getDirection(), point.m_vertexNormal));
-
 	math::real cos2t = 1 - r * r * (1 - c * c);
 
 	if (cos2t < (math::real)0.0) {

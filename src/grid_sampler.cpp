@@ -7,6 +7,7 @@ manta::GridSampler::GridSampler() {
 }
 
 manta::GridSampler::~GridSampler() {
+	/* void */
 }
 
 void manta::GridSampler::generateSamples(int sampleCount, math::Vector *target) const {

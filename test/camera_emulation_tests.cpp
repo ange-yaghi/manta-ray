@@ -125,8 +125,8 @@ TEST(CameraEmulationTests, SimpleLensCacheTest) {
 	ray1.setSource(sensorLocation);
 	ray1.setDirection(math::normalize(math::loadVector(1.0f, 0.5f * lensHeight / -math::getX(sensorLocation), 0.0f)));
 
-	LensScanHint hint;
-	lens.lensScan(sensorLocation, &hint, 4, 1.0f);
+	Lens::LensScanHint hint;
+	lens.lensScan(sensorLocation, 4, 1.0f, &hint);
 }
 
 TEST(CameraEmulationTests, PolygonalApertureTest) {
@@ -175,8 +175,8 @@ TEST(CameraEmulationTests, DiffractionRayTest) {
 	ray1.setSource(origin);
 	ray1.setDirection(dir);
 
-	LensScanHint hint;
-	lens.lensScan(sensorLocation, &hint, 4, 1.0f);
+	Lens::LensScanHint hint;
+	lens.lensScan(sensorLocation, 4, 1.0f, &hint);
 
 	LightRay outputRay;
 	bool result = lens.transformRay(&ray1, &outputRay);

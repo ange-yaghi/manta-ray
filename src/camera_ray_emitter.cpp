@@ -11,4 +11,5 @@ manta::CameraRayEmitter::CameraRayEmitter() {
 }
 
 manta::CameraRayEmitter::~CameraRayEmitter() {
+	/* void */
 }

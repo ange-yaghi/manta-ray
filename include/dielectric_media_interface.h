@@ -8,7 +8,7 @@ namespace manta {
 	class DielectricMediaInterface : public MediaInterface {
 	public:
 		DielectricMediaInterface();
-		~DielectricMediaInterface();
+		virtual ~DielectricMediaInterface();
 
 		void setIorIncident(math::real iorIncident) { m_iorIncident = iorIncident; }
 		math::real getIorIncident() const { return m_iorIncident; }
@@ -16,12 +16,13 @@ namespace manta {
 		void setIorTransmitted(math::real iorTransmitted) { m_iorTransmitted = iorTransmitted; }
 		math::real getIorTransmitted() const { return m_iorTransmitted; }
 
-		virtual math::real fresnelTerm(const math::Vector &i, const math::Vector &m, DIRECTION d) const;
+		virtual math::real fresnelTerm(const math::Vector &i, const math::Vector &m, 
+			DIRECTION d) const;
 		virtual math::real fresnelTerm(math::real cosThetaI, math::real *pdf, DIRECTION d) const;
 
-		virtual math::real ior(DIRECTION d);
-		virtual math::real no(DIRECTION d);
-		virtual math::real ni(DIRECTION d);
+		virtual math::real ior(DIRECTION d) const;
+		virtual math::real no(DIRECTION d) const;
+		virtual math::real ni(DIRECTION d) const;
 
 	protected:
 		math::real m_iorIncident;

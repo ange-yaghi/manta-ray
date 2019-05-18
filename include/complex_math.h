@@ -16,35 +16,36 @@ namespace manta {
 			real_d r;
 			real_d i;
 
-			inline Complex operator+(const Complex &b) const {
+			Complex operator+(const Complex &b) const {
 				return { r + b.r, i + b.i };
 			}
 
-			inline Complex operator-(const Complex &b) const {
+			Complex operator-(const Complex &b) const {
 				return { r + b.r, i + b.i };
 			}
 
-			inline Complex operator*(const Complex &b) const {
+			Complex operator*(const Complex &b) const {
 				return { r * b.r - i * b.i, i * b.r + r * b.i };
 			}
 
-			inline Complex operator*(math::real b) const {
+			Complex operator*(math::real b) const {
 				return { r * b, i * b };
 			}
 
-			inline Complex operator/(const Complex &b) const {
+			Complex operator/(const Complex &b) const {
 				real_d r_part = r * b.r + i * b.i;
 				real_d i_part = i * b.r + r * b.i;
 				real_d m = 1 / (b.r * b.r + b.i * b.i);
 				return { r_part * m, i_part * m };
 			}
 
-			inline Complex conjugate() const {
+			Complex conjugate() const {
 				return { r, -i };
 			}
 		};
 
 	} /* namespace math */
+
 } /* namespace manta */
 
 #endif /* COMPLEX_MATH_H */

@@ -7,11 +7,12 @@ manta::StarburstApproximation::StarburstApproximation() {
 }
 
 manta::StarburstApproximation::~StarburstApproximation() {
-
+	/* void */
 }
 
 manta::math::real manta::StarburstApproximation::getExtents(const math::Vector &reference) const {
-	if (math::getX(reference) == 0 || math::getY(reference) == 0 || math::getZ(reference) == 0) return (math::real)0.0;
+	if (math::getX(reference) == 0 || math::getY(reference) == 0 || math::getZ(reference) == 0) 
+		return (math::real)0.0;
 
 	return m_radius;
 }

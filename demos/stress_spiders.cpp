@@ -175,7 +175,7 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 
 		FraunhoferDiffraction testFraun;
 		FraunhoferDiffraction::Settings settings;
-		FraunhoferDiffraction::defaultSettings(&settings);
+		FraunhoferDiffraction::setDefaultSettings(&settings);
 		settings.frequencyMultiplier = 1.0;
 		settings.maxSamples = 4096;
 		settings.textureSamples = 10;

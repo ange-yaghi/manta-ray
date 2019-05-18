@@ -6,7 +6,7 @@ manta::CircleConvolution::CircleConvolution() {
 }
 
 manta::CircleConvolution::~CircleConvolution() {
-
+	/* void */
 }
 
 manta::math::real manta::CircleConvolution::getExtents(const math::Vector &reference) const {

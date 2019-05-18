@@ -5,7 +5,7 @@ manta::SceneGeometry::SceneGeometry() {
 }
 
 manta::SceneGeometry::~SceneGeometry() {
-
+	/* void */
 }
 
 int manta::SceneGeometry::getId() const {

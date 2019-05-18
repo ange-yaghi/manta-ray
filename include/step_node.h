@@ -12,7 +12,7 @@ namespace manta {
 	class StepNode : public Node {
 	public:
 		StepNode();
-		~StepNode();
+		virtual ~StepNode();
 
 		StepNodeOutput *getMainOutput() { return &m_output; }
 

@@ -6,7 +6,7 @@
 namespace manta {
 
 	class PolygonalAperture : public Aperture {
-	public:
+	protected:
 		struct Edge {
 			math::Vector2 reference;
 			math::Vector2 direction;
@@ -15,7 +15,7 @@ namespace manta {
 
 	public:
 		PolygonalAperture();
-		~PolygonalAperture();
+		virtual ~PolygonalAperture();
 
 		void initialize(int edges, math::real angle = (math::real)0.0, bool halfOffset=false);
 		void destroy();

@@ -16,18 +16,22 @@
 #include <thread>
 
 manta::FraunhoferDiffraction::FraunhoferDiffraction() {
-	m_physicalSensorWidth = (math::real)1.0;
+	m_colorTable = nullptr;
+	m_sourceSpectrum = nullptr;
+
+	m_physicalSensorWidth = (math::real)0.0;
+	m_sensorElementWidth = (math::real)0.0;
 }
 
 manta::FraunhoferDiffraction::~FraunhoferDiffraction() {
 	/* void */
 }
 
-void manta::FraunhoferDiffraction::generate(const Aperture *aperture, const VectorMap2D *dirtMap, int outputResolution, math::real physicalSensorWidth, CmfTable *colorTable, Spectrum *sourceSpectrum, const Settings *settingsIn) {
-	constexpr math::real SAFETY_FACTOR = (math::real)1.1;
-	
+void manta::FraunhoferDiffraction::generate(const Aperture *aperture, 
+		const VectorMap2D *dirtMap, int outputResolution, math::real physicalSensorWidth, 
+		CmfTable *colorTable, Spectrum *sourceSpectrum, const Settings *settingsIn) {
 	Settings settings;
-	if (settingsIn == nullptr) defaultSettings(&settings);
+	if (settingsIn == nullptr) setDefaultSettings(&settings);
 	else settings = *settingsIn;
 	
 	int MAX_SAMPLES = settings.maxSamples;
@@ -52,7 +56,7 @@ void manta::FraunhoferDiffraction::generate(const Aperture *aperture, const Vect
 	math::real_d sampleWindow = 0.0;
 	math::real_d maxFreq = (sensorWidth / 2) / (minWavelength * 1e-6);
 
-	sampleWindow = CftEstimator2D::getMinPhysicalDim(minFrequencyStep / settings.frequencyMultiplier, apertureRadius * 2 * SAFETY_FACTOR);
+	sampleWindow = CftEstimator2D::getMinPhysicalDim(minFrequencyStep / settings.frequencyMultiplier, apertureRadius * 2 * settings.safetyFactor);
 	sampleWindow = 0.5;
 	estimatorSamples = CftEstimator2D::getMinSamples(maxFreq, sampleWindow, MAX_SAMPLES);
 	estimatorSamples = 4096 * 1;
@@ -176,13 +180,14 @@ void manta::FraunhoferDiffraction::normalize() {
 	}
 }
 
-void manta::FraunhoferDiffraction::defaultSettings(Settings *settings) {
+void manta::FraunhoferDiffraction::setDefaultSettings(Settings *settings) {
 	settings->maxSamples = 4096;
 	settings->textureSamples = 10;
 	settings->maxWavelength = 780;
 	settings->minWavelength = 380;
 	settings->wavelengthStep = 5;
 	settings->frequencyMultiplier = 3.0;
+	settings->safetyFactor = (math::real_d)1.1;
 
 	settings->saveApertureFunction = false;
 }
@@ -224,9 +229,8 @@ void manta::FraunhoferDiffraction::generateMap(const CftEstimator2D *estimator, 
 	StandardAllocator::Global()->free(threads, threadCount);
 }
 
-#include <iostream>
-
-void manta::FraunhoferDiffraction::_generateMap(const CftEstimator2D *estimator, const Settings *settings, int startRow, int endRow, VectorMap2D *target) const {
+void manta::FraunhoferDiffraction::_generateMap(const CftEstimator2D *estimator, 
+		const Settings *settings, int startRow, int endRow, VectorMap2D *target) const {
 	int res = target->getWidth();
 
 	math::real_d sdx = m_sensorElementWidth;
@@ -252,7 +256,8 @@ void manta::FraunhoferDiffraction::_generateMap(const CftEstimator2D *estimator,
 			math::real_d y = j * sdy - scy;
 			spectrum.clear();
 
-			for (int wavelength = startWavelength; wavelength <= endWavelength; wavelength += wavelengthStep) {
+			for (int wavelength = startWavelength; 
+					wavelength <= endWavelength; wavelength += wavelengthStep) {
 				math::real_d freqSpace = (sdx * 1E6 / wavelength) * 1.0;
 
 				for (int s = 0; s < textureSamples; s++) {

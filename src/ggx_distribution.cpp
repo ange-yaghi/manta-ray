@@ -52,7 +52,8 @@ manta::math::Vector manta::GgxDistribution::generateMicrosurfaceNormal(NodeSessi
 	return math::mul(t1, t2);
 }
 
-manta::math::real manta::GgxDistribution::calculateDistribution(const math::Vector &m, NodeSessionMemory *mem) const {
+manta::math::real manta::GgxDistribution::calculateDistribution(
+		const math::Vector &m, NodeSessionMemory *mem) const {
 	GgxMemory *memory = reinterpret_cast<GgxMemory *>((void *)mem->memory);
 
 	math::real cos_theta_m = math::getZ(m);
@@ -70,7 +71,8 @@ manta::math::real manta::GgxDistribution::calculateDistribution(const math::Vect
 	return d_m;
 }
 
-manta::math::real manta::GgxDistribution::calculateG1(const math::Vector &v, const math::Vector &m, NodeSessionMemory *mem) const {
+manta::math::real manta::GgxDistribution::calculateG1(const math::Vector &v, 
+		const math::Vector &m, NodeSessionMemory *mem) const {
 	GgxMemory *memory = reinterpret_cast<GgxMemory *>((void *)mem->memory);
 
 	math::real v_dot_m = math::getScalar(math::dot(v, m));

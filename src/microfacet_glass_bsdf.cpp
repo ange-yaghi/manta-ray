@@ -4,18 +4,22 @@
 #include <microfacet_distribution.h>
 
 manta::MicrofacetGlassBSDF::MicrofacetGlassBSDF() {
-
+	/* void */
 }
 
 manta::MicrofacetGlassBSDF::~MicrofacetGlassBSDF() {
-
+	/* void */
 }
 
-void manta::MicrofacetGlassBSDF::initializeSessionMemory(const IntersectionPoint *surfaceInteraction, NodeSessionMemory *memory, StackAllocator *stackAllocator) const {
-
+void manta::MicrofacetGlassBSDF::initializeSessionMemory(
+		const IntersectionPoint *surfaceInteraction, NodeSessionMemory *memory, 
+		StackAllocator *stackAllocator) const {
+	/* void */
 }
 
-manta::math::Vector manta::MicrofacetGlassBSDF::sampleF(const IntersectionPoint *surfaceInteraction, const math::Vector &i, math::Vector *o, math::real *pdf, StackAllocator *stackAllocator) const {
+manta::math::Vector manta::MicrofacetGlassBSDF::sampleF(
+		const IntersectionPoint *surfaceInteraction, const math::Vector &i, 
+		math::Vector *o, math::real *pdf, StackAllocator *stackAllocator) const {
 	constexpr math::Vector reflect = { (math::real)-1.0, (math::real)-1.0, (math::real)1.0, (math::real)1.0 };
 	
 	math::real u = math::uniformRandom();
@@ -59,7 +63,8 @@ manta::math::Vector manta::MicrofacetGlassBSDF::sampleF(const IntersectionPoint 
 
 		// Calculate reflectivity
 		math::Vector reflectivity = math::loadScalar(
-			m_distribution->calculateDistribution(m, &s) * m_distribution->bidirectionalShadowMasking(i, *o, m, &s) * F / (4 * cosThetaI * cosThetaO));
+			m_distribution->calculateDistribution(m, &s) * 
+				m_distribution->bidirectionalShadowMasking(i, *o, m, &s) * F / (4 * cosThetaI * cosThetaO));
 
 		// Free all memory
 		m_distribution->destroySessionMemory(&s, stackAllocator);
@@ -113,7 +118,9 @@ manta::math::Vector manta::MicrofacetGlassBSDF::sampleF(const IntersectionPoint 
 		tPdf = m_distribution->calculatePDF(m, &s) * jacobian;
 
 		// Calculate transmitance
-		math::real Ft_num = (1 / (ior * ior)) * m_distribution->calculateDistribution(m, &s) * m_distribution->bidirectionalShadowMasking(i, rt, m, &s) * (1 - F);
+		math::real Ft_num = (1 / (ior * ior)) * 
+			m_distribution->calculateDistribution(m, &s) * 
+			m_distribution->bidirectionalShadowMasking(i, rt, m, &s) * (1 - F);
 		Ft_num *= ::abs(o_dot_m * i_dot_m);
 
 		math::real Ft_div = (i_dot_m + (1 / ior) * ::abs(o_dot_m));

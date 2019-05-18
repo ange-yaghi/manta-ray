@@ -89,11 +89,11 @@ bool manta::PolygonalAperture::filter(math::real x, math::real y) const {
 
 		if (c == 0) continue;
 		else if (c < 0) {
-			if (s == POSITIVE) insidePolygon = false;
+			if (s == POSITIVE) { insidePolygon = false; break;  }
 			else s = NEGATIVE;
 		}
 		else if (c > 0) {
-			if (s == NEGATIVE) insidePolygon = false;
+			if (s == NEGATIVE) { insidePolygon = false; break;  }
 			else s = POSITIVE;
 		}
 	}

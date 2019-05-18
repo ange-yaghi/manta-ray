@@ -47,13 +47,12 @@ void writeToJpeg(const VectorMap2D *vectorMap, const std::string &fname) {
 	byteBuffer.free();
 }
 
-int main() {
-	constexpr int SENSOR_RESOLUTION = 1024;
+void execute(int resolution, math::real_d apertureRadius, int bladeCount, math::real_d bladeCurvature) {
+	int SENSOR_RESOLUTION = resolution;
 	constexpr int MAX_SAMPLES = 4096;
 
-	constexpr math::real_d apertureRadius = 0.18f;
 	constexpr math::real_d sensorWidth = 4.0f; // mm
-	constexpr math::real_d sensorElementWidth = sensorWidth / SENSOR_RESOLUTION;
+	math::real_d sensorElementWidth = sensorWidth / SENSOR_RESOLUTION;
 
 	constexpr math::real_d minWavelength = 380e-6;
 	constexpr math::real_d maxWavelength = 780e-6;
@@ -73,12 +72,12 @@ int main() {
 	dirtTexture.initialize();
 	dirtTexture.evaluate();
 	const VectorMap2D *texture = dirtTexture.getMainOutput()->getMap();
-	//texture = nullptr;
+	texture = nullptr;
 
 	PolygonalAperture aperture;
 	aperture.setRadius(apertureRadius);
-	aperture.setBladeCurvature(0.7f);
-	aperture.initialize(6, math::constants::PI / 2);
+	aperture.setBladeCurvature(bladeCurvature);
+	aperture.initialize(bladeCount, math::constants::PI / 2);
 
 	int maxResolution = (int)((CftEstimator2D::getFreqRange(estimatorSamples, sampleWindow) * maxWavelength + sensorWidth / 2) / sensorElementWidth);
 
@@ -92,7 +91,7 @@ int main() {
 
 	FraunhoferDiffraction fraun;
 	FraunhoferDiffraction::Settings settings;
-	fraun.defaultSettings(&settings);
+	fraun.setDefaultSettings(&settings);
 
 	settings.frequencyMultiplier = (math::real_d)8.0;
 	settings.maxSamples = MAX_SAMPLES;
@@ -119,9 +118,20 @@ int main() {
 
 	source.destroy();
 
+	std::stringstream suffix;
+	suffix << bladeCount << "B_" << bladeCurvature << "C_" << apertureRadius << "R";
+
 	std::cout << "Writing to file" << std::endl;
-	writeToJpeg(fraun.getDiffractionPattern(), std::string(TMP_PATH) + "sensing_plane.jpg");
-	writeToJpeg(fraun.getApertureFunction(), std::string(TMP_PATH) + "aperture_function.jpg");
+	writeToJpeg(fraun.getDiffractionPattern(), std::string(TMP_PATH) + "sensing_plane_" + suffix.str() + ".jpg");
+	writeToJpeg(fraun.getApertureFunction(), std::string(TMP_PATH) + "aperture_function_" + suffix.str() + ".jpg");
 
 	fraun.destroy();
+}
+
+int main() {
+	for (int bladeCount = 3; bladeCount < 12; bladeCount++) {
+		for (math::real_d bladeCurvature = 0.0f; bladeCurvature < 1.0f; bladeCurvature += 0.1f) {
+			execute(1024, 0.18f, bladeCount, bladeCurvature);
+		}
+	}
 }

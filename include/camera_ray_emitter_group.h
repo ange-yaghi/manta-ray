@@ -14,7 +14,7 @@ namespace manta {
 	class CameraRayEmitterGroup {
 	public:
 		CameraRayEmitterGroup();
-		~CameraRayEmitterGroup();
+		virtual ~CameraRayEmitterGroup();
 
 		void setUp(const math::Vector &up) { m_up = up; }
 		math::Vector getUp() const { return m_up; }
@@ -45,8 +45,9 @@ namespace manta {
 
 		virtual void initialize() = 0;
 
-		virtual CameraRayEmitter *createEmitter(int ix, int iy, StackAllocator *stackAllocator) const = 0;
-		void freeEmitter(CameraRayEmitter *rayEmitter, StackAllocator *stackAllocator) const { stackAllocator->free(rayEmitter); };
+		virtual CameraRayEmitter *createEmitter(int ix, int iy, 
+			StackAllocator *stackAllocator) const = 0;
+		void freeEmitter(CameraRayEmitter *rayEmitter, StackAllocator *stackAllocator) const;
 
 	protected:
 		template<typename t_RayEmitterType>

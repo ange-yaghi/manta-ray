@@ -32,7 +32,7 @@ namespace manta {
 		int getHeight() const { return m_height; }
 
 		void setPixel(int row, int column, const Color &c);
-		void convertToColor(const math::Vector &v, Color *c, bool correctGamma) const;
+		void convertToColor(const math::Vector &v, bool correctGamma, Color *c) const;
 
 	protected:
 		int m_pitch;

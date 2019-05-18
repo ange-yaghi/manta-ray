@@ -8,6 +8,21 @@ const manta::RgbSpace manta::RgbSpace::srgb = {
 	{(math::real_d)0.3127, (math::real_d)0.3290} // White point
 };
 
+manta::RgbSpace::RgbSpace() {
+	/* void */
+}
+
+manta::RgbSpace::RgbSpace(
+		const math::Vector3_d &x, const math::Vector3_d &y, const math::Vector2_d &whitePoint){
+	m_x = x;
+	m_y = y; 
+	m_whitePoint = whitePoint;
+}
+
+manta::RgbSpace::~RgbSpace() {
+	/* void */
+}
+
 manta::math::real_d manta::RgbSpace::applyGammaSrgb(math::real_d u) {
 	static constexpr math::real_d MIN_SRGB_POWER_POINT = (math::real_d)0.0031308;
 
@@ -55,9 +70,12 @@ manta::ColorRgb manta::RgbSpace::convertToRgb(const ColorXyy &col) const {
 	math::real_d bz = (m_x.r * m_y.g) - (m_x.g * m_y.r);
 
 	// Compute the RGB luminance scaling factor
-	math::real_d rw = ((rx * m_whitePoint.x) + (ry * m_whitePoint.y) + (rz * zw)) / m_whitePoint.y;
-	math::real_d gw = ((gx * m_whitePoint.x) + (gy * m_whitePoint.y) + (gz * zw)) / m_whitePoint.y;
-	math::real_d bw = ((bx * m_whitePoint.x) + (by * m_whitePoint.y) + (bz * zw)) / m_whitePoint.y;
+	math::real_d rw = ((rx * m_whitePoint.x) + (ry * m_whitePoint.y) + 
+		(rz * zw)) / m_whitePoint.y;
+	math::real_d gw = ((gx * m_whitePoint.x) + (gy * m_whitePoint.y) + 
+		(gz * zw)) / m_whitePoint.y;
+	math::real_d bw = ((bx * m_whitePoint.x) + (by * m_whitePoint.y) + 
+		(bz * zw)) / m_whitePoint.y;
 
 	// Scale the XYZ to RGB matrix to white
 	rx = rx / rw;  ry = ry / rw;  rz = rz / rw;

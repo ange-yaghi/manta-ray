@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\aperture.cpp" />
     <ClCompile Include="..\..\src\media_interface.cpp" />
     <ClCompile Include="..\..\src\biconvex_lens.cpp" />
     <ClCompile Include="..\..\src\bilayer_bsdf.cpp" />
@@ -49,6 +50,7 @@
     <ClCompile Include="..\..\src\mipmap.cpp" />
     <ClCompile Include="..\..\src\multiply_node.cpp" />
     <ClCompile Include="..\..\src\multiply_node_output.cpp" />
+    <ClCompile Include="..\..\src\opaque_media_interface.cpp" />
     <ClCompile Include="..\..\src\power_node_output.cpp" />
     <ClCompile Include="..\..\src\ramp_node.cpp" />
     <ClCompile Include="..\..\src\ramp_node_output.cpp" />

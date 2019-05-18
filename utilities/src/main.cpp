@@ -34,7 +34,7 @@ int main() {
 	}
 
 	manta::ImagePlane temp;
-	sceneBuffer.clone(&temp);
+	temp.copyFrom(&sceneBuffer);
 	manta::ImagePlane prev;
 
 	bool prevValid = false;
@@ -61,7 +61,7 @@ int main() {
 		else if (command == "undo" || command == "u") {
 			if (prevValid) {
 				temp.destroy();
-				prev.clone(&temp);
+				temp.copyFrom(&prev);
 				write = true;
 			}
 			else {
@@ -82,7 +82,7 @@ int main() {
 		}
 		else if (command == "reset" || command == "r") {
 			if (temp.isInitialized()) temp.destroy();
-			sceneBuffer.clone(&temp);
+			temp.copyFrom(&sceneBuffer);
 			write = true;
 		}
 		else if (command == "quit" || command == "q") {
@@ -91,7 +91,7 @@ int main() {
 		}
 
 		if (write) {
-			temp.clone(&prev);
+			prev.copyFrom(&temp);
 			prevValid = true;
 
 			std::stringstream ss;

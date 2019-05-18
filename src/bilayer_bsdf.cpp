@@ -22,7 +22,8 @@ manta::BilayerBSDF::~BilayerBSDF() {
 	/* void */
 }
 
-manta::math::Vector manta::BilayerBSDF::sampleF(const IntersectionPoint *surfaceInteraction, const math::Vector &i, math::Vector *o, math::real *pdf, StackAllocator *stackAllocator) const {
+manta::math::Vector manta::BilayerBSDF::sampleF(const IntersectionPoint *surfaceInteraction, 
+	const math::Vector &i, math::Vector *o, math::real *pdf, StackAllocator *stackAllocator) const {
 	math::Vector diffuseR = m_diffuse;
 	math::Vector specularR = m_specular;
 

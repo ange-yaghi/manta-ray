@@ -21,7 +21,9 @@ namespace manta {
 		}
 
 		const MediaInterface *getMediaInterface() const { return m_mediaInterface; }
-		void setMediaInterface(const MediaInterface *mediaInterface) { m_mediaInterface = mediaInterface; }
+		void setMediaInterface(const MediaInterface *mediaInterface) { 
+			m_mediaInterface = mediaInterface; 
+		}
 
 	protected:
 		const MediaInterface *m_mediaInterface;

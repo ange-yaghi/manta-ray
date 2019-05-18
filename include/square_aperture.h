@@ -8,7 +8,7 @@ namespace manta {
 	class SquareAperture : public Aperture {
 	public:
 		SquareAperture();
-		~SquareAperture();
+		virtual ~SquareAperture();
 
 		virtual bool filter(math::real x, math::real y) const;
 	};

@@ -499,7 +499,7 @@ void manta::Mesh::loadObjFileData(ObjFileLoader *data, MaterialManager *material
 	initialize(data->getFaceCount(), data->getVertexCount(), data->getNormalCount(), data->getTexCoordCount());
 
 	for (unsigned int i = 0; i < data->getFaceCount(); i++) {
-		ObjFace *face = data->getFace(i);
+		ObjFileLoader::ObjFace *face = data->getFace(i);
 		m_faces[i].u = face->v1 - 1;
 		m_faces[i].v = face->v2 - 1;
 		m_faces[i].w = face->v3 - 1;

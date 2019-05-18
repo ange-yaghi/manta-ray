@@ -12,6 +12,7 @@
 
 namespace manta {
 
+	// Forward declarations
 	class GPUMemoryOpenCL;
 	class GPUKernelOpenCL;
 	class GPUKernel;

@@ -64,7 +64,7 @@ manta::math::Complex manta::ComplexMap2D::sampleDiscrete(math::real_d ku, math::
 	return m_data[ik_y * m_width + ik_x];
 }
 
-void manta::ComplexMap2D::fillByteBuffer(ImageByteBuffer *target, Margins *margins) const {
+void manta::ComplexMap2D::fillByteBuffer(ImageByteBuffer *target, bool realOnly, const Margins *margins) const {
 	int startX, startY;
 	int width, height;
 
@@ -88,7 +88,12 @@ void manta::ComplexMap2D::fillByteBuffer(ImageByteBuffer *target, Margins *margi
 			ImageByteBuffer::Color color;
 			math::Complex value = get(u + startX, v + startY);
 
-			target->convertToColor(math::loadVector((math::real)value.r, (math::real)0.0, (math::real)value.i), &color, true);
+			if (realOnly) {
+				target->convertToColor(math::loadVector((math::real)value.r, (math::real)0.0, (math::real)value.i), true, &color);
+			}
+			else {
+				target->convertToColor(math::loadVector((math::real)value.r, (math::real)value.r, (math::real)value.r), true, &color);
+			}
 			target->setPixel(v, u, color);
 		}
 	}

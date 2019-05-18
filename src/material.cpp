@@ -6,5 +6,5 @@ manta::Material::Material() {
 }
 
 manta::Material::~Material() {
-
+	/* void */
 }

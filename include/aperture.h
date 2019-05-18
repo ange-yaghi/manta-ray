@@ -7,8 +7,8 @@ namespace manta {
 
 	class Aperture {
 	public:
-		Aperture() {}
-		~Aperture() {}
+		Aperture();
+		virtual ~Aperture();
 
 		// Test whether a point lies inside or outside the aperture
 		virtual bool filter(math::real x, math::real y) const = 0;

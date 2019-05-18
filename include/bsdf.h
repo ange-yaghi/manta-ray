@@ -18,11 +18,23 @@ namespace manta {
 	class BSDF : public Node {
 	public:
 		BSDF();
-		~BSDF();
+		virtual ~BSDF();
 
-		virtual math::Vector sampleF(const IntersectionPoint *surfaceInteraction, const math::Vector &i, math::Vector *o, math::real *pdf, StackAllocator *stackAllocator) const = 0;
+		virtual math::Vector sampleF(const IntersectionPoint *surfaceInteraction, 
+			const math::Vector &i, math::Vector *o, math::real *pdf, 
+			StackAllocator *stackAllocator) const = 0;
 
-		static inline bool refract(const math::Vector &i, const math::Vector &n, math::real ior, math::Vector *t) {
+		static inline bool refract(const math::Vector &i, const math::Vector &n,
+			math::real ior, math::Vector *t);
+
+	protected:
+		BSDFNodeOutput m_output;
+
+		virtual void registerOutputs();
+	};
+
+	inline bool BSDF::refract(const math::Vector &i, const math::Vector &n,
+		math::real ior, math::Vector *t) {
 			math::real cosThetaI = math::getScalar(math::dot(n, i));
 			math::real sin2ThetaI = std::max((math::real)0.0, (math::real)1.0 - cosThetaI * cosThetaI);
 			math::real sin2ThetaT = ior * ior * sin2ThetaI;
@@ -39,13 +51,7 @@ namespace manta {
 			);
 
 			return true;
-		}
-
-	protected:
-		BSDFNodeOutput m_output;
-
-		virtual void registerOutputs();
-	};
+	}
 
 } /* namespace manta */
 
