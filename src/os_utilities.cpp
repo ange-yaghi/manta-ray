@@ -11,3 +11,14 @@ void manta::createFolder(const char *folder) {
 		// Failed to create folder
 	}
 }
+
+void manta::showConsoleCursor(bool show) {
+	HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	CONSOLE_CURSOR_INFO cursorInfo;
+	GetConsoleCursorInfo(out, &cursorInfo);
+
+	cursorInfo.bVisible = show;
+
+	SetConsoleCursorInfo(out, &cursorInfo);
+}
