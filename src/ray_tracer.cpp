@@ -18,6 +18,7 @@
 #include <ray_container.h>
 #include <coarse_intersection.h>
 #include <image_plane.h>
+#include <os_utilities.h>
 
 #include <iostream>
 #include <thread>
@@ -32,7 +33,7 @@ manta::RayTracer::RayTracer() {
 }
 
 manta::RayTracer::~RayTracer() {
-
+	/* void */
 }
 
 void manta::RayTracer::traceAll(const Scene *scene, CameraRayEmitterGroup *group, ImagePlane *target) {
@@ -84,10 +85,17 @@ void manta::RayTracer::traceAll(const Scene *scene, CameraRayEmitterGroup *group
 		}
 	}
 
+	// Hide the cursor to avoid annoying blinking artifact
+	showConsoleCursor(false);
+
 	// Create and start all threads
 	createWorkers();
 	startWorkers();
 	waitForWorkers();
+
+	// Print a single new line to terminate progress display
+	// See RayTracer::incrementRayCompletion
+	std::cout << std::endl;
 
 	auto endTime = std::chrono::system_clock::now();
 	std::chrono::duration<double> diff = endTime - startTime;
@@ -139,6 +147,9 @@ void manta::RayTracer::traceAll(const Scene *scene, CameraRayEmitterGroup *group
 	std::cout <<		"                                     -----------" << std::endl;
 	std::cout <<		"Total memory usage:                  " << totalUsage / (double)MB << " MB" << std::endl;
 	std::cout <<		"================================================" << std::endl;
+
+	// Bring back the cursor
+	showConsoleCursor(true);
 }
 
 void manta::RayTracer::tracePixel(int px, int py, const Scene *scene, CameraRayEmitterGroup *group, ImagePlane *target) {
@@ -206,11 +217,15 @@ void manta::RayTracer::destroy() {
 
 void manta::RayTracer::incrementRayCompletion(const Job *job, int increment) {
 	m_outputLock.lock();
+	
 	int emitterCount = job->group->getResolutionX() * job->group->getResolutionY();
 	m_currentRay += increment;
-	if (m_currentRay % 1000 == 0) {
-		std::cout << "Ray " << m_currentRay << "/" << emitterCount << std::endl;
+
+	// Print in increments of 1000 or the last 1000 one by one
+	if (m_currentRay % 1000 == 0 || m_currentRay >= (emitterCount - 1000)) {
+		std::cout << "Ray " << m_currentRay << "/" << emitterCount << "                      \r" << std::flush;
 	}
+
 	m_outputLock.unlock();
 }
 
@@ -225,8 +240,9 @@ void manta::RayTracer::createWorkers() {
 void manta::RayTracer::startWorkers() {
 	int workerCount = m_threadCount;
 
+	std::cout << "Starting " << workerCount << " workers" << std::endl;
+
 	for (int i = 0; i < workerCount; i++) {
-		std::cout << "Starting worker " << i << std::endl;
 		m_workers[i].start(m_multithreaded);
 	}
 }
@@ -285,7 +301,8 @@ void manta::RayTracer::depthCull(const Scene *scene, const LightRay *ray, SceneO
 	}
 }
 
-void manta::RayTracer::refineContact(const LightRay *ray, math::real depth, IntersectionPoint *point, SceneObject **closestObject, StackAllocator *s) const {
+void manta::RayTracer::refineContact(const LightRay *ray, math::real depth, IntersectionPoint *point, 
+						SceneObject **closestObject, StackAllocator *s) const {
 	// Simple bias
 	math::real d = depth;
 	d -= (math::real)5E-3;
