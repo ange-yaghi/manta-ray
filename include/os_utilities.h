@@ -5,6 +5,7 @@ namespace manta {
 
 	void createFolder(const char *folder);
 	void showConsoleCursor(bool show);
+	void sleep(int milliseconds);
 
 } /* namespace manta */
 

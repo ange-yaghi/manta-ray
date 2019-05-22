@@ -109,7 +109,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 
 	KDTree kdtree;
 	kdtree.initialize(150.f, math::constants::Zero);
-	kdtree.analyze(&pen, 4);
+	kdtree.analyzeWithProgress(&pen, 4);
 
 	// Create scene objects
 	SceneObject *penObject = scene.createSceneObject();

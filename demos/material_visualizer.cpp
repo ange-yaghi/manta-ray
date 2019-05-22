@@ -188,7 +188,7 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
 
 	KDTree kdtree;
 	kdtree.initialize(20, math::constants::Zero);
-	kdtree.analyze(&stage, 4);
+	kdtree.analyzeWithProgress(&stage, 4);
 
 	// Create scene objects
 	SceneObject *stageObject = scene.createSceneObject();
