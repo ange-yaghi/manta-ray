@@ -145,7 +145,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 
 	KDTree kdtree;
 	kdtree.initialize(100.0f, math::constants::Zero);
-	kdtree.analyze(&roomGeometry, 4);
+	kdtree.analyzeWithProgress(&roomGeometry, 4);
 
 	SpherePrimitive outdoorTopLightGeometry;
 	outdoorTopLightGeometry.setRadius((math::real)10.0);

@@ -69,7 +69,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	// Create scene objects
 	KDTree kdtree;
 	kdtree.initialize(1000.0f, math::constants::Zero);
-	kdtree.analyze(&boxCity, 2);
+	kdtree.analyzeWithProgress(&boxCity, 2);
 
 	if (WRITE_KDTREE_TO_FILE) {
 		kdtree.writeToObjFile("../../workspace/test_results/box_city_kdtree.obj");

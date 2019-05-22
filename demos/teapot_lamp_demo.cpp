@@ -130,7 +130,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 
 	KDTree kdtree;
 	kdtree.initialize(4.0f, math::constants::Zero);
-	kdtree.analyze(&objectMesh, 4);
+	kdtree.analyzeWithProgress(&objectMesh, 4);
 
 	SpherePrimitive bulb;
 	bulb.setRadius(0.25f);

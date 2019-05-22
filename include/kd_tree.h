@@ -10,6 +10,7 @@
 
 #include <vector>
 #include <fstream>
+#include <atomic>
 
 #define OPTIMIZED_KD_TREE_NODE (true)
 
@@ -140,6 +141,7 @@ namespace manta {
 			const CoarseIntersection *hint) const;
 		virtual bool fastIntersection(const LightRay *ray) const;
 
+		void analyzeWithProgress(Mesh *mesh, int maxSize);
 		void analyze(Mesh *mesh, int maxSize);
 
 		int createNode();
@@ -151,9 +153,16 @@ namespace manta {
 
 		void writeToObjFile(const char *fname) const;
 
+		void setComplete(bool complete) { m_complete = complete; }
+		bool isComplete() const { return m_complete; }
+		void resetProgress() { m_progress = (math::real)0.0; }
+		void setProgress(math::real progress) { m_progress = progress; }
+		void incrementProgress(math::real d) { m_progress = m_progress + d; }
+		math::real getProgress() const { return m_progress; }
+
 	protected:
-		void analyze(int currentNode, AABB *nodeBounds, const std::vector<int> &faces, 
-			int badRefines, int depth, KDTreeWorkspace *workspace);
+		void _analyze(int currentNode, AABB *nodeBounds, const std::vector<int> &faces, 
+			int badRefines, int depth, KDTreeWorkspace *workspace, math::real effort);
 
 		Mesh *m_mesh;
 
@@ -172,6 +181,10 @@ namespace manta {
 		std::vector<AABB> m_nodeBounds;
 
 		math::real m_width;
+
+		// Non-essential statistics
+		math::real m_progress;
+		bool m_complete;
 	};
 
 } /* namespace manta */
