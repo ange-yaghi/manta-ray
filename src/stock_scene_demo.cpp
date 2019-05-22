@@ -173,7 +173,7 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
 	SceneObject *stageObject = scene.createSceneObject();
 	if (USE_ACCELERATION_STRUCTURE) {
 		kdtree.initialize(100, math::constants::Zero);
-		kdtree.analyze(&stage, 4);
+		kdtree.analyzeWithProgress(&stage, 4);
 		stageObject->setGeometry(&kdtree);
 	}
 	else {
