@@ -4,8 +4,12 @@
 #include <standard_allocator.h>
 #include <coarse_intersection.h>
 #include <runtime_statistics.h>
+#include <os_utilities.h>
 
 #include <algorithm>
+#include <thread>
+#include <stdlib.h>
+#include <chrono>
 
 manta::KDTree::KDTree() {
 	m_nodes = nullptr;
@@ -17,6 +21,9 @@ manta::KDTree::KDTree() {
 
 	m_faceLists = nullptr;
 	m_faceCount = 0;
+
+	m_progress = (math::real)0.0;
+	m_complete = false;
 }
 
 manta::KDTree::~KDTree() {
@@ -54,7 +61,9 @@ void manta::KDTree::destroy() {
 	}
 }
 
-bool manta::KDTree::findClosestIntersection(const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const {
+bool manta::KDTree::findClosestIntersection(const LightRay *ray, CoarseIntersection *intersection, 
+											math::real minDepth, math::real maxDepth, StackAllocator *s	
+											/**/ STATISTICS_PROTOTYPE) const {
 	math::real tmin, tmax;
 	if (!m_bounds.rayIntersect(*ray, &tmin, &tmax)) {
 		return false;
@@ -165,8 +174,36 @@ bool manta::KDTree::fastIntersection(const LightRay *ray) const {
 	return true;
 }
 
+void manta::KDTree::analyzeWithProgress(Mesh *mesh, int maxSize) {
+	auto startTime = std::chrono::system_clock::now();
+
+	showConsoleCursor(false);
+
+	std::thread thread(&KDTree::analyze, this, mesh, maxSize);
+
+	while (!isComplete()) {
+		std::cout << "Generating KD tree:..." << m_progress * (math::real)100.0 << "%                    \r";
+		sleep(20);	
+	}
+
+	// Wait for the thread to finish
+	thread.join();
+
+	std::cout << "Generating KD tree... " << (math::real)100.0 << "%                    \r" << std::endl;
+
+	showConsoleCursor(true);
+
+	auto endTime = std::chrono::system_clock::now();
+	std::chrono::duration<double> diff = endTime - startTime;
+
+	std::cout << "KD tree generation took: " << diff.count() << "s" << std::endl;
+}
+
 void manta::KDTree::analyze(Mesh *mesh, int maxSize) {
 	constexpr int MAX_DEPTH = 64;
+
+	setComplete(false);
+	resetProgress();
 
 	m_mesh = mesh;
 
@@ -195,7 +232,7 @@ void manta::KDTree::analyze(Mesh *mesh, int maxSize) {
 	topNodeBounds.maxPoint = math::loadScalar(m_width);
 
 	int badRefines = 0;
-	analyze(0, &topNodeBounds, faces, badRefines, MAX_DEPTH, &workspace);
+	_analyze(0, &topNodeBounds, faces, badRefines, MAX_DEPTH, &workspace, (math::real)1.0);
 
 	// Copy faces into a new array
 	int totalFaces = (int)workspace.faces.size();
@@ -212,9 +249,13 @@ void manta::KDTree::analyze(Mesh *mesh, int maxSize) {
 	}
 
 	StandardAllocator::Global()->aligned_free(workspace.allFaceBounds, nFaces);
+
+	setProgress((math::real)1.0);
+	setComplete(true);
 }
 
-void manta::KDTree::analyze(int currentNode, AABB *nodeBounds, const std::vector<int> &faces, int badRefines, int depth, KDTreeWorkspace *workspace) {
+void manta::KDTree::_analyze(int currentNode, AABB *nodeBounds, const std::vector<int> &faces, 
+							int badRefines, int depth, KDTreeWorkspace *workspace, math::real effort) {
 	constexpr math::real intersectionCost = 80;
 	constexpr math::real traversalCost = 1;
 	constexpr math::real emptyBonus = 0.5;
@@ -227,6 +268,8 @@ void manta::KDTree::analyze(int currentNode, AABB *nodeBounds, const std::vector
 	int primitiveCount = (int)faces.size();
 	if (primitiveCount <= workspace->maxPrimitives || depth == 0) {
 		initLeaf(currentNode, faces, *nodeBounds, workspace);
+
+		incrementProgress(effort);
 		return;
 	}
 
@@ -292,6 +335,7 @@ void manta::KDTree::analyze(int currentNode, AABB *nodeBounds, const std::vector
 	if (bestCost > oldCost) ++badRefines;
 	if (((bestCost > 4 * oldCost && primitiveCount < workspace->maxPrimitives) || bestAxis == -1 || badRefines == 3)) {
 		initLeaf(currentNode, faces, *nodeBounds, workspace);
+		incrementProgress(effort);
 		return;
 	}
 
@@ -315,10 +359,15 @@ void manta::KDTree::analyze(int currentNode, AABB *nodeBounds, const std::vector
 	math::set(bounds0.maxPoint, bestAxis, split);
 	math::set(bounds1.minPoint, bestAxis, split);
 
-	analyze(currentNode + 1, &bounds0, primitives0, badRefines, depth - 1, workspace);
+	int totalPrimitives = (int)primitives0.size() + (int)primitives1.size();
+	math::real effort0, effort1;
+	effort0 = (math::real)primitives0.size() / totalPrimitives;
+	effort1 = (math::real)1.0 - effort0;
+
+	_analyze(currentNode + 1, &bounds0, primitives0, badRefines, depth - 1, workspace, effort0 * effort);
 	int aboveChild = m_nodeCount;
 	m_nodes[currentNode].initInterior(bestAxis, aboveChild, split);
-	analyze(aboveChild, &bounds1, primitives1, badRefines, depth - 1, workspace);
+	_analyze(aboveChild, &bounds1, primitives1, badRefines, depth - 1, workspace, effort1 * effort);
 }
 
 int manta::KDTree::createNode() {

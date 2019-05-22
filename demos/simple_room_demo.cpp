@@ -72,7 +72,7 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 
 	KDTree kdtree;
 	kdtree.initialize(100.f, math::loadVector(0, 0, 0));
-	kdtree.analyze(&smallHouse, 4);
+	kdtree.analyzeWithProgress(&smallHouse, 4);
 
 	if (WRITE_KDTREE_TO_FILE) {
 		kdtree.writeToObjFile("../../workspace/test_results/house_kdtree.obj");

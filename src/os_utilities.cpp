@@ -22,3 +22,7 @@ void manta::showConsoleCursor(bool show) {
 
 	SetConsoleCursorInfo(out, &cursorInfo);
 }
+
+void manta::sleep(int milliseconds) {
+	Sleep((DWORD)milliseconds);
+}

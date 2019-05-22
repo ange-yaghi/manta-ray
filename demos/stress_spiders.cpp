@@ -64,7 +64,7 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 
 	KDTree kdtree;
 	kdtree.initialize(100.0f, math::constants::Zero);
-	kdtree.analyze(&stressSpiders, 4);
+	kdtree.analyzeWithProgress(&stressSpiders, 4);
 
 	SpherePrimitive outdoorTopLightGeometry;
 	outdoorTopLightGeometry.setRadius(10.f);

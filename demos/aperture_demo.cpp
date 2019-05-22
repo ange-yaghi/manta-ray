@@ -44,7 +44,7 @@ void manta_demo::apertureDemo(int samplesPerPixel, int resolutionX, int resoluti
 	// Create scene objects
 	KDTree kdtree;
 	kdtree.initialize((math::real)500.0, math::constants::Zero);
-	kdtree.analyze(&blocks, 4);
+	kdtree.analyzeWithProgress(&blocks, 4);
 
 	SceneObject *boxCityObject = scene.createSceneObject();
 	if (USE_ACCELERATION_STRUCTURE) boxCityObject->setGeometry(&kdtree);

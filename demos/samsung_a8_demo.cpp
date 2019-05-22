@@ -287,16 +287,13 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	// Create all scene geometry
 	Mesh phone;
 	phone.loadObjFileData(&phoneObj, rayTracer.getMaterialManager(), defaultMaterial->getIndex(), 0);
-	std::cout << phone.getTriangleFaceCount() << std::endl;
-	//phone.findQuads();
-	std::cout << phone.getQuadFaceCount() << ", " << phone.getTriangleFaceCount() << std::endl;
 
 	// Destroy file loaders
 	phoneObj.destroy();
 
 	KDTree kdtree;
 	kdtree.initialize(1000, math::constants::Zero);
-	kdtree.analyze(&phone, 2);
+	kdtree.analyzeWithProgress(&phone, 2);
 
 	// Create scene objects
 	SceneObject *phoneObject = scene.createSceneObject();
