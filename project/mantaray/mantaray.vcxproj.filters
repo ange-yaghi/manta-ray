@@ -549,9 +549,6 @@
     <ClCompile Include="..\..\src\vector_map_2d.cpp">
       <Filter>Source Files\math\maps</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\mipmap.cpp">
-      <Filter>Source Files\math\maps</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\node.cpp">
       <Filter>Source Files\nodes</Filter>
     </ClCompile>
@@ -642,10 +639,10 @@
     <ClCompile Include="..\..\src\sdl_value_label.cpp">
       <Filter>Source Files\sdl-parser\values</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\include\sdl_value_int.h">
-      <Filter>Header Files\sdl-parser\values</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\sdl_value_node_ref.cpp">
+      <Filter>Source Files\sdl-parser\values</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_value_int.cpp">
       <Filter>Source Files\sdl-parser\values</Filter>
     </ClCompile>
   </ItemGroup>

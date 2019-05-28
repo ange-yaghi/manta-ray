@@ -4,6 +4,7 @@
 #include <settings.h>
 
 // All required manta-ray includes
+#include <manta.h>
 #include <light_ray.h>
 #include <sphere_primitive.h>
 #include <intersection_point.h>

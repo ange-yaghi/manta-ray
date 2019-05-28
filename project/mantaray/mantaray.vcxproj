@@ -21,7 +21,6 @@
   <ItemGroup>
     <ClCompile Include="..\..\autogen\sdl_parser.auto.cpp" />
     <ClCompile Include="..\..\autogen\sdl_scanner.auto.cpp" />
-    <ClCompile Include="..\..\include\sdl_value_int.h" />
     <ClCompile Include="..\..\src\aperture.cpp" />
     <ClCompile Include="..\..\src\media_interface.cpp" />
     <ClCompile Include="..\..\src\biconvex_lens.cpp" />
@@ -50,7 +49,6 @@
     <ClCompile Include="..\..\src\manta_math.cpp" />
     <ClCompile Include="..\..\src\media_interface_node_output.cpp" />
     <ClCompile Include="..\..\src\microfacet_distribution_node_output.cpp" />
-    <ClCompile Include="..\..\src\mipmap.cpp" />
     <ClCompile Include="..\..\src\multiply_node.cpp" />
     <ClCompile Include="..\..\src\multiply_node_output.cpp" />
     <ClCompile Include="..\..\src\opaque_media_interface.cpp" />
@@ -64,6 +62,7 @@
     <ClCompile Include="..\..\src\sdl_driver.cpp" />
     <ClCompile Include="..\..\src\sdl_node.cpp" />
     <ClCompile Include="..\..\src\sdl_value.cpp" />
+    <ClCompile Include="..\..\src\sdl_value_int.cpp" />
     <ClCompile Include="..\..\src\sdl_value_label.cpp" />
     <ClCompile Include="..\..\src\sdl_value_node_ref.cpp" />
     <ClCompile Include="..\..\src\signal_processing.cpp" />
@@ -384,7 +383,7 @@
       <AdditionalDependencies>SDL2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Lib>
-      <AdditionalDependencies>turbojpeg.lib;SDL2.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <PreBuildEvent>
       <Command>$(SolutionDir)/../scripts/compile_flex_bison.bat</Command>
@@ -409,7 +408,7 @@
       <Command>python $(TargetDir)..\..\..\scripts\increment_build_version.py</Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalDependencies>turbojpeg.lib;SDL2.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <PreBuildEvent>
       <Command>$(SolutionDir)/../scripts/compile_flex_bison.bat</Command>
@@ -434,7 +433,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>turbojpeg.lib;SDL2.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <PreBuildEvent>
       <Command>$(SolutionDir)/../scripts/compile_flex_bison.bat</Command>
@@ -463,7 +462,7 @@
       <Command>python $(TargetDir)..\..\..\scripts\increment_build_version.py</Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalDependencies>turbojpeg.lib;SDL2.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <PreBuildEvent>
       <Command>$(SolutionDir)/../scripts/compile_flex_bison.bat</Command>

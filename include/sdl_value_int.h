@@ -8,6 +8,7 @@ namespace manta {
 	class SdlValueInt : public SdlValue {
 	public:
 		SdlValueInt(int *values, int n);
+		virtual ~SdlValueInt();
 
 		int getLength() const { return m_length; }
 		int get(int index) const { return m_values[index]; }
