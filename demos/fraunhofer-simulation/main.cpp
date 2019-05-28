@@ -1,3 +1,4 @@
+#include <manta.h>
 #include <manta_math.h>
 #include <standard_allocator.h>
 #include <signal_processing.h>
