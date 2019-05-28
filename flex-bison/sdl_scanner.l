@@ -21,6 +21,11 @@ using token = manta::SdlParser::token;
 
 %}
 
+/* This is to avoid macro redefinition warnings */
+%top{
+#include <stdint.h>
+}
+
 %option debug
 %option nodefault
 %option yyclass="manta::SdlScanner"
