@@ -46,7 +46,7 @@ void manta::SdlDriver::parseHelper(std::istream &stream) {
 	try {
 		m_scanner = new manta::SdlScanner(&stream);
 	}
-	catch (std::bad_alloc &ba) {
+	catch (std::bad_alloc) {
 		return;
 	}
 
@@ -55,7 +55,7 @@ void manta::SdlDriver::parseHelper(std::istream &stream) {
 	try {
 		m_parser = new manta::SdlParser(*m_scanner, *this);
 	}
-	catch (std::bad_alloc &ba) {
+	catch (std::bad_alloc) {
 		return;
 	}
 

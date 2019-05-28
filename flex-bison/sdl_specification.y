@@ -3,7 +3,7 @@
 %debug
 %defines
 %define api.namespace {manta}
-%define parser_class_name {SdlParser}
+%define api.parser.class {SdlParser}
 
 %code requires {
 	namespace manta {
@@ -28,6 +28,12 @@
 	#define YY_NULLPTR 0
 	#endif
 	#endif
+
+	/* Remove annoying compiler warnings */
+    #ifdef _MSC_VER
+    /* warning C4065: switch statement contains 'default' but no 'case' labels */
+    #pragma warning (disable : 4065)
+    #endif
 }
 
 %type <manta::SdlNode *> node;
@@ -70,7 +76,7 @@
 sdl : END | node_list END;
 
 node_list 
-  : /* empty */		{ $$ = &driver; }
+  : node			{ $$ = &driver; $$->addNode($1); }
   | node_list node	{ $1->addNode($2); $$ = $1; }
   ;
 
