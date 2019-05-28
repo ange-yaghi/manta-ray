@@ -1,0 +1,13 @@
+FileImage testImage (
+    Filename: var
+)
+
+Add a (
+    A: testImage,
+    B: var
+)
+
+ImageOutput (
+    Filename: var,
+    Input: a
+)

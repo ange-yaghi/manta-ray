@@ -289,6 +289,36 @@
     <Filter Include="Source Files\nodes\output-ports\operations">
       <UniqueIdentifier>{f142cbcd-03f8-4292-b817-5637529626ab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\sdl-parser">
+      <UniqueIdentifier>{7b28548d-7ec1-4d98-934d-b59b02533d11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sdl-parser">
+      <UniqueIdentifier>{49df4e27-bb7f-4668-a212-5d30200c9484}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sdl-parser\autogen">
+      <UniqueIdentifier>{8c2447b9-db55-4f23-933e-99498e55194d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl-parser\autogen">
+      <UniqueIdentifier>{97ed18c2-894a-44d4-975a-383f291bcfe1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl-parser\scanner">
+      <UniqueIdentifier>{a7559481-db71-4944-b2c8-466787e1b6ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Flex-Bison">
+      <UniqueIdentifier>{95175351-dc65-4898-ac36-6d4082af33a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl-parser\driver">
+      <UniqueIdentifier>{34b4dffb-9450-4f32-9c46-b44bc4be5bb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sdl-parser\driver">
+      <UniqueIdentifier>{15b74b5b-3226-4253-9229-fdcc4330e4ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl-parser\values">
+      <UniqueIdentifier>{aebbebc9-5a53-40d0-89a0-a9ba1c3b8c8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sdl-parser\values">
+      <UniqueIdentifier>{71ad4405-531b-43da-be16-a3d90bbf32b3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -587,6 +617,36 @@
     </ClCompile>
     <ClCompile Include="..\..\src\media_interface.cpp">
       <Filter>Source Files\material\surface-modeling\media-interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_driver.cpp">
+      <Filter>Source Files\sdl-parser\driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\autogen\sdl_parser.auto.cpp">
+      <Filter>Source Files\sdl-parser\autogen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\autogen\sdl_scanner.auto.cpp">
+      <Filter>Source Files\sdl-parser\autogen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_node.cpp">
+      <Filter>Source Files\sdl-parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_attribute.cpp">
+      <Filter>Source Files\sdl-parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_attribute_list.cpp">
+      <Filter>Source Files\sdl-parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_value.cpp">
+      <Filter>Source Files\sdl-parser\values</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_value_label.cpp">
+      <Filter>Source Files\sdl-parser\values</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\include\sdl_value_int.h">
+      <Filter>Header Files\sdl-parser\values</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_value_node_ref.cpp">
+      <Filter>Source Files\sdl-parser\values</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -950,6 +1010,33 @@
     <ClInclude Include="..\..\include\step_node.h">
       <Filter>Header Files\nodes\library</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\sdl_scanner.h">
+      <Filter>Header Files\sdl-parser\scanner</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_driver.h">
+      <Filter>Header Files\sdl-parser\driver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\autogen\sdl_parser.auto.h">
+      <Filter>Header Files\sdl-parser\autogen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_node.h">
+      <Filter>Header Files\sdl-parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_attribute_list.h">
+      <Filter>Header Files\sdl-parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_attribute.h">
+      <Filter>Header Files\sdl-parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_value.h">
+      <Filter>Header Files\sdl-parser\values</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_value_label.h">
+      <Filter>Header Files\sdl-parser\values</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_value_node_ref.h">
+      <Filter>Header Files\sdl-parser\values</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\opencl_programs\mantaray.cl">
@@ -958,5 +1045,9 @@
     <None Include="..\..\scripts\increment_build_version.py">
       <Filter>Scripts</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\flex-bison\sdl_scanner.l" />
+    <CustomBuild Include="..\..\flex-bison\sdl_specification.y" />
   </ItemGroup>
 </Project>

@@ -75,8 +75,8 @@ void execute(int resolution, math::real_d apertureRadius, int bladeCount, math::
 	texture = nullptr;
 
 	PolygonalAperture aperture;
-	aperture.setRadius(apertureRadius);
-	aperture.setBladeCurvature(bladeCurvature);
+	aperture.setRadius((math::real)apertureRadius);
+	aperture.setBladeCurvature((math::real)bladeCurvature);
 	aperture.initialize(bladeCount, math::constants::PI / 2);
 
 	int maxResolution = (int)((CftEstimator2D::getFreqRange(estimatorSamples, sampleWindow) * maxWavelength + sensorWidth / 2) / sensorElementWidth);

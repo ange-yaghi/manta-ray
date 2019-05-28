@@ -80,7 +80,7 @@ using namespace manta;
 #define CMF_PATH "../../../demos/cmfs/"
 #define WORKSPACE_PATH "../../../workspace/"
 #define TMP_PATH (WORKSPACE_PATH "tmp/")
-
+#define SDL_TEST_FILES "../../../test/sdl/"
 
 void writeToJpeg(const RealMap2D *scalarMap, const std::string &fname);
 void writeToJpeg(const VectorMap2D *vectorMap, const std::string &fname);
