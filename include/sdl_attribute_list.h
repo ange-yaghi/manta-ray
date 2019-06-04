@@ -1,18 +1,20 @@
 #ifndef SDL_ATTRIBUTE_LIST_H
 #define SDL_ATTRIBUTE_LIST_H
 
+#include <sdl_parser_structure.h>
+
 #include <vector>
 
 namespace manta {
 
 	class SdlAttribute;
 
-	class SdlAttributeList {
+	class SdlAttributeList : public SdlParserStructure {
 	public:
 		SdlAttributeList();
 		~SdlAttributeList();
 
-		void addAttribute(SdlAttribute *attribute) { m_attributes.push_back(attribute); }
+		void addAttribute(SdlAttribute *attribute);
 		SdlAttribute *getAttribute(int index) const { return m_attributes[index]; }
 		int getAttributeCount() const { return (int)m_attributes.size(); }
 

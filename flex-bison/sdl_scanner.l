@@ -1,6 +1,8 @@
 %{
 /* C++ string header, for string ops below */
 #include <string>
+#include <sstream>
+#include <iostream>
 
 /* Implementation of yyFlexScanner */ 
 #include <sdl_scanner.h>
@@ -17,7 +19,10 @@ using token = manta::SdlParser::token;
 #define YY_NO_UNISTD_H
 
 /* update location on matching */
-#define YY_USER_ACTION m_loc->step(); m_loc->columns(yyleng);
+#define YY_USER_ACTION count();
+
+#define DEFAULT_BUILD(location) buildValue<std::string>(yytext, (location), true)
+#define BUILD_INVALID(location) buildValue<std::string>(yytext, (location), false)
 
 %}
 
@@ -34,24 +39,126 @@ using token = manta::SdlParser::token;
 
 D				[0-9]
 L				[a-zA-Z_]
+H				[a-fA-F0-9]
 
 %%
 %{          /** Code executed at the beginning of yylex **/
             m_yylval = lval;
 %}
 
+"import"		{ DEFAULT_BUILD(location); return (token::IMPORT); }
+"input"			{ DEFAULT_BUILD(location); return (token::INPUT); }
+"output"		{ DEFAULT_BUILD(location); return (token::OUTPUT); }
+"default"		{ DEFAULT_BUILD(location); return (token::DEFAULT); }
+"node"			{ DEFAULT_BUILD(location); return (token::NODE); }
+"export"		{ DEFAULT_BUILD(location); return (token::EXPORT); }
+"local"			{ DEFAULT_BUILD(location); return (token::LOCAL); }
+"@"				{ DEFAULT_BUILD(location); return (token::DECORATOR); }
 
-{L}({L}|{D})*	{
-					m_yylval->build<std::string>(yytext);
-					return (token::LABEL);
+"true"			{
+					buildValue<bool>(true, location);
+					return (token::BOOL);
+				}
+"false"			{
+					buildValue<bool>(false, location);
+					return (token::BOOL);
 				}
 
-","				{ return (','); }
-"("				{ return ('('); }
-")"				{ return (')'); }
-":"				{ return (':'); }
-";"				{ return (';'); }
-","				{ return (','); }
+
+{L}({L}|{D})*	{
+					DEFAULT_BUILD(location);
+					return (token::LABEL);
+				}
+0[xX]{H}+		{
+					unsigned int value;
+					value = std::stoul(yytext, nullptr, 16);
+
+					buildValue<int>((int)value, location);
+					return (token::INT);
+				}
+{D}+			{
+					unsigned int value;
+					value = std::stoul(yytext, nullptr, 10);
+
+					buildValue<int>((int)value, location);
+					return (token::INT);
+				}
+{D}+"."{D}+		{
+					double value;
+					value = std::stod(yytext);
+
+					buildValue<double>(value, location);
+					return (token::FLOAT);
+				}
+\"(\\.|[^\\"\n])*\"	{
+					// String literal
+					size_t length = strlen(yytext);
+					char *str = new char[length];
+					strcpy_s(str, length, yytext + 1);
+					str[length - 2] = '\0';
+
+					buildValue<std::string>(str, location);
+					delete[] str;
+
+					return (token::STRING);
+				}
+
+","				{ DEFAULT_BUILD(location); return (','); }
+"("				{ DEFAULT_BUILD(location); return ('('); }
+")"				{ DEFAULT_BUILD(location); return (')'); }
+":"				{ DEFAULT_BUILD(location); return (':'); }
+
+"."				{ DEFAULT_BUILD(location); return ('.'); }
+"*"				{ DEFAULT_BUILD(location); return ('*'); }
+"/"				{ DEFAULT_BUILD(location); return ('/'); }
+"+"				{ DEFAULT_BUILD(location); return ('+'); }
+"-"				{ DEFAULT_BUILD(location); return ('-'); }
+
+"=>"			{ DEFAULT_BUILD(location); return (token::POINTER); }
+"="				{ DEFAULT_BUILD(location); return ('='); }
+
+","				{ DEFAULT_BUILD(location); return (','); }
+
 [ \t\v\n\f]		{ }
-.				{ }
+"//"[^\n]*		{ }
+"/*"			{ comment(); }
+.				{ BUILD_INVALID(location); return (token::UNRECOGNIZED); }
 %%
+
+void manta::SdlScanner::comment(void) {
+	char c, prev = 0;
+	while ((c = yyinput()) != 0) { /* (EOF maps to 0) */
+		countChar(c);
+		if (c == '/' && prev == '*') return;
+		prev = c;
+	}
+
+	LexerError("unterminated comment");
+}
+
+void manta::SdlScanner::count() {
+	step();
+
+	for (int i = 0; yytext[i] != '\0'; i++) {
+		char c = yytext[i];
+		countChar(c);
+	}
+}
+
+void manta::SdlScanner::countChar(char c) {
+	if (c == '\n') {
+		m_loc->lineEnd++;
+		m_loc->colEnd = 1;
+	}
+	else if (c == '\t') {
+		m_loc->colEnd += 4;
+	}
+	else {
+		m_loc->colEnd++;
+	}
+}
+
+void manta::SdlScanner::step() {
+	m_loc->lineStart = m_loc->lineEnd;
+	m_loc->colStart = m_loc->colEnd;
+}

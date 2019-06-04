@@ -1,0 +1,3 @@
+FileImage testImage (
+    test_float:   float2(10.123, 15.456)
+) // Test comment

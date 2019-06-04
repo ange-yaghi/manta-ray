@@ -5,5 +5,5 @@ FileImage testImage (
 
 FileImage testImage2 (
 	test1:	test,
-	test2: 	test
+	test2: 	test /* Test block comment */
 )
