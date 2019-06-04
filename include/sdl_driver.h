@@ -11,9 +11,12 @@ namespace manta {
 	class SdlParser;
 	class SdlScanner;
 	class SdlNode;
+	class SdlNodeDefinition;
 	class SdlAttributeList;
 	class SdlAttribute;
 	class SdlValue;
+	class SdlImportStatement;
+	class SdlCompilationError;
 
 	class SdlDriver {
 	public:
@@ -24,35 +27,34 @@ namespace manta {
 		void parse(const char *sdl);
 		void parse(std::istream &iss);
 
-		void addUpper();
-		void addLower();
-		void addWord(const std::string &word);
-		void addNewline();
-		void addChar();
-
-		SdlNode *createNode(const std::string &type, const std::string &name, SdlAttributeList *attributes) const;
 		void addNode(SdlNode *node);
 		SdlNode *getNode(int index) const;
 		int getNodeCount() const;
 
-		SdlAttributeList *createAttributeList() const;
-		SdlAttribute *createAttribute(const std::string &name, SdlValue *value) const;
+		void addImportStatement(SdlImportStatement *statement);
+		SdlImportStatement *getImportStatement(int index) const { return m_importStatements[index]; }
+		int getImportStatementCount() const;
+
+		void addNodeDefinition(SdlNodeDefinition *definition);
+		SdlNodeDefinition *getNodeDefinition(int index) const { return m_nodeDefinitions[index]; }
+		int getNodeDefinitionCount() const;
+
+		void addCompilationError(SdlCompilationError *err);
+		SdlCompilationError *getCompilationError(int index) { return m_compilationErrors[index]; }
+		int getCompilationErrorCount() const { return (int)m_compilationErrors.size(); }
 
 		std::ostream& print(std::ostream &stream);
 
 	private:
 		void parseHelper(std::istream &stream);
 
-		std::size_t m_chars = 0;
-		std::size_t m_words = 0;
-		std::size_t m_lines = 0;
-		std::size_t m_uppercase = 0;
-		std::size_t m_lowercase = 0;
-		std::size_t m_nodeCount = 0;
 		SdlParser *m_parser = nullptr;
 		SdlScanner *m_scanner = nullptr;
 
 		std::vector<SdlNode *> m_nodes;
+		std::vector<SdlImportStatement *> m_importStatements;
+		std::vector<SdlNodeDefinition *> m_nodeDefinitions;
+		std::vector<SdlCompilationError *> m_compilationErrors;
 	};
 
 } /* namespace manta */

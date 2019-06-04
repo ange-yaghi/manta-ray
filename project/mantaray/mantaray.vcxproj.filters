@@ -345,9 +345,6 @@
     <ClCompile Include="..\..\src\manta_math_single.cpp">
       <Filter>Source Files\math</Filter>
     </ClCompile>
-    <ClCompile Include="stack_allocator.cpp">
-      <Filter>Source Files\memory-management</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\spherical_surface.cpp">
       <Filter>Source Files\camera-emulation</Filter>
     </ClCompile>
@@ -636,14 +633,29 @@
     <ClCompile Include="..\..\src\sdl_value.cpp">
       <Filter>Source Files\sdl-parser\values</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\sdl_value_label.cpp">
+    <ClCompile Include="..\..\src\stack_allocator.cpp">
+      <Filter>Source Files\memory-management</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_binary_operator.cpp">
       <Filter>Source Files\sdl-parser\values</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\sdl_value_node_ref.cpp">
-      <Filter>Source Files\sdl-parser\values</Filter>
+    <ClCompile Include="..\..\src\sdl_import_statement.cpp">
+      <Filter>Source Files\sdl-parser</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\sdl_value_int.cpp">
-      <Filter>Source Files\sdl-parser\values</Filter>
+    <ClCompile Include="..\..\src\sdl_parser_structure.cpp">
+      <Filter>Source Files\sdl-parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_attribute_definition_list.cpp">
+      <Filter>Source Files\sdl-parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_node_definition.cpp">
+      <Filter>Source Files\sdl-parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_attribute_definition.cpp">
+      <Filter>Source Files\sdl-parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_compilation_error.cpp">
+      <Filter>Source Files\sdl-parser</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1028,11 +1040,32 @@
     <ClInclude Include="..\..\include\sdl_value.h">
       <Filter>Header Files\sdl-parser\values</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\sdl_value_label.h">
+    <ClInclude Include="..\..\include\sdl_value_constant.h">
       <Filter>Header Files\sdl-parser\values</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\sdl_value_node_ref.h">
+    <ClInclude Include="..\..\include\sdl_binary_operator.h">
       <Filter>Header Files\sdl-parser\values</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_import_statement.h">
+      <Filter>Header Files\sdl-parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_node_definition.h">
+      <Filter>Header Files\sdl-parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_attribute_definition.h">
+      <Filter>Header Files\sdl-parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_token_info.h">
+      <Filter>Header Files\sdl-parser\scanner</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_parser_structure.h">
+      <Filter>Header Files\sdl-parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_attribute_definition_list.h">
+      <Filter>Header Files\sdl-parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_compilation_error.h">
+      <Filter>Header Files\sdl-parser</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1044,7 +1077,11 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="..\..\flex-bison\sdl_scanner.l" />
-    <CustomBuild Include="..\..\flex-bison\sdl_specification.y" />
+    <CustomBuild Include="..\..\flex-bison\sdl_scanner.l">
+      <Filter>Flex-Bison</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\flex-bison\sdl_specification.y">
+      <Filter>Flex-Bison</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>

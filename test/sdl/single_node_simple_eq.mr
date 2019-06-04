@@ -1,0 +1,3 @@
+SampleNode node1 (
+	eq: a + (b / c)
+)

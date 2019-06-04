@@ -1,0 +1,4 @@
+FileImage testImage (
+    test_dec:   10,
+    test_hex_1: 0x10
+) // Test comment

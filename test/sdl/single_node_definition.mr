@@ -1,0 +1,20 @@
+@author = "Ange Yaghi"
+@date = "2019-05-30"
+
+import "test.sdl"
+import test
+
+export node NewNode:
+    @author = "Ange Yaghi"
+    @comment = "This is just a test node"
+(
+    // Inputs
+    @doc = "Main input"
+    default input A,
+    input B,
+
+    // Outputs
+    @doc = "Main output"
+    default output A_out: A,
+    output B_out: B
+)

@@ -1,14 +1,14 @@
-#include <cctype>
-#include <fstream>
-#include <cassert>
-#include <sstream>
-
 #include <sdl_driver.h>
+
 #include <sdl_scanner.h>
 #include <sdl_node.h>
 #include <sdl_attribute_list.h>
 #include <sdl_attribute.h>
-#include <sdl_value_label.h>
+
+#include <cctype>
+#include <fstream>
+#include <cassert>
+#include <sstream>
 
 manta::SdlDriver::~SdlDriver() {
 	delete m_scanner;
@@ -65,48 +65,7 @@ void manta::SdlDriver::parseHelper(std::istream &stream) {
 	}
 }
 
-void manta::SdlDriver::addUpper() {
-	m_uppercase++;
-	m_chars++;
-	m_words++;
-}
-
-void manta::SdlDriver::addLower() {
-	m_lowercase++;
-	m_chars++;
-	m_words++;
-}
-
-void manta::SdlDriver::addWord(const std::string &word) {
-	m_words++;
-	m_chars += word.length();
-
-	for (const char &c : word) {
-		if (std::islower(c)) {
-			m_lowercase++;
-		}
-		else if (isupper(c)) {
-			m_uppercase++;
-		}
-	}
-}
-
-void manta::SdlDriver::addNewline() {
-	m_lines++;
-	m_chars++;
-}
-
-void manta::SdlDriver::addChar() {
-	m_chars++;
-}
-
-manta::SdlNode *manta::SdlDriver::createNode(const std::string &type, const std::string &name, SdlAttributeList *attributes) const {
-	SdlNode *newNode = new SdlNode(type, name, attributes);
-	return newNode;
-}
-
 void manta::SdlDriver::addNode(SdlNode *node) {
-	m_nodeCount++;
 	m_nodes.push_back(node);
 }
 
@@ -115,15 +74,27 @@ manta::SdlNode *manta::SdlDriver::getNode(int index) const {
 }
 
 int manta::SdlDriver::getNodeCount() const {
-	return (int)m_nodeCount;
+	return (int)m_nodes.size();
 }
 
-manta::SdlAttributeList *manta::SdlDriver::createAttributeList() const {
-	return new SdlAttributeList;
+void manta::SdlDriver::addImportStatement(SdlImportStatement *statement) {
+	m_importStatements.push_back(statement);
 }
 
-manta::SdlAttribute *manta::SdlDriver::createAttribute(const std::string &name, SdlValue *value) const {
-	return new SdlAttribute(name, value);
+int manta::SdlDriver::getImportStatementCount() const {
+	return (int)m_importStatements.size();
+}
+
+void manta::SdlDriver::addNodeDefinition(SdlNodeDefinition *nodeDefinition) {
+	m_nodeDefinitions.push_back(nodeDefinition);
+}
+
+int manta::SdlDriver::getNodeDefinitionCount() const {
+	return (int)m_nodeDefinitions.size();
+}
+
+void manta::SdlDriver::addCompilationError(SdlCompilationError *err) {
+	m_compilationErrors.push_back(err);
 }
 
 std::ostream& manta::SdlDriver::print(std::ostream &stream) {

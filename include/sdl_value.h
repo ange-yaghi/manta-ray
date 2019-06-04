@@ -1,16 +1,19 @@
 #ifndef SDL_VALUE_H
 #define SDL_VALUE_H
 
+#include <sdl_parser_structure.h>
+
 namespace manta {
 
-	class SdlValue {
+	class SdlValue : public SdlParserStructure {
 	public:
 		enum VALUE_TYPE {
 			CONSTANT_FLOAT,
 			CONSTANT_INT,
 			CONSTANT_STRING,
 			CONSTANT_LABEL,
-			CONSTANT_BINARY_OPERATION,
+			CONSTANT_BOOL,
+			BINARY_OPERATION,
 			NODE_REF
 		};
 
