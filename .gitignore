@@ -20,6 +20,7 @@
 [Rr]eleases/
 bld/
 [Bb]in/
+!dependencies/**/bin/
 [Oo]bj/
 [Ll]og/
 
@@ -89,10 +90,12 @@ StyleCopReport.xml
 *.svclog
 *.scc
 *.bmp
-*.exe
+#*.exe
+!dependencies/**/*.exe
 *.dll
 !dependencies/runtime/x64/*.dll
 !dependencies/runtime/x86/*.dll
+!dependencies/tools/**/*.dll
 *.blend
 
 # Chutzpah Test files
