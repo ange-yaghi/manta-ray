@@ -29,12 +29,18 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	// Create all materials
 	LambertianBSDF lambert;
 
+	TextureNode blockWood;
+	blockWood.loadFile(TEXTURE_PATH "dark_wood.jpg", true);
+	blockWood.initialize();
+	blockWood.evaluate();
+
 	PhongDistribution blockCoating;
 	blockCoating.setPower((math::real)300);
 	BilayerBSDF blockBSDF;
 	blockBSDF.setCoatingDistribution(blockCoating.getMainOutput());
 	blockBSDF.setDiffuseMaterial(&lambert);
-	blockBSDF.setDiffuse(getColor(0xf1, 0xc4, 0x0f)); // 0xf1, 0xc4, 0x0f
+	//blockBSDF.setDiffuse(getColor(129, 216, 208)); // 0xf1, 0xc4, 0x0f
+	blockBSDF.setDiffuseNode(blockWood.getMainOutput());
 	blockBSDF.setSpecularAtNormal(math::loadVector(0.02f, 0.02f, 0.02f));
 	SimpleBSDFMaterial *blockMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	blockMaterial->setName("Block");
@@ -53,7 +59,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	SimpleBSDFMaterial *sunMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	sunMaterial->setName("Sun");
 	sunMaterial->setReflectance(math::loadVector(0.0f, 0.0f, 0.0f));
-	sunMaterial->setEmission(math::loadVector(1000.0f, 1000.0f, 1000.0f));
+	sunMaterial->setEmission(math::loadVector(100.0f, 100.0f, 100.0f));
 	sunMaterial->setBSDF(nullptr);
 
 	// Create all scene geometry
@@ -100,7 +106,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
 	manta::SimpleLens lens;
 	manta::PolygonalAperture polygonalAperture;
-	polygonalAperture.setBladeCurvature(0.4f);
+	polygonalAperture.setBladeCurvature(0.25f);
 	polygonalAperture.initialize(8);
 
 	if (POLYGON_APERTURE) lens.setAperture(&polygonalAperture);
@@ -162,7 +168,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
 	// Initialize and run the ray tracer
 	rayTracer.initialize(200 * MB, 50 * MB, 12, 100, true);
-	rayTracer.setBackgroundColor(getColor(0xff, 0xff, 0xff));
+	rayTracer.setBackgroundColor(math::loadScalar(1.1f));
 	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 	
@@ -193,7 +199,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 		settings.textureSamples = 10;
 
 		TextureNode dirtTexture;
-		dirtTexture.loadFile(TEXTURE_PATH "dirt_very_soft.png", true);
+		dirtTexture.loadFile(TEXTURE_PATH "dirt_composite.png", true);
 		dirtTexture.initialize();
 		dirtTexture.evaluate();
 		const VectorMap2D *dirtTextureMap = dirtTexture.getMainOutput()->getMap();
@@ -223,17 +229,17 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 		mantaOutput.evaluate();
 		mantaOutput.destroy();
 
-		RampNode ramp;
-		ramp.initialize();
-		ramp.getMainOutput()->setDefaultDc(math::constants::One);
-		ramp.getMainOutput()->setDefaultFoot(math::constants::One);
-		ramp.getMainOutput()->setDefaultSlope(math::loadScalar(10.0f));
-		ramp.getMainOutput()->setInput(mantaOutput.getMainOutput());
-		ramp.evaluate();
+		RampNode step;
+		step.initialize();
+		step.getMainOutput()->setDefaultDc(math::constants::One);
+		step.getMainOutput()->setDefaultFoot(math::loadScalar(1.05f));
+		step.getMainOutput()->setDefaultSlope(math::loadScalar(500.0f));
+		step.getMainOutput()->setInput(mantaOutput.getMainOutput());
+		step.evaluate();
 
 		MultiplyNode mulNode;
 		mulNode.initialize();
-		mulNode.getMainOutput()->setInputA(ramp.getMainOutput());
+		mulNode.getMainOutput()->setInputA(step.getMainOutput());
 		mulNode.getMainOutput()->setInputB(mantaOutput.getMainOutput());
 		mulNode.evaluate();
 
@@ -271,6 +277,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	boxCityObj.destroy();
 	kdtree.destroy();
 	polygonalAperture.destroy();
+	blockWood.destroy();
 
 	std::cout << "Standard allocator memory leaks:     " << StandardAllocator::Global()->getLedger() << ", " << StandardAllocator::Global()->getCurrentUsage() << std::endl;
 }
