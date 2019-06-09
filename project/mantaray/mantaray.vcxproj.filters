@@ -307,17 +307,23 @@
     <Filter Include="Flex-Bison">
       <UniqueIdentifier>{95175351-dc65-4898-ac36-6d4082af33a1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\sdl-parser\driver">
-      <UniqueIdentifier>{34b4dffb-9450-4f32-9c46-b44bc4be5bb9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\sdl-parser\driver">
-      <UniqueIdentifier>{15b74b5b-3226-4253-9229-fdcc4330e4ac}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\sdl-parser\values">
       <UniqueIdentifier>{aebbebc9-5a53-40d0-89a0-a9ba1c3b8c8b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\sdl-parser\values">
       <UniqueIdentifier>{71ad4405-531b-43da-be16-a3d90bbf32b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl-parser\parser">
+      <UniqueIdentifier>{6d498b1a-91cb-4917-baaa-81d135668ff3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl-parser\unit">
+      <UniqueIdentifier>{34b4dffb-9450-4f32-9c46-b44bc4be5bb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sdl-parser\unit">
+      <UniqueIdentifier>{15b74b5b-3226-4253-9229-fdcc4330e4ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sdl-parser\parser">
+      <UniqueIdentifier>{39fc1852-76c1-42d4-aa34-dcfe6367253e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -612,23 +618,11 @@
     <ClCompile Include="..\..\src\media_interface.cpp">
       <Filter>Source Files\material\surface-modeling\media-interface</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\sdl_driver.cpp">
-      <Filter>Source Files\sdl-parser\driver</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\autogen\sdl_parser.auto.cpp">
       <Filter>Source Files\sdl-parser\autogen</Filter>
     </ClCompile>
     <ClCompile Include="..\..\autogen\sdl_scanner.auto.cpp">
       <Filter>Source Files\sdl-parser\autogen</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\sdl_node.cpp">
-      <Filter>Source Files\sdl-parser</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\sdl_attribute.cpp">
-      <Filter>Source Files\sdl-parser</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\sdl_attribute_list.cpp">
-      <Filter>Source Files\sdl-parser</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\sdl_value.cpp">
       <Filter>Source Files\sdl-parser\values</Filter>
@@ -639,20 +633,32 @@
     <ClCompile Include="..\..\src\sdl_binary_operator.cpp">
       <Filter>Source Files\sdl-parser\values</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\sdl_import_statement.cpp">
-      <Filter>Source Files\sdl-parser</Filter>
+    <ClCompile Include="..\..\src\sdl_compilation_unit.cpp">
+      <Filter>Source Files\sdl-parser\unit</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\sdl_parser_structure.cpp">
-      <Filter>Source Files\sdl-parser</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\sdl_attribute_definition_list.cpp">
-      <Filter>Source Files\sdl-parser</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\sdl_node_definition.cpp">
-      <Filter>Source Files\sdl-parser</Filter>
+    <ClCompile Include="..\..\src\sdl_attribute.cpp">
+      <Filter>Source Files\sdl-parser\parser</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\sdl_attribute_definition.cpp">
-      <Filter>Source Files\sdl-parser</Filter>
+      <Filter>Source Files\sdl-parser\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_attribute_definition_list.cpp">
+      <Filter>Source Files\sdl-parser\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_attribute_list.cpp">
+      <Filter>Source Files\sdl-parser\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_import_statement.cpp">
+      <Filter>Source Files\sdl-parser\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_node.cpp">
+      <Filter>Source Files\sdl-parser\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_node_definition.cpp">
+      <Filter>Source Files\sdl-parser\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_parser_structure.cpp">
+      <Filter>Source Files\sdl-parser\parser</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\sdl_compilation_error.cpp">
       <Filter>Source Files\sdl-parser</Filter>
@@ -1022,20 +1028,8 @@
     <ClInclude Include="..\..\include\sdl_scanner.h">
       <Filter>Header Files\sdl-parser\scanner</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\sdl_driver.h">
-      <Filter>Header Files\sdl-parser\driver</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\autogen\sdl_parser.auto.h">
       <Filter>Header Files\sdl-parser\autogen</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\sdl_node.h">
-      <Filter>Header Files\sdl-parser</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\sdl_attribute_list.h">
-      <Filter>Header Files\sdl-parser</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\sdl_attribute.h">
-      <Filter>Header Files\sdl-parser</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\sdl_value.h">
       <Filter>Header Files\sdl-parser\values</Filter>
@@ -1046,26 +1040,38 @@
     <ClInclude Include="..\..\include\sdl_binary_operator.h">
       <Filter>Header Files\sdl-parser\values</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\sdl_import_statement.h">
-      <Filter>Header Files\sdl-parser</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\sdl_node_definition.h">
-      <Filter>Header Files\sdl-parser</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\sdl_attribute_definition.h">
-      <Filter>Header Files\sdl-parser</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\sdl_token_info.h">
       <Filter>Header Files\sdl-parser\scanner</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\sdl_parser_structure.h">
-      <Filter>Header Files\sdl-parser</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\sdl_attribute_definition_list.h">
-      <Filter>Header Files\sdl-parser</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\sdl_compilation_error.h">
       <Filter>Header Files\sdl-parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_compilation_unit.h">
+      <Filter>Header Files\sdl-parser\unit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_parser_structure.h">
+      <Filter>Header Files\sdl-parser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_node_definition.h">
+      <Filter>Header Files\sdl-parser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_node.h">
+      <Filter>Header Files\sdl-parser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_import_statement.h">
+      <Filter>Header Files\sdl-parser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_attribute_list.h">
+      <Filter>Header Files\sdl-parser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_attribute_definition_list.h">
+      <Filter>Header Files\sdl-parser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_attribute_definition.h">
+      <Filter>Header Files\sdl-parser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_attribute.h">
+      <Filter>Header Files\sdl-parser\parser</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

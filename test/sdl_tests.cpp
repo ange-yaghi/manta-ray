@@ -1,6 +1,6 @@
 #include <pch.h>
 
-#include <sdl_driver.h>
+#include <sdl_compilation_unit.h>
 #include <sdl_node.h>
 #include <sdl_attribute_list.h>
 #include <sdl_attribute.h>
@@ -28,7 +28,7 @@ using namespace manta;
 	
 
 TEST(SdlTests, SdlSanityCheck) {
-	SdlDriver parser;
+	SdlCompilationUnit parser;
 	parser.parseFile(SDL_TEST_FILES "single_empty_node.mr");
 
 	const SdlNode *node = parser.getNode(0);
@@ -44,7 +44,7 @@ TEST(SdlTests, SdlSanityCheck) {
 }
 
 TEST(SdlTests, SdlSingleAttribute) {
-	SdlDriver parser;
+	SdlCompilationUnit parser;
 	parser.parseFile(SDL_TEST_FILES "single_node_single_attrib.mr");
 
 	const SdlNode *node = parser.getNode(0);
@@ -63,7 +63,7 @@ TEST(SdlTests, SdlSingleAttribute) {
 }
 
 TEST(SdlTests, SdlTwoAttributes) {
-	SdlDriver parser;
+	SdlCompilationUnit parser;
 	parser.parseFile(SDL_TEST_FILES "single_node_two_attribs.mr");
 
 	const SdlNode *node = parser.getNode(0);
@@ -88,7 +88,7 @@ TEST(SdlTests, SdlTwoAttributes) {
 }
 
 TEST(SdlTests, SdlTwoNodes) {
-	SdlDriver parser;
+	SdlCompilationUnit parser;
 	parser.parseFile(SDL_TEST_FILES "two_nodes.mr");
 
 	const SdlNode *node1 = parser.getNode(0);
@@ -109,7 +109,7 @@ TEST(SdlTests, SdlTwoNodes) {
 }
 
 TEST(SdlTests, SdlInlineNode) {
-	SdlDriver parser;
+	SdlCompilationUnit parser;
 	parser.parseFile(SDL_TEST_FILES "single_node_inline_node.mr");
 
 	const SdlNode *node = parser.getNode(0);
@@ -143,7 +143,7 @@ TEST(SdlTests, SdlInlineNode) {
 }
 
 TEST(SdlTests, SdlSimpleIntTest) {
-	SdlDriver parser;
+	SdlCompilationUnit parser;
 	parser.parseFile(SDL_TEST_FILES "single_node_single_int.mr");
 
 	const SdlNode *node = parser.getNode(0);
@@ -168,7 +168,7 @@ TEST(SdlTests, SdlSimpleIntTest) {
 }
 
 TEST(SdlTests, SdlStringSanityCheck) {
-	SdlDriver parser;
+	SdlCompilationUnit parser;
 	parser.parseFile(SDL_TEST_FILES "single_node_string_attrib.mr");
 
 	const SdlNode *node = parser.getNode(0);
@@ -187,7 +187,7 @@ TEST(SdlTests, SdlStringSanityCheck) {
 }
 
 TEST(SdlTests, SdlSingleNodeDataAccess) {
-	SdlDriver parser;
+	SdlCompilationUnit parser;
 	parser.parseFile(SDL_TEST_FILES "single_node_data_access.mr");
 
 	const SdlNode *node = parser.getNode(0);
@@ -209,7 +209,7 @@ TEST(SdlTests, SdlSingleNodeDataAccess) {
 }
 
 TEST(SdlTests, SdlSingleNodeSimpleEq) {
-	SdlDriver parser;
+	SdlCompilationUnit parser;
 	parser.parseFile(SDL_TEST_FILES "single_node_simple_eq.mr");
 
 	const SdlNode *node = parser.getNode(0);
@@ -217,7 +217,7 @@ TEST(SdlTests, SdlSingleNodeSimpleEq) {
 }
 
 TEST(SdlTests, SdlImportTest) {
-	SdlDriver parser;
+	SdlCompilationUnit parser;
 	parser.parseFile(SDL_TEST_FILES "single_node_import_statement.mr");
 
 	int importCount = parser.getImportStatementCount();
@@ -232,7 +232,7 @@ TEST(SdlTests, SdlImportTest) {
 }
 
 TEST(SdlTests, SdlNodeDefinitionTest) {
-	SdlDriver parser;
+	SdlCompilationUnit parser;
 	parser.parseFile(SDL_TEST_FILES "single_node_definition.mr");
 
 	EXPECT_EQ(parser.getNodeDefinitionCount(), 1);
@@ -249,7 +249,7 @@ TEST(SdlTests, SdlNodeDefinitionTest) {
 }
 
 TEST(SdlTests, SdlNodeBuiltinTest) {
-	SdlDriver parser;
+	SdlCompilationUnit parser;
 	parser.parseFile(SDL_TEST_FILES "single_node_builtin.mr");
 
 	EXPECT_EQ(parser.getNodeDefinitionCount(), 1);
@@ -288,7 +288,7 @@ TEST(SdlTests, SdlNodeBuiltinTest) {
 }
 
 TEST(SdlTests, SdlFloatTest) {
-	SdlDriver parser;
+	SdlCompilationUnit parser;
 	parser.parseFile(SDL_TEST_FILES "single_node_vector_float.mr");
 
 	SdlNode *node = parser.getNode(0);
@@ -317,7 +317,7 @@ TEST(SdlTests, SdlFloatTest) {
 }
 
 TEST(SdlTests, SdlBoolTest) {
-	SdlDriver parser;
+	SdlCompilationUnit parser;
 	parser.parseFile(SDL_TEST_FILES "single_node_bool.mr");
 
 	SdlNode *node = parser.getNode(0);
@@ -344,7 +344,7 @@ TEST(SdlTests, SdlBoolTest) {
 }
 
 TEST(SdlTests, SdlSyntaxErrorTest) {
-	SdlDriver parser;
+	SdlCompilationUnit parser;
 	parser.parseFile(SDL_TEST_FILES "syntax_error.mr");
 
 	int errorCount = parser.getCompilationErrorCount();

@@ -1,5 +1,5 @@
-#ifndef SDL_DRIVER_H
-#define SDL_DRIVER_H
+#ifndef SDL_COMPILATION_UNIT_H
+#define SDL_COMPILATION_UNIT_H
 
 #include <string>
 #include <cstddef>
@@ -18,14 +18,14 @@ namespace manta {
 	class SdlImportStatement;
 	class SdlCompilationError;
 
-	class SdlDriver {
+	class SdlCompilationUnit {
 	public:
-		SdlDriver() = default;
-		virtual ~SdlDriver();
+		SdlCompilationUnit() = default;
+		virtual ~SdlCompilationUnit();
 
-		void parseFile(const char *filename);
-		void parse(const char *sdl);
-		void parse(std::istream &iss);
+		void parseFile(const std::string &rootDir, const std::string &filename, SdlCompilationUnit *topLevel = nullptr);
+		void parse(const char *sdl, SdlCompilationUnit *topLevel = nullptr);
+		void parse(std::istream &iss, SdlCompilationUnit *topLevel = nullptr);
 
 		void addNode(SdlNode *node);
 		SdlNode *getNode(int index) const;
@@ -45,11 +45,19 @@ namespace manta {
 
 		std::ostream& print(std::ostream &stream);
 
-	private:
-		void parseHelper(std::istream &stream);
+		SdlCompilationUnit *getCompilationUnit(const std::string &moduleName) const;
+		const std::string &getModuleName() const { return m_moduleName; }
+		const std::string &getFullPath() const { /* TOOD */ return m_homePath + m_moduleName; }
 
+	private:
+		void parseHelper(std::istream &stream, SdlCompilationUnit *topLevel = nullptr);
+
+		SdlCompilationUnit *m_topLevel = nullptr;
 		SdlParser *m_parser = nullptr;
 		SdlScanner *m_scanner = nullptr;
+
+		std::string m_moduleName;
+		std::string m_homePath;
 
 		std::vector<SdlNode *> m_nodes;
 		std::vector<SdlImportStatement *> m_importStatements;
@@ -59,4 +67,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* SDL_DRIVER_H */
+#endif /* SDL_COMPILATION_UNIT_H */
