@@ -25,6 +25,7 @@
     <ClCompile Include="..\..\src\sdl_attribute_definition.cpp" />
     <ClCompile Include="..\..\src\sdl_attribute_definition_list.cpp" />
     <ClCompile Include="..\..\src\sdl_compilation_error.cpp" />
+    <ClCompile Include="..\..\src\sdl_compiler.cpp" />
     <ClCompile Include="..\..\src\sdl_import_statement.cpp" />
     <ClCompile Include="..\..\src\media_interface.cpp" />
     <ClCompile Include="..\..\src\biconvex_lens.cpp" />
@@ -161,6 +162,7 @@
     <ClInclude Include="..\..\include\sdl_attribute_definition.h" />
     <ClInclude Include="..\..\include\sdl_attribute_definition_list.h" />
     <ClInclude Include="..\..\include\sdl_compilation_error.h" />
+    <ClInclude Include="..\..\include\sdl_compiler.h" />
     <ClInclude Include="..\..\include\sdl_import_statement.h" />
     <ClInclude Include="..\..\include\jpeg_writer.h" />
     <ClInclude Include="..\..\include\kd_tree.h" />
