@@ -325,6 +325,12 @@
     <Filter Include="Source Files\sdl-parser\parser">
       <UniqueIdentifier>{39fc1852-76c1-42d4-aa34-dcfe6367253e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\sdl-parser\compiler">
+      <UniqueIdentifier>{275c232f-7066-450f-8a80-acf6e23fa77e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sdl-parser\compiler">
+      <UniqueIdentifier>{18f0abee-c9b1-4797-b160-a23f5d7c0753}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -662,6 +668,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\sdl_compilation_error.cpp">
       <Filter>Source Files\sdl-parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_compiler.cpp">
+      <Filter>Source Files\sdl-parser\compiler</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1072,6 +1081,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\sdl_attribute.h">
       <Filter>Header Files\sdl-parser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_compiler.h">
+      <Filter>Header Files\sdl-parser\compiler</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
