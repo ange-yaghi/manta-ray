@@ -7,11 +7,11 @@
 
 %code requires {
 	namespace manta {
-		class SdlDriver;
+		class SdlCompilationUnit;
 		class SdlScanner;
 	}
 
-	#include <sdl_driver.h>
+	#include <sdl_compilation_unit.h>
 	#include <sdl_node.h>
 	#include <sdl_attribute_list.h>
 	#include <sdl_attribute.h>
@@ -54,14 +54,14 @@
 }
 
 %parse-param {SdlScanner &scanner}
-%parse-param {SdlDriver &driver}
+%parse-param {SdlCompilationUnit &driver}
 
 %code {
   #include <iostream>
   #include <cstdlib>
   #include <fstream>
 
-  #include <sdl_driver.h>
+  #include <sdl_compilation_unit.h>
   #include <sdl_scanner.h>
 
 #undef yylex
