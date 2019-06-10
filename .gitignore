@@ -15,10 +15,10 @@
 
 # Build results
 [Dd]ebug/
-!dependencies/**/debug/
+!dependencies/**/[Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
-!dependencies/**/release/
+!dependencies/**/[Rr]release/
 [Rr]eleases/
 bld/
 [Bb]in/
