@@ -20,8 +20,12 @@ namespace manta {
 		SdlCompilationUnit *build(const SdlPath &scriptPath);
 		SdlCompilationUnit *getUnit(const SdlPath &scriptPath) const;
 
+		int getUnitCount() const { return (int)m_units.size(); }
+
 	protected:
 		bool isPathEquivalent(const SdlPath &a, const SdlPath &b) const;
+
+		static bool hasEnding(std::string const &fullString, std::string const &ending);
 
 	protected:
 		std::vector<SdlCompilationUnit *> m_units;

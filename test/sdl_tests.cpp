@@ -371,3 +371,27 @@ TEST(SdlTests, SdlCompilerTest) {
 	SdlCompilationUnit *dep = unit->getDependency(0);
 	EXPECT_EQ(dep->getNodeDefinitionCount(), 1);
 }
+
+TEST(SdlTests, SdlDependencyTreeTest) {
+	SdlCompiler compiler;
+	SdlCompilationUnit *unit = compiler.build(SDL_TEST_FILES "dependency_tree.mr");
+
+	int dependencyCount = unit->getDependencyCount();
+	EXPECT_EQ(dependencyCount, 2);
+
+	// Simple sanity check to make sure it's the right file
+	SdlCompilationUnit *dep = unit->getDependency(0);
+	EXPECT_EQ(dep->getNodeDefinitionCount(), 1);
+
+	SdlCompilationUnit *dep2 = unit->getDependency(1);
+	EXPECT_EQ(dep2->getNodeDefinitionCount(), 2);
+
+	int secondaryDependencyCount = dep2->getDependencyCount();
+	EXPECT_EQ(secondaryDependencyCount, 1);
+
+	SdlCompilationUnit *secondaryDep = dep2->getDependency(0);
+
+	// Make sure that the compiler doesn't build a file twice
+	EXPECT_EQ(dep, secondaryDep);
+	EXPECT_EQ(compiler.getUnitCount(), 3);
+}

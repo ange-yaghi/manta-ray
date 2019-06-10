@@ -31,6 +31,9 @@ namespace manta {
 
 		const Path &operator =(const Path &b);
 
+		std::string getExtension() const;
+		std::string getStem() const;
+
 		bool isAbsolute() const;
 
 	protected:

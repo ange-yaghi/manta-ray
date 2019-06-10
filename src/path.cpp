@@ -56,6 +56,14 @@ const manta::Path &manta::Path::operator=(const Path &b) {
 	return *this;
 }
 
+std::string manta::Path::getExtension() const {
+	return m_path->extension().string();
+}
+
+std::string manta::Path::getStem() const {
+	return m_path->stem().string();
+}
+
 bool manta::Path::isAbsolute() const {
 	return m_path->is_complete();
 }
