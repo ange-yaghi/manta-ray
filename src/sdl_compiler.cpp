@@ -25,7 +25,13 @@ manta::SdlCompilationUnit *manta::SdlCompiler::build(const SdlPath &scriptPath) 
 		int importCount = newUnit->getImportStatementCount();
 		for (int i = 0; i < importCount; i++) {
 			SdlImportStatement *s = newUnit->getImportStatement(i);
-			Path importPath(s->getLibName());
+			std::string libName = s->getLibName();
+
+			if (!hasEnding(libName, ".mr")) {
+				libName += ".mr";
+			}
+
+			Path importPath(libName);
 			Path fullImportPath;
 
 			if (importPath.isAbsolute()) {
@@ -60,4 +66,13 @@ manta::SdlCompilationUnit *manta::SdlCompiler::getUnit(const SdlPath &scriptPath
 
 bool manta::SdlCompiler::isPathEquivalent(const SdlPath &a, const SdlPath &b) const {
 	return (a == b);
+}
+
+bool manta::SdlCompiler::hasEnding(std::string const &fullString, std::string const &ending) {
+	if (fullString.length() >= ending.length()) {
+		return (0 == fullString.compare(fullString.length() - ending.length(), ending.length(), ending));
+	}
+	else {
+		return false;
+	}
 }
