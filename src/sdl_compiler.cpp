@@ -15,7 +15,7 @@ manta::SdlCompilationUnit *manta::SdlCompiler::build(const SdlPath &scriptPath) 
 
 	if (newUnit == nullptr) {
 		newUnit = new SdlCompilationUnit();
-		newUnit->parseFile(scriptPath);
+		newUnit->parseFile("", scriptPath);
 
 		m_units.push_back(newUnit);
 	}
@@ -24,13 +24,13 @@ manta::SdlCompilationUnit *manta::SdlCompiler::build(const SdlPath &scriptPath) 
 }
 
 manta::SdlCompilationUnit *manta::SdlCompiler::getUnit(const SdlPath &scriptPath) const {
-	int nUnits = m_units.size();
+	int nUnits = (int)m_units.size();
 
 	for (int i = 0; i < nUnits; i++) {
 		SdlCompilationUnit *unit = m_units[i];
-		if (unit->getFullPath() == scriptPath) {
-			return unit;
-		}
+		//if (unit->getFullPath() == scriptPath) {
+		//	return unit;
+		//}
 	}
 
 	return nullptr;

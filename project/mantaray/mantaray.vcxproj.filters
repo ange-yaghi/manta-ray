@@ -672,6 +672,9 @@
     <ClCompile Include="..\..\src\sdl_compiler.cpp">
       <Filter>Source Files\sdl-parser\compiler</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\path.cpp">
+      <Filter>Source Files\os</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\sphere_primitive.h">
@@ -1084,6 +1087,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\sdl_compiler.h">
       <Filter>Header Files\sdl-parser\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\path.h">
+      <Filter>Header Files\os</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

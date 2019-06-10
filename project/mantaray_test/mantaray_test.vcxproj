@@ -40,19 +40,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(SolutionDir)\..\include;$(SolutionDir)\..\test;$(SolutionDir)\$(ProjectName);$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\SDL\lib\$(PlatformTarget);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\SDL\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\boost-filesystem\lib\$(PlatformTarget);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>$(SolutionDir)\..\include;$(SolutionDir)\..\test;$(SolutionDir)\$(ProjectName);$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\SDL\lib\$(PlatformTarget);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\SDL\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\boost-filesystem\lib\$(PlatformTarget);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(SolutionDir)\..\include;$(SolutionDir)\..\test;$(SolutionDir)\$(ProjectName);$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\SDL\lib\$(PlatformTarget);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\SDL\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\boost-filesystem\lib\$(PlatformTarget);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(SolutionDir)\..\include;$(SolutionDir)\..\test;$(SolutionDir)\$(ProjectName);$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\SDL\lib\$(PlatformTarget);$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\SDL\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\boost-filesystem\lib\$(PlatformTarget);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemGroup>
     <ClInclude Include="..\..\test\utilities.h" />
@@ -62,6 +62,7 @@
     <ClCompile Include="..\..\test\bsdf_tests.cpp" />
     <ClCompile Include="..\..\test\camera_emulation_tests.cpp" />
     <ClCompile Include="..\..\test\color_tests.cpp" />
+    <ClCompile Include="..\..\test\file_operations_tests.cpp" />
     <ClCompile Include="..\..\test\fraunhofer_tests.cpp" />
     <ClCompile Include="..\..\test\integration_testing.cpp" />
     <ClCompile Include="..\..\test\jpeg_tests.cpp" />

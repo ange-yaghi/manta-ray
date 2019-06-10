@@ -1,6 +1,8 @@
 #ifndef SDL_COMPILATION_UNIT_H
 #define SDL_COMPILATION_UNIT_H
 
+#include <path.h>
+
 #include <string>
 #include <cstddef>
 #include <istream>
@@ -23,7 +25,7 @@ namespace manta {
 		SdlCompilationUnit() = default;
 		virtual ~SdlCompilationUnit();
 
-		void parseFile(const std::string &rootDir, const std::string &filename, SdlCompilationUnit *topLevel = nullptr);
+		void parseFile(const Path &rootDir, const Path &filename, SdlCompilationUnit *topLevel = nullptr);
 		void parse(const char *sdl, SdlCompilationUnit *topLevel = nullptr);
 		void parse(std::istream &iss, SdlCompilationUnit *topLevel = nullptr);
 

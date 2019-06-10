@@ -22,6 +22,7 @@
     <ClCompile Include="..\..\autogen\sdl_parser.auto.cpp" />
     <ClCompile Include="..\..\autogen\sdl_scanner.auto.cpp" />
     <ClCompile Include="..\..\src\aperture.cpp" />
+    <ClCompile Include="..\..\src\path.cpp" />
     <ClCompile Include="..\..\src\sdl_attribute_definition.cpp" />
     <ClCompile Include="..\..\src\sdl_attribute_definition_list.cpp" />
     <ClCompile Include="..\..\src\sdl_compilation_error.cpp" />
@@ -159,6 +160,7 @@
     <ClInclude Include="..\..\include\image_file_node.h" />
     <ClInclude Include="..\..\include\image_handling.h" />
     <ClInclude Include="..\..\include\image_output_node.h" />
+    <ClInclude Include="..\..\include\path.h" />
     <ClInclude Include="..\..\include\sdl_attribute_definition.h" />
     <ClInclude Include="..\..\include\sdl_attribute_definition_list.h" />
     <ClInclude Include="..\..\include\sdl_compilation_error.h" />
@@ -361,23 +363,23 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)\..\autogen\;$(SolutionDir)\..\dependencies\libraries\flex\include;$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\include;$(SolutionDir)\..\..\Common\SDL2-2.0.9\include;$(SolutionDir)\..\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\..\autogen\;$(SolutionDir)\..\dependencies\libraries\flex\include;$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\..\Common\SDL2-2.0.9\include;$(SolutionDir)\..\include;$(IncludePath);$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include</IncludePath>
     <LibraryPath>$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\x86;$(SolutionDir)\..\..\Common\SDL2-2.0.9\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)\..\autogen\;$(SolutionDir)\..\dependencies\libraries\flex\include;$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\include;$(SolutionDir)\..\dependencies\libraries\SDL\include;$(SolutionDir)\..\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\..\autogen\;$(SolutionDir)\..\dependencies\libraries\flex\include;$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\SDL\include;$(SolutionDir)\..\include;$(IncludePath);$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include</IncludePath>
     <LibraryPath>$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\x64;$(SolutionDir)\..\dependencies\libraries\SDL\lib\x64;$(LibraryPath)</LibraryPath>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\x86;$(SolutionDir)\..\..\Common\SDL2-2.0.9\lib\x86;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)\..\autogen\;$(SolutionDir)\..\dependencies\libraries\flex\include;$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\include;$(SolutionDir)\..\..\Common\SDL2-2.0.9\include;$(SolutionDir)\..\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\..\autogen\;$(SolutionDir)\..\dependencies\libraries\flex\include;$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\..\Common\SDL2-2.0.9\include;$(SolutionDir)\..\include;$(IncludePath);$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)\..\autogen\;$(SolutionDir)\..\dependencies\libraries\flex\include;$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\include;$(SolutionDir)\..\dependencies\libraries\SDL\include;$(SolutionDir)\..\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\..\autogen\;$(SolutionDir)\..\dependencies\libraries\flex\include;$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\SDL\include;$(SolutionDir)\..\include;$(IncludePath);$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include</IncludePath>
     <LibraryPath>$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\x64;$(SolutionDir)\..\dependencies\libraries\SDL\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
