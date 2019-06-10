@@ -7,6 +7,8 @@
 
 namespace manta {
 
+	class SdlCompilationUnit;
+
 	class SdlCompilationError {
 	public:
 		struct ErrorCode {
@@ -22,12 +24,16 @@ namespace manta {
 		const SdlTokenInfo *getErrorLocation() const { return &m_errorLocation; }
 		void setErrorLocation(SdlTokenInfo &loc) { m_errorLocation = loc; }
 
-		void setErrorcode(const ErrorCode &code) { m_code = code; }
+		void setErrorCode(const ErrorCode &code) { m_code = code; }
 		const ErrorCode &getErrorCode() const { return m_code; }
+
+		void setCompilationUnit(SdlCompilationUnit *unit) { m_unit = unit; }
+		SdlCompilationUnit *getCompilationUnit() const { return m_unit; }
 
 	protected:
 		SdlTokenInfo m_errorLocation;
 		ErrorCode m_code;
+		SdlCompilationUnit *m_unit;
 	};
 
 } /* namespace manta */

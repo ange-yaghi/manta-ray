@@ -18,6 +18,7 @@ manta::SdlCompilationUnit *manta::SdlCompiler::build(const SdlPath &scriptPath) 
 
 	if (newUnit == nullptr) {
 		newUnit = new SdlCompilationUnit();
+		newUnit->setErrorList(&m_errorList);
 		newUnit->parseFile(scriptPath);
 
 		m_units.push_back(newUnit);

@@ -331,6 +331,12 @@
     <Filter Include="Source Files\sdl-parser\compiler">
       <UniqueIdentifier>{18f0abee-c9b1-4797-b160-a23f5d7c0753}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\sdl-parser\error-handling">
+      <UniqueIdentifier>{53dfec4e-97f9-46ef-aa83-61b8aa67f91b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sdl-parser\error-handling">
+      <UniqueIdentifier>{1cad7f3d-1a8a-4e8a-b831-852c8ac885a9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -666,14 +672,17 @@
     <ClCompile Include="..\..\src\sdl_parser_structure.cpp">
       <Filter>Source Files\sdl-parser\parser</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\sdl_compilation_error.cpp">
-      <Filter>Source Files\sdl-parser</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\sdl_compiler.cpp">
       <Filter>Source Files\sdl-parser\compiler</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\path.cpp">
       <Filter>Source Files\os</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_compilation_error.cpp">
+      <Filter>Source Files\sdl-parser\error-handling</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_error_list.cpp">
+      <Filter>Source Files\sdl-parser\error-handling</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1055,9 +1064,6 @@
     <ClInclude Include="..\..\include\sdl_token_info.h">
       <Filter>Header Files\sdl-parser\scanner</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\sdl_compilation_error.h">
-      <Filter>Header Files\sdl-parser</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\sdl_compilation_unit.h">
       <Filter>Header Files\sdl-parser\unit</Filter>
     </ClInclude>
@@ -1090,6 +1096,12 @@
     </ClInclude>
     <ClInclude Include="..\..\include\path.h">
       <Filter>Header Files\os</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_compilation_error.h">
+      <Filter>Header Files\sdl-parser\error-handling</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_error_list.h">
+      <Filter>Header Files\sdl-parser\error-handling</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -4,6 +4,7 @@
 #include <sdl_node.h>
 #include <sdl_attribute_list.h>
 #include <sdl_attribute.h>
+#include <sdl_error_list.h>
 
 #include <cctype>
 #include <fstream>
@@ -95,7 +96,13 @@ int manta::SdlCompilationUnit::getNodeDefinitionCount() const {
 }
 
 void manta::SdlCompilationUnit::addCompilationError(SdlCompilationError *err) {
-	m_compilationErrors.push_back(err);
+	if (m_errorList != nullptr) {
+		err->setCompilationUnit(this);
+		m_errorList->addCompilationError(err);
+	}
+	else {
+		delete err;
+	}
 }
 
 std::ostream& manta::SdlCompilationUnit::print(std::ostream &stream) {
