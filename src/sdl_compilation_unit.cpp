@@ -18,11 +18,11 @@ manta::SdlCompilationUnit::~SdlCompilationUnit() {
 	m_parser = nullptr;
 }
 
-void manta::SdlCompilationUnit::parseFile(const std::string &rootDir, const std::string &filename, SdlCompilationUnit *topLevel) {
-	m_homePath = rootDir;
-	m_moduleName = filename;
+void manta::SdlCompilationUnit::parseFile(const Path &rootDir, const Path &filename, SdlCompilationUnit *topLevel) {
+	//m_homePath = rootDir;
+	//m_moduleName = filename;
 	
-	std::ifstream inFile(filename);
+	std::ifstream inFile(filename.toString());
 	if (!inFile.good()) {
 		return;
 	}

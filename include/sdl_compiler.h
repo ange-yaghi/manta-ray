@@ -1,6 +1,8 @@
 #ifndef SDL_COMPILER_H
 #define SDL_COMPILER_H
 
+#include <path.h>
+
 #include <vector>
 #include <string>
 
@@ -8,7 +10,7 @@ namespace manta {
 
 	class SdlCompilationUnit;
 
-	typedef std::string SdlPath;
+	typedef Path SdlPath;
 
 	class SdlCompiler {
 	public:
@@ -18,7 +20,7 @@ namespace manta {
 		SdlCompilationUnit *build(const SdlPath &scriptPath);
 		void addImportDirectory(const SdlPath &path) { m_importDirectories.push_back(path); }
 
-		SdlCompilationUnit *getUnit(const std::string &scriptPath) const;
+		SdlCompilationUnit *getUnit(const SdlPath &scriptPath) const;
 
 		SdlPath resolveModuleName(const SdlPath &scriptPath) const;
 
