@@ -11,6 +11,7 @@
 #include <sdl_attribute_definition.h>
 #include <sdl_attribute_definition_list.h>
 #include <sdl_compilation_error.h>
+#include <sdl_compiler.h>
 
 #include "utilities.h"
 
@@ -29,7 +30,7 @@ using namespace manta;
 
 TEST(SdlTests, SdlSanityCheck) {
 	SdlCompilationUnit parser;
-	parser.parseFile("", SDL_TEST_FILES "single_empty_node.mr");
+	parser.parseFile(SDL_TEST_FILES "single_empty_node.mr");
 
 	const SdlNode *node = parser.getNode(0);
 	const SdlAttributeList *attributes = node->getAttributes();
@@ -45,7 +46,7 @@ TEST(SdlTests, SdlSanityCheck) {
 
 TEST(SdlTests, SdlSingleAttribute) {
 	SdlCompilationUnit parser;
-	parser.parseFile("", SDL_TEST_FILES "single_node_single_attrib.mr");
+	parser.parseFile(SDL_TEST_FILES "single_node_single_attrib.mr");
 
 	const SdlNode *node = parser.getNode(0);
 	const SdlAttributeList *attributes = node->getAttributes();
@@ -64,7 +65,7 @@ TEST(SdlTests, SdlSingleAttribute) {
 
 TEST(SdlTests, SdlTwoAttributes) {
 	SdlCompilationUnit parser;
-	parser.parseFile("", SDL_TEST_FILES "single_node_two_attribs.mr");
+	parser.parseFile(SDL_TEST_FILES "single_node_two_attribs.mr");
 
 	const SdlNode *node = parser.getNode(0);
 	const SdlAttributeList *attributes = node->getAttributes();
@@ -89,7 +90,7 @@ TEST(SdlTests, SdlTwoAttributes) {
 
 TEST(SdlTests, SdlTwoNodes) {
 	SdlCompilationUnit parser;
-	parser.parseFile("", SDL_TEST_FILES "two_nodes.mr");
+	parser.parseFile(SDL_TEST_FILES "two_nodes.mr");
 
 	const SdlNode *node1 = parser.getNode(0);
 	const SdlAttributeList *attributes1 = node1->getAttributes();
@@ -110,7 +111,7 @@ TEST(SdlTests, SdlTwoNodes) {
 
 TEST(SdlTests, SdlInlineNode) {
 	SdlCompilationUnit parser;
-	parser.parseFile("", SDL_TEST_FILES "single_node_inline_node.mr");
+	parser.parseFile(SDL_TEST_FILES "single_node_inline_node.mr");
 
 	const SdlNode *node = parser.getNode(0);
 	const SdlAttributeList *attributes = node->getAttributes();
@@ -144,7 +145,7 @@ TEST(SdlTests, SdlInlineNode) {
 
 TEST(SdlTests, SdlSimpleIntTest) {
 	SdlCompilationUnit parser;
-	parser.parseFile("", SDL_TEST_FILES "single_node_single_int.mr");
+	parser.parseFile(SDL_TEST_FILES "single_node_single_int.mr");
 
 	const SdlNode *node = parser.getNode(0);
 	const SdlAttributeList *attributes = node->getAttributes();
@@ -169,7 +170,7 @@ TEST(SdlTests, SdlSimpleIntTest) {
 
 TEST(SdlTests, SdlStringSanityCheck) {
 	SdlCompilationUnit parser;
-	parser.parseFile("", SDL_TEST_FILES "single_node_string_attrib.mr");
+	parser.parseFile(SDL_TEST_FILES "single_node_string_attrib.mr");
 
 	const SdlNode *node = parser.getNode(0);
 	const SdlAttributeList *attributes = node->getAttributes();
@@ -188,7 +189,7 @@ TEST(SdlTests, SdlStringSanityCheck) {
 
 TEST(SdlTests, SdlSingleNodeDataAccess) {
 	SdlCompilationUnit parser;
-	parser.parseFile("", SDL_TEST_FILES "single_node_data_access.mr");
+	parser.parseFile(SDL_TEST_FILES "single_node_data_access.mr");
 
 	const SdlNode *node = parser.getNode(0);
 	const SdlAttributeList *attributes = node->getAttributes();
@@ -210,7 +211,7 @@ TEST(SdlTests, SdlSingleNodeDataAccess) {
 
 TEST(SdlTests, SdlSingleNodeSimpleEq) {
 	SdlCompilationUnit parser;
-	parser.parseFile("", SDL_TEST_FILES "single_node_simple_eq.mr");
+	parser.parseFile(SDL_TEST_FILES "single_node_simple_eq.mr");
 
 	const SdlNode *node = parser.getNode(0);
 	const SdlAttributeList *attributes = node->getAttributes();
@@ -218,7 +219,7 @@ TEST(SdlTests, SdlSingleNodeSimpleEq) {
 
 TEST(SdlTests, SdlImportTest) {
 	SdlCompilationUnit parser;
-	parser.parseFile("", SDL_TEST_FILES "single_node_import_statement.mr");
+	parser.parseFile(SDL_TEST_FILES "single_node_import_statement.mr");
 
 	int importCount = parser.getImportStatementCount();
 
@@ -233,7 +234,7 @@ TEST(SdlTests, SdlImportTest) {
 
 TEST(SdlTests, SdlNodeDefinitionTest) {
 	SdlCompilationUnit parser;
-	parser.parseFile("", SDL_TEST_FILES "single_node_definition.mr");
+	parser.parseFile(SDL_TEST_FILES "single_node_definition.mr");
 
 	EXPECT_EQ(parser.getNodeDefinitionCount(), 1);
 
@@ -250,7 +251,7 @@ TEST(SdlTests, SdlNodeDefinitionTest) {
 
 TEST(SdlTests, SdlNodeBuiltinTest) {
 	SdlCompilationUnit parser;
-	parser.parseFile("", SDL_TEST_FILES "single_node_builtin.mr");
+	parser.parseFile(SDL_TEST_FILES "single_node_builtin.mr");
 
 	EXPECT_EQ(parser.getNodeDefinitionCount(), 1);
 
@@ -289,7 +290,7 @@ TEST(SdlTests, SdlNodeBuiltinTest) {
 
 TEST(SdlTests, SdlFloatTest) {
 	SdlCompilationUnit parser;
-	parser.parseFile("", SDL_TEST_FILES "single_node_vector_float.mr");
+	parser.parseFile(SDL_TEST_FILES "single_node_vector_float.mr");
 
 	SdlNode *node = parser.getNode(0);
 	SdlAttribute *testAttrib = node->getAttributes()->getAttribute(0);
@@ -318,7 +319,7 @@ TEST(SdlTests, SdlFloatTest) {
 
 TEST(SdlTests, SdlBoolTest) {
 	SdlCompilationUnit parser;
-	parser.parseFile("", SDL_TEST_FILES "single_node_bool.mr");
+	parser.parseFile(SDL_TEST_FILES "single_node_bool.mr");
 
 	SdlNode *node = parser.getNode(0);
 	SdlAttribute *falseAttrib = node->getAttributes()->getAttribute(0);
@@ -345,7 +346,7 @@ TEST(SdlTests, SdlBoolTest) {
 
 TEST(SdlTests, SdlSyntaxErrorTest) {
 	SdlCompilationUnit parser;
-	parser.parseFile("", SDL_TEST_FILES "syntax_error.mr");
+	parser.parseFile(SDL_TEST_FILES "syntax_error.mr");
 
 	int errorCount = parser.getCompilationErrorCount();
 	EXPECT_EQ(errorCount, 3);
@@ -357,4 +358,16 @@ TEST(SdlTests, SdlSyntaxErrorTest) {
 	CHECK_ERROR_CODE(err1, "S", "0001");
 	CHECK_ERROR_CODE(err2, "S", "0001");
 	CHECK_ERROR_CODE(err3, "P", "0001");
+}
+
+TEST(SdlTests, SdlCompilerTest) {
+	SdlCompiler compiler;
+	SdlCompilationUnit *unit = compiler.build(SDL_TEST_FILES "dependency_test.mr");
+
+	int dependencyCount = unit->getDependencyCount();
+	EXPECT_EQ(dependencyCount, 1);
+
+	// Simple sanity check to make sure it's the right file
+	SdlCompilationUnit *dep = unit->getDependency(0);
+	EXPECT_EQ(dep->getNodeDefinitionCount(), 1);
 }

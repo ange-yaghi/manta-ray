@@ -18,20 +18,13 @@ namespace manta {
 		~SdlCompiler();
 
 		SdlCompilationUnit *build(const SdlPath &scriptPath);
-		void addImportDirectory(const SdlPath &path) { m_importDirectories.push_back(path); }
-
 		SdlCompilationUnit *getUnit(const SdlPath &scriptPath) const;
-
-		SdlPath resolveModuleName(const SdlPath &scriptPath) const;
 
 	protected:
 		bool isPathEquivalent(const SdlPath &a, const SdlPath &b) const;
 
 	protected:
-		std::vector<SdlPath> m_importDirectories;
 		std::vector<SdlCompilationUnit *> m_units;
-
-		std::string m_mainPath;
 	};
 
 } /* namespace manta */

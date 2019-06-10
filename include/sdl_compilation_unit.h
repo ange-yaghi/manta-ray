@@ -25,7 +25,7 @@ namespace manta {
 		SdlCompilationUnit() = default;
 		virtual ~SdlCompilationUnit();
 
-		void parseFile(const Path &rootDir, const Path &filename, SdlCompilationUnit *topLevel = nullptr);
+		void parseFile(const Path &filename, SdlCompilationUnit *topLevel = nullptr);
 		void parse(const char *sdl, SdlCompilationUnit *topLevel = nullptr);
 		void parse(std::istream &iss, SdlCompilationUnit *topLevel = nullptr);
 
@@ -48,8 +48,10 @@ namespace manta {
 		std::ostream& print(std::ostream &stream);
 
 		SdlCompilationUnit *getCompilationUnit(const std::string &moduleName) const;
-		const std::string &getModuleName() const { return m_moduleName; }
-		const std::string &getFullPath() const { /* TOOD */ return m_homePath + m_moduleName; }
+		void addDependency(SdlCompilationUnit *unit) { m_dependencies.push_back(unit); }
+		SdlCompilationUnit *getDependency(int index) { return m_dependencies[index]; }
+		int getDependencyCount() const { return (int)m_dependencies.size(); }
+		const Path &getPath() const { return m_path; }
 
 	private:
 		void parseHelper(std::istream &stream, SdlCompilationUnit *topLevel = nullptr);
@@ -58,13 +60,13 @@ namespace manta {
 		SdlParser *m_parser = nullptr;
 		SdlScanner *m_scanner = nullptr;
 
-		std::string m_moduleName;
-		std::string m_homePath;
+		Path m_path;
 
 		std::vector<SdlNode *> m_nodes;
 		std::vector<SdlImportStatement *> m_importStatements;
 		std::vector<SdlNodeDefinition *> m_nodeDefinitions;
 		std::vector<SdlCompilationError *> m_compilationErrors;
+		std::vector<SdlCompilationUnit *> m_dependencies;
 	};
 
 } /* namespace manta */
