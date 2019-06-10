@@ -10,6 +10,11 @@ manta::Path::Path(const char *path) {
 	setPath(std::string(path));
 }
 
+manta::Path::Path(const Path &path) {
+	m_path = new boost::filesystem::path;
+	*m_path = path.getBoostPath();
+}
+
 manta::Path::Path() {
 	m_path = nullptr;
 }
@@ -37,6 +42,18 @@ bool manta::Path::operator==(const Path &path) const {
 
 manta::Path manta::Path::append(const Path &path) const {
 	return Path(getBoostPath() / path.getBoostPath());
+}
+
+void manta::Path::getParentPath(Path *path) const {
+	path->m_path = new boost::filesystem::path;
+	*path->m_path = m_path->parent_path();
+}
+
+const manta::Path &manta::Path::operator=(const Path &b) {
+	m_path = new boost::filesystem::path;
+	*m_path = b.getBoostPath();
+
+	return *this;
 }
 
 bool manta::Path::isAbsolute() const {

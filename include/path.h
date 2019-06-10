@@ -17,6 +17,7 @@ namespace manta {
 	public:
 		Path(const std::string &path);
 		Path(const char *path);
+		Path(const Path &path);
 		Path();
 		~Path();
 
@@ -25,6 +26,10 @@ namespace manta {
 		void setPath(const std::string &path);
 		bool operator==(const Path &path) const;
 		Path append(const Path &path) const;
+
+		void getParentPath(Path *path) const;
+
+		const Path &operator =(const Path &b);
 
 		bool isAbsolute() const;
 
