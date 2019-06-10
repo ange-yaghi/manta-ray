@@ -52,6 +52,15 @@ manta::SdlCompilationUnit *manta::SdlCompiler::build(const SdlPath &scriptPath) 
 	return newUnit;
 }
 
+manta::SdlCompilationUnit *manta::SdlCompiler::compile(const SdlPath &scriptPath) {
+	SdlCompilationUnit *topLevel = build(scriptPath);
+
+	// Resolution step
+	resolve();
+
+	return topLevel;
+}
+
 manta::SdlCompilationUnit *manta::SdlCompiler::getUnit(const SdlPath &scriptPath) const {
 	int nUnits = (int)m_units.size();
 
@@ -75,5 +84,13 @@ bool manta::SdlCompiler::hasEnding(std::string const &fullString, std::string co
 	}
 	else {
 		return false;
+	}
+}
+
+void manta::SdlCompiler::resolve() {
+	int unitCount = getUnitCount();
+	for (int i = 0; i < unitCount; i++) {
+		SdlCompilationUnit *unit = m_units[i];
+		unit->resolve();
 	}
 }

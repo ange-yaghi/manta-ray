@@ -8,6 +8,7 @@
 namespace manta {
 
 	class SdlValue;
+	class SdlAttributeDefinition;
 
 	class SdlAttribute : public SdlParserStructure {
 	public:
@@ -24,6 +25,14 @@ namespace manta {
 	protected:
 		SdlTokenInfo_string m_name;
 		SdlValue *m_value;
+
+		// Resolution stage
+	public:
+		void setAttributeDefinition(SdlAttributeDefinition *definition) { m_definition = definition; }
+		SdlAttributeDefinition *getAttributeDefinition() const { return m_definition; }
+
+	protected:
+		SdlAttributeDefinition *m_definition;
 	};
 
 } /* namespace manta */

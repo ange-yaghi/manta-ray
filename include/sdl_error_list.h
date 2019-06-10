@@ -13,7 +13,7 @@ namespace manta {
 		~SdlErrorList();
 
 		void addCompilationError(SdlCompilationError *err);
-		SdlCompilationError *getCompilationError(int index) { return m_compilationErrors[index]; }
+		SdlCompilationError *getCompilationError(int index) const { return m_compilationErrors[index]; }
 		int getErrorCount() const { return (int)m_compilationErrors.size(); }
 
 		void destroy();

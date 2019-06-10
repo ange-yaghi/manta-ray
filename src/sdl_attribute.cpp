@@ -12,6 +12,8 @@ manta::SdlAttribute::SdlAttribute(const SdlTokenInfo_string &name, SdlValue *val
 
 	registerToken(&name);
 	registerComponent(value);
+
+	m_definition = nullptr;
 }
 
 manta::SdlAttribute::SdlAttribute(SdlValue *value) {

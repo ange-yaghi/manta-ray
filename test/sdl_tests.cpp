@@ -365,7 +365,7 @@ TEST(SdlTests, SdlSyntaxErrorTest) {
 
 TEST(SdlTests, SdlCompilerTest) {
 	SdlCompiler compiler;
-	SdlCompilationUnit *unit = compiler.build(SDL_TEST_FILES "dependency_test.mr");
+	SdlCompilationUnit *unit = compiler.compile(SDL_TEST_FILES "dependency_test.mr");
 
 	int dependencyCount = unit->getDependencyCount();
 	EXPECT_EQ(dependencyCount, 1);
@@ -377,7 +377,7 @@ TEST(SdlTests, SdlCompilerTest) {
 
 TEST(SdlTests, SdlDependencyTreeTest) {
 	SdlCompiler compiler;
-	SdlCompilationUnit *unit = compiler.build(SDL_TEST_FILES "dependency_tree.mr");
+	SdlCompilationUnit *unit = compiler.compile(SDL_TEST_FILES "dependency_tree.mr");
 
 	int dependencyCount = unit->getDependencyCount();
 	EXPECT_EQ(dependencyCount, 2);
@@ -397,4 +397,47 @@ TEST(SdlTests, SdlDependencyTreeTest) {
 	// Make sure that the compiler doesn't build a file twice
 	EXPECT_EQ(dep, secondaryDep);
 	EXPECT_EQ(compiler.getUnitCount(), 3);
+
+	// Make sure the definitions were found
+	EXPECT_TRUE(unit->getNode(0)->getDefinition() != nullptr);
+	EXPECT_TRUE(unit->getNode(1)->getDefinition() != nullptr);
+}
+
+TEST(SdlTests, SdlMissingNodeDefinitionTest) {
+	SdlCompiler compiler;
+	SdlCompilationUnit *unit = compiler.compile(SDL_TEST_FILES "single_empty_node.mr");
+
+	const SdlErrorList *errors = compiler.getErrorList();
+	int errorCount = errors->getErrorCount();
+
+	SdlCompilationError *err = errors->getCompilationError(0);
+	CHECK_ERROR_CODE(err, "R", "0001");
+
+	// Check that the location matches
+	EXPECT_EQ(err->getErrorLocation()->lineStart, 1);
+	EXPECT_EQ(err->getErrorLocation()->lineEnd, 1);
+}
+
+TEST(SdlTests, SdlAttributeDefinitionTest) {
+	SdlCompiler compiler;
+	SdlCompilationUnit *unit = compiler.compile(SDL_TEST_FILES "attribute_definition_test.mr");
+
+	const SdlErrorList *errors = compiler.getErrorList();
+	int errorCount = errors->getErrorCount();
+
+	EXPECT_EQ(errorCount, 2);
+
+	SdlCompilationError *err0 = errors->getCompilationError(0);
+	SdlCompilationError *err1 = errors->getCompilationError(1);
+	CHECK_ERROR_CODE(err0, "R", "0002");
+	CHECK_ERROR_CODE(err1, "R", "0003");
+
+	SdlNodeDefinition *definition = unit->getNodeDefinition(0);
+	SdlNode *nodeInstance = unit->getNode(0);
+
+	EXPECT_EQ(nodeInstance->getDefinition(), definition);
+	EXPECT_EQ(nodeInstance->getAttributes()->getAttribute(0)->getAttributeDefinition(), definition->getAttributeDefinition("A"));
+	EXPECT_EQ(nodeInstance->getAttributes()->getAttribute(1)->getAttributeDefinition(), definition->getAttributeDefinition("B"));
+	EXPECT_EQ(nodeInstance->getAttributes()->getAttribute(2)->getAttributeDefinition(), nullptr);
+	EXPECT_EQ(nodeInstance->getAttributes()->getAttribute(3)->getAttributeDefinition(), nullptr);
 }
