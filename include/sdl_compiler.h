@@ -2,6 +2,7 @@
 #define SDL_COMPILER_H
 
 #include <path.h>
+#include <sdl_error_list.h>
 
 #include <vector>
 #include <string>
@@ -28,6 +29,7 @@ namespace manta {
 		static bool hasEnding(std::string const &fullString, std::string const &ending);
 
 	protected:
+		SdlErrorList m_errorList;
 		std::vector<SdlCompilationUnit *> m_units;
 	};
 

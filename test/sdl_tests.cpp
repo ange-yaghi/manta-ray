@@ -11,6 +11,7 @@
 #include <sdl_attribute_definition.h>
 #include <sdl_attribute_definition_list.h>
 #include <sdl_compilation_error.h>
+#include <sdl_error_list.h>
 #include <sdl_compiler.h>
 
 #include "utilities.h"
@@ -345,15 +346,17 @@ TEST(SdlTests, SdlBoolTest) {
 }
 
 TEST(SdlTests, SdlSyntaxErrorTest) {
+	SdlErrorList errorList;
 	SdlCompilationUnit parser;
+	parser.setErrorList(&errorList);
 	parser.parseFile(SDL_TEST_FILES "syntax_error.mr");
 
-	int errorCount = parser.getCompilationErrorCount();
+	int errorCount = errorList.getErrorCount();
 	EXPECT_EQ(errorCount, 3);
 
-	SdlCompilationError *err1 = parser.getCompilationError(0);
-	SdlCompilationError *err2 = parser.getCompilationError(1);
-	SdlCompilationError *err3 = parser.getCompilationError(2);
+	SdlCompilationError *err1 = errorList.getCompilationError(0);
+	SdlCompilationError *err2 = errorList.getCompilationError(1);
+	SdlCompilationError *err3 = errorList.getCompilationError(2);
 
 	CHECK_ERROR_CODE(err1, "S", "0001");
 	CHECK_ERROR_CODE(err2, "S", "0001");

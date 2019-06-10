@@ -19,6 +19,7 @@ namespace manta {
 	class SdlValue;
 	class SdlImportStatement;
 	class SdlCompilationError;
+	class SdlErrorList;
 
 	class SdlCompilationUnit {
 	public:
@@ -42,16 +43,16 @@ namespace manta {
 		int getNodeDefinitionCount() const;
 
 		void addCompilationError(SdlCompilationError *err);
-		SdlCompilationError *getCompilationError(int index) { return m_compilationErrors[index]; }
-		int getCompilationErrorCount() const { return (int)m_compilationErrors.size(); }
 
 		std::ostream& print(std::ostream &stream);
 
-		SdlCompilationUnit *getCompilationUnit(const std::string &moduleName) const;
 		void addDependency(SdlCompilationUnit *unit) { m_dependencies.push_back(unit); }
 		SdlCompilationUnit *getDependency(int index) { return m_dependencies[index]; }
 		int getDependencyCount() const { return (int)m_dependencies.size(); }
 		const Path &getPath() const { return m_path; }
+
+		void setErrorList(SdlErrorList *list) { m_errorList = list; }
+		SdlErrorList *getErrorList() const { return m_errorList; }
 
 	private:
 		void parseHelper(std::istream &stream, SdlCompilationUnit *topLevel = nullptr);
@@ -65,8 +66,9 @@ namespace manta {
 		std::vector<SdlNode *> m_nodes;
 		std::vector<SdlImportStatement *> m_importStatements;
 		std::vector<SdlNodeDefinition *> m_nodeDefinitions;
-		std::vector<SdlCompilationError *> m_compilationErrors;
 		std::vector<SdlCompilationUnit *> m_dependencies;
+
+		SdlErrorList *m_errorList = nullptr;
 	};
 
 } /* namespace manta */
