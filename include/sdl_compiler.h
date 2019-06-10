@@ -18,15 +18,22 @@ namespace manta {
 		SdlCompiler();
 		~SdlCompiler();
 
-		SdlCompilationUnit *build(const SdlPath &scriptPath);
+		SdlCompilationUnit *compile(const SdlPath &scriptPath);
 		SdlCompilationUnit *getUnit(const SdlPath &scriptPath) const;
 
 		int getUnitCount() const { return (int)m_units.size(); }
 
+		const SdlErrorList *getErrorList() const { return &m_errorList; }
+
 	protected:
+		SdlCompilationUnit *build(const SdlPath &scriptPath);
 		bool isPathEquivalent(const SdlPath &a, const SdlPath &b) const;
 
 		static bool hasEnding(std::string const &fullString, std::string const &ending);
+
+	protected:
+		// Build steps
+		void resolve();
 
 	protected:
 		SdlErrorList m_errorList;

@@ -43,6 +43,14 @@ void manta::SdlCompilationUnit::parse(std::istream &stream, SdlCompilationUnit *
 	parseHelper(stream);
 }
 
+void manta::SdlCompilationUnit::resolve() {
+	if (isResolved()) return;
+	else m_resolved = true;
+
+	// Resolve all references to node definitions
+	resolveNodeDefinitions();
+}
+
 void manta::SdlCompilationUnit::parseHelper(std::istream &stream, SdlCompilationUnit *topLevel) {
 	delete m_scanner;
 	try {
@@ -65,6 +73,61 @@ void manta::SdlCompilationUnit::parseHelper(std::istream &stream, SdlCompilation
 	if (m_parser->parse() != success) {
 		std::cerr << "Parse failed!!" << std::endl;
 	}
+}
+
+void manta::SdlCompilationUnit::resolveNodeDefinitions() {
+	int nodeCount = getNodeCount();
+	for (int i = 0; i < nodeCount; i++) {
+		int definitionCount = 0;
+		SdlNode *node = m_nodes[i];
+		SdlNodeDefinition *definition = resolveNodeDefinition(node, &definitionCount);
+
+		if (nodeCount > 0) {
+			// TODO: log a warning when a node type is ambiguous
+		}
+
+		if (definition == nullptr) {
+			addCompilationError(new SdlCompilationError(node->getNameToken(), {"R", "0001", "Undefined node type"}));
+		}
+
+		else {
+			node->setDefinition(definition);
+		}
+
+		node->resolveAttributeDefinitions(this);
+	}
+}
+
+manta::SdlNodeDefinition *manta::SdlCompilationUnit::resolveNodeDefinition(SdlNode *node, int *count, bool searchDependencies) {
+	*count = 0;
+	manta::SdlNodeDefinition *definition = nullptr;
+	std::string typeName = node->getType();
+
+	// First search local node definitions
+	int localNodeDefinitions = (int)m_nodeDefinitions.size();
+	for (int i = 0; i < localNodeDefinitions; i++) {
+		std::string defName = m_nodeDefinitions[i]->getName();
+
+		if (defName == typeName) {
+			(*count)++;
+			if (definition == nullptr) definition = m_nodeDefinitions[i];
+		}
+	}
+
+	// Search dependencies
+	if (searchDependencies) {
+		int dependencyCount = getDependencyCount();
+		for (int i = 0; i < dependencyCount; i++) {
+			int secondaryCount = 0;
+			SdlNodeDefinition *def = m_dependencies[i]->resolveNodeDefinition(node, &secondaryCount, false);
+			if (def != nullptr) {
+				(*count) += secondaryCount;
+				if (definition == nullptr) definition = def;
+			}
+		}
+	}
+
+	return definition;
 }
 
 void manta::SdlCompilationUnit::addNode(SdlNode *node) {

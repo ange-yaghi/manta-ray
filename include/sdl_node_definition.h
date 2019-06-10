@@ -8,6 +8,7 @@
 namespace manta {
 
 	class SdlAttributeDefinitionList;
+	class SdlAttributeDefinition;
 
 	class SdlNodeDefinition : public SdlParserStructure {
 	public:
@@ -39,6 +40,8 @@ namespace manta {
 
 		void setScopeToken(const SdlTokenInfo_string &token);
 		const SdlTokenInfo *getScopeToken() const { return &m_scopeToken; }
+
+		SdlAttributeDefinition *getAttributeDefinition(const std::string &attributeName) const;
 
 	protected:
 		SdlTokenInfo_string m_name;

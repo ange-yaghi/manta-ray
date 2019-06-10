@@ -54,8 +54,14 @@ namespace manta {
 		void setErrorList(SdlErrorList *list) { m_errorList = list; }
 		SdlErrorList *getErrorList() const { return m_errorList; }
 
+		void resolve();
+		bool isResolved() const { return m_resolved; }
+
 	private:
 		void parseHelper(std::istream &stream, SdlCompilationUnit *topLevel = nullptr);
+
+		void resolveNodeDefinitions();
+		SdlNodeDefinition *resolveNodeDefinition(SdlNode *node, int *count, bool searchDependencies = true);
 
 		SdlCompilationUnit *m_topLevel = nullptr;
 		SdlParser *m_parser = nullptr;
@@ -69,6 +75,8 @@ namespace manta {
 		std::vector<SdlCompilationUnit *> m_dependencies;
 
 		SdlErrorList *m_errorList = nullptr;
+
+		bool m_resolved = false;
 	};
 
 } /* namespace manta */
