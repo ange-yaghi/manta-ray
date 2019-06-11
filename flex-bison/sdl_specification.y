@@ -89,6 +89,7 @@
 %token <manta::SdlTokenInfo_string> LOCAL
 %token <manta::SdlTokenInfo_string> EXPORT
 %token <manta::SdlTokenInfo_string> POINTER
+%token <manta::SdlTokenInfo_string> BODY_SEPARATOR
 %token <manta::SdlTokenInfo_string> UNRECOGNIZED
 
 %token <manta::SdlTokenInfo_string> '='
@@ -126,7 +127,6 @@
 %type <manta::SdlNodeDefinition *> node_decorator;
 %type <manta::SdlNodeDefinition *> node_definition;
 %type <manta::SdlNodeDefinition *> specific_node_definition;
-%type <manta::SdlNodeDefinition *> node_definition_with_body;
 
 %type <manta::SdlAttributeDefinition *> port_declaration;
 %type <manta::SdlAttributeDefinition *> port_status;
@@ -157,7 +157,7 @@ decorator_list
 statement
   : node							{ driver.addNode($1); }
   | import_statement				{ driver.addImportStatement($1); }
-  | node_definition_with_body		{ }
+  | specific_node_definition		{ }
   ;
 
 statement_list 
@@ -195,12 +195,15 @@ node_shadow
   ;
 
 node_decorator
-  : node_shadow decorator_list							{ $$ = $1; }
-  | node_shadow											{ $$ = $1; }
+  : node_shadow '(' decorator_list BODY_SEPARATOR port_definitions		{ $$ = $1; $$->setAttributeDefinitionList($5); }
+  | node_shadow '(' BODY_SEPARATOR port_definitions						{ $$ = $1; $$->setAttributeDefinitionList($4); }
+  | node_shadow '(' port_definitions									{ $$ = $1; $$->setAttributeDefinitionList($3); }
   ;
 
 node_definition
-  : node_decorator '(' port_definitions ')'				{ $$ = $1; $$->setAttributeDefinitionList($3); }
+  : node_decorator ')'									{ $$ = $1; $$->setBody(nullptr); }
+  | node_decorator BODY_SEPARATOR node_list ')'			{ $$ = $1; $$->setBody($3); }
+  | node_decorator BODY_SEPARATOR ')'					{ $$ = $1; $$->setBody(nullptr); }
   ;
 
 specific_node_definition
@@ -215,12 +218,6 @@ specific_node_definition
 															$$->setScope(SdlNodeDefinition::EXPORT);
 															$$->setScopeToken($1);
 														}
-  ;
-
-node_definition_with_body
-  : specific_node_definition '{' '}'					{ $$ = $1; $$->setBody(nullptr); }
-  | specific_node_definition							{ $$ = $1; $$->setBody(nullptr); }
-  | specific_node_definition '{' node_list '}'			{ $$ = $1; $$->setBody($3); }
   ;
 
 port_definitions
