@@ -90,6 +90,7 @@
 %token <manta::SdlTokenInfo_string> EXPORT
 %token <manta::SdlTokenInfo_string> POINTER
 %token <manta::SdlTokenInfo_string> BODY_SEPARATOR
+%token <manta::SdlTokenInfo_string> PORTS_SEPARATOR
 %token <manta::SdlTokenInfo_string> UNRECOGNIZED
 
 %token <manta::SdlTokenInfo_string> '='
@@ -99,9 +100,8 @@
 %token <manta::SdlTokenInfo_string> '*'
 %token <manta::SdlTokenInfo_string> '('
 %token <manta::SdlTokenInfo_string> ')'
-%token <manta::SdlTokenInfo_string> '{'
-%token <manta::SdlTokenInfo_string> '}'
 %token <manta::SdlTokenInfo_string> ':'
+%token <manta::SdlTokenInfo_string> ';'
 %token <manta::SdlTokenInfo_string> ','
 %token <manta::SdlTokenInfo_string> '.'
 
@@ -195,8 +195,8 @@ node_shadow
   ;
 
 node_decorator
-  : node_shadow '(' decorator_list BODY_SEPARATOR port_definitions		{ $$ = $1; $$->setAttributeDefinitionList($5); }
-  | node_shadow '(' BODY_SEPARATOR port_definitions						{ $$ = $1; $$->setAttributeDefinitionList($4); }
+  : node_shadow '(' decorator_list PORTS_SEPARATOR port_definitions		{ $$ = $1; $$->setAttributeDefinitionList($5); }
+  | node_shadow '(' PORTS_SEPARATOR port_definitions					{ $$ = $1; $$->setAttributeDefinitionList($4); }
   | node_shadow '(' port_definitions									{ $$ = $1; $$->setAttributeDefinitionList($3); }
   ;
 
@@ -221,11 +221,11 @@ specific_node_definition
   ;
 
 port_definitions
-  : documented_port_definition							{ 
+  : documented_port_definition	';'						{ 
 															$$ = new SdlAttributeDefinitionList(); 
 															$$->addDefinition($1); 
 														}
-  | port_definitions ',' documented_port_definition		{ $$ = $1; $$->addDefinition($3); }
+  | port_definitions documented_port_definition	';'		{ $$ = $1; $$->addDefinition($2); }
   ;
 
 port_declaration

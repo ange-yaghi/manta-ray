@@ -7,14 +7,15 @@ import test
 export node NewNode: (
     @author = "Ange Yaghi"
     @comment = "This is just a test node"
-    :::
+    
+    --Ports
     // Inputs
     @doc = "Main input"
-    default input A,
-    input B,
+    default input A;
+    input B;
 
     // Outputs
     @doc = "Main output"
-    default output A_out: A,
-    output B_out: B
+    default output A_out: A;
+    output B_out: B;
 )

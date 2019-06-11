@@ -12,14 +12,14 @@ export node NewNode => BuiltinNode: (
     @author = "Ange Yaghi"
     @comment = "This is just a test node"
                "Check out this multiline comment"
-    :::
+    --Ports
     // Inputs
     @doc = "Main input"
-    default input A,
-    input B,
+    default input A;
+    input B;
 
     // Outputs
     @doc = "Main output"
-    default output A_out,
-    output B_out
+    default output A_out;
+    output B_out;
 )
