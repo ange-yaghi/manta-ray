@@ -5,9 +5,12 @@ node Add: (
 )
 
 node SampleNode: (
+    @author = "Ange Yaghi"
+    @comment = "This is just a test node"
+    :::
     input A,
     input B,
     default output C: add_mod // This should take the default output 'C'
-) {
+    :::
     Add add_mod(A, B)
-}
+)

@@ -8,11 +8,11 @@ import test
  * Second line.
  */
 
-export node NewNode => BuiltinNode:
+export node NewNode => BuiltinNode: (
     @author = "Ange Yaghi"
     @comment = "This is just a test node"
                "Check out this multiline comment"
-(
+    :::
     // Inputs
     @doc = "Main input"
     default input A,

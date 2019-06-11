@@ -120,6 +120,7 @@ H				[a-fA-F0-9]
 "="				{ DEFAULT_BUILD(location); return ('='); }
 
 ","				{ DEFAULT_BUILD(location); return (','); }
+":::"			{ DEFAULT_BUILD(location); return (token::BODY_SEPARATOR); }
 
 [ \t\v\n\f]		{ }
 "//"[^\n]*		{ }

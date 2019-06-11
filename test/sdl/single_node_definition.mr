@@ -4,10 +4,10 @@
 import "test.sdl"
 import test
 
-export node NewNode:
+export node NewNode: (
     @author = "Ange Yaghi"
     @comment = "This is just a test node"
-(
+    :::
     // Inputs
     @doc = "Main input"
     default input A,
