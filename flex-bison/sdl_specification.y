@@ -24,6 +24,7 @@
 	#include <sdl_attribute_definition.h>
 	#include <sdl_attribute_definition_list.h>
 	#include <sdl_compilation_error.h>
+	#include <sdl_structure_list.h>
 
 	#include <string>
 
@@ -97,11 +98,14 @@
 %token <manta::SdlTokenInfo_string> '*'
 %token <manta::SdlTokenInfo_string> '('
 %token <manta::SdlTokenInfo_string> ')'
+%token <manta::SdlTokenInfo_string> '{'
+%token <manta::SdlTokenInfo_string> '}'
 %token <manta::SdlTokenInfo_string> ':'
 %token <manta::SdlTokenInfo_string> ','
 %token <manta::SdlTokenInfo_string> '.'
 
 %type <manta::SdlNode *> node;
+%type <manta::SdlNodeList *> node_list;
 %type <manta::SdlAttributeList *> attribute_list;
 %type <manta::SdlAttributeList *> connection_block;
 %type <manta::SdlAttribute *> attribute;
@@ -122,6 +126,7 @@
 %type <manta::SdlNodeDefinition *> node_decorator;
 %type <manta::SdlNodeDefinition *> node_definition;
 %type <manta::SdlNodeDefinition *> specific_node_definition;
+%type <manta::SdlNodeDefinition *> node_definition_with_body;
 
 %type <manta::SdlAttributeDefinition *> port_declaration;
 %type <manta::SdlAttributeDefinition *> port_status;
@@ -152,7 +157,7 @@ decorator_list
 statement
   : node							{ driver.addNode($1); }
   | import_statement				{ driver.addImportStatement($1); }
-  | specific_node_definition		{ }
+  | node_definition_with_body		{ }
   ;
 
 statement_list 
@@ -166,7 +171,15 @@ import_statement
   ;
 
 node
-  : LABEL LABEL connection_block	{ $$ = new SdlNode($1, $2, $3); }
+  : LABEL LABEL connection_block						{ $$ = new SdlNode($1, $2, $3); }
+  ;
+
+node_list
+  : node												{
+															$$ = new SdlNodeList();
+															$$->add($1);
+														}
+  | node_list node										{ $1->add($2); }
   ;
 
 node_name
@@ -202,6 +215,12 @@ specific_node_definition
 															$$->setScope(SdlNodeDefinition::EXPORT);
 															$$->setScopeToken($1);
 														}
+  ;
+
+node_definition_with_body
+  : specific_node_definition '{' '}'					{ $$ = $1; $$->setBody(nullptr); }
+  | specific_node_definition							{ $$ = $1; $$->setBody(nullptr); }
+  | specific_node_definition '{' node_list '}'			{ $$ = $1; $$->setBody($3); }
   ;
 
 port_definitions

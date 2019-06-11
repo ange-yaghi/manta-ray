@@ -4,11 +4,13 @@
 #include <sdl_parser_structure.h>
 
 #include <sdl_token_info.h>
+#include <sdl_structure_list.h>
 
 namespace manta {
 
 	class SdlAttributeDefinitionList;
 	class SdlAttributeDefinition;
+	class SdlCompilationUnit;
 
 	class SdlNodeDefinition : public SdlParserStructure {
 	public:
@@ -43,6 +45,9 @@ namespace manta {
 
 		SdlAttributeDefinition *getAttributeDefinition(const std::string &attributeName) const;
 
+		void setBody(SdlNodeList *body) { m_body = body; }
+		SdlNodeList *getBody() const { return m_body; }
+
 	protected:
 		SdlTokenInfo_string m_name;
 
@@ -50,9 +55,14 @@ namespace manta {
 		SdlTokenInfo_string m_builtinName;
 
 		SdlAttributeDefinitionList *m_attributes;
+		SdlNodeList *m_body;
 
 		SdlTokenInfo_string m_scopeToken;
 		SCOPE m_scope;
+
+		// Resolution stage
+	public:
+		void resolveNodeDefinitions(SdlCompilationUnit *unit);
 	};
 
 } /* namespace manta */

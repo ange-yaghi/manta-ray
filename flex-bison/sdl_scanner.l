@@ -106,6 +106,8 @@ H				[a-fA-F0-9]
 ","				{ DEFAULT_BUILD(location); return (','); }
 "("				{ DEFAULT_BUILD(location); return ('('); }
 ")"				{ DEFAULT_BUILD(location); return (')'); }
+"{"				{ DEFAULT_BUILD(location); return ('{'); }
+"}"				{ DEFAULT_BUILD(location); return ('}'); }
 ":"				{ DEFAULT_BUILD(location); return (':'); }
 
 "."				{ DEFAULT_BUILD(location); return ('.'); }
