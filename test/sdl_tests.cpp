@@ -245,7 +245,7 @@ TEST(SdlTests, SdlNodeDefinitionTest) {
 	EXPECT_EQ(nodeDef->getScope(), SdlNodeDefinition::EXPORT);
 
 	const SdlAttributeDefinitionList *definitions =
-		nodeDef->getAttributionDefinitionList();
+		nodeDef->getAttributeDefinitionList();
 
 	EXPECT_EQ(definitions->getDefinitionCount(), 4);
 }
@@ -263,7 +263,7 @@ TEST(SdlTests, SdlNodeBuiltinTest) {
 	EXPECT_EQ(nodeDef->getScope(), SdlNodeDefinition::EXPORT);
 
 	const SdlAttributeDefinitionList *definitions = 
-		nodeDef->getAttributionDefinitionList();
+		nodeDef->getAttributeDefinitionList();
 
 	EXPECT_EQ(definitions->getDefinitionCount(), 4);
 
@@ -440,4 +440,24 @@ TEST(SdlTests, SdlAttributeDefinitionTest) {
 	EXPECT_EQ(nodeInstance->getAttributes()->getAttribute(1)->getAttributeDefinition(), definition->getAttributeDefinition("B"));
 	EXPECT_EQ(nodeInstance->getAttributes()->getAttribute(2)->getAttributeDefinition(), nullptr);
 	EXPECT_EQ(nodeInstance->getAttributes()->getAttribute(3)->getAttributeDefinition(), nullptr);
+}
+
+TEST(SdlTests, SdlPositionAttributeTest) {
+	SdlCompiler compiler;
+	SdlCompilationUnit *unit = compiler.compile(SDL_TEST_FILES "position_attribute_test.mr");
+
+	const SdlErrorList *errors = compiler.getErrorList();
+	int errorCount = errors->getErrorCount();
+
+	// 2 are from the dependency
+	EXPECT_EQ(errorCount, 3);
+
+	SdlCompilationError *err0 = errors->getCompilationError(0);
+	CHECK_ERROR_CODE(err0, "R", "0004");
+
+	SdlNode *nodeInstance = unit->getNode(0);
+
+	EXPECT_EQ(nodeInstance->getAttributes()->getAttribute(0)->getAttributeDefinition()->getName(), "A");
+	EXPECT_EQ(nodeInstance->getAttributes()->getAttribute(1)->getAttributeDefinition()->getName(), "B");
+	EXPECT_EQ(nodeInstance->getAttributes()->getAttribute(2)->getAttributeDefinition(), nullptr);
 }

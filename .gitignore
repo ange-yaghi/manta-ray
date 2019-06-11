@@ -92,7 +92,7 @@ StyleCopReport.xml
 *.svclog
 *.scc
 *.bmp
-#*.exe
+*.exe
 !dependencies/**/*.exe
 *.dll
 !dependencies/runtime/x64/*.dll

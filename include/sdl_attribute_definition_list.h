@@ -18,6 +18,9 @@ namespace manta {
 		SdlAttributeDefinition *getDefinition(int index) const { return m_definitions[index]; }
 		int getDefinitionCount() const { return (int)m_definitions.size(); }
 
+		SdlAttributeDefinition *getInputDefinition(int index) const;
+		int getInputCount() const;
+
 	protected:
 		std::vector<SdlAttributeDefinition *> m_definitions;
 	};

@@ -6,6 +6,7 @@
 #include <sdl_node_definition.h>
 #include <sdl_attribute_definition.h>
 #include <sdl_compilation_error.h>
+#include <sdl_attribute_definition_list.h>
 
 manta::SdlNode::SdlNode() {
 	/* void */
@@ -42,19 +43,50 @@ void manta::SdlNode::resolveAttributeDefinitions(SdlCompilationUnit *unit) {
 		return;
 	}
 
+	if (m_attributes == nullptr) {
+		// There was a compilation error in the attributes section, so this step can be skipped
+		return;
+	}
+
 	int attributeCount = m_attributes->getAttributeCount();
 	for (int i = 0; i < attributeCount; i++) {
 		SdlAttribute *attribute = m_attributes->getAttribute(i);
+
+		std::string name = attribute->getName();
+		SdlAttributeDefinition *definition;
 		
-		SdlAttributeDefinition *definition = m_definition->getAttributeDefinition(attribute->getName());
+		if (name == "") {
+			// Name not specified, positional notation is assumed
+			const SdlAttributeDefinitionList *list = m_definition->getAttributeDefinitionList();
+			int position = attribute->getPosition();
+
+			// Check position is not out of bounds
+			if (position >= list->getInputCount()) {
+				unit->addCompilationError(new SdlCompilationError(*attribute->getSummaryToken(), 
+					{ "R", "0004", "Position argument out of bounds" }));
+				attribute->setAttributeDefinition(nullptr);
+				return;
+			}
+			else {
+				definition = m_definition->getAttributeDefinitionList()->getInputDefinition(
+					attribute->getPosition()
+				);
+			}
+		}
+		else {
+			definition = m_definition->getAttributeDefinition(attribute->getName());
+		}
+
 		if (definition == nullptr) {
 			// Port not found
-			unit->addCompilationError(new SdlCompilationError(*attribute->getSummaryToken(), { "R", "0003", "Port not found" }));
+			unit->addCompilationError(new SdlCompilationError(*attribute->getSummaryToken(), 
+				{ "R", "0003", "Port not found" }));
 			attribute->setAttributeDefinition(nullptr);
 		}
 		else if (definition->getDirection() == SdlAttributeDefinition::OUTPUT) {
 			// Can't assign an output port
-			unit->addCompilationError(new SdlCompilationError(*attribute->getSummaryToken(), { "R", "0002", "Using an output port as in input" }));
+			unit->addCompilationError(new SdlCompilationError(*attribute->getSummaryToken(), 
+				{ "R", "0002", "Using an output port as in input" }));
 			attribute->setAttributeDefinition(nullptr);
 		}
 		else {

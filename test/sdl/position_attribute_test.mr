@@ -1,0 +1,7 @@
+import attribute_definition_test
+
+TestNode positionalNode (
+    5,
+    6,
+    "kaboom"
+)
