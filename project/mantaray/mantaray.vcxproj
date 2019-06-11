@@ -193,6 +193,7 @@
     <ClInclude Include="..\..\include\sdl_node_definition.h" />
     <ClInclude Include="..\..\include\sdl_parser_structure.h" />
     <ClInclude Include="..\..\include\sdl_scanner.h" />
+    <ClInclude Include="..\..\include\sdl_structure_list.h" />
     <ClInclude Include="..\..\include\sdl_token_info.h" />
     <ClInclude Include="..\..\include\sdl_value.h" />
     <ClInclude Include="..\..\include\sdl_value_constant.h" />

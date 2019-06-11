@@ -2,6 +2,8 @@
 
 #include <sdl_attribute_definition_list.h>
 #include <sdl_attribute_definition.h>
+#include <sdl_compilation_unit.h>
+#include <sdl_node.h>
 
 manta::SdlNodeDefinition::SdlNodeDefinition(const SdlTokenInfo_string &name) {
 	m_name = name;
@@ -39,4 +41,17 @@ manta::SdlAttributeDefinition *manta::SdlNodeDefinition::getAttributeDefinition(
 	}
 
 	return nullptr;
+}
+
+void manta::SdlNodeDefinition::resolveNodeDefinitions(SdlCompilationUnit *unit) {
+	if (m_body == nullptr) {
+		// The body was empty so this step can be skipped
+		return;
+	}
+
+	int nodeCount = m_body->getItemCount();
+	for (int i = 0; i < nodeCount; i++) {
+		SdlNode *node = m_body->getItem(i);
+		node->resolveNodeDefinition(unit);
+	}
 }

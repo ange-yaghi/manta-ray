@@ -1103,6 +1103,9 @@
     <ClInclude Include="..\..\include\sdl_error_list.h">
       <Filter>Header Files\sdl-parser\error-handling</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\sdl_structure_list.h">
+      <Filter>Header Files\sdl-parser\parser</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\opencl_programs\mantaray.cl">

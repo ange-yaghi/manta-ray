@@ -37,6 +37,24 @@ manta::SdlNode::~SdlNode() {
 	/* void */
 }
 
+void manta::SdlNode::resolveNodeDefinition(SdlCompilationUnit *unit) {
+	int definitionCount = 0;
+	SdlNodeDefinition *definition = unit->resolveNodeDefinition(this, &definitionCount);
+
+	if (definitionCount > 0) {
+		// TODO: log a warning when a node type is ambiguous
+	}
+
+	if (definition == nullptr) {
+		unit->addCompilationError(new SdlCompilationError(getNameToken(), 
+			{ "R", "0001", "Undefined node type" }));
+	}
+
+	else {
+		setDefinition(definition);
+	}
+}
+
 void manta::SdlNode::resolveAttributeDefinitions(SdlCompilationUnit *unit) {
 	if (m_definition == nullptr) {
 		// The definition wasn't found so resolving any attributes doesn't make sense

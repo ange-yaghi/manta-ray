@@ -461,3 +461,25 @@ TEST(SdlTests, SdlPositionAttributeTest) {
 	EXPECT_EQ(nodeInstance->getAttributes()->getAttribute(1)->getAttributeDefinition()->getName(), "B");
 	EXPECT_EQ(nodeInstance->getAttributes()->getAttribute(2)->getAttributeDefinition(), nullptr);
 }
+
+TEST(SdlTests, SdlNodeBodyTest) {
+	SdlCompiler compiler;
+	SdlCompilationUnit *unit = compiler.compile(SDL_TEST_FILES "node_body.mr");
+
+	const SdlErrorList *errors = compiler.getErrorList();
+	int errorCount = errors->getErrorCount();
+
+	// No errors expected
+	EXPECT_EQ(errorCount, 0);
+
+	SdlNode *nodeInstance = unit->getNode(0);
+	SdlNodeDefinition *definition = nodeInstance->getDefinition();
+	SdlNode *bodyNode = definition->getBody()->getItem(0);
+
+	EXPECT_EQ(bodyNode->getName(), "add_mod");
+	EXPECT_EQ(bodyNode->getType(), "Add");
+
+	// Check that the node was resolved properly
+	SdlNodeDefinition *bodyDefinition = bodyNode->getDefinition();
+	EXPECT_NE(bodyDefinition, nullptr);
+}

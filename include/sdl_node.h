@@ -29,6 +29,7 @@ namespace manta {
 		SdlNodeDefinition *getDefinition() const { return m_definition; }
 		void setDefinition(SdlNodeDefinition *definition) { m_definition = definition; }
 
+		void resolveNodeDefinition(SdlCompilationUnit *unit);
 		void resolveAttributeDefinitions(SdlCompilationUnit *unit);
 
 	protected:

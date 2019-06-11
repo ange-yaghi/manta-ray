@@ -78,23 +78,15 @@ void manta::SdlCompilationUnit::parseHelper(std::istream &stream, SdlCompilation
 void manta::SdlCompilationUnit::resolveNodeDefinitions() {
 	int nodeCount = getNodeCount();
 	for (int i = 0; i < nodeCount; i++) {
-		int definitionCount = 0;
 		SdlNode *node = m_nodes[i];
-		SdlNodeDefinition *definition = resolveNodeDefinition(node, &definitionCount);
-
-		if (nodeCount > 0) {
-			// TODO: log a warning when a node type is ambiguous
-		}
-
-		if (definition == nullptr) {
-			addCompilationError(new SdlCompilationError(node->getNameToken(), {"R", "0001", "Undefined node type"}));
-		}
-
-		else {
-			node->setDefinition(definition);
-		}
-
+		node->resolveNodeDefinition(this);
 		node->resolveAttributeDefinitions(this);
+	}
+
+	int nodeDefinitionCount = getNodeDefinitionCount();
+	for (int i = 0; i < nodeDefinitionCount; i++) {
+		SdlNodeDefinition *definition = getNodeDefinition(i);
+		definition->resolveNodeDefinitions(this);
 	}
 }
 
