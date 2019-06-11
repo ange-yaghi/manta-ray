@@ -1,16 +1,25 @@
+@author = "Ange Yaghi"
+@date = "2019-06-11"
+
 node Add: (
-    input A,
-    input B,
-    default output C: A + B
+    @author = "Ange Yaghi"
+    @comment = "Hypothetical 'add' implementation"
+    
+    --Ports
+    input A;
+    input B;
+    default output C: A + B;
 )
 
 node SampleNode: (
     @author = "Ange Yaghi"
     @comment = "This is just a test node"
-    :::
-    input A,
-    input B,
-    default output C: add_mod // This should take the default output 'C'
-    :::
+
+    --Ports
+    input A;
+    input B;
+    default output C: add_mod; // This should take the default output 'C'
+    
+    --Body
     Add add_mod(A, B)
 )
