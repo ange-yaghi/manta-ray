@@ -26,7 +26,7 @@ if __name__ == "__main__":
 
     mypath = os.path.dirname(os.path.realpath(__file__)) + "/../"
 
-    directories = ['src', 'test', 'include', 'scripts', 'opencl_programs', 'demos', 'utilities/src', 'utilities/include', 'flex-bison']
+    directories = ['src', 'test', 'include', 'scripts', 'opencl_programs', 'demos', 'utilities/src', 'utilities/include', 'flex-bison', 'test/sdl', 'test/sdl/sample_lib']
     
     # Find the right file (previous versions used different naming conventions)
     possible_file_names = ['build_version.txt', 'BuildVersion.txt']
@@ -72,7 +72,7 @@ if __name__ == "__main__":
         for root, subFolders, files in os.walk(mypath + directory):
             for fileEntry in files:
                 if (fileEntry.endswith('.h') or fileEntry.endswith('.cpp') or fileEntry.endswith('.py') or fileEntry.endswith('.cl')) \
-                    or fileEntry.endswith('.y') or fileEntry.endswith('.l'):
+                    or fileEntry.endswith('.y') or fileEntry.endswith('.l') or fileEntry.endswith('.mr'):
                     if (fileEntry not in ignoreFiles):
                         lineCount += GetFileLineCount(os.path.join(root, fileEntry.strip()))
         

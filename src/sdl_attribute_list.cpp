@@ -11,7 +11,10 @@ manta::SdlAttributeList::~SdlAttributeList() {
 }
 
 void manta::SdlAttributeList::addAttribute(SdlAttribute *attribute) {
+	int index = getAttributeCount();
+
 	m_attributes.push_back(attribute);
+	attribute->setPosition(index);
 
 	registerComponent(attribute);
 }

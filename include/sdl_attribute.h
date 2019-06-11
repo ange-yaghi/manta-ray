@@ -22,9 +22,14 @@ namespace manta {
 		void setValue(SdlValue *value) { m_value = value; }
 		SdlValue *getValue() const { return m_value; }
 
+		void setPosition(int position) { m_position = position; }
+		int getPosition() const { return m_position;  }
+
 	protected:
 		SdlTokenInfo_string m_name;
 		SdlValue *m_value;
+
+		int m_position;
 
 		// Resolution stage
 	public:

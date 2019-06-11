@@ -9,6 +9,7 @@ manta::SdlAttribute::SdlAttribute() {
 manta::SdlAttribute::SdlAttribute(const SdlTokenInfo_string &name, SdlValue *value) {
 	m_name = name;
 	m_value = value;
+	m_position = -1;
 
 	registerToken(&name);
 	registerComponent(value);
@@ -18,6 +19,7 @@ manta::SdlAttribute::SdlAttribute(const SdlTokenInfo_string &name, SdlValue *val
 
 manta::SdlAttribute::SdlAttribute(SdlValue *value) {
 	m_value = value;
+	m_position = -1;
 
 	registerComponent(value);
 }

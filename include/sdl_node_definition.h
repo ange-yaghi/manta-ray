@@ -33,7 +33,7 @@ namespace manta {
 		std::string getName() const { return m_name.data; }
 
 		void setAttributeDefinitionList(SdlAttributeDefinitionList *definitions);
-		const SdlAttributeDefinitionList *getAttributionDefinitionList() const { return m_attributes; }
+		const SdlAttributeDefinitionList *getAttributeDefinitionList() const { return m_attributes; }
 
 		void setScope(SCOPE scope) { m_scope = scope; }
 		SCOPE getScope() const { return m_scope; }
