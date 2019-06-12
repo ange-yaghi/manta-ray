@@ -1,12 +1,12 @@
-node TestNode: (
+node TestNode: {
     input A;
     input B;
     output C;
-)
+};
 
 TestNode nodeInstance (
     A: 5,
     B: 6,
     C: "kaboom",
     D: "undefined"
-)
+);

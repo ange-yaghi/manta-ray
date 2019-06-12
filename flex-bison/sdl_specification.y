@@ -89,8 +89,6 @@
 %token <manta::SdlTokenInfo_string> LOCAL
 %token <manta::SdlTokenInfo_string> EXPORT
 %token <manta::SdlTokenInfo_string> POINTER
-%token <manta::SdlTokenInfo_string> BODY_SEPARATOR
-%token <manta::SdlTokenInfo_string> PORTS_SEPARATOR
 %token <manta::SdlTokenInfo_string> UNRECOGNIZED
 
 %token <manta::SdlTokenInfo_string> '='
@@ -100,6 +98,8 @@
 %token <manta::SdlTokenInfo_string> '*'
 %token <manta::SdlTokenInfo_string> '('
 %token <manta::SdlTokenInfo_string> ')'
+%token <manta::SdlTokenInfo_string> '{'
+%token <manta::SdlTokenInfo_string> '}'
 %token <manta::SdlTokenInfo_string> ':'
 %token <manta::SdlTokenInfo_string> ';'
 %token <manta::SdlTokenInfo_string> ','
@@ -155,9 +155,9 @@ decorator_list
   ;
 
 statement
-  : node							{ driver.addNode($1); }
+  : node ';'						{ driver.addNode($1); }
   | import_statement				{ driver.addImportStatement($1); }
-  | specific_node_definition		{ }
+  | specific_node_definition ';'	{ }
   ;
 
 statement_list 
@@ -175,11 +175,11 @@ node
   ;
 
 node_list
-  : node												{
+  : node ';'											{
 															$$ = new SdlNodeList();
 															$$->add($1);
 														}
-  | node_list node										{ $1->add($2); }
+  | node_list node ';'									{ $1->add($2); }
   ;
 
 node_name
@@ -195,15 +195,13 @@ node_shadow
   ;
 
 node_decorator
-  : node_shadow '(' decorator_list PORTS_SEPARATOR port_definitions		{ $$ = $1; $$->setAttributeDefinitionList($5); }
-  | node_shadow '(' PORTS_SEPARATOR port_definitions					{ $$ = $1; $$->setAttributeDefinitionList($4); }
-  | node_shadow '(' port_definitions									{ $$ = $1; $$->setAttributeDefinitionList($3); }
+  : node_shadow decorator_list '{' port_definitions		{ $$ = $1; $$->setAttributeDefinitionList($4); }
+  | node_shadow '{' port_definitions					{ $$ = $1; $$->setAttributeDefinitionList($3); }
   ;
 
 node_definition
-  : node_decorator ')'									{ $$ = $1; $$->setBody(nullptr); }
-  | node_decorator BODY_SEPARATOR node_list ')'			{ $$ = $1; $$->setBody($3); }
-  | node_decorator BODY_SEPARATOR ')'					{ $$ = $1; $$->setBody(nullptr); }
+  : node_decorator '}'									{ $$ = $1; $$->setBody(nullptr); }
+  | node_decorator node_list '}'						{ $$ = $1; $$->setBody($2); }
   ;
 
 specific_node_definition
