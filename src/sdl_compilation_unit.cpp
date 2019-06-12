@@ -19,28 +19,28 @@ manta::SdlCompilationUnit::~SdlCompilationUnit() {
 	m_parser = nullptr;
 }
 
-void manta::SdlCompilationUnit::parseFile(const Path &filename, SdlCompilationUnit *topLevel) {
+manta::SdlCompilationUnit::ParseResult manta::SdlCompilationUnit::parseFile(const Path &filename, SdlCompilationUnit *topLevel) {
 	m_path = filename;
 	
 	std::ifstream inFile(filename.toString());
 	if (!inFile.good()) {
-		return;
+		return IO_ERROR;
 	}
 
-	parseHelper(inFile);
+	return parseHelper(inFile);
 }
 
-void manta::SdlCompilationUnit::parse(const char *sdl, SdlCompilationUnit *topLevel) {
+manta::SdlCompilationUnit::ParseResult manta::SdlCompilationUnit::parse(const char *sdl, SdlCompilationUnit *topLevel) {
 	std::istringstream sdlStream(sdl);
-	parse(sdlStream);
+	return parse(sdlStream);
 }
 
-void manta::SdlCompilationUnit::parse(std::istream &stream, SdlCompilationUnit *topLevel) {
+manta::SdlCompilationUnit::ParseResult manta::SdlCompilationUnit::parse(std::istream &stream, SdlCompilationUnit *topLevel) {
 	if (!stream.good() && stream.eof()) {
-		return;
+		return IO_ERROR;
 	}
 
-	parseHelper(stream);
+	return parseHelper(stream);
 }
 
 void manta::SdlCompilationUnit::resolve() {
@@ -51,27 +51,31 @@ void manta::SdlCompilationUnit::resolve() {
 	resolveNodeDefinitions();
 }
 
-void manta::SdlCompilationUnit::parseHelper(std::istream &stream, SdlCompilationUnit *topLevel) {
+manta::SdlCompilationUnit::ParseResult manta::SdlCompilationUnit::parseHelper(
+									std::istream &stream, SdlCompilationUnit *topLevel) {
 	delete m_scanner;
 	try {
 		m_scanner = new manta::SdlScanner(&stream);
 	}
 	catch (std::bad_alloc) {
-		return;
+		return FAIL;
 	}
 
 	delete m_parser;
-
 	try {
 		m_parser = new manta::SdlParser(*m_scanner, *this);
 	}
 	catch (std::bad_alloc) {
-		return;
+		return FAIL;
 	}
 
 	const int success = 0;
 	if (m_parser->parse() != success) {
 		std::cerr << "Parse failed!!" << std::endl;
+		return FAIL;
+	}
+	else {
+		return SUCCESS;
 	}
 }
 

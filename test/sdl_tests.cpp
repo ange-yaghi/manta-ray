@@ -483,3 +483,17 @@ TEST(SdlTests, SdlNodeBodyTest) {
 	SdlNodeDefinition *bodyDefinition = bodyNode->getDefinition();
 	EXPECT_NE(bodyDefinition, nullptr);
 }
+
+TEST(SdlTests, SdlMissingDependencyTest) {
+	SdlCompiler compiler;
+	SdlCompilationUnit *unit = compiler.compile(SDL_TEST_FILES "missing_dependency.mr");
+
+	const SdlErrorList *errors = compiler.getErrorList();
+	int errorCount = errors->getErrorCount();
+
+	// Expect an import error
+	EXPECT_EQ(errorCount, 1);
+
+	SdlCompilationError *err0 = errors->getCompilationError(0);
+	EXPECT_EQ(err0->getErrorCode().stage, "IO");
+}
