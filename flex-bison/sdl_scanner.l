@@ -103,11 +103,13 @@ H				[a-fA-F0-9]
 					return (token::STRING);
 				}
 
-","				{ DEFAULT_BUILD(location); return (','); }
 "("				{ DEFAULT_BUILD(location); return ('('); }
 ")"				{ DEFAULT_BUILD(location); return (')'); }
+"{"				{ DEFAULT_BUILD(location); return ('{'); }
+"}"				{ DEFAULT_BUILD(location); return ('}'); }
 ":"				{ DEFAULT_BUILD(location); return (':'); }
 ";"				{ DEFAULT_BUILD(location); return (';'); }
+","				{ DEFAULT_BUILD(location); return (','); }
 
 "."				{ DEFAULT_BUILD(location); return ('.'); }
 "*"				{ DEFAULT_BUILD(location); return ('*'); }
@@ -117,10 +119,6 @@ H				[a-fA-F0-9]
 
 "=>"			{ DEFAULT_BUILD(location); return (token::POINTER); }
 "="				{ DEFAULT_BUILD(location); return ('='); }
-
-","				{ DEFAULT_BUILD(location); return (','); }
-"--Ports"		{ DEFAULT_BUILD(location); return (token::PORTS_SEPARATOR); }
-"--Body"		{ DEFAULT_BUILD(location); return (token::BODY_SEPARATOR); }
 
 [ \t\v\n\f]		{ }
 "//"[^\n]*		{ }
