@@ -2,6 +2,7 @@
 
 #include <sdl_compilation_unit.h>
 #include <sdl_import_statement.h>
+#include <sdl_compilation_error.h>
 
 manta::SdlCompiler::SdlCompiler() {
 	/* void */
@@ -19,7 +20,12 @@ manta::SdlCompilationUnit *manta::SdlCompiler::build(const SdlPath &scriptPath) 
 	if (newUnit == nullptr) {
 		newUnit = new SdlCompilationUnit();
 		newUnit->setErrorList(&m_errorList);
-		newUnit->parseFile(scriptPath);
+		SdlCompilationUnit::ParseResult parseResult = newUnit->parseFile(scriptPath);
+
+		if (parseResult == SdlCompilationUnit::IO_ERROR) {
+			delete newUnit;
+			return nullptr;
+		}
 
 		m_units.push_back(newUnit);
 
@@ -43,9 +49,21 @@ manta::SdlCompilationUnit *manta::SdlCompiler::build(const SdlPath &scriptPath) 
 				fullImportPath = rootDir.append(importPath);
 			}
 
+			if (!fullImportPath.exists()) {
+				newUnit->addCompilationError(new SdlCompilationError(*s->getSummaryToken(), 
+					{"IO", "0001", "Could not open file"}));
+				continue;
+			}
+
 			// Recursively build
 			SdlCompilationUnit *importUnit = build(fullImportPath);
-			newUnit->addDependency(importUnit);
+			if (importUnit == nullptr) {
+				newUnit->addCompilationError(new SdlCompilationError(*s->getSummaryToken(),
+					{ "IO", "0001", "Could not open file" }));
+			}
+			else {
+				newUnit->addDependency(importUnit);
+			}
 		}
 	}
 

@@ -35,6 +35,7 @@ namespace manta {
 		std::string getStem() const;
 
 		bool isAbsolute() const;
+		bool exists() const;
 
 	protected:
 		boost::filesystem::path *m_path;

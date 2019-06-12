@@ -23,12 +23,19 @@ namespace manta {
 
 	class SdlCompilationUnit {
 	public:
+		enum ParseResult {
+			IO_ERROR,
+			SUCCESS,
+			FAIL
+		};
+
+	public:
 		SdlCompilationUnit() = default;
 		virtual ~SdlCompilationUnit();
 
-		void parseFile(const Path &filename, SdlCompilationUnit *topLevel = nullptr);
-		void parse(const char *sdl, SdlCompilationUnit *topLevel = nullptr);
-		void parse(std::istream &iss, SdlCompilationUnit *topLevel = nullptr);
+		ParseResult parseFile(const Path &filename, SdlCompilationUnit *topLevel = nullptr);
+		ParseResult parse(const char *sdl, SdlCompilationUnit *topLevel = nullptr);
+		ParseResult parse(std::istream &iss, SdlCompilationUnit *topLevel = nullptr);
 
 		void addNode(SdlNode *node);
 		SdlNode *getNode(int index) const;
@@ -55,7 +62,7 @@ namespace manta {
 		SdlErrorList *getErrorList() const { return m_errorList; }
 
 	private:
-		void parseHelper(std::istream &stream, SdlCompilationUnit *topLevel = nullptr);
+		ParseResult parseHelper(std::istream &stream, SdlCompilationUnit *topLevel = nullptr);
 
 		SdlCompilationUnit *m_topLevel = nullptr;
 		SdlParser *m_parser = nullptr;
