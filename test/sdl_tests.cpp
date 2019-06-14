@@ -497,3 +497,19 @@ TEST(SdlTests, SdlMissingDependencyTest) {
 	SdlCompilationError *err0 = errors->getCompilationError(0);
 	EXPECT_EQ(err0->getErrorCode().stage, "IO");
 }
+
+TEST(SdlTests, SdlReferenceResolutionTest) {
+	SdlCompiler compiler;
+	SdlCompilationUnit *unit = compiler.compile(SDL_TEST_FILES "reference_resolution.mr");
+
+	const SdlErrorList *errors = compiler.getErrorList();
+	int errorCount = errors->getErrorCount();
+
+	// Expect no errors
+	EXPECT_EQ(errorCount, 0);
+
+	SdlNode *node = unit->getNode(0);
+	SdlParserStructure *b = node->getPublicAttribute("B");
+
+	int a = 0;
+}

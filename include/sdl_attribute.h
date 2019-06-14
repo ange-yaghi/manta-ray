@@ -19,7 +19,7 @@ namespace manta {
 
 		std::string getName() const { return m_name.data; }
 
-		void setValue(SdlValue *value) { m_value = value; }
+		void setValue(SdlValue *value);
 		SdlValue *getValue() const { return m_value; }
 
 		void setPosition(int position) { m_position = position; }

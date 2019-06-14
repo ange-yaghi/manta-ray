@@ -1,0 +1,18 @@
+local node ChildNode: {
+    default input main_in;
+    default output main_out: main_in;
+};
+
+local node TestNode: {
+    default input A;
+    default output B: childNode.main_out;
+    output C: childNode; // Test the default behavior 
+
+    ChildNode childNode(
+        main_in: A
+    );
+};
+
+TestNode testNodeInstance(
+    A: "Hello World"
+);

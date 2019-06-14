@@ -44,3 +44,36 @@ int manta::SdlAttributeDefinitionList::getInputCount() const {
 
 	return inputs;
 }
+
+manta::SdlAttributeDefinition *manta::SdlAttributeDefinitionList::getOutputDefinition(const std::string &name) const {
+	int totalCount = getDefinitionCount();
+	int inputs = 0;
+	for (int i = 0; i < totalCount; i++) {
+		SdlAttributeDefinition *definition = m_definitions[i];
+		if (definition->getDirection() == SdlAttributeDefinition::OUTPUT && name == definition->getName()) {
+			return definition;
+		}
+	}
+
+	return nullptr;
+}
+
+manta::SdlAttributeDefinition *manta::SdlAttributeDefinitionList::getDefaultOutput() const {
+	SdlAttributeDefinition *firstOutput = nullptr;
+
+	int totalCount = getDefinitionCount();
+	int inputs = 0;
+	for (int i = 0; i < totalCount; i++) {
+		SdlAttributeDefinition *definition = m_definitions[i];
+		if (definition->getDirection() == SdlAttributeDefinition::OUTPUT) {
+			firstOutput = definition;
+
+			if (definition->isDefault()) {
+				return definition;
+			}
+		}
+	}
+
+	// If not explicit default is found, return the first output
+	return firstOutput;
+}
