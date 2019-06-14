@@ -41,7 +41,7 @@ namespace manta {
 		void setDefinition(SdlNodeDefinition *definition) { m_definition = definition; }
 
 	protected:
-		virtual void _resolve();
+		virtual void _resolveDefinitions(SdlCompilationUnit *unit);
 
 		void resolveNodeDefinition(SdlCompilationUnit *unit);
 		void resolveAttributeDefinitions(SdlCompilationUnit *unit);

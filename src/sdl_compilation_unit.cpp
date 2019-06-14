@@ -43,6 +43,7 @@ manta::SdlCompilationUnit::ParseResult manta::SdlCompilationUnit::parse(std::ist
 	return parseHelper(stream);
 }
 
+/*
 void manta::SdlCompilationUnit::resolve() {
 	if (isResolved()) return;
 	else m_resolved = true;
@@ -55,7 +56,7 @@ void manta::SdlCompilationUnit::resolve() {
 
 	// Resolve all references to node definitions
 	resolveNodeDefinitions();
-}
+}*/
 
 manta::SdlCompilationUnit::ParseResult manta::SdlCompilationUnit::parseHelper(
 									std::istream &stream, SdlCompilationUnit *topLevel) {
@@ -85,6 +86,7 @@ manta::SdlCompilationUnit::ParseResult manta::SdlCompilationUnit::parseHelper(
 	}
 }
 
+/*
 void manta::SdlCompilationUnit::resolveNodeDefinitions() {
 	int nodeCount = getNodeCount();
 	for (int i = 0; i < nodeCount; i++) {
@@ -112,7 +114,7 @@ void manta::SdlCompilationUnit::resolveReferences() {
 		SdlNodeDefinition *definition = getNodeDefinition(i);
 		definition->resolveReferences();
 	}
-}
+}*/
 
 manta::SdlNodeDefinition *manta::SdlCompilationUnit::resolveNodeDefinition(SdlNode *node, int *count, bool searchDependencies) {
 	*count = 0;

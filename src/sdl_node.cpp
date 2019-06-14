@@ -66,9 +66,9 @@ manta::SdlParserStructure *manta::SdlNode::getPublicAttribute(const std::string 
 	return defaultValue;
 }
 
-void manta::SdlNode::_resolve() {
-	resolveNodeDefinition();
-
+void manta::SdlNode::_resolveDefinitions(SdlCompilationUnit *unit) {
+	resolveNodeDefinition(unit);
+	resolveAttributeDefinitions(unit);
 }
 
 void manta::SdlNode::resolveNodeDefinition(SdlCompilationUnit *unit) {

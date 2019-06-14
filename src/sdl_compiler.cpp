@@ -109,7 +109,8 @@ void manta::SdlCompiler::resolve() {
 	int unitCount = getUnitCount();
 	for (int i = 0; i < unitCount; i++) {
 		SdlCompilationUnit *unit = m_units[i];
-		unit->resolve();
-		unit->resolveReferences();
+		unit->expand(unit);
+		unit->resolveDefinitions(unit);
+		unit->resolveReferences(unit);
 	}
 }
