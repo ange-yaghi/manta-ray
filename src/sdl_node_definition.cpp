@@ -43,6 +43,7 @@ manta::SdlAttributeDefinition *manta::SdlNodeDefinition::getAttributeDefinition(
 	return nullptr;
 }
 
+/*
 void manta::SdlNodeDefinition::resolveNodeDefinitions(SdlCompilationUnit *unit) {
 	if (m_body == nullptr) {
 		// The body was empty so this step can be skipped
@@ -55,3 +56,4 @@ void manta::SdlNodeDefinition::resolveNodeDefinitions(SdlCompilationUnit *unit) 
 		node->resolveNodeDefinition(unit);
 	}
 }
+*/

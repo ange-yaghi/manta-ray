@@ -10,25 +10,29 @@ manta::SdlBinaryOperator::SdlBinaryOperator(OPERATOR op, SdlValue *left, SdlValu
 
 	registerComponent(left);
 	registerComponent(right);
+
+	// The dot operator is special in the sense that the right-hand operand
+	// will *always* be a standard label that doesn't reference anything itself.
+	// Therefore it wouldn't be wise to resolve the reference of that label
+	if (m_operator == DOT) {
+		m_resolveReferencesChildren = false;
+	}
 }
 
 manta::SdlBinaryOperator::~SdlBinaryOperator() {
 	/* void */
 }
 
-void manta::SdlBinaryOperator::resolveReferences() {
-	SdlValue::resolveReferences();
-
+void manta::SdlBinaryOperator::_resolveReferences(SdlCompilationUnit *unit) {
 	if (m_leftOperand == nullptr || m_rightOperand == nullptr) {
 		// There was a syntax error so this step can be skipped
 		return;
 	}
 
+	// The dot is the reference operator
 	if (m_operator == DOT) {
-		// The dot is the reference operator
-		if (!m_leftOperand->isResolved()) {
-			m_leftOperand->resolveReferences();
-		}
+		// Make sure that the left operand is actually resolved
+		m_leftOperand->resolveReferences(unit);
 
 		SdlParserStructure *resolvedLeft = m_leftOperand->getReference();
 		if (resolvedLeft == nullptr) {
@@ -50,13 +54,11 @@ void manta::SdlBinaryOperator::resolveReferences() {
 			return;
 		}
 
-		if (!publicAttribute->isResolved()) {
-			publicAttribute->resolveReferences();
-		}
-
-		m_reference = publicAttribute->getReference();
+		m_reference = publicAttribute;
 	}
 	else {
-
+		// Other operators need both right and left hand to be resolved
+		m_leftOperand->resolveReferences(unit);
+		m_rightOperand->resolveReferences(unit);
 	}
 }

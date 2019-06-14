@@ -45,7 +45,7 @@ namespace manta {
 
 		SdlAttributeDefinition *getAttributeDefinition(const std::string &attributeName) const;
 
-		void setBody(SdlNodeList *body) { m_body = body; }
+		void setBody(SdlNodeList *body) { m_body = body; registerComponent(body); }
 		SdlNodeList *getBody() const { return m_body; }
 
 	protected:
@@ -62,7 +62,7 @@ namespace manta {
 
 		// Resolution stage
 	public:
-		void resolveNodeDefinitions(SdlCompilationUnit *unit);
+		//void resolveNodeDefinitions(SdlCompilationUnit *unit);
 	};
 
 } /* namespace manta */

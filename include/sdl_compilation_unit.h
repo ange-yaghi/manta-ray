@@ -55,7 +55,7 @@ namespace manta {
 
 		std::ostream& print(std::ostream &stream);
 
-		void addDependency(SdlCompilationUnit *unit) { m_dependencies.push_back(unit); }
+		void addDependency(SdlCompilationUnit *unit) { m_dependencies.push_back(unit); registerComponent(unit); }
 		SdlCompilationUnit *getDependency(int index) { return m_dependencies[index]; }
 		int getDependencyCount() const { return (int)m_dependencies.size(); }
 		const Path &getPath() const { return m_path; }
@@ -79,20 +79,17 @@ namespace manta {
 
 		SdlErrorList *m_errorList = nullptr;
 
-		bool m_resolved = false;
-		bool m_resolvedReferences = false;
-
 		// Resolution stage
 	public:
-		void resolve();
-		void resolveReferences();
-		bool isResolved() const { return m_resolved; }
-		bool areReferencesResolved() const { m_resolvedReferences; }
+		//virtual void resolveDefinitions();
+		//virtual void resolveReferences();
+		//bool isResolved() const { return m_resolved; }
+		//bool areReferencesResolved() const { m_resolvedReferences; }
 
 		SdlNodeDefinition *resolveNodeDefinition(SdlNode *node, int *count, bool searchDependencies = true);
 
 	private:
-		void resolveNodeDefinitions();
+		//void resolveNodeDefinitions();
 	};
 
 } /* namespace manta */

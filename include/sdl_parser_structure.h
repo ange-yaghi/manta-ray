@@ -8,6 +8,7 @@
 namespace manta {
 
 	class SdlValue;
+	class SdlCompilationUnit;
 
 	class SdlParserStructure {
 	public:
@@ -16,31 +17,38 @@ namespace manta {
 
 		const SdlTokenInfo *getSummaryToken() const { return &m_summaryToken; }
 		void registerToken(const SdlTokenInfo *tokenInfo);
+
 		void registerComponent(SdlParserStructure *child);
+		int getComponentCount() const { return (int)m_components.size(); }
 
 		virtual SdlParserStructure *getPublicAttribute(const std::string &name) { return nullptr; }
 
 		void setParentScope(SdlParserStructure *parentScope) { m_parentScope = parentScope; }
 		SdlParserStructure *resolveName(const std::string &name) const;
 
-		bool isResolved() const { return m_isResolved; }
+		bool getDefinitionsResolved() const { return m_definitionsResolved; }
+		bool getReferencesResolved() const { return m_referencesResolved; }
 		bool isExpanded() const { return m_isExpanded; }
-		SdlParserStructure *getReference() const { return m_reference; }
+		SdlParserStructure *getImmediateReference() const { return m_reference; }
+		SdlParserStructure *getReference() const;
 		SdlParserStructure *getExpansion() const { return m_expansion; }
 
 		virtual SdlValue *getAsValue() { return nullptr; }
 
 	public:
 		// Compilation stages
-		void expand();
-		void resolve();
+		void expand(SdlCompilationUnit *unit);
+		void resolveDefinitions(SdlCompilationUnit *unit);
+		void resolveReferences(SdlCompilationUnit *unit);
 
 	protected:
-		virtual void _expand();
-		virtual void _resolve();
+		virtual void _expand(SdlCompilationUnit *unit);
+		virtual void _resolveDefinitions(SdlCompilationUnit *unit);
+		virtual void _resolveReferences(SdlCompilationUnit *unit);
 
 	protected:
-		SdlParserStructure *resolveLocalName() const;
+		SdlParserStructure *resolveLocalName(const std::string &name) const;
+		SdlParserStructure *_resolveLocalName(const std::string &name) const;
 
 		SdlParserStructure *m_parentScope;
 		SdlTokenInfo m_summaryToken;
@@ -48,10 +56,15 @@ namespace manta {
 		SdlParserStructure *m_reference;
 		SdlParserStructure *m_expansion;
 
+		std::vector<SdlParserStructure *> m_components;
+
 	protected:
 		// Compilation flags
 		bool m_isExpanded;
-		bool m_isResolved;
+		bool m_definitionsResolved;
+		bool m_referencesResolved;
+
+		bool m_resolveReferencesChildren;
 	};
 
 } /* namespace manta */

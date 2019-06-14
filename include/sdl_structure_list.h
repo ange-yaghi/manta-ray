@@ -13,7 +13,7 @@ namespace manta {
 		SdlStructureList() { /* void */ }
 		~SdlStructureList() { /* void */ }
 
-		void add(T *item) { m_items.push_back(item); }
+		void add(T *item) { m_items.push_back(item); registerComponent(item); }
 		T *getItem(int index) const { return m_items[index]; }
 		int getItemCount() const { return (int)m_items.size(); }
 

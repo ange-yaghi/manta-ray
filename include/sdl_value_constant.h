@@ -36,8 +36,8 @@ namespace manta {
 		SdlValueLabel(const _TokenInfo &value) : SdlValueConstant(value) { /* void */ }
 		~SdlValueLabel() { /* void */ }
 
-		virtual void resolveReferences() {
-			SdlValue::resolveReferences();
+	protected:
+		virtual void _resolveReferences(SdlCompilationUnit *unit) {
 			m_reference = resolveName(m_value);
 		}
 	};

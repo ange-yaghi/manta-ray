@@ -25,6 +25,8 @@ namespace manta {
 
 		VALUE_TYPE getType() const { return m_type; }
 
+		virtual SdlValue *getAsValue() { return this; }
+
 	private:
 		VALUE_TYPE m_type;
 	};

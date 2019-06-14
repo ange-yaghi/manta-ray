@@ -29,8 +29,8 @@ namespace manta {
 		SdlValue *m_rightOperand;
 
 		// Resolution stage
-	public:
-		virtual void resolveReferences();
+	protected:
+		virtual void _resolveReferences(SdlCompilationUnit *unit);
 	};
 
 } /* namespace manta */
