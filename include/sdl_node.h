@@ -27,7 +27,7 @@ namespace manta {
 		SdlAttributeList *getAttributes() const { return m_attributes; }
 
 		virtual SdlParserStructure *getPublicAttribute(const std::string &name, bool *failed = nullptr);
-		virtual SdlParserStructure *getDefaultInterface();
+		virtual SdlValue *getAsValue();
 
 	protected:
 		SdlTokenInfo_string m_type;
@@ -40,10 +40,12 @@ namespace manta {
 		SdlNodeDefinition *getDefinition() const { return m_definition; }
 		void setDefinition(SdlNodeDefinition *definition) { m_definition = definition; }
 
+	protected:
+		virtual void _resolve();
+
 		void resolveNodeDefinition(SdlCompilationUnit *unit);
 		void resolveAttributeDefinitions(SdlCompilationUnit *unit);
 
-	protected:
 		SdlNodeDefinition *m_definition;
 	};
 

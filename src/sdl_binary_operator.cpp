@@ -56,4 +56,7 @@ void manta::SdlBinaryOperator::resolveReferences() {
 
 		m_reference = publicAttribute->getReference();
 	}
+	else {
+
+	}
 }
