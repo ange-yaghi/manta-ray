@@ -66,20 +66,9 @@ manta::SdlParserStructure *manta::SdlNode::getPublicAttribute(const std::string 
 	return defaultValue;
 }
 
-manta::SdlParserStructure *manta::SdlNode::getDefaultInterface() {
-	auto definition = m_definition;
-	if (definition == nullptr) return nullptr;
+void manta::SdlNode::_resolve() {
+	resolveNodeDefinition();
 
-	auto definitionList = definition->getAttributeDefinitionList();
-	if (definitionList == nullptr) return nullptr;
-
-	auto outputDefinition = definitionList->getDefaultOutput();
-	if (outputDefinition == nullptr) return nullptr;
-
-	auto defaultValue = outputDefinition->getDefaultValue();
-	if (defaultValue == nullptr) return nullptr;
-
-	return defaultValue->getDefaultInterface();
 }
 
 void manta::SdlNode::resolveNodeDefinition(SdlCompilationUnit *unit) {
@@ -157,4 +146,20 @@ void manta::SdlNode::resolveAttributeDefinitions(SdlCompilationUnit *unit) {
 			attribute->setAttributeDefinition(definition);
 		}
 	}
+}
+
+manta::SdlValue *manta::SdlNode::getAsValue() {
+	auto definition = m_definition;
+	if (definition == nullptr) return nullptr;
+
+	auto definitionList = definition->getAttributeDefinitionList();
+	if (definitionList == nullptr) return nullptr;
+
+	auto outputDefinition = definitionList->getDefaultOutput();
+	if (outputDefinition == nullptr) return nullptr;
+
+	auto defaultValue = outputDefinition->getDefaultValue();
+	if (defaultValue == nullptr) return nullptr;
+
+	return defaultValue->getAsValue();
 }

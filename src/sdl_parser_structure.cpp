@@ -30,9 +30,26 @@ manta::SdlParserStructure *manta::SdlParserStructure::resolveName(const std::str
 	return nullptr;
 }
 
-void manta::SdlParserStructure::resolveReferences() {
+void manta::SdlParserStructure::resolve() {
+	if (m_isResolved) return;
+
 	m_isResolved = true;
+	_resolve();
+}
+
+void manta::SdlParserStructure::expand() {
+	if (m_isExpanded) return;
+
+	m_isExpanded = true;
+	_expand();
+}
+
+void manta::SdlParserStructure::_resolve() {
 	m_reference = this;
+}
+
+void manta::SdlParserStructure::_expand() {
+	m_expansion = nullptr;
 }
 
 manta::SdlParserStructure *manta::SdlParserStructure::resolveLocalName() const {
