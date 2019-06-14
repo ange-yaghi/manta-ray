@@ -7,6 +7,7 @@
 #include <sdl_attribute_definition.h>
 #include <sdl_compilation_error.h>
 #include <sdl_attribute_definition_list.h>
+#include <sdl_value.h>
 
 manta::SdlNode::SdlNode() {
 	/* void */
@@ -35,6 +36,50 @@ manta::SdlNode::SdlNode(const SdlTokenInfo_string &type, SdlAttributeList *attri
 
 manta::SdlNode::~SdlNode() {
 	/* void */
+}
+
+void manta::SdlNode::setAttributes(SdlAttributeList *list) {
+	m_attributes = list;
+	registerComponent(list);
+}
+
+manta::SdlParserStructure *manta::SdlNode::getPublicAttribute(const std::string &name, bool *failed) {
+	if (failed != nullptr) *failed = false;
+
+	auto definition = m_definition;
+	if (definition == nullptr) return nullptr;
+
+	auto definitionList = definition->getAttributeDefinitionList();
+	if (definitionList == nullptr) return nullptr;
+
+	auto outputDefinition = definitionList->getOutputDefinition(name);
+	if (outputDefinition == nullptr) {
+		// In this case it is a true failure because rather than there being a syntax error,
+		// the output name itself was not found
+		if (failed != nullptr) *failed = true;
+		return nullptr;
+	}
+
+	auto defaultValue = outputDefinition->getDefaultValue();
+	if (defaultValue == nullptr) return nullptr;
+
+	return defaultValue;
+}
+
+manta::SdlParserStructure *manta::SdlNode::getDefaultInterface() {
+	auto definition = m_definition;
+	if (definition == nullptr) return nullptr;
+
+	auto definitionList = definition->getAttributeDefinitionList();
+	if (definitionList == nullptr) return nullptr;
+
+	auto outputDefinition = definitionList->getDefaultOutput();
+	if (outputDefinition == nullptr) return nullptr;
+
+	auto defaultValue = outputDefinition->getDefaultValue();
+	if (defaultValue == nullptr) return nullptr;
+
+	return defaultValue->getDefaultInterface();
 }
 
 void manta::SdlNode::resolveNodeDefinition(SdlCompilationUnit *unit) {

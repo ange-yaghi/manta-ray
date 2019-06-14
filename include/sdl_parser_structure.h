@@ -16,10 +16,26 @@ namespace manta {
 
 		const SdlTokenInfo *getSummaryToken() const { return &m_summaryToken; }
 		void registerToken(const SdlTokenInfo *tokenInfo);
-		void registerComponent(const SdlParserStructure *child);
+		void registerComponent(SdlParserStructure *child);
+
+		virtual SdlParserStructure *getPublicAttribute(const std::string &name) { return nullptr; }
+		virtual SdlParserStructure *getDefaultInterface() { return this; }
+
+		void setParentScope(SdlParserStructure *parentScope) { m_parentScope = parentScope; }
+		SdlParserStructure *resolveName(const std::string &name) const;
+
+		bool isResolved() const { return m_isResolved; }
+		SdlParserStructure *getReference() { return m_reference; }
+		virtual void resolveReferences();
 
 	protected:
+		SdlParserStructure *resolveLocalName() const;
+
+		SdlParserStructure *m_parentScope;
 		SdlTokenInfo m_summaryToken;
+
+		SdlParserStructure *m_reference;
+		bool m_isResolved;
 	};
 
 } /* namespace manta */

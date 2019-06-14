@@ -23,14 +23,11 @@ namespace manta {
 		const std::string &getType() const { return m_type.data; }
 		const std::string &getName() const { return m_name.data; }
 
-		void setAttributes(SdlAttributeList *list) { m_attributes = list; }
+		void setAttributes(SdlAttributeList *list);
 		SdlAttributeList *getAttributes() const { return m_attributes; }
 
-		SdlNodeDefinition *getDefinition() const { return m_definition; }
-		void setDefinition(SdlNodeDefinition *definition) { m_definition = definition; }
-
-		void resolveNodeDefinition(SdlCompilationUnit *unit);
-		void resolveAttributeDefinitions(SdlCompilationUnit *unit);
+		virtual SdlParserStructure *getPublicAttribute(const std::string &name, bool *failed = nullptr);
+		virtual SdlParserStructure *getDefaultInterface();
 
 	protected:
 		SdlTokenInfo_string m_type;
@@ -38,7 +35,15 @@ namespace manta {
 
 		SdlAttributeList *m_attributes;
 
-		// Members for use by the compiler
+		// Resolution stage
+	public:
+		SdlNodeDefinition *getDefinition() const { return m_definition; }
+		void setDefinition(SdlNodeDefinition *definition) { m_definition = definition; }
+
+		void resolveNodeDefinition(SdlCompilationUnit *unit);
+		void resolveAttributeDefinitions(SdlCompilationUnit *unit);
+
+	protected:
 		SdlNodeDefinition *m_definition;
 	};
 

@@ -1,6 +1,8 @@
 #ifndef SDL_COMPILATION_UNIT_H
 #define SDL_COMPILATION_UNIT_H
 
+#include <sdl_parser_structure.h>
+
 #include <path.h>
 
 #include <string>
@@ -21,7 +23,7 @@ namespace manta {
 	class SdlCompilationError;
 	class SdlErrorList;
 
-	class SdlCompilationUnit {
+	class SdlCompilationUnit : public SdlParserStructure {
 	public:
 		enum ParseResult {
 			IO_ERROR,
@@ -78,11 +80,14 @@ namespace manta {
 		SdlErrorList *m_errorList = nullptr;
 
 		bool m_resolved = false;
+		bool m_resolvedReferences = false;
 
 		// Resolution stage
 	public:
 		void resolve();
+		void resolveReferences();
 		bool isResolved() const { return m_resolved; }
+		bool areReferencesResolved() const { m_resolvedReferences; }
 
 		SdlNodeDefinition *resolveNodeDefinition(SdlNode *node, int *count, bool searchDependencies = true);
 

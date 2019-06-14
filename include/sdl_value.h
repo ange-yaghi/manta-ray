@@ -5,6 +5,8 @@
 
 namespace manta {
 
+	class SdlAttribute;
+
 	class SdlValue : public SdlParserStructure {
 	public:
 		enum VALUE_TYPE {

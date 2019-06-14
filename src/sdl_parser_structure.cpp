@@ -1,7 +1,7 @@
 #include <sdl_parser_structure.h>
 
 manta::SdlParserStructure::SdlParserStructure() {
-	/* void */
+	m_parentScope = nullptr;
 }
 
 manta::SdlParserStructure::~SdlParserStructure() {
@@ -12,6 +12,29 @@ void manta::SdlParserStructure::registerToken(const SdlTokenInfo *tokenInfo) {
 	if (tokenInfo != nullptr) m_summaryToken.combine(tokenInfo);
 }
 
-void manta::SdlParserStructure::registerComponent(const SdlParserStructure *child) {
-	if (child != nullptr) m_summaryToken.combine(child->getSummaryToken());
+void manta::SdlParserStructure::registerComponent(SdlParserStructure *child) {
+	if (child != nullptr) {
+		m_summaryToken.combine(child->getSummaryToken());
+		child->setParentScope(this);
+	}
+}
+
+manta::SdlParserStructure *manta::SdlParserStructure::resolveName(const std::string &name) const {
+	SdlParserStructure *local = resolveLocalName();
+	if (local != nullptr) return local;
+	
+	if (m_parentScope != nullptr) {
+		return m_parentScope->resolveName(name);
+	}
+
+	return nullptr;
+}
+
+void manta::SdlParserStructure::resolveReferences() {
+	m_isResolved = true;
+	m_reference = this;
+}
+
+manta::SdlParserStructure *manta::SdlParserStructure::resolveLocalName() const {
+	return nullptr;
 }

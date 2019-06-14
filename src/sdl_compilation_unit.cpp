@@ -47,6 +47,12 @@ void manta::SdlCompilationUnit::resolve() {
 	if (isResolved()) return;
 	else m_resolved = true;
 
+	// Resolve dependencies first
+	int dependencyCount = getDependencyCount();
+	for (int i = 0; i < dependencyCount; i++) {
+		m_dependencies[i]->resolve();
+	}
+
 	// Resolve all references to node definitions
 	resolveNodeDefinitions();
 }
@@ -94,6 +100,20 @@ void manta::SdlCompilationUnit::resolveNodeDefinitions() {
 	}
 }
 
+void manta::SdlCompilationUnit::resolveReferences() {
+	int nodeCount = getNodeCount();
+	for (int i = 0; i < nodeCount; i++) {
+		SdlNode *node = m_nodes[i];
+		node->resolveReferences();
+	}
+
+	int nodeDefinitionCount = getNodeDefinitionCount();
+	for (int i = 0; i < nodeDefinitionCount; i++) {
+		SdlNodeDefinition *definition = getNodeDefinition(i);
+		definition->resolveReferences();
+	}
+}
+
 manta::SdlNodeDefinition *manta::SdlCompilationUnit::resolveNodeDefinition(SdlNode *node, int *count, bool searchDependencies) {
 	*count = 0;
 	manta::SdlNodeDefinition *definition = nullptr;
@@ -128,6 +148,7 @@ manta::SdlNodeDefinition *manta::SdlCompilationUnit::resolveNodeDefinition(SdlNo
 
 void manta::SdlCompilationUnit::addNode(SdlNode *node) {
 	m_nodes.push_back(node);
+	registerComponent(node);
 }
 
 manta::SdlNode *manta::SdlCompilationUnit::getNode(int index) const {
@@ -140,6 +161,7 @@ int manta::SdlCompilationUnit::getNodeCount() const {
 
 void manta::SdlCompilationUnit::addImportStatement(SdlImportStatement *statement) {
 	m_importStatements.push_back(statement);
+	registerComponent(statement);
 }
 
 int manta::SdlCompilationUnit::getImportStatementCount() const {
@@ -148,6 +170,7 @@ int manta::SdlCompilationUnit::getImportStatementCount() const {
 
 void manta::SdlCompilationUnit::addNodeDefinition(SdlNodeDefinition *nodeDefinition) {
 	m_nodeDefinitions.push_back(nodeDefinition);
+	registerComponent(nodeDefinition);
 }
 
 int manta::SdlCompilationUnit::getNodeDefinitionCount() const {

@@ -27,6 +27,10 @@ namespace manta {
 		OPERATOR m_operator;
 		SdlValue *m_leftOperand;
 		SdlValue *m_rightOperand;
+
+		// Resolution stage
+	public:
+		virtual void resolveReferences();
 	};
 
 } /* namespace manta */

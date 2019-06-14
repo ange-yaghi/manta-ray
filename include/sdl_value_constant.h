@@ -29,9 +29,21 @@ namespace manta {
 		_TokenInfo m_token;
 	};
 
+	// Specialized type for labels
+	class SdlValueLabel : public SdlValueConstant<std::string, SdlValue::CONSTANT_LABEL> {
+		// Resolution stage
+	public:
+		SdlValueLabel(const _TokenInfo &value) : SdlValueConstant(value) { /* void */ }
+		~SdlValueLabel() { /* void */ }
+
+		virtual void resolveReferences() {
+			SdlValue::resolveReferences();
+			m_reference = resolveName(m_value);
+		}
+	};
+
 	typedef SdlValueConstant<int, SdlValue::CONSTANT_INT> SdlValueInt;
 	typedef SdlValueConstant<SdlNode *, SdlValue::NODE_REF> SdlValueNodeRef;
-	typedef SdlValueConstant<std::string, SdlValue::CONSTANT_LABEL> SdlValueLabel;
 	typedef SdlValueConstant<std::string, SdlValue::CONSTANT_STRING> SdlValueString;
 	typedef SdlValueConstant<double, SdlValue::CONSTANT_FLOAT> SdlValueFloat;
 	typedef SdlValueConstant<bool, SdlValue::CONSTANT_BOOL> SdlValueBool;

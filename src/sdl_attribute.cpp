@@ -27,3 +27,8 @@ manta::SdlAttribute::SdlAttribute(SdlValue *value) {
 manta::SdlAttribute::~SdlAttribute() {
 	/* void */
 }
+
+void manta::SdlAttribute::setValue(SdlValue *value) {
+	m_value = value;
+	registerComponent(value);
+}

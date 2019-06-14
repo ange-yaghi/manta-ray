@@ -4,6 +4,7 @@
 #include <sdl_parser_structure.h>
 
 #include <vector>
+#include <string>
 
 namespace manta {
 
@@ -20,6 +21,9 @@ namespace manta {
 
 		SdlAttributeDefinition *getInputDefinition(int index) const;
 		int getInputCount() const;
+
+		SdlAttributeDefinition *getOutputDefinition(const std::string &name) const;
+		SdlAttributeDefinition *getDefaultOutput() const;
 
 	protected:
 		std::vector<SdlAttributeDefinition *> m_definitions;
