@@ -550,14 +550,15 @@ TEST(SdlTests, SdlReferenceResolutionError1Test) {
 
 	const SdlErrorList *errors = compiler.getErrorList();
 
-	EXPECT_TRUE(findError(errors, SdlErrorCode::AccessingInternalMember, 22));
 	EXPECT_TRUE(findError(errors, SdlErrorCode::UnresolvedReference, 18));
-	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedMember, 21));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::AccessingInternalMember, 21));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UnresolvedReference, 22));
 	EXPECT_TRUE(findError(errors, SdlErrorCode::AccessingInternalMember, 23));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::AccessingInternalMember, 24));
 
 	EXPECT_TRUE(findError(errors, SdlErrorCode::InputSpecifiedMultipleTimes, 31));
 	EXPECT_TRUE(findError(errors, SdlErrorCode::InputSpecifiedMultipleTimes, 32));
 
 	// Expect 3 errors
-	EXPECT_EQ(errors->getErrorCount(), 6);
+	EXPECT_EQ(errors->getErrorCount(), 7);
 }

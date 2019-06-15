@@ -21,6 +21,7 @@ local node NewNode: {
     output should_fail: myNode.childNode;   // AccessingInternalMember
     output should_also_fail: nonsense;      // UnresolvedReference
     output cant_access_that: myNode.A;      // AccessingInternalMember
+    output doesnt_exit: myNode.nonsense     // UndefinedMember
 
     TestNode myNode(
         A: "Hi"
