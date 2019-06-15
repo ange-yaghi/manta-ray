@@ -43,6 +43,27 @@ void manta::SdlNode::setAttributes(SdlAttributeList *list) {
 	registerComponent(list);
 }
 
+manta::SdlAttribute *manta::SdlNode::getAttribute(const std::string &name, int *count) const {
+	if (m_attributes == nullptr) return nullptr;
+
+	if (count != nullptr) {
+		*count = 0;
+	}
+
+	SdlAttribute *result = nullptr;
+	int attributeCount = m_attributes->getAttributeCount();
+	for (int i = 0; i < attributeCount; i++) {
+		SdlAttribute *attribute = m_attributes->getAttribute(i);
+		if (attribute->getName() == name) {
+			if (result == nullptr) result = attribute;
+			if (count != nullptr) (*count)++;
+		}
+	}
+
+	return result;
+}
+
+/*
 manta::SdlParserStructure *manta::SdlNode::getPublicAttribute(const std::string &name, bool *failed) const {
 	if (failed != nullptr) *failed = false;
 
@@ -64,11 +85,43 @@ manta::SdlParserStructure *manta::SdlNode::getPublicAttribute(const std::string 
 	if (defaultValue == nullptr) return nullptr;
 
 	return defaultValue;
+}*/
+
+manta::SdlParserStructure *manta::SdlNode::resolveLocalName(const std::string &name) const {
+	SdlParserStructure *attribute = getAttribute(name);
+	if (attribute != nullptr) return attribute;
+	
+	return m_definition->resolveLocalName(name);
 }
 
 void manta::SdlNode::_resolveDefinitions(SdlCompilationUnit *unit) {
 	resolveNodeDefinition(unit);
 	resolveAttributeDefinitions(unit);
+}
+
+void manta::SdlNode::_validate(SdlCompilationUnit *unit) {
+	SdlAttributeList *attributes = m_attributes;
+
+	if (attributes == nullptr) {
+		// There was a syntax error before this step
+		return;
+	}
+
+	int attributeCount = attributes->getAttributeCount();
+	for (int i = 0; i < attributeCount; i++) {
+		SdlAttribute *attribute = attributes->getAttribute(i);
+
+		// Only check if this is not a positional attribute
+		if (attribute->isPositional()) continue;
+
+		int count;
+		SdlAttribute *other = getAttribute(attribute->getName(), &count);
+		if (count > 1) {
+			// Attribute defined multiple times
+			unit->addCompilationError(new SdlCompilationError(*attribute->getSummaryToken(),
+				SdlErrorCode::InputSpecifiedMultipleTimes));
+		}
+	}
 }
 
 void manta::SdlNode::resolveNodeDefinition(SdlCompilationUnit *unit) {
@@ -104,11 +157,9 @@ void manta::SdlNode::resolveAttributeDefinitions(SdlCompilationUnit *unit) {
 	for (int i = 0; i < attributeCount; i++) {
 		SdlAttribute *attribute = m_attributes->getAttribute(i);
 
-		std::string name = attribute->getName();
 		SdlAttributeDefinition *definition;
 		
-		if (name == "") {
-			// Name not specified, positional notation is assumed
+		if (attribute->isPositional()) {
 			const SdlAttributeDefinitionList *list = m_definition->getAttributeDefinitionList();
 			int position = attribute->getPosition();
 

@@ -18,8 +18,9 @@ local node NewNode: {
     default output test_out: testNodeInstance;
 
     // Accessing internal members in this manner should fail
-    output should_fail: myNode.childNode;
-    output should_also_fail: nonsense;
+    output should_fail: myNode.childNode;   // AccessingInternalMember
+    output should_also_fail: nonsense;      // UnresolvedReference
+    output cant_access_that: myNode.A;      // AccessingInternalMember
 
     TestNode myNode(
         A: "Hi"
@@ -27,5 +28,6 @@ local node NewNode: {
 };
 
 TestNode testNodeInstance(
-    A: "Hello World"
+    A: "Hello World",
+    A: "Boom" // ERROR
 );

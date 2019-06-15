@@ -48,11 +48,18 @@ void manta::SdlBinaryOperator::_resolveReferences(SdlCompilationUnit *unit) {
 		}
 
 		SdlValueLabel *labelConstant = static_cast<SdlValueLabel *>(m_rightOperand);
-		SdlParserStructure *publicAttribute = resolvedLeft->getPublicAttribute(labelConstant->getValue());
+		SdlParserStructure *publicAttribute = resolvedLeft->resolveLocalName(labelConstant->getValue());
+
+		// Check to make sure that the user is not accidentally trying to use a hidden member
+		if (!publicAttribute->allowsExternalAccess()) {
+			unit->addCompilationError(new SdlCompilationError(*m_rightOperand->getSummaryToken(),
+				SdlErrorCode::AccessingInternalMember));
+			return;
+		}
 
 		if (publicAttribute == nullptr) {
 			// Left hand does not have this member
-			unit->addCompilationError(new SdlCompilationError(*m_leftOperand->getSummaryToken(),
+			unit->addCompilationError(new SdlCompilationError(*m_rightOperand->getSummaryToken(),
 				SdlErrorCode::UndefinedMember));
 			return;
 		}

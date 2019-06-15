@@ -33,7 +33,9 @@ namespace manta {
 
 	protected:
 		// Build steps
+		void expand();
 		void resolve();
+		void validate();
 
 	protected:
 		SdlErrorList m_errorList;
