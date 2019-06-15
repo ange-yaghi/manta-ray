@@ -26,7 +26,7 @@ namespace manta {
 		void setAttributes(SdlAttributeList *list);
 		SdlAttributeList *getAttributes() const { return m_attributes; }
 
-		virtual SdlParserStructure *getPublicAttribute(const std::string &name, bool *failed = nullptr);
+		virtual SdlParserStructure *getPublicAttribute(const std::string &name, bool *failed = nullptr) const;
 		virtual SdlValue *getAsValue();
 
 	protected:

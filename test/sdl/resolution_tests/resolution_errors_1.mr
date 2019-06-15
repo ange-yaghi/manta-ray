@@ -1,0 +1,31 @@
+local node ChildNode: {
+    default input main_in;
+    default output main_out: main_in;
+};
+
+local node TestNode: {
+    default input A;
+    default output B: childNode.main_out;
+    output C: childNode; // Test the default behavior 
+
+    ChildNode childNode(
+        main_in: A
+    );
+};
+
+local node NewNode: {
+    default input test_in;
+    default output test_out: testNodeInstance;
+
+    // Accessing internal members in this manner should fail
+    output should_fail: myNode.childNode;
+    output should_also_fail: nonsense;
+
+    TestNode myNode(
+        A: "Hi"
+    );
+};
+
+TestNode testNodeInstance(
+    A: "Hello World"
+);

@@ -26,7 +26,7 @@ void manta::SdlParserStructure::registerComponent(SdlParserStructure *child) {
 }
 
 manta::SdlParserStructure *manta::SdlParserStructure::resolveName(const std::string &name) const {
-	SdlParserStructure *local = resolveLocalName();
+	SdlParserStructure *local = resolveLocalName(name);
 	if (local != nullptr) return local;
 	
 	if (m_parentScope != nullptr) {
@@ -36,9 +36,9 @@ manta::SdlParserStructure *manta::SdlParserStructure::resolveName(const std::str
 	return nullptr;
 }
 
-manta::SdlParserStructure *manta::SdlParserStructure::getReference() const {
+manta::SdlParserStructure *manta::SdlParserStructure::getReference() {
 	if (m_reference != nullptr) return m_reference->getReference();
-	else return getImmediateReference();
+	else return this;
 }
 
 void manta::SdlParserStructure::resolveDefinitions(SdlCompilationUnit *unit) {

@@ -51,7 +51,7 @@ manta::SdlCompilationUnit *manta::SdlCompiler::build(const SdlPath &scriptPath) 
 
 			if (!fullImportPath.exists()) {
 				newUnit->addCompilationError(new SdlCompilationError(*s->getSummaryToken(), 
-					{"IO", "0001", "Could not open file"}));
+					SdlErrorCode::FileOpenFailed));
 				continue;
 			}
 
@@ -59,7 +59,7 @@ manta::SdlCompilationUnit *manta::SdlCompiler::build(const SdlPath &scriptPath) 
 			SdlCompilationUnit *importUnit = build(fullImportPath);
 			if (importUnit == nullptr) {
 				newUnit->addCompilationError(new SdlCompilationError(*s->getSummaryToken(),
-					{ "IO", "0001", "Could not open file" }));
+					SdlErrorCode::FileOpenFailed));
 			}
 			else {
 				newUnit->addDependency(importUnit);

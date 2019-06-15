@@ -62,7 +62,7 @@ namespace manta {
 
 		// Resolution stage
 	public:
-		//void resolveNodeDefinitions(SdlCompilationUnit *unit);
+		SdlParserStructure *resolveLocalName(const std::string &name) const;
 	};
 
 } /* namespace manta */
