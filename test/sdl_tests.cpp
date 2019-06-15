@@ -24,9 +24,31 @@ using namespace manta;
 	EXPECT_EQ((parserStructure)->getSummaryToken()->lineStart,	(_lineStart));		\
 	EXPECT_EQ((parserStructure)->getSummaryToken()->lineEnd,	(_lineEnd));
 
-#define CHECK_ERROR_CODE(error, _stage, _code)				\
-	EXPECT_EQ((error)->getErrorCode().stage, (_stage));	\
-	EXPECT_EQ((error)->getErrorCode().code, (_code));
+#define EXPECT_ERROR_CODE(error, code_)						\
+	EXPECT_EQ((error)->getErrorCode().stage, code_.stage);	\
+	EXPECT_EQ((error)->getErrorCode().code, code_.code);
+
+#define EXPECT_ERROR_CODE_LINE(error, code_, line)			\
+	EXPECT_EQ((error)->getErrorCode().stage, code_.stage);	\
+	EXPECT_EQ((error)->getErrorCode().code, code_.code);	\
+	EXPECT_EQ((error)->getErrorLocation()->lineStart, line);
+
+bool findError(const SdlErrorList *errorList, const SdlErrorCode_struct &errorCode, int line = -1, const SdlCompilationUnit *unit = nullptr) {
+	int errorCount = errorList->getErrorCount();
+
+	for (int i = 0; i < errorCount; i++) {
+		SdlCompilationError *error = errorList->getCompilationError(i);
+		if (unit == nullptr || error->getCompilationUnit() == unit) {
+			if (error->getErrorCode().code == errorCode.code && error->getErrorCode().stage == errorCode.stage) {
+				if (line == -1 || error->getErrorLocation()->lineStart == line) {
+					return true;
+				}
+			}
+		}
+	}
+
+	return false;
+}
 	
 
 TEST(SdlTests, SdlSanityCheck) {
@@ -358,9 +380,9 @@ TEST(SdlTests, SdlSyntaxErrorTest) {
 	SdlCompilationError *err2 = errorList.getCompilationError(1);
 	SdlCompilationError *err3 = errorList.getCompilationError(2);
 
-	CHECK_ERROR_CODE(err1, "S", "0001");
-	CHECK_ERROR_CODE(err2, "S", "0001");
-	CHECK_ERROR_CODE(err3, "P", "0001");
+	EXPECT_ERROR_CODE(err1, SdlErrorCode::UnidentifiedToken);
+	EXPECT_ERROR_CODE(err2, SdlErrorCode::UnidentifiedToken);
+	EXPECT_ERROR_CODE(err3, SdlErrorCode::UnexpectedToken);
 }
 
 TEST(SdlTests, SdlCompilerTest) {
@@ -411,7 +433,7 @@ TEST(SdlTests, SdlMissingNodeDefinitionTest) {
 	int errorCount = errors->getErrorCount();
 
 	SdlCompilationError *err = errors->getCompilationError(0);
-	CHECK_ERROR_CODE(err, "R", "0001");
+	EXPECT_ERROR_CODE(err, SdlErrorCode::UndefinedNodeType);
 
 	// Check that the location matches
 	EXPECT_EQ(err->getErrorLocation()->lineStart, 1);
@@ -429,8 +451,8 @@ TEST(SdlTests, SdlAttributeDefinitionTest) {
 
 	SdlCompilationError *err0 = errors->getCompilationError(0);
 	SdlCompilationError *err1 = errors->getCompilationError(1);
-	CHECK_ERROR_CODE(err0, "R", "0002");
-	CHECK_ERROR_CODE(err1, "R", "0003");
+	EXPECT_ERROR_CODE(err0, SdlErrorCode::UsingOutputPortAsInput);
+	EXPECT_ERROR_CODE(err1, SdlErrorCode::PortNotFound);
 
 	SdlNodeDefinition *definition = unit->getNodeDefinition(0);
 	SdlNode *nodeInstance = unit->getNode(0);
@@ -453,7 +475,7 @@ TEST(SdlTests, SdlPositionAttributeTest) {
 	EXPECT_EQ(errorCount, 3);
 
 	SdlCompilationError *err0 = errors->getCompilationError(0);
-	CHECK_ERROR_CODE(err0, "R", "0004");
+	EXPECT_ERROR_CODE(err0, SdlErrorCode::ArgumentPositionOutOfBounds);
 
 	SdlNode *nodeInstance = unit->getNode(0);
 
@@ -495,7 +517,7 @@ TEST(SdlTests, SdlMissingDependencyTest) {
 	EXPECT_EQ(errorCount, 1);
 
 	SdlCompilationError *err0 = errors->getCompilationError(0);
-	EXPECT_EQ(err0->getErrorCode().stage, "IO");
+	EXPECT_ERROR_CODE(err0, SdlErrorCode::FileOpenFailed);
 }
 
 TEST(SdlTests, SdlReferenceResolutionTest) {
@@ -510,6 +532,26 @@ TEST(SdlTests, SdlReferenceResolutionTest) {
 
 	SdlNode *node = unit->getNode(0);
 	SdlParserStructure *b = node->getPublicAttribute("B");
+	SdlAttributeDefinition *definition = (SdlAttributeDefinition *)b->getReference();
+	EXPECT_EQ(definition->getName(), "main_in");
+	EXPECT_EQ(definition->getDirection(), SdlAttributeDefinition::INPUT);
 
-	int a = 0;
+	SdlNode *childNode = (SdlNode *)node->getPublicAttribute("C")->getReference();
+	EXPECT_EQ(childNode->getType(), "ChildNode");
+	EXPECT_EQ(childNode->getName(), "childNode");	
+}
+
+TEST(SdlTests, SdlReferenceResolutionError1Test) {
+	SdlCompiler compiler;
+	SdlCompilationUnit *unit = compiler.compile(SDL_TEST_FILES "resolution_tests/resolution_errors_1.mr");
+	EXPECT_NE(unit, nullptr);
+
+	const SdlErrorList *errors = compiler.getErrorList();
+
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UnresolvedReference, 22));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UnresolvedReference, 18));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedMember, 21));
+
+	// Expect 3 errors
+	EXPECT_EQ(errors->getErrorCount(), 3);
 }

@@ -357,10 +357,10 @@ void manta::SdlParser::error(const SdlTokenInfo &l, const std::string &err_messa
 	SdlCompilationError *err;
 	
 	if (l.valid) {
-		err = new SdlCompilationError(l, {"P", "0001", "Unexpected token"});
+		err = new SdlCompilationError(l, SdlErrorCode::UnexpectedToken);
 	}
 	else {
-		err = new SdlCompilationError(l, {"S", "0001", "Unidentified token"});
+		err = new SdlCompilationError(l, SdlErrorCode::UnidentifiedToken);
 	}
 
 	driver.addCompilationError(err);

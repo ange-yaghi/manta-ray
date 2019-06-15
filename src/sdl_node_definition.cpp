@@ -43,17 +43,23 @@ manta::SdlAttributeDefinition *manta::SdlNodeDefinition::getAttributeDefinition(
 	return nullptr;
 }
 
-/*
-void manta::SdlNodeDefinition::resolveNodeDefinitions(SdlCompilationUnit *unit) {
-	if (m_body == nullptr) {
-		// The body was empty so this step can be skipped
-		return;
+manta::SdlParserStructure *manta::SdlNodeDefinition::resolveLocalName(const std::string &name) const {
+	int attributeCount = m_attributes->getDefinitionCount();
+	for (int i = 0; i < attributeCount; i++) {
+		SdlAttributeDefinition *definition = m_attributes->getDefinition(i);
+
+		if (definition->getName() == name) {
+			return definition;
+		}
 	}
 
 	int nodeCount = m_body->getItemCount();
 	for (int i = 0; i < nodeCount; i++) {
 		SdlNode *node = m_body->getItem(i);
-		node->resolveNodeDefinition(unit);
+		if (node->getName() == name) {
+			return node;
+		}
 	}
+
+	return nullptr;
 }
-*/

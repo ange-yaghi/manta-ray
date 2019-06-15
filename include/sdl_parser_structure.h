@@ -21,7 +21,7 @@ namespace manta {
 		void registerComponent(SdlParserStructure *child);
 		int getComponentCount() const { return (int)m_components.size(); }
 
-		virtual SdlParserStructure *getPublicAttribute(const std::string &name) { return nullptr; }
+		virtual SdlParserStructure *getPublicAttribute(const std::string &name, bool *failed = nullptr) const { return nullptr; }
 
 		void setParentScope(SdlParserStructure *parentScope) { m_parentScope = parentScope; }
 		SdlParserStructure *resolveName(const std::string &name) const;
@@ -30,7 +30,7 @@ namespace manta {
 		bool getReferencesResolved() const { return m_referencesResolved; }
 		bool isExpanded() const { return m_isExpanded; }
 		SdlParserStructure *getImmediateReference() const { return m_reference; }
-		SdlParserStructure *getReference() const;
+		SdlParserStructure *getReference();
 		SdlParserStructure *getExpansion() const { return m_expansion; }
 
 		virtual SdlValue *getAsValue() { return nullptr; }
@@ -47,8 +47,7 @@ namespace manta {
 		virtual void _resolveReferences(SdlCompilationUnit *unit);
 
 	protected:
-		SdlParserStructure *resolveLocalName(const std::string &name) const;
-		SdlParserStructure *_resolveLocalName(const std::string &name) const;
+	 	virtual SdlParserStructure *resolveLocalName(const std::string &name) const;
 
 		SdlParserStructure *m_parentScope;
 		SdlTokenInfo m_summaryToken;

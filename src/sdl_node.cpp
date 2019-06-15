@@ -43,7 +43,7 @@ void manta::SdlNode::setAttributes(SdlAttributeList *list) {
 	registerComponent(list);
 }
 
-manta::SdlParserStructure *manta::SdlNode::getPublicAttribute(const std::string &name, bool *failed) {
+manta::SdlParserStructure *manta::SdlNode::getPublicAttribute(const std::string &name, bool *failed) const {
 	if (failed != nullptr) *failed = false;
 
 	auto definition = m_definition;
@@ -81,7 +81,7 @@ void manta::SdlNode::resolveNodeDefinition(SdlCompilationUnit *unit) {
 
 	if (definition == nullptr) {
 		unit->addCompilationError(new SdlCompilationError(getNameToken(), 
-			{ "R", "0001", "Undefined node type" }));
+			SdlErrorCode::UndefinedNodeType));
 	}
 
 	else {
@@ -115,7 +115,7 @@ void manta::SdlNode::resolveAttributeDefinitions(SdlCompilationUnit *unit) {
 			// Check position is not out of bounds
 			if (position >= list->getInputCount()) {
 				unit->addCompilationError(new SdlCompilationError(*attribute->getSummaryToken(), 
-					{ "R", "0004", "Position argument out of bounds" }));
+					SdlErrorCode::ArgumentPositionOutOfBounds));
 				attribute->setAttributeDefinition(nullptr);
 				return;
 			}
@@ -132,13 +132,13 @@ void manta::SdlNode::resolveAttributeDefinitions(SdlCompilationUnit *unit) {
 		if (definition == nullptr) {
 			// Port not found
 			unit->addCompilationError(new SdlCompilationError(*attribute->getSummaryToken(), 
-				{ "R", "0003", "Port not found" }));
+				SdlErrorCode::PortNotFound));
 			attribute->setAttributeDefinition(nullptr);
 		}
 		else if (definition->getDirection() == SdlAttributeDefinition::OUTPUT) {
 			// Can't assign an output port
 			unit->addCompilationError(new SdlCompilationError(*attribute->getSummaryToken(), 
-				{ "R", "0002", "Using an output port as in input" }));
+				SdlErrorCode::UsingOutputPortAsInput));
 			attribute->setAttributeDefinition(nullptr);
 		}
 		else {

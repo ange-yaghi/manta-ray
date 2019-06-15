@@ -4,6 +4,8 @@
 #include <sdl_value.h>
 
 #include <sdl_token_info.h>
+#include <sdl_compilation_error.h>
+#include <sdl_compilation_unit.h>
 
 namespace manta {
 
@@ -39,6 +41,11 @@ namespace manta {
 	protected:
 		virtual void _resolveReferences(SdlCompilationUnit *unit) {
 			m_reference = resolveName(m_value);
+
+			if (m_reference == nullptr) {
+				unit->addCompilationError(new SdlCompilationError(m_summaryToken,
+					SdlErrorCode::UnresolvedReference));
+			}
 		}
 	};
 

@@ -42,15 +42,23 @@ void manta::SdlBinaryOperator::_resolveReferences(SdlCompilationUnit *unit) {
 
 		// Check that the right operand is of the right type
 		if (m_rightOperand->getType() != SdlValue::CONSTANT_LABEL) {
-			// TODO: ERROR, invalid right hand operator
+			unit->addCompilationError(new SdlCompilationError(*m_rightOperand->getSummaryToken(),
+				SdlErrorCode::InvalidRightHandOperand));
 			return;
 		}
 
-		SdlValueLabel *labelConstant = static_cast<SdlValueLabel *>(resolvedLeft);
+		if (resolvedLeft == nullptr) {
+			// There was a syntax error somewhere else before this point
+			return;
+		}
+
+		SdlValueLabel *labelConstant = static_cast<SdlValueLabel *>(m_rightOperand);
 		SdlParserStructure *publicAttribute = resolvedLeft->getPublicAttribute(labelConstant->getValue());
 
 		if (publicAttribute == nullptr) {
-			// TODO: ERROR, left hand does not have this member
+			// Left hand does not have this member
+			unit->addCompilationError(new SdlCompilationError(*m_leftOperand->getSummaryToken(),
+				SdlErrorCode::UndefinedMember));
 			return;
 		}
 
