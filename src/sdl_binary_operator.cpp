@@ -47,11 +47,6 @@ void manta::SdlBinaryOperator::_resolveReferences(SdlCompilationUnit *unit) {
 			return;
 		}
 
-		if (resolvedLeft == nullptr) {
-			// There was a syntax error somewhere else before this point
-			return;
-		}
-
 		SdlValueLabel *labelConstant = static_cast<SdlValueLabel *>(m_rightOperand);
 		SdlParserStructure *publicAttribute = resolvedLeft->getPublicAttribute(labelConstant->getValue());
 
