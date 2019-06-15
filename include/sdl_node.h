@@ -10,6 +10,7 @@ namespace manta {
 	class SdlAttributeList;
 	class SdlNodeDefinition;
 	class SdlCompilationUnit;
+	class SdlAttribute;
 
 	class SdlNode : public SdlParserStructure {
 	public:
@@ -25,8 +26,9 @@ namespace manta {
 
 		void setAttributes(SdlAttributeList *list);
 		SdlAttributeList *getAttributes() const { return m_attributes; }
+		SdlAttribute *getAttribute(const std::string &name, int *count = nullptr) const;
 
-		virtual SdlParserStructure *getPublicAttribute(const std::string &name, bool *failed = nullptr) const;
+		//virtual SdlParserStructure *getPublicAttribute(const std::string &name, bool *failed = nullptr) const;
 		virtual SdlValue *getAsValue();
 
 	protected:
@@ -40,8 +42,11 @@ namespace manta {
 		SdlNodeDefinition *getDefinition() const { return m_definition; }
 		void setDefinition(SdlNodeDefinition *definition) { m_definition = definition; }
 
+		SdlParserStructure *resolveLocalName(const std::string &name) const;
+
 	protected:
 		virtual void _resolveDefinitions(SdlCompilationUnit *unit);
+		virtual void _validate(SdlCompilationUnit *unit);
 
 		void resolveNodeDefinition(SdlCompilationUnit *unit);
 		void resolveAttributeDefinitions(SdlCompilationUnit *unit);

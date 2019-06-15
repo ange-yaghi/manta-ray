@@ -44,6 +44,10 @@ namespace manta {
 
 		DIRECTION m_direction;
 		bool m_isDefault;
+
+		// Resoltuion stage
+	protected:
+		virtual void _resolveReferences(SdlCompilationUnit *unit);
 	};
 
 } /* namespace manta */

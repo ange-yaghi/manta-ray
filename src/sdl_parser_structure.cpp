@@ -6,6 +6,8 @@ manta::SdlParserStructure::SdlParserStructure() {
 
 	m_definitionsResolved = false;
 	m_referencesResolved = false;
+
+	m_externalAccess = false;
 }
 
 manta::SdlParserStructure::~SdlParserStructure() {
@@ -71,6 +73,20 @@ void manta::SdlParserStructure::resolveReferences(SdlCompilationUnit *unit) {
 	m_referencesResolved = true;
 }
 
+void manta::SdlParserStructure::validate(SdlCompilationUnit *unit) {
+	if (m_validated) return;
+
+	// Validate components
+	int componentCount = getComponentCount();
+	for (int i = 0; i < componentCount; i++) {
+		m_components[i]->validate(unit);
+	}
+
+	_validate(unit);
+
+	m_validated = true;
+}
+
 void manta::SdlParserStructure::expand(SdlCompilationUnit *unit) {
 	if (m_isExpanded) return;
 
@@ -96,6 +112,10 @@ void manta::SdlParserStructure::expand(SdlCompilationUnit *unit) {
 
 void manta::SdlParserStructure::_resolveReferences(SdlCompilationUnit *unit) {
 	m_reference = nullptr;
+}
+
+void manta::SdlParserStructure::_validate(SdlCompilationUnit *unit) {
+	/* void */
 }
 
 void manta::SdlParserStructure::_resolveDefinitions(SdlCompilationUnit *unit) {

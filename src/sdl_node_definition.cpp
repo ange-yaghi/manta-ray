@@ -30,6 +30,8 @@ void manta::SdlNodeDefinition::setScopeToken(const SdlTokenInfo_string &scopeTok
 }
 
 manta::SdlAttributeDefinition *manta::SdlNodeDefinition::getAttributeDefinition(const std::string &attributeName) const {
+	if (m_attributes == nullptr) return nullptr;
+
 	int attributeCount = m_attributes->getDefinitionCount();
 
 	for (int i = 0; i < attributeCount; i++) {
@@ -44,20 +46,24 @@ manta::SdlAttributeDefinition *manta::SdlNodeDefinition::getAttributeDefinition(
 }
 
 manta::SdlParserStructure *manta::SdlNodeDefinition::resolveLocalName(const std::string &name) const {
-	int attributeCount = m_attributes->getDefinitionCount();
-	for (int i = 0; i < attributeCount; i++) {
-		SdlAttributeDefinition *definition = m_attributes->getDefinition(i);
+	if (m_attributes != nullptr) {
+		int attributeCount = m_attributes->getDefinitionCount();
+		for (int i = 0; i < attributeCount; i++) {
+			SdlAttributeDefinition *definition = m_attributes->getDefinition(i);
 
-		if (definition->getName() == name) {
-			return definition;
+			if (definition->getName() == name) {
+				return definition;
+			}
 		}
 	}
 
-	int nodeCount = m_body->getItemCount();
-	for (int i = 0; i < nodeCount; i++) {
-		SdlNode *node = m_body->getItem(i);
-		if (node->getName() == name) {
-			return node;
+	if (m_body != nullptr) {
+		int nodeCount = m_body->getItemCount();
+		for (int i = 0; i < nodeCount; i++) {
+			SdlNode *node = m_body->getItem(i);
+			if (node->getName() == name) {
+				return node;
+			}
 		}
 	}
 

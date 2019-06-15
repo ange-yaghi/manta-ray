@@ -25,6 +25,9 @@ namespace manta {
 		void setPosition(int position) { m_position = position; }
 		int getPosition() const { return m_position;  }
 
+		// If no name is specified positional notation is assumed
+		bool isPositional() const { return getName() == ""; }
+
 	protected:
 		SdlTokenInfo_string m_name;
 		SdlValue *m_value;

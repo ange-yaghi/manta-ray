@@ -531,12 +531,14 @@ TEST(SdlTests, SdlReferenceResolutionTest) {
 	EXPECT_EQ(errorCount, 0);
 
 	SdlNode *node = unit->getNode(0);
-	SdlParserStructure *b = node->getPublicAttribute("B");
+	SdlParserStructure *b = node->resolveLocalName("B");
+	EXPECT_TRUE(b->allowsExternalAccess());
+
 	SdlAttributeDefinition *definition = (SdlAttributeDefinition *)b->getReference();
 	EXPECT_EQ(definition->getName(), "main_in");
 	EXPECT_EQ(definition->getDirection(), SdlAttributeDefinition::INPUT);
 
-	SdlNode *childNode = (SdlNode *)node->getPublicAttribute("C")->getReference();
+	SdlNode *childNode = (SdlNode *)node->resolveLocalName("C")->getReference();
 	EXPECT_EQ(childNode->getType(), "ChildNode");
 	EXPECT_EQ(childNode->getName(), "childNode");	
 }
@@ -548,10 +550,14 @@ TEST(SdlTests, SdlReferenceResolutionError1Test) {
 
 	const SdlErrorList *errors = compiler.getErrorList();
 
-	EXPECT_TRUE(findError(errors, SdlErrorCode::UnresolvedReference, 22));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::AccessingInternalMember, 22));
 	EXPECT_TRUE(findError(errors, SdlErrorCode::UnresolvedReference, 18));
 	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedMember, 21));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::AccessingInternalMember, 23));
+
+	EXPECT_TRUE(findError(errors, SdlErrorCode::InputSpecifiedMultipleTimes, 31));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::InputSpecifiedMultipleTimes, 32));
 
 	// Expect 3 errors
-	EXPECT_EQ(errors->getErrorCount(), 3);
+	EXPECT_EQ(errors->getErrorCount(), 6);
 }

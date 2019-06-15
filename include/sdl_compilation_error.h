@@ -34,7 +34,11 @@ namespace manta {
 		extern const SdlErrorCode_struct UsingOutputPortAsInput;
 		extern const SdlErrorCode_struct UnresolvedReference;
 		extern const SdlErrorCode_struct UndefinedMember;
+		extern const SdlErrorCode_struct AccessingInternalMember;
 		extern const SdlErrorCode_struct InvalidRightHandOperand;
+
+		// [V] - Validation errors
+		extern const SdlErrorCode_struct InputSpecifiedMultipleTimes;
 	};
 
 	class SdlCompilationError {
