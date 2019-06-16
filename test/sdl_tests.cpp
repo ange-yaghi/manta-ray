@@ -540,12 +540,12 @@ TEST(SdlTests, SdlReferenceResolutionTest) {
 
 	SdlNode *childNode = (SdlNode *)node->resolveLocalName("C")->getReference();
 	EXPECT_EQ(childNode->getType(), "ChildNode");
-	EXPECT_EQ(childNode->getName(), "childNode");	
+	EXPECT_EQ(childNode->getName(), "childNode");
 }
 
 TEST(SdlTests, SdlReferenceResolutionError1Test) {
 	SdlCompiler compiler;
-	SdlCompilationUnit *unit = compiler.compile(SDL_TEST_FILES "resolution_tests/resolution_errors_1.mr");
+	SdlCompilationUnit *unit = compiler.compile(SDL_TEST_FILES "resolution-tests/resolution_errors_1.mr");
 	EXPECT_NE(unit, nullptr);
 
 	const SdlErrorList *errors = compiler.getErrorList();
@@ -554,11 +554,85 @@ TEST(SdlTests, SdlReferenceResolutionError1Test) {
 	EXPECT_TRUE(findError(errors, SdlErrorCode::AccessingInternalMember, 21));
 	EXPECT_TRUE(findError(errors, SdlErrorCode::UnresolvedReference, 22));
 	EXPECT_TRUE(findError(errors, SdlErrorCode::AccessingInternalMember, 23));
-	EXPECT_TRUE(findError(errors, SdlErrorCode::AccessingInternalMember, 24));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedMember, 24));
 
-	EXPECT_TRUE(findError(errors, SdlErrorCode::InputSpecifiedMultipleTimes, 31));
 	EXPECT_TRUE(findError(errors, SdlErrorCode::InputSpecifiedMultipleTimes, 32));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::InputSpecifiedMultipleTimes, 33));
 
-	// Expect 3 errors
+	EXPECT_EQ(errors->getErrorCount(), 7);
+}
+
+TEST(SdlTests, SdlReferenceResolutionError2Test) {
+	SdlCompiler compiler;
+	SdlCompilationUnit *unit = compiler.compile(SDL_TEST_FILES "resolution-tests/resolution_errors_2.mr");
+	EXPECT_NE(unit, nullptr);
+
+	const SdlErrorList *errors = compiler.getErrorList();
+
+	EXPECT_TRUE(findError(errors, SdlErrorCode::NodeWithNoOutputs, 1));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::SymbolUsedMultipleTimes, 5));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::SymbolUsedMultipleTimes, 7));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedNodeType, 7));
+
+	EXPECT_TRUE(findError(errors, SdlErrorCode::SymbolUsedMultipleTimes, 12));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::SymbolUsedMultipleTimes, 13));
+
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UnresolvedReference, 25));
+
+	EXPECT_TRUE(findError(errors, SdlErrorCode::InputNotConnected, 28));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::OutputWithNoDefinition, 31));
+
+	EXPECT_TRUE(findError(errors, SdlErrorCode::BuiltinOutputWithDefinition, 43));
+
+	EXPECT_TRUE(findError(errors, SdlErrorCode::InputSpecifiedMultipleTimesPositional, 47));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::InputSpecifiedMultipleTimes, 48));
+
+	EXPECT_EQ(errors->getErrorCount(), 12);
+}
+
+TEST(SdlTests, SdlFullErrorTest1) {
+	SdlCompiler compiler;
+	SdlCompilationUnit *unit = compiler.compile(SDL_TEST_FILES "full-error-testing/test_case_1.mr");
+	EXPECT_NE(unit, nullptr);
+
+	const SdlErrorList *errors = compiler.getErrorList();
+
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UnidentifiedToken, 14));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedNodeType, 22));
+
+	EXPECT_EQ(errors->getErrorCount(), 2);
+}
+
+TEST(SdlTests, SdlFullErrorTest2) {
+	SdlCompiler compiler;
+	SdlCompilationUnit *unit = compiler.compile(SDL_TEST_FILES "full-error-testing/test_case_2.mr");
+	EXPECT_NE(unit, nullptr);
+
+	const SdlErrorList *errors = compiler.getErrorList();
+	
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UnidentifiedToken, 16));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::PortNotFound, 24));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::PortNotFound, 25));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::PortNotFound, 29));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UnresolvedReference, 18));
+
+	EXPECT_EQ(errors->getErrorCount(), 5);
+}
+
+TEST(SdlTests, SdlFullErrorTest3) {
+	SdlCompiler compiler;
+	SdlCompilationUnit *unit = compiler.compile(SDL_TEST_FILES "full-error-testing/test_case_3.mr");
+	EXPECT_NE(unit, nullptr);
+
+	const SdlErrorList *errors = compiler.getErrorList();
+
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UnidentifiedToken, 5));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UnidentifiedToken, 13));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::InputNotConnected, 13));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UnidentifiedToken, 14));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::InputNotConnected, 14));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedMember, 15));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UnexpectedToken, 16));
+
 	EXPECT_EQ(errors->getErrorCount(), 7);
 }

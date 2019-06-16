@@ -1,7 +1,7 @@
 node TestNode: {
     input A;
     input B;
-    output C;
+    output C: "Random value";
 };
 
 TestNode nodeInstance (

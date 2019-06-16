@@ -43,21 +43,6 @@ manta::SdlCompilationUnit::ParseResult manta::SdlCompilationUnit::parse(std::ist
 	return parseHelper(stream);
 }
 
-/*
-void manta::SdlCompilationUnit::resolve() {
-	if (isResolved()) return;
-	else m_resolved = true;
-
-	// Resolve dependencies first
-	int dependencyCount = getDependencyCount();
-	for (int i = 0; i < dependencyCount; i++) {
-		m_dependencies[i]->resolve();
-	}
-
-	// Resolve all references to node definitions
-	resolveNodeDefinitions();
-}*/
-
 manta::SdlCompilationUnit::ParseResult manta::SdlCompilationUnit::parseHelper(
 									std::istream &stream, SdlCompilationUnit *topLevel) {
 	delete m_scanner;
@@ -85,36 +70,6 @@ manta::SdlCompilationUnit::ParseResult manta::SdlCompilationUnit::parseHelper(
 		return SUCCESS;
 	}
 }
-
-/*
-void manta::SdlCompilationUnit::resolveNodeDefinitions() {
-	int nodeCount = getNodeCount();
-	for (int i = 0; i < nodeCount; i++) {
-		SdlNode *node = m_nodes[i];
-		node->resolveNodeDefinition(this);
-		node->resolveAttributeDefinitions(this);
-	}
-
-	int nodeDefinitionCount = getNodeDefinitionCount();
-	for (int i = 0; i < nodeDefinitionCount; i++) {
-		SdlNodeDefinition *definition = getNodeDefinition(i);
-		definition->resolveNodeDefinitions(this);
-	}
-}
-
-void manta::SdlCompilationUnit::resolveReferences() {
-	int nodeCount = getNodeCount();
-	for (int i = 0; i < nodeCount; i++) {
-		SdlNode *node = m_nodes[i];
-		node->resolveReferences();
-	}
-
-	int nodeDefinitionCount = getNodeDefinitionCount();
-	for (int i = 0; i < nodeDefinitionCount; i++) {
-		SdlNodeDefinition *definition = getNodeDefinition(i);
-		definition->resolveReferences();
-	}
-}*/
 
 manta::SdlNodeDefinition *manta::SdlCompilationUnit::resolveNodeDefinition(SdlNode *node, int *count, bool searchDependencies) {
 	*count = 0;
@@ -148,9 +103,24 @@ manta::SdlNodeDefinition *manta::SdlCompilationUnit::resolveNodeDefinition(SdlNo
 	return definition;
 }
 
+void manta::SdlCompilationUnit::_validate(SdlCompilationUnit *unit) {
+	int nodeCount = getNodeCount();
+	for (int i = 0; i < nodeCount; i++) {
+		SdlNode *node = m_nodes[i];
+		int count = countSymbolIncidence(node->getName());
+
+		if (count > 1) {
+			unit->addCompilationError(new SdlCompilationError(node->getNameToken(),
+				SdlErrorCode::SymbolUsedMultipleTimes));
+		}
+	}
+}
+
 void manta::SdlCompilationUnit::addNode(SdlNode *node) {
-	m_nodes.push_back(node);
-	registerComponent(node);
+	if (node != nullptr) {
+		m_nodes.push_back(node);
+		registerComponent(node);
+	}
 }
 
 manta::SdlNode *manta::SdlCompilationUnit::getNode(int index) const {
@@ -162,8 +132,10 @@ int manta::SdlCompilationUnit::getNodeCount() const {
 }
 
 void manta::SdlCompilationUnit::addImportStatement(SdlImportStatement *statement) {
-	m_importStatements.push_back(statement);
-	registerComponent(statement);
+	if (statement != nullptr) {
+		m_importStatements.push_back(statement);
+		registerComponent(statement);
+	}
 }
 
 int manta::SdlCompilationUnit::getImportStatementCount() const {
@@ -171,12 +143,39 @@ int manta::SdlCompilationUnit::getImportStatementCount() const {
 }
 
 void manta::SdlCompilationUnit::addNodeDefinition(SdlNodeDefinition *nodeDefinition) {
-	m_nodeDefinitions.push_back(nodeDefinition);
-	registerComponent(nodeDefinition);
+	if (nodeDefinition != nullptr) {
+		m_nodeDefinitions.push_back(nodeDefinition);
+		registerComponent(nodeDefinition);
+	}
 }
 
 int manta::SdlCompilationUnit::getNodeDefinitionCount() const {
 	return (int)m_nodeDefinitions.size();
+}
+
+manta::SdlParserStructure *manta::SdlCompilationUnit::resolveLocalName(const std::string &name) const {
+	int nodeCount = getNodeCount();
+	for (int i = 0; i < nodeCount; i++) {
+		SdlNode *node = m_nodes[i];
+		if (node->getName() == name) {
+			return node;
+		}
+	}
+
+	return nullptr;
+}
+
+int manta::SdlCompilationUnit::countSymbolIncidence(const std::string & name) const {
+	int count = 0;
+	int nodeCount = getNodeCount();
+	for (int i = 0; i < nodeCount; i++) {
+		SdlNode *node = m_nodes[i];
+		if (node->getName() == name) {
+			count++;
+		}
+	}
+
+	return count;
 }
 
 void manta::SdlCompilationUnit::addCompilationError(SdlCompilationError *err) {

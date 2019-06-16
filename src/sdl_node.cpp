@@ -46,9 +46,7 @@ void manta::SdlNode::setAttributes(SdlAttributeList *list) {
 manta::SdlAttribute *manta::SdlNode::getAttribute(const std::string &name, int *count) const {
 	if (m_attributes == nullptr) return nullptr;
 
-	if (count != nullptr) {
-		*count = 0;
-	}
+	if (count != nullptr) *count = 0;
 
 	SdlAttribute *result = nullptr;
 	int attributeCount = m_attributes->getAttributeCount();
@@ -63,29 +61,23 @@ manta::SdlAttribute *manta::SdlNode::getAttribute(const std::string &name, int *
 	return result;
 }
 
-/*
-manta::SdlParserStructure *manta::SdlNode::getPublicAttribute(const std::string &name, bool *failed) const {
-	if (failed != nullptr) *failed = false;
+manta::SdlAttribute *manta::SdlNode::getAttribute(SdlAttributeDefinition *definition, int *count) const {
+	if (m_attributes == nullptr) return nullptr;
 
-	auto definition = m_definition;
-	if (definition == nullptr) return nullptr;
+	if (count != nullptr) *count = 0;
 
-	auto definitionList = definition->getAttributeDefinitionList();
-	if (definitionList == nullptr) return nullptr;
-
-	auto outputDefinition = definitionList->getOutputDefinition(name);
-	if (outputDefinition == nullptr) {
-		// In this case it is a true failure because rather than there being a syntax error,
-		// the output name itself was not found
-		if (failed != nullptr) *failed = true;
-		return nullptr;
+	SdlAttribute *result = nullptr;
+	int attributeCount = m_attributes->getAttributeCount();
+	for (int i = 0; i < attributeCount; i++) {
+		SdlAttribute *attribute = m_attributes->getAttribute(i);
+		if (attribute->getAttributeDefinition() == definition) {
+			if (result == nullptr) result = attribute;
+			if (count != nullptr) (*count)++;
+		}
 	}
 
-	auto defaultValue = outputDefinition->getDefaultValue();
-	if (defaultValue == nullptr) return nullptr;
-
-	return defaultValue;
-}*/
+	return result;
+}
 
 manta::SdlParserStructure *manta::SdlNode::resolveLocalName(const std::string &name) const {
 	SdlParserStructure *attribute = getAttribute(name);
@@ -107,19 +99,53 @@ void manta::SdlNode::_validate(SdlCompilationUnit *unit) {
 		return;
 	}
 
+	// Check for symbols used more than once
 	int attributeCount = attributes->getAttributeCount();
 	for (int i = 0; i < attributeCount; i++) {
 		SdlAttribute *attribute = attributes->getAttribute(i);
 
-		// Only check if this is not a positional attribute
-		if (attribute->isPositional()) continue;
-
 		int count;
-		SdlAttribute *other = getAttribute(attribute->getName(), &count);
+		bool positional = attribute->isPositional();
+
+		SdlAttributeDefinition *definition = attribute->getAttributeDefinition();
+
+		// If there was an error resolving the definition, skip this validation step
+		if (definition != nullptr) getAttribute(definition, &count);
+		else continue;
+
 		if (count > 1) {
 			// Attribute defined multiple times
-			unit->addCompilationError(new SdlCompilationError(*attribute->getSummaryToken(),
-				SdlErrorCode::InputSpecifiedMultipleTimes));
+
+			if (positional) {
+				// Log a more specific message for clarify if the attribute is positional
+				unit->addCompilationError(new SdlCompilationError(*attribute->getSummaryToken(),
+					SdlErrorCode::InputSpecifiedMultipleTimesPositional));
+			}
+			else {
+				unit->addCompilationError(new SdlCompilationError(*attribute->getSummaryToken(),
+					SdlErrorCode::InputSpecifiedMultipleTimes));
+			}
+		}
+	}
+
+	// Check for missing inputs
+	if (m_definition != nullptr) {
+		auto attributeList = m_definition->getAttributeDefinitionList();
+
+		// Check that there wasn't an error in the definition
+		if (attributeList != nullptr) {
+			int inputCount = attributeList->getInputCount();
+
+			for (int i = 0; i < inputCount; i++) {
+				SdlAttributeDefinition *input = attributeList->getInputDefinition(i);
+				SdlParserStructure *attribute = getAttribute(input);
+
+				if (attribute == nullptr && input->getDefaultValue() == nullptr) {
+					// This input port is not conencted and has no default value
+					unit->addCompilationError(new SdlCompilationError(*getSummaryToken(),
+						SdlErrorCode::InputNotConnected));
+				}
+			}
 		}
 	}
 }

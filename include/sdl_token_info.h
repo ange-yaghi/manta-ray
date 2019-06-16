@@ -11,10 +11,12 @@ namespace manta {
 			lineStart(lineStart), lineEnd(lineEnd), colStart(colStart), colEnd(colEnd) {
 			valid = true;
 		}
+
 		SdlTokenInfo() :
 			lineStart(INT_MAX), lineEnd(-1), colStart(INT_MAX), colEnd(-1) {
 			valid = true;
 		}
+
 		~SdlTokenInfo() {
 			/* void */
 		}
@@ -61,13 +63,16 @@ namespace manta {
 		T_SdlTokenInfo() {
 			/* void */
 		}
+
 		T_SdlTokenInfo(const T &data) : data(data) {
 			/* void */
 		}
+
 		T_SdlTokenInfo(const T &data, int lineStart, int lineEnd, int colStart, int colEnd)
 			: data(data), SdlTokenInfo(lineStart, lineEnd, colStart, colEnd) {
 			/* void */
 		}
+
 		~T_SdlTokenInfo() {
 			/* void */
 		}

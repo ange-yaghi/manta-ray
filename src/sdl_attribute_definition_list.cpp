@@ -11,8 +11,10 @@ manta::SdlAttributeDefinitionList::~SdlAttributeDefinitionList() {
 }
 
 void manta::SdlAttributeDefinitionList::addDefinition(SdlAttributeDefinition *definition) {
-	m_definitions.push_back(definition);
-	registerComponent(definition);
+	if (definition != nullptr) {
+		m_definitions.push_back(definition);
+		registerComponent(definition);
+	}
 }
 
 manta::SdlAttributeDefinition *manta::SdlAttributeDefinitionList::getInputDefinition(int index) const {
