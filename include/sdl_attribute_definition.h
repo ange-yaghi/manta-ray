@@ -8,6 +8,7 @@
 namespace manta {
 
 	class SdlValue;
+	class SdlInputConnection;
 
 	class SdlAttributeDefinition : public SdlParserStructure {
 	public:
@@ -36,6 +37,13 @@ namespace manta {
 		void setDirection(DIRECTION direction) { m_direction = direction; }
 		DIRECTION getDirection() const { return m_direction; }
 
+		SdlInputConnection *getImpliedMember(int i) const { return m_impliedMembers[i]; }
+		int getImpliedMemberCount() const { return (int)m_impliedMembers.size(); }
+		SdlInputConnection *getImpliedMember(const std::string &name) const;
+
+		virtual SdlParserStructure *resolveLocalName(const std::string &name);
+		virtual SdlParserStructure *resolveName(const std::string &name);
+
 	protected:
 		SdlTokenInfo_string m_directionToken;
 		SdlTokenInfo_string m_defaultToken;
@@ -45,7 +53,9 @@ namespace manta {
 		DIRECTION m_direction;
 		bool m_isDefault;
 
-		// Resoltuion stage
+		std::vector<SdlInputConnection *> m_impliedMembers;
+
+		// Resolution stage
 	protected:
 		virtual void _resolveReferences(SdlCompilationUnit *unit);
 	};

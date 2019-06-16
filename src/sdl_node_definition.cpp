@@ -46,7 +46,7 @@ manta::SdlAttributeDefinition *manta::SdlNodeDefinition::getAttributeDefinition(
 	return nullptr;
 }
 
-manta::SdlParserStructure *manta::SdlNodeDefinition::resolveName(const std::string &name) const {
+manta::SdlParserStructure *manta::SdlNodeDefinition::resolveName(const std::string &name) {
 	// Node definitions are not able to see variables outside of themselves for now
 	return resolveLocalName(name);
 }
@@ -77,7 +77,7 @@ int manta::SdlNodeDefinition::countSymbolIncidence(const std::string &name) cons
 	return count;
 }
 
-manta::SdlParserStructure *manta::SdlNodeDefinition::resolveLocalName(const std::string &name) const {
+manta::SdlParserStructure *manta::SdlNodeDefinition::resolveLocalName(const std::string &name) {
 	if (m_attributes != nullptr) {
 		int attributeCount = m_attributes->getDefinitionCount();
 		for (int i = 0; i < attributeCount; i++) {

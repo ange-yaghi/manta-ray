@@ -79,7 +79,7 @@ manta::SdlAttribute *manta::SdlNode::getAttribute(SdlAttributeDefinition *defini
 	return result;
 }
 
-manta::SdlParserStructure *manta::SdlNode::resolveLocalName(const std::string &name) const {
+manta::SdlParserStructure *manta::SdlNode::resolveLocalName(const std::string &name) {
 	SdlParserStructure *attribute = getAttribute(name);
 	if (attribute != nullptr) return attribute;
 	
