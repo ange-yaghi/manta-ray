@@ -569,7 +569,6 @@ TEST(SdlTests, SdlReferenceResolutionError2Test) {
 
 	const SdlErrorList *errors = compiler.getErrorList();
 
-	EXPECT_TRUE(findError(errors, SdlErrorCode::NodeWithNoOutputs, 1));
 	EXPECT_TRUE(findError(errors, SdlErrorCode::SymbolUsedMultipleTimes, 5));
 	EXPECT_TRUE(findError(errors, SdlErrorCode::SymbolUsedMultipleTimes, 7));
 	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedNodeType, 7));
@@ -587,7 +586,7 @@ TEST(SdlTests, SdlReferenceResolutionError2Test) {
 	EXPECT_TRUE(findError(errors, SdlErrorCode::InputSpecifiedMultipleTimesPositional, 47));
 	EXPECT_TRUE(findError(errors, SdlErrorCode::InputSpecifiedMultipleTimes, 48));
 
-	EXPECT_EQ(errors->getErrorCount(), 12);
+	EXPECT_EQ(errors->getErrorCount(), 11);
 }
 
 TEST(SdlTests, SdlFullErrorTest1) {
