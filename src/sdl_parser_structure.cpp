@@ -28,7 +28,7 @@ void manta::SdlParserStructure::registerComponent(SdlParserStructure *child) {
 	}
 }
 
-manta::SdlParserStructure *manta::SdlParserStructure::resolveName(const std::string &name) const {
+manta::SdlParserStructure *manta::SdlParserStructure::resolveName(const std::string &name) {
 	SdlParserStructure *local = resolveLocalName(name);
 	if (local != nullptr) return local;
 	
@@ -127,6 +127,6 @@ void manta::SdlParserStructure::_expand(SdlCompilationUnit *unit) {
 	m_expansion = nullptr;
 }
 
-manta::SdlParserStructure *manta::SdlParserStructure::resolveLocalName(const std::string &name) const {
+manta::SdlParserStructure *manta::SdlParserStructure::resolveLocalName(const std::string &name) {
 	return nullptr;
 }

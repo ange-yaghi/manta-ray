@@ -68,6 +68,7 @@
     <ClCompile Include="..\..\src\sdl_attribute_list.cpp" />
     <ClCompile Include="..\..\src\sdl_binary_operator.cpp" />
     <ClCompile Include="..\..\src\sdl_compilation_unit.cpp" />
+    <ClCompile Include="..\..\src\sdl_input_connection.cpp" />
     <ClCompile Include="..\..\src\sdl_node.cpp" />
     <ClCompile Include="..\..\src\sdl_node_definition.cpp" />
     <ClCompile Include="..\..\src\sdl_parser_structure.cpp" />
@@ -189,6 +190,7 @@
     <ClInclude Include="..\..\include\sdl_attribute_list.h" />
     <ClInclude Include="..\..\include\sdl_binary_operator.h" />
     <ClInclude Include="..\..\include\sdl_compilation_unit.h" />
+    <ClInclude Include="..\..\include\sdl_input_connection.h" />
     <ClInclude Include="..\..\include\sdl_node.h" />
     <ClInclude Include="..\..\include\sdl_node_definition.h" />
     <ClInclude Include="..\..\include\sdl_parser_structure.h" />

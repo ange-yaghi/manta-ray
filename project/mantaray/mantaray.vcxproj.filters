@@ -684,6 +684,9 @@
     <ClCompile Include="..\..\src\sdl_error_list.cpp">
       <Filter>Source Files\sdl-parser\error-handling</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\sdl_input_connection.cpp">
+      <Filter>Source Files\sdl-parser\parser</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\sphere_primitive.h">
@@ -1104,6 +1107,9 @@
       <Filter>Header Files\sdl-parser\error-handling</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\sdl_structure_list.h">
+      <Filter>Header Files\sdl-parser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_input_connection.h">
       <Filter>Header Files\sdl-parser\parser</Filter>
     </ClInclude>
   </ItemGroup>
