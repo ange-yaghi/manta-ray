@@ -1,4 +1,4 @@
-local node EmptyNode: { // NodeWithNoOutputs
+local node EmptyNode: {
 };
 
 local node ProblemNode: {

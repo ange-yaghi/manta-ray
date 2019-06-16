@@ -38,7 +38,6 @@ namespace manta {
 
 		// [V] - Validation errors
 		extern const SdlErrorCode_struct InputSpecifiedMultipleTimes;
-		extern const SdlErrorCode_struct NodeWithNoOutputs;
 		extern const SdlErrorCode_struct SymbolUsedMultipleTimes;
 		extern const SdlErrorCode_struct InputNotConnected;
 		extern const SdlErrorCode_struct OutputWithNoDefinition;

@@ -37,7 +37,6 @@ ERR(AccessingInternalMember) =	{ "R", "0061", "Invalid reference to an internal 
 // [V] - Validation errors
 ERR(InputSpecifiedMultipleTimes) = 
 								{ "V", "0010", "Input specified multiple times" };
-ERR(NodeWithNoOutputs) =		{ "V", "0020", "Node definition with no outputs" };
 ERR(SymbolUsedMultipleTimes) =	{ "V", "0030", "Symbol used multiple times" };
 ERR(InputNotConnected) =		{ "V", "0040", "Input not connected" };
 ERR(OutputWithNoDefinition) =	{ "V", "0050", "Output with no definition" };

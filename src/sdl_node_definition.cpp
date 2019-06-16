@@ -103,25 +103,6 @@ manta::SdlParserStructure *manta::SdlNodeDefinition::resolveLocalName(const std:
 }
 
 void manta::SdlNodeDefinition::_validate(SdlCompilationUnit *unit) {
-	// Check that this node actually has more than one output defined
-	if (m_attributes != nullptr) {
-		int attributeCount = m_attributes->getDefinitionCount();
-		bool hasOutput = false;
-		for (int i = 0; i < attributeCount; i++) {
-			SdlAttributeDefinition *definition = m_attributes->getDefinition(i);
-
-			if (definition->getDirection() == SdlAttributeDefinition::OUTPUT) {
-				hasOutput = true;
-				break;
-			}
-		}
-
-		if (!hasOutput) {
-			unit->addCompilationError(new SdlCompilationError(*getSummaryToken(),
-				SdlErrorCode::NodeWithNoOutputs));
-		}
-	}
-
 	// Check that no symbol is used more than once
 	if (m_attributes != nullptr) {
 		int attributeCount = m_attributes->getDefinitionCount();
