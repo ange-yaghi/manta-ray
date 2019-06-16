@@ -40,27 +40,20 @@ void manta::SdlBinaryOperator::_resolveReferences(SdlCompilationUnit *unit) {
 			return;
 		}
 
-		// Check that the right operand is of the right type
-		if (m_rightOperand->getType() != SdlValue::CONSTANT_LABEL) {
-			unit->addCompilationError(new SdlCompilationError(*m_rightOperand->getSummaryToken(),
-				SdlErrorCode::InvalidRightHandOperand));
-			return;
-		}
-
 		SdlValueLabel *labelConstant = static_cast<SdlValueLabel *>(m_rightOperand);
 		SdlParserStructure *publicAttribute = resolvedLeft->resolveLocalName(labelConstant->getValue());
-
-		// Check to make sure that the user is not accidentally trying to use a hidden member
-		if (!publicAttribute->allowsExternalAccess()) {
-			unit->addCompilationError(new SdlCompilationError(*m_rightOperand->getSummaryToken(),
-				SdlErrorCode::AccessingInternalMember));
-			return;
-		}
 
 		if (publicAttribute == nullptr) {
 			// Left hand does not have this member
 			unit->addCompilationError(new SdlCompilationError(*m_rightOperand->getSummaryToken(),
 				SdlErrorCode::UndefinedMember));
+			return;
+		}
+
+		// Check to make sure that the user is not accidentally trying to use a hidden member
+		if (!publicAttribute->allowsExternalAccess()) {
+			unit->addCompilationError(new SdlCompilationError(*m_rightOperand->getSummaryToken(),
+				SdlErrorCode::AccessingInternalMember));
 			return;
 		}
 

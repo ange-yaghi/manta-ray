@@ -6,6 +6,7 @@
 #include <sdl_token_info.h>
 #include <sdl_compilation_error.h>
 #include <sdl_compilation_unit.h>
+#include <sdl_node.h>
 
 namespace manta {
 
@@ -23,7 +24,7 @@ namespace manta {
 		const _TokenInfo *getToken() const { return &m_token; }
 		void useToken(const _TokenInfo &info) { m_value = info.data; registerToken(&info); }
 
-		void setValue(const T &value) { m_value = value; }
+		virtual void setValue(const T &value) { m_value = value; }
 		T getValue() const { return m_value; }
 
 	protected:
@@ -33,11 +34,11 @@ namespace manta {
 
 	// Specialized type for labels
 	class SdlValueLabel : public SdlValueConstant<std::string, SdlValue::CONSTANT_LABEL> {
-		// Resolution stage
 	public:
 		SdlValueLabel(const _TokenInfo &value) : SdlValueConstant(value) { /* void */ }
 		~SdlValueLabel() { /* void */ }
 
+		// Resolution stage
 	protected:
 		virtual void _resolveReferences(SdlCompilationUnit *unit) {
 			m_reference = resolveName(m_value);
@@ -49,8 +50,25 @@ namespace manta {
 		}
 	};
 
+	// Specialized type for node references
+	class SdlValueNodeRef : public SdlValueConstant<SdlNode *, SdlValue::NODE_REF> {
+	public:
+		SdlValueNodeRef(const _TokenInfo &value) : SdlValueConstant(value) { registerComponent(value.data); }
+		~SdlValueNodeRef() { /* void */ }
+
+		virtual void setValue(SdlNode *const &value) {
+			m_value = value; 
+			registerComponent(value); 
+		}
+
+		// Resolution stage
+	protected:
+		virtual void _resolveReferences(SdlCompilationUnit *unit) {
+			m_reference = m_value;
+		}
+	};
+
 	typedef SdlValueConstant<int, SdlValue::CONSTANT_INT> SdlValueInt;
-	typedef SdlValueConstant<SdlNode *, SdlValue::NODE_REF> SdlValueNodeRef;
 	typedef SdlValueConstant<std::string, SdlValue::CONSTANT_STRING> SdlValueString;
 	typedef SdlValueConstant<double, SdlValue::CONSTANT_FLOAT> SdlValueFloat;
 	typedef SdlValueConstant<bool, SdlValue::CONSTANT_BOOL> SdlValueBool;

@@ -1,0 +1,25 @@
+node AddNode: {
+    input p1;
+    input p2;
+    default output out: p1 + p2;
+};
+
+node AddMulNode: {
+    input p1;
+    input p2;
+    input p3;
+    default output out: AddNode(p1, p2) * p3;
+};
+
+node BrokenNodeDef###: {
+    input a;
+    input b;
+    default output out: a - b;
+};
+
+// This node should still be read even though
+// the node definition before is messed up
+BrokenNodeDef brokenNodeInstance( // UndefinedNodeType
+    fake_input_1: 5,
+    fake_input_2: 6
+);

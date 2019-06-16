@@ -21,10 +21,8 @@ namespace manta {
 		void registerComponent(SdlParserStructure *child);
 		int getComponentCount() const { return (int)m_components.size(); }
 
-		//virtual SdlParserStructure *getPublicAttribute(const std::string &name, bool *failed = nullptr) const { return nullptr; }
-
 		void setParentScope(SdlParserStructure *parentScope) { m_parentScope = parentScope; }
-		SdlParserStructure *resolveName(const std::string &name) const;
+		virtual SdlParserStructure *resolveName(const std::string &name) const;
 		virtual SdlParserStructure *resolveLocalName(const std::string &name) const;
 
 		bool getDefinitionsResolved() const { return m_definitionsResolved; }

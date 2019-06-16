@@ -1,0 +1,30 @@
+node AddNode: {
+    input p1;
+    input p2;
+    default output out: p1 + p2;
+};
+
+node AddMulNode: {
+    input p1;
+    input p2;
+    input p3;
+    default output out: AddNode(p1, p2) * p3;
+};
+
+node BrokenNodeDef: {
+    // Broken attribute, the rest should still work
+    input a###; // UnidentifiedToken
+    input b;
+    default output out: a - b; // UnresolvedReference
+};
+
+// This node should still be read even though
+// the node definition before is messed up
+BrokenNodeDef brokenNodeInstance(
+    fake_input_1: 5, // PortNotFound
+    fake_input_2: 6, // PortNotFound
+    b: 15, // Good
+
+    // This will fail because a is messed up
+    a: "Fail" // PortNotFound 
+);

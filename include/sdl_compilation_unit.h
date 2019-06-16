@@ -51,6 +51,9 @@ namespace manta {
 		SdlNodeDefinition *getNodeDefinition(int index) const { return m_nodeDefinitions[index]; }
 		int getNodeDefinitionCount() const;
 
+		virtual SdlParserStructure *resolveLocalName(const std::string &name) const;
+		int countSymbolIncidence(const std::string &name) const;
+
 		void addCompilationError(SdlCompilationError *err);
 
 		std::ostream& print(std::ostream &stream);
@@ -81,15 +84,11 @@ namespace manta {
 
 		// Resolution stage
 	public:
-		//virtual void resolveDefinitions();
-		//virtual void resolveReferences();
-		//bool isResolved() const { return m_resolved; }
-		//bool areReferencesResolved() const { m_resolvedReferences; }
-
 		SdlNodeDefinition *resolveNodeDefinition(SdlNode *node, int *count, bool searchDependencies = true);
 
-	private:
-		//void resolveNodeDefinitions();
+		// Validation stage
+	protected:
+		virtual void _validate(SdlCompilationUnit *unit);
 	};
 
 } /* namespace manta */

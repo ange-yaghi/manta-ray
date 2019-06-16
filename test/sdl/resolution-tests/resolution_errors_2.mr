@@ -1,0 +1,49 @@
+local node EmptyNode: { // NodeWithNoOutputs
+};
+
+local node ProblemNode: {
+    output test: 46; // SymbolUsedMultipleTimes
+
+    FakeNode test( // SymbolUsedMultipleTimes, UndefinedNodeType
+        fake_input: 50
+    );
+};
+
+ProblemNode same_name(); // SymbolUsedMultipleTimes
+ProblemNode same_name(); // SymbolUsedMultipleTimes
+
+local node GoodNode: {
+    input test;
+    output test_out: test;
+};
+
+GoodNode okay_node(
+    test: same_name
+);
+
+GoodNode bad_node(
+    test: some_type // UnresolvedReference
+);
+
+GoodNode unconnected(); // InputNotConnected
+
+local node NodeWithBadOutput: {
+    output boom; // OutputWithNoDefinition
+};
+
+local node BuiltinExample => BuiltinNode: {
+    // This works because this node defines the interface to
+    // a built-in type
+    output good;
+};
+
+local node BuiltinExampleBad => BuiltinNode: {
+    // This doesn't work because built-in nodes
+    // can't have their outputs redefined
+    output good: "boom"; // BuiltinOutputWithDefinition
+};
+
+GoodNode overdefinition(
+    "positional input",             // InputSpecifiedMultipleTimesPositional        
+    test: "non-positional input"    // InputSpecifiedMultipleTimes
+);

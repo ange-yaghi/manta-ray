@@ -16,13 +16,13 @@ manta::SdlCompilationError::~SdlCompilationError() {
 #define ERR(tag) const manta::SdlErrorCode_struct manta::SdlErrorCode::tag
 
 // [IO] - IO Errors
-ERR(FileOpenFailed) =			{ "IO", "0001", "Could not open file" };
+ERR(FileOpenFailed) =			{ "IO", "0010", "Could not open file" };
 
 // [S] - Scanning errors
-ERR(UnidentifiedToken) =		{ "S", "0001", "Unidentified token" };
+ERR(UnidentifiedToken) =		{ "S", "0010", "Unidentified token" };
 
 // [P] - Parsing errors
-ERR(UnexpectedToken) =			{ "P", "0001", "Unexpected token" };
+ERR(UnexpectedToken) =			{ "P", "0010", "Unexpected token" };
 
 // [R] - Resolution errors
 ERR(UndefinedNodeType) =		{ "R", "0010", "Undefined node type" };
@@ -33,8 +33,15 @@ ERR(UsingOutputPortAsInput) =	{ "R", "0040", "Using output port as input" };
 ERR(UnresolvedReference) =		{ "R", "0050", "Unresolved reference" };
 ERR(UndefinedMember) =			{ "R", "0060", "Undefined member" };
 ERR(AccessingInternalMember) =	{ "R", "0061", "Invalid reference to an internal member" };
-ERR(InvalidRightHandOperand) =	{ "R", "0070", "Invalid right-hand operand" };
 
 // [V] - Validation errors
 ERR(InputSpecifiedMultipleTimes) = 
-								{ "V", "0001", "Input specified multiple times" };
+								{ "V", "0010", "Input specified multiple times" };
+ERR(NodeWithNoOutputs) =		{ "V", "0020", "Node definition with no outputs" };
+ERR(SymbolUsedMultipleTimes) =	{ "V", "0030", "Symbol used multiple times" };
+ERR(InputNotConnected) =		{ "V", "0040", "Input not connected" };
+ERR(OutputWithNoDefinition) =	{ "V", "0050", "Output with no definition" };
+ERR(BuiltinOutputWithDefinition) =
+								{ "V", "0051", "Built-in output given a definition" };
+ERR(InputSpecifiedMultipleTimesPositional) =
+								{ "V", "0011", "Input specified multiple times by positional" };

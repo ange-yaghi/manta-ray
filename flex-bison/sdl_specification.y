@@ -157,7 +157,7 @@ decorator_list
 statement
   : node ';'						{ driver.addNode($1); }
   | import_statement				{ driver.addImportStatement($1); }
-  | specific_node_definition ';'	{ }
+  | specific_node_definition ';'	{ driver.addNodeDefinition($1); }
   ;
 
 statement_list 
@@ -179,14 +179,14 @@ node_list
 															$$ = new SdlNodeList();
 															$$->add($1);
 														}
-  | node_list node ';'									{ $1->add($2); }
+  | node_list node ';'									{ 
+															$$ = $1;
+															$1->add($2);  
+														}
   ;
 
 node_name
-  : NODE LABEL											{ 
-															$$ = new SdlNodeDefinition($2); 
-															driver.addNodeDefinition($$); 
-														}
+  : NODE LABEL											{ $$ = new SdlNodeDefinition($2); }
   ;
 
 node_shadow
@@ -197,11 +197,16 @@ node_shadow
 node_decorator
   : node_shadow decorator_list '{' port_definitions		{ $$ = $1; $$->setAttributeDefinitionList($4); }
   | node_shadow '{' port_definitions					{ $$ = $1; $$->setAttributeDefinitionList($3); }
+  | node_shadow '{'										{ 
+															$$ = $1; 
+															$$->setAttributeDefinitionList(new SdlAttributeDefinitionList()); 
+														}
   ;
 
 node_definition
   : node_decorator '}'									{ $$ = $1; $$->setBody(nullptr); }
   | node_decorator node_list '}'						{ $$ = $1; $$->setBody($2); }
+  | error '}'											{ yyerrok; }
   ;
 
 specific_node_definition
@@ -219,11 +224,11 @@ specific_node_definition
   ;
 
 port_definitions
-  : documented_port_definition	';'						{ 
+  : documented_port_definition							{ 
 															$$ = new SdlAttributeDefinitionList(); 
 															$$->addDefinition($1); 
 														}
-  | port_definitions documented_port_definition	';'		{ $$ = $1; $$->addDefinition($2); }
+  | port_definitions documented_port_definition			{ $$ = $1; $$->addDefinition($2); }
   ;
 
 port_declaration
@@ -242,8 +247,9 @@ port_connection
   ;
 
 documented_port_definition
-  : decorator_list port_connection		{ $$ = $2; }
-  | port_connection						{ $$ = $1; }
+  : decorator_list port_connection ';'	{ $$ = $2; }
+  | port_connection ';'					{ $$ = $1; }
+  | error ';'							{ }
   ;
 
 inline_node
@@ -257,7 +263,8 @@ connection_block
 										$$->registerToken(&$2); 
 									}
   | '(' attribute_list ')'			{ 
-										$$ = $2; $$->registerToken(&$1); 
+										$$ = $2; 
+										$$->registerToken(&$1); 
 										$$->registerToken(&$3); 
 									}
   | '(' error ')'					{ yyerrok; }
@@ -317,7 +324,7 @@ atomic_value
 primary_exp
   : atomic_value					{ $$ = $1; }
   | '(' value ')'					{ $$ = $2; $$->registerToken(&$1); $$->registerToken(&$3); }
-  | '(' error ')'					{ yyerrok; }
+  | '(' error ')'					{ $$ = nullptr; yyerrok; }
   ;
 
 data_access

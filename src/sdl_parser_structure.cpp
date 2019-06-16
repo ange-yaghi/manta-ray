@@ -6,6 +6,7 @@ manta::SdlParserStructure::SdlParserStructure() {
 
 	m_definitionsResolved = false;
 	m_referencesResolved = false;
+	m_validated = false;
 
 	m_externalAccess = false;
 }

@@ -1,0 +1,31 @@
+node AddNode: {
+    input p1;
+    input p2;
+    default output out: p1 + p2;
+    output boom: test_label$; // UnidentifiedToken;
+};
+
+node AddMulNode: {
+    input p1;
+    input p2;
+    input p3;
+    // Broken definition
+    default output out: AddNode(p1 $, p2) * p3; // UnidentifiedToken, InputNotConnected
+    output test: AddNode(p1 $, p2).out * p3; // UnidentifiedToken, InputNotConnected
+    output boom: AddNode(p1, p2).boom; // UndefinedMember
+    output bad_access: AddNode(p1, p2)."weird"; // UnexpectedToken
+};
+
+node BrokenNodeDef: {
+    input a;
+    input b;
+    default output out: a - b;
+};
+
+// This node should still be read even though
+// the node definition before is messed up
+AddMulNode brokenNodeInstance(
+    p1: 5,
+    p2: 15,
+    p3: 16
+);
