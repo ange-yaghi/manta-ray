@@ -5,6 +5,8 @@
 
 namespace manta {
 
+	class SdlCompilationError;
+
 	class SdlBinaryOperator : public SdlValue {
 	public:
 		enum OPERATOR {
@@ -23,14 +25,12 @@ namespace manta {
 		SdlValue *getLeft() const { return m_leftOperand; }
 		SdlValue *getRight() const { return m_rightOperand; }
 
+		virtual SdlParserStructure *getImmediateReference(SdlCompilationError **err);
+
 	protected:
 		OPERATOR m_operator;
 		SdlValue *m_leftOperand;
 		SdlValue *m_rightOperand;
-
-		// Resolution stage
-	protected:
-		virtual void _resolveReferences(SdlCompilationUnit *unit);
 	};
 
 } /* namespace manta */

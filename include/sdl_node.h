@@ -44,7 +44,7 @@ namespace manta {
 		SdlNodeDefinition *getDefinition() const { return m_definition; }
 		void setDefinition(SdlNodeDefinition *definition) { m_definition = definition; }
 
-		virtual SdlParserStructure *resolveLocalName(const std::string &name);
+		virtual SdlParserStructure *resolveLocalName(const std::string &name) const;
 
 	protected:
 		virtual void _resolveDefinitions(SdlCompilationUnit *unit);

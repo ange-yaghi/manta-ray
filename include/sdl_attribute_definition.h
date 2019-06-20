@@ -9,6 +9,7 @@ namespace manta {
 
 	class SdlValue;
 	class SdlInputConnection;
+	class SdlCompilationError;
 
 	class SdlAttributeDefinition : public SdlParserStructure {
 	public:
@@ -41,8 +42,10 @@ namespace manta {
 		int getImpliedMemberCount() const { return (int)m_impliedMembers.size(); }
 		SdlInputConnection *getImpliedMember(const std::string &name) const;
 
-		virtual SdlParserStructure *resolveLocalName(const std::string &name);
-		virtual SdlParserStructure *resolveName(const std::string &name);
+		virtual SdlParserStructure *resolveLocalName(const std::string &name) const;
+		virtual SdlParserStructure *resolveName(const std::string &name) const;
+
+		virtual SdlParserStructure *getImmediateReference(SdlCompilationError **err);
 
 	protected:
 		SdlTokenInfo_string m_directionToken;
@@ -54,10 +57,6 @@ namespace manta {
 		bool m_isDefault;
 
 		std::vector<SdlInputConnection *> m_impliedMembers;
-
-		// Resolution stage
-	protected:
-		virtual void _resolveReferences(SdlCompilationUnit *unit);
 	};
 
 } /* namespace manta */
