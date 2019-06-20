@@ -51,7 +51,7 @@ namespace manta {
 		SdlNodeDefinition *getNodeDefinition(int index) const { return m_nodeDefinitions[index]; }
 		int getNodeDefinitionCount() const;
 
-		virtual SdlParserStructure *resolveLocalName(const std::string &name);
+		virtual SdlParserStructure *resolveLocalName(const std::string &name) const;
 		int countSymbolIncidence(const std::string &name) const;
 
 		void addCompilationError(SdlCompilationError *err);

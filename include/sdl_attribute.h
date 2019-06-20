@@ -23,7 +23,7 @@ namespace manta {
 		SdlValue *getValue() const { return m_value; }
 
 		void setPosition(int position) { m_position = position; }
-		int getPosition() const { return m_position;  }
+		int getPosition() const { return m_position; }
 
 		// If no name is specified positional notation is assumed
 		bool isPositional() const { return getName() == ""; }

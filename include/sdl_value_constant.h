@@ -38,15 +38,21 @@ namespace manta {
 		SdlValueLabel(const _TokenInfo &value) : SdlValueConstant(value) { /* void */ }
 		~SdlValueLabel() { /* void */ }
 
-		// Resolution stage
-	protected:
-		virtual void _resolveReferences(SdlCompilationUnit *unit) {
-			m_reference = resolveName(m_value);
+		virtual SdlParserStructure *getImmediateReference(SdlCompilationError **err = nullptr) {
+			SdlParserStructure *reference = resolveName(m_value);
 
-			if (m_reference == nullptr) {
-				unit->addCompilationError(new SdlCompilationError(m_summaryToken,
-					SdlErrorCode::UnresolvedReference));
+			// Do error checking
+			if (err != nullptr) {
+				if (reference == nullptr) {
+					*err = new SdlCompilationError(m_summaryToken,
+						SdlErrorCode::UnresolvedReference);
+				}
+				else {
+					*err = nullptr;
+				}
 			}
+
+			return reference;
 		}
 	};
 
@@ -61,10 +67,15 @@ namespace manta {
 			registerComponent(value); 
 		}
 
+		virtual SdlParserStructure *getImmediateReference(SdlCompilationError **err = nullptr) {
+			if (err != nullptr) *err = nullptr;
+			return m_value;
+		}
+
 		// Resolution stage
 	protected:
 		virtual void _resolveReferences(SdlCompilationUnit *unit) {
-			m_reference = m_value;
+			/* void */
 		}
 	};
 

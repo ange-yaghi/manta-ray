@@ -9,6 +9,7 @@ namespace manta {
 
 	class SdlValue;
 	class SdlCompilationUnit;
+	class SdlCompilationError;
 
 	class SdlParserStructure {
 	public:
@@ -22,15 +23,14 @@ namespace manta {
 		int getComponentCount() const { return (int)m_components.size(); }
 
 		void setParentScope(SdlParserStructure *parentScope) { m_parentScope = parentScope; }
-		virtual SdlParserStructure *resolveName(const std::string &name);
-		virtual SdlParserStructure *resolveLocalName(const std::string &name);
+		virtual SdlParserStructure *resolveName(const std::string &name) const;
+		virtual SdlParserStructure *resolveLocalName(const std::string &name) const;
 
 		bool getDefinitionsResolved() const { return m_definitionsResolved; }
-		bool getReferencesResolved() const { return m_referencesResolved; }
 		bool isExpanded() const { return m_isExpanded; }
 		bool isValidated() const { return m_validated; }
-		SdlParserStructure *getImmediateReference() const { return m_reference; }
-		SdlParserStructure *getReference();
+		virtual SdlParserStructure *getImmediateReference(SdlCompilationError **err = nullptr) { return nullptr; }
+		SdlParserStructure *getReference(SdlCompilationError **err = nullptr);
 		SdlParserStructure *getExpansion() const { return m_expansion; }
 
 		virtual SdlValue *getAsValue() { return nullptr; }
@@ -38,24 +38,25 @@ namespace manta {
 		bool allowsExternalAccess() const { return m_externalAccess; }
 		void setExternalAccess(bool externalAccess) { m_externalAccess = externalAccess; }
 
+		void setCheckReferences(bool check) { m_checkReferences = check; }
+		bool getCheckReferences() const { return m_checkReferences; }
+
 	public:
 		// Compilation stages
 		void expand(SdlCompilationUnit *unit);
 		void resolveDefinitions(SdlCompilationUnit *unit);
-		void resolveReferences(SdlCompilationUnit *unit);
+		void checkReferences(SdlCompilationUnit *unit);
 		void validate(SdlCompilationUnit *unit);
 
 	protected:
 		virtual void _expand(SdlCompilationUnit *unit);
 		virtual void _resolveDefinitions(SdlCompilationUnit *unit);
-		virtual void _resolveReferences(SdlCompilationUnit *unit);
 		virtual void _validate(SdlCompilationUnit *unit);
 
 	protected:
 		SdlParserStructure *m_parentScope;
 		SdlTokenInfo m_summaryToken;
 
-		SdlParserStructure *m_reference;
 		SdlParserStructure *m_expansion;
 
 		std::vector<SdlParserStructure *> m_components;
@@ -64,10 +65,10 @@ namespace manta {
 		// Compilation flags
 		bool m_isExpanded;
 		bool m_definitionsResolved;
-		bool m_referencesResolved;
 		bool m_validated;
 
-		bool m_resolveReferencesChildren;
+		bool m_checkReferences;
+
 		bool m_externalAccess;
 	};
 

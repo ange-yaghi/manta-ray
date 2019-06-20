@@ -153,7 +153,7 @@ int manta::SdlCompilationUnit::getNodeDefinitionCount() const {
 	return (int)m_nodeDefinitions.size();
 }
 
-manta::SdlParserStructure *manta::SdlCompilationUnit::resolveLocalName(const std::string &name) {
+manta::SdlParserStructure *manta::SdlCompilationUnit::resolveLocalName(const std::string &name) const {
 	int nodeCount = getNodeCount();
 	for (int i = 0; i < nodeCount; i++) {
 		SdlNode *node = m_nodes[i];

@@ -48,7 +48,7 @@ namespace manta {
 		void setBody(SdlNodeList *body) { m_body = body; registerComponent(body); }
 		SdlNodeList *getBody() const { return m_body; }
 
-		virtual SdlParserStructure *resolveName(const std::string &name);
+		virtual SdlParserStructure *resolveName(const std::string &name) const;
 
 	protected:
 		SdlTokenInfo_string m_name;
@@ -65,7 +65,7 @@ namespace manta {
 		// Resolution stage
 	public:
 		int countSymbolIncidence(const std::string &name) const;
-		SdlParserStructure *resolveLocalName(const std::string &name);
+		SdlParserStructure *resolveLocalName(const std::string &name) const;
 
 		// Validation stage
 	protected:

@@ -44,13 +44,13 @@ manta::SdlInputConnection *manta::SdlAttributeDefinition::getImpliedMember(const
 	return nullptr;
 }
 
-manta::SdlParserStructure *manta::SdlAttributeDefinition::resolveLocalName(const std::string &name) {
+manta::SdlParserStructure *manta::SdlAttributeDefinition::resolveLocalName(const std::string &name) const {
 	// If this function is called it means that a member of this attribute
 	// is being accessed. Ordinarily this would be a member of an input. Since
 	// we can't figure out right away what this actually references (since a node
 	// definition can be instantiated multiple times) we return a placeholder with
 	// the member in question.
-	SdlInputConnection *inputConnection = getImpliedMember(name);
+	/*SdlInputConnection *inputConnection = getImpliedMember(name);
 	if (inputConnection != nullptr) return inputConnection;
 	else {
 		inputConnection = new SdlInputConnection();
@@ -63,10 +63,11 @@ manta::SdlParserStructure *manta::SdlAttributeDefinition::resolveLocalName(const
 		m_impliedMembers.push_back(inputConnection);
 
 		return inputConnection;
-	}
+	}*/
+	return nullptr;
 }
 
-manta::SdlParserStructure *manta::SdlAttributeDefinition::resolveName(const std::string &name) {
+manta::SdlParserStructure *manta::SdlAttributeDefinition::resolveName(const std::string &name) const {
 	if (m_parentScope != nullptr) {
 		return m_parentScope->resolveName(name);
 	}
@@ -74,7 +75,7 @@ manta::SdlParserStructure *manta::SdlAttributeDefinition::resolveName(const std:
 	return nullptr;
 }
 
-void manta::SdlAttributeDefinition::_resolveReferences(SdlCompilationUnit *unit) {
+manta::SdlParserStructure *manta::SdlAttributeDefinition::getImmediateReference(SdlCompilationError **err) {
 	// An attribute definition will by default point to its definition (ie default value)
-	m_reference = m_defaultValue;
+	return m_defaultValue;
 }
