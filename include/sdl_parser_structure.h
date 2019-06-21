@@ -29,8 +29,10 @@ namespace manta {
 		bool getDefinitionsResolved() const { return m_definitionsResolved; }
 		bool isExpanded() const { return m_isExpanded; }
 		bool isValidated() const { return m_validated; }
-		virtual SdlParserStructure *getImmediateReference(SdlCompilationError **err = nullptr) { return nullptr; }
-		SdlParserStructure *getReference(SdlCompilationError **err = nullptr);
+		virtual SdlParserStructure *getImmediateReference(SdlParserStructure *inputContext = nullptr, 
+			SdlCompilationError **err = nullptr) { return nullptr; }
+		SdlParserStructure *getReference(SdlParserStructure *inputContext = nullptr, 
+			SdlCompilationError **err = nullptr);
 		SdlParserStructure *getExpansion() const { return m_expansion; }
 
 		virtual SdlValue *getAsValue() { return nullptr; }
@@ -41,17 +43,20 @@ namespace manta {
 		void setCheckReferences(bool check) { m_checkReferences = check; }
 		bool getCheckReferences() const { return m_checkReferences; }
 
+		virtual bool isInputPoint() const { return false; }
+
 	public:
 		// Compilation stages
 		void expand(SdlCompilationUnit *unit);
 		void resolveDefinitions(SdlCompilationUnit *unit);
-		void checkReferences(SdlCompilationUnit *unit);
+		void checkReferences(SdlCompilationUnit *unit, SdlParserStructure *inputContext = nullptr);
 		void validate(SdlCompilationUnit *unit);
 
 	protected:
 		virtual void _expand(SdlCompilationUnit *unit);
 		virtual void _resolveDefinitions(SdlCompilationUnit *unit);
 		virtual void _validate(SdlCompilationUnit *unit);
+		virtual void _checkInstantiation(SdlCompilationUnit *unit);
 
 	protected:
 		SdlParserStructure *m_parentScope;

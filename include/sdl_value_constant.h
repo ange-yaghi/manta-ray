@@ -38,14 +38,23 @@ namespace manta {
 		SdlValueLabel(const _TokenInfo &value) : SdlValueConstant(value) { /* void */ }
 		~SdlValueLabel() { /* void */ }
 
-		virtual SdlParserStructure *getImmediateReference(SdlCompilationError **err = nullptr) {
-			SdlParserStructure *reference = resolveName(m_value);
+		virtual SdlParserStructure *getImmediateReference(SdlParserStructure *inputContext, SdlCompilationError **err = nullptr) {
+			SdlParserStructure *reference = nullptr;
+
+			// First check the input context for the reference
+			if (inputContext != nullptr) {
+				reference = inputContext->resolveLocalName(m_value);
+			}
+
+			if (reference == nullptr) {
+				reference = resolveName(m_value);
+			}
 
 			// Do error checking
 			if (err != nullptr) {
-				if (reference == nullptr) {
+				if (reference == nullptr && inputContext == nullptr) {
 					*err = new SdlCompilationError(m_summaryToken,
-						SdlErrorCode::UnresolvedReference);
+						SdlErrorCode::UnresolvedReference, inputContext);
 				}
 				else {
 					*err = nullptr;
@@ -67,7 +76,9 @@ namespace manta {
 			registerComponent(value); 
 		}
 
-		virtual SdlParserStructure *getImmediateReference(SdlCompilationError **err = nullptr) {
+		virtual SdlParserStructure *getImmediateReference(SdlParserStructure *inputContext, SdlCompilationError **err = nullptr) {
+			(void)inputContext;
+
 			if (err != nullptr) *err = nullptr;
 			return m_value;
 		}

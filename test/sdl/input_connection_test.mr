@@ -1,0 +1,16 @@
+node SomeNode: {
+    output attribute: "Hello world";
+};
+
+node SomeOtherNode: {
+    output other_attribute: "Hello other world";
+};
+
+node AttributeExtractor: {
+    input n: SomeNode();
+    output attribute: n.attribute; 
+};
+
+AttributeExtractor test_extractor (
+    n: SomeOtherNode() // Kaboom
+);

@@ -8,6 +8,7 @@
 namespace manta {
 
 	class SdlCompilationUnit;
+	class SdlParserStructure;
 
 	struct SdlErrorCode_struct {
 		std::string stage;
@@ -47,7 +48,8 @@ namespace manta {
 
 	class SdlCompilationError {
 	public:
-		SdlCompilationError(const SdlTokenInfo &location, const SdlErrorCode_struct &code);
+		SdlCompilationError(const SdlTokenInfo &location, const SdlErrorCode_struct &code, 
+			SdlParserStructure *instantiation = nullptr);
 		~SdlCompilationError();
 
 		const SdlTokenInfo *getErrorLocation() const { return &m_errorLocation; }
@@ -59,10 +61,15 @@ namespace manta {
 		void setCompilationUnit(SdlCompilationUnit *unit) { m_unit = unit; }
 		SdlCompilationUnit *getCompilationUnit() const { return m_unit; }
 
+		bool isInstantiationError() const { return m_instantiation != nullptr; }
+		SdlParserStructure *getInstantiation() const { return m_instantiation; }
+
 	protected:
 		SdlTokenInfo m_errorLocation;
 		SdlErrorCode_struct m_code;
 		SdlCompilationUnit *m_unit;
+
+		SdlParserStructure *m_instantiation;
 	};
 
 } /* namespace manta */

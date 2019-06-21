@@ -25,7 +25,7 @@ namespace manta {
 		SdlValue *getLeft() const { return m_leftOperand; }
 		SdlValue *getRight() const { return m_rightOperand; }
 
-		virtual SdlParserStructure *getImmediateReference(SdlCompilationError **err);
+		virtual SdlParserStructure *getImmediateReference(SdlParserStructure *inputContext, SdlCompilationError **err);
 
 	protected:
 		OPERATOR m_operator;

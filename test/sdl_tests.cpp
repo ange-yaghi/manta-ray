@@ -635,3 +635,15 @@ TEST(SdlTests, SdlFullErrorTest3) {
 
 	EXPECT_EQ(errors->getErrorCount(), 7);
 }
+
+TEST(SdlTests, SdlInputConnectionTest) {
+	SdlCompiler compiler;
+	SdlCompilationUnit *unit = compiler.compile(SDL_TEST_FILES "input_connection_test.mr");
+	EXPECT_NE(unit, nullptr);
+
+	const SdlErrorList *errors = compiler.getErrorList();
+
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedMember, 11));
+
+	EXPECT_EQ(errors->getErrorCount(), 1);
+}

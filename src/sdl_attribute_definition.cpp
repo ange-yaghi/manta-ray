@@ -75,7 +75,9 @@ manta::SdlParserStructure *manta::SdlAttributeDefinition::resolveName(const std:
 	return nullptr;
 }
 
-manta::SdlParserStructure *manta::SdlAttributeDefinition::getImmediateReference(SdlCompilationError **err) {
+manta::SdlParserStructure *manta::SdlAttributeDefinition::getImmediateReference(SdlParserStructure *inputContext, SdlCompilationError **err) {
+	(void)inputContext;
+
 	// An attribute definition will by default point to its definition (ie default value)
 	return m_defaultValue;
 }

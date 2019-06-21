@@ -21,7 +21,7 @@ manta::SdlBinaryOperator::~SdlBinaryOperator() {
 	/* void */
 }
 
-manta::SdlParserStructure *manta::SdlBinaryOperator::getImmediateReference(SdlCompilationError **err) {
+manta::SdlParserStructure *manta::SdlBinaryOperator::getImmediateReference(SdlParserStructure *inputContext, SdlCompilationError **err) {
 	if (err != nullptr) *err = nullptr;
 	
 	if (m_leftOperand == nullptr || m_rightOperand == nullptr) {
@@ -31,26 +31,45 @@ manta::SdlParserStructure *manta::SdlBinaryOperator::getImmediateReference(SdlCo
 
 	// The dot is the reference operator
 	if (m_operator == DOT) {
-		SdlParserStructure *resolvedLeft = m_leftOperand->getReference();
+		SdlParserStructure *resolvedLeft = nullptr;
+		resolvedLeft = m_leftOperand->getReference();
+
+		bool foundInput = false;
+
+		// Check the input context for this symbol
+		if (inputContext != nullptr) {
+			SdlParserStructure *inputConnection = m_leftOperand->getReference(inputContext);
+			if (inputConnection != nullptr && inputConnection != resolvedLeft) {
+				foundInput = true;
+				resolvedLeft = inputConnection;
+			}
+		}
+
 		if (resolvedLeft == nullptr) {
 			// Reference could not be resolved, skip the rest
 			return nullptr;
 		}
-
+		
 		SdlValueLabel *labelConstant = static_cast<SdlValueLabel *>(m_rightOperand);
 		SdlParserStructure *publicAttribute = resolvedLeft->resolveLocalName(labelConstant->getValue());
 
 		if (err != nullptr && publicAttribute == nullptr) {
-			// Left hand does not have this member
-			*err = new SdlCompilationError(*m_rightOperand->getSummaryToken(),
-				SdlErrorCode::UndefinedMember);
+			bool isValidError = false;
+			isValidError = (inputContext == nullptr || (inputContext != nullptr && foundInput));
+
+			if (isValidError) {
+				// Left hand does not have this member
+				*err = new SdlCompilationError(*m_rightOperand->getSummaryToken(),
+					SdlErrorCode::UndefinedMember, inputContext);
+			}
+
 			return nullptr;
 		}
 
 		// Check to make sure that the user is not accidentally trying to use a hidden member
 		if (err != nullptr && !publicAttribute->allowsExternalAccess()) {
 			*err = new SdlCompilationError(*m_rightOperand->getSummaryToken(),
-				SdlErrorCode::AccessingInternalMember);
+				SdlErrorCode::AccessingInternalMember, inputContext);
 			return nullptr;
 		}
 

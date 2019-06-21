@@ -39,6 +39,8 @@ namespace manta {
 		void setAttributeDefinition(SdlAttributeDefinition *definition) { m_definition = definition; }
 		SdlAttributeDefinition *getAttributeDefinition() const { return m_definition; }
 
+		virtual SdlParserStructure *getImmediateReference(SdlParserStructure *inputContext, SdlCompilationError **err);
+
 	protected:
 		SdlAttributeDefinition *m_definition;
 	};
