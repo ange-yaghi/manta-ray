@@ -150,6 +150,14 @@ void manta::SdlNode::_validate(SdlCompilationUnit *unit) {
 	}
 }
 
+void manta::SdlNode::_checkInstantiation(SdlCompilationUnit *unit) {
+	// Check all references relating to the connection of inputs from this
+	// node to the actual definition.
+	if (m_definition != nullptr) {
+		m_definition->checkReferences(unit, this);
+	}
+}
+
 void manta::SdlNode::resolveNodeDefinition(SdlCompilationUnit *unit) {
 	int definitionCount = 0;
 	SdlNodeDefinition *definition = unit->resolveNodeDefinition(this, &definitionCount);

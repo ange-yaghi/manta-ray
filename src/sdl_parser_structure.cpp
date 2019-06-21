@@ -40,13 +40,13 @@ manta::SdlParserStructure *manta::SdlParserStructure::resolveName(const std::str
 	return nullptr;
 }
 
-manta::SdlParserStructure *manta::SdlParserStructure::getReference(SdlCompilationError **err) {
+manta::SdlParserStructure *manta::SdlParserStructure::getReference(SdlParserStructure *inputContext, SdlCompilationError **err) {
 	if (err != nullptr) *err = nullptr;
-	SdlParserStructure *immediateRefernece = getImmediateReference(err);
+	SdlParserStructure *immediateReference = getImmediateReference(inputContext, err);
 
 	// Error checking is not done on any parent nodes because it's assumed that errors have
 	// already been checked/reported
-	if (immediateRefernece != nullptr) return immediateRefernece->getReference(nullptr);
+	if (immediateReference != nullptr) return immediateReference->getReference(inputContext, nullptr);
 	else return this;
 }
 
@@ -64,21 +64,23 @@ void manta::SdlParserStructure::resolveDefinitions(SdlCompilationUnit *unit) {
 	m_definitionsResolved = true;
 }
 
-void manta::SdlParserStructure::checkReferences(SdlCompilationUnit *unit) {
+void manta::SdlParserStructure::checkReferences(SdlCompilationUnit *unit, SdlParserStructure *inputContext) {
 	// Check components
 	int componentCount = getComponentCount();
 	for (int i = 0; i < componentCount; i++) {
-		m_components[i]->checkReferences(unit);
+		m_components[i]->checkReferences(unit, inputContext);
 	}
 
 	if (m_checkReferences) {
 		SdlCompilationError *err = nullptr;
-		SdlParserStructure *reference = getReference(&err);
+		SdlParserStructure *reference = getReference(inputContext, &err);
 
 		if (err != nullptr) {
 			unit->addCompilationError(err);
 		}
 	}
+
+	_checkInstantiation(unit);
 }
 
 void manta::SdlParserStructure::validate(SdlCompilationUnit *unit) {
@@ -119,6 +121,10 @@ void manta::SdlParserStructure::expand(SdlCompilationUnit *unit) {
 }
 
 void manta::SdlParserStructure::_validate(SdlCompilationUnit *unit) {
+	/* void */
+}
+
+void manta::SdlParserStructure::_checkInstantiation(SdlCompilationUnit *unit) {
 	/* void */
 }
 

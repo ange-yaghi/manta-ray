@@ -49,6 +49,7 @@ namespace manta {
 	protected:
 		virtual void _resolveDefinitions(SdlCompilationUnit *unit);
 		virtual void _validate(SdlCompilationUnit *unit);
+		virtual void _checkInstantiation(SdlCompilationUnit *unit);
 
 		void resolveNodeDefinition(SdlCompilationUnit *unit);
 		void resolveAttributeDefinitions(SdlCompilationUnit *unit);

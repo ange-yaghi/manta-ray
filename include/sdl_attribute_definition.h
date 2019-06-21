@@ -45,7 +45,9 @@ namespace manta {
 		virtual SdlParserStructure *resolveLocalName(const std::string &name) const;
 		virtual SdlParserStructure *resolveName(const std::string &name) const;
 
-		virtual SdlParserStructure *getImmediateReference(SdlCompilationError **err);
+		virtual SdlParserStructure *getImmediateReference(SdlParserStructure *inputContext, SdlCompilationError **err);
+
+		virtual bool isConnectionPoint() const { return m_direction == INPUT; }
 
 	protected:
 		SdlTokenInfo_string m_directionToken;
