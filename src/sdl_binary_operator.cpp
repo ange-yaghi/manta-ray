@@ -34,20 +34,21 @@ manta::SdlParserStructure *manta::SdlBinaryOperator::getImmediateReference(SdlPa
 		SdlParserStructure *resolvedLeft = nullptr;
 		resolvedLeft = m_leftOperand->getReference();
 
-		bool foundInput = false;
+		// Even if the left operand refers to an input, a reference to it should still
+		// be found
+		if (resolvedLeft == nullptr) {
+			// Reference could not be resolved, skip the rest
+			return nullptr;
+		}
 
 		// Check the input context for this symbol
+		bool foundInput = false;
 		if (inputContext != nullptr) {
 			SdlParserStructure *inputConnection = m_leftOperand->getReference(inputContext);
 			if (inputConnection != nullptr && inputConnection != resolvedLeft) {
 				foundInput = true;
 				resolvedLeft = inputConnection;
 			}
-		}
-
-		if (resolvedLeft == nullptr) {
-			// Reference could not be resolved, skip the rest
-			return nullptr;
 		}
 		
 		SdlValueLabel *labelConstant = static_cast<SdlValueLabel *>(m_rightOperand);

@@ -33,7 +33,8 @@ using namespace manta;
 	EXPECT_EQ((error)->getErrorCode().code, code_.code);	\
 	EXPECT_EQ((error)->getErrorLocation()->lineStart, line);
 
-bool findError(const SdlErrorList *errorList, const SdlErrorCode_struct &errorCode, int line = -1, const SdlCompilationUnit *unit = nullptr) {
+bool findError(const SdlErrorList *errorList, const SdlErrorCode_struct &errorCode, 
+				int line = -1, const SdlCompilationUnit *unit = nullptr, bool instantiationError = false) {
 	int errorCount = errorList->getErrorCount();
 
 	for (int i = 0; i < errorCount; i++) {
@@ -41,7 +42,9 @@ bool findError(const SdlErrorList *errorList, const SdlErrorCode_struct &errorCo
 		if (unit == nullptr || error->getCompilationUnit() == unit) {
 			if (error->getErrorCode().code == errorCode.code && error->getErrorCode().stage == errorCode.stage) {
 				if (line == -1 || error->getErrorLocation()->lineStart == line) {
-					return true;
+					if (error->isInstantiationError() == instantiationError) {
+						return true;
+					}
 				}
 			}
 		}
@@ -643,7 +646,8 @@ TEST(SdlTests, SdlInputConnectionTest) {
 
 	const SdlErrorList *errors = compiler.getErrorList();
 
-	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedMember, 11));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedMember, 23, nullptr, true));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedMember, 25, nullptr, true));
 
-	EXPECT_EQ(errors->getErrorCount(), 1);
+	EXPECT_EQ(errors->getErrorCount(), 2);
 }
