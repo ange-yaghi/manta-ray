@@ -16,10 +16,13 @@ namespace manta {
 	class SdlNode : public SdlParserStructure {
 	public:
 		SdlNode();
-		SdlNode(const SdlTokenInfo_string &type, const SdlTokenInfo_string &name, SdlAttributeList *attributes);
-		SdlNode(const SdlTokenInfo_string &type, SdlAttributeList *attributes);
+		SdlNode(const SdlTokenInfo_string &type, const SdlTokenInfo_string &name, SdlAttributeList *attributes, 
+			const SdlTokenInfo_string &library);
+		SdlNode(const SdlTokenInfo_string &type, SdlAttributeList *attributes, 
+			const SdlTokenInfo_string &library);
 		~SdlNode();
 
+		SdlTokenInfo getTypeToken() const { return m_type; }
 		SdlTokenInfo getNameToken() const { return m_name; }
 
 		const std::string &getType() const { return m_type.data; }
@@ -34,6 +37,7 @@ namespace manta {
 	protected:
 		SdlTokenInfo_string m_type;
 		SdlTokenInfo_string m_name;
+		SdlTokenInfo_string m_library;
 
 		SdlAttributeList *m_attributes;
 
@@ -47,12 +51,12 @@ namespace manta {
 		virtual SdlParserStructure *resolveLocalName(const std::string &name) const;
 
 	protected:
-		virtual void _resolveDefinitions(SdlCompilationUnit *unit);
-		virtual void _validate(SdlCompilationUnit *unit);
-		virtual void _checkInstantiation(SdlCompilationUnit *unit);
+		virtual void _resolveDefinitions();
+		virtual void _validate();
+		virtual void _checkInstantiation();
 
-		void resolveNodeDefinition(SdlCompilationUnit *unit);
-		void resolveAttributeDefinitions(SdlCompilationUnit *unit);
+		void resolveNodeDefinition();
+		void resolveAttributeDefinitions();
 
 		SdlNodeDefinition *m_definition;
 	};

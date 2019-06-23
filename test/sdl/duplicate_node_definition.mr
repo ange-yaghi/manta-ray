@@ -1,0 +1,9 @@
+private node the_same_node: {
+    default input A;
+    default output B: A;
+};
+
+private node the_same_node: {
+    default input C;
+    default output D: C;
+};

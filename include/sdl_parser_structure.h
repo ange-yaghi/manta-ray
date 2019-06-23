@@ -2,6 +2,7 @@
 #define SDL_PARSER_STRUCTURE_H
 
 #include <sdl_token_info.h>
+#include <sdl_visibility.h>
 
 #include <vector>
 
@@ -37,26 +38,34 @@ namespace manta {
 
 		virtual SdlValue *getAsValue() { return nullptr; }
 
-		bool allowsExternalAccess() const { return m_externalAccess; }
-		void setExternalAccess(bool externalAccess) { m_externalAccess = externalAccess; }
+		bool allowsExternalAccess() const;
+
+		void setVisibility(SdlVisibility visibility) { m_visibility = visibility; }
+		SdlVisibility getVisibility() const { return m_visibility; }
+
+		void setDefaultVisibility(SdlVisibility visibility) { m_defaultVisibility = visibility; }
+		SdlVisibility getDefaultVisibility() const { return m_defaultVisibility; }
 
 		void setCheckReferences(bool check) { m_checkReferences = check; }
 		bool getCheckReferences() const { return m_checkReferences; }
 
 		virtual bool isInputPoint() const { return false; }
 
+		void setParentUnit(SdlCompilationUnit *unit) { m_parentUnit = unit; }
+		SdlCompilationUnit *getParentUnit() const;
+
 	public:
 		// Compilation stages
-		void expand(SdlCompilationUnit *unit);
-		void resolveDefinitions(SdlCompilationUnit *unit);
-		void checkReferences(SdlCompilationUnit *unit, SdlParserStructure *inputContext = nullptr);
-		void validate(SdlCompilationUnit *unit);
+		void expand();
+		void resolveDefinitions();
+		void checkReferences(SdlParserStructure *inputContext = nullptr);
+		void validate();
 
 	protected:
-		virtual void _expand(SdlCompilationUnit *unit);
-		virtual void _resolveDefinitions(SdlCompilationUnit *unit);
-		virtual void _validate(SdlCompilationUnit *unit);
-		virtual void _checkInstantiation(SdlCompilationUnit *unit);
+		virtual void _expand();
+		virtual void _resolveDefinitions();
+		virtual void _validate();
+		virtual void _checkInstantiation();
 
 	protected:
 		SdlParserStructure *m_parentScope;
@@ -66,15 +75,19 @@ namespace manta {
 
 		std::vector<SdlParserStructure *> m_components;
 
+		SdlCompilationUnit *m_parentUnit;
+
 	protected:
+		// Visibility
+		SdlVisibility m_defaultVisibility;
+		SdlVisibility m_visibility;
+
 		// Compilation flags
 		bool m_isExpanded;
 		bool m_definitionsResolved;
 		bool m_validated;
 
 		bool m_checkReferences;
-
-		bool m_externalAccess;
 	};
 
 } /* namespace manta */

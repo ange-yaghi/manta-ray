@@ -14,13 +14,6 @@ namespace manta {
 
 	class SdlNodeDefinition : public SdlParserStructure {
 	public:
-		enum SCOPE {
-			LOCAL,
-			EXPORT,
-			UNSPECIFIED
-		};
-
-	public:
 		SdlNodeDefinition(const SdlTokenInfo_string &name);
 		virtual ~SdlNodeDefinition();
 
@@ -36,9 +29,6 @@ namespace manta {
 
 		void setAttributeDefinitionList(SdlAttributeDefinitionList *definitions);
 		const SdlAttributeDefinitionList *getAttributeDefinitionList() const { return m_attributes; }
-
-		void setScope(SCOPE scope) { m_scope = scope; }
-		SCOPE getScope() const { return m_scope; }
 
 		void setScopeToken(const SdlTokenInfo_string &token);
 		const SdlTokenInfo *getScopeToken() const { return &m_scopeToken; }
@@ -60,7 +50,6 @@ namespace manta {
 		SdlNodeList *m_body;
 
 		SdlTokenInfo_string m_scopeToken;
-		SCOPE m_scope;
 
 		// Resolution stage
 	public:
@@ -69,7 +58,7 @@ namespace manta {
 
 		// Validation stage
 	protected:
-		virtual void _validate(SdlCompilationUnit *unit);
+		virtual void _validate();
 	};
 
 } /* namespace manta */

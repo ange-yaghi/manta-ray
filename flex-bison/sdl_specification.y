@@ -25,6 +25,7 @@
 	#include <sdl_attribute_definition_list.h>
 	#include <sdl_compilation_error.h>
 	#include <sdl_structure_list.h>
+	#include <sdl_visibility.h>
 
 	#include <string>
 
@@ -76,6 +77,7 @@
 %token END 0
 %token <manta::SdlTokenInfo_string> CHAR
 %token <manta::SdlTokenInfo_string> IMPORT
+%token <manta::SdlTokenInfo_string> AS
 %token <manta::SdlTokenInfo_string> NODE
 %token <manta::SdlTokenInfo_string> DEFAULT
 %token <manta::SdlTokenInfo_string> INPUT
@@ -87,8 +89,9 @@
 %token <manta::SdlTokenInfo_string> STRING
 %token <manta::SdlTokenInfo_string> DECORATOR
 %token <manta::SdlTokenInfo_string> PUBLIC
-%token <manta::SdlTokenInfo_string> HIDDEN
+%token <manta::SdlTokenInfo_string> PRIVATE
 %token <manta::SdlTokenInfo_string> POINTER
+%token <manta::SdlTokenInfo_string> NAMESPACE_POINTER
 %token <manta::SdlTokenInfo_string> UNRECOGNIZED
 %token <manta::SdlTokenInfo_string> OPERATOR
 
@@ -107,6 +110,8 @@
 %token <manta::SdlTokenInfo_string> '.'
 
 %type <manta::SdlTokenInfo_string> standard_operator;
+%type <manta::SdlTokenInfo_string> type_name;
+%type <manta::SdlTokenInfoSet<std::string, 2>> type_name_namespace;
 %type <manta::SdlNode *> node;
 %type <manta::SdlNodeList *> node_list;
 %type <manta::SdlAttributeList *> attribute_list;
@@ -123,6 +128,7 @@
 %type <manta::SdlValue *> primary_exp;
 %type <manta::SdlImportStatement *> import_statement;
 %type <manta::SdlImportStatement *> import_statement_visibility;
+%type <manta::SdlImportStatement *> import_statement_short_name;
 %type <manta::SdlTokenInfo_string> string;
 
 %type <manta::SdlNodeDefinition *> node_name;
@@ -159,7 +165,7 @@ decorator_list
 
 statement
   : node ';'						{ driver.addNode($1); }
-  | import_statement_visibility		{ driver.addImportStatement($1); }
+  | import_statement_short_name		{ driver.addImportStatement($1); }
   | specific_node_definition ';'	{ driver.addNodeDefinition($1); }
   ;
 
@@ -170,23 +176,57 @@ statement_list
 
 import_statement
   : IMPORT string					{ $$ = new SdlImportStatement($2); }
-  | IMPORT LABEL					{ $$ = new SdlImportStatement($2); }
+  | IMPORT LABEL					{ 
+										$$ = new SdlImportStatement($2); 
+
+										/* The name is a valid label so it can be used as a short name */
+										$$->setShortName($2); 
+									}
   ;
 
 import_statement_visibility
-  : PUBLIC import_statement			{ $$ = $2; }
-  | HIDDEN import_statement			{ $$ = $2; }
-  | import_statement				{ $$ = $1; }
+  : PUBLIC import_statement			{ $$ = $2; $$->setVisibility(SdlVisibility::PUBLIC); }
+  | PRIVATE import_statement		{ $$ = $2; $$->setVisibility(SdlVisibility::PRIVATE); }
+  | import_statement				{ $$ = $1; $$->setVisibility(SdlVisibility::DEFAULT); }
+  ;
+
+import_statement_short_name
+  : import_statement_visibility AS LABEL	{ $$ = $1; $$->setShortName($3); }
+  | import_statement_visibility				{ $$ = $1; }
+  ;
+
+type_name
+  : LABEL							{ $$ = $1; }
+  | OPERATOR standard_operator		{
+										SdlTokenInfo_string info = $1;
+										info.combine(&$2);
+										info.data = std::string("operator") + $2.data;
+										$$ = info;										
+									}
+  ;
+
+type_name_namespace
+  : type_name							{ 
+											SdlTokenInfoSet<std::string, 2> set; 
+											set.data[1] = $1; 
+											$$ = set; 
+										}
+  | LABEL NAMESPACE_POINTER type_name	{ 
+											SdlTokenInfoSet<std::string, 2> set; 
+											set.data[0] = $1; 
+											set.data[1] = $3; 
+											$$ = set; 
+										}
+  | NAMESPACE_POINTER type_name			{ 
+											SdlTokenInfoSet<std::string, 2> set; 
+											set.data[0].specified = true; 
+											set.data[1] = $2; 
+											$$ = set; 
+										}
   ;
 
 node
-  : LABEL LABEL connection_block						{ $$ = new SdlNode($1, $2, $3); }
-  | OPERATOR standard_operator LABEL connection_block	{ 
-															SdlTokenInfo_string info = $1;
-															info.combine(&$2);
-															info.data = std::string("operator") + $2.data;
-															$$ = new SdlNode(info, $3, $4);
-														}
+  : type_name_namespace LABEL connection_block			{ $$ = new SdlNode($1.data[1], $2, $3, $1.data[0]); }
   ;
 
 node_list
@@ -239,10 +279,10 @@ node_definition
 
 specific_node_definition
   : node_definition										{ $$ = $1; }
-  | HIDDEN node_definition								{ 
+  | PRIVATE node_definition								{ 
 															if ($2 != nullptr) {
 																$$ = $2; 
-																$$->setScope(SdlNodeDefinition::LOCAL); 
+																$$->setVisibility(SdlVisibility::PRIVATE); 
 																$$->setScopeToken($1);
 															}
 															else $$ = nullptr;
@@ -250,7 +290,7 @@ specific_node_definition
   | PUBLIC node_definition								{ 
 															if ($2 != nullptr) {
 																$$ = $2;
-																$$->setScope(SdlNodeDefinition::EXPORT);
+																$$->setVisibility(SdlVisibility::PUBLIC);
 																$$->setScopeToken($1);
 															}
 															else $$ = nullptr;
@@ -287,7 +327,7 @@ documented_port_definition
   ;
 
 inline_node
-  : LABEL connection_block			{ $$ = new SdlNode($1, $2); }
+  : type_name_namespace connection_block	{ $$ = new SdlNode($1.data[1], $2, $1.data[0]); }
   ;
 
 connection_block 

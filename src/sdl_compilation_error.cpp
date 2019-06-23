@@ -45,3 +45,5 @@ ERR(BuiltinOutputWithDefinition) =
 								{ "V", "0051", "Built-in output given a definition" };
 ERR(InputSpecifiedMultipleTimesPositional) =
 								{ "V", "0011", "Input specified multiple times by positional" };
+ERR(MultipleDefinitionsWithSameName) =
+								{ "V", "0060", "Multiple definitions with the same name" };

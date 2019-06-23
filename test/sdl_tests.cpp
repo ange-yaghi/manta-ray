@@ -267,7 +267,7 @@ TEST(SdlTests, SdlNodeDefinitionTest) {
 	SdlNodeDefinition *nodeDef = parser.getNodeDefinition(0);
 	EXPECT_EQ(nodeDef->getName(), "NewNode");
 	EXPECT_EQ(nodeDef->isBuiltin(), false);
-	EXPECT_EQ(nodeDef->getScope(), SdlNodeDefinition::EXPORT);
+	EXPECT_EQ(nodeDef->getVisibility(), SdlVisibility::PUBLIC);
 
 	const SdlAttributeDefinitionList *definitions =
 		nodeDef->getAttributeDefinitionList();
@@ -285,7 +285,7 @@ TEST(SdlTests, SdlNodeBuiltinTest) {
 	EXPECT_EQ(nodeDef->getBuiltinName(), "BuiltinNode");
 	EXPECT_EQ(nodeDef->getName(), "NewNode");
 	EXPECT_EQ(nodeDef->isBuiltin(), true);
-	EXPECT_EQ(nodeDef->getScope(), SdlNodeDefinition::EXPORT);
+	EXPECT_EQ(nodeDef->getVisibility(), SdlVisibility::PUBLIC);
 
 	const SdlAttributeDefinitionList *definitions = 
 		nodeDef->getAttributeDefinitionList();
@@ -403,6 +403,10 @@ TEST(SdlTests, SdlCompilerTest) {
 TEST(SdlTests, SdlDependencyTreeTest) {
 	SdlCompiler compiler;
 	SdlCompilationUnit *unit = compiler.compile(SDL_TEST_FILES "dependency_tree.mr");
+
+	EXPECT_NE(unit, nullptr);
+	const SdlErrorList *errors = compiler.getErrorList();
+	EXPECT_EQ(errors->getErrorCount(), 0);
 
 	int dependencyCount = unit->getDependencyCount();
 	EXPECT_EQ(dependencyCount, 2);
@@ -667,4 +671,47 @@ TEST(SdlTests, SdlOperationDefinitionTest) {
 
 	// Expect no errors
 	EXPECT_EQ(errors->getErrorCount(), 0);
+}
+
+TEST(SdlTests, SdlVisibilityTest1) {
+	SdlCompiler compiler;
+	SdlCompilationUnit *unit = compiler.compile(SDL_TEST_FILES "/visibility-tests/visibility_test_1.mr");
+	EXPECT_NE(unit, nullptr);
+
+	const SdlErrorList *errors = compiler.getErrorList();
+
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedNodeType, 3));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedNodeType, 4));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedNodeType, 5));
+
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedNodeType, 8));
+
+	EXPECT_EQ(errors->getErrorCount(), 4);
+}
+
+TEST(SdlTests, SdlVisibilityTest2) {
+	SdlCompiler compiler;
+	SdlCompilationUnit *unit = compiler.compile(SDL_TEST_FILES "/visibility-tests/visibility_test_2.mr");
+	EXPECT_NE(unit, nullptr);
+
+	const SdlErrorList *errors = compiler.getErrorList();
+
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedMember, 13));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedNodeType, 15));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedMember, 17));
+
+	EXPECT_EQ(errors->getErrorCount(), 3);
+}
+
+TEST(SdlTests, SdlDuplicateNodeDefinitionTest) {
+	SdlCompiler compiler;
+	SdlCompilationUnit *unit = compiler.compile(SDL_TEST_FILES "duplicate_node_definition.mr");
+	EXPECT_NE(unit, nullptr);
+
+	const SdlErrorList *errors = compiler.getErrorList();
+
+	EXPECT_TRUE(findError(errors, SdlErrorCode::MultipleDefinitionsWithSameName, 1));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::MultipleDefinitionsWithSameName, 6));
+
+	EXPECT_EQ(errors->getErrorCount(), 2);
 }

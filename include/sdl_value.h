@@ -15,7 +15,9 @@ namespace manta {
 			CONSTANT_STRING,
 			CONSTANT_LABEL,
 			CONSTANT_BOOL,
+
 			BINARY_OPERATION,
+
 			NODE_REF
 		};
 

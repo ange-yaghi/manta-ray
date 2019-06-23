@@ -10,11 +10,15 @@ namespace manta {
 		SdlTokenInfo(int lineStart, int lineEnd, int colStart, int colEnd) :
 			lineStart(lineStart), lineEnd(lineEnd), colStart(colStart), colEnd(colEnd) {
 			valid = true;
+			specified = true;
+			empty = false;
 		}
 
 		SdlTokenInfo() :
 			lineStart(INT_MAX), lineEnd(-1), colStart(INT_MAX), colEnd(-1) {
 			valid = true;
+			specified = false;
+			empty = true;
 		}
 
 		~SdlTokenInfo() {
@@ -26,6 +30,8 @@ namespace manta {
 		int colStart;
 		int colEnd;
 		bool valid;
+		bool empty;
+		bool specified;
 
 		void combine(const SdlTokenInfo *info) {
 			valid = valid && info->valid;
@@ -78,6 +84,19 @@ namespace manta {
 		}
 
 		T data;
+	};
+
+	template <typename T, int size>
+	struct SdlTokenInfoSet {
+		SdlTokenInfoSet() {
+			/* void */
+		}
+
+		~SdlTokenInfoSet() {
+			/* void */
+		}
+
+		T_SdlTokenInfo<T> data[size];
 	};
 
 	typedef T_SdlTokenInfo<int> SdlTokenInfo_int;

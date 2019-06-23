@@ -47,12 +47,13 @@ H				[a-fA-F0-9]
 %}
 
 "import"		{ DEFAULT_BUILD(location); return (token::IMPORT); }
+"as"			{ DEFAULT_BUILD(location); return (token::AS); }
 "input"			{ DEFAULT_BUILD(location); return (token::INPUT); }
 "output"		{ DEFAULT_BUILD(location); return (token::OUTPUT); }
 "default"		{ DEFAULT_BUILD(location); return (token::DEFAULT); }
 "node"			{ DEFAULT_BUILD(location); return (token::NODE); }
 "public"		{ DEFAULT_BUILD(location); return (token::PUBLIC); }
-"hidden"		{ DEFAULT_BUILD(location); return (token::HIDDEN); }
+"private"		{ DEFAULT_BUILD(location); return (token::PRIVATE); }
 "operator"		{ DEFAULT_BUILD(location); return (token::OPERATOR); }
 "@"				{ DEFAULT_BUILD(location); return (token::DECORATOR); }
 
@@ -119,6 +120,7 @@ H				[a-fA-F0-9]
 "-"				{ DEFAULT_BUILD(location); return ('-'); }
 
 "=>"			{ DEFAULT_BUILD(location); return (token::POINTER); }
+"::"			{ DEFAULT_BUILD(location); return (token::NAMESPACE_POINTER); }
 "="				{ DEFAULT_BUILD(location); return ('='); }
 
 [ \t\v\n\f]		{ }

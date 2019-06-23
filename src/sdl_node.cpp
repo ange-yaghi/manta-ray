@@ -13,24 +13,30 @@ manta::SdlNode::SdlNode() {
 	/* void */
 }
 
-manta::SdlNode::SdlNode(const SdlTokenInfo_string &type, const SdlTokenInfo_string &name, SdlAttributeList *attributes) {
+manta::SdlNode::SdlNode(const SdlTokenInfo_string &type, const SdlTokenInfo_string &name, 
+			SdlAttributeList *attributes, const SdlTokenInfo_string &library) {
 	m_type = type;
 	m_name = name;
 	m_attributes = attributes;
+	m_library = library;
 
 	registerToken(&type);
 	registerToken(&name);
+	registerToken(&library);
 	registerComponent(attributes);
 
 	m_definition = nullptr;
 }
 
-manta::SdlNode::SdlNode(const SdlTokenInfo_string &type, SdlAttributeList *attributes) {
+manta::SdlNode::SdlNode(const SdlTokenInfo_string &type, SdlAttributeList *attributes,
+			const SdlTokenInfo_string &library) {
 	m_type = type;
 	m_name = SdlTokenInfo_string("");
 	m_attributes = attributes;
+	m_library = library;
 
 	registerToken(&type);
+	registerToken(&library);
 	registerComponent(attributes);
 }
 
@@ -83,16 +89,18 @@ manta::SdlParserStructure *manta::SdlNode::resolveLocalName(const std::string &n
 	SdlParserStructure *attribute = getAttribute(name);
 	if (attribute != nullptr) return attribute;
 	
-	return m_definition->resolveLocalName(name);
+	if (m_definition != nullptr) return m_definition->resolveLocalName(name);
+	else return nullptr;
 }
 
-void manta::SdlNode::_resolveDefinitions(SdlCompilationUnit *unit) {
-	resolveNodeDefinition(unit);
-	resolveAttributeDefinitions(unit);
+void manta::SdlNode::_resolveDefinitions() {
+	resolveNodeDefinition();
+	resolveAttributeDefinitions();
 }
 
-void manta::SdlNode::_validate(SdlCompilationUnit *unit) {
+void manta::SdlNode::_validate() {
 	SdlAttributeList *attributes = m_attributes;
+	SdlCompilationUnit *unit = getParentUnit();
 
 	if (attributes == nullptr) {
 		// There was a syntax error before this step
@@ -150,24 +158,38 @@ void manta::SdlNode::_validate(SdlCompilationUnit *unit) {
 	}
 }
 
-void manta::SdlNode::_checkInstantiation(SdlCompilationUnit *unit) {
+void manta::SdlNode::_checkInstantiation() {
 	// Check all references relating to the connection of inputs from this
 	// node to the actual definition.
 	if (m_definition != nullptr) {
-		m_definition->checkReferences(unit, this);
+		m_definition->checkReferences(this);
 	}
 }
 
-void manta::SdlNode::resolveNodeDefinition(SdlCompilationUnit *unit) {
+void manta::SdlNode::resolveNodeDefinition() {
 	int definitionCount = 0;
-	SdlNodeDefinition *definition = unit->resolveNodeDefinition(this, &definitionCount);
+	SdlNodeDefinition *definition = nullptr;
+	SdlCompilationUnit *unit = getParentUnit();
+
+	if (m_library.specified) {
+		if (!m_library.data.empty()) {
+			definition = unit->resolveNodeDefinition(this, &definitionCount, m_library.data);
+		}
+		else {
+			// Adding an empty library name means that the local scope must strictly be used
+			definition = unit->resolveLocalNodeDefinition(getType(), &definitionCount);
+		}
+	}
+	else {
+		definition = unit->resolveNodeDefinition(this, &definitionCount, "");
+	}
 
 	if (definitionCount > 0) {
 		// TODO: log a warning when a node type is ambiguous
 	}
 
 	if (definition == nullptr) {
-		unit->addCompilationError(new SdlCompilationError(getNameToken(), 
+		unit->addCompilationError(new SdlCompilationError(getTypeToken(), 
 			SdlErrorCode::UndefinedNodeType));
 	}
 
@@ -176,7 +198,7 @@ void manta::SdlNode::resolveNodeDefinition(SdlCompilationUnit *unit) {
 	}
 }
 
-void manta::SdlNode::resolveAttributeDefinitions(SdlCompilationUnit *unit) {
+void manta::SdlNode::resolveAttributeDefinitions() {
 	if (m_definition == nullptr) {
 		// The definition wasn't found so resolving any attributes doesn't make sense
 		return;
@@ -186,6 +208,8 @@ void manta::SdlNode::resolveAttributeDefinitions(SdlCompilationUnit *unit) {
 		// There was a compilation error in the attributes section, so this step can be skipped
 		return;
 	}
+
+	SdlCompilationUnit *unit = getParentUnit();
 
 	int attributeCount = m_attributes->getAttributeCount();
 	for (int i = 0; i < attributeCount; i++) {
