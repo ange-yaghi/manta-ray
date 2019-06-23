@@ -50,6 +50,13 @@ manta::SdlParserStructure *manta::SdlBinaryOperator::getImmediateReference(SdlPa
 				resolvedLeft = inputConnection;
 			}
 		}
+
+		// No sense in checking an input point for a member. If this is called it means that
+		// the input in question has no default value and has returned itself as the object
+		// its referencing.
+		if (resolvedLeft->isInputPoint()) {
+			return nullptr;
+		}
 		
 		SdlValueLabel *labelConstant = static_cast<SdlValueLabel *>(m_rightOperand);
 		SdlParserStructure *publicAttribute = resolvedLeft->resolveLocalName(labelConstant->getValue());

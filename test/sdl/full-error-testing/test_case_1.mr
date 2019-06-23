@@ -1,17 +1,17 @@
-node AddNode: {
+hidden node AddNode: {
     input p1;
     input p2;
     default output out: p1 + p2;
 };
 
-node AddMulNode: {
+hidden node AddMulNode: {
     input p1;
     input p2;
     input p3;
     default output out: AddNode(p1, p2) * p3;
 };
 
-node BrokenNodeDef###: {
+hidden node BrokenNodeDef###: {
     input a;
     input b;
     default output out: a - b;

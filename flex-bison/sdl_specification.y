@@ -86,10 +86,11 @@
 %token <manta::SdlTokenInfo_bool>	BOOL
 %token <manta::SdlTokenInfo_string> STRING
 %token <manta::SdlTokenInfo_string> DECORATOR
-%token <manta::SdlTokenInfo_string> LOCAL
-%token <manta::SdlTokenInfo_string> EXPORT
+%token <manta::SdlTokenInfo_string> PUBLIC
+%token <manta::SdlTokenInfo_string> HIDDEN
 %token <manta::SdlTokenInfo_string> POINTER
 %token <manta::SdlTokenInfo_string> UNRECOGNIZED
+%token <manta::SdlTokenInfo_string> OPERATOR
 
 %token <manta::SdlTokenInfo_string> '='
 %token <manta::SdlTokenInfo_string> '+'
@@ -105,6 +106,7 @@
 %token <manta::SdlTokenInfo_string> ','
 %token <manta::SdlTokenInfo_string> '.'
 
+%type <manta::SdlTokenInfo_string> standard_operator;
 %type <manta::SdlNode *> node;
 %type <manta::SdlNodeList *> node_list;
 %type <manta::SdlAttributeList *> attribute_list;
@@ -120,6 +122,7 @@
 %type <manta::SdlValue *> add_exp;
 %type <manta::SdlValue *> primary_exp;
 %type <manta::SdlImportStatement *> import_statement;
+%type <manta::SdlImportStatement *> import_statement_visibility;
 %type <manta::SdlTokenInfo_string> string;
 
 %type <manta::SdlNodeDefinition *> node_name;
@@ -156,7 +159,7 @@ decorator_list
 
 statement
   : node ';'						{ driver.addNode($1); }
-  | import_statement				{ driver.addImportStatement($1); }
+  | import_statement_visibility		{ driver.addImportStatement($1); }
   | specific_node_definition ';'	{ driver.addNodeDefinition($1); }
   ;
 
@@ -170,8 +173,20 @@ import_statement
   | IMPORT LABEL					{ $$ = new SdlImportStatement($2); }
   ;
 
+import_statement_visibility
+  : PUBLIC import_statement			{ $$ = $2; }
+  | HIDDEN import_statement			{ $$ = $2; }
+  | import_statement				{ $$ = $1; }
+  ;
+
 node
   : LABEL LABEL connection_block						{ $$ = new SdlNode($1, $2, $3); }
+  | OPERATOR standard_operator LABEL connection_block	{ 
+															SdlTokenInfo_string info = $1;
+															info.combine(&$2);
+															info.data = std::string("operator") + $2.data;
+															$$ = new SdlNode(info, $3, $4);
+														}
   ;
 
 node_list
@@ -185,8 +200,21 @@ node_list
 														}
   ;
 
+standard_operator
+  : '-'													{ $$ = $1; }
+  | '+'													{ $$ = $1; }
+  | '/'													{ $$ = $1; }
+  | '*'													{ $$ = $1; }
+  ;
+
 node_name
   : NODE LABEL											{ $$ = new SdlNodeDefinition($2); }
+  | NODE OPERATOR standard_operator						{
+															SdlTokenInfo_string info = $2;
+															info.combine(&$3);
+															info.data = std::string("operator") + $3.data;
+															$$ = new SdlNodeDefinition(info);
+														}
   ;
 
 node_shadow
@@ -211,15 +239,21 @@ node_definition
 
 specific_node_definition
   : node_definition										{ $$ = $1; }
-  | LOCAL node_definition								{ 
-															$$ = $2; 
-															$$->setScope(SdlNodeDefinition::LOCAL); 
-															$$->setScopeToken($1); 
+  | HIDDEN node_definition								{ 
+															if ($2 != nullptr) {
+																$$ = $2; 
+																$$->setScope(SdlNodeDefinition::LOCAL); 
+																$$->setScopeToken($1);
+															}
+															else $$ = nullptr;
 														}
-  | EXPORT node_definition								{ 
-															$$ = $2;
-															$$->setScope(SdlNodeDefinition::EXPORT);
-															$$->setScopeToken($1);
+  | PUBLIC node_definition								{ 
+															if ($2 != nullptr) {
+																$$ = $2;
+																$$->setScope(SdlNodeDefinition::EXPORT);
+																$$->setScopeToken($1);
+															}
+															else $$ = nullptr;
 														}
   ;
 

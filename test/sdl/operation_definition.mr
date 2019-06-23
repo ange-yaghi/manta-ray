@@ -1,0 +1,10 @@
+hidden node operator+ => __builtin_add: {
+    default input __in0;
+    default input __in1;
+    default output __out0;
+};
+
+operator+ test_node (
+    2,
+    2
+);

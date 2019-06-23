@@ -1,4 +1,4 @@
-import example_dependency
+hidden import example_dependency
 
 node NewNode1: {
     input A;

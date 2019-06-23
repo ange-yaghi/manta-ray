@@ -1,14 +1,14 @@
 @author = "Ange Yaghi"
 @date = "2019-05-30"
 
-import "test.sdl"
-import test
+hidden import "test.sdl"
+hidden import test
 
 /* Multiline test comment.
  * Second line.
  */
 
-export node NewNode => BuiltinNode:
+public node NewNode => BuiltinNode:
     @author = "Ange Yaghi"
     @comment = "This is just a test node"
                "Check out this multiline comment"

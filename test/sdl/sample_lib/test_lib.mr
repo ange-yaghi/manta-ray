@@ -1,7 +1,7 @@
 @author = "Ange Yaghi"
 @date = "2019-06-11"
 
-export node Add:
+public node Add:
     @author = "Ange Yaghi"
     @comment = "Hypothetical 'add' implementation"
 {
@@ -10,7 +10,7 @@ export node Add:
     default output C: A + B;
 };
 
-export node SampleNode:
+public node SampleNode:
     @author = "Ange Yaghi"
     @comment = "This is just a test node"
 {

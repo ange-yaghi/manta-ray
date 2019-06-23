@@ -51,8 +51,9 @@ H				[a-fA-F0-9]
 "output"		{ DEFAULT_BUILD(location); return (token::OUTPUT); }
 "default"		{ DEFAULT_BUILD(location); return (token::DEFAULT); }
 "node"			{ DEFAULT_BUILD(location); return (token::NODE); }
-"export"		{ DEFAULT_BUILD(location); return (token::EXPORT); }
-"local"			{ DEFAULT_BUILD(location); return (token::LOCAL); }
+"public"		{ DEFAULT_BUILD(location); return (token::PUBLIC); }
+"hidden"		{ DEFAULT_BUILD(location); return (token::HIDDEN); }
+"operator"		{ DEFAULT_BUILD(location); return (token::OPERATOR); }
 "@"				{ DEFAULT_BUILD(location); return (token::DECORATOR); }
 
 "true"			{

@@ -1,5 +1,5 @@
-import "test.sdl"
-import test
+hidden import "test.sdl"
+hidden import test
 
 SampleNode node1 (
 	eq: a + (b / c)
