@@ -9,6 +9,9 @@
 manta::SdlNodeDefinition::SdlNodeDefinition(const SdlTokenInfo_string &name) {
 	m_name = name;
 	registerToken(&name);
+
+	// Node definitions are public by default
+	setDefaultVisibility(SdlVisibility::PUBLIC);
 }
 
 manta::SdlNodeDefinition::~SdlNodeDefinition() {
@@ -102,7 +105,9 @@ manta::SdlParserStructure *manta::SdlNodeDefinition::resolveLocalName(const std:
 	return nullptr;
 }
 
-void manta::SdlNodeDefinition::_validate(SdlCompilationUnit *unit) {
+void manta::SdlNodeDefinition::_validate() {
+	SdlCompilationUnit *unit = getParentUnit();
+
 	// Check that no symbol is used more than once
 	if (m_attributes != nullptr) {
 		int attributeCount = m_attributes->getDefinitionCount();

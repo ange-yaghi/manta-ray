@@ -1,0 +1,16 @@
+@doc = "This is intended to be a standard library of some sort"
+
+private import color
+
+private node Converter:
+    @doc = "Converts scalar quantity to a color"
+{
+    input s: 0.0;
+    output rgb: color::Color(s, s, s);
+};
+
+public node Gray:
+    @doc = "Simple node to generate gray"
+{
+    output rgb: ::Converter(0.5);
+};

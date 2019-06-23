@@ -82,12 +82,6 @@ namespace manta {
 			if (err != nullptr) *err = nullptr;
 			return m_value;
 		}
-
-		// Resolution stage
-	protected:
-		virtual void _resolveReferences(SdlCompilationUnit *unit) {
-			/* void */
-		}
 	};
 
 	typedef SdlValueConstant<int, SdlValue::CONSTANT_INT> SdlValueInt;

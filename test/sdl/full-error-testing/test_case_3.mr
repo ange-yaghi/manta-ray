@@ -1,11 +1,11 @@
-hidden node AddNode: {
+private node AddNode: {
     input p1;
     input p2;
     default output out: p1 + p2;
     output boom: test_label$; // UnidentifiedToken;
 };
 
-hidden node AddMulNode: {
+private node AddMulNode: {
     input p1;
     input p2;
     input p3;
@@ -16,7 +16,7 @@ hidden node AddMulNode: {
     output bad_access: AddNode(p1, p2)."weird"; // UnexpectedToken
 };
 
-hidden node BrokenNodeDef: {
+private node BrokenNodeDef: {
     input a;
     input b;
     default output out: a - b;

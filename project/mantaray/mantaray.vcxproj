@@ -158,6 +158,7 @@
     <ClInclude Include="..\..\include\geometry.h" />
     <ClInclude Include="..\..\include\ggx_distribution.h" />
     <ClInclude Include="..\..\include\grid_sampler.h" />
+    <ClInclude Include="..\..\include\sdl_visibility.h" />
     <ClInclude Include="..\..\include\image_byte_buffer.h" />
     <ClInclude Include="..\..\include\image_file_node.h" />
     <ClInclude Include="..\..\include\image_handling.h" />

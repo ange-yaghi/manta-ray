@@ -57,6 +57,7 @@ manta::SdlCompilationUnit *manta::SdlCompiler::build(const SdlPath &scriptPath) 
 
 			// Recursively build
 			SdlCompilationUnit *importUnit = build(fullImportPath);
+			s->setUnit(importUnit);
 			if (importUnit == nullptr) {
 				newUnit->addCompilationError(new SdlCompilationError(*s->getSummaryToken(),
 					SdlErrorCode::FileOpenFailed));
@@ -115,7 +116,7 @@ void manta::SdlCompiler::expand() {
 	int unitCount = getUnitCount();
 	for (int i = 0; i < unitCount; i++) {
 		SdlCompilationUnit *unit = m_units[i];
-		unit->expand(unit);
+		unit->expand();
 	}
 }
 
@@ -123,8 +124,8 @@ void manta::SdlCompiler::resolve() {
 	int unitCount = getUnitCount();
 	for (int i = 0; i < unitCount; i++) {
 		SdlCompilationUnit *unit = m_units[i];
-		unit->resolveDefinitions(unit);
-		unit->checkReferences(unit);
+		unit->resolveDefinitions();
+		unit->checkReferences();
 	}
 }
 
@@ -132,6 +133,6 @@ void manta::SdlCompiler::validate() {
 	int unitCount = getUnitCount();
 	for (int i = 0; i < unitCount; i++) {
 		SdlCompilationUnit *unit = m_units[i];
-		unit->validate(unit);
+		unit->validate();
 	}
 }

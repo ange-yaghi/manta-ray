@@ -9,7 +9,8 @@ manta::SdlParserStructure::SdlParserStructure() {
 	m_definitionsResolved = false;
 	m_validated = false;
 
-	m_externalAccess = false;
+	m_visibility = SdlVisibility::DEFAULT;
+	m_defaultVisibility = SdlVisibility::PRIVATE;
 }
 
 manta::SdlParserStructure::~SdlParserStructure() {
@@ -50,25 +51,25 @@ manta::SdlParserStructure *manta::SdlParserStructure::getReference(SdlParserStru
 	else return this;
 }
 
-void manta::SdlParserStructure::resolveDefinitions(SdlCompilationUnit *unit) {
+void manta::SdlParserStructure::resolveDefinitions() {
 	if (m_definitionsResolved) return;
 
 	// Resolve components
 	int componentCount = getComponentCount();
 	for (int i = 0; i < componentCount; i++) {
-		m_components[i]->resolveDefinitions(unit);
+		m_components[i]->resolveDefinitions();
 	}
 
-	_resolveDefinitions(unit);
+	_resolveDefinitions();
 
 	m_definitionsResolved = true;
 }
 
-void manta::SdlParserStructure::checkReferences(SdlCompilationUnit *unit, SdlParserStructure *inputContext) {
+void manta::SdlParserStructure::checkReferences(SdlParserStructure *inputContext) {
 	// Check components
 	int componentCount = getComponentCount();
 	for (int i = 0; i < componentCount; i++) {
-		m_components[i]->checkReferences(unit, inputContext);
+		m_components[i]->checkReferences(inputContext);
 	}
 
 	if (m_checkReferences) {
@@ -76,37 +77,37 @@ void manta::SdlParserStructure::checkReferences(SdlCompilationUnit *unit, SdlPar
 		SdlParserStructure *reference = getReference(inputContext, &err);
 
 		if (err != nullptr) {
-			unit->addCompilationError(err);
+			getParentUnit()->addCompilationError(err);
 		}
 	}
 
-	_checkInstantiation(unit);
+	_checkInstantiation();
 }
 
-void manta::SdlParserStructure::validate(SdlCompilationUnit *unit) {
+void manta::SdlParserStructure::validate() {
 	if (m_validated) return;
 
 	// Validate components
 	int componentCount = getComponentCount();
 	for (int i = 0; i < componentCount; i++) {
-		m_components[i]->validate(unit);
+		m_components[i]->validate();
 	}
 
-	_validate(unit);
+	_validate();
 
 	m_validated = true;
 }
 
-void manta::SdlParserStructure::expand(SdlCompilationUnit *unit) {
+void manta::SdlParserStructure::expand() {
 	if (m_isExpanded) return;
 
 	// Expand components
 	int componentCount = getComponentCount();
 	for (int i = 0; i < componentCount; i++) {
-		m_components[i]->expand(unit);
+		m_components[i]->expand();
 	}
 
-	_expand(unit);
+	_expand();
 
 	if (m_expansion != nullptr) {
 		// If this structure is found to result in an expanded form,
@@ -120,22 +121,32 @@ void manta::SdlParserStructure::expand(SdlCompilationUnit *unit) {
 	m_isExpanded = true;
 }
 
-void manta::SdlParserStructure::_validate(SdlCompilationUnit *unit) {
+void manta::SdlParserStructure::_validate() {
 	/* void */
 }
 
-void manta::SdlParserStructure::_checkInstantiation(SdlCompilationUnit *unit) {
+void manta::SdlParserStructure::_checkInstantiation() {
 	/* void */
 }
 
-void manta::SdlParserStructure::_resolveDefinitions(SdlCompilationUnit *unit) {
+void manta::SdlParserStructure::_resolveDefinitions() {
 	/* void */
 }
 
-void manta::SdlParserStructure::_expand(SdlCompilationUnit *unit) {
+void manta::SdlParserStructure::_expand() {
 	m_expansion = nullptr;
 }
 
 manta::SdlParserStructure *manta::SdlParserStructure::resolveLocalName(const std::string &name) const {
 	return nullptr;
+}
+
+bool manta::SdlParserStructure::allowsExternalAccess() const {
+	SdlVisibility visibility = (m_visibility == SdlVisibility::DEFAULT) ? m_defaultVisibility : m_visibility;
+	return visibility == SdlVisibility::PUBLIC;
+}
+
+manta::SdlCompilationUnit *manta::SdlParserStructure::getParentUnit() const {
+	if (m_parentUnit == nullptr) return m_parentScope->getParentUnit();
+	else return m_parentUnit;
 }

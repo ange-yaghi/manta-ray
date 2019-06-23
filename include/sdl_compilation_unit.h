@@ -69,7 +69,6 @@ namespace manta {
 	private:
 		ParseResult parseHelper(std::istream &stream, SdlCompilationUnit *topLevel = nullptr);
 
-		SdlCompilationUnit *m_topLevel = nullptr;
 		SdlParser *m_parser = nullptr;
 		SdlScanner *m_scanner = nullptr;
 
@@ -84,11 +83,13 @@ namespace manta {
 
 		// Resolution stage
 	public:
-		SdlNodeDefinition *resolveNodeDefinition(SdlNode *node, int *count, bool searchDependencies = true);
+		SdlNodeDefinition *resolveLocalNodeDefinition(const std::string &name, int *count, bool external = false);
+		SdlNodeDefinition *resolveNodeDefinition(SdlNode *node, int *count, 
+			const std::string &libraryName, bool external = false);
 
 		// Validation stage
 	protected:
-		virtual void _validate(SdlCompilationUnit *unit);
+		virtual void _validate();
 	};
 
 } /* namespace manta */

@@ -44,6 +44,7 @@ namespace manta {
 		extern const SdlErrorCode_struct OutputWithNoDefinition;
 		extern const SdlErrorCode_struct BuiltinOutputWithDefinition;
 		extern const SdlErrorCode_struct InputSpecifiedMultipleTimesPositional;
+		extern const SdlErrorCode_struct MultipleDefinitionsWithSameName;
 	};
 
 	class SdlCompilationError {

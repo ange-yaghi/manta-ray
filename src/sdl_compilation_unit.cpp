@@ -19,7 +19,8 @@ manta::SdlCompilationUnit::~SdlCompilationUnit() {
 	m_parser = nullptr;
 }
 
-manta::SdlCompilationUnit::ParseResult manta::SdlCompilationUnit::parseFile(const Path &filename, SdlCompilationUnit *topLevel) {
+manta::SdlCompilationUnit::ParseResult manta::SdlCompilationUnit::parseFile(const Path &filename, 
+																		SdlCompilationUnit *topLevel) {
 	m_path = filename;
 	
 	std::ifstream inFile(filename.toString());
@@ -30,12 +31,14 @@ manta::SdlCompilationUnit::ParseResult manta::SdlCompilationUnit::parseFile(cons
 	return parseHelper(inFile);
 }
 
-manta::SdlCompilationUnit::ParseResult manta::SdlCompilationUnit::parse(const char *sdl, SdlCompilationUnit *topLevel) {
+manta::SdlCompilationUnit::ParseResult manta::SdlCompilationUnit::parse(const char *sdl, 
+															SdlCompilationUnit *topLevel) {
 	std::istringstream sdlStream(sdl);
 	return parse(sdlStream);
 }
 
-manta::SdlCompilationUnit::ParseResult manta::SdlCompilationUnit::parse(std::istream &stream, SdlCompilationUnit *topLevel) {
+manta::SdlCompilationUnit::ParseResult manta::SdlCompilationUnit::parse(std::istream &stream, 
+																SdlCompilationUnit *topLevel) {
 	if (!stream.good() && stream.eof()) {
 		return IO_ERROR;
 	}
@@ -44,7 +47,7 @@ manta::SdlCompilationUnit::ParseResult manta::SdlCompilationUnit::parse(std::ist
 }
 
 manta::SdlCompilationUnit::ParseResult manta::SdlCompilationUnit::parseHelper(
-									std::istream &stream, SdlCompilationUnit *topLevel) {
+							std::istream &stream, SdlCompilationUnit *topLevel) {
 	delete m_scanner;
 	try {
 		m_scanner = new manta::SdlScanner(&stream);
@@ -71,28 +74,45 @@ manta::SdlCompilationUnit::ParseResult manta::SdlCompilationUnit::parseHelper(
 	}
 }
 
-manta::SdlNodeDefinition *manta::SdlCompilationUnit::resolveNodeDefinition(SdlNode *node, int *count, bool searchDependencies) {
+manta::SdlNodeDefinition *manta::SdlCompilationUnit::resolveNodeDefinition(SdlNode *node, int *count, 
+														const std::string &libraryName, bool external) {
 	*count = 0;
 	manta::SdlNodeDefinition *definition = nullptr;
 	std::string typeName = node->getType();
 
-	// First search local node definitions
-	int localNodeDefinitions = (int)m_nodeDefinitions.size();
-	for (int i = 0; i < localNodeDefinitions; i++) {
-		std::string defName = m_nodeDefinitions[i]->getName();
+	// First search local node definitions if a library is not specified
+	if (libraryName.empty()) {
+		int localCount = 0;
+		SdlNodeDefinition *localDefinition = resolveLocalNodeDefinition(node->getType(), &localCount, external);
+		(*count) += localCount;
 
-		if (defName == typeName) {
-			(*count)++;
-			if (definition == nullptr) definition = m_nodeDefinitions[i];
-		}
+		if (localDefinition != nullptr) return localDefinition;
 	}
 
 	// Search dependencies
-	if (searchDependencies) {
-		int dependencyCount = getDependencyCount();
-		for (int i = 0; i < dependencyCount; i++) {
-			int secondaryCount = 0;
-			SdlNodeDefinition *def = m_dependencies[i]->resolveNodeDefinition(node, &secondaryCount, false);
+	int dependencyCount = getImportStatementCount();
+	for (int i = 0; i < dependencyCount; i++) {
+		int secondaryCount = 0;
+		SdlImportStatement *importStatement = getImportStatement(i);
+
+		if (importStatement->getUnit() == nullptr) {
+			// This import statement already failed, skip it
+			continue;
+		}
+
+		if (	libraryName.empty() ||
+				(importStatement->hasShortName() && libraryName == importStatement->getShortName()))
+		{
+			if (external) {
+				// Check if the import statement is private or public
+				if (!importStatement->allowsExternalAccess()) {
+					continue;
+				}
+			}
+
+			// The external access flag must be set to true since the libraries are being accessed
+			// externally                                                                                         ----
+			SdlNodeDefinition *def = importStatement->getUnit()->resolveNodeDefinition(node, &secondaryCount, "", true);
 			if (def != nullptr) {
 				(*count) += secondaryCount;
 				if (definition == nullptr) definition = def;
@@ -103,15 +123,48 @@ manta::SdlNodeDefinition *manta::SdlCompilationUnit::resolveNodeDefinition(SdlNo
 	return definition;
 }
 
-void manta::SdlCompilationUnit::_validate(SdlCompilationUnit *unit) {
+manta::SdlNodeDefinition *manta::SdlCompilationUnit::resolveLocalNodeDefinition(const std::string &name, int *count, bool external) {
+	*count = 0;
+	manta::SdlNodeDefinition *definition = nullptr;
+	std::string typeName = name;
+
+	int localNodeDefinitions = (int)m_nodeDefinitions.size();
+	for (int i = 0; i < localNodeDefinitions; i++) {
+		SdlNodeDefinition *def = m_nodeDefinitions[i];
+		if (external && !def->allowsExternalAccess()) continue;
+
+		std::string defName = m_nodeDefinitions[i]->getName();
+
+		if (defName == typeName) {
+			(*count)++;
+			if (definition == nullptr) definition = m_nodeDefinitions[i];
+		}
+	}
+
+	return definition;
+}
+
+void manta::SdlCompilationUnit::_validate() {
 	int nodeCount = getNodeCount();
 	for (int i = 0; i < nodeCount; i++) {
 		SdlNode *node = m_nodes[i];
 		int count = countSymbolIncidence(node->getName());
 
 		if (count > 1) {
-			unit->addCompilationError(new SdlCompilationError(node->getNameToken(),
+			this->addCompilationError(new SdlCompilationError(node->getNameToken(),
 				SdlErrorCode::SymbolUsedMultipleTimes));
+		}
+	}
+
+	int definitionCount = getNodeDefinitionCount();
+	for (int i = 0; i < definitionCount; i++) {
+		SdlNodeDefinition *def = m_nodeDefinitions[i];
+		int count = 0;
+		resolveLocalNodeDefinition(def->getName(), &count);
+
+		if (count > 1) {
+			this->addCompilationError(new SdlCompilationError(*def->getNameToken(),
+				SdlErrorCode::MultipleDefinitionsWithSameName));
 		}
 	}
 }
@@ -120,6 +173,8 @@ void manta::SdlCompilationUnit::addNode(SdlNode *node) {
 	if (node != nullptr) {
 		m_nodes.push_back(node);
 		registerComponent(node);
+
+		node->setParentUnit(this);
 	}
 }
 
@@ -135,6 +190,8 @@ void manta::SdlCompilationUnit::addImportStatement(SdlImportStatement *statement
 	if (statement != nullptr) {
 		m_importStatements.push_back(statement);
 		registerComponent(statement);
+
+		statement->setParentUnit(this);
 	}
 }
 
@@ -146,6 +203,8 @@ void manta::SdlCompilationUnit::addNodeDefinition(SdlNodeDefinition *nodeDefinit
 	if (nodeDefinition != nullptr) {
 		m_nodeDefinitions.push_back(nodeDefinition);
 		registerComponent(nodeDefinition);
+
+		nodeDefinition->setParentUnit(this);
 	}
 }
 
@@ -165,7 +224,7 @@ manta::SdlParserStructure *manta::SdlCompilationUnit::resolveLocalName(const std
 	return nullptr;
 }
 
-int manta::SdlCompilationUnit::countSymbolIncidence(const std::string & name) const {
+int manta::SdlCompilationUnit::countSymbolIncidence(const std::string &name) const {
 	int count = 0;
 	int nodeCount = getNodeCount();
 	for (int i = 0; i < nodeCount; i++) {

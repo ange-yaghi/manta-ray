@@ -337,6 +337,9 @@
     <Filter Include="Source Files\sdl-parser\error-handling">
       <UniqueIdentifier>{1cad7f3d-1a8a-4e8a-b831-852c8ac885a9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\sdl-parser\common">
+      <UniqueIdentifier>{c7b58865-2620-42aa-b9ca-9b0914cb10b3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -1070,9 +1073,6 @@
     <ClInclude Include="..\..\include\sdl_compilation_unit.h">
       <Filter>Header Files\sdl-parser\unit</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\sdl_parser_structure.h">
-      <Filter>Header Files\sdl-parser\parser</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\sdl_node_definition.h">
       <Filter>Header Files\sdl-parser\parser</Filter>
     </ClInclude>
@@ -1111,6 +1111,12 @@
     </ClInclude>
     <ClInclude Include="..\..\include\sdl_input_connection.h">
       <Filter>Header Files\sdl-parser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_visibility.h">
+      <Filter>Header Files\sdl-parser\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_parser_structure.h">
+      <Filter>Header Files\sdl-parser\scanner</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

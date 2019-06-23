@@ -1,23 +1,23 @@
-hidden node CommonComponent: {
+private node CommonComponent: {
     default input in_message;
     default output out_message: in_message;
 };
 
-hidden node SomeNode: {
+private node SomeNode: {
     output attribute: "Hello world";
     output common: component;
 
     CommonComponent component("Some node here");
 };
 
-hidden node SomeOtherNode: {
+private node SomeOtherNode: {
     output other_attribute: "Hello other world";
     output common: component;
 
     CommonComponent component("Some other node here");
 };
 
-hidden node AttributeExtractor: {
+private node AttributeExtractor: {
     input n: SomeNode();
     input in_no_default;
     output attribute: n.attribute;
@@ -25,7 +25,8 @@ hidden node AttributeExtractor: {
     output other_attribute: in_no_default.other_attribute;
 };
 
-AttributeExtractor test_extractor (
+::AttributeExtractor test_extractor (
     n: SomeOtherNode(), // Kaboom
     in_no_default: SomeNode() // Kaboom
 );
+

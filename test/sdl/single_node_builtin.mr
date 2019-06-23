@@ -1,8 +1,8 @@
 @author = "Ange Yaghi"
 @date = "2019-05-30"
 
-hidden import "test.sdl"
-hidden import test
+private import "test.sdl"
+private import test
 
 /* Multiline test comment.
  * Second line.
