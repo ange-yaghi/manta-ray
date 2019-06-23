@@ -651,3 +651,20 @@ TEST(SdlTests, SdlInputConnectionTest) {
 
 	EXPECT_EQ(errors->getErrorCount(), 2);
 }
+
+TEST(SdlTests, SdlOperationDefinitionTest) {
+	SdlCompiler compiler;
+	SdlCompilationUnit *unit = compiler.compile(SDL_TEST_FILES "operation_definition.mr");
+	EXPECT_NE(unit, nullptr);
+
+	const SdlErrorList *errors = compiler.getErrorList();
+
+	SdlNode *node = unit->getNode(0);
+	EXPECT_EQ(node->getType(), "operator+");
+
+	SdlNodeDefinition *definition = unit->getNodeDefinition(0);
+	EXPECT_EQ(definition->getName(), "operator+");
+
+	// Expect no errors
+	EXPECT_EQ(errors->getErrorCount(), 0);
+}

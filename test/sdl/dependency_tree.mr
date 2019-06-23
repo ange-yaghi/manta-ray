@@ -1,5 +1,5 @@
-import "sample_lib/example_dependency"
-import "sample_lib/dependency_tree"
+public import "sample_lib/example_dependency"
+hidden import "sample_lib/dependency_tree"
 
 NewNode1 test(
     A: "Input"

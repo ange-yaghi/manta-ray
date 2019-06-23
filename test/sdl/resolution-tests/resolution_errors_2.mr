@@ -1,7 +1,7 @@
-local node EmptyNode: {
+hidden node EmptyNode: {
 };
 
-local node ProblemNode: {
+hidden node ProblemNode: {
     output test: 46; // SymbolUsedMultipleTimes
 
     FakeNode test( // SymbolUsedMultipleTimes, UndefinedNodeType
@@ -12,7 +12,7 @@ local node ProblemNode: {
 ProblemNode same_name(); // SymbolUsedMultipleTimes
 ProblemNode same_name(); // SymbolUsedMultipleTimes
 
-local node GoodNode: {
+hidden node GoodNode: {
     input test;
     output test_out: test;
 };
@@ -27,17 +27,17 @@ GoodNode bad_node(
 
 GoodNode unconnected(); // InputNotConnected
 
-local node NodeWithBadOutput: {
+hidden node NodeWithBadOutput: {
     output boom; // OutputWithNoDefinition
 };
 
-local node BuiltinExample => BuiltinNode: {
+hidden node BuiltinExample => BuiltinNode: {
     // This works because this node defines the interface to
     // a built-in type
     output good;
 };
 
-local node BuiltinExampleBad => BuiltinNode: {
+hidden node BuiltinExampleBad => BuiltinNode: {
     // This doesn't work because built-in nodes
     // can't have their outputs redefined
     output good: "boom"; // BuiltinOutputWithDefinition

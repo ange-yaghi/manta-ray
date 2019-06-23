@@ -1,9 +1,9 @@
-local node ChildNode: {
+hidden node ChildNode: {
     default input main_in;
     default output main_out: main_in;
 };
 
-local node TestNode: {
+hidden node TestNode: {
     default input A;
     default output B: childNode.main_out;
     output C: childNode; // Test the default behavior 
@@ -13,7 +13,7 @@ local node TestNode: {
     );
 };
 
-local node NewNode: {
+hidden node NewNode: {
     default input test_in;
     default output test_out: testNodeInstance;
 

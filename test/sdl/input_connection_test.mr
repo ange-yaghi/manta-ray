@@ -1,23 +1,23 @@
-local node CommonComponent: {
+hidden node CommonComponent: {
     default input in_message;
     default output out_message: in_message;
 };
 
-local node SomeNode: {
+hidden node SomeNode: {
     output attribute: "Hello world";
     output common: component;
 
     CommonComponent component("Some node here");
 };
 
-local node SomeOtherNode: {
+hidden node SomeOtherNode: {
     output other_attribute: "Hello other world";
     output common: component;
 
     CommonComponent component("Some other node here");
 };
 
-local node AttributeExtractor: {
+hidden node AttributeExtractor: {
     input n: SomeNode();
     input in_no_default;
     output attribute: n.attribute;
