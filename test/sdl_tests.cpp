@@ -710,8 +710,17 @@ TEST(SdlTests, SdlDuplicateNodeDefinitionTest) {
 
 	const SdlErrorList *errors = compiler.getErrorList();
 
-	EXPECT_TRUE(findError(errors, SdlErrorCode::MultipleDefinitionsWithSameName, 1));
-	EXPECT_TRUE(findError(errors, SdlErrorCode::MultipleDefinitionsWithSameName, 6));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::DuplicateNodeDefinition, 1));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::DuplicateNodeDefinition, 6));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::SymbolUsedMultipleTimes, 7));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::SymbolUsedMultipleTimes, 8));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::SymbolUsedMultipleTimes, 9));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::SymbolUsedMultipleTimes, 10));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::SymbolUsedMultipleTimes, 11));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::SymbolUsedMultipleTimes, 12));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::OutputWithNoDefinition, 11));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::OutputWithNoDefinition, 12));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::SymbolUsedMultipleTimes, 14));
 
-	EXPECT_EQ(errors->getErrorCount(), 2);
+	EXPECT_EQ(errors->getErrorCount(), 11);
 }

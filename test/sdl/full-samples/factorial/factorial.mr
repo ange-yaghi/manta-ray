@@ -1,0 +1,25 @@
+node if: {
+    input condition;
+    input then;
+    input else;
+    output result;
+};
+
+node FactorialInternal: {
+    input n: 0;
+    input result0: 1;
+    output next_n: 0;
+    output result: 
+        if (n == 0, then: 1, else: n * (n - 1));
+};
+
+node Factorial: {
+    input n: 0;
+    output result:
+
+    input __n: 0;
+    
+    FactorialInternal fact(
+        
+    );
+};

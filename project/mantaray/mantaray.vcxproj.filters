@@ -340,6 +340,9 @@
     <Filter Include="Header Files\sdl-parser\common">
       <UniqueIdentifier>{c7b58865-2620-42aa-b9ca-9b0914cb10b3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\sdl-parser\generator">
+      <UniqueIdentifier>{f891218a-d6ef-4386-855a-06fa19b90257}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -1117,6 +1120,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\sdl_parser_structure.h">
       <Filter>Header Files\sdl-parser\scanner</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_generator.h">
+      <Filter>Header Files\sdl-parser\generator</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
