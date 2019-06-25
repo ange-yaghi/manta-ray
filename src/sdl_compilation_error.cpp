@@ -1,7 +1,7 @@
 #include <sdl_compilation_error.h>
 
-manta::SdlCompilationError::SdlCompilationError(
-		const SdlTokenInfo &location, const SdlErrorCode_struct &code, SdlParserStructure *instantiation) {
+manta::SdlCompilationError::SdlCompilationError(const SdlTokenInfo &location, 
+			const SdlErrorCode_struct &code, SdlParserStructure *instantiation) {
 	m_errorLocation = location;
 	m_code = code;
 	m_instantiation = instantiation;
@@ -45,5 +45,4 @@ ERR(BuiltinOutputWithDefinition) =
 								{ "V", "0051", "Built-in output given a definition" };
 ERR(InputSpecifiedMultipleTimesPositional) =
 								{ "V", "0011", "Input specified multiple times by positional" };
-ERR(MultipleDefinitionsWithSameName) =
-								{ "V", "0060", "Multiple definitions with the same name" };
+ERR(DuplicateNodeDefinition) =	{ "V", "0060", "Multiple definitions with the same name" };

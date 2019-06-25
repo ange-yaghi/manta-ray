@@ -164,7 +164,7 @@ void manta::SdlCompilationUnit::_validate() {
 
 		if (count > 1) {
 			this->addCompilationError(new SdlCompilationError(*def->getNameToken(),
-				SdlErrorCode::MultipleDefinitionsWithSameName));
+				SdlErrorCode::DuplicateNodeDefinition));
 		}
 	}
 }
