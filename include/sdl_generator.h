@@ -5,6 +5,9 @@
 
 namespace manta {
 
+	class Node;
+	class SdlNode;
+
 	class SdlGenerator {
 	public:
 		enum BuiltinCode {
@@ -20,7 +23,7 @@ namespace manta {
 		SdlGenerator();
 		~SdlGenerator();
 
-		 generate
+		Node *generateNode(SdlNode *reference) const;
 	};
 
 } /* namespace manta */

@@ -20,3 +20,15 @@ void manta::SdlAttributeList::addAttribute(SdlAttribute *attribute) {
 		registerComponent(attribute);
 	}
 }
+
+manta::SdlAttribute *manta::SdlAttributeList::getAttribute(SdlAttributeDefinition *definition) const {
+	int attributeCount = getAttributeCount();
+	for (int i = 0; i < attributeCount; i++) {
+		SdlAttribute *attribute = getAttribute(i);
+		if (attribute->getAttributeDefinition() == definition) {
+			return attribute;
+		}
+	}
+
+	return nullptr;
+}

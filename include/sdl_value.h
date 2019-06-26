@@ -6,6 +6,7 @@
 namespace manta {
 
 	class SdlAttribute;
+	class NodeOutput;
 
 	class SdlValue : public SdlParserStructure {
 	public:
@@ -31,6 +32,9 @@ namespace manta {
 
 	private:
 		VALUE_TYPE m_type;
+
+	public:
+		virtual NodeOutput *generateNodeOutput() { return nullptr; }
 	};
 
 } /* namespace manta */

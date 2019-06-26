@@ -17,13 +17,13 @@ namespace manta {
 
 	public:
 		NodeOutput(const NodeType *singleType) { m_singleType = singleType; m_dimensionsEvaluated = false; }
-		virtual ~NodeOutput() {}
+		virtual ~NodeOutput() { /* void */ }
 
 		const NodeType *getType() const { return m_singleType; }
 
-		virtual void sample(const IntersectionPoint *surfaceInteraction, void *target) const {}
-		virtual void discreteSample2D(int x, int y, void *target) const {}
-		virtual void fullCompute(void *target) const {}
+		virtual void sample(const IntersectionPoint *surfaceInteraction, void *target) const { /* void */ }
+		virtual void discreteSample2D(int x, int y, void *target) const { /* void */ }
+		virtual void fullCompute(void *target) const { /* void */ }
 		virtual void getDataReference(const void **target) const { *target = nullptr; }
 
 		int getSize(int dim) const { return m_dimensions[dim]; }
@@ -48,6 +48,8 @@ namespace manta {
 		void setDimensions(int dimensionCount) { m_dimensionCount = dimensionCount; }
 
 		virtual void _evaluateDimensions() { setDimensions(1); setDimensionSize(0, 1); };
+
+		void overrideType(const NodeType *type) { m_singleType = type; }
 
 	private:
 		int m_dimensions[MAX_DIMENSIONS];

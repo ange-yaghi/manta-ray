@@ -343,6 +343,45 @@
     <Filter Include="Header Files\sdl-parser\generator">
       <UniqueIdentifier>{f891218a-d6ef-4386-855a-06fa19b90257}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\nodes\management">
+      <UniqueIdentifier>{b00a1987-ab01-4a5d-a37f-f3ae977b69e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\nodes\management">
+      <UniqueIdentifier>{85795042-4955-4952-a474-bf4c8db002f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sdl-parser\generator">
+      <UniqueIdentifier>{2809afb2-3144-4611-b8e1-1ba597c47201}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\nodes\output-ports\atomic-types">
+      <UniqueIdentifier>{d7d23cea-e59b-4918-8332-a460b3b4344b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\nodes\output-ports\atomic-types">
+      <UniqueIdentifier>{70ed637c-565b-4cc0-9fa5-2fcc9967b349}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\nodes\output-ports\atomic-types\constants">
+      <UniqueIdentifier>{1041a88a-0686-46c2-8d09-257323c50717}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\nodes\output-ports\atomic-types\types">
+      <UniqueIdentifier>{5fe97ed4-a886-4d18-b211-747e45a9e8f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\nodes\output-ports\atomic-types\constants">
+      <UniqueIdentifier>{b0a1fc03-4820-45ca-b5c6-5a7e17b5f6b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\nodes\output-ports\atomic-types\types">
+      <UniqueIdentifier>{a3bc281e-b843-4d97-9b03-13c598b9b5bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\nodes\library\sdl">
+      <UniqueIdentifier>{88079674-3fb7-4218-97c5-48446c951cf1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\nodes\library\sdl">
+      <UniqueIdentifier>{ac11a43d-1357-48f9-8a81-90827ac5ff94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\nodes\output-ports\atomic-types\compound">
+      <UniqueIdentifier>{9db394f3-d5bd-4d49-a8a4-868d6d64e3df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\nodes\output-ports\atomic-types\compound">
+      <UniqueIdentifier>{1df9a960-6b72-4b33-9277-d476c399d8f6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -692,6 +731,24 @@
     </ClCompile>
     <ClCompile Include="..\..\src\sdl_input_connection.cpp">
       <Filter>Source Files\sdl-parser\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\node_program.cpp">
+      <Filter>Source Files\nodes\management</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_generator.cpp">
+      <Filter>Source Files\sdl-parser\generator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\float_node_output.cpp">
+      <Filter>Source Files\nodes\output-ports\atomic-types\types</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\single_float_node_output.cpp">
+      <Filter>Source Files\nodes\output-ports\atomic-types\constants</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\vector_node.cpp">
+      <Filter>Source Files\nodes\library\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\constructed_vector_node_output.cpp">
+      <Filter>Source Files\nodes\output-ports\atomic-types\compound</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1123,6 +1180,21 @@
     </ClInclude>
     <ClInclude Include="..\..\include\sdl_generator.h">
       <Filter>Header Files\sdl-parser\generator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\node_program.h">
+      <Filter>Header Files\nodes\management</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\float_node_output.h">
+      <Filter>Header Files\nodes\output-ports\atomic-types\types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\single_float_node_output.h">
+      <Filter>Header Files\nodes\output-ports\atomic-types\constants</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\vector_node.h">
+      <Filter>Header Files\nodes\library\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\constructed_vector_node_output.h">
+      <Filter>Header Files\nodes\output-ports\atomic-types\compound</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
