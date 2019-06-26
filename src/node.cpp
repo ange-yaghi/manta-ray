@@ -43,6 +43,12 @@ void manta::Node::evaluate() {
 		}
 	}
 
+	int outputReferenceCount = getOutputReferenceCount();
+	for (int i = 0; i < outputReferenceCount; i++) {
+		const NodeOutput *node = *m_outputReferences[i].output;
+		node->getParentNode()->evaluate();
+	}
+
 	// Node can now self-evaluate
 	_evaluate();
 
@@ -85,13 +91,21 @@ void manta::Node::connectInput(pNodeInput input, const char *name) {
 	}
 }
 
-manta::NodeOutput *manta::Node::getOutput(const char *name) const {
+const manta::NodeOutput *manta::Node::getOutput(const char *name) const {
 	int outputCount = getOutputCount();
 
 	for (int i = 0; i < outputCount; i++) {
 		const char *outputName = m_outputs[i].name;
 		if (strcmp(outputName, name) == 0) {
 			return m_outputs[i].output;
+		}
+	}
+
+	int outputReferenceCount = getOutputReferenceCount();
+	for (int i = 0; i < outputReferenceCount; i++) {
+		const char *outputName = m_outputReferences[i].name;
+		if (strcmp(outputName, name) == 0) {
+			return *m_outputReferences[i].output;
 		}
 	}
 
@@ -117,6 +131,10 @@ void manta::Node::registerInputs() {
 void manta::Node::registerOutput(NodeOutput *node, const char *name) {
 	m_outputs.push_back({ node, name });
 	node->setParentNode(this);
+}
+
+void manta::Node::registerOutputReference(const NodeOutput *const *node, const char *name) {
+	m_outputReferences.push_back({ node, name });
 }
 
 void manta::Node::registerOutputs() {

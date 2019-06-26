@@ -8,6 +8,7 @@
 namespace manta {
 
 	class SdlAttribute;
+	class SdlAttributeDefinition;
 
 	class SdlAttributeList : public SdlParserStructure {
 	public:
@@ -16,6 +17,7 @@ namespace manta {
 
 		void addAttribute(SdlAttribute *attribute);
 		SdlAttribute *getAttribute(int index) const { return m_attributes[index]; }
+		SdlAttribute *getAttribute(SdlAttributeDefinition *definition) const;
 		int getAttributeCount() const { return (int)m_attributes.size(); }
 
 	protected:

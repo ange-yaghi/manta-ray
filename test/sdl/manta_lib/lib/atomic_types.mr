@@ -1,0 +1,19 @@
+public node vector => __builtin__vector: {
+    input x: 0.0;
+    input y: 0.0;
+    input z: 0.0;
+    input w: 0.0;
+
+    default output vector;
+    output x;
+    output y;
+    output z;
+    output w;
+};
+
+public node s_vector: {
+    input s: 0.0;
+
+    default output: vector(s, s, s, s);
+    output s: s;
+};

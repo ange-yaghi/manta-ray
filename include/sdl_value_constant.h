@@ -7,6 +7,8 @@
 #include <sdl_compilation_error.h>
 #include <sdl_compilation_unit.h>
 #include <sdl_node.h>
+#include <single_float_node_output.h>
+#include <standard_allocator.h>
 
 namespace manta {
 
@@ -17,6 +19,33 @@ namespace manta {
 	protected:
 		typedef T_SdlTokenInfo<T> _TokenInfo;
 
+		static NodeOutput *generateNodeOutput(math::real_d value) {
+			SingleFloatNodeOutput *newNode = StandardAllocator::Global()->allocate<SingleFloatNodeOutput>();
+			newNode->setValue(value);
+
+			return newNode;
+		}
+
+		static NodeOutput *generateNodeOutput(const std::string &value) {
+			// TODO
+			return nullptr;
+		}
+
+		static NodeOutput *generateNodeOutput(SdlNode *node) {
+			// TODO
+			return nullptr;
+		}
+
+		static NodeOutput *generateNodeOutput(bool value) {
+			// TODO
+			return nullptr;
+		}
+
+		static NodeOutput *generateNodeOutput(int value) {
+			// TODO
+			return nullptr;
+		}
+
 	public:
 		SdlValueConstant(const _TokenInfo &value) : SdlValue(TypeCode) { m_value = value.data; useToken(value); }
 		virtual ~SdlValueConstant() { /* void */ }
@@ -26,6 +55,10 @@ namespace manta {
 
 		virtual void setValue(const T &value) { m_value = value; }
 		T getValue() const { return m_value; }
+
+		virtual NodeOutput *generateNodeOutput() {
+			return generateNodeOutput(m_value);
+		}
 
 	protected:
 		T m_value;

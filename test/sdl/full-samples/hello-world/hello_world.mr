@@ -1,5 +1,0 @@
-private node ConsoleOut => __builtin_console: {
-    default input text: "";
-};
-
-ConsoleOut main("Hello World");

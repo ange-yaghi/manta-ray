@@ -3,12 +3,12 @@
 
 #include <sdl_parser_structure.h>
 
+#include <sdl_attribute_definition.h>
+
 #include <vector>
 #include <string>
 
 namespace manta {
-
-	class SdlAttributeDefinition;
 
 	class SdlAttributeDefinitionList : public SdlParserStructure {
 	public:
@@ -19,11 +19,16 @@ namespace manta {
 		SdlAttributeDefinition *getDefinition(int index) const { return m_definitions[index]; }
 		int getDefinitionCount() const { return (int)m_definitions.size(); }
 
+		SdlAttributeDefinition *getDefinition(int index, SdlAttributeDefinition::DIRECTION direction) const;
 		SdlAttributeDefinition *getInputDefinition(int index) const;
-		int getInputCount() const;
 
+		SdlAttributeDefinition *getOutputDefinition(int index) const;
 		SdlAttributeDefinition *getOutputDefinition(const std::string &name) const;
 		SdlAttributeDefinition *getDefaultOutput() const;
+
+		int getCount(SdlAttributeDefinition::DIRECTION direction) const;
+		int getInputCount() const;
+		int getOutputCount() const;
 
 	protected:
 		std::vector<SdlAttributeDefinition *> m_definitions;

@@ -17,12 +17,12 @@ void manta::SdlAttributeDefinitionList::addDefinition(SdlAttributeDefinition *de
 	}
 }
 
-manta::SdlAttributeDefinition *manta::SdlAttributeDefinitionList::getInputDefinition(int index) const {
+manta::SdlAttributeDefinition *manta::SdlAttributeDefinitionList::getDefinition(int index, SdlAttributeDefinition::DIRECTION direction) const {
 	int totalCount = getDefinitionCount();
 	int inputIndex = 0;
 	for (int i = 0; i < totalCount; i++) {
 		SdlAttributeDefinition *definition = m_definitions[i];
-		if (definition->getDirection() == SdlAttributeDefinition::INPUT) {
+		if (definition->getDirection() == direction) {
 			if (inputIndex == index) {
 				return definition;
 			}
@@ -34,17 +34,33 @@ manta::SdlAttributeDefinition *manta::SdlAttributeDefinitionList::getInputDefini
 	return nullptr;
 }
 
-int manta::SdlAttributeDefinitionList::getInputCount() const {
+manta::SdlAttributeDefinition *manta::SdlAttributeDefinitionList::getInputDefinition(int index) const {
+	return getDefinition(index, SdlAttributeDefinition::INPUT);
+}
+
+int manta::SdlAttributeDefinitionList::getCount(SdlAttributeDefinition::DIRECTION direction) const {
 	int totalCount = getDefinitionCount();
 	int inputs = 0;
 	for (int i = 0; i < totalCount; i++) {
 		SdlAttributeDefinition *definition = m_definitions[i];
-		if (definition->getDirection() == SdlAttributeDefinition::INPUT) {
+		if (definition->getDirection() == direction) {
 			inputs++;
 		}
 	}
 
 	return inputs;
+}
+
+int manta::SdlAttributeDefinitionList::getInputCount() const {
+	return getCount(SdlAttributeDefinition::INPUT);
+}
+
+int manta::SdlAttributeDefinitionList::getOutputCount() const {
+	return getCount(SdlAttributeDefinition::OUTPUT);
+}
+
+manta::SdlAttributeDefinition *manta::SdlAttributeDefinitionList::getOutputDefinition(int index) const {
+	return getDefinition(index, SdlAttributeDefinition::OUTPUT);
 }
 
 manta::SdlAttributeDefinition *manta::SdlAttributeDefinitionList::getOutputDefinition(const std::string &name) const {
