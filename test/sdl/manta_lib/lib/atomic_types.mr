@@ -1,8 +1,8 @@
 public node vector => __builtin__vector: {
-    input x: 0.0;
-    input y: 0.0;
-    input z: 0.0;
-    input w: 0.0;
+    input in_x: 0.0;
+    input in_y: 0.0;
+    input in_z: 0.0;
+    input in_w: 0.0;
 
     default output vector;
     output x;
@@ -12,8 +12,8 @@ public node vector => __builtin__vector: {
 };
 
 public node s_vector: {
-    input s: 0.0;
+    input in_s: 0.0;
 
-    default output: vector(s, s, s, s);
-    output s: s;
+    default output vector: vector(in_s, in_s, in_s, in_s);
+    output s: in_s;
 };

@@ -32,8 +32,8 @@ void manta::VectorNode::registerOutputs() {
 }
 
 void manta::VectorNode::registerInputs() {
-	registerInput(m_output.getXConnection(), "x");
-	registerInput(m_output.getYConnection(), "y");
-	registerInput(m_output.getZConnection(), "z");
-	registerInput(m_output.getWConnection(), "w");
+	registerInput(m_output.getXConnection(), "in_x");
+	registerInput(m_output.getYConnection(), "in_y");
+	registerInput(m_output.getZConnection(), "in_z");
+	registerInput(m_output.getWConnection(), "in_w");
 }

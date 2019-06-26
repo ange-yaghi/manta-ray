@@ -27,6 +27,7 @@ TEST(SdlConstructionTests, SdlVectorTest) {
 	EXPECT_NE(unit, nullptr);
 
 	const SdlErrorList *errors = compiler.getErrorList();
+	EXPECT_EQ(errors->getErrorCount(), 0);
 
 	SdlNode *node = unit->getNode(0);
 	
