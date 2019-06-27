@@ -1,13 +1,14 @@
-@author = "Ange Yaghi"
-@date = "2019-05-30"
+module {
+    @author = "Ange Yaghi"
+    @date = "2019-05-30"
+}
 
 private import "test.sdl"
 private import test
 
-public node NewNode:
-    @author = "Ange Yaghi"
-    @comment = "This is just a test node"
-{
+@author = "Ange Yaghi"
+@comment = "This is just a test node"
+public node NewNode {
     // Inputs
     @doc = "Main input"
     default input A;
@@ -17,4 +18,4 @@ public node NewNode:
     @doc = "Main output"
     default output A_out: A;
     output B_out: B;
-};
+}

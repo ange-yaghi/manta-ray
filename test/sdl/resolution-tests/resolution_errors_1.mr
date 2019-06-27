@@ -1,9 +1,9 @@
-private node ChildNode: {
+private node ChildNode {
     default input main_in;
     default output main_out: main_in;
-};
+}
 
-private node TestNode: {
+private node TestNode {
     default input A;
     default output B: childNode.main_out;
     output C: childNode; // Test the default behavior 
@@ -11,9 +11,9 @@ private node TestNode: {
     ChildNode childNode(
         main_in: A
     );
-};
+}
 
-private node NewNode: {
+private node NewNode {
     default input test_in;
     default output test_out: testNodeInstance;
 
@@ -26,9 +26,9 @@ private node NewNode: {
     TestNode myNode(
         A: "Hi"
     );
-};
+}
 
 TestNode testNodeInstance(
     A: "Hello World",
     A: "Boom" // ERROR
-);
+)

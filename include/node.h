@@ -53,6 +53,7 @@ namespace manta {
 		void connectInput(pNodeInput input, const char *name);
 		int getInputCount() const { return (int)m_inputs.size(); }
 
+		const NodeOutput *getPrimaryOutput() const;
 		const NodeOutput *getOutput(const char *name) const;
 		int getOutputCount() const { return (int)m_outputs.size(); }
 
@@ -84,9 +85,13 @@ namespace manta {
 
 		std::vector<NodeOutputPort> m_outputs;
 		void registerOutput(NodeOutput *node, const char *name);
+		void setPrimaryOutput(NodeOutput *node);
 
 		std::vector<NodeOutputPortReference> m_outputReferences;
 		void registerOutputReference(const NodeOutput *const *node, const char *name);
+
+	protected:
+		NodeOutput *m_primaryOutput;
 
 	private:
 		// State variables

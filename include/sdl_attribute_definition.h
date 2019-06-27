@@ -21,6 +21,7 @@ namespace manta {
 	public:
 		SdlAttributeDefinition(const SdlTokenInfo_string &directionToken, 
 			const SdlTokenInfo_string &name, DIRECTION dir);
+		SdlAttributeDefinition(const SdlTokenInfo_string &name);
 		virtual ~SdlAttributeDefinition();
 
 		const SdlTokenInfo *getNameToken() const { return &m_name; }

@@ -23,7 +23,7 @@ void manta::VectorNode::_destroy() {
 }
 
 void manta::VectorNode::registerOutputs() {
-	registerOutput(&m_output, "vector");
+	setPrimaryOutput(&m_output);
 
 	registerOutputReference(m_output.getXConnection(), "x");
 	registerOutputReference(m_output.getYConnection(), "y");
