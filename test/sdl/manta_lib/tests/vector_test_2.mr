@@ -1,0 +1,17 @@
+private import "../lib/atomic_types" as types
+
+private node Constants {
+    output x: 1.0;
+    output y: 2.0;
+    output z: 3.0;
+    output w: 4.0;
+}
+
+::Constants constants()
+
+types::vector test_vector(
+    constants.x,
+    constants.y, 
+    constants.z, 
+    constants.w
+)

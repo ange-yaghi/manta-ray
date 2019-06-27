@@ -1,22 +1,22 @@
-private node AddNode: {
+private node AddNode {
     input p1;
     input p2;
     default output out: p1 + p2;
-};
+}
 
-private node AddMulNode: {
+private node AddMulNode {
     input p1;
     input p2;
     input p3;
     default output out: AddNode(p1, p2) * p3;
-};
+}
 
-private node BrokenNodeDef: {
+private node BrokenNodeDef {
     // Broken attribute, the rest should still work
     input a###; // UnidentifiedToken
     input b;
     default output out: a - b; // UnresolvedReference
-};
+}
 
 // This node should still be read even though
 // the node definition before is messed up
@@ -27,4 +27,4 @@ BrokenNodeDef brokenNodeInstance(
 
     // This will fail because a is messed up
     a: "Fail" // PortNotFound 
-);
+)

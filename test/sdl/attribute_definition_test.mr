@@ -1,12 +1,17 @@
-node TestNode: {
+module {
+    @author = "Ange Yaghi"
+    @date = "2019-05-30"
+}
+
+node TestNode {
     input A;
     input B;
     output C: "Random value";
-};
+}
 
 TestNode nodeInstance (
     A: 5,
     B: 6,
     C: "kaboom",
     D: "undefined"
-);
+)

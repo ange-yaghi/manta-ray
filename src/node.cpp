@@ -9,6 +9,7 @@ manta::Node::Node() {
 
 	m_initialized = false;
 	m_evaluated = false;
+	m_primaryOutput = nullptr;
 }
 
 manta::Node::~Node() {
@@ -91,6 +92,10 @@ void manta::Node::connectInput(pNodeInput input, const char *name) {
 	}
 }
 
+const manta::NodeOutput *manta::Node::getPrimaryOutput() const {
+	return m_primaryOutput;
+}
+
 const manta::NodeOutput *manta::Node::getOutput(const char *name) const {
 	int outputCount = getOutputCount();
 
@@ -131,6 +136,11 @@ void manta::Node::registerInputs() {
 void manta::Node::registerOutput(NodeOutput *node, const char *name) {
 	m_outputs.push_back({ node, name });
 	node->setParentNode(this);
+}
+
+void manta::Node::setPrimaryOutput(NodeOutput *node) {
+	m_primaryOutput = node;
+	registerOutput(m_primaryOutput, "$PRIMARY");
 }
 
 void manta::Node::registerOutputReference(const NodeOutput *const *node, const char *name) {

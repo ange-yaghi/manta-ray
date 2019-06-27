@@ -1,4 +1,4 @@
 ArbNode boolTestNode (
     test_false: false,
     test_true: true
-); // Test comment
+) // Test comment

@@ -94,6 +94,7 @@
 %token <manta::SdlTokenInfo_string> NAMESPACE_POINTER
 %token <manta::SdlTokenInfo_string> UNRECOGNIZED
 %token <manta::SdlTokenInfo_string> OPERATOR
+%token <manta::SdlTokenInfo_string> MODULE
 
 %token <manta::SdlTokenInfo_string> '='
 %token <manta::SdlTokenInfo_string> '+'
@@ -135,6 +136,7 @@
 %type <manta::SdlNodeDefinition *> node_shadow;
 %type <manta::SdlNodeDefinition *> node_decorator;
 %type <manta::SdlNodeDefinition *> node_definition;
+%type <manta::SdlNodeDefinition *> node_port_definitions;
 %type <manta::SdlNodeDefinition *> specific_node_definition;
 
 %type <manta::SdlAttributeDefinition *> port_declaration;
@@ -150,7 +152,7 @@
 
 sdl 
   : END 
-  | decorator_list statement_list END
+  | MODULE '{' decorator_list '}' statement_list END
   | statement_list END
   ;
 
@@ -164,9 +166,9 @@ decorator_list
   ;
 
 statement
-  : node ';'						{ driver.addNode($1); }
+  : node 							{ driver.addNode($1); }
   | import_statement_short_name		{ driver.addImportStatement($1); }
-  | specific_node_definition ';'	{ driver.addNodeDefinition($1); }
+  | node_decorator					{ driver.addNodeDefinition($1); }
   ;
 
 statement_list 
@@ -258,13 +260,12 @@ node_name
   ;
 
 node_shadow
-  : node_name POINTER LABEL	':'							{ $$ = $1; $$->setBuiltinName($3); $$->setDefinesBuiltin(true); }
-  | node_name ':'										{ $$ = $1; $$->setDefinesBuiltin(false); }
+  : node_name POINTER LABEL								{ $$ = $1; $$->setBuiltinName($3); $$->setDefinesBuiltin(true); }
+  | node_name											{ $$ = $1; $$->setDefinesBuiltin(false); }
   ;
 
-node_decorator
-  : node_shadow decorator_list '{' port_definitions		{ $$ = $1; $$->setAttributeDefinitionList($4); }
-  | node_shadow '{' port_definitions					{ $$ = $1; $$->setAttributeDefinitionList($3); }
+node_port_definitions
+  : node_shadow '{' port_definitions					{ $$ = $1; $$->setAttributeDefinitionList($3); }
   | node_shadow '{'										{ 
 															$$ = $1; 
 															$$->setAttributeDefinitionList(new SdlAttributeDefinitionList()); 
@@ -272,8 +273,8 @@ node_decorator
   ;
 
 node_definition
-  : node_decorator '}'									{ $$ = $1; $$->setBody(nullptr); }
-  | node_decorator node_list '}'						{ $$ = $1; $$->setBody($2); }
+  : node_port_definitions '}'							{ $$ = $1; $$->setBody(nullptr); }
+  | node_port_definitions node_list '}'					{ $$ = $1; $$->setBody($2); }
   | error '}'											{ yyerrok; }
   ;
 
@@ -295,6 +296,11 @@ specific_node_definition
 															}
 															else $$ = nullptr;
 														}
+  ;
+
+node_decorator
+  : decorator_list specific_node_definition				{ $$ = $2; }
+  | specific_node_definition							{ $$ = $1; }
   ;
 
 port_definitions

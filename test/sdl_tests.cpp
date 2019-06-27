@@ -261,7 +261,7 @@ TEST(SdlTests, SdlNodeBuiltinTest) {
 	EXPECT_EQ(definitions->getDefinition(0)->getDirection(),
 		SdlAttributeDefinition::INPUT);
 	EXPECT_EQ(definitions->getDefinition(0)->getName(), "A");
-	CHECK_SDL_POS(definitions->getDefinition(0), 5, 20, 18, 18);
+	CHECK_SDL_POS(definitions->getDefinition(0), 5, 20, 19, 19);
 
 	EXPECT_EQ(definitions->getDefinition(1)->isDefault(), false);
 	EXPECT_EQ(definitions->getDefinition(1)->getDirection(),
@@ -661,9 +661,9 @@ TEST(SdlTests, SdlVisibilityTest2) {
 
 	const SdlErrorList *errors = compiler.getErrorList();
 
-	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedMember, 13));
-	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedNodeType, 15));
-	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedMember, 17));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedMember, 12));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedNodeType, 14));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedMember, 16));
 
 	EXPECT_EQ(errors->getErrorCount(), 3);
 }

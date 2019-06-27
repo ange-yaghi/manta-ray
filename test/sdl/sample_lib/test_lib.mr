@@ -1,22 +1,22 @@
-@author = "Ange Yaghi"
-@date = "2019-06-11"
-
-public node Add:
+module {
     @author = "Ange Yaghi"
-    @comment = "Hypothetical 'add' implementation"
-{
+    @date = "2019-06-11"
+}
+
+@author = "Ange Yaghi"
+@comment = "Hypothetical 'add' implementation"
+public node Add {
     input A;
     input B;
     default output C: A + B;
-};
+}
 
-public node SampleNode:
-    @author = "Ange Yaghi"
-    @comment = "This is just a test node"
-{
+@author = "Ange Yaghi"
+@comment = "This is just a test node"
+public node SampleNode {
     input A;
     input B;
     default output C: add_mod; // This should take the default output 'C'
     
     Add add_mod(A, B);
-};
+}

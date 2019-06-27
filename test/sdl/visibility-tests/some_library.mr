@@ -1,16 +1,16 @@
-@doc = "This is intended to be a standard library of some sort"
+module {
+    @doc = "This is intended to be a standard library of some sort"
+}
 
 private import color
 
-private node Converter:
-    @doc = "Converts scalar quantity to a color"
-{
+@doc = "Converts scalar quantity to a color"
+private node Converter {
     input s: 0.0;
     output rgb: color::Color(s, s, s);
-};
+}
 
-public node Gray:
-    @doc = "Simple node to generate gray"
-{
+@doc = "Simple node to generate gray"
+public node Gray {
     output rgb: ::Converter(0.5);
-};
+}

@@ -55,6 +55,7 @@ H				[a-fA-F0-9]
 "public"		{ DEFAULT_BUILD(location); return (token::PUBLIC); }
 "private"		{ DEFAULT_BUILD(location); return (token::PRIVATE); }
 "operator"		{ DEFAULT_BUILD(location); return (token::OPERATOR); }
+"module"		{ DEFAULT_BUILD(location); return (token::MODULE); }
 "@"				{ DEFAULT_BUILD(location); return (token::DECORATOR); }
 
 "true"			{

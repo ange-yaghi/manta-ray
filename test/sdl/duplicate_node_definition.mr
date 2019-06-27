@@ -1,9 +1,9 @@
-private node the_same_node: {   // DuplicateNodeDefinition
+private node the_same_node {   // DuplicateNodeDefinition
     default input A;
     default output B: A;
-};
+}
 
-private node the_same_node: {   // DuplicateNodeDefinition
+private node the_same_node {   // DuplicateNodeDefinition
     default input C;            // SymbolUsedMultipleTimes
     default input C;            // SymbolUsedMultipleTimes
     default input D;            // SymbolUsedMultipleTimes
@@ -12,9 +12,9 @@ private node the_same_node: {   // DuplicateNodeDefinition
     default output C;           // SymbolUsedMultipleTimes, OutputWithNoDefinition
 
     interior_node C();          // SymbolUsedMultipleTimes
-};
+}
 
-private node interior_node: {
+private node interior_node {
     default input A: 0;
     default output B: A;
-};
+}

@@ -18,6 +18,14 @@ manta::SdlAttributeDefinition::SdlAttributeDefinition(const SdlTokenInfo_string 
 	}
 }
 
+manta::SdlAttributeDefinition::SdlAttributeDefinition(const SdlTokenInfo_string &name) {
+	m_name = name;
+	registerToken(&m_name);
+
+	m_direction = OUTPUT;
+	setVisibility(SdlVisibility::PUBLIC);
+}
+
 manta::SdlAttributeDefinition::~SdlAttributeDefinition() {
 	/* void */
 }
