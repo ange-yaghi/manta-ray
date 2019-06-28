@@ -1,10 +1,10 @@
 @doc = "Defines a basic color class"
 public node Color {
-    input in_r: 0.0;
-    input in_g: 0.0;
-    input in_b: 0.0;
+    input in_r: 0.0
+    input in_g: 0.0
+    input in_b: 0.0
 
-    output r: in_r;
-    output g: in_g;
-    output b: in_b;
+    output r: in_r
+    output g: in_g
+    output b: in_b
 }

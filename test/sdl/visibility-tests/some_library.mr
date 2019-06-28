@@ -7,10 +7,10 @@ private import color
 @doc = "Converts scalar quantity to a color"
 private node Converter {
     input s: 0.0;
-    output rgb: color::Color(s, s, s);
+    output rgb: color::Color(s, s, s)
 }
 
 @doc = "Simple node to generate gray"
 public node Gray {
-    output rgb: ::Converter(0.5);
+    output rgb: ::Converter(0.5)
 }

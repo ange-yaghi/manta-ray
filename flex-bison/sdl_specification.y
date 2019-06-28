@@ -92,6 +92,7 @@
 %token <manta::SdlTokenInfo_string> PRIVATE
 %token <manta::SdlTokenInfo_string> POINTER
 %token <manta::SdlTokenInfo_string> NAMESPACE_POINTER
+%token <manta::SdlTokenInfo_string> LOCAL_NAMESPACE
 %token <manta::SdlTokenInfo_string> UNRECOGNIZED
 %token <manta::SdlTokenInfo_string> OPERATOR
 %token <manta::SdlTokenInfo_string> MODULE
@@ -143,6 +144,7 @@
 %type <manta::SdlAttributeDefinition *> port_status;
 %type <manta::SdlAttributeDefinition *> port_connection;
 %type <manta::SdlAttributeDefinition *> documented_port_definition;
+%type <manta::SdlAttributeDefinition *> error_recovery_port_definition;
 
 %type <manta::SdlAttributeDefinitionList *> port_definitions;
 
@@ -219,7 +221,7 @@ type_name_namespace
 											set.data[1] = $3; 
 											$$ = set; 
 										}
-  | NAMESPACE_POINTER type_name			{ 
+  | LOCAL_NAMESPACE type_name			{ 
 											SdlTokenInfoSet<std::string, 2> set; 
 											set.data[0].specified = true; 
 											set.data[1] = $2; 
@@ -232,11 +234,11 @@ node
   ;
 
 node_list
-  : node ';'											{
+  : node											{
 															$$ = new SdlNodeList();
 															$$->add($1);
 														}
-  | node_list node ';'									{ 
+  | node_list node									{ 
 															$$ = $1;
 															$1->add($2);  
 														}
@@ -275,7 +277,6 @@ node_port_definitions
 node_definition
   : node_port_definitions '}'							{ $$ = $1; $$->setBody(nullptr); }
   | node_port_definitions node_list '}'					{ $$ = $1; $$->setBody($2); }
-  | error '}'											{ yyerrok; }
   ;
 
 specific_node_definition
@@ -304,16 +305,16 @@ node_decorator
   ;
 
 port_definitions
-  : documented_port_definition							{ 
+  : error_recovery_port_definition						{ 
 															$$ = new SdlAttributeDefinitionList(); 
 															$$->addDefinition($1); 
 														}
-  | port_definitions documented_port_definition			{ $$ = $1; $$->addDefinition($2); }
+  | port_definitions error_recovery_port_definition		{ $$ = $1; $$->addDefinition($2); }
   ;
 
 port_declaration
-  : INPUT LABEL							{ $$ = new SdlAttributeDefinition($1, $2, SdlAttributeDefinition::INPUT); }
-  | OUTPUT LABEL						{ $$ = new SdlAttributeDefinition($1, $2, SdlAttributeDefinition::OUTPUT); }
+  : INPUT LABEL													{ $$ = new SdlAttributeDefinition($1, $2, SdlAttributeDefinition::INPUT); }
+  | OUTPUT LABEL												{ $$ = new SdlAttributeDefinition($1, $2, SdlAttributeDefinition::OUTPUT); }
   ;
 
 port_status
@@ -327,9 +328,12 @@ port_connection
   ;
 
 documented_port_definition
-  : decorator_list port_connection ';'	{ $$ = $2; }
-  | port_connection ';'					{ $$ = $1; }
-  | error ';'							{ }
+  : decorator_list port_connection 		{ $$ = $2; }
+  | port_connection 					{ $$ = $1; }
+  ;
+
+error_recovery_port_definition
+  : documented_port_definition			{ $$ = $1; }
   ;
 
 inline_node

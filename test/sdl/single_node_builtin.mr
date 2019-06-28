@@ -16,11 +16,11 @@ private import test
 public node NewNode => BuiltinNode {
     // Inputs
     @doc = "Main input"
-    default input A;
-    input B;
+    default input A
+    input B
 
     // Outputs
     @doc = "Main output"
-    default output A_out;
-    output B_out;
+    default output A_out
+    output B_out
 }
