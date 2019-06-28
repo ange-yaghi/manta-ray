@@ -1,28 +1,28 @@
 private node CommonComponent {
-    default input in_message;
-    default output out_message: in_message;
+    default input in_message
+    default output out_message: in_message
 }
 
 private node SomeNode {
-    output attribute: "Hello world";
-    output common: component;
+    output attribute: "Hello world"
+    output common: component
 
-    CommonComponent component("Some node here");
+    CommonComponent component("Some node here")
 }
 
 private node SomeOtherNode {
-    output other_attribute: "Hello other world";
-    output common: component;
+    output other_attribute: "Hello other world"
+    output common: component
 
-    CommonComponent component("Some other node here");
+    CommonComponent component("Some other node here")
 }
 
 private node AttributeExtractor {
-    input n: SomeNode();
-    input in_no_default;
-    output attribute: n.attribute;
-    output message: n.common.out_message;
-    output other_attribute: in_no_default.other_attribute;
+    input n: SomeNode()
+    input in_no_default
+    output attribute: n.attribute
+    output message: n.common.out_message
+    output other_attribute: in_no_default.other_attribute
 }
 
 ::AttributeExtractor test_extractor (

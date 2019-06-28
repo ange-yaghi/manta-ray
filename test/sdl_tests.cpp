@@ -584,10 +584,8 @@ TEST(SdlTests, SdlFullErrorTest2) {
 	EXPECT_TRUE(findError(errors, SdlErrorCode::UnidentifiedToken, 16));
 	EXPECT_TRUE(findError(errors, SdlErrorCode::PortNotFound, 24));
 	EXPECT_TRUE(findError(errors, SdlErrorCode::PortNotFound, 25));
-	EXPECT_TRUE(findError(errors, SdlErrorCode::PortNotFound, 29));
-	EXPECT_TRUE(findError(errors, SdlErrorCode::UnresolvedReference, 18));
 
-	EXPECT_EQ(errors->getErrorCount(), 5);
+	EXPECT_EQ(errors->getErrorCount(), 3);
 }
 
 TEST(SdlTests, SdlFullErrorTest3) {

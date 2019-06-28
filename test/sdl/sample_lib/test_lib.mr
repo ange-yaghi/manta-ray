@@ -6,17 +6,17 @@ module {
 @author = "Ange Yaghi"
 @comment = "Hypothetical 'add' implementation"
 public node Add {
-    input A;
-    input B;
-    default output C: A + B;
+    input A
+    input B
+    default output C: A + B
 }
 
 @author = "Ange Yaghi"
 @comment = "This is just a test node"
 public node SampleNode {
-    input A;
-    input B;
-    default output C: add_mod; // This should take the default output 'C'
+    input A
+    input B
+    default output C: add_mod // This should take the default output 'C'
     
-    Add add_mod(A, B);
+    Add add_mod(A, B)
 }

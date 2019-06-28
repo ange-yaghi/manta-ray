@@ -4,9 +4,9 @@ module {
 }
 
 node TestNode {
-    input A;
-    input B;
-    output C: "Random value";
+    input A
+    input B
+    output C: "Random value"
 }
 
 TestNode nodeInstance (
