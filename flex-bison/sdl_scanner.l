@@ -122,7 +122,6 @@ H				[a-fA-F0-9]
 
 "=>"			{ DEFAULT_BUILD(location); return (token::POINTER); }
 "::"			{ DEFAULT_BUILD(location); return (token::NAMESPACE_POINTER); }
-":::"			{ DEFAULT_BUILD(location); return (token::LOCAL_NAMESPACE); }
 "="				{ DEFAULT_BUILD(location); return ('='); }
 
 [ \t\v\n\f]		{ }

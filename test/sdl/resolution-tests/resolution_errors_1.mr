@@ -1,12 +1,12 @@
 private node ChildNode {
-    default input main_in
-    default output main_out: main_in
+    default input main_in;
+    default output main_out: main_in;
 }
 
 private node TestNode {
-    default input A
-    default output B: childNode.main_out
-    output C: childNode // Test the default behavior 
+    default input A;
+    default output B: childNode.main_out;
+    output C: childNode; // Test the default behavior 
 
     ChildNode childNode(
         main_in: A
@@ -14,14 +14,14 @@ private node TestNode {
 }
 
 private node NewNode {
-    default input test_in
-    default output test_out: testNodeInstance
+    default input test_in;
+    default output test_out: testNodeInstance;
 
     // Accessing internal members in this manner should fail
-    output should_fail: myNode.childNode   // AccessingInternalMember
-    output should_also_fail: nonsense      // UnresolvedReference
-    output cant_access_that: myNode.A      // AccessingInternalMember
-    output doesnt_exit: myNode.nonsense    // UndefinedMember
+    output should_fail: myNode.childNode;   // AccessingInternalMember
+    output should_also_fail: nonsense;      // UnresolvedReference
+    output cant_access_that: myNode.A;      // AccessingInternalMember
+    output doesnt_exit: myNode.nonsense;    // UndefinedMember
 
     TestNode myNode(
         A: "Hi"

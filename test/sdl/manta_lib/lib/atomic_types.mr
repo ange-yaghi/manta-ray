@@ -1,18 +1,28 @@
-public node vector => __builtin__vector {
-    input in_x: 0.0
-    input in_y: 0.0
-    input in_z: 0.0
-    input in_w: 0.0
+public node float => __builtin__float {
+    input __in: 0.0;
+    default output __out;
+}
 
-    output x
-    output y
-    output z
-    output w
+public node int => __builtin__int {
+    input __in: 0;
+    default output __out;
+}
+
+public node vector => __builtin__vector { 
+    input in_x: 0.0;
+    input in_y: 0.0;
+    input in_z: 0.0;
+    input in_w: 0.0;
+
+    output x {float};
+    output y {float};
+    output z {float};
+    output w {float};
 }
 
 public node s_vector {
-    input in_s: 0.0
+    input in_s: 0.0;
 
-    default output vector: vector(in_s, in_s, in_s, in_s)
-    output s: in_s
+    default output vector: vector(in_s, in_s, in_s, in_s);
+    output s: in_s;
 }
