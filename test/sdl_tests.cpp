@@ -582,10 +582,12 @@ TEST(SdlTests, SdlFullErrorTest2) {
 	const SdlErrorList *errors = compiler.getErrorList();
 	
 	EXPECT_TRUE(findError(errors, SdlErrorCode::UnidentifiedToken, 16));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UnresolvedReference, 18));
 	EXPECT_TRUE(findError(errors, SdlErrorCode::PortNotFound, 24));
 	EXPECT_TRUE(findError(errors, SdlErrorCode::PortNotFound, 25));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::PortNotFound, 29));
 
-	EXPECT_EQ(errors->getErrorCount(), 3);
+	EXPECT_EQ(errors->getErrorCount(), 5);
 }
 
 TEST(SdlTests, SdlFullErrorTest3) {

@@ -1,20 +1,20 @@
 private node the_same_node {   // DuplicateNodeDefinition
-    default input A
-    default output B: A
+    default input A;
+    default output B: A;
 }
 
 private node the_same_node {    // DuplicateNodeDefinition
-    default input C             // SymbolUsedMultipleTimes
-    default input C             // SymbolUsedMultipleTimes
-    default input D             // SymbolUsedMultipleTimes
-    default output D: C         // SymbolUsedMultipleTimes
-    default output D            // SymbolUsedMultipleTimes, OutputWithNoDefinition
-    default output C            // SymbolUsedMultipleTimes, OutputWithNoDefinition
+    default input C;             // SymbolUsedMultipleTimes
+    default input C;             // SymbolUsedMultipleTimes
+    default input D;             // SymbolUsedMultipleTimes
+    default output D: C;         // SymbolUsedMultipleTimes
+    default output D;            // SymbolUsedMultipleTimes, OutputWithNoDefinition
+    default output C;            // SymbolUsedMultipleTimes, OutputWithNoDefinition
 
     interior_node C()           // SymbolUsedMultipleTimes
 }
 
 private node interior_node {
-    default input A: 0
-    default output B: A
+    default input A: 0;
+    default output B: A;
 }

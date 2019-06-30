@@ -6,9 +6,9 @@ module {
 private import "colors.mr" as colors
 
 node color_adder {
-    input color1
-    input color2
-    output result: color1 + color2
+    input color1;
+    input color2;
+    output result: color1 + color2;
 }
 
 // fdafdsagdafsd commment
@@ -18,16 +18,16 @@ node color_adder {
 @doc = "This is a color"
 private node color => __builtin__color {    
     @doc = "This is a color"
-    input r
-    input g
-    input b
+    input r;
+    input g;
+    input b;
 }
 
 public node texture {
-    input filename
-    default output image
-    output file_size
-    output thing: color(10, 10, 10)
+    input filename;
+    default output image;
+    output file_size;
+    output thing: color(10, 10, 10);
 
     color c(10, 10, 10)
 }

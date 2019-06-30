@@ -11,11 +11,11 @@ private import test
 public node NewNode {
     // Inputs
     @doc = "Main input"
-    default input A
-    input B
+    default input A;
+    input B;
 
     // Outputs
     @doc = "Main output"
-    default output A_out: A
-    output B_out: B
+    default output A_out: A;
+    output B_out: B;
 }
