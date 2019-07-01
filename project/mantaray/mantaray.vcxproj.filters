@@ -780,6 +780,9 @@
     <ClCompile Include="..\..\src\custom_node.cpp">
       <Filter>Source Files\nodes</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\sdl_context_tree.cpp">
+      <Filter>Source Files\sdl-parser\generator</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\sphere_primitive.h">
@@ -1246,6 +1249,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\custom_node.h">
       <Filter>Header Files\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_context_tree.h">
+      <Filter>Header Files\sdl-parser\generator</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

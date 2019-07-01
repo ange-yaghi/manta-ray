@@ -25,8 +25,9 @@ manta::SdlBinaryOperator::~SdlBinaryOperator() {
 }
 
 manta::SdlParserStructure *manta::SdlBinaryOperator::getImmediateReference(
-				SdlParserStructure *inputContext, SdlCompilationError **err) {
+					SdlContextTree *inputContext, SdlCompilationError **err, SdlContextTree **newContext) {
 	if (err != nullptr) *err = nullptr;
+	if (newContext != nullptr) *newContext = inputContext;
 	
 	if (m_leftOperand == nullptr || m_rightOperand == nullptr) {
 		// There was a syntax error so this step can be skipped
@@ -36,7 +37,7 @@ manta::SdlParserStructure *manta::SdlBinaryOperator::getImmediateReference(
 	// The dot is the reference operator
 	if (m_operator == DOT || m_operator == POINTER) {
 		SdlParserStructure *resolvedLeft = nullptr;
-		resolvedLeft = m_leftOperand->getReference();
+		resolvedLeft = m_leftOperand->getReference(nullptr);
 
 		// Even if the left operand refers to an input, a reference to it should still
 		// be found
@@ -48,7 +49,7 @@ manta::SdlParserStructure *manta::SdlBinaryOperator::getImmediateReference(
 		// Check the input context for this symbol
 		bool foundInput = false;
 		if (inputContext != nullptr) {
-			SdlParserStructure *inputConnection = m_leftOperand->getReference(inputContext);
+			SdlParserStructure *inputConnection = m_leftOperand->getReference(inputContext, nullptr, newContext);
 			if (inputConnection != nullptr && inputConnection != resolvedLeft) {
 				foundInput = true;
 				resolvedLeft = inputConnection;
@@ -108,7 +109,7 @@ manta::SdlParserStructure *manta::SdlBinaryOperator::getImmediateReference(
 	return nullptr;
 }
 
-manta::NodeOutput *manta::SdlBinaryOperator::_generateNodeOutput(SdlParserStructure *context) {
+manta::NodeOutput *manta::SdlBinaryOperator::_generateNodeOutput(SdlContextTree *context) {
 	if (m_leftOperand == nullptr || m_rightOperand == nullptr) {
 		// There was a syntax error so this step can be skipped
 		return nullptr;
@@ -153,7 +154,7 @@ manta::NodeOutput *manta::SdlBinaryOperator::_generateNodeOutput(SdlParserStruct
 	return nullptr;
 }
 
-manta::Node *manta::SdlBinaryOperator::_generateNode(SdlParserStructure *context) {
+manta::Node *manta::SdlBinaryOperator::_generateNode(SdlContextTree *context) {
 	if (m_leftOperand == nullptr || m_rightOperand == nullptr) {
 		// There was a syntax error so this step can be skipped
 		return nullptr;
@@ -165,7 +166,7 @@ manta::Node *manta::SdlBinaryOperator::_generateNode(SdlParserStructure *context
 		SdlNode *asNode = reference->getAsNode();
 
 		if (asNode != nullptr) {
-			return asNode->generateNode();
+			return asNode->generateNode(context);
 		}
 	}
 

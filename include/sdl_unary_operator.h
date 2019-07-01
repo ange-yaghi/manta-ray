@@ -22,15 +22,15 @@ namespace manta {
 		OPERATOR getOperator() const { return m_operator; }
 		SdlValue *getOperand() const { return m_operand; }
 
-		virtual SdlParserStructure *getImmediateReference(SdlParserStructure *inputContext, SdlCompilationError **err);
+		virtual SdlParserStructure *getImmediateReference(SdlContextTree *inputContext, SdlCompilationError **err, SdlContextTree **newContext);
 
 	protected:
 		OPERATOR m_operator;
 		SdlValue *m_operand;
 
 	protected:
-		virtual NodeOutput *_generateNodeOutput(SdlParserStructure *context);
-		virtual Node *_generateNode(SdlParserStructure *context);
+		virtual NodeOutput *_generateNodeOutput(SdlContextTree *context);
+		virtual Node *_generateNode(SdlContextTree *context);
 	};
 
 } /* namespace manta */

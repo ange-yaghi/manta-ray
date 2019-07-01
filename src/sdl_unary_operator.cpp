@@ -3,6 +3,7 @@
 #include <sdl_compilation_error.h>
 #include <sdl_node.h>
 #include <node.h>
+#include <sdl_context_tree.h>
 
 manta::SdlUnaryOperator::SdlUnaryOperator(OPERATOR op, SdlValue *operand) : SdlValue(SdlValue::UNARY_OPERATION) {
 	m_operand = operand;
@@ -15,8 +16,9 @@ manta::SdlUnaryOperator::~SdlUnaryOperator() {
 	/* void */
 }
 
-manta::SdlParserStructure *manta::SdlUnaryOperator::getImmediateReference(SdlParserStructure *inputContext, SdlCompilationError **err) {
+manta::SdlParserStructure *manta::SdlUnaryOperator::getImmediateReference(SdlContextTree *inputContext, SdlCompilationError **err, SdlContextTree **newContext) {
 	if (err != nullptr) *err = nullptr;
+	if (newContext != nullptr) *newContext = inputContext;
 
 	SdlParserStructure *resolvedOperand = m_operand->getReference();
 
@@ -27,7 +29,7 @@ manta::SdlParserStructure *manta::SdlUnaryOperator::getImmediateReference(SdlPar
 	// Check the input context
 	bool foundInput = false;
 	if (inputContext != nullptr) {
-		SdlParserStructure *inputConnection = resolvedOperand->getReference(inputContext);
+		SdlParserStructure *inputConnection = resolvedOperand->getReference(inputContext, nullptr, newContext);
 		if (inputConnection != nullptr && inputConnection != resolvedOperand) {
 			foundInput = true;
 			resolvedOperand = inputConnection;
@@ -57,7 +59,7 @@ manta::SdlParserStructure *manta::SdlUnaryOperator::getImmediateReference(SdlPar
 	return nullptr;
 }
 
-manta::NodeOutput *manta::SdlUnaryOperator::_generateNodeOutput(SdlParserStructure *context) {
+manta::NodeOutput *manta::SdlUnaryOperator::_generateNodeOutput(SdlContextTree *context) {
 	SdlValue *resolvedOperand = m_operand;
 
 	if (resolvedOperand == nullptr) return nullptr;
@@ -73,7 +75,7 @@ manta::NodeOutput *manta::SdlUnaryOperator::_generateNodeOutput(SdlParserStructu
 	return nullptr;
 }
 
-manta::Node *manta::SdlUnaryOperator::_generateNode(SdlParserStructure *context) {
+manta::Node *manta::SdlUnaryOperator::_generateNode(SdlContextTree *context) {
 	SdlValue *resolvedOperand = m_operand;
 
 	if (resolvedOperand == nullptr) return nullptr;

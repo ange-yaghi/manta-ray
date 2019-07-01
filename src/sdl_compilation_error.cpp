@@ -1,7 +1,7 @@
 #include <sdl_compilation_error.h>
 
 manta::SdlCompilationError::SdlCompilationError(const SdlTokenInfo &location, 
-			const SdlErrorCode_struct &code, SdlParserStructure *instantiation) {
+			const SdlErrorCode_struct &code, SdlContextTree *instantiation) {
 	m_errorLocation = location;
 	m_code = code;
 	m_instantiation = instantiation;

@@ -1,0 +1,44 @@
+private import "../lib/atomic_types.mr" as types
+
+private node Combine {
+    input vector1;
+    input vector2;
+    default output combined_vector: 
+        types::vector(
+            vector1.x, 
+            vector1.y, 
+            vector2.z, 
+            vector2.w
+        );
+}
+
+private node SomethingConvoluted {
+    input vector1;
+    default output vector: vector1;
+}
+
+private node Container {
+    input vector1;
+    input vector2;
+    default output reverse_vector:
+        Combine(
+            SomethingConvoluted(vector1)^, 
+            // Try creating another vector to confuse the compiler
+            types::vector(
+                vector2.x,
+                vector2.y,
+                vector2.z,
+                vector2.w
+            ));
+}
+
+private node Constants {
+    output ascending1: types::vector(1.0, 2.0, 3.0, 4.0);
+    output ascending2: types::vector(5.0, 6.0, 7.0, 8.0);
+}
+
+Constants constants()
+Container test(
+        constants.ascending1,
+        constants.ascending2
+)

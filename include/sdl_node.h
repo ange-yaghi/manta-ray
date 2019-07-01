@@ -5,6 +5,8 @@
 
 #include <sdl_token_info.h>
 
+#include <vector>
+
 namespace manta {
 
 	class SdlAttributeList;
@@ -13,6 +15,7 @@ namespace manta {
 	class SdlAttribute;
 	class SdlAttributeDefinition;
 	class Node;
+	class SdlContextTree;
 
 	class SdlNode : public SdlParserStructure {
 	public:
@@ -33,7 +36,10 @@ namespace manta {
 		SdlAttributeList *getAttributes() const { return m_attributes; }
 		SdlAttribute *getAttribute(const std::string &name, int *count = nullptr) const;
 
+		virtual void setParentScope(SdlParserStructure *parentScope);
+
 		virtual SdlValue *getDefaultOutputValue();
+
 		virtual SdlNode *getAsNode() { return this; }
 
 	protected:
@@ -55,7 +61,7 @@ namespace manta {
 	protected:
 		virtual void _resolveDefinitions();
 		virtual void _validate();
-		virtual void _checkInstantiation();
+		virtual void _checkInstantiation(SdlContextTree *inputContext);
 
 		void resolveNodeDefinition();
 		void resolveAttributeDefinitions();
@@ -63,10 +69,18 @@ namespace manta {
 		SdlNodeDefinition *m_definition;
 
 	public:
-		Node *generateNode();
+		Node *generateNode(SdlContextTree *context = nullptr);
 
 	protected:
-		Node *m_generatedNode;
+		struct NodeTableEntry {
+			Node *generatedNode;
+			SdlContextTree *context;
+		};
+
+		NodeTableEntry *getTableEntry(SdlContextTree *context);
+		NodeTableEntry *newTableEntry(SdlContextTree *context);
+
+		std::vector<NodeTableEntry> m_nodeTable;
 	};
 
 } /* namespace manta */

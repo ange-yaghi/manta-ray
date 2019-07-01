@@ -33,6 +33,6 @@ void manta::SdlAttribute::setValue(SdlValue *value) {
 	registerComponent(value);
 }
 
-manta::SdlParserStructure *manta::SdlAttribute::getImmediateReference(SdlParserStructure *inputContext, SdlCompilationError **err) {
+manta::SdlParserStructure *manta::SdlAttribute::getImmediateReference(SdlContextTree *inputContext, SdlCompilationError **err, SdlContextTree **newContext) {
 	return m_value;
 }

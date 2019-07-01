@@ -118,3 +118,49 @@ TEST(SdlConstructionTests, SdlColorTest) {
 
 	CHECK_VEC_EQ(out, expected, 1E-5);
 }
+
+TEST(SdlConstructionTests, SdlInlineTest) {
+	SdlCompiler compiler;
+	SdlCompilationUnit *unit = compiler.compile(SDL_TEST_FILES "manta_lib/tests/inline_test.mr");
+	EXPECT_NE(unit, nullptr);
+
+	const SdlErrorList *errors = compiler.getErrorList();
+	EXPECT_EQ(errors->getErrorCount(), 0);
+
+	SdlNode *node = unit->getNode(0);
+
+	EXPECT_EQ(node->getType(), "Container");
+	EXPECT_EQ(node->getName(), "test");
+
+	Node *vectorGeneratedNode = node->generateNode();
+
+	math::Vector out;
+	vectorGeneratedNode->getPrimaryOutput()->sample(nullptr, (void *)&out);
+
+	math::Vector expected = math::loadVector(4.0f, 3.0f, 2.0f, 1.0f);
+
+	CHECK_VEC_EQ(out, expected, 1E-5);
+}
+
+TEST(SdlConstructionTests, SdlDoubleInlineTest) {
+	SdlCompiler compiler;
+	SdlCompilationUnit *unit = compiler.compile(SDL_TEST_FILES "manta_lib/tests/double_inline_test.mr");
+	EXPECT_NE(unit, nullptr);
+
+	const SdlErrorList *errors = compiler.getErrorList();
+	EXPECT_EQ(errors->getErrorCount(), 0);
+
+	SdlNode *node = unit->getNode(1);
+
+	EXPECT_EQ(node->getType(), "Container");
+	EXPECT_EQ(node->getName(), "test");
+
+	Node *vectorGeneratedNode = node->generateNode();
+
+	math::Vector out;
+	vectorGeneratedNode->getPrimaryOutput()->sample(nullptr, (void *)&out);
+
+	math::Vector expected = math::loadVector(1.0f, 2.0f, 7.0f, 8.0f);
+
+	CHECK_VEC_EQ(out, expected, 1E-5);
+}

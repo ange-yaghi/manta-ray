@@ -12,6 +12,7 @@ namespace manta {
 	class SdlCompilationUnit;
 	class SdlCompilationError;
 	class SdlNode;
+	class SdlContextTree;
 	class Node;
 
 	class SdlParserStructure {
@@ -25,17 +26,18 @@ namespace manta {
 		void registerComponent(SdlParserStructure *child);
 		int getComponentCount() const { return (int)m_components.size(); }
 
-		void setParentScope(SdlParserStructure *parentScope) { m_parentScope = parentScope; }
+		virtual void setParentScope(SdlParserStructure *parentScope) { m_parentScope = parentScope; }
+		virtual void setLogicalParent(SdlParserStructure *parent) { m_logicalParent = parent; }
 		virtual SdlParserStructure *resolveName(const std::string &name) const;
 		virtual SdlParserStructure *resolveLocalName(const std::string &name) const;
 
 		bool getDefinitionsResolved() const { return m_definitionsResolved; }
 		bool isExpanded() const { return m_isExpanded; }
 		bool isValidated() const { return m_validated; }
-		virtual SdlParserStructure *getImmediateReference(SdlParserStructure *inputContext = nullptr, 
-			SdlCompilationError **err = nullptr) { return nullptr; }
-		SdlParserStructure *getReference(SdlParserStructure *inputContext = nullptr, 
-			SdlCompilationError **err = nullptr);
+		virtual SdlParserStructure *getImmediateReference(SdlContextTree *inputContext = nullptr, 
+			SdlCompilationError **err = nullptr, SdlContextTree **newContext = nullptr) { return nullptr; }
+		SdlParserStructure *getReference(SdlContextTree *inputContext = nullptr, 
+			SdlCompilationError **err = nullptr, SdlContextTree **newContext = nullptr);
 		SdlParserStructure *getExpansion() const { return m_expansion; }
 
 		virtual SdlValue *getAsValue() { return nullptr; }
@@ -62,17 +64,19 @@ namespace manta {
 		// Compilation stages
 		void expand();
 		void resolveDefinitions();
-		void checkReferences(SdlParserStructure *inputContext = nullptr);
+		void checkReferences(SdlContextTree *inputContext = nullptr);
+		void checkInstantiation(SdlContextTree *inputContext = nullptr);
 		void validate();
 
 	protected:
 		virtual void _expand();
 		virtual void _resolveDefinitions();
 		virtual void _validate();
-		virtual void _checkInstantiation();
+		virtual void _checkInstantiation(SdlContextTree *inputContext);
 
 	protected:
 		SdlParserStructure *m_parentScope;
+		SdlParserStructure *m_logicalParent;
 		SdlTokenInfo m_summaryToken;
 
 		SdlParserStructure *m_expansion;

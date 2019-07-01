@@ -27,6 +27,7 @@ namespace manta {
 
 		// If no name is specified positional notation is assumed
 		bool isPositional() const { return getName() == ""; }
+		virtual SdlValue *getAsValue() { return m_value; }
 
 	protected:
 		SdlTokenInfo_string m_name;
@@ -39,7 +40,7 @@ namespace manta {
 		void setAttributeDefinition(SdlAttributeDefinition *definition) { m_definition = definition; }
 		SdlAttributeDefinition *getAttributeDefinition() const { return m_definition; }
 
-		virtual SdlParserStructure *getImmediateReference(SdlParserStructure *inputContext, SdlCompilationError **err);
+		virtual SdlParserStructure *getImmediateReference(SdlContextTree *inputContext, SdlCompilationError **err, SdlContextTree **newContext);
 
 	protected:
 		SdlAttributeDefinition *m_definition;
