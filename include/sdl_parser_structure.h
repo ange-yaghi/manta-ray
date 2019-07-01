@@ -11,6 +11,8 @@ namespace manta {
 	class SdlValue;
 	class SdlCompilationUnit;
 	class SdlCompilationError;
+	class SdlNode;
+	class Node;
 
 	class SdlParserStructure {
 	public:
@@ -53,6 +55,8 @@ namespace manta {
 
 		void setParentUnit(SdlCompilationUnit *unit) { m_parentUnit = unit; }
 		SdlCompilationUnit *getParentUnit() const;
+
+		virtual SdlNode *getAsNode() { return nullptr; }
 
 	public:
 		// Compilation stages

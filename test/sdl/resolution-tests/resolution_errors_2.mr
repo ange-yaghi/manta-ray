@@ -34,7 +34,7 @@ private node NodeWithBadOutput {
 private node BuiltinExample => BuiltinNode {
     // This works because this node defines the interface to
     // a built-in type
-    output good;
+    output good: [EmptyNode];
 }
 
 private node BuiltinExampleBad => BuiltinNode {

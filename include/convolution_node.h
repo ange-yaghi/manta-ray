@@ -13,7 +13,7 @@ namespace manta {
 		ConvolutionNode();
 		~ConvolutionNode();
 
-		void setInputs(const NodeOutput *base, const NodeOutput *filter) { m_base = base; m_filter = filter; }
+		void setInputs(NodeOutput *base, NodeOutput *filter) { m_base = base; m_filter = filter; }
 
 		void setResize(bool resize) { m_resize = resize; }
 		bool getResize() const { return m_resize; }
@@ -21,7 +21,7 @@ namespace manta {
 		void setClip(bool clip) { m_clip = clip; }
 		bool getClip() const { return m_clip; }
 
-		const VectorMap2DNodeOutput *getMainOutput() const { return &m_output; }
+		VectorMap2DNodeOutput *getMainOutput() { return &m_output; }
 
 	protected:
 		virtual void _initialize();
@@ -32,8 +32,8 @@ namespace manta {
 		virtual void registerOutputs();
 
 	protected:
-		const NodeOutput *m_base;
-		const NodeOutput *m_filter;
+		NodeOutput *m_base;
+		NodeOutput *m_filter;
 		VectorMap2DNodeOutput m_output;
 		bool m_resize;
 		bool m_clip;

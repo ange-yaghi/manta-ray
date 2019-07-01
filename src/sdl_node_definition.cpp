@@ -5,6 +5,7 @@
 #include <sdl_compilation_unit.h>
 #include <sdl_node.h>
 #include <sdl_compilation_error.h>
+#include <sdl_value.h>
 
 manta::SdlNodeDefinition::SdlNodeDefinition(const SdlTokenInfo_string &name) {
 	m_name = name;
@@ -133,19 +134,26 @@ void manta::SdlNodeDefinition::_validate() {
 		}
 	}
 
-	// Check that every output has a definition unless this is a built-in type
+	// Check that every output has a definition of the right type
 	if (m_attributes != nullptr) {
 		int attributeCount = m_attributes->getDefinitionCount();
 		for (int i = 0; i < attributeCount; i++) {
 			SdlAttributeDefinition *definition = m_attributes->getDefinition(i);
 			if (definition->getDirection() == SdlAttributeDefinition::OUTPUT) {
-				if (definition->getDefaultValue() == nullptr && !isBuiltin()) {
+				SdlValue *value = definition->getDefaultValue();
+				if (value != nullptr) {
+					if (value->isGeneric() && !isBuiltin()) {
+						unit->addCompilationError(new SdlCompilationError(*definition->getNameToken(),
+							SdlErrorCode::StandardOutputWithType));
+					}
+					else if (!value->isGeneric() && isBuiltin()) {
+						unit->addCompilationError(new SdlCompilationError(*definition->getNameToken(),
+							SdlErrorCode::BuiltinOutputWithDefinition));
+					}
+				}
+				else {
 					unit->addCompilationError(new SdlCompilationError(*definition->getNameToken(),
 						SdlErrorCode::OutputWithNoDefinition));
-				}
-				else if (definition->getDefaultValue() != nullptr && isBuiltin()) {
-					unit->addCompilationError(new SdlCompilationError(*definition->getNameToken(),
-						SdlErrorCode::BuiltinOutputWithDefinition));
 				}
 			}
 		}

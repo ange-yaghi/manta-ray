@@ -84,7 +84,7 @@ namespace manta {
 		// Resolution stage
 	public:
 		SdlNodeDefinition *resolveLocalNodeDefinition(const std::string &name, int *count, bool external = false);
-		SdlNodeDefinition *resolveNodeDefinition(SdlNode *node, int *count, 
+		SdlNodeDefinition *resolveNodeDefinition(const std::string &name, int *count,
 			const std::string &libraryName, bool external = false);
 
 		// Validation stage

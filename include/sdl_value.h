@@ -3,10 +3,13 @@
 
 #include <sdl_parser_structure.h>
 
+#include <vector>
+
 namespace manta {
 
 	class SdlAttribute;
 	class NodeOutput;
+	class Node;
 
 	class SdlValue : public SdlParserStructure {
 	public:
@@ -18,8 +21,17 @@ namespace manta {
 			CONSTANT_BOOL,
 
 			BINARY_OPERATION,
+			UNARY_OPERATION,
 
-			NODE_REF
+			NODE_REF,
+			GENERIC
+		};
+
+	public:
+		struct GenerationTableEntry {
+			NodeOutput *nodeGeneratedOutput;
+			Node *nodeReference;
+			SdlParserStructure *context;
 		};
 
 	public:
@@ -30,11 +42,23 @@ namespace manta {
 
 		virtual SdlValue *getAsValue() { return this; }
 
+		virtual bool isGeneric() const { return false; }
+
 	private:
 		VALUE_TYPE m_type;
 
 	public:
-		virtual NodeOutput *generateNodeOutput() { return nullptr; }
+		NodeOutput *generateNodeOutput(SdlParserStructure *context);
+		Node *generateNode(SdlParserStructure *context);
+
+	protected:
+		virtual NodeOutput *_generateNodeOutput(SdlParserStructure *context);
+		virtual Node *_generateNode(SdlParserStructure *context);
+
+		GenerationTableEntry *getEntry(SdlParserStructure *context);
+		GenerationTableEntry *newEntry(SdlParserStructure *context);
+
+		std::vector<GenerationTableEntry> m_generationTable;
 	};
 
 } /* namespace manta */

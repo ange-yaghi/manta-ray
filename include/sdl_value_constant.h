@@ -9,6 +9,7 @@
 #include <sdl_node.h>
 #include <single_float_node_output.h>
 #include <standard_allocator.h>
+#include <node.h>
 
 namespace manta {
 
@@ -19,29 +20,24 @@ namespace manta {
 	protected:
 		typedef T_SdlTokenInfo<T> _TokenInfo;
 
-		static NodeOutput *generateNodeOutput(math::real_d value) {
+		static NodeOutput *generateNodeOutput(math::real_d value, SdlParserStructure *context) {
 			SingleFloatNodeOutput *newNode = StandardAllocator::Global()->allocate<SingleFloatNodeOutput>();
 			newNode->setValue(value);
 
 			return newNode;
 		}
 
-		static NodeOutput *generateNodeOutput(const std::string &value) {
+		static NodeOutput *generateNodeOutput(const std::string &value, SdlParserStructure *context) {
 			// TODO
 			return nullptr;
 		}
 
-		static NodeOutput *generateNodeOutput(SdlNode *node) {
+		static NodeOutput *generateNodeOutput(bool value, SdlParserStructure *context) {
 			// TODO
 			return nullptr;
 		}
 
-		static NodeOutput *generateNodeOutput(bool value) {
-			// TODO
-			return nullptr;
-		}
-
-		static NodeOutput *generateNodeOutput(int value) {
+		static NodeOutput *generateNodeOutput(int value, SdlParserStructure *context) {
 			// TODO
 			return nullptr;
 		}
@@ -56,8 +52,8 @@ namespace manta {
 		virtual void setValue(const T &value) { m_value = value; }
 		T getValue() const { return m_value; }
 
-		virtual NodeOutput *generateNodeOutput() {
-			return generateNodeOutput(m_value);
+		virtual NodeOutput *_generateNodeOutput(SdlParserStructure *context) {
+			return generateNodeOutput(m_value, context);
 		}
 
 	protected:
@@ -96,6 +92,35 @@ namespace manta {
 
 			return reference;
 		}
+
+		virtual Node *_generateNode(SdlParserStructure *context) {
+			SdlParserStructure *reference = getImmediateReference(context);
+			if (reference == nullptr) return nullptr;
+
+			SdlNode *asNode = reference->getAsNode();
+			if (asNode != nullptr) {
+				return asNode->generateNode();
+			}
+			else return nullptr;
+		}
+
+		virtual NodeOutput *_generateNodeOutput(SdlParserStructure *context) {
+			SdlParserStructure *reference = getImmediateReference(context);
+			if (reference == nullptr) return nullptr;
+
+			SdlNode *asNode = reference->getAsNode();
+			if (asNode != nullptr) {
+				Node *generatedNode = generateNode(context);
+				if (generatedNode != nullptr) {
+					return generatedNode->getPrimaryOutput();
+				}
+			}
+
+			SdlValue *value = reference->getAsValue();
+			// TODO: if value is nullptr then that would be very bad... not sure what to do about this yet
+
+			return value->generateNodeOutput(context);
+		}
 	};
 
 	// Specialized type for node references
@@ -114,6 +139,18 @@ namespace manta {
 
 			if (err != nullptr) *err = nullptr;
 			return m_value;
+		}
+
+		virtual SdlNode *asNode() {
+			return m_value;
+		}
+
+		virtual Node *_generateNode(SdlParserStructure *context) {
+			return m_value->generateNode();
+		}
+
+		virtual NodeOutput *_generateNodeOutput(SdlParserStructure *context) {
+			return nullptr;
 		}
 	};
 

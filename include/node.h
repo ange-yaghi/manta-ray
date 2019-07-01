@@ -21,17 +21,17 @@ namespace manta {
 
 		struct NodeInputPort {
 			pNodeInput *input;
-			const char *name;
+			std::string name;
 		};
 
 		struct NodeOutputPort {
 			NodeOutput *output;
-			const char *name;
+			std::string name;
 		};
 
 		struct NodeOutputPortReference {
-			const NodeOutput * const *output;
-			const char *name;
+			NodeOutput * const *output;
+			std::string name;
 		};
 
 	public:
@@ -50,11 +50,11 @@ namespace manta {
 		void setName(const std::string &name) { m_name = name; }
 		std::string getName() const { return m_name; }
 
-		void connectInput(pNodeInput input, const char *name);
+		void connectInput(pNodeInput input, const std::string &name);
 		int getInputCount() const { return (int)m_inputs.size(); }
 
-		const NodeOutput *getPrimaryOutput() const;
-		const NodeOutput *getOutput(const char *name) const;
+		NodeOutput *getPrimaryOutput() const;
+		NodeOutput *getOutput(const std::string &name) const;
 		int getOutputCount() const { return (int)m_outputs.size(); }
 
 		int getOutputReferenceCount() const { return (int)m_outputReferences.size(); }
@@ -81,14 +81,15 @@ namespace manta {
 
 	protected:
 		std::vector<NodeInputPort> m_inputs;
-		void registerInput(pNodeInput *node, const char *name) { m_inputs.push_back({node, name}); }
+		void registerInput(pNodeInput *node, const std::string &name);
 
 		std::vector<NodeOutputPort> m_outputs;
-		void registerOutput(NodeOutput *node, const char *name);
-		void setPrimaryOutput(NodeOutput *node);
+		void registerOutput(NodeOutput *node, const std::string &name);
 
 		std::vector<NodeOutputPortReference> m_outputReferences;
-		void registerOutputReference(const NodeOutput *const *node, const char *name);
+		void registerOutputReference(NodeOutput *const *node, const std::string &name);
+
+		void setPrimaryOutput(NodeOutput *node);
 
 	protected:
 		NodeOutput *m_primaryOutput;

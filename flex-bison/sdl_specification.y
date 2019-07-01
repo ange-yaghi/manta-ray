@@ -26,6 +26,8 @@
 	#include <sdl_compilation_error.h>
 	#include <sdl_structure_list.h>
 	#include <sdl_visibility.h>
+	#include <sdl_unary_operator.h>
+	#include <sdl_generic_value.h>
 
 	#include <string>
 
@@ -90,6 +92,7 @@
 %token <manta::SdlTokenInfo_string> DECORATOR
 %token <manta::SdlTokenInfo_string> PUBLIC
 %token <manta::SdlTokenInfo_string> PRIVATE
+%token <manta::SdlTokenInfo_string> BUILTIN_POINTER
 %token <manta::SdlTokenInfo_string> POINTER
 %token <manta::SdlTokenInfo_string> NAMESPACE_POINTER
 %token <manta::SdlTokenInfo_string> UNRECOGNIZED
@@ -105,10 +108,13 @@
 %token <manta::SdlTokenInfo_string> ')'
 %token <manta::SdlTokenInfo_string> '{'
 %token <manta::SdlTokenInfo_string> '}'
+%token <manta::SdlTokenInfo_string> '['
+%token <manta::SdlTokenInfo_string> ']'
 %token <manta::SdlTokenInfo_string> ':'
 %token <manta::SdlTokenInfo_string> ';'
 %token <manta::SdlTokenInfo_string> ','
 %token <manta::SdlTokenInfo_string> '.'
+%token <manta::SdlTokenInfo_string> '^'
 
 %type <manta::SdlTokenInfo_string> standard_operator;
 %type <manta::SdlTokenInfo_string> type_name;
@@ -119,11 +125,13 @@
 %type <manta::SdlAttributeList *> connection_block;
 %type <manta::SdlAttribute *> attribute;
 %type <manta::SdlValue *> value;
+%type <manta::SdlValue *> port_value;
 %type <manta::SdlValue *> atomic_value;
 %type <manta::SdlValue *> label_value;
 %type <manta::SdlNode *> inline_node;
 %type <manta::SdlValue *> constant;
 %type <manta::SdlValue *> data_access;
+%type <manta::SdlValue *> default_operator;
 %type <manta::SdlValue *> mul_exp;
 %type <manta::SdlValue *> add_exp;
 %type <manta::SdlValue *> primary_exp;
@@ -260,7 +268,7 @@ node_name
   ;
 
 node_shadow
-  : node_name POINTER LABEL								{ $$ = $1; $$->setBuiltinName($3); $$->setDefinesBuiltin(true); }
+  : node_name BUILTIN_POINTER LABEL						{ $$ = $1; $$->setBuiltinName($3); $$->setDefinesBuiltin(true); }
   | node_name											{ $$ = $1; $$->setDefinesBuiltin(false); }
   ;
 
@@ -322,8 +330,13 @@ port_status
   | port_declaration					{ $$ = $1; $$->setDefault(false); }
   ;
 
+port_value
+  : '[' type_name_namespace ']'			{ $$ = new SdlGenericValue($2); }
+  | value								{ $$ = $1; }
+  ;
+
 port_connection
-  : port_status ':' value				{ $$ = $1; $$->setDefaultValue($3); }
+  : port_status ':' port_value			{ $$ = $1; $$->setDefaultValue($3); }
   | port_status							{ $$ = $1; $$->setDefaultValue(nullptr); }
   ;
 
@@ -408,11 +421,20 @@ primary_exp
   | '(' error ')'					{ $$ = nullptr; yyerrok; }
   ;
 
-data_access
+default_operator
   : primary_exp						{ $$ = $1; }
+  | primary_exp '^'					{ $$ = new SdlUnaryOperator(SdlUnaryOperator::DEFAULT, $1); }
+  ;
+
+data_access
+  : default_operator				{ $$ = $1; }
   | data_access '.' label_value		{ 
 										$$ = static_cast<SdlValue *>(
 											new SdlBinaryOperator(SdlBinaryOperator::DOT, $1, $3));
+									}
+  | data_access POINTER label_value { 
+										$$ = static_cast<SdlValue *>(
+											new SdlBinaryOperator(SdlBinaryOperator::POINTER, $1, $3));
 									}
   ;
 

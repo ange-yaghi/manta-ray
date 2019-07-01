@@ -34,6 +34,7 @@ ERR(UsingOutputPortAsInput) =	{ "R", "0040", "Using output port as input" };
 ERR(UnresolvedReference) =		{ "R", "0050", "Unresolved reference" };
 ERR(UndefinedMember) =			{ "R", "0060", "Undefined member" };
 ERR(AccessingInternalMember) =	{ "R", "0061", "Invalid reference to an internal member" };
+ERR(CannotFindDefaultValue) =	{ "R", "0070", "Cannot find default value" };
 
 // [V] - Validation errors
 ERR(InputSpecifiedMultipleTimes) = 
@@ -43,6 +44,8 @@ ERR(InputNotConnected) =		{ "V", "0040", "Input not connected" };
 ERR(OutputWithNoDefinition) =	{ "V", "0050", "Output with no definition" };
 ERR(BuiltinOutputWithDefinition) =
 								{ "V", "0051", "Built-in output given a definition" };
+ERR(BuiltinOutputMissingType) = { "V", "0052", "Built-in output missing a definition" };
+ERR(StandardOutputWithType) =	{ "V", "0051", "Built-in output given a definition" };
 ERR(InputSpecifiedMultipleTimesPositional) =
 								{ "V", "0011", "Input specified multiple times by positional" };
 ERR(DuplicateNodeDefinition) =	{ "V", "0060", "Multiple definitions with the same name" };

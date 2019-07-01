@@ -36,6 +36,7 @@ namespace manta {
 		extern const SdlErrorCode_struct UnresolvedReference;
 		extern const SdlErrorCode_struct UndefinedMember;
 		extern const SdlErrorCode_struct AccessingInternalMember;
+		extern const SdlErrorCode_struct CannotFindDefaultValue;
 
 		// [V] - Validation errors
 		extern const SdlErrorCode_struct InputSpecifiedMultipleTimes;
@@ -43,6 +44,8 @@ namespace manta {
 		extern const SdlErrorCode_struct InputNotConnected;
 		extern const SdlErrorCode_struct OutputWithNoDefinition;
 		extern const SdlErrorCode_struct BuiltinOutputWithDefinition;
+		extern const SdlErrorCode_struct BuiltinOutputMissingType;
+		extern const SdlErrorCode_struct StandardOutputWithType;
 		extern const SdlErrorCode_struct InputSpecifiedMultipleTimesPositional;
 		extern const SdlErrorCode_struct DuplicateNodeDefinition;
 	};

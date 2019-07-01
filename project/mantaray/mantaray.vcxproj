@@ -23,6 +23,8 @@
     <ClCompile Include="..\..\autogen\sdl_scanner.auto.cpp" />
     <ClCompile Include="..\..\src\aperture.cpp" />
     <ClCompile Include="..\..\src\constructed_vector_node_output.cpp" />
+    <ClCompile Include="..\..\src\custom_node.cpp" />
+    <ClCompile Include="..\..\src\node_output.cpp" />
     <ClCompile Include="..\..\src\node_program.cpp" />
     <ClCompile Include="..\..\src\path.cpp" />
     <ClCompile Include="..\..\src\float_node_output.cpp" />
@@ -32,6 +34,7 @@
     <ClCompile Include="..\..\src\sdl_compiler.cpp" />
     <ClCompile Include="..\..\src\sdl_error_list.cpp" />
     <ClCompile Include="..\..\src\sdl_generator.cpp" />
+    <ClCompile Include="..\..\src\sdl_generic_value.cpp" />
     <ClCompile Include="..\..\src\sdl_import_statement.cpp" />
     <ClCompile Include="..\..\src\media_interface.cpp" />
     <ClCompile Include="..\..\src\biconvex_lens.cpp" />
@@ -76,11 +79,14 @@
     <ClCompile Include="..\..\src\sdl_node.cpp" />
     <ClCompile Include="..\..\src\sdl_node_definition.cpp" />
     <ClCompile Include="..\..\src\sdl_parser_structure.cpp" />
+    <ClCompile Include="..\..\src\sdl_unary_operator.cpp" />
     <ClCompile Include="..\..\src\sdl_value.cpp" />
     <ClCompile Include="..\..\src\signal_processing.cpp" />
     <ClCompile Include="..\..\src\single_float_node_output.cpp" />
     <ClCompile Include="..\..\src\single_vector_node_output.cpp" />
     <ClCompile Include="..\..\src\spectrum.cpp" />
+    <ClCompile Include="..\..\src\srgb_node.cpp" />
+    <ClCompile Include="..\..\src\srgb_node_output.cpp" />
     <ClCompile Include="..\..\src\stack_allocator.cpp" />
     <ClCompile Include="..\..\src\step_node.cpp" />
     <ClCompile Include="..\..\src\step_node_output.cpp" />
@@ -138,8 +144,10 @@
     <ClCompile Include="..\..\src\starburst_approximation.cpp" />
     <ClCompile Include="..\..\src\texture_node.cpp" />
     <ClCompile Include="..\..\src\vector_map_2d_node_output.cpp" />
-    <ClCompile Include="..\..\src\vector_node.cpp" />
+    <ClCompile Include="..\..\src\constructed_vector_node.cpp" />
     <ClCompile Include="..\..\src\vector_node_output.cpp" />
+    <ClCompile Include="..\..\src\vector_split_node.cpp" />
+    <ClCompile Include="..\..\src\vector_split_node_output.cpp" />
     <ClCompile Include="..\..\src\worker.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -160,6 +168,7 @@
     <ClInclude Include="..\..\include\complex_math.h" />
     <ClInclude Include="..\..\include\constructed_vector_node_output.h" />
     <ClInclude Include="..\..\include\convolution.h" />
+    <ClInclude Include="..\..\include\custom_node.h" />
     <ClInclude Include="..\..\include\dielectric_media_interface.h" />
     <ClInclude Include="..\..\include\fraunhofer_diffraction.h" />
     <ClInclude Include="..\..\include\geometry.h" />
@@ -168,6 +177,8 @@
     <ClInclude Include="..\..\include\node_program.h" />
     <ClInclude Include="..\..\include\float_node_output.h" />
     <ClInclude Include="..\..\include\sdl_generator.h" />
+    <ClInclude Include="..\..\include\sdl_generic_value.h" />
+    <ClInclude Include="..\..\include\sdl_unary_operator.h" />
     <ClInclude Include="..\..\include\sdl_visibility.h" />
     <ClInclude Include="..\..\include\image_byte_buffer.h" />
     <ClInclude Include="..\..\include\image_file_node.h" />
@@ -213,6 +224,8 @@
     <ClInclude Include="..\..\include\signal_processing.h" />
     <ClInclude Include="..\..\include\single_float_node_output.h" />
     <ClInclude Include="..\..\include\single_vector_node_output.h" />
+    <ClInclude Include="..\..\include\srgb_node.h" />
+    <ClInclude Include="..\..\include\srgb_node_output.h" />
     <ClInclude Include="..\..\include\step_node.h" />
     <ClInclude Include="..\..\include\step_node_output.h" />
     <ClInclude Include="..\..\include\vector_map_wrapper_node.h" />
@@ -287,8 +300,10 @@
     <ClInclude Include="..\..\include\texture_node.h" />
     <ClInclude Include="..\..\include\vector_map_2d_node_output.h" />
     <ClInclude Include="..\..\include\node_output.h" />
-    <ClInclude Include="..\..\include\vector_node.h" />
+    <ClInclude Include="..\..\include\constructed_vector_node.h" />
     <ClInclude Include="..\..\include\vector_node_output.h" />
+    <ClInclude Include="..\..\include\vector_split_node.h" />
+    <ClInclude Include="..\..\include\vector_split_node_output.h" />
     <ClInclude Include="..\..\include\worker.h" />
     <ClInclude Include="..\..\scripts\new_contributor.py" />
   </ItemGroup>

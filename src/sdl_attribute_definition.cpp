@@ -2,6 +2,8 @@
 
 #include <sdl_value.h>
 #include <sdl_input_connection.h>
+#include <sdl_compilation_unit.h>
+#include <sdl_compilation_error.h>
 
 manta::SdlAttributeDefinition::SdlAttributeDefinition(const SdlTokenInfo_string &directionToken,
 								const SdlTokenInfo_string &name, DIRECTION dir) {

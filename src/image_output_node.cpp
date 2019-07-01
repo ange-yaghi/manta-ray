@@ -47,7 +47,7 @@ void manta::ImageOutputNode::_destroy() {
 }
 
 void manta::ImageOutputNode::registerInputs() {
-	registerInput((const NodeOutput **)&m_input, "Input");
+	registerInput(&m_input, "Input");
 }
 
 void manta::ImageOutputNode::registerOutputs() {

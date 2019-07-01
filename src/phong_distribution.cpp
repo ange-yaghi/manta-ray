@@ -95,5 +95,5 @@ manta::math::real manta::PhongDistribution::calculateG1(
 }
 
 void manta::PhongDistribution::registerInputs() {
-	registerInput((const NodeOutput **)m_powerNode, "Power");
+	registerInput((pNodeInput *)m_powerNode, "Power");
 }
