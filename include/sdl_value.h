@@ -10,6 +10,7 @@ namespace manta {
 	class SdlAttribute;
 	class NodeOutput;
 	class Node;
+	class SdlContextTree;
 
 	class SdlValue : public SdlParserStructure {
 	public:
@@ -31,7 +32,7 @@ namespace manta {
 		struct GenerationTableEntry {
 			NodeOutput *nodeGeneratedOutput;
 			Node *nodeReference;
-			SdlParserStructure *context;
+			SdlContextTree *context;
 		};
 
 	public:
@@ -48,15 +49,15 @@ namespace manta {
 		VALUE_TYPE m_type;
 
 	public:
-		NodeOutput *generateNodeOutput(SdlParserStructure *context);
-		Node *generateNode(SdlParserStructure *context);
+		NodeOutput *generateNodeOutput(SdlContextTree *context);
+		Node *generateNode(SdlContextTree *context);
 
 	protected:
-		virtual NodeOutput *_generateNodeOutput(SdlParserStructure *context);
-		virtual Node *_generateNode(SdlParserStructure *context);
+		virtual NodeOutput *_generateNodeOutput(SdlContextTree *context);
+		virtual Node *_generateNode(SdlContextTree *context);
 
-		GenerationTableEntry *getEntry(SdlParserStructure *context);
-		GenerationTableEntry *newEntry(SdlParserStructure *context);
+		GenerationTableEntry *getEntry(SdlContextTree *context);
+		GenerationTableEntry *newEntry(SdlContextTree *context);
 
 		std::vector<GenerationTableEntry> m_generationTable;
 	};

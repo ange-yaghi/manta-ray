@@ -10,10 +10,10 @@
 #include <sdl_value.h>
 #include <node.h>
 #include <custom_node.h>
-
 #include <standard_allocator.h>
 #include <srgb_node.h>
 #include <constructed_vector_node.h>
+#include <sdl_context_tree.h>
 
 manta::SdlNode::SdlNode() {
 	/* void */
@@ -32,7 +32,6 @@ manta::SdlNode::SdlNode(const SdlTokenInfo_string &type, const SdlTokenInfo_stri
 	registerComponent(attributes);
 
 	m_definition = nullptr;
-	m_generatedNode = nullptr;
 }
 
 manta::SdlNode::SdlNode(const SdlTokenInfo_string &type, SdlAttributeList *attributes,
@@ -45,8 +44,6 @@ manta::SdlNode::SdlNode(const SdlTokenInfo_string &type, SdlAttributeList *attri
 	registerToken(&type);
 	registerToken(&library);
 	registerComponent(attributes);
-
-	m_generatedNode = nullptr;
 }
 
 manta::SdlNode::~SdlNode() {
@@ -67,13 +64,23 @@ manta::SdlAttribute *manta::SdlNode::getAttribute(const std::string &name, int *
 	int attributeCount = m_attributes->getAttributeCount();
 	for (int i = 0; i < attributeCount; i++) {
 		SdlAttribute *attribute = m_attributes->getAttribute(i);
-		if (attribute->getName() == name) {
+		bool definitionMatches = attribute->getAttributeDefinition() != nullptr
+			? attribute->getAttributeDefinition()->getName() == name
+			: false;
+		if (definitionMatches || attribute->getName() == name) {
 			if (result == nullptr) result = attribute;
 			if (count != nullptr) (*count)++;
 		}
 	}
 
 	return result;
+}
+
+void manta::SdlNode::setParentScope(SdlParserStructure *parentScope) {
+	SdlParserStructure::setParentScope(parentScope);
+	if (m_attributes != nullptr) {
+		m_attributes->setParentScope(parentScope);
+	}
 }
 
 manta::SdlAttribute *manta::SdlNode::getAttribute(SdlAttributeDefinition *definition, int *count) const {
@@ -167,11 +174,15 @@ void manta::SdlNode::_validate() {
 	}
 }
 
-void manta::SdlNode::_checkInstantiation() {
+void manta::SdlNode::_checkInstantiation(SdlContextTree *inputContext) {
 	// Check all references relating to the connection of inputs from this
 	// node to the actual definition.
 	if (m_definition != nullptr) {
-		m_definition->checkReferences(this);
+		SdlContextTree *context = inputContext
+			? inputContext->newChild(this)
+			: new SdlContextTree(this);
+
+		m_definition->checkReferences(context);
 	}
 }
 
@@ -266,8 +277,19 @@ void manta::SdlNode::resolveAttributeDefinitions() {
 	}
 }
 
-manta::Node *manta::SdlNode::generateNode() {
-	if (m_generatedNode != nullptr) return m_generatedNode;
+manta::Node *manta::SdlNode::generateNode(SdlContextTree *context) {
+	SdlContextTree *newContext;
+	if (context == nullptr) {
+		newContext = new SdlContextTree(this);
+	}
+	else {
+		newContext = context->newChild(this);
+	}
+
+	NodeTableEntry *entry = getTableEntry(context);
+	if (entry != nullptr) return entry->generatedNode;
+
+	entry = newTableEntry(context);
 
 	SdlNodeDefinition *definition = getDefinition();
 	const SdlAttributeDefinitionList *allAttributes = definition->getAttributeDefinitionList();
@@ -291,29 +313,29 @@ manta::Node *manta::SdlNode::generateNode() {
 
 			if (attribute != nullptr) {
 				// Input was specified
-				SdlValue *asValue = attribute->getImmediateReference(this, nullptr)->getAsValue();
+				SdlValue *asValue = attribute->getImmediateReference(context, nullptr, nullptr)->getAsValue();
 
 				Mapping inputPort;
-				inputPort.output = asValue->generateNodeOutput(this);
+				inputPort.output = asValue->generateNodeOutput(context);
 				inputPort.name = attributeDefinition->getName();
 				inputs.push_back(inputPort);
 			}
 			else {
 				// Use the default value in the definition
-				SdlValue *asValue = attributeDefinition->getImmediateReference(this, nullptr)->getAsValue();
+				SdlValue *asValue = attributeDefinition->getImmediateReference(context, nullptr, nullptr)->getAsValue();
 
 				Mapping inputPort;
-				inputPort.output = asValue->generateNodeOutput(this);
+				inputPort.output = asValue->generateNodeOutput(context);
 				inputPort.name = attributeDefinition->getName();
 				inputs.push_back(inputPort);
 			}
 		}
 		else if (attributeDefinition->getDirection() == SdlAttributeDefinition::OUTPUT &&
 																	!definition->isBuiltin()) {
-			SdlValue *asValue = attributeDefinition->getImmediateReference(this, nullptr)->getAsValue();
+			SdlValue *asValue = attributeDefinition->getImmediateReference(newContext, nullptr, nullptr)->getAsValue();
 
 			Mapping outputPort;
-			outputPort.output = asValue->generateNodeOutput(this);
+			outputPort.output = asValue->generateNodeOutput(newContext);
 			outputPort.name = attributeDefinition->getName();
 			outputPort.primary = asValue == getDefaultOutputValue();
 
@@ -357,8 +379,27 @@ manta::Node *manta::SdlNode::generateNode() {
 		}
 	}
 
-	m_generatedNode = newNode;
+	entry->generatedNode = newNode;
 	return newNode;
+}
+
+manta::SdlNode::NodeTableEntry *manta::SdlNode::getTableEntry(SdlContextTree *context) {
+	int entryCount = (int)m_nodeTable.size();
+	for (int i = 0; i < entryCount; i++) {
+		if (m_nodeTable[i].context == context) {
+			return &m_nodeTable[i];
+		}
+	}
+
+	return nullptr;
+}
+
+manta::SdlNode::NodeTableEntry *manta::SdlNode::newTableEntry(SdlContextTree *context) {
+	NodeTableEntry *newEntry = new NodeTableEntry();
+	newEntry->context = context;
+	newEntry->generatedNode = nullptr;
+
+	return newEntry;
 }
 
 manta::SdlValue *manta::SdlNode::getDefaultOutputValue() {

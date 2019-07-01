@@ -1,9 +1,11 @@
 #include <sdl_parser_structure.h>
 
 #include <sdl_compilation_unit.h>
+#include <sdl_context_tree.h>
 
 manta::SdlParserStructure::SdlParserStructure() {
 	m_parentScope = nullptr;
+	m_logicalParent = nullptr;
 	m_checkReferences = true;
 
 	m_definitionsResolved = false;
@@ -25,6 +27,7 @@ void manta::SdlParserStructure::registerComponent(SdlParserStructure *child) {
 	if (child != nullptr) {
 		m_summaryToken.combine(child->getSummaryToken());
 		child->setParentScope(this);
+		child->setLogicalParent(this);
 
 		m_components.push_back(child);
 	}
@@ -41,13 +44,16 @@ manta::SdlParserStructure *manta::SdlParserStructure::resolveName(const std::str
 	return nullptr;
 }
 
-manta::SdlParserStructure *manta::SdlParserStructure::getReference(SdlParserStructure *inputContext, SdlCompilationError **err) {
+manta::SdlParserStructure *manta::SdlParserStructure::getReference(SdlContextTree *inputContext, 
+											SdlCompilationError **err, SdlContextTree **_newContext) {
 	if (err != nullptr) *err = nullptr;
-	SdlParserStructure *immediateReference = getImmediateReference(inputContext, err);
+
+	SdlContextTree *newContext = inputContext;
+	SdlParserStructure *immediateReference = getImmediateReference(inputContext, err, &newContext);
 
 	// Error checking is not done on any parent nodes because it's assumed that errors have
 	// already been checked/reported
-	if (immediateReference != nullptr) return immediateReference->getReference(inputContext, nullptr);
+	if (immediateReference != nullptr) return immediateReference->getReference(newContext, nullptr, _newContext);
 	else return this;
 }
 
@@ -65,7 +71,7 @@ void manta::SdlParserStructure::resolveDefinitions() {
 	m_definitionsResolved = true;
 }
 
-void manta::SdlParserStructure::checkReferences(SdlParserStructure *inputContext) {
+void manta::SdlParserStructure::checkReferences(SdlContextTree *inputContext) {
 	// Check components
 	int componentCount = getComponentCount();
 	for (int i = 0; i < componentCount; i++) {
@@ -80,8 +86,10 @@ void manta::SdlParserStructure::checkReferences(SdlParserStructure *inputContext
 			getParentUnit()->addCompilationError(err);
 		}
 	}
+}
 
-	_checkInstantiation();
+void manta::SdlParserStructure::checkInstantiation(SdlContextTree *inputContext) {
+	_checkInstantiation(inputContext);
 }
 
 void manta::SdlParserStructure::validate() {
@@ -125,7 +133,7 @@ void manta::SdlParserStructure::_validate() {
 	/* void */
 }
 
-void manta::SdlParserStructure::_checkInstantiation() {
+void manta::SdlParserStructure::_checkInstantiation(SdlContextTree *inputContext) {
 	/* void */
 }
 
@@ -147,6 +155,6 @@ bool manta::SdlParserStructure::allowsExternalAccess() const {
 }
 
 manta::SdlCompilationUnit *manta::SdlParserStructure::getParentUnit() const {
-	if (m_parentUnit == nullptr) return m_parentScope->getParentUnit();
+	if (m_parentUnit == nullptr) return m_logicalParent->getParentUnit();
 	else return m_parentUnit;
 }

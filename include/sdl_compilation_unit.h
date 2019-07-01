@@ -86,6 +86,7 @@ namespace manta {
 		SdlNodeDefinition *resolveLocalNodeDefinition(const std::string &name, int *count, bool external = false);
 		SdlNodeDefinition *resolveNodeDefinition(const std::string &name, int *count,
 			const std::string &libraryName, bool external = false);
+		virtual void _checkInstantiation(SdlContextTree *inputContext);
 
 		// Validation stage
 	protected:

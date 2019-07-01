@@ -126,6 +126,7 @@ void manta::SdlCompiler::resolve() {
 		SdlCompilationUnit *unit = m_units[i];
 		unit->resolveDefinitions();
 		unit->checkReferences();
+		unit->checkInstantiation();
 	}
 }
 

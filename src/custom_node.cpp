@@ -22,14 +22,9 @@ void manta::CustomNode::addCustomInput(const std::string &name) {
 	m_customInputs.push_back(newPort);
 }
 
-void manta::CustomNode::_initialize() {
-	int inputCount = getCustomInputCount();
-	for (int i = 0; i < inputCount; i++) {
-		m_customInputs[i]->port->initialize();
-	}	
-	
+void manta::CustomNode::_initialize() {	
 	int outputCount = getCustomOutputCount();
-	for (int i = 0; i < inputCount; i++) {
+	for (int i = 0; i < outputCount; i++) {
 		m_customOutputs[i]->port->initialize();
 	}
 }

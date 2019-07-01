@@ -10,7 +10,7 @@ manta::SdlValue::~SdlValue() {
 	/* void */
 }
 
-manta::NodeOutput *manta::SdlValue::generateNodeOutput(SdlParserStructure *context) {
+manta::NodeOutput *manta::SdlValue::generateNodeOutput(SdlContextTree *context) {
 	GenerationTableEntry *entry = getEntry(context);
 	if (entry == nullptr) entry = newEntry(context);
 
@@ -29,7 +29,7 @@ manta::NodeOutput *manta::SdlValue::generateNodeOutput(SdlParserStructure *conte
 	return entry->nodeGeneratedOutput;
 }
 
-manta::Node *manta::SdlValue::generateNode(SdlParserStructure *context) {
+manta::Node *manta::SdlValue::generateNode(SdlContextTree *context) {
 	GenerationTableEntry *entry = getEntry(context);
 	if (entry == nullptr) entry = newEntry(context);
 
@@ -40,15 +40,15 @@ manta::Node *manta::SdlValue::generateNode(SdlParserStructure *context) {
 	else return entry->nodeReference;
 }
 
-manta::NodeOutput *manta::SdlValue::_generateNodeOutput(SdlParserStructure *context) {
+manta::NodeOutput *manta::SdlValue::_generateNodeOutput(SdlContextTree *context) {
 	return nullptr;
 }
 
-manta::Node *manta::SdlValue::_generateNode(SdlParserStructure *context) {
+manta::Node *manta::SdlValue::_generateNode(SdlContextTree *context) {
 	return nullptr;
 }
 
-manta::SdlValue::GenerationTableEntry *manta::SdlValue::getEntry(SdlParserStructure *context) {
+manta::SdlValue::GenerationTableEntry *manta::SdlValue::getEntry(SdlContextTree *context) {
 	int entryCount = (int)m_generationTable.size();
 	for (int i = 0; i < entryCount; i++) {
 		if (m_generationTable[i].context == context) {
@@ -59,7 +59,7 @@ manta::SdlValue::GenerationTableEntry *manta::SdlValue::getEntry(SdlParserStruct
 	return nullptr;
 }
 
-manta::SdlValue::GenerationTableEntry *manta::SdlValue::newEntry(SdlParserStructure *context) {
+manta::SdlValue::GenerationTableEntry *manta::SdlValue::newEntry(SdlContextTree *context) {
 	GenerationTableEntry *newEntry = new GenerationTableEntry();
 	newEntry->context = context;
 	newEntry->nodeGeneratedOutput = nullptr;

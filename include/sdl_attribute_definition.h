@@ -44,7 +44,7 @@ namespace manta {
 		int getImpliedMemberCount() const { return (int)m_impliedMembers.size(); }
 		SdlInputConnection *getImpliedMember(const std::string &name) const;
 
-		virtual SdlParserStructure *getImmediateReference(SdlParserStructure *inputContext, SdlCompilationError **err);
+		virtual SdlParserStructure *getImmediateReference(SdlContextTree *inputContext, SdlCompilationError **err, SdlContextTree **newContext);
 
 		virtual bool isInputPoint() const { return m_direction == INPUT; }
 
