@@ -12,6 +12,7 @@ namespace manta {
 	class SdlCompilationUnit;
 	class SdlAttribute;
 	class SdlAttributeDefinition;
+	class Node;
 
 	class SdlNode : public SdlParserStructure {
 	public:
@@ -32,7 +33,8 @@ namespace manta {
 		SdlAttributeList *getAttributes() const { return m_attributes; }
 		SdlAttribute *getAttribute(const std::string &name, int *count = nullptr) const;
 
-		virtual SdlValue *getAsValue();
+		virtual SdlValue *getDefaultOutputValue();
+		virtual SdlNode *getAsNode() { return this; }
 
 	protected:
 		SdlTokenInfo_string m_type;
@@ -59,6 +61,12 @@ namespace manta {
 		void resolveAttributeDefinitions();
 
 		SdlNodeDefinition *m_definition;
+
+	public:
+		Node *generateNode();
+
+	protected:
+		Node *m_generatedNode;
 	};
 
 } /* namespace manta */

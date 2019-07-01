@@ -1,5 +1,5 @@
-#ifndef VECTOR_NODE_H
-#define VECTOR_NODE_H
+#ifndef CONSTRUCTED_VECTOR_NODE_H
+#define CONSTRUCTED_VECTOR_NODE_H
 
 #include <node.h>
 
@@ -7,10 +7,10 @@
 
 namespace manta {
 
-	class VectorNode : public Node {
+	class ConstructedVectorNode : public Node {
 	public:
-		VectorNode();
-		virtual ~VectorNode();
+		ConstructedVectorNode();
+		virtual ~ConstructedVectorNode();
 
 	protected:
 		virtual void _initialize();
@@ -20,12 +20,10 @@ namespace manta {
 		virtual void registerOutputs();
 		virtual void registerInputs();
 
-		const ConstructedVectorNodeOutput *getMainOutput() const { return &m_output; }
-
 	protected:
 		ConstructedVectorNodeOutput m_output;
 	};
 
 } /* namespace manta */
 
-#endif /* VECTOR_NODE_H */
+#endif /* CONSTRUCTED_VECTOR_NODE_H */

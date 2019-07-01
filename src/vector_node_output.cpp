@@ -1,8 +1,18 @@
 #include <vector_node_output.h>
 
 #include <vector_map_2d.h>
+#include <vector_split_node.h>
+#include <standard_allocator.h>
 
 const manta::NodeType manta::VectorNodeOutput::VectorType("VectorNodeType");
+
+manta::VectorNodeOutput::VectorNodeOutput(bool scalar) : NodeOutput(&VectorType) {
+	m_scalar = scalar;
+}
+
+manta::VectorNodeOutput::~VectorNodeOutput() {
+	/* void */
+}
 
 void manta::VectorNodeOutput::fullCompute(void *_target) const {
 	VectorMap2D *target = reinterpret_cast<VectorMap2D *>(_target);
@@ -35,4 +45,16 @@ void manta::VectorNodeOutput::fullCompute(void *_target) const {
 			target->set(v, i, j);
 		}
 	}
+}
+
+manta::Node *manta::VectorNodeOutput::generateInterface() {
+	if (!m_scalar) {
+		VectorSplitNode *vectorInterface = 
+			StandardAllocator::Global()->allocate<VectorSplitNode>(16);
+		vectorInterface->initialize();
+		vectorInterface->connectInput(this, "__in");
+
+		return vectorInterface;
+	}
+	else return nullptr;
 }

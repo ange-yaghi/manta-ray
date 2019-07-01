@@ -74,16 +74,16 @@ manta::SdlCompilationUnit::ParseResult manta::SdlCompilationUnit::parseHelper(
 	}
 }
 
-manta::SdlNodeDefinition *manta::SdlCompilationUnit::resolveNodeDefinition(SdlNode *node, int *count, 
+manta::SdlNodeDefinition *manta::SdlCompilationUnit::resolveNodeDefinition(const std::string &name, int *count,
 														const std::string &libraryName, bool external) {
 	*count = 0;
 	manta::SdlNodeDefinition *definition = nullptr;
-	std::string typeName = node->getType();
+	std::string typeName = name;
 
 	// First search local node definitions if a library is not specified
 	if (libraryName.empty()) {
 		int localCount = 0;
-		SdlNodeDefinition *localDefinition = resolveLocalNodeDefinition(node->getType(), &localCount, external);
+		SdlNodeDefinition *localDefinition = resolveLocalNodeDefinition(typeName, &localCount, external);
 		(*count) += localCount;
 
 		if (localDefinition != nullptr) return localDefinition;
@@ -112,7 +112,7 @@ manta::SdlNodeDefinition *manta::SdlCompilationUnit::resolveNodeDefinition(SdlNo
 
 			// The external access flag must be set to true since the libraries are being accessed
 			// externally                                                                                         ----
-			SdlNodeDefinition *def = importStatement->getUnit()->resolveNodeDefinition(node, &secondaryCount, "", true);
+			SdlNodeDefinition *def = importStatement->getUnit()->resolveNodeDefinition(name, &secondaryCount, "", true);
 			if (def != nullptr) {
 				(*count) += secondaryCount;
 				if (definition == nullptr) definition = def;

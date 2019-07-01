@@ -17,7 +17,7 @@ namespace manta {
 			/* void */
 		}
 
-		const VectorMap2DNodeOutput *getMainOutput() const { return &m_output; }
+		VectorMap2DNodeOutput *getMainOutput() { return &m_output; }
 
 	protected:
 		virtual void _evaluate() {

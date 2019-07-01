@@ -32,16 +32,16 @@ namespace manta {
 		virtual void sample(const IntersectionPoint *surfaceInteraction, void *target) const;
 		virtual void discreteSample2D(int x, int y, void *target) const;
 
-		void setInput(const VectorNodeOutput *input) { m_input = input; }
+		void setInput(VectorNodeOutput *input) { m_input = input; }
 		const NodeOutput *getInput() const { return m_input; }
 
-		void setFootNode(const VectorNodeOutput *footNode) { m_foot = footNode; }
+		void setFootNode(VectorNodeOutput *footNode) { m_foot = footNode; }
 		const NodeOutput *getFootNode() const { return m_foot; }
 
-		void setSlopeNode(const VectorNodeOutput *slopeNode) { m_slope = slopeNode; }
+		void setSlopeNode(VectorNodeOutput *slopeNode) { m_slope = slopeNode; }
 		const NodeOutput *getSlopeNode() const { return m_slope; }
 
-		void setDcNode(const VectorNodeOutput *dcNode) { m_dc = dcNode; }
+		void setDcNode(VectorNodeOutput *dcNode) { m_dc = dcNode; }
 		const NodeOutput *getDcNode() const { return m_dc; }
 
 		void setDefaultFoot(const math::Vector &v) { m_defaultFoot = v; }

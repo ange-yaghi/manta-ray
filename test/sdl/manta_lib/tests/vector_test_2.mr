@@ -7,11 +7,15 @@ private node Constants {
     output w: 4.0;
 }
 
-::Constants constants()
+private node Container {
+    output constants: ::Constants();
+}
+
+Container container()
 
 types::vector test_vector(
-    constants.x,
-    constants.y, 
-    constants.z, 
-    constants.w
+    container.constants.x,
+    container.constants.y, 
+    container.constants.z, 
+    container.constants.w
 )

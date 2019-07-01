@@ -1,11 +1,9 @@
 public node float => __builtin__float {
-    input __in: 0.0;
-    default output __out;
+    default input __in: 0.0;
 }
 
 public node int => __builtin__int {
-    input __in: 0;
-    default output __out;
+    default input __in: 0;
 }
 
 public node vector => __builtin__vector { 
@@ -14,14 +12,19 @@ public node vector => __builtin__vector {
     input in_z: 0.0;
     input in_w: 0.0;
 
-    output x {float};
-    output y {float};
-    output z {float};
-    output w {float};
+    output x: [float];
+    output y: [float];
+    output z: [float];
+    output w: [float];
+
+    output r: [float];
+    output g: [float];
+    output b: [float];
+    output a: [float];
 }
 
 public node s_vector {
-    input in_s: 0.0;
+    default input in_s: 0.0;
 
     default output vector: vector(in_s, in_s, in_s, in_s);
     output s: in_s;

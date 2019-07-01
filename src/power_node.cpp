@@ -12,7 +12,7 @@ manta::PowerNode::PowerNode() {
 	m_output.setPowerNode(m_powerNode);
 }
 
-manta::PowerNode::PowerNode(math::real power, const VectorNodeOutput *input) {
+manta::PowerNode::PowerNode(math::real power, VectorNodeOutput *input) {
 	m_power = power;
 	m_inputNode = input;
 	m_powerNode = nullptr;
@@ -33,8 +33,8 @@ void manta::PowerNode::_initialize() {
 }
 
 void manta::PowerNode::registerInputs() {
-	registerInput((const NodeOutput **)&m_inputNode, "Input");
-	registerInput((const NodeOutput **)&m_powerNode, "Power");
+	registerInput((pNodeInput *)&m_inputNode, "Input");
+	registerInput((pNodeInput *)&m_powerNode, "Power");
 }
 
 void manta::PowerNode::registerOutputs() {

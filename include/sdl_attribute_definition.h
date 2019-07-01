@@ -10,6 +10,7 @@ namespace manta {
 	class SdlValue;
 	class SdlInputConnection;
 	class SdlCompilationError;
+	class SdlNodeDefinition;
 
 	class SdlAttributeDefinition : public SdlParserStructure {
 	public:
@@ -47,16 +48,26 @@ namespace manta {
 
 		virtual bool isInputPoint() const { return m_direction == INPUT; }
 
+		void setTypeName(const SdlTokenInfoSet<std::string, 2> &typeInfo) { m_typeInfo = typeInfo; }
+
+		SdlNodeDefinition *getTypeDefinition() const { return m_typeDefinition; }
+
 	protected:
 		SdlTokenInfo_string m_directionToken;
 		SdlTokenInfo_string m_defaultToken;
 		SdlTokenInfo_string m_name;
+		SdlTokenInfoSet<std::string, 2> m_typeInfo;
+
 		SdlValue *m_defaultValue;
 
 		DIRECTION m_direction;
 		bool m_isDefault;
 
 		std::vector<SdlInputConnection *> m_impliedMembers;
+
+		// Resolution stage
+	protected:
+		SdlNodeDefinition *m_typeDefinition;
 	};
 
 } /* namespace manta */

@@ -56,7 +56,6 @@ namespace manta {
 		int countSymbolIncidence(const std::string &name) const;
 		SdlParserStructure *resolveLocalName(const std::string &name) const;
 
-		// Validation stage
 	protected:
 		virtual void _validate();
 	};
