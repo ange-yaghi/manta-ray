@@ -1,0 +1,45 @@
+private node ExplicitDefault {
+    input object;
+    default output object_default: object^; 
+}
+
+private node float => some_builtin_float_class {
+    input __in;
+}
+
+private node vector2d => some_builtin_vector_class {
+    input __in_x;
+    input __in_y;
+
+    output x: [float];
+    output y: [::float];
+}
+
+private node dual_vector {
+    default output output1: vector2d(0, 1);
+    output output2: vector2d(1, 2);
+}
+
+private node confusion {
+    default output output1: local;
+    output output2: 1.0;
+    output vector_test: local_vector.x;
+
+    dual_vector local()
+    vector2d local_vector()
+}
+
+private node container {
+    default output output1: dual_vector();
+    output output2: confusion();
+}
+
+container test_container()
+
+private node test {
+    output test1: container.output1.output1.x;  // Unresolved reference
+    output test2: container.output1->x;         // Unresolved reference
+    output test3: container.output1->z;         // Unresolved reference
+}
+
+test test()

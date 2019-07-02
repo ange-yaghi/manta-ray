@@ -71,7 +71,8 @@ namespace manta {
 		SdlValueLabel(const _TokenInfo &value) : SdlValueConstant(value) { /* void */ }
 		~SdlValueLabel() { /* void */ }
 
-		virtual SdlParserStructure *getImmediateReference(SdlContextTree *inputContext, SdlCompilationError **err = nullptr, SdlContextTree **newContext = nullptr) {
+		virtual SdlParserStructure *getImmediateReference(SdlContextTree *inputContext, 
+				SdlCompilationError **err = nullptr, SdlContextTree **newContext = nullptr) {
 			if (newContext != nullptr) *newContext = inputContext;
 
 			SdlParserStructure *reference = nullptr;
