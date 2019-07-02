@@ -78,6 +78,7 @@
     <ClCompile Include="..\..\test\primitives.cpp" />
     <ClCompile Include="..\..\test\sanity_check.cpp" />
     <ClCompile Include="..\..\test\sdl_construction_tests.cpp" />
+    <ClCompile Include="..\..\test\sdl_stress_tests.cpp" />
     <ClCompile Include="..\..\test\sdl_tests.cpp" />
     <ClCompile Include="..\..\test\signal_processing_tests.cpp" />
     <ClCompile Include="..\..\test\utilities.cpp" />

@@ -36,7 +36,7 @@ namespace manta {
 		bool isValidated() const { return m_validated; }
 		virtual SdlParserStructure *getImmediateReference(SdlContextTree *inputContext = nullptr, 
 			SdlCompilationError **err = nullptr, SdlContextTree **newContext = nullptr) { return nullptr; }
-		SdlParserStructure *getReference(SdlContextTree *inputContext = nullptr, 
+		virtual SdlParserStructure *getReference(SdlContextTree *inputContext = nullptr, 
 			SdlCompilationError **err = nullptr, SdlContextTree **newContext = nullptr);
 		SdlParserStructure *getExpansion() const { return m_expansion; }
 
