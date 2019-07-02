@@ -1,0 +1,11 @@
+private import "../lib/atomic_types.mr" as types
+
+private node TestSetup {
+    input s: "";
+
+    default output _s: s;
+    output convert: types::string(s);
+    output empty: types::string();
+}
+
+TestSetup test("Hello World")

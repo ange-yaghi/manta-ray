@@ -9,6 +9,7 @@
 #include <sdl_node.h>
 #include <sdl_context_tree.h>
 #include <single_float_node_output.h>
+#include <single_string_node_output.h>
 #include <standard_allocator.h>
 #include <node.h>
 
@@ -29,8 +30,10 @@ namespace manta {
 		}
 
 		static NodeOutput *generateNodeOutput(const std::string &value, SdlContextTree *context) {
-			// TODO
-			return nullptr;
+			SingleStringNodeOutput *newNode = StandardAllocator::Global()->allocate<SingleStringNodeOutput>();
+			newNode->setValue(value);
+
+			return newNode;
 		}
 
 		static NodeOutput *generateNodeOutput(bool value, SdlContextTree *context) {

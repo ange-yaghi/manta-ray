@@ -783,6 +783,21 @@
     <ClCompile Include="..\..\src\sdl_context_tree.cpp">
       <Filter>Source Files\sdl-parser\generator</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\string_node_output.cpp">
+      <Filter>Source Files\nodes\output-ports\atomic-types\types</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\single_string_node_output.cpp">
+      <Filter>Source Files\nodes\output-ports\atomic-types\constants</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\constructed_string_node_output.cpp">
+      <Filter>Source Files\nodes\output-ports\atomic-types\compound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\constructed_string_node.cpp">
+      <Filter>Source Files\nodes\library\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\simple_bsdf_material_node.cpp">
+      <Filter>Source Files\nodes\library\sdl</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\sphere_primitive.h">
@@ -1252,6 +1267,21 @@
     </ClInclude>
     <ClInclude Include="..\..\include\sdl_context_tree.h">
       <Filter>Header Files\sdl-parser\generator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\string_node_output.h">
+      <Filter>Header Files\nodes\output-ports\atomic-types\types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\single_string_node_output.h">
+      <Filter>Header Files\nodes\output-ports\atomic-types\constants</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\constructed_string_node_output.h">
+      <Filter>Header Files\nodes\output-ports\atomic-types\compound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\constructed_string_node.h">
+      <Filter>Header Files\nodes\library\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\simple_bsdf_material_node.h">
+      <Filter>Header Files\nodes\library\sdl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

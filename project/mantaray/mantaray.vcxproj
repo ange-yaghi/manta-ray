@@ -22,6 +22,8 @@
     <ClCompile Include="..\..\autogen\sdl_parser.auto.cpp" />
     <ClCompile Include="..\..\autogen\sdl_scanner.auto.cpp" />
     <ClCompile Include="..\..\src\aperture.cpp" />
+    <ClCompile Include="..\..\src\constructed_string_node.cpp" />
+    <ClCompile Include="..\..\src\constructed_string_node_output.cpp" />
     <ClCompile Include="..\..\src\constructed_vector_node_output.cpp" />
     <ClCompile Include="..\..\src\custom_node.cpp" />
     <ClCompile Include="..\..\src\node_output.cpp" />
@@ -83,7 +85,9 @@
     <ClCompile Include="..\..\src\sdl_unary_operator.cpp" />
     <ClCompile Include="..\..\src\sdl_value.cpp" />
     <ClCompile Include="..\..\src\signal_processing.cpp" />
+    <ClCompile Include="..\..\src\simple_bsdf_material_node.cpp" />
     <ClCompile Include="..\..\src\single_float_node_output.cpp" />
+    <ClCompile Include="..\..\src\single_string_node_output.cpp" />
     <ClCompile Include="..\..\src\single_vector_node_output.cpp" />
     <ClCompile Include="..\..\src\spectrum.cpp" />
     <ClCompile Include="..\..\src\srgb_node.cpp" />
@@ -91,6 +95,7 @@
     <ClCompile Include="..\..\src\stack_allocator.cpp" />
     <ClCompile Include="..\..\src\step_node.cpp" />
     <ClCompile Include="..\..\src\step_node_output.cpp" />
+    <ClCompile Include="..\..\src\string_node_output.cpp" />
     <ClCompile Include="..\..\src\vector_map_2d.cpp" />
     <ClCompile Include="..\..\src\material_manager.cpp" />
     <ClCompile Include="..\..\src\node.cpp" />
@@ -167,6 +172,8 @@
     <ClInclude Include="..\..\include\color.h" />
     <ClInclude Include="..\..\include\complex_map_2d.h" />
     <ClInclude Include="..\..\include\complex_math.h" />
+    <ClInclude Include="..\..\include\constructed_string_node.h" />
+    <ClInclude Include="..\..\include\constructed_string_node_output.h" />
     <ClInclude Include="..\..\include\constructed_vector_node_output.h" />
     <ClInclude Include="..\..\include\convolution.h" />
     <ClInclude Include="..\..\include\custom_node.h" />
@@ -224,12 +231,15 @@
     <ClInclude Include="..\..\include\sdl_value.h" />
     <ClInclude Include="..\..\include\sdl_value_constant.h" />
     <ClInclude Include="..\..\include\signal_processing.h" />
+    <ClInclude Include="..\..\include\simple_bsdf_material_node.h" />
     <ClInclude Include="..\..\include\single_float_node_output.h" />
+    <ClInclude Include="..\..\include\single_string_node_output.h" />
     <ClInclude Include="..\..\include\single_vector_node_output.h" />
     <ClInclude Include="..\..\include\srgb_node.h" />
     <ClInclude Include="..\..\include\srgb_node_output.h" />
     <ClInclude Include="..\..\include\step_node.h" />
     <ClInclude Include="..\..\include\step_node_output.h" />
+    <ClInclude Include="..\..\include\string_node_output.h" />
     <ClInclude Include="..\..\include\vector_map_wrapper_node.h" />
     <ClInclude Include="..\..\include\spectrum.h" />
     <ClInclude Include="..\..\include\vector_map_2d.h" />

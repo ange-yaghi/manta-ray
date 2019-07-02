@@ -11,9 +11,13 @@
 #include <node.h>
 #include <custom_node.h>
 #include <standard_allocator.h>
+#include <sdl_context_tree.h>
+
 #include <srgb_node.h>
 #include <constructed_vector_node.h>
-#include <sdl_context_tree.h>
+#include <constructed_string_node.h>
+#include <simple_bsdf_material_node.h>
+#include <lambertian_bsdf.h>
 
 manta::SdlNode::SdlNode() {
 	/* void */
@@ -350,12 +354,22 @@ manta::Node *manta::SdlNode::generateNode(SdlContextTree *context) {
 	if (definition->isBuiltin()) {
 		if (definition->getBuiltinName() == "__builtin__vector") {
 			newNode = StandardAllocator::Global()->allocate<ConstructedVectorNode>();
-			newNode->initialize();
 		}
 
 		if (definition->getBuiltinName() == "__builtin__srgb") {
 			newNode = StandardAllocator::Global()->allocate<SrgbNode>();
-			newNode->initialize();
+		}
+
+		if (definition->getBuiltinName() == "__builtin__string") {
+			newNode = StandardAllocator::Global()->allocate<ConstructedStringNode>();
+		}
+
+		if (definition->getBuiltinName() == "__builtin__simple_bsdf_material") {
+			newNode = StandardAllocator::Global()->allocate<SimpleBsdfMaterialNode>();
+		}
+
+		if (definition->getBuiltinName() == "__builtin__LambertianBsdf") {
+			newNode = StandardAllocator::Global()->allocate<LambertianBSDF>();
 		}
 	}
 	else {
@@ -369,11 +383,12 @@ manta::Node *manta::SdlNode::generateNode(SdlContextTree *context) {
 			newCustomNode->addCustomOutput(outputs[i].output, outputs[i].name, outputs[i].primary);
 		}
 
-		newCustomNode->initialize();
 		newNode = newCustomNode;
 	}
 
 	if (newNode != nullptr) {
+		newNode->initialize();
+
 		for (int i = 0; i < inputCount; i++) {
 			newNode->connectInput(inputs[i].output, inputs[i].name.c_str());
 		}

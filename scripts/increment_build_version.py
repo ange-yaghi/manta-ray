@@ -11,8 +11,6 @@ from os.path import isfile, join
 from datetime import datetime, date, time
 
 def get_file_line_count(filename):
-    print filename
-
     f = open(filename)
     line_count = 0
     
