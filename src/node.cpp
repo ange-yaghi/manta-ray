@@ -40,14 +40,16 @@ void manta::Node::evaluate() {
 	for (int i = 0; i < inputCount; i++) {
 		pNodeInput *node = m_inputs[i].input;
 		if (node != nullptr && *node != nullptr) {
-			(*node)->getParentNode()->evaluate();
+			Node *parentNode = (*node)->getParentNode();
+			if (parentNode != nullptr) parentNode->evaluate();
 		}
 	}
 
 	int outputReferenceCount = getOutputReferenceCount();
 	for (int i = 0; i < outputReferenceCount; i++) {
 		const NodeOutput *node = *m_outputReferences[i].output;
-		node->getParentNode()->evaluate();
+		Node *parentNode = node->getParentNode();
+		if (parentNode != nullptr) parentNode->evaluate();
 	}
 
 	// Node can now self-evaluate

@@ -35,6 +35,9 @@ void manta_demo::runDemo(DEMO demo, int samplesPerPixel, int resolutionX, int re
 	case DEMO::APERTURE_DEMO:
 		apertureDemo(samplesPerPixel, resolutionX, resolutionY);
 		break;
+	case DEMO::SDL_DEMO:
+		sdlDemo(samplesPerPixel, resolutionX, resolutionY);
+		break;
 	default:
 		std::cout << "Unknown/undefined demo specified" << std::endl;
 		break;

@@ -16,6 +16,7 @@
 #include <sdl_compiler.h>
 #include <sdl_generator.h>
 #include <rgb_space.h>
+#include <material_manager.h>
 
 #include "utilities.h"
 
@@ -163,4 +164,45 @@ TEST(SdlConstructionTests, SdlDoubleInlineTest) {
 	math::Vector expected = math::loadVector(1.0f, 2.0f, 7.0f, 8.0f);
 
 	CHECK_VEC_EQ(out, expected, 1E-5);
+}
+
+TEST(SdlConstructionTests, SdlStringTest) {
+	SdlCompiler compiler;
+	SdlCompilationUnit *unit = compiler.compile(SDL_TEST_FILES "manta_lib/tests/string_test.mr");
+	EXPECT_NE(unit, nullptr);
+
+	const SdlErrorList *errors = compiler.getErrorList();
+	EXPECT_EQ(errors->getErrorCount(), 0);
+
+	SdlNode *node = unit->getNode(0);
+
+	EXPECT_EQ(node->getType(), "TestSetup");
+	EXPECT_EQ(node->getName(), "test");
+
+	Node *generatedNode = node->generateNode();
+
+	std::string out_s, out_convert, out_empty;
+	generatedNode->getPrimaryOutput()->sample(nullptr, (void *)&out_s);
+	generatedNode->getOutput("convert")->sample(nullptr, (void *)&out_convert);
+	generatedNode->getOutput("empty")->sample(nullptr, (void *)&out_empty);
+
+	EXPECT_EQ(out_s, "Hello World");
+	EXPECT_EQ(out_convert, "Hello World");
+	EXPECT_EQ(out_empty, "");
+}
+
+TEST(SdlConstructionTests, SdlMaterialTest) {
+	SdlCompiler compiler;
+	SdlCompilationUnit *unit = compiler.compile(SDL_TEST_FILES "manta_lib/tests/simple_material_test.mr");
+	EXPECT_NE(unit, nullptr);
+
+	const SdlErrorList *errors = compiler.getErrorList();
+	EXPECT_EQ(errors->getErrorCount(), 0);
+
+	SdlNode *node = unit->getNode(0);
+
+	EXPECT_EQ(node->getType(), "SimpleBsdfMaterial");
+	EXPECT_EQ(node->getName(), "material");
+
+	Node *generatedNode = node->generateNode();
 }

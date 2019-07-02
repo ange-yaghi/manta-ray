@@ -20,11 +20,11 @@ namespace manta {
 			/* void */
 		}
 
-		const BSDF *getMediaInterface() const { return m_bsdf; }
-		void setMediaInterface(const BSDF *bsdf) { m_bsdf = bsdf; }
+		BSDF *getBsdf() const { return m_bsdf; }
+		void setBsdf(BSDF *bsdf) { m_bsdf = bsdf; }
 
 	protected:
-		const BSDF *m_bsdf;
+		BSDF *m_bsdf;
 	};
 
 } /* namespace manta */

@@ -57,6 +57,9 @@
     <ClCompile Include="..\..\demos\aperture_demo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\demos\sdl_demo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\demos\demos.h">
