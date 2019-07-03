@@ -66,11 +66,12 @@ private node test {
     output test15: internal_container^->z;                  // UndefinedMember
 
     output test16: hello_world_default->hello_world;                    // UndefinedMember
-    output test17: hello_world_default^;                                // Okay
-    output test18: hello_world_default.object_reference.hello_world;    // Okay
-    output test19: hello_world_default.object_reference->hello_world;   // Okay
+    output test17: hello_world_default.object_default.hello_world;      // UndefinedMember
+    output test18: hello_world_default^;                                // Okay
+    output test19: hello_world_default.object_reference.hello_world;    // Okay
     output test20: hello_world_default.object_reference->hello_world;   // Okay
-    output test21: hello_world_default.object_reference->fake;          // UndefinedMember
+    output test21: hello_world_default.object_reference->hello_world;   // Okay
+    output test22: hello_world_default.object_reference->fake;          // UndefinedMember
 
     container internal_container()
     HelloWorldContainer hello_world()

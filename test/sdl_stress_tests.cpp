@@ -35,7 +35,7 @@ const SdlErrorList *compileFile(const std::string &filename) {
 TEST(SdlSyntaxStressTests, SdlSyntaxStressTest1) {
 	const SdlErrorList *errors = compileFile("stress-testing/stress_test_1.mr");
 
-	EXPECT_EQ(errors->getErrorCount(), 12);
+	EXPECT_EQ(errors->getErrorCount(), 13);
 
 	EXPECT_TRUE(findError(errors, SdlErrorCode::UnresolvedReference, 50));
 	EXPECT_TRUE(findError(errors, SdlErrorCode::UnresolvedReference, 51));
@@ -51,5 +51,6 @@ TEST(SdlSyntaxStressTests, SdlSyntaxStressTest1) {
 	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedMember, 66));
 
 	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedMember, 68));
-	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedMember, 73));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedMember, 69));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedMember, 74));
 }
