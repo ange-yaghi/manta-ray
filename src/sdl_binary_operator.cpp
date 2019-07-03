@@ -112,6 +112,8 @@ manta::SdlParserStructure *manta::SdlBinaryOperator::getImmediateReference(
 				SDL_FAIL();
 				return nullptr;
 			}
+
+			SDL_INFO_OUT(newContext, refInfo.newContext);
 		}
 
 		// No sense in checking an input point for a member. If this is called it means that
@@ -146,6 +148,10 @@ manta::SdlParserStructure *manta::SdlBinaryOperator::getImmediateReference(
 			}
 
 			return nullptr;
+		}
+
+		if (query.inputContext) {
+			SDL_INFO_OUT(newContext, query.inputContext->newChild(resolvedLeft));
 		}
 
 		return publicAttribute;

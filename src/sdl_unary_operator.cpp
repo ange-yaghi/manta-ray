@@ -84,6 +84,8 @@ manta::SdlParserStructure *manta::SdlUnaryOperator::getImmediateReference(const 
 			return nullptr;
 		}
 
+		if (query.inputContext != nullptr) SDL_INFO_OUT(newContext, query.inputContext->newChild(resolvedOperand));
+
 		return result;
 	}
 
