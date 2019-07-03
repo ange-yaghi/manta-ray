@@ -1,0 +1,23 @@
+private node ExplicitDefault {
+    input object;
+    default output object_default: object^.hello_world; 
+}
+
+private node HelloWorldNode {
+    input text;
+    default output hello_world: text;
+}
+
+private node HelloWorldContainer {
+    input text;
+    default output hello_world: HelloWorldNode(text);
+}
+
+private node test {
+    output test17: hello_world_default.object_default;      // UndefinedMember
+
+    HelloWorldContainer hello_world("Hello World")
+    ExplicitDefault hello_world_default(hello_world)
+}
+
+test test()

@@ -81,7 +81,7 @@ namespace manta {
 			// First check the input context for the reference
 			if (query.inputContext != nullptr) {
 				reference = query.inputContext->getContext()->resolveLocalName(m_value);
-				if (reference != nullptr) {
+				if (reference != nullptr && reference->isExternalInput()) {
 					SDL_INFO_OUT(newContext, query.inputContext->getParent());
 				}
 			}

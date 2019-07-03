@@ -175,6 +175,43 @@ void manta::SdlParserStructure::_checkInstantiation(SdlContextTree *inputContext
 	/* void */
 }
 
+void manta::SdlParserStructure::writeReferencesToFile(std::ofstream &file, SdlContextTree *context, int tabLevel) {
+	for (int i = 0; i < tabLevel; i++) {
+		file << " ";
+	}
+
+	if (m_summaryToken.lineStart != m_summaryToken.lineEnd) {
+		file << "L[" << m_summaryToken.lineStart << "-" << m_summaryToken.lineEnd << "]";
+	}
+	else {
+		file << "L[" << m_summaryToken.lineStart << "]";
+	}
+
+	file << "[" << m_summaryToken.colStart << "-" << m_summaryToken.colEnd << "]";
+
+	SdlReferenceInfo info;
+	SdlReferenceQuery query;
+	query.inputContext = context;
+	query.recordErrors = false;
+
+	SdlNode *asNode = getAsNode();
+	SdlParserStructure *immediateReference = getImmediateReference(query, &info);
+
+	if (info.failed) {
+		file << " => "; 
+		file << "ERROR" << std::endl;
+		return;
+	}
+	else if (immediateReference == nullptr) {
+		file << std::endl;
+		return;
+	}
+	else {
+		file << " => ";
+		immediateReference->writeReferencesToFile(file, info.newContext);
+	}
+}
+
 void manta::SdlParserStructure::_resolveDefinitions() {
 	/* void */
 }

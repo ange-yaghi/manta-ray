@@ -441,3 +441,16 @@ manta::SdlValue *manta::SdlNode::getDefaultOutputValue() {
 
 	return defaultValue->getAsValue();
 }
+
+void manta::SdlNode::writeTraceToFile(std::ofstream &file) {
+	SdlContextTree *parentContext = new SdlContextTree(m_parentScope);
+	SdlContextTree *thisContext = parentContext->newChild(this);
+
+	int attributeDefinitions = m_definition->getAttributeDefinitionList()->getDefinitionCount();
+	for (int i = 0; i < attributeDefinitions; i++) {
+		m_definition
+			->getAttributeDefinitionList()
+			->getDefinition(i)
+			->writeReferencesToFile(file, thisContext);
+	}
+}

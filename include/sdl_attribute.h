@@ -29,6 +29,8 @@ namespace manta {
 		bool isPositional() const { return getName() == ""; }
 		virtual SdlValue *getAsValue() { return m_value; }
 
+		virtual bool isExternalInput() const { return true; }
+
 	protected:
 		SdlTokenInfo_string m_name;
 		SdlValue *m_value;

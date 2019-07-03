@@ -5,6 +5,7 @@
 #include <sdl_visibility.h>
 
 #include <vector>
+#include <fstream>
 
 #define SDL_INFO_OUT(param, data)	if (output != nullptr) { (output)->param = (data); }
 #define SDL_ERR_OUT(data)			SDL_INFO_OUT(err, (data)); 
@@ -43,7 +44,7 @@ namespace manta {
 
 	public:
 		SdlParserStructure();
-		~SdlParserStructure();
+		virtual ~SdlParserStructure();
 
 		const SdlTokenInfo *getSummaryToken() const { return &m_summaryToken; }
 		void registerToken(const SdlTokenInfo *tokenInfo);
@@ -78,6 +79,7 @@ namespace manta {
 		bool getCheckReferences() const { return m_checkReferences; }
 
 		virtual bool isInputPoint() const { return false; }
+		virtual bool isExternalInput() const { return false; }
 
 		void setParentUnit(SdlCompilationUnit *unit) { m_parentUnit = unit; }
 		SdlCompilationUnit *getParentUnit() const;
@@ -120,6 +122,10 @@ namespace manta {
 		bool m_validated;
 
 		bool m_checkReferences;
+
+	public:
+		// Debugging
+		void writeReferencesToFile(std::ofstream &file, SdlContextTree *context, int tabLevel = 0);
 	};
 
 } /* namespace manta */
