@@ -1,6 +1,16 @@
 private node ExplicitDefault {
     input object;
-    default output object_default: object^; 
+    default output object_default: object^.hello_world; 
+    default output object_default_pointer: object->hello_world;
+    output object_reference: object;
+}
+
+private node HelloWorldNode {
+    default output hello_world: "Hello World";
+}
+
+private node HelloWorldContainer {
+    default output hello_world: HelloWorldNode();
 }
 
 private node float => some_builtin_float_class {
@@ -8,8 +18,8 @@ private node float => some_builtin_float_class {
 }
 
 private node vector2d => some_builtin_vector_class {
-    input __in_x;
-    input __in_y;
+    input __in_x: 0.0;
+    input __in_y: 0.0;
 
     output x: [float];
     output y: [::float];
@@ -37,9 +47,34 @@ private node container {
 container test_container()
 
 private node test {
-    output test1: container.output1.output1.x;  // Unresolved reference
-    output test2: container.output1->x;         // Unresolved reference
-    output test3: container.output1->z;         // Unresolved reference
+    output test1: container.output1.output1.x;  // UnresolvedReference
+    output test2: container.output1->x;         // UnresolvedReference
+    output test3: container.output1->z;         // UnresolvedReference
+
+    output test4: test_container.output1.output1.x;  // UnresolvedReference
+    output test5: test_container.output1->x;         // UnresolvedReference
+    output test6: test_container.output1->z;         // UnresolvedReference
+
+    output test7: internal_container.output1.output1.x;     // Okay
+    output test8: internal_container.output1->x;            // Okay
+    output test9: internal_container.output1->z;            // UndefinedMember
+    output test10: internal_container^^.x;                  // Okay
+    output test11: internal_container^^.z;                  // UndefinedMember
+    output test12: ((internal_container^)^).x;              // Okay
+    output test13: ((internal_container^)^).z;              // UndefinedMember
+    output test14: internal_container^->x;                  // Okay
+    output test15: internal_container^->z;                  // UndefinedMember
+
+    output test16: hello_world_default->hello_world;                    // UndefinedMember
+    output test17: hello_world_default^;                                // Okay
+    output test18: hello_world_default.object_reference.hello_world;    // Okay
+    output test19: hello_world_default.object_reference->hello_world;   // Okay
+    output test20: hello_world_default.object_reference->hello_world;   // Okay
+    output test21: hello_world_default.object_reference->fake;          // UndefinedMember
+
+    container internal_container()
+    HelloWorldContainer hello_world()
+    ExplicitDefault hello_world_default(hello_world)
 }
 
 test test()

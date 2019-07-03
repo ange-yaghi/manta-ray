@@ -16,38 +16,69 @@ manta::SdlUnaryOperator::~SdlUnaryOperator() {
 	/* void */
 }
 
-manta::SdlParserStructure *manta::SdlUnaryOperator::getImmediateReference(SdlContextTree *inputContext, SdlCompilationError **err, SdlContextTree **newContext) {
-	if (err != nullptr) *err = nullptr;
-	if (newContext != nullptr) *newContext = inputContext;
+manta::SdlParserStructure *manta::SdlUnaryOperator::getImmediateReference(const SdlReferenceQuery &query, SdlReferenceInfo *output) {
+	SDL_INFO_OUT(err, nullptr);
+	SDL_INFO_OUT(newContext, query.inputContext);
+	SDL_INFO_OUT(failed, false);
 
-	SdlParserStructure *resolvedOperand = m_operand->getReference();
+	SdlReferenceInfo basicInfo;
+	SdlReferenceQuery basicQuery;
+	basicQuery.inputContext = query.inputContext;
+	basicQuery.recordErrors = false;
+	SdlParserStructure *resolvedOperand = m_operand->getReference(basicQuery, &basicInfo);
 
-	if (resolvedOperand == nullptr) {
+	if (SDL_FAILED(&basicInfo) || resolvedOperand == nullptr) {
+		SDL_FAIL();
 		return nullptr;
 	}
 
 	// Check the input context
 	bool foundInput = false;
-	if (inputContext != nullptr) {
-		SdlParserStructure *inputConnection = resolvedOperand->getReference(inputContext, nullptr, newContext);
+	if (query.inputContext != nullptr) {
+		SdlReferenceInfo inputInfo;
+		SdlReferenceQuery inputQuery;
+		inputQuery.inputContext = query.inputContext;
+		inputQuery.recordErrors = false;
+
+		SdlParserStructure *inputConnection = resolvedOperand->getReference(inputQuery, &inputInfo);
+		if (SDL_FAILED(&inputInfo)) {
+			SDL_FAIL();
+			return nullptr;
+		}
+
 		if (inputConnection != nullptr && inputConnection != resolvedOperand) {
 			foundInput = true;
 			resolvedOperand = inputConnection;
+
+			// Context has changed
+			SDL_INFO_OUT(newContext, inputInfo.newContext);
 		}
 	}
 
+	bool isValidError = (query.inputContext == nullptr || (query.inputContext != nullptr && foundInput));
+
 	if (m_operator == DEFAULT) {
 		SdlParserStructure *result = resolvedOperand->getAsValue();
+
+		if (result == nullptr && resolvedOperand->isInputPoint()) {
+			// This means that this references an input point with no default value. Obviously
+			// it makes no sense to check for further errors. This state is technically an "error"
+			// but it won't be reported as it's known that there could be something defined
+			// in the input context later
+			SDL_FAIL();
+			return nullptr;
+		}
+
 		SdlNode *asNode = resolvedOperand->getAsNode();
 		if (result == nullptr && asNode != nullptr) result = asNode->getDefaultOutputValue();
 
-		if (err != nullptr && result == nullptr) {
-			bool isValidError = (inputContext == nullptr || (inputContext != nullptr && foundInput));
+		if (result == nullptr) {
+			SDL_FAIL();
 
-			if (isValidError) {
+			if (query.recordErrors && isValidError) {
 				// This object does not have a default value
-				*err = new SdlCompilationError(*m_operand->getSummaryToken(),
-					SdlErrorCode::CannotFindDefaultValue, inputContext);
+				SDL_ERR_OUT(new SdlCompilationError(*m_operand->getSummaryToken(),
+					SdlErrorCode::CannotFindDefaultValue, query.inputContext));
 			}
 
 			return nullptr;
@@ -56,6 +87,8 @@ manta::SdlParserStructure *manta::SdlUnaryOperator::getImmediateReference(SdlCon
 		return result;
 	}
 
+	// Shouldn't reach here
+	SDL_FAIL();
 	return nullptr;
 }
 

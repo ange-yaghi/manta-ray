@@ -54,8 +54,10 @@ manta::SdlInputConnection *manta::SdlAttributeDefinition::getImpliedMember(const
 	return nullptr;
 }
 
-manta::SdlParserStructure *manta::SdlAttributeDefinition::getImmediateReference(SdlContextTree *inputContext, SdlCompilationError **err, SdlContextTree **newContext) {
-	(void)inputContext;
+manta::SdlParserStructure *manta::SdlAttributeDefinition::getImmediateReference(const SdlReferenceQuery &query, SdlReferenceInfo *output) {
+	SDL_INFO_OUT(newContext, query.inputContext);
+	SDL_INFO_OUT(err, nullptr);
+	SDL_INFO_OUT(failed, false);
 
 	// An attribute definition will by default point to its definition (ie default value)
 	return m_defaultValue;

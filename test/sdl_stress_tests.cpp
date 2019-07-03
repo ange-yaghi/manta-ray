@@ -35,7 +35,21 @@ const SdlErrorList *compileFile(const std::string &filename) {
 TEST(SdlSyntaxStressTests, SdlSyntaxStressTest1) {
 	const SdlErrorList *errors = compileFile("stress-testing/stress_test_1.mr");
 
-	EXPECT_EQ(errors->getErrorCount(), 1);
+	EXPECT_EQ(errors->getErrorCount(), 12);
 
-	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedMember, 40));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UnresolvedReference, 50));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UnresolvedReference, 51));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UnresolvedReference, 52));
+
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UnresolvedReference, 54));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UnresolvedReference, 55));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UnresolvedReference, 56));
+
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedMember, 60));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedMember, 62));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedMember, 64));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedMember, 66));
+
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedMember, 68));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedMember, 73));
 }

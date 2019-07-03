@@ -6,6 +6,11 @@
 
 #include <vector>
 
+#define SDL_INFO_OUT(param, data)	if (output != nullptr) { (output)->param = (data); }
+#define SDL_ERR_OUT(data)			SDL_INFO_OUT(err, (data)); 
+#define SDL_FAIL()					SDL_INFO_OUT(failed, true);
+#define SDL_FAILED(output)			(((output) != nullptr) ? (output)->failed : false)
+
 namespace manta {
 
 	class SdlValue;
@@ -16,6 +21,26 @@ namespace manta {
 	class Node;
 
 	class SdlParserStructure {
+	public:
+		struct SdlReferenceQuery {
+			SdlReferenceQuery();
+			~SdlReferenceQuery();
+
+			// Inputs
+			SdlContextTree *inputContext;
+			bool recordErrors;
+		};
+
+		struct SdlReferenceInfo {
+			SdlReferenceInfo();
+			~SdlReferenceInfo();
+
+			// Ouputs
+			SdlContextTree *newContext;
+			SdlCompilationError *err;
+			bool failed;
+		};
+
 	public:
 		SdlParserStructure();
 		~SdlParserStructure();
@@ -34,10 +59,9 @@ namespace manta {
 		bool getDefinitionsResolved() const { return m_definitionsResolved; }
 		bool isExpanded() const { return m_isExpanded; }
 		bool isValidated() const { return m_validated; }
-		virtual SdlParserStructure *getImmediateReference(SdlContextTree *inputContext = nullptr, 
-			SdlCompilationError **err = nullptr, SdlContextTree **newContext = nullptr) { return nullptr; }
-		virtual SdlParserStructure *getReference(SdlContextTree *inputContext = nullptr, 
-			SdlCompilationError **err = nullptr, SdlContextTree **newContext = nullptr);
+		virtual SdlParserStructure *getImmediateReference(const SdlReferenceQuery &query, SdlReferenceInfo *output = nullptr);
+		SdlParserStructure *getReference(const SdlReferenceQuery &query, SdlReferenceInfo *output = nullptr);
+
 		SdlParserStructure *getExpansion() const { return m_expansion; }
 
 		virtual SdlValue *getAsValue() { return nullptr; }

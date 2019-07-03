@@ -317,7 +317,10 @@ manta::Node *manta::SdlNode::generateNode(SdlContextTree *context) {
 
 			if (attribute != nullptr) {
 				// Input was specified
-				SdlValue *asValue = attribute->getImmediateReference(context, nullptr, nullptr)->getAsValue();
+				SdlReferenceQuery query;
+				query.inputContext = context;
+				query.recordErrors = false;
+				SdlValue *asValue = attribute->getImmediateReference(query, nullptr)->getAsValue();
 
 				Mapping inputPort;
 				inputPort.output = asValue->generateNodeOutput(context);
@@ -326,7 +329,10 @@ manta::Node *manta::SdlNode::generateNode(SdlContextTree *context) {
 			}
 			else {
 				// Use the default value in the definition
-				SdlValue *asValue = attributeDefinition->getImmediateReference(context, nullptr, nullptr)->getAsValue();
+				SdlReferenceQuery query;
+				query.inputContext = context;
+				query.recordErrors = false;
+				SdlValue *asValue = attributeDefinition->getImmediateReference(query, nullptr)->getAsValue();
 
 				Mapping inputPort;
 				inputPort.output = asValue->generateNodeOutput(context);
@@ -336,12 +342,15 @@ manta::Node *manta::SdlNode::generateNode(SdlContextTree *context) {
 		}
 		else if (attributeDefinition->getDirection() == SdlAttributeDefinition::OUTPUT &&
 																	!definition->isBuiltin()) {
-			SdlValue *asValue = attributeDefinition->getImmediateReference(newContext, nullptr, nullptr)->getAsValue();
+			SdlReferenceQuery query;
+			query.inputContext = context;
+			query.recordErrors = false;
+			SdlValue *asValue = attributeDefinition->getImmediateReference(query, nullptr)->getAsValue();
 
 			Mapping outputPort;
 			outputPort.output = asValue->generateNodeOutput(newContext);
 			outputPort.name = attributeDefinition->getName();
-			outputPort.primary = asValue == getDefaultOutputValue();
+			outputPort.primary = (asValue == getDefaultOutputValue());
 
 			outputs.push_back(outputPort);
 		}
