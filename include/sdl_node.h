@@ -6,6 +6,7 @@
 #include <sdl_token_info.h>
 
 #include <vector>
+#include <fstream>
 
 namespace manta {
 
@@ -41,6 +42,8 @@ namespace manta {
 		virtual SdlValue *getDefaultOutputValue();
 
 		virtual SdlNode *getAsNode() { return this; }
+
+		void writeTraceToFile(std::ofstream &file);
 
 	protected:
 		SdlTokenInfo_string m_type;

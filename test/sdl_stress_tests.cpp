@@ -29,11 +29,16 @@ const SdlErrorList *compileFile(const std::string &filename) {
 
 	const SdlErrorList *errors = compiler->getErrorList();
 
+	SdlNode *node = unit->getNode(0);
+	std::ofstream f(TMP_PATH + std::string("trace.txt"));
+	node->writeTraceToFile(f);
+	f.close();
+
 	return errors;
 }
 
 TEST(SdlSyntaxStressTests, SdlSyntaxStressTest1) {
-	const SdlErrorList *errors = compileFile("stress-testing/stress_test_1.mr");
+	const SdlErrorList *errors = compileFile("stress-testing/stress_test_1_isolated.mr");
 
 	EXPECT_EQ(errors->getErrorCount(), 13);
 

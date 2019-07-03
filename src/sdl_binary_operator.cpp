@@ -50,14 +50,6 @@ manta::SdlParserStructure *manta::SdlBinaryOperator::getImmediateReference(
 		SdlReferenceInfo basicInfo;
 		SdlParserStructure *resolvedLeft = m_leftOperand->getReference(basicQuery, &basicInfo);
 
-		// Even if the left operand refers to an input, a reference to it should still
-		// be found
-		if (SDL_FAILED(&basicInfo) || resolvedLeft == nullptr) {
-			// Reference could not be resolved, skip the rest
-			SDL_FAIL();
-			return nullptr;
-		}
-
 		// Check the input context for this symbol
 		bool foundInput = false;
 		if (query.inputContext != nullptr) {
@@ -79,6 +71,12 @@ manta::SdlParserStructure *manta::SdlBinaryOperator::getImmediateReference(
 				// Context has changed
 				SDL_INFO_OUT(newContext, inputInfo.newContext);
 			}
+		}
+
+		if (resolvedLeft == nullptr) {
+			// Reference could not be resolved, skip the rest
+			SDL_FAIL();
+			return nullptr;
 		}
 
 		bool isValidError = (query.inputContext == nullptr || (query.inputContext != nullptr && foundInput));

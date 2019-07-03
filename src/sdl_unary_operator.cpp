@@ -62,9 +62,7 @@ manta::SdlParserStructure *manta::SdlUnaryOperator::getImmediateReference(const 
 
 		if (result == nullptr && resolvedOperand->isInputPoint()) {
 			// This means that this references an input point with no default value. Obviously
-			// it makes no sense to check for further errors. This state is technically an "error"
-			// but it won't be reported as it's known that there could be something defined
-			// in the input context later
+			// it makes no sense to check for further errors.
 			SDL_FAIL();
 			return nullptr;
 		}
