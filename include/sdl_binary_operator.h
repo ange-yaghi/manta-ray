@@ -26,7 +26,7 @@ namespace manta {
 		SdlValue *getLeft() const { return m_leftOperand; }
 		SdlValue *getRight() const { return m_rightOperand; }
 
-		virtual SdlParserStructure *getImmediateReference(SdlContextTree *inputContext, SdlCompilationError **err, SdlContextTree **newContext);
+		virtual SdlParserStructure *getImmediateReference(const SdlReferenceQuery &query, SdlReferenceInfo *output);
 
 	protected:
 		virtual NodeOutput *_generateNodeOutput(SdlContextTree *context);

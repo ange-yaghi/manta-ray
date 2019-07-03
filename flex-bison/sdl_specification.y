@@ -423,7 +423,7 @@ primary_exp
 
 default_operator
   : primary_exp						{ $$ = $1; }
-  | primary_exp '^'					{ $$ = new SdlUnaryOperator(SdlUnaryOperator::DEFAULT, $1); }
+  | default_operator '^'			{ $$ = new SdlUnaryOperator(SdlUnaryOperator::DEFAULT, $1); }
   ;
 
 data_access

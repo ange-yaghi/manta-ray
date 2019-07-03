@@ -22,7 +22,7 @@ namespace manta {
 		OPERATOR getOperator() const { return m_operator; }
 		SdlValue *getOperand() const { return m_operand; }
 
-		virtual SdlParserStructure *getImmediateReference(SdlContextTree *inputContext, SdlCompilationError **err, SdlContextTree **newContext);
+		virtual SdlParserStructure *getImmediateReference(const SdlReferenceQuery &query, SdlReferenceInfo *output);
 
 	protected:
 		OPERATOR m_operator;

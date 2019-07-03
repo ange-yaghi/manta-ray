@@ -3,6 +3,27 @@
 #include <sdl_compilation_unit.h>
 #include <sdl_context_tree.h>
 
+manta::SdlParserStructure::SdlReferenceInfo::SdlReferenceInfo() {
+	newContext = nullptr;
+	err = nullptr;
+
+	failed = false;
+}
+
+manta::SdlParserStructure::SdlReferenceInfo::~SdlReferenceInfo() {
+	/* void */
+}
+
+manta::SdlParserStructure::SdlReferenceQuery::SdlReferenceQuery() {
+	inputContext = nullptr;
+	recordErrors = false;
+}
+
+manta::SdlParserStructure::SdlReferenceQuery::~SdlReferenceQuery() {
+	/* void */
+}
+
+
 manta::SdlParserStructure::SdlParserStructure() {
 	m_parentScope = nullptr;
 	m_logicalParent = nullptr;
@@ -44,16 +65,29 @@ manta::SdlParserStructure *manta::SdlParserStructure::resolveName(const std::str
 	return nullptr;
 }
 
-manta::SdlParserStructure *manta::SdlParserStructure::getReference(SdlContextTree *inputContext, 
-											SdlCompilationError **err, SdlContextTree **_newContext) {
-	if (err != nullptr) *err = nullptr;
+manta::SdlParserStructure *manta::SdlParserStructure::getImmediateReference(const SdlReferenceQuery &query, SdlReferenceInfo *output) {
+	return nullptr;
+}
 
-	SdlContextTree *newContext = inputContext;
-	SdlParserStructure *immediateReference = getImmediateReference(inputContext, err, &newContext);
+manta::SdlParserStructure *manta::SdlParserStructure::getReference(const SdlReferenceQuery &query, SdlReferenceInfo *output) {
+	SDL_INFO_OUT(err, nullptr);
+	SDL_INFO_OUT(failed, false);
+	SDL_INFO_OUT(newContext, query.inputContext);
+
+	SdlParserStructure *immediateReference = getImmediateReference(query, output);
+
+	if (SDL_FAILED(output)) {
+		SDL_FAIL();
+		return nullptr;
+	}
 
 	// Error checking is not done on any parent nodes because it's assumed that errors have
 	// already been checked/reported
-	if (immediateReference != nullptr) return immediateReference->getReference(newContext, nullptr, _newContext);
+	SdlReferenceQuery nestedQuery = query;
+	nestedQuery.inputContext = (output != nullptr) ? output->newContext : nullptr;
+	nestedQuery.recordErrors = false;
+
+	if (immediateReference != nullptr) return immediateReference->getReference(nestedQuery, output);
 	else return this;
 }
 
@@ -79,11 +113,15 @@ void manta::SdlParserStructure::checkReferences(SdlContextTree *inputContext) {
 	}
 
 	if (m_checkReferences) {
-		SdlCompilationError *err = nullptr;
-		SdlParserStructure *reference = getReference(inputContext, &err);
+		SdlReferenceQuery query;
+		query.inputContext = inputContext;
+		query.recordErrors = true;
+		SdlReferenceInfo info;
 
-		if (err != nullptr) {
-			getParentUnit()->addCompilationError(err);
+		SdlParserStructure *reference = getReference(query, &info);
+
+		if (info.err != nullptr) {
+			getParentUnit()->addCompilationError(info.err);
 		}
 	}
 }
