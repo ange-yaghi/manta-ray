@@ -318,6 +318,7 @@ manta::Node *manta::SdlNode::generateNode(SdlContextTree *context) {
 			if (attribute != nullptr) {
 				// Input was specified
 				SdlReferenceQuery query;
+				query.inputContext = context;
 				query.recordErrors = false;
 				SdlValue *asValue = attribute->getImmediateReference(query, nullptr)->getAsValue();
 
@@ -329,6 +330,7 @@ manta::Node *manta::SdlNode::generateNode(SdlContextTree *context) {
 			else {
 				// Use the default value in the definition
 				SdlReferenceQuery query;
+				query.inputContext = context;
 				query.recordErrors = false;
 				SdlValue *asValue = attributeDefinition->getImmediateReference(query, nullptr)->getAsValue();
 
@@ -341,6 +343,7 @@ manta::Node *manta::SdlNode::generateNode(SdlContextTree *context) {
 		else if (attributeDefinition->getDirection() == SdlAttributeDefinition::OUTPUT &&
 																	!definition->isBuiltin()) {
 			SdlReferenceQuery query;
+			query.inputContext = context;
 			query.recordErrors = false;
 			SdlValue *asValue = attributeDefinition->getImmediateReference(query, nullptr)->getAsValue();
 
@@ -448,6 +451,6 @@ void manta::SdlNode::writeTraceToFile(std::ofstream &file) {
 		m_definition
 			->getAttributeDefinitionList()
 			->getDefinition(i)
-			->writeReferencesToFile(file);
+			->writeReferencesToFile(file, thisContext);
 	}
 }

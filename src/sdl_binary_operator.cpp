@@ -30,6 +30,7 @@ manta::SdlParserStructure *manta::SdlBinaryOperator::getImmediateReference(
 					const SdlReferenceQuery &query, SdlReferenceInfo *output) {
 	SDL_INFO_OUT(failed, false);
 	SDL_INFO_OUT(err, nullptr);
+	SDL_INFO_OUT(newContext, query.inputContext);
 	
 	if (m_leftOperand == nullptr || m_rightOperand == nullptr) {
 		// There was a syntax error so this step can be skipped
@@ -37,18 +38,48 @@ manta::SdlParserStructure *manta::SdlBinaryOperator::getImmediateReference(
 		return nullptr;
 	}
 
+	if (static_cast<SdlValueLabel *>(m_rightOperand)->getValue() == "fake") {
+		int a = 0;
+	}
+
 	// The dot is the reference operator
 	if (m_operator == DOT || m_operator == POINTER) {
 		SdlReferenceQuery basicQuery;
+		basicQuery.inputContext = nullptr;
 		basicQuery.recordErrors = false;
 		SdlReferenceInfo basicInfo;
 		SdlParserStructure *resolvedLeft = m_leftOperand->getReference(basicQuery, &basicInfo);
 
-		if (basicInfo.failed || resolvedLeft == nullptr) {
+		// Check the input context for this symbol
+		bool foundInput = false;
+		if (query.inputContext != nullptr) {
+			SdlReferenceInfo inputInfo;
+			SdlReferenceQuery inputQuery;
+			inputQuery.inputContext = query.inputContext;
+			inputQuery.recordErrors = false;
+
+			SdlParserStructure *inputConnection = m_leftOperand->getReference(inputQuery, &inputInfo);
+			if (SDL_FAILED(&inputInfo)) {
+				SDL_FAIL();
+				return nullptr;
+			}
+
+			if (inputConnection != nullptr && inputConnection != resolvedLeft) {
+				foundInput = true;
+				resolvedLeft = inputConnection;
+
+				// Context has changed
+				SDL_INFO_OUT(newContext, inputInfo.newContext);
+			}
+		}
+
+		if (resolvedLeft == nullptr) {
 			// Reference could not be resolved, skip the rest
 			SDL_FAIL();
 			return nullptr;
 		}
+
+		bool isValidError = (query.inputContext == nullptr || (query.inputContext != nullptr && foundInput));
 
 		// Perform code specific to the pointer operator
 		if (m_operator == POINTER) {
@@ -61,9 +92,9 @@ manta::SdlParserStructure *manta::SdlBinaryOperator::getImmediateReference(
 			if (resolvedLeft == nullptr) {
 				SDL_FAIL();
 
-				if (query.recordErrors) {
+				if (query.recordErrors && isValidError) {
 					SDL_ERR_OUT(new SdlCompilationError(*m_leftOperand->getSummaryToken(),
-						SdlErrorCode::CannotFindDefaultValue, nullptr));
+						SdlErrorCode::CannotFindDefaultValue, query.inputContext));
 				}
 
 				return nullptr;
@@ -71,6 +102,7 @@ manta::SdlParserStructure *manta::SdlBinaryOperator::getImmediateReference(
 
 			SdlReferenceInfo refInfo;
 			SdlReferenceQuery refQuery;
+			refQuery.inputContext = query.inputContext;
 			refQuery.recordErrors = false;
 			resolvedLeft = resolvedLeft->getReference(refQuery, &refInfo);
 
@@ -78,6 +110,8 @@ manta::SdlParserStructure *manta::SdlBinaryOperator::getImmediateReference(
 				SDL_FAIL();
 				return nullptr;
 			}
+
+			SDL_INFO_OUT(newContext, refInfo.newContext);
 		}
 
 		// No sense in checking an input point for a member. If this is called it means that
@@ -93,10 +127,10 @@ manta::SdlParserStructure *manta::SdlBinaryOperator::getImmediateReference(
 		if (publicAttribute == nullptr) {
 			SDL_FAIL();
 
-			if (query.recordErrors) {
+			if (query.recordErrors && isValidError) {
 				// Left hand does not have this member
 				SDL_ERR_OUT(new SdlCompilationError(*m_rightOperand->getSummaryToken(),
-					SdlErrorCode::UndefinedMember, nullptr));
+					SdlErrorCode::UndefinedMember, query.inputContext));
 			}
 
 			return nullptr;
@@ -106,12 +140,16 @@ manta::SdlParserStructure *manta::SdlBinaryOperator::getImmediateReference(
 		if (!publicAttribute->allowsExternalAccess()) {
 			SDL_FAIL();
 
-			if (query.recordErrors) {
+			if (query.recordErrors && isValidError) {
 				SDL_ERR_OUT(new SdlCompilationError(*m_rightOperand->getSummaryToken(),
-					SdlErrorCode::AccessingInternalMember, nullptr));
+					SdlErrorCode::AccessingInternalMember, query.inputContext));
 			}
 
 			return nullptr;
+		}
+
+		if (query.inputContext) {
+			SDL_INFO_OUT(newContext, query.inputContext->newChild(resolvedLeft));
 		}
 
 		return publicAttribute;
@@ -174,6 +212,7 @@ manta::Node *manta::SdlBinaryOperator::_generateNode(SdlContextTree *context) {
 	// The dot is the reference operator
 	if (m_operator == DOT || m_operator == POINTER) {
 		SdlReferenceQuery query;
+		query.inputContext = context;
 		query.recordErrors = false;
 
 		SdlParserStructure *reference = getReference(query);
