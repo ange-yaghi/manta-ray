@@ -35,6 +35,7 @@ void manta::SdlAttribute::setValue(SdlValue *value) {
 
 manta::SdlParserStructure *manta::SdlAttribute::getImmediateReference(const SdlReferenceQuery &query, SdlReferenceInfo *output) {
 	SDL_INFO_OUT(err, nullptr);
+	SDL_INFO_OUT(newContext, query.inputContext);
 	SDL_INFO_OUT(failed, false);
 
 	return m_value;

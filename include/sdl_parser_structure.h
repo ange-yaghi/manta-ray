@@ -28,6 +28,7 @@ namespace manta {
 			~SdlReferenceQuery();
 
 			// Inputs
+			SdlContextTree *inputContext;
 			bool recordErrors;
 		};
 
@@ -36,6 +37,7 @@ namespace manta {
 			~SdlReferenceInfo();
 
 			// Ouputs
+			SdlContextTree *newContext;
 			SdlCompilationError *err;
 			bool failed;
 		};
@@ -123,7 +125,7 @@ namespace manta {
 
 	public:
 		// Debugging
-		void writeReferencesToFile(std::ofstream &file, int tabLevel = 0);
+		void writeReferencesToFile(std::ofstream &file, SdlContextTree *context, int tabLevel = 0);
 	};
 
 } /* namespace manta */

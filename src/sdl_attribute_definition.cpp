@@ -55,6 +55,7 @@ manta::SdlInputConnection *manta::SdlAttributeDefinition::getImpliedMember(const
 }
 
 manta::SdlParserStructure *manta::SdlAttributeDefinition::getImmediateReference(const SdlReferenceQuery &query, SdlReferenceInfo *output) {
+	SDL_INFO_OUT(newContext, query.inputContext);
 	SDL_INFO_OUT(err, nullptr);
 	SDL_INFO_OUT(failed, false);
 
