@@ -17,9 +17,7 @@ manta::SdlUnaryOperator::~SdlUnaryOperator() {
 }
 
 manta::SdlParserStructure *manta::SdlUnaryOperator::getImmediateReference(const SdlReferenceQuery &query, SdlReferenceInfo *output) {
-	SDL_INFO_OUT(err, nullptr);
-	SDL_INFO_OUT(newContext, query.inputContext);
-	SDL_INFO_OUT(failed, false);
+	SDL_RESET(query);
 
 	SdlReferenceInfo basicInfo;
 	SdlReferenceQuery basicQuery;
@@ -82,7 +80,7 @@ manta::SdlParserStructure *manta::SdlUnaryOperator::getImmediateReference(const 
 			return nullptr;
 		}
 
-		if (query.inputContext != nullptr) SDL_INFO_OUT(newContext, query.inputContext->newChild(resolvedOperand));
+		if (query.inputContext != nullptr) SDL_INFO_OUT(newContext, query.inputContext->newChild(asNode));
 
 		return result;
 	}

@@ -182,9 +182,8 @@ void manta::SdlNode::_checkInstantiation(SdlContextTree *inputContext) {
 	// Check all references relating to the connection of inputs from this
 	// node to the actual definition.
 	if (m_definition != nullptr) {
-		SdlContextTree *context = inputContext
-			? inputContext->newChild(this)
-			: new SdlContextTree(this);
+		SdlContextTree *parentContext = new SdlContextTree(nullptr);
+		SdlContextTree *context = parentContext->newChild(this);
 
 		m_definition->checkReferences(context);
 	}
@@ -443,7 +442,7 @@ manta::SdlValue *manta::SdlNode::getDefaultOutputValue() {
 }
 
 void manta::SdlNode::writeTraceToFile(std::ofstream &file) {
-	SdlContextTree *parentContext = new SdlContextTree(m_parentScope);
+	SdlContextTree *parentContext = new SdlContextTree(nullptr);
 	SdlContextTree *thisContext = parentContext->newChild(this);
 
 	int attributeDefinitions = m_definition->getAttributeDefinitionList()->getDefinitionCount();

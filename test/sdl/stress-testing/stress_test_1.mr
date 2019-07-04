@@ -47,31 +47,31 @@ private node container {
 container test_container()
 
 private node test {
-    output test1: container.output1.output1.x;  // UnresolvedReference
-    output test2: container.output1->x;         // UnresolvedReference
-    output test3: container.output1->z;         // UnresolvedReference
+    //output test1: container.output1.output1.x;  // UnresolvedReference
+    //output test2: container.output1->x;         // UnresolvedReference
+    //output test3: container.output1->z;         // UnresolvedReference
 
-    output test4: test_container.output1.output1.x;  // UnresolvedReference
-    output test5: test_container.output1->x;         // UnresolvedReference
-    output test6: test_container.output1->z;         // UnresolvedReference
+    //output test4: test_container.output1.output1.x;  // UnresolvedReference
+    //output test5: test_container.output1->x;         // UnresolvedReference
+    //output test6: test_container.output1->z;         // UnresolvedReference
 
-    output test7: internal_container.output1.output1.x;     // Okay
-    output test8: internal_container.output1->x;            // Okay
-    output test9: internal_container.output1->z;            // UndefinedMember
-    output test10: internal_container^^.x;                  // Okay
-    output test11: internal_container^^.z;                  // UndefinedMember
-    output test12: ((internal_container^)^).x;              // Okay
-    output test13: ((internal_container^)^).z;              // UndefinedMember
-    output test14: internal_container^->x;                  // Okay
-    output test15: internal_container^->z;                  // UndefinedMember
+    //output test7: internal_container.output1.output1.x;     // Okay
+    //output test8: internal_container.output1->x;            // Okay
+    //output test9: internal_container.output1->z;            // UndefinedMember
+    //output test10: internal_container^^.x;                  // Okay
+    //output test11: internal_container^^.z;                  // UndefinedMember
+    //output test12: ((internal_container^)^).x;              // Okay
+    //output test13: ((internal_container^)^).z;              // UndefinedMember
+    //output test14: internal_container^->x;                  // Okay
+    //output test15: internal_container^->z;                  // UndefinedMember
 
     output test16: hello_world_default->hello_world;                    // UndefinedMember
     output test17: hello_world_default.object_default.hello_world;      // UndefinedMember
-    output test18: hello_world_default^;                                // Okay
-    output test19: hello_world_default.object_reference.hello_world;    // Okay
-    output test20: hello_world_default.object_reference->hello_world;   // Okay
-    output test21: hello_world_default.object_reference->hello_world;   // Okay
-    output test22: hello_world_default.object_reference->fake;          // UndefinedMember
+    ////output test18: hello_world_default^;                                // Okay
+    //output test19: hello_world_default.object_reference.hello_world;    // Okay
+    //output test20: hello_world_default.object_reference->hello_world;   // Okay
+    //output test21: hello_world_default.object_reference->hello_world;   // Okay
+    //output test22: hello_world_default.object_reference->fake;          // UndefinedMember
 
     container internal_container()
     HelloWorldContainer hello_world()

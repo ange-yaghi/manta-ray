@@ -506,9 +506,10 @@ TEST(SdlTests, SdlReferenceResolutionTest) {
 	SdlParserStructure *b = node->resolveLocalName("B");
 	EXPECT_TRUE(b->allowsExternalAccess());
 
-	SdlAttributeDefinition *definition = (SdlAttributeDefinition *)b->getReference(SdlParserStructure::SdlReferenceQuery());
-	EXPECT_EQ(definition->getName(), "main_in");
-	EXPECT_EQ(definition->getDirection(), SdlAttributeDefinition::INPUT);
+	SdlParserStructure::SdlReferenceInfo info;
+	SdlParserStructure *definition = b->getReference(SdlParserStructure::SdlReferenceQuery(), &info);
+	EXPECT_EQ(definition, nullptr);
+	EXPECT_TRUE(info.reachedDeadEnd);
 
 	SdlNode *childNode = (SdlNode *)node->resolveLocalName("C")->getReference(SdlParserStructure::SdlReferenceQuery());
 	EXPECT_EQ(childNode->getType(), "ChildNode");
