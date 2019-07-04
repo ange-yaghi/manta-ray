@@ -18,12 +18,10 @@ manta::SdlUnaryOperator::~SdlUnaryOperator() {
 
 manta::SdlParserStructure *manta::SdlUnaryOperator::getImmediateReference(const SdlReferenceQuery &query, SdlReferenceInfo *output) {
 	SDL_INFO_OUT(err, nullptr);
-	SDL_INFO_OUT(newContext, query.inputContext);
 	SDL_INFO_OUT(failed, false);
 
 	SdlReferenceInfo basicInfo;
 	SdlReferenceQuery basicQuery;
-	basicQuery.inputContext = query.inputContext;
 	basicQuery.recordErrors = false;
 	SdlParserStructure *resolvedOperand = m_operand->getReference(basicQuery, &basicInfo);
 
@@ -31,31 +29,6 @@ manta::SdlParserStructure *manta::SdlUnaryOperator::getImmediateReference(const 
 		SDL_FAIL();
 		return nullptr;
 	}
-
-	// Check the input context
-	bool foundInput = false;
-	if (query.inputContext != nullptr) {
-		SdlReferenceInfo inputInfo;
-		SdlReferenceQuery inputQuery;
-		inputQuery.inputContext = query.inputContext;
-		inputQuery.recordErrors = false;
-
-		SdlParserStructure *inputConnection = resolvedOperand->getReference(inputQuery, &inputInfo);
-		if (SDL_FAILED(&inputInfo)) {
-			SDL_FAIL();
-			return nullptr;
-		}
-
-		if (inputConnection != nullptr && inputConnection != resolvedOperand) {
-			foundInput = true;
-			resolvedOperand = inputConnection;
-
-			// Context has changed
-			SDL_INFO_OUT(newContext, inputInfo.newContext);
-		}
-	}
-
-	bool isValidError = (query.inputContext == nullptr || (query.inputContext != nullptr && foundInput));
 
 	if (m_operator == DEFAULT) {
 		SdlParserStructure *result = resolvedOperand->getAsValue();
@@ -73,16 +46,14 @@ manta::SdlParserStructure *manta::SdlUnaryOperator::getImmediateReference(const 
 		if (result == nullptr) {
 			SDL_FAIL();
 
-			if (query.recordErrors && isValidError) {
+			if (query.recordErrors) {
 				// This object does not have a default value
 				SDL_ERR_OUT(new SdlCompilationError(*m_operand->getSummaryToken(),
-					SdlErrorCode::CannotFindDefaultValue, query.inputContext));
+					SdlErrorCode::CannotFindDefaultValue, nullptr));
 			}
 
 			return nullptr;
 		}
-
-		if (query.inputContext != nullptr) SDL_INFO_OUT(newContext, query.inputContext->newChild(resolvedOperand));
 
 		return result;
 	}

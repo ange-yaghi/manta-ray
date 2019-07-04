@@ -4,9 +4,7 @@
 #include <sdl_context_tree.h>
 
 manta::SdlParserStructure::SdlReferenceInfo::SdlReferenceInfo() {
-	newContext = nullptr;
 	err = nullptr;
-
 	failed = false;
 }
 
@@ -15,7 +13,6 @@ manta::SdlParserStructure::SdlReferenceInfo::~SdlReferenceInfo() {
 }
 
 manta::SdlParserStructure::SdlReferenceQuery::SdlReferenceQuery() {
-	inputContext = nullptr;
 	recordErrors = false;
 }
 
@@ -72,7 +69,6 @@ manta::SdlParserStructure *manta::SdlParserStructure::getImmediateReference(cons
 manta::SdlParserStructure *manta::SdlParserStructure::getReference(const SdlReferenceQuery &query, SdlReferenceInfo *output) {
 	SDL_INFO_OUT(err, nullptr);
 	SDL_INFO_OUT(failed, false);
-	SDL_INFO_OUT(newContext, query.inputContext);
 
 	SdlParserStructure *immediateReference = getImmediateReference(query, output);
 
@@ -84,7 +80,6 @@ manta::SdlParserStructure *manta::SdlParserStructure::getReference(const SdlRefe
 	// Error checking is not done on any parent nodes because it's assumed that errors have
 	// already been checked/reported
 	SdlReferenceQuery nestedQuery = query;
-	nestedQuery.inputContext = (output != nullptr) ? output->newContext : nullptr;
 	nestedQuery.recordErrors = false;
 
 	if (immediateReference != nullptr) return immediateReference->getReference(nestedQuery, output);
@@ -114,7 +109,6 @@ void manta::SdlParserStructure::checkReferences(SdlContextTree *inputContext) {
 
 	if (m_checkReferences) {
 		SdlReferenceQuery query;
-		query.inputContext = inputContext;
 		query.recordErrors = true;
 		SdlReferenceInfo info;
 
@@ -175,7 +169,7 @@ void manta::SdlParserStructure::_checkInstantiation(SdlContextTree *inputContext
 	/* void */
 }
 
-void manta::SdlParserStructure::writeReferencesToFile(std::ofstream &file, SdlContextTree *context, int tabLevel) {
+void manta::SdlParserStructure::writeReferencesToFile(std::ofstream &file, int tabLevel) {
 	for (int i = 0; i < tabLevel; i++) {
 		file << " ";
 	}
@@ -191,7 +185,6 @@ void manta::SdlParserStructure::writeReferencesToFile(std::ofstream &file, SdlCo
 
 	SdlReferenceInfo info;
 	SdlReferenceQuery query;
-	query.inputContext = context;
 	query.recordErrors = false;
 
 	SdlNode *asNode = getAsNode();
@@ -208,7 +201,7 @@ void manta::SdlParserStructure::writeReferencesToFile(std::ofstream &file, SdlCo
 	}
 	else {
 		file << " => ";
-		immediateReference->writeReferencesToFile(file, info.newContext);
+		immediateReference->writeReferencesToFile(file);
 	}
 }
 
