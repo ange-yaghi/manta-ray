@@ -73,30 +73,17 @@ namespace manta {
 
 		virtual SdlParserStructure *getImmediateReference(const SdlReferenceQuery &query, SdlReferenceInfo *output) {
 			SDL_INFO_OUT(err, nullptr);
-			SDL_INFO_OUT(newContext, query.inputContext);
 			SDL_INFO_OUT(failed, false);
 
-			SdlParserStructure *reference = nullptr;
-
-			// First check the input context for the reference
-			if (query.inputContext != nullptr) {
-				reference = query.inputContext->getContext()->resolveLocalName(m_value);
-				if (reference != nullptr && reference->isExternalInput()) {
-					SDL_INFO_OUT(newContext, query.inputContext->getParent());
-				}
-			}
-
-			if (reference == nullptr) {
-				reference = resolveName(m_value);
-			}
+			SdlParserStructure *reference = resolveName(m_value);
 
 			// Do error checking
-			if (reference == nullptr && query.inputContext == nullptr) {
+			if (reference == nullptr) {
 				SDL_FAIL();
 
 				if (query.recordErrors) {
 					SDL_ERR_OUT(new SdlCompilationError(m_summaryToken,
-						SdlErrorCode::UnresolvedReference, query.inputContext));
+						SdlErrorCode::UnresolvedReference, nullptr));
 				}
 
 				return nullptr;
@@ -107,7 +94,6 @@ namespace manta {
 
 		virtual Node *_generateNode(SdlContextTree *context) {
 			SdlReferenceQuery query;
-			query.inputContext = context;
 			query.recordErrors = false;
 			SdlParserStructure *reference = getImmediateReference(query, nullptr);
 			if (reference == nullptr) return nullptr;
@@ -122,14 +108,13 @@ namespace manta {
 		virtual NodeOutput *_generateNodeOutput(SdlContextTree *context) {
 			SdlReferenceInfo info;
 			SdlReferenceQuery query;
-			query.inputContext = context;
 			query.recordErrors = false;
 			SdlParserStructure *reference = getImmediateReference(query, &info);
 			if (reference == nullptr) return nullptr;
 
 			SdlNode *asNode = reference->getAsNode();
 			if (asNode != nullptr) {
-				Node *generatedNode = generateNode(info.newContext);
+				Node *generatedNode = generateNode(nullptr);
 				if (generatedNode != nullptr) {
 					return generatedNode->getPrimaryOutput();
 				}
@@ -149,7 +134,7 @@ namespace manta {
 			//}
 			// TODO: if value is nullptr then that would be very bad... not sure what to do about this yet
 
-			return value->generateNodeOutput(info.newContext);
+			return value->generateNodeOutput(nullptr);
 		}
 	};
 
@@ -166,7 +151,6 @@ namespace manta {
 
 		virtual SdlParserStructure *getImmediateReference(const SdlReferenceQuery &query, SdlReferenceInfo *output) {
 			SDL_INFO_OUT(err, nullptr);
-			SDL_INFO_OUT(newContext, query.inputContext);
 			SDL_INFO_OUT(failed, false);
 
 			return m_value;
