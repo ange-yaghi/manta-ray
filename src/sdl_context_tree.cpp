@@ -1,11 +1,16 @@
 #include <sdl_context_tree.h>
 
+#include <sdl_node.h>
+#include <sdl_attribute_definition.h>
+#include <sdl_attribute_list.h>
+#include <sdl_attribute.h>
+
 manta::SdlContextTree::SdlContextTree() {
 	m_context = nullptr;
 	m_parent = nullptr;
 }
 
-manta::SdlContextTree::SdlContextTree(SdlParserStructure *context) {
+manta::SdlContextTree::SdlContextTree(SdlNode *context) {
 	m_context = context;
 }
 
@@ -22,7 +27,7 @@ manta::SdlContextTree *manta::SdlContextTree::search(const SdlContextTree *refer
 	return nullptr;
 }
 
-manta::SdlContextTree *manta::SdlContextTree::newChild(SdlParserStructure *context) {
+manta::SdlContextTree *manta::SdlContextTree::newChild(SdlNode *context) {
 	SdlContextTree *newChild = new SdlContextTree(context);
 	newChild->setParent(this);
 
@@ -35,4 +40,12 @@ manta::SdlContextTree *manta::SdlContextTree::findContext(SdlParserStructure *co
 	if (m_context == context) return this;
 	else if (m_parent != nullptr) return m_parent->findContext(context);
 	else return nullptr;
+}
+
+manta::SdlParserStructure *manta::SdlContextTree::resolveDefinition(SdlAttributeDefinition *definition) {
+	if (m_context != nullptr) {
+		return m_context->getAttributes()->getAttribute(definition);
+	}
+
+	return nullptr;
 }

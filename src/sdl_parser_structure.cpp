@@ -8,10 +8,21 @@ manta::SdlParserStructure::SdlReferenceInfo::SdlReferenceInfo() {
 	err = nullptr;
 
 	failed = false;
+	reachedDeadEnd = false;
+	staticReference = true;
 }
 
 manta::SdlParserStructure::SdlReferenceInfo::~SdlReferenceInfo() {
 	/* void */
+}
+
+void manta::SdlParserStructure::SdlReferenceInfo::reset() {
+	newContext = nullptr;
+	err = nullptr;
+
+	failed = false;
+	reachedDeadEnd = false;
+	staticReference = true;
 }
 
 manta::SdlParserStructure::SdlReferenceQuery::SdlReferenceQuery() {
@@ -70,25 +81,52 @@ manta::SdlParserStructure *manta::SdlParserStructure::getImmediateReference(cons
 }
 
 manta::SdlParserStructure *manta::SdlParserStructure::getReference(const SdlReferenceQuery &query, SdlReferenceInfo *output) {
-	SDL_INFO_OUT(err, nullptr);
-	SDL_INFO_OUT(failed, false);
-	SDL_INFO_OUT(newContext, query.inputContext);
+	SDL_RESET(query);
 
-	SdlParserStructure *immediateReference = getImmediateReference(query, output);
+	SdlReferenceQuery immediateQuery = query;
+	SdlReferenceInfo immediateInfo;
+	SdlParserStructure *immediateReference = getImmediateReference(immediateQuery, &immediateInfo);
 
-	if (SDL_FAILED(output)) {
+	if (immediateInfo.failed) {
 		SDL_FAIL();
+		SDL_ERR_OUT(immediateInfo.err);
 		return nullptr;
 	}
 
-	// Error checking is not done on any parent nodes because it's assumed that errors have
-	// already been checked/reported
-	SdlReferenceQuery nestedQuery = query;
-	nestedQuery.inputContext = (output != nullptr) ? output->newContext : nullptr;
-	nestedQuery.recordErrors = false;
+	if (immediateInfo.reachedDeadEnd) {
+		SDL_DEAD_END();
+		return nullptr;
+	}
 
-	if (immediateReference != nullptr) return immediateReference->getReference(nestedQuery, output);
-	else return this;
+	if (immediateReference != nullptr) {
+		SdlReferenceInfo nestedInfo;
+		SdlReferenceQuery nestedQuery;
+		nestedQuery.inputContext = immediateInfo.newContext;
+
+		// Error checking is not done on any parent nodes because it's assumed that errors have
+		// already been checked/reported
+		nestedQuery.recordErrors = false;
+
+		SdlParserStructure *fullReference = immediateReference->getReference(nestedQuery, &nestedInfo);
+
+		if (nestedInfo.failed) {
+			SDL_FAIL();
+			SDL_ERR_OUT(nestedInfo.err);
+			return nullptr;
+		}
+
+		if (nestedInfo.reachedDeadEnd) {
+			SDL_DEAD_END();
+			return nullptr;
+		}
+
+		SDL_INFO_OUT(newContext, nestedInfo.newContext);
+		SDL_INFO_OUT(staticReference, nestedInfo.staticReference && immediateInfo.staticReference);
+		return fullReference;
+	}
+	else {
+		return this;
+	}
 }
 
 void manta::SdlParserStructure::resolveDefinitions() {

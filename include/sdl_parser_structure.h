@@ -7,9 +7,11 @@
 #include <vector>
 #include <fstream>
 
-#define SDL_INFO_OUT(param, data)	if (output != nullptr) { (output)->param = (data); }
+#define SDL_RESET(query)			if (output != nullptr) { output->reset(); output->newContext = (query).inputContext; }
+#define SDL_INFO_OUT(param, data)	if (output != nullptr) { output->param = (data); }
 #define SDL_ERR_OUT(data)			SDL_INFO_OUT(err, (data)); 
 #define SDL_FAIL()					SDL_INFO_OUT(failed, true);
+#define SDL_DEAD_END()				SDL_INFO_OUT(reachedDeadEnd, true);
 #define SDL_FAILED(output)			(((output) != nullptr) ? (output)->failed : false)
 
 namespace manta {
@@ -36,10 +38,15 @@ namespace manta {
 			SdlReferenceInfo();
 			~SdlReferenceInfo();
 
+			void reset();
+
 			// Ouputs
 			SdlContextTree *newContext;
 			SdlCompilationError *err;
+
 			bool failed;
+			bool reachedDeadEnd;
+			bool staticReference;
 		};
 
 	public:

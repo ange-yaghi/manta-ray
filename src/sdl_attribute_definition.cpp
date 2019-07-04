@@ -4,6 +4,7 @@
 #include <sdl_input_connection.h>
 #include <sdl_compilation_unit.h>
 #include <sdl_compilation_error.h>
+#include <sdl_context_tree.h>
 
 manta::SdlAttributeDefinition::SdlAttributeDefinition(const SdlTokenInfo_string &directionToken,
 								const SdlTokenInfo_string &name, DIRECTION dir) {
@@ -55,10 +56,31 @@ manta::SdlInputConnection *manta::SdlAttributeDefinition::getImpliedMember(const
 }
 
 manta::SdlParserStructure *manta::SdlAttributeDefinition::getImmediateReference(const SdlReferenceQuery &query, SdlReferenceInfo *output) {
-	SDL_INFO_OUT(newContext, query.inputContext);
-	SDL_INFO_OUT(err, nullptr);
-	SDL_INFO_OUT(failed, false);
+	SDL_RESET(query);
+
+	// First check the input context for the reference
+	if (query.inputContext != nullptr) {
+		SdlParserStructure *reference = query.inputContext->resolveDefinition(this);
+		if (reference != nullptr) {
+			SDL_INFO_OUT(newContext, query.inputContext->getParent());
+			SDL_INFO_OUT(staticReference, false);
+
+			return reference;
+		}
+	}
 
 	// An attribute definition will by default point to its definition (ie default value)
+	if (m_defaultValue == nullptr) {
+		if (query.inputContext == nullptr) {
+			SDL_DEAD_END();
+			return nullptr;
+		}
+		else {
+			// This is the result of an unconnected input (that has no input)
+			SDL_FAIL();
+			return nullptr;
+		}
+	}
+
 	return m_defaultValue;
 }

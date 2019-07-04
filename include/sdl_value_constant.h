@@ -72,23 +72,9 @@ namespace manta {
 		~SdlValueLabel() { /* void */ }
 
 		virtual SdlParserStructure *getImmediateReference(const SdlReferenceQuery &query, SdlReferenceInfo *output) {
-			SDL_INFO_OUT(err, nullptr);
-			SDL_INFO_OUT(newContext, query.inputContext);
-			SDL_INFO_OUT(failed, false);
+			SDL_RESET(query);
 
-			SdlParserStructure *reference = nullptr;
-
-			// First check the input context for the reference
-			if (query.inputContext != nullptr) {
-				reference = query.inputContext->getContext()->resolveLocalName(m_value);
-				if (reference != nullptr && reference->isExternalInput()) {
-					SDL_INFO_OUT(newContext, query.inputContext->getParent());
-				}
-			}
-
-			if (reference == nullptr) {
-				reference = resolveName(m_value);
-			}
+			SdlParserStructure *reference = resolveName(m_value);
 
 			// Do error checking
 			if (reference == nullptr && query.inputContext == nullptr) {
@@ -124,7 +110,7 @@ namespace manta {
 			SdlReferenceQuery query;
 			query.inputContext = context;
 			query.recordErrors = false;
-			SdlParserStructure *reference = getImmediateReference(query, &info);
+			SdlParserStructure *reference = getReference(query, &info);
 			if (reference == nullptr) return nullptr;
 
 			SdlNode *asNode = reference->getAsNode();
@@ -136,10 +122,10 @@ namespace manta {
 			}
 
 			// Check if this is a reference to an input (which would have to be looked up)
-			SdlValue *value = nullptr;
+			//SdlValue *value = nullptr;
 			
 			//if (!reference->isInputPoint()) {
-				value = reference->getAsValue();
+				//value = reference->get();
 			//}
 			//else {
 			//	SdlParserStructure *inputReference = reference->getImmediateReference(context);
@@ -149,7 +135,7 @@ namespace manta {
 			//}
 			// TODO: if value is nullptr then that would be very bad... not sure what to do about this yet
 
-			return value->generateNodeOutput(info.newContext);
+			return reference->getAsValue()->generateNodeOutput(info.newContext);
 		}
 	};
 
@@ -165,9 +151,7 @@ namespace manta {
 		}
 
 		virtual SdlParserStructure *getImmediateReference(const SdlReferenceQuery &query, SdlReferenceInfo *output) {
-			SDL_INFO_OUT(err, nullptr);
-			SDL_INFO_OUT(newContext, query.inputContext);
-			SDL_INFO_OUT(failed, false);
+			SDL_RESET(query);
 
 			return m_value;
 		}
