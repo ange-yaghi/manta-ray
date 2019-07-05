@@ -30,5 +30,5 @@ manta::math::real manta::MicrofacetDistribution::smithBidirectionalShadowMasking
 }
 
 void manta::MicrofacetDistribution::registerOutputs() {
-	registerOutput(&m_output, "Output");
+	setPrimaryOutput(&m_output);
 }

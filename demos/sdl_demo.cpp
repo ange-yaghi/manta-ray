@@ -31,6 +31,8 @@ void manta_demo::sdlDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 		SimpleBsdfMaterialNode *generatedNode = (SimpleBsdfMaterialNode *)node->generateNode();
 		generatedNode->setMaterialManager(rayTracer.getMaterialManager());
 		generatedNode->evaluate();
+
+		int a = 0;
 	}
 
 	LambertianBSDF lambert;
