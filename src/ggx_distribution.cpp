@@ -91,5 +91,5 @@ manta::math::real manta::GgxDistribution::calculateG1(const math::Vector &v,
 }
 
 void manta::GgxDistribution::registerInputs() {
-	registerInput(&m_widthNode, "Width");
+	registerInput(&m_widthNode, "width");
 }

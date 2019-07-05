@@ -18,6 +18,8 @@
 #include <constructed_string_node.h>
 #include <simple_bsdf_material_node.h>
 #include <lambertian_bsdf.h>
+#include <phong_distribution.h>
+#include <microfacet_reflection_bsdf.h>
 
 manta::SdlNode::SdlNode() {
 	/* void */
@@ -385,6 +387,14 @@ manta::Node *manta::SdlNode::generateNode(SdlContextTree *context) {
 
 		if (definition->getBuiltinName() == "__builtin__LambertianBsdf") {
 			newNode = StandardAllocator::Global()->allocate<LambertianBSDF>();
+		}
+
+		if (definition->getBuiltinName() == "__builtin__PhongDistribution") {
+			newNode = StandardAllocator::Global()->allocate<PhongDistribution>();
+		}
+
+		if (definition->getBuiltinName() == "__builtin__MicrofacetReflectionBSDF") {
+			newNode = StandardAllocator::Global()->allocate<MicrofacetReflectionBSDF>();
 		}
 	}
 	else {

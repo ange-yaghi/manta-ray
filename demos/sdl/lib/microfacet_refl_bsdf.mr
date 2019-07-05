@@ -1,0 +1,3 @@
+public node MicrofacetReflBsdf => __builtin__MicrofacetReflectionBSDF {
+    input distribution;
+}

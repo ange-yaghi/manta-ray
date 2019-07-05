@@ -45,13 +45,6 @@ void manta::Node::evaluate() {
 		}
 	}
 
-	int outputReferenceCount = getOutputReferenceCount();
-	for (int i = 0; i < outputReferenceCount; i++) {
-		const NodeOutput *node = *m_outputReferences[i].output;
-		Node *parentNode = node->getParentNode();
-		if (parentNode != nullptr) parentNode->evaluate();
-	}
-
 	// Node can now self-evaluate
 	_evaluate();
 
@@ -61,6 +54,13 @@ void manta::Node::evaluate() {
 	for (int i = 0; i < outputCount; i++) {
 		NodeOutput *node = m_outputs[i].output;
 		node->evaluateDimensions();
+	}
+
+	int outputReferenceCount = getOutputReferenceCount();
+	for (int i = 0; i < outputReferenceCount; i++) {
+		const NodeOutput *node = *m_outputReferences[i].output;
+		Node *parentNode = node->getParentNode();
+		if (parentNode != nullptr) parentNode->evaluate();
 	}
 }
 
