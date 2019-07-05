@@ -1,0 +1,26 @@
+module {
+    @author = "Ange Yaghi"
+    @date = "2019-05-30"
+}
+
+private import "test.sdl"
+private import test
+
+/* Multiline test comment.
+ * Second line.
+ */
+
+@author = "Ange Yaghi"
+@comment =  "This is just a test node"
+            "Check out this multiline comment"
+public node NewNode => BuiltinNode {
+    // Inputs
+    @doc = "Main input"
+    default input A;
+    input B;
+
+    // Outputs
+    @doc = "Main output"
+    default output A_out;
+    output B_out;
+}

@@ -19,7 +19,7 @@ namespace manta {
 		// Deprecated
 		void loadFile(const char *fname, bool correctGamma);
 
-		const VectorMap2DNodeOutput *getMainOutput() const { return &m_textureOutput; }
+		VectorMap2DNodeOutput *getMainOutput() { return &m_textureOutput; }
 
 	protected:
 		virtual void registerInputs();

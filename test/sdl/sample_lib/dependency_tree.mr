@@ -1,0 +1,11 @@
+private import example_dependency
+
+node NewNode1 {
+    input A;
+    output B: "Hello world";
+}
+
+node NewNode2 {
+    input A;
+    output B: "Hello mars";
+}

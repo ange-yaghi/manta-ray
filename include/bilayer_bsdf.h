@@ -20,7 +20,7 @@ namespace manta {
 			const math::Vector &i, math::Vector *o, math::real *pdf, 
 			StackAllocator *stackAllocator) const;
 
-		void setCoatingDistribution(const MicrofacetDistributionNodeOutput *coatingMaterial) 
+		void setCoatingDistribution(MicrofacetDistributionNodeOutput *coatingMaterial) 
 			{ m_coatingDistribution = coatingMaterial; }
 		const MicrofacetDistributionNodeOutput *getCoatingDistribution() 
 			{ return m_coatingDistribution; }
@@ -45,7 +45,7 @@ namespace manta {
 		virtual void registerInputs();
 
 	protected:
-		const MicrofacetDistributionNodeOutput *m_coatingDistribution;
+		MicrofacetDistributionNodeOutput *m_coatingDistribution;
 		LambertianBSDF *m_diffuseMaterial;
 
 		pNodeInput m_diffuseNode;

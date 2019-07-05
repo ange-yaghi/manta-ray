@@ -1,0 +1,17 @@
+private import some_library as lib
+private import color
+
+@doc = "Define a new version of this same node name"
+private node Gray {
+    input s: 0.5;
+    default output gray: color::Color(s, s, s) ; 
+}
+
+private node Test {
+    output testCase1: Gray().gray;           // Okay
+    output testCase2: Gray().rgb;            // UndefinedMember
+    output testCase3: Color();               // Okay
+    output testCase4: ::Color();             // UndefinedNodeType
+    output testCase5: lib::Gray().rgb;       // Okay
+    output testCase6: lib::Gray().gray;      // UndefinedMember
+}

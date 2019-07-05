@@ -4,6 +4,8 @@
 
 #include <image_byte_buffer.h>
 #include <jpeg_writer.h>
+#include <sdl_compilation_error.h>
+#include <sdl_error_list.h>
 
 void writeToJpeg(const RealMap2D *scalarMap, const std::string &fname) {
 	ImageByteBuffer byteBuffer;
@@ -47,4 +49,24 @@ void writeToJpeg(const ComplexMap2D *plane, const std::string &fname, Margins *m
 	writer.write(&byteBuffer, fname.c_str());
 
 	byteBuffer.free();
+}
+
+bool findError(const SdlErrorList *errorList, const SdlErrorCode_struct &errorCode, int line, 
+										const SdlCompilationUnit *unit, bool instantiationError) {
+	int errorCount = errorList->getErrorCount();
+
+	for (int i = 0; i < errorCount; i++) {
+		SdlCompilationError *error = errorList->getCompilationError(i);
+		if (unit == nullptr || error->getCompilationUnit() == unit) {
+			if (error->getErrorCode().code == errorCode.code && error->getErrorCode().stage == errorCode.stage) {
+				if (line == -1 || error->getErrorLocation()->lineStart == line) {
+					if (error->isInstantiationError() == instantiationError) {
+						return true;
+					}
+				}
+			}
+		}
+	}
+
+	return false;
 }

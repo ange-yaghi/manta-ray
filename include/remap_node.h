@@ -16,7 +16,7 @@ namespace manta {
 		RemapNode(const math::Vector &start, const math::Vector &end, pNodeInput inputNode);
 		virtual ~RemapNode();
 
-		const NodeOutput *getMainOutput() const { return &m_output; }
+		NodeOutput *getMainOutput() { return &m_output; }
 
 	protected:
 		virtual void _evaluate();

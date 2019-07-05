@@ -1,0 +1,6 @@
+private import "test.sdl"
+private import test
+
+SampleNode node1 (
+	eq: a + (b / c)
+)

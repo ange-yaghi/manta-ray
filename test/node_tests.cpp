@@ -20,7 +20,7 @@ TEST(NodeTests, MultiplyNodeTest) {
 	node.evaluate();
 
 	// Check state
-	NodeOutput *o = node.getOutput("Output");
+	const NodeOutput *o = node.getOutput("Output");
 	EXPECT_EQ(o->getDimensions(), 1);
 	EXPECT_EQ(o->getSize(0), 1);
 
@@ -46,7 +46,7 @@ TEST(NodeTests, MultiplyMapNodeTest) {
 	node.evaluate();
 
 	// Check state
-	NodeOutput *o = node.getOutput("Output");
+	const NodeOutput *o = node.getOutput("Output");
 	EXPECT_EQ(o->getDimensions(), 2);
 	EXPECT_EQ(o->getSize(0), 16);
 	EXPECT_EQ(o->getSize(1), 16);
@@ -82,7 +82,7 @@ TEST(NodeTests, StepNode) {
 	node.evaluate();
 
 	// Check state
-	NodeOutput *o = node.getOutput("Output");
+	const NodeOutput *o = node.getOutput("Output");
 	EXPECT_EQ(o->getDimensions(), 1);
 	EXPECT_EQ(o->getSize(0), 1);
 

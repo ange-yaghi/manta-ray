@@ -1,0 +1,3 @@
+public node FileImage {
+    output Port: "Test";
+}

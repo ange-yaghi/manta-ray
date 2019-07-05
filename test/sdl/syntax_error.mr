@@ -1,0 +1,5 @@
+SampleNode node1(
+	color: rgb(255, 255, 0xff).r ~,
+	synax_err: test ~,
+	name: 	scene.file.name	
+) technically_a_valid_token

@@ -1,0 +1,21 @@
+module {
+    @author = "Ange Yaghi"
+    @date = "2019-05-30"
+}
+
+private import "test.sdl"
+private import test
+
+@author = "Ange Yaghi"
+@comment = "This is just a test node"
+public node NewNode {
+    // Inputs
+    @doc = "Main input"
+    default input A;
+    input B;
+
+    // Outputs
+    @doc = "Main output"
+    default output A_out: A;
+    output B_out: B;
+}
