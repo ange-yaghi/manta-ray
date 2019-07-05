@@ -10,8 +10,9 @@ manta::SdlContextTree::SdlContextTree() {
 	m_parent = nullptr;
 }
 
-manta::SdlContextTree::SdlContextTree(SdlNode *context) {
+manta::SdlContextTree::SdlContextTree(SdlNode *context, bool mainContext) {
 	m_context = context;
+	m_mainContext = mainContext;
 }
 
 manta::SdlContextTree::~SdlContextTree() {
@@ -27,8 +28,8 @@ manta::SdlContextTree *manta::SdlContextTree::search(const SdlContextTree *refer
 	return nullptr;
 }
 
-manta::SdlContextTree *manta::SdlContextTree::newChild(SdlNode *context) {
-	SdlContextTree *newChild = new SdlContextTree(context);
+manta::SdlContextTree *manta::SdlContextTree::newChild(SdlNode *context, bool mainContext) {
+	SdlContextTree *newChild = new SdlContextTree(context, mainContext);
 	newChild->setParent(this);
 
 	m_children.push_back(newChild);

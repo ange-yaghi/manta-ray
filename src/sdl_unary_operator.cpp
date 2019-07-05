@@ -30,43 +30,22 @@ manta::SdlParserStructure *manta::SdlUnaryOperator::getImmediateReference(const 
 		return nullptr;
 	}
 
-	// Check the input context
-	bool foundInput = false;
-	if (query.inputContext != nullptr) {
-		SdlReferenceInfo inputInfo;
-		SdlReferenceQuery inputQuery;
-		inputQuery.inputContext = query.inputContext;
-		inputQuery.recordErrors = false;
+	if (basicInfo.touchedMainContext) SDL_INFO_OUT(touchedMainContext, true);
 
-		SdlParserStructure *inputConnection = resolvedOperand->getReference(inputQuery, &inputInfo);
-		if (SDL_FAILED(&inputInfo)) {
-			SDL_FAIL();
-			return nullptr;
-		}
-
-		if (inputConnection != nullptr && inputConnection != resolvedOperand) {
-			foundInput = true;
-			resolvedOperand = inputConnection;
-
-			// Context has changed
-			SDL_INFO_OUT(newContext, inputInfo.newContext);
-		}
-	}
-
-	bool isValidError = (query.inputContext == nullptr || (query.inputContext != nullptr && foundInput));
+	bool isValidError = (SDL_EMPTY_CONTEXT() || basicInfo.touchedMainContext);
 
 	if (m_operator == DEFAULT) {
-		SdlParserStructure *result = resolvedOperand->getAsValue();
+		SdlParserStructure *result = resolvedOperand;
 
-		if (result == nullptr && resolvedOperand->isInputPoint()) {
+		if (basicInfo.reachedDeadEnd) {
 			// This means that this references an input point with no default value. Obviously
 			// it makes no sense to check for further errors.
-			SDL_FAIL();
+			SDL_DEAD_END();
 			return nullptr;
 		}
 
 		SdlNode *asNode = resolvedOperand->getAsNode();
-		if (result == nullptr && asNode != nullptr) result = asNode->getDefaultOutputValue();
+		if (asNode != nullptr) result = asNode->getDefaultOutputValue();
 
 		if (result == nullptr) {
 			SDL_FAIL();

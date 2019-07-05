@@ -6,6 +6,7 @@
 #include <sdl_node.h>
 #include <sdl_compilation_error.h>
 #include <sdl_value.h>
+#include <sdl_context_tree.h>
 
 manta::SdlNodeDefinition::SdlNodeDefinition(const SdlTokenInfo_string &name) {
 	m_name = name;
@@ -158,4 +159,9 @@ void manta::SdlNodeDefinition::_validate() {
 			}
 		}
 	}
+}
+
+void manta::SdlNodeDefinition::_checkInstantiation() {
+	SdlContextTree *mainContext = new SdlContextTree(nullptr, true);
+	checkReferences(mainContext);
 }

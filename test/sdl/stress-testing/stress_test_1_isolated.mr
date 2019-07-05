@@ -1,6 +1,7 @@
 private node ExplicitDefault {
     input object;
     default output object_default: object^.hello_world; 
+    output object_reference: object;
 }
 
 private node HelloWorldNode {
@@ -14,7 +15,7 @@ private node HelloWorldContainer {
 }
 
 private node test {
-    output test17: hello_world_default.object_default;      // UndefinedMember
+    output test22: hello_world_default.object_reference->fake;          // UndefinedMember
 
     HelloWorldContainer hello_world("Hello World")
     ExplicitDefault hello_world_default(hello_world)

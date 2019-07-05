@@ -59,11 +59,11 @@ manta::SdlParserStructure *manta::SdlAttributeDefinition::getImmediateReference(
 	SDL_RESET(query);
 
 	// First check the input context for the reference
-	if (query.inputContext != nullptr) {
+	if (!SDL_EMPTY_CONTEXT()) {
 		SdlParserStructure *reference = query.inputContext->resolveDefinition(this);
 		if (reference != nullptr) {
 			SDL_INFO_OUT(newContext, query.inputContext->getParent());
-			SDL_INFO_OUT(staticReference, false);
+			SDL_INFO_OUT(touchedMainContext, query.inputContext->isMainContext());
 
 			return reference;
 		}
@@ -71,7 +71,7 @@ manta::SdlParserStructure *manta::SdlAttributeDefinition::getImmediateReference(
 
 	// An attribute definition will by default point to its definition (ie default value)
 	if (m_defaultValue == nullptr) {
-		if (query.inputContext == nullptr) {
+		if (SDL_EMPTY_CONTEXT()) {
 			SDL_DEAD_END();
 			return nullptr;
 		}

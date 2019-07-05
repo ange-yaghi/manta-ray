@@ -65,7 +65,7 @@ namespace manta {
 		void setCompilationUnit(SdlCompilationUnit *unit) { m_unit = unit; }
 		SdlCompilationUnit *getCompilationUnit() const { return m_unit; }
 
-		bool isInstantiationError() const { return m_instantiation != nullptr; }
+		bool isInstantiationError() const;
 		SdlContextTree *getInstantiation() const { return m_instantiation; }
 
 	protected:

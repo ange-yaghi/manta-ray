@@ -1,5 +1,8 @@
 #include <sdl_compilation_error.h>
 
+#include <sdl_context_tree.h>
+#include <sdl_parser_structure.h>
+
 manta::SdlCompilationError::SdlCompilationError(const SdlTokenInfo &location, 
 			const SdlErrorCode_struct &code, SdlContextTree *instantiation) {
 	m_errorLocation = location;
@@ -9,6 +12,10 @@ manta::SdlCompilationError::SdlCompilationError(const SdlTokenInfo &location,
 
 manta::SdlCompilationError::~SdlCompilationError() {
 	/* void */
+}
+
+bool manta::SdlCompilationError::isInstantiationError() const {
+	return (m_instantiation != nullptr && m_instantiation->getContext() != nullptr);
 }
 
 // Error definitions --------------------------------------

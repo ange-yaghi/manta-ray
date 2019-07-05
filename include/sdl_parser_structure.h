@@ -13,6 +13,7 @@
 #define SDL_FAIL()					SDL_INFO_OUT(failed, true);
 #define SDL_DEAD_END()				SDL_INFO_OUT(reachedDeadEnd, true);
 #define SDL_FAILED(output)			(((output) != nullptr) ? (output)->failed : false)
+#define SDL_EMPTY_CONTEXT()			(query.inputContext == nullptr || query.inputContext->getContext() == nullptr)
 
 namespace manta {
 
@@ -46,7 +47,7 @@ namespace manta {
 
 			bool failed;
 			bool reachedDeadEnd;
-			bool staticReference;
+			bool touchedMainContext;
 		};
 
 	public:
@@ -97,15 +98,15 @@ namespace manta {
 		// Compilation stages
 		void expand();
 		void resolveDefinitions();
-		void checkReferences(SdlContextTree *inputContext = nullptr);
-		void checkInstantiation(SdlContextTree *inputContext = nullptr);
+		virtual void checkReferences(SdlContextTree *inputContext = nullptr);
+		void checkInstantiation();
 		void validate();
 
 	protected:
 		virtual void _expand();
 		virtual void _resolveDefinitions();
 		virtual void _validate();
-		virtual void _checkInstantiation(SdlContextTree *inputContext);
+		virtual void _checkInstantiation();
 
 	protected:
 		SdlParserStructure *m_parentScope;

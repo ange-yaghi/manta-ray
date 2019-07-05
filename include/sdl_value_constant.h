@@ -77,30 +77,31 @@ namespace manta {
 			SdlParserStructure *reference = resolveName(m_value);
 
 			// Do error checking
-			if (reference == nullptr && query.inputContext == nullptr) {
+			if (reference == nullptr) {
 				SDL_FAIL();
 
-				if (query.recordErrors) {
+				if (query.recordErrors && SDL_EMPTY_CONTEXT()) {
 					SDL_ERR_OUT(new SdlCompilationError(m_summaryToken,
 						SdlErrorCode::UnresolvedReference, query.inputContext));
 				}
 
 				return nullptr;
-			}
+			}	
 
 			return reference;
 		}
 
 		virtual Node *_generateNode(SdlContextTree *context) {
+			SdlReferenceInfo info;
 			SdlReferenceQuery query;
 			query.inputContext = context;
 			query.recordErrors = false;
-			SdlParserStructure *reference = getImmediateReference(query, nullptr);
+			SdlParserStructure *reference = getImmediateReference(query, &info);
 			if (reference == nullptr) return nullptr;
 
 			SdlNode *asNode = reference->getAsNode();
 			if (asNode != nullptr) {
-				return asNode->generateNode(context);
+				return asNode->generateNode(info.newContext);
 			}
 			else return nullptr;
 		}
@@ -115,25 +116,11 @@ namespace manta {
 
 			SdlNode *asNode = reference->getAsNode();
 			if (asNode != nullptr) {
-				Node *generatedNode = generateNode(info.newContext);
+				Node *generatedNode = asNode->generateNode(info.newContext);
 				if (generatedNode != nullptr) {
 					return generatedNode->getPrimaryOutput();
 				}
 			}
-
-			// Check if this is a reference to an input (which would have to be looked up)
-			//SdlValue *value = nullptr;
-			
-			//if (!reference->isInputPoint()) {
-				//value = reference->get();
-			//}
-			//else {
-			//	SdlParserStructure *inputReference = reference->getImmediateReference(context);
-			//	if (inputReference != nullptr) {
-			//		value = inputReference->getAsValue();
-			//	}
-			//}
-			// TODO: if value is nullptr then that would be very bad... not sure what to do about this yet
 
 			return reference->getAsValue()->generateNodeOutput(info.newContext);
 		}

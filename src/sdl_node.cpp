@@ -178,14 +178,19 @@ void manta::SdlNode::_validate() {
 	}
 }
 
-void manta::SdlNode::_checkInstantiation(SdlContextTree *inputContext) {
+void manta::SdlNode::_checkInstantiation() {
 	// Check all references relating to the connection of inputs from this
 	// node to the actual definition.
-	if (m_definition != nullptr) {
-		SdlContextTree *parentContext = new SdlContextTree(nullptr);
-		SdlContextTree *context = parentContext->newChild(this);
+	SdlContextTree *parentContext = new SdlContextTree(nullptr);
+	SdlContextTree *mainContext = parentContext->newChild(this, true);
 
-		m_definition->checkReferences(context);
+	int attributeCount = getAttributes()->getAttributeCount();
+	for (int i = 0; i < attributeCount; i++) {
+		m_attributes->getAttribute(i)->checkReferences(parentContext);
+	}
+
+	if (m_definition != nullptr) {
+		m_definition->checkReferences(mainContext);
 	}
 }
 
@@ -282,17 +287,19 @@ void manta::SdlNode::resolveAttributeDefinitions() {
 
 manta::Node *manta::SdlNode::generateNode(SdlContextTree *context) {
 	SdlContextTree *newContext;
-	if (context == nullptr) {
-		newContext = new SdlContextTree(this);
+	SdlContextTree *parentContext = context;
+	if (parentContext == nullptr) {
+		parentContext = new SdlContextTree(nullptr);
+		newContext = parentContext->newChild(this);
 	}
 	else {
-		newContext = context->newChild(this);
+		newContext = parentContext->newChild(this);
 	}
 
-	NodeTableEntry *entry = getTableEntry(context);
+	NodeTableEntry *entry = getTableEntry(parentContext);
 	if (entry != nullptr) return entry->generatedNode;
 
-	entry = newTableEntry(context);
+	entry = newTableEntry(parentContext);
 
 	SdlNodeDefinition *definition = getDefinition();
 	const SdlAttributeDefinitionList *allAttributes = definition->getAttributeDefinitionList();
@@ -317,24 +324,24 @@ manta::Node *manta::SdlNode::generateNode(SdlContextTree *context) {
 			if (attribute != nullptr) {
 				// Input was specified
 				SdlReferenceQuery query;
-				query.inputContext = context;
+				query.inputContext = parentContext;
 				query.recordErrors = false;
 				SdlValue *asValue = attribute->getImmediateReference(query, nullptr)->getAsValue();
 
 				Mapping inputPort;
-				inputPort.output = asValue->generateNodeOutput(context);
+				inputPort.output = asValue->generateNodeOutput(parentContext);
 				inputPort.name = attributeDefinition->getName();
 				inputs.push_back(inputPort);
 			}
 			else {
 				// Use the default value in the definition
 				SdlReferenceQuery query;
-				query.inputContext = context;
+				query.inputContext = parentContext;
 				query.recordErrors = false;
 				SdlValue *asValue = attributeDefinition->getImmediateReference(query, nullptr)->getAsValue();
 
 				Mapping inputPort;
-				inputPort.output = asValue->generateNodeOutput(context);
+				inputPort.output = asValue->generateNodeOutput(parentContext);
 				inputPort.name = attributeDefinition->getName();
 				inputs.push_back(inputPort);
 			}
@@ -342,7 +349,7 @@ manta::Node *manta::SdlNode::generateNode(SdlContextTree *context) {
 		else if (attributeDefinition->getDirection() == SdlAttributeDefinition::OUTPUT &&
 																	!definition->isBuiltin()) {
 			SdlReferenceQuery query;
-			query.inputContext = context;
+			query.inputContext = parentContext;
 			query.recordErrors = false;
 			SdlValue *asValue = attributeDefinition->getImmediateReference(query, nullptr)->getAsValue();
 
@@ -451,5 +458,18 @@ void manta::SdlNode::writeTraceToFile(std::ofstream &file) {
 			->getAttributeDefinitionList()
 			->getDefinition(i)
 			->writeReferencesToFile(file, thisContext);
+	}
+}
+
+void manta::SdlNode::checkReferences(SdlContextTree *inputContext) {
+	SdlContextTree *thisContext = inputContext->newChild(this, false);
+
+	int attributeCount = getAttributes()->getAttributeCount();
+	for (int i = 0; i < attributeCount; i++) {
+		m_attributes->getAttribute(i)->checkReferences(inputContext);
+	}
+
+	if (m_definition != nullptr) {
+		m_definition->checkReferences(thisContext);
 	}
 }

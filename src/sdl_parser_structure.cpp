@@ -9,7 +9,7 @@ manta::SdlParserStructure::SdlReferenceInfo::SdlReferenceInfo() {
 
 	failed = false;
 	reachedDeadEnd = false;
-	staticReference = true;
+	touchedMainContext = false;
 }
 
 manta::SdlParserStructure::SdlReferenceInfo::~SdlReferenceInfo() {
@@ -22,7 +22,7 @@ void manta::SdlParserStructure::SdlReferenceInfo::reset() {
 
 	failed = false;
 	reachedDeadEnd = false;
-	staticReference = true;
+	touchedMainContext = false;
 }
 
 manta::SdlParserStructure::SdlReferenceQuery::SdlReferenceQuery() {
@@ -121,7 +121,7 @@ manta::SdlParserStructure *manta::SdlParserStructure::getReference(const SdlRefe
 		}
 
 		SDL_INFO_OUT(newContext, nestedInfo.newContext);
-		SDL_INFO_OUT(staticReference, nestedInfo.staticReference && immediateInfo.staticReference);
+		SDL_INFO_OUT(touchedMainContext, nestedInfo.touchedMainContext || immediateInfo.touchedMainContext);
 		return fullReference;
 	}
 	else {
@@ -164,8 +164,14 @@ void manta::SdlParserStructure::checkReferences(SdlContextTree *inputContext) {
 	}
 }
 
-void manta::SdlParserStructure::checkInstantiation(SdlContextTree *inputContext) {
-	_checkInstantiation(inputContext);
+void manta::SdlParserStructure::checkInstantiation() {
+	// Check components
+	int componentCount = getComponentCount();
+	for (int i = 0; i < componentCount; i++) {
+		m_components[i]->checkInstantiation();
+	}
+
+	_checkInstantiation();
 }
 
 void manta::SdlParserStructure::validate() {
@@ -209,7 +215,7 @@ void manta::SdlParserStructure::_validate() {
 	/* void */
 }
 
-void manta::SdlParserStructure::_checkInstantiation(SdlContextTree *inputContext) {
+void manta::SdlParserStructure::_checkInstantiation() {
 	/* void */
 }
 

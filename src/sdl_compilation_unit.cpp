@@ -123,14 +123,6 @@ manta::SdlNodeDefinition *manta::SdlCompilationUnit::resolveNodeDefinition(const
 	return definition;
 }
 
-void manta::SdlCompilationUnit::_checkInstantiation(SdlContextTree *inputContext) {
-	int nodeCount = getNodeCount();
-	for (int i = 0; i < nodeCount; i++) {
-		SdlNode *node = m_nodes[i];
-		node->checkInstantiation(inputContext);
-	}
-}
-
 manta::SdlNodeDefinition *manta::SdlCompilationUnit::resolveLocalNodeDefinition(const std::string &name, int *count, bool external) {
 	*count = 0;
 	manta::SdlNodeDefinition *definition = nullptr;

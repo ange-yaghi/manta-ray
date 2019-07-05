@@ -54,7 +54,11 @@ manta::SdlParserStructure *manta::SdlBinaryOperator::getImmediateReference(
 			return nullptr;
 		}
 
-		bool isValidError = (query.inputContext == nullptr || (query.inputContext != nullptr && !basicInfo.staticReference));
+		bool touchedMainContext = false;
+		if (basicInfo.touchedMainContext) {
+			SDL_INFO_OUT(touchedMainContext, true);
+			touchedMainContext = true;
+		}
 
 		SdlContextTree *currentContext = basicInfo.newContext;
 
@@ -69,12 +73,17 @@ manta::SdlParserStructure *manta::SdlBinaryOperator::getImmediateReference(
 			if (resolvedLeft == nullptr) {
 				SDL_FAIL();
 
+				bool isValidError = (SDL_EMPTY_CONTEXT() || touchedMainContext);
 				if (query.recordErrors && isValidError) {
 					SDL_ERR_OUT(new SdlCompilationError(*m_leftOperand->getSummaryToken(),
-						SdlErrorCode::CannotFindDefaultValue, currentContext));
+						SdlErrorCode::CannotFindDefaultValue, query.inputContext));
 				}
 
 				return nullptr;
+			}
+
+			if (currentContext != nullptr) {
+				currentContext = currentContext->newChild(asNode);
 			}
 
 			SdlReferenceInfo refInfo;
@@ -83,9 +92,19 @@ manta::SdlParserStructure *manta::SdlBinaryOperator::getImmediateReference(
 			refQuery.recordErrors = false;
 			resolvedLeft = resolvedLeft->getReference(refQuery, &refInfo);
 
-			if (SDL_FAILED(&refInfo) || resolvedLeft == nullptr) {
+			if (SDL_FAILED(&refInfo)) {
 				SDL_FAIL();
 				return nullptr;
+			}
+
+			if (refInfo.reachedDeadEnd) {
+				SDL_DEAD_END();
+				return nullptr;
+			}
+
+			if (refInfo.touchedMainContext) {
+				SDL_INFO_OUT(touchedMainContext, true);
+				touchedMainContext = true;
 			}
 
 			currentContext = refInfo.newContext;
@@ -97,10 +116,11 @@ manta::SdlParserStructure *manta::SdlBinaryOperator::getImmediateReference(
 		if (publicAttribute == nullptr) {
 			SDL_FAIL();
 
+			bool isValidError = (SDL_EMPTY_CONTEXT() || touchedMainContext);
 			if (query.recordErrors && isValidError) {
 				// Left hand does not have this member
 				SDL_ERR_OUT(new SdlCompilationError(*m_rightOperand->getSummaryToken(),
-					SdlErrorCode::UndefinedMember, currentContext));
+					SdlErrorCode::UndefinedMember, query.inputContext));
 			}
 
 			return nullptr;
@@ -110,9 +130,10 @@ manta::SdlParserStructure *manta::SdlBinaryOperator::getImmediateReference(
 		if (!publicAttribute->allowsExternalAccess()) {
 			SDL_FAIL();
 
+			bool isValidError = (SDL_EMPTY_CONTEXT() || touchedMainContext);
 			if (query.recordErrors && isValidError) {
 				SDL_ERR_OUT(new SdlCompilationError(*m_rightOperand->getSummaryToken(),
-					SdlErrorCode::AccessingInternalMember, currentContext));
+					SdlErrorCode::AccessingInternalMember, query.inputContext));
 			}
 
 			return nullptr;
