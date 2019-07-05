@@ -29,7 +29,7 @@ const SdlErrorList *compileFile(const std::string &filename) {
 
 	const SdlErrorList *errors = compiler->getErrorList();
 
-	SdlNode *node = unit->getNode(1);
+	SdlNode *node = unit->getNode(0);
 	std::ofstream f(TMP_PATH + std::string("trace.txt"));
 	node->writeTraceToFile(f);
 	f.close();
@@ -58,4 +58,29 @@ TEST(SdlSyntaxStressTests, SdlSyntaxStressTest1) {
 	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedMember, 68));
 	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedMember, 69));
 	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedMember, 74));
+}
+
+TEST(SdlSyntaxStressTests, SdlSyntaxNodeArgumentStressTest1) {
+	const SdlErrorList *errors = compileFile("stress-testing/node_argument_stress_test_1.mr");
+
+	EXPECT_EQ(errors->getErrorCount(), 5);
+
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedMember, 22, nullptr, true));
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedMember, 23, nullptr));
+}
+
+TEST(SdlSyntaxStressTests, SdlSyntaxDeepErrorIsolated) {
+	const SdlErrorList *errors = compileFile("stress-testing/deep_error_isolated.mr");
+
+	EXPECT_EQ(errors->getErrorCount(), 1);
+
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedMember, 3, nullptr, true));
+}
+
+TEST(SdlSyntaxStressTests, SdlSyntaxDeepError) {
+	const SdlErrorList *errors = compileFile("stress-testing/deep_error.mr");
+
+	EXPECT_EQ(errors->getErrorCount(), 3);
+
+	EXPECT_TRUE(findError(errors, SdlErrorCode::UndefinedMember, 27, nullptr, true));
 }

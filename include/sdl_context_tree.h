@@ -14,7 +14,7 @@ namespace manta {
 	class SdlContextTree {
 	public:
 		SdlContextTree();
-		SdlContextTree(SdlNode *context);
+		SdlContextTree(SdlNode *context, bool mainContext = false);
 		~SdlContextTree();
 
 		void setParent(SdlContextTree *parent) { m_parent = parent; }
@@ -22,15 +22,18 @@ namespace manta {
 		SdlContextTree *getRoot();
 
 		SdlContextTree *search(const SdlContextTree *reference) const;
-		SdlContextTree *newChild(SdlNode *context);
+		SdlContextTree *newChild(SdlNode *context, bool mainContext = false);
 
 		SdlNode *getContext() const { return m_context; }
 		SdlContextTree *findContext(SdlParserStructure *context);
 
 		SdlParserStructure *resolveDefinition(SdlAttributeDefinition *definition);
 
+		bool isMainContext() const { return m_mainContext; }
+
 	protected:
 		SdlNode *m_context;
+		bool m_mainContext;
 
 		SdlContextTree *m_parent;
 		std::vector<SdlContextTree *> m_children;

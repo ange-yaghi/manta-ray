@@ -45,6 +45,8 @@ namespace manta {
 
 		void writeTraceToFile(std::ofstream &file);
 
+		virtual void checkReferences(SdlContextTree *inputContext = nullptr);
+
 	protected:
 		SdlTokenInfo_string m_type;
 		SdlTokenInfo_string m_name;
@@ -64,7 +66,7 @@ namespace manta {
 	protected:
 		virtual void _resolveDefinitions();
 		virtual void _validate();
-		virtual void _checkInstantiation(SdlContextTree *inputContext);
+		virtual void _checkInstantiation();
 
 		void resolveNodeDefinition();
 		void resolveAttributeDefinitions();

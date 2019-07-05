@@ -58,6 +58,7 @@ namespace manta {
 
 	protected:
 		virtual void _validate();
+		virtual void _checkInstantiation();
 	};
 
 } /* namespace manta */

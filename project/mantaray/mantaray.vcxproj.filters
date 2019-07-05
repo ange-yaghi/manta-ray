@@ -1223,9 +1223,6 @@
     <ClInclude Include="..\..\include\sdl_visibility.h">
       <Filter>Header Files\sdl-parser\common</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\sdl_parser_structure.h">
-      <Filter>Header Files\sdl-parser\scanner</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\sdl_generator.h">
       <Filter>Header Files\sdl-parser\generator</Filter>
     </ClInclude>
@@ -1282,6 +1279,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\simple_bsdf_material_node.h">
       <Filter>Header Files\nodes\library\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_parser_structure.h">
+      <Filter>Header Files\sdl-parser\parser</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

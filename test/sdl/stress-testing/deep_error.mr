@@ -1,0 +1,44 @@
+private node test {
+    input x;
+    input y;
+
+    output a: x;
+    output b: y;
+}
+
+private node empty {}
+
+private node half_good {
+    output b: 5;
+}
+
+private node even_harder {
+    input v;
+    default output _v: v;
+}
+
+private node straight_through {
+    input x;
+    output a: x;
+}
+
+private node confusion {
+    input some_input;
+    output test: test(some_input.a, some_input.b); // Undefined member x3
+
+    even_harder internal_node(
+        empty()
+    )
+}
+
+private node top_confusion {
+    input some_input;
+    input other;
+    default output __out: 
+        confusion(
+            straight_through(some_input)
+        );
+    output __out2: confusion(other);
+}
+
+top_confusion test(5, 6)
