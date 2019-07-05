@@ -1,0 +1,9 @@
+private import some_library as lib
+
+lib::Color myColor() // UndefinedNodeType - Color is defined in a different module
+lib::Converter myConverter() // UndefinedNodeType
+::Converter myOtherconverter() // UndefinedNodeType
+
+lib::Gray myGray() // No error
+::Gray myOtherGray() // UndefinedNodeType
+Gray myOtherOtherGray() // No error

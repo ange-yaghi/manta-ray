@@ -1,0 +1,9 @@
+FileImage testImage (
+	test1:	test,
+	test2: 	test
+)
+
+FileImage testImage2 (
+	test1:	test,
+	test2: 	test /* Test block comment */
+)

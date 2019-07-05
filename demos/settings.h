@@ -14,6 +14,7 @@
 #define TMP_PATH (WORKSPACE_PATH "tmp/")
 #define MODEL_PATH "../../demos/models/"
 #define TEXTURE_PATH "../../demos/textures/"
+#define SDL_PATH "../../demos/sdl/"
 #define RENDER_OUTPUT (WORKSPACE_PATH "render/")
 #define CMF_PATH "../../demos/cmfs/"
 

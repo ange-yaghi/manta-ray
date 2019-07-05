@@ -4,6 +4,7 @@
 #include <settings.h>
 
 // All required manta-ray includes
+#include <manta.h>
 #include <light_ray.h>
 #include <sphere_primitive.h>
 #include <intersection_point.h>
@@ -75,7 +76,8 @@ namespace manta_demo {
 		SAMSUNG_A8,
 		MATERIAL_PREVIEW,
 		STOCK_SCENE,
-		APERTURE_DEMO
+		APERTURE_DEMO,
+		SDL_DEMO
 	};
 
 	void runDemo(DEMO demo, int samplesPerPixel, int resolutionX, int resolutionY);
@@ -91,6 +93,7 @@ namespace manta_demo {
 	void materialVisualizer(int samplesPerPixel, int resolutionX, int resolutionY);
 	void stockSceneDemo(int samplesPerPixel, int resolutionX, int resolutionY);
 	void apertureDemo(int samplesPerPixe, int resolutionX, int resolutionY);
+	void sdlDemo(int samplesPerPixe, int resolutionX, int resolutionY);
 
 } /* namespace manta_demo */
 

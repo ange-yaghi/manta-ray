@@ -19,7 +19,26 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\autogen\sdl_parser.auto.cpp" />
+    <ClCompile Include="..\..\autogen\sdl_scanner.auto.cpp" />
     <ClCompile Include="..\..\src\aperture.cpp" />
+    <ClCompile Include="..\..\src\constructed_string_node.cpp" />
+    <ClCompile Include="..\..\src\constructed_string_node_output.cpp" />
+    <ClCompile Include="..\..\src\constructed_vector_node_output.cpp" />
+    <ClCompile Include="..\..\src\custom_node.cpp" />
+    <ClCompile Include="..\..\src\node_output.cpp" />
+    <ClCompile Include="..\..\src\node_program.cpp" />
+    <ClCompile Include="..\..\src\path.cpp" />
+    <ClCompile Include="..\..\src\float_node_output.cpp" />
+    <ClCompile Include="..\..\src\sdl_attribute_definition.cpp" />
+    <ClCompile Include="..\..\src\sdl_attribute_definition_list.cpp" />
+    <ClCompile Include="..\..\src\sdl_compilation_error.cpp" />
+    <ClCompile Include="..\..\src\sdl_compiler.cpp" />
+    <ClCompile Include="..\..\src\sdl_context_tree.cpp" />
+    <ClCompile Include="..\..\src\sdl_error_list.cpp" />
+    <ClCompile Include="..\..\src\sdl_generator.cpp" />
+    <ClCompile Include="..\..\src\sdl_generic_value.cpp" />
+    <ClCompile Include="..\..\src\sdl_import_statement.cpp" />
     <ClCompile Include="..\..\src\media_interface.cpp" />
     <ClCompile Include="..\..\src\biconvex_lens.cpp" />
     <ClCompile Include="..\..\src\bilayer_bsdf.cpp" />
@@ -47,7 +66,6 @@
     <ClCompile Include="..\..\src\manta_math.cpp" />
     <ClCompile Include="..\..\src\media_interface_node_output.cpp" />
     <ClCompile Include="..\..\src\microfacet_distribution_node_output.cpp" />
-    <ClCompile Include="..\..\src\mipmap.cpp" />
     <ClCompile Include="..\..\src\multiply_node.cpp" />
     <ClCompile Include="..\..\src\multiply_node_output.cpp" />
     <ClCompile Include="..\..\src\opaque_media_interface.cpp" />
@@ -56,11 +74,28 @@
     <ClCompile Include="..\..\src\ramp_node_output.cpp" />
     <ClCompile Include="..\..\src\remap_node_output.cpp" />
     <ClCompile Include="..\..\src\rgb_space.cpp" />
+    <ClCompile Include="..\..\src\sdl_attribute.cpp" />
+    <ClCompile Include="..\..\src\sdl_attribute_list.cpp" />
+    <ClCompile Include="..\..\src\sdl_binary_operator.cpp" />
+    <ClCompile Include="..\..\src\sdl_compilation_unit.cpp" />
+    <ClCompile Include="..\..\src\sdl_input_connection.cpp" />
+    <ClCompile Include="..\..\src\sdl_node.cpp" />
+    <ClCompile Include="..\..\src\sdl_node_definition.cpp" />
+    <ClCompile Include="..\..\src\sdl_parser_structure.cpp" />
+    <ClCompile Include="..\..\src\sdl_unary_operator.cpp" />
+    <ClCompile Include="..\..\src\sdl_value.cpp" />
     <ClCompile Include="..\..\src\signal_processing.cpp" />
+    <ClCompile Include="..\..\src\simple_bsdf_material_node.cpp" />
+    <ClCompile Include="..\..\src\single_float_node_output.cpp" />
+    <ClCompile Include="..\..\src\single_string_node_output.cpp" />
     <ClCompile Include="..\..\src\single_vector_node_output.cpp" />
     <ClCompile Include="..\..\src\spectrum.cpp" />
+    <ClCompile Include="..\..\src\srgb_node.cpp" />
+    <ClCompile Include="..\..\src\srgb_node_output.cpp" />
+    <ClCompile Include="..\..\src\stack_allocator.cpp" />
     <ClCompile Include="..\..\src\step_node.cpp" />
     <ClCompile Include="..\..\src\step_node_output.cpp" />
+    <ClCompile Include="..\..\src\string_node_output.cpp" />
     <ClCompile Include="..\..\src\vector_map_2d.cpp" />
     <ClCompile Include="..\..\src\material_manager.cpp" />
     <ClCompile Include="..\..\src\node.cpp" />
@@ -115,11 +150,14 @@
     <ClCompile Include="..\..\src\starburst_approximation.cpp" />
     <ClCompile Include="..\..\src\texture_node.cpp" />
     <ClCompile Include="..\..\src\vector_map_2d_node_output.cpp" />
+    <ClCompile Include="..\..\src\constructed_vector_node.cpp" />
     <ClCompile Include="..\..\src\vector_node_output.cpp" />
+    <ClCompile Include="..\..\src\vector_split_node.cpp" />
+    <ClCompile Include="..\..\src\vector_split_node_output.cpp" />
     <ClCompile Include="..\..\src\worker.cpp" />
-    <ClCompile Include="stack_allocator.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\autogen\sdl_parser.auto.h" />
     <ClInclude Include="..\..\include\aperture.h" />
     <ClInclude Include="..\..\include\biconvex_lens.h" />
     <ClInclude Include="..\..\include\bilayer_bsdf.h" />
@@ -134,16 +172,34 @@
     <ClInclude Include="..\..\include\color.h" />
     <ClInclude Include="..\..\include\complex_map_2d.h" />
     <ClInclude Include="..\..\include\complex_math.h" />
+    <ClInclude Include="..\..\include\constructed_string_node.h" />
+    <ClInclude Include="..\..\include\constructed_string_node_output.h" />
+    <ClInclude Include="..\..\include\constructed_vector_node_output.h" />
     <ClInclude Include="..\..\include\convolution.h" />
+    <ClInclude Include="..\..\include\custom_node.h" />
     <ClInclude Include="..\..\include\dielectric_media_interface.h" />
     <ClInclude Include="..\..\include\fraunhofer_diffraction.h" />
     <ClInclude Include="..\..\include\geometry.h" />
     <ClInclude Include="..\..\include\ggx_distribution.h" />
     <ClInclude Include="..\..\include\grid_sampler.h" />
+    <ClInclude Include="..\..\include\node_program.h" />
+    <ClInclude Include="..\..\include\float_node_output.h" />
+    <ClInclude Include="..\..\include\sdl_context_tree.h" />
+    <ClInclude Include="..\..\include\sdl_generator.h" />
+    <ClInclude Include="..\..\include\sdl_generic_value.h" />
+    <ClInclude Include="..\..\include\sdl_unary_operator.h" />
+    <ClInclude Include="..\..\include\sdl_visibility.h" />
     <ClInclude Include="..\..\include\image_byte_buffer.h" />
     <ClInclude Include="..\..\include\image_file_node.h" />
     <ClInclude Include="..\..\include\image_handling.h" />
     <ClInclude Include="..\..\include\image_output_node.h" />
+    <ClInclude Include="..\..\include\path.h" />
+    <ClInclude Include="..\..\include\sdl_attribute_definition.h" />
+    <ClInclude Include="..\..\include\sdl_attribute_definition_list.h" />
+    <ClInclude Include="..\..\include\sdl_compilation_error.h" />
+    <ClInclude Include="..\..\include\sdl_compiler.h" />
+    <ClInclude Include="..\..\include\sdl_error_list.h" />
+    <ClInclude Include="..\..\include\sdl_import_statement.h" />
     <ClInclude Include="..\..\include\jpeg_writer.h" />
     <ClInclude Include="..\..\include\kd_tree.h" />
     <ClInclude Include="..\..\include\lambertian_bsdf.h" />
@@ -161,10 +217,29 @@
     <ClInclude Include="..\..\include\remap_node_output.h" />
     <ClInclude Include="..\..\include\rgb_space.h" />
     <ClInclude Include="..\..\include\scalar_map_2d.h" />
+    <ClInclude Include="..\..\include\sdl_attribute.h" />
+    <ClInclude Include="..\..\include\sdl_attribute_list.h" />
+    <ClInclude Include="..\..\include\sdl_binary_operator.h" />
+    <ClInclude Include="..\..\include\sdl_compilation_unit.h" />
+    <ClInclude Include="..\..\include\sdl_input_connection.h" />
+    <ClInclude Include="..\..\include\sdl_node.h" />
+    <ClInclude Include="..\..\include\sdl_node_definition.h" />
+    <ClInclude Include="..\..\include\sdl_parser_structure.h" />
+    <ClInclude Include="..\..\include\sdl_scanner.h" />
+    <ClInclude Include="..\..\include\sdl_structure_list.h" />
+    <ClInclude Include="..\..\include\sdl_token_info.h" />
+    <ClInclude Include="..\..\include\sdl_value.h" />
+    <ClInclude Include="..\..\include\sdl_value_constant.h" />
     <ClInclude Include="..\..\include\signal_processing.h" />
+    <ClInclude Include="..\..\include\simple_bsdf_material_node.h" />
+    <ClInclude Include="..\..\include\single_float_node_output.h" />
+    <ClInclude Include="..\..\include\single_string_node_output.h" />
     <ClInclude Include="..\..\include\single_vector_node_output.h" />
+    <ClInclude Include="..\..\include\srgb_node.h" />
+    <ClInclude Include="..\..\include\srgb_node_output.h" />
     <ClInclude Include="..\..\include\step_node.h" />
     <ClInclude Include="..\..\include\step_node_output.h" />
+    <ClInclude Include="..\..\include\string_node_output.h" />
     <ClInclude Include="..\..\include\vector_map_wrapper_node.h" />
     <ClInclude Include="..\..\include\spectrum.h" />
     <ClInclude Include="..\..\include\vector_map_2d.h" />
@@ -237,11 +312,44 @@
     <ClInclude Include="..\..\include\texture_node.h" />
     <ClInclude Include="..\..\include\vector_map_2d_node_output.h" />
     <ClInclude Include="..\..\include\node_output.h" />
+    <ClInclude Include="..\..\include\constructed_vector_node.h" />
     <ClInclude Include="..\..\include\vector_node_output.h" />
+    <ClInclude Include="..\..\include\vector_split_node.h" />
+    <ClInclude Include="..\..\include\vector_split_node_output.h" />
     <ClInclude Include="..\..\include\worker.h" />
     <ClInclude Include="..\..\scripts\new_contributor.py" />
   </ItemGroup>
   <ItemGroup>
+    <CustomBuild Include="..\..\flex-bison\sdl_scanner.l">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <FileType>Document</FileType>
+      <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</TreatOutputAsContent>
+      <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</TreatOutputAsContent>
+      <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</TreatOutputAsContent>
+      <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</TreatOutputAsContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+    </CustomBuild>
+    <CustomBuild Include="..\..\flex-bison\sdl_specification.y">
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</TreatOutputAsContent>
+      <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</TreatOutputAsContent>
+      <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</TreatOutputAsContent>
+      <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</TreatOutputAsContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+    </CustomBuild>
     <None Include="..\..\opencl_programs\mantaray.cl" />
     <None Include="..\..\scripts\increment_build_version.py" />
   </ItemGroup>
@@ -251,6 +359,7 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>mantaray</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -299,23 +408,23 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\include;$(SolutionDir)\..\..\Common\SDL2-2.0.9\include;$(SolutionDir)\..\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\..\autogen\;$(SolutionDir)\..\dependencies\libraries\flex\include;$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\..\Common\SDL2-2.0.9\include;$(SolutionDir)\..\include;$(IncludePath);$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include</IncludePath>
     <LibraryPath>$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\x86;$(SolutionDir)\..\..\Common\SDL2-2.0.9\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\include;$(SolutionDir)\..\dependencies\libraries\SDL\include;$(SolutionDir)\..\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\..\autogen\;$(SolutionDir)\..\dependencies\libraries\flex\include;$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\SDL\include;$(SolutionDir)\..\include;$(IncludePath);$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include</IncludePath>
     <LibraryPath>$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\x64;$(SolutionDir)\..\dependencies\libraries\SDL\lib\x64;$(LibraryPath)</LibraryPath>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\x86;$(SolutionDir)\..\..\Common\SDL2-2.0.9\lib\x86;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\include;$(SolutionDir)\..\..\Common\SDL2-2.0.9\include;$(SolutionDir)\..\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\..\autogen\;$(SolutionDir)\..\dependencies\libraries\flex\include;$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\..\Common\SDL2-2.0.9\include;$(SolutionDir)\..\include;$(IncludePath);$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\include;$(SolutionDir)\..\dependencies\libraries\SDL\include;$(SolutionDir)\..\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\..\autogen\;$(SolutionDir)\..\dependencies\libraries\flex\include;$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\SDL\include;$(SolutionDir)\..\include;$(IncludePath);$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include</IncludePath>
     <LibraryPath>$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\x64;$(SolutionDir)\..\dependencies\libraries\SDL\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -334,8 +443,11 @@
       <AdditionalDependencies>SDL2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Lib>
-      <AdditionalDependencies>turbojpeg.lib;SDL2.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
+    <PreBuildEvent>
+      <Command>$(SolutionDir)/../scripts/compile_flex_bison.bat</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -356,8 +468,11 @@
       <Command>python $(TargetDir)..\..\..\scripts\increment_build_version.py</Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalDependencies>turbojpeg.lib;SDL2.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
+    <PreBuildEvent>
+      <Command>$(SolutionDir)/../scripts/compile_flex_bison.bat</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -378,8 +493,11 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>turbojpeg.lib;SDL2.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
+    <PreBuildEvent>
+      <Command>$(SolutionDir)/../scripts/compile_flex_bison.bat</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -404,8 +522,11 @@
       <Command>python $(TargetDir)..\..\..\scripts\increment_build_version.py</Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalDependencies>turbojpeg.lib;SDL2.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
+    <PreBuildEvent>
+      <Command>$(SolutionDir)/../scripts/compile_flex_bison.bat</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,0 +1,11 @@
+private node confusion {
+    input some_input;
+    output test: some_input.a; // Undefined member x2
+}
+
+private node top_confusion {
+    input other;
+    output __out2: confusion(other);
+}
+
+top_confusion test(5)

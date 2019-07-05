@@ -289,6 +289,105 @@
     <Filter Include="Source Files\nodes\output-ports\operations">
       <UniqueIdentifier>{f142cbcd-03f8-4292-b817-5637529626ab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\sdl-parser">
+      <UniqueIdentifier>{7b28548d-7ec1-4d98-934d-b59b02533d11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sdl-parser">
+      <UniqueIdentifier>{49df4e27-bb7f-4668-a212-5d30200c9484}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sdl-parser\autogen">
+      <UniqueIdentifier>{8c2447b9-db55-4f23-933e-99498e55194d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl-parser\autogen">
+      <UniqueIdentifier>{97ed18c2-894a-44d4-975a-383f291bcfe1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl-parser\scanner">
+      <UniqueIdentifier>{a7559481-db71-4944-b2c8-466787e1b6ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Flex-Bison">
+      <UniqueIdentifier>{95175351-dc65-4898-ac36-6d4082af33a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl-parser\values">
+      <UniqueIdentifier>{aebbebc9-5a53-40d0-89a0-a9ba1c3b8c8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sdl-parser\values">
+      <UniqueIdentifier>{71ad4405-531b-43da-be16-a3d90bbf32b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl-parser\parser">
+      <UniqueIdentifier>{6d498b1a-91cb-4917-baaa-81d135668ff3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl-parser\unit">
+      <UniqueIdentifier>{34b4dffb-9450-4f32-9c46-b44bc4be5bb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sdl-parser\unit">
+      <UniqueIdentifier>{15b74b5b-3226-4253-9229-fdcc4330e4ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sdl-parser\parser">
+      <UniqueIdentifier>{39fc1852-76c1-42d4-aa34-dcfe6367253e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl-parser\compiler">
+      <UniqueIdentifier>{275c232f-7066-450f-8a80-acf6e23fa77e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sdl-parser\compiler">
+      <UniqueIdentifier>{18f0abee-c9b1-4797-b160-a23f5d7c0753}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl-parser\error-handling">
+      <UniqueIdentifier>{53dfec4e-97f9-46ef-aa83-61b8aa67f91b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sdl-parser\error-handling">
+      <UniqueIdentifier>{1cad7f3d-1a8a-4e8a-b831-852c8ac885a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl-parser\common">
+      <UniqueIdentifier>{c7b58865-2620-42aa-b9ca-9b0914cb10b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl-parser\generator">
+      <UniqueIdentifier>{f891218a-d6ef-4386-855a-06fa19b90257}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\nodes\management">
+      <UniqueIdentifier>{b00a1987-ab01-4a5d-a37f-f3ae977b69e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\nodes\management">
+      <UniqueIdentifier>{85795042-4955-4952-a474-bf4c8db002f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sdl-parser\generator">
+      <UniqueIdentifier>{2809afb2-3144-4611-b8e1-1ba597c47201}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\nodes\output-ports\atomic-types">
+      <UniqueIdentifier>{d7d23cea-e59b-4918-8332-a460b3b4344b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\nodes\output-ports\atomic-types">
+      <UniqueIdentifier>{70ed637c-565b-4cc0-9fa5-2fcc9967b349}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\nodes\output-ports\atomic-types\constants">
+      <UniqueIdentifier>{1041a88a-0686-46c2-8d09-257323c50717}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\nodes\output-ports\atomic-types\types">
+      <UniqueIdentifier>{5fe97ed4-a886-4d18-b211-747e45a9e8f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\nodes\output-ports\atomic-types\constants">
+      <UniqueIdentifier>{b0a1fc03-4820-45ca-b5c6-5a7e17b5f6b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\nodes\output-ports\atomic-types\types">
+      <UniqueIdentifier>{a3bc281e-b843-4d97-9b03-13c598b9b5bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\nodes\library\sdl">
+      <UniqueIdentifier>{88079674-3fb7-4218-97c5-48446c951cf1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\nodes\library\sdl">
+      <UniqueIdentifier>{ac11a43d-1357-48f9-8a81-90827ac5ff94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\nodes\output-ports\atomic-types\compound">
+      <UniqueIdentifier>{9db394f3-d5bd-4d49-a8a4-868d6d64e3df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\nodes\output-ports\atomic-types\compound">
+      <UniqueIdentifier>{1df9a960-6b72-4b33-9277-d476c399d8f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\nodes\output-ports\color">
+      <UniqueIdentifier>{161ba087-c11c-4db6-b31d-934f8958501e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\nodes\output-ports\color">
+      <UniqueIdentifier>{7053271c-7fb1-4fa2-b174-ef342aa6e764}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -314,9 +413,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\manta_math_single.cpp">
       <Filter>Source Files\math</Filter>
-    </ClCompile>
-    <ClCompile Include="stack_allocator.cpp">
-      <Filter>Source Files\memory-management</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\spherical_surface.cpp">
       <Filter>Source Files\camera-emulation</Filter>
@@ -519,9 +615,6 @@
     <ClCompile Include="..\..\src\vector_map_2d.cpp">
       <Filter>Source Files\math\maps</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\mipmap.cpp">
-      <Filter>Source Files\math\maps</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\node.cpp">
       <Filter>Source Files\nodes</Filter>
     </ClCompile>
@@ -587,6 +680,123 @@
     </ClCompile>
     <ClCompile Include="..\..\src\media_interface.cpp">
       <Filter>Source Files\material\surface-modeling\media-interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\autogen\sdl_parser.auto.cpp">
+      <Filter>Source Files\sdl-parser\autogen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\autogen\sdl_scanner.auto.cpp">
+      <Filter>Source Files\sdl-parser\autogen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_value.cpp">
+      <Filter>Source Files\sdl-parser\values</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\stack_allocator.cpp">
+      <Filter>Source Files\memory-management</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_binary_operator.cpp">
+      <Filter>Source Files\sdl-parser\values</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_compilation_unit.cpp">
+      <Filter>Source Files\sdl-parser\unit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_attribute.cpp">
+      <Filter>Source Files\sdl-parser\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_attribute_definition.cpp">
+      <Filter>Source Files\sdl-parser\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_attribute_definition_list.cpp">
+      <Filter>Source Files\sdl-parser\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_attribute_list.cpp">
+      <Filter>Source Files\sdl-parser\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_import_statement.cpp">
+      <Filter>Source Files\sdl-parser\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_node.cpp">
+      <Filter>Source Files\sdl-parser\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_node_definition.cpp">
+      <Filter>Source Files\sdl-parser\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_parser_structure.cpp">
+      <Filter>Source Files\sdl-parser\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_compiler.cpp">
+      <Filter>Source Files\sdl-parser\compiler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\path.cpp">
+      <Filter>Source Files\os</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_compilation_error.cpp">
+      <Filter>Source Files\sdl-parser\error-handling</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_error_list.cpp">
+      <Filter>Source Files\sdl-parser\error-handling</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_input_connection.cpp">
+      <Filter>Source Files\sdl-parser\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\node_program.cpp">
+      <Filter>Source Files\nodes\management</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_generator.cpp">
+      <Filter>Source Files\sdl-parser\generator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\float_node_output.cpp">
+      <Filter>Source Files\nodes\output-ports\atomic-types\types</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\single_float_node_output.cpp">
+      <Filter>Source Files\nodes\output-ports\atomic-types\constants</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\constructed_vector_node_output.cpp">
+      <Filter>Source Files\nodes\output-ports\atomic-types\compound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\srgb_node_output.cpp">
+      <Filter>Source Files\nodes\output-ports\color</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\srgb_node.cpp">
+      <Filter>Source Files\nodes\library\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\constructed_vector_node.cpp">
+      <Filter>Source Files\nodes\library\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\vector_split_node_output.cpp">
+      <Filter>Source Files\nodes\output-ports\atomic-types\compound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\vector_split_node.cpp">
+      <Filter>Source Files\nodes\library\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\node_output.cpp">
+      <Filter>Source Files\nodes\output-ports</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_unary_operator.cpp">
+      <Filter>Source Files\sdl-parser\values</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_generic_value.cpp">
+      <Filter>Source Files\sdl-parser\values</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\custom_node.cpp">
+      <Filter>Source Files\nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sdl_context_tree.cpp">
+      <Filter>Source Files\sdl-parser\generator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\string_node_output.cpp">
+      <Filter>Source Files\nodes\output-ports\atomic-types\types</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\single_string_node_output.cpp">
+      <Filter>Source Files\nodes\output-ports\atomic-types\constants</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\constructed_string_node_output.cpp">
+      <Filter>Source Files\nodes\output-ports\atomic-types\compound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\constructed_string_node.cpp">
+      <Filter>Source Files\nodes\library\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\simple_bsdf_material_node.cpp">
+      <Filter>Source Files\nodes\library\sdl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -950,6 +1160,129 @@
     <ClInclude Include="..\..\include\step_node.h">
       <Filter>Header Files\nodes\library</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\sdl_scanner.h">
+      <Filter>Header Files\sdl-parser\scanner</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\autogen\sdl_parser.auto.h">
+      <Filter>Header Files\sdl-parser\autogen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_value.h">
+      <Filter>Header Files\sdl-parser\values</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_value_constant.h">
+      <Filter>Header Files\sdl-parser\values</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_binary_operator.h">
+      <Filter>Header Files\sdl-parser\values</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_token_info.h">
+      <Filter>Header Files\sdl-parser\scanner</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_compilation_unit.h">
+      <Filter>Header Files\sdl-parser\unit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_node_definition.h">
+      <Filter>Header Files\sdl-parser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_node.h">
+      <Filter>Header Files\sdl-parser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_import_statement.h">
+      <Filter>Header Files\sdl-parser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_attribute_list.h">
+      <Filter>Header Files\sdl-parser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_attribute_definition_list.h">
+      <Filter>Header Files\sdl-parser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_attribute_definition.h">
+      <Filter>Header Files\sdl-parser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_attribute.h">
+      <Filter>Header Files\sdl-parser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_compiler.h">
+      <Filter>Header Files\sdl-parser\compiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\path.h">
+      <Filter>Header Files\os</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_compilation_error.h">
+      <Filter>Header Files\sdl-parser\error-handling</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_error_list.h">
+      <Filter>Header Files\sdl-parser\error-handling</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_structure_list.h">
+      <Filter>Header Files\sdl-parser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_input_connection.h">
+      <Filter>Header Files\sdl-parser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_visibility.h">
+      <Filter>Header Files\sdl-parser\common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_generator.h">
+      <Filter>Header Files\sdl-parser\generator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\node_program.h">
+      <Filter>Header Files\nodes\management</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\float_node_output.h">
+      <Filter>Header Files\nodes\output-ports\atomic-types\types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\single_float_node_output.h">
+      <Filter>Header Files\nodes\output-ports\atomic-types\constants</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\constructed_vector_node_output.h">
+      <Filter>Header Files\nodes\output-ports\atomic-types\compound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\srgb_node.h">
+      <Filter>Header Files\nodes\library\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\srgb_node_output.h">
+      <Filter>Header Files\nodes\output-ports\color</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\constructed_vector_node.h">
+      <Filter>Header Files\nodes\library\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\vector_split_node_output.h">
+      <Filter>Header Files\nodes\output-ports\atomic-types\compound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\vector_split_node.h">
+      <Filter>Header Files\nodes\library\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_unary_operator.h">
+      <Filter>Header Files\sdl-parser\values</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_generic_value.h">
+      <Filter>Header Files\sdl-parser\values</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\custom_node.h">
+      <Filter>Header Files\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_context_tree.h">
+      <Filter>Header Files\sdl-parser\generator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\string_node_output.h">
+      <Filter>Header Files\nodes\output-ports\atomic-types\types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\single_string_node_output.h">
+      <Filter>Header Files\nodes\output-ports\atomic-types\constants</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\constructed_string_node_output.h">
+      <Filter>Header Files\nodes\output-ports\atomic-types\compound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\constructed_string_node.h">
+      <Filter>Header Files\nodes\library\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\simple_bsdf_material_node.h">
+      <Filter>Header Files\nodes\library\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sdl_parser_structure.h">
+      <Filter>Header Files\sdl-parser\parser</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\opencl_programs\mantaray.cl">
@@ -958,5 +1291,13 @@
     <None Include="..\..\scripts\increment_build_version.py">
       <Filter>Scripts</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\flex-bison\sdl_scanner.l">
+      <Filter>Flex-Bison</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\flex-bison\sdl_specification.y">
+      <Filter>Flex-Bison</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>

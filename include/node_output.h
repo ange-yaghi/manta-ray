@@ -16,14 +16,16 @@ namespace manta {
 		static const int MAX_DIMENSIONS = 4;
 
 	public:
-		NodeOutput(const NodeType *singleType) { m_singleType = singleType; m_dimensionsEvaluated = false; }
-		virtual ~NodeOutput() {}
+		NodeOutput(const NodeType *singleType);
+		virtual ~NodeOutput();
 
 		const NodeType *getType() const { return m_singleType; }
 
-		virtual void sample(const IntersectionPoint *surfaceInteraction, void *target) const {}
-		virtual void discreteSample2D(int x, int y, void *target) const {}
-		virtual void fullCompute(void *target) const {}
+		void initialize();
+
+		virtual void sample(const IntersectionPoint *surfaceInteraction, void *target) const { /* void */ }
+		virtual void discreteSample2D(int x, int y, void *target) const { /* void */ }
+		virtual void fullCompute(void *target) const { /* void */ }
 		virtual void getDataReference(const void **target) const { *target = nullptr; }
 
 		int getSize(int dim) const { return m_dimensions[dim]; }
@@ -43,11 +45,17 @@ namespace manta {
 
 		bool areDimensionsEvaluated() const { return m_dimensionsEvaluated; }
 
+		Node *getInterface() const { return m_interface; }
+
 	protected:
 		void setDimensionSize(int dim, int size) { m_dimensions[dim] = size; }
 		void setDimensions(int dimensionCount) { m_dimensionCount = dimensionCount; }
 
 		virtual void _evaluateDimensions() { setDimensions(1); setDimensionSize(0, 1); };
+
+		void overrideType(const NodeType *type) { m_singleType = type; }
+
+		virtual Node *generateInterface() { return nullptr; }
 
 	private:
 		int m_dimensions[MAX_DIMENSIONS];
@@ -57,12 +65,13 @@ namespace manta {
 		std::string m_name;
 
 		Node *m_parentNode;
+		Node *m_interface;
 
 		bool m_dimensionsEvaluated;
 	};
 
 	// Type to reduce confusion
-	typedef const NodeOutput * pNodeInput;
+	typedef NodeOutput * pNodeInput;
 
 } /* namespace manta */
 

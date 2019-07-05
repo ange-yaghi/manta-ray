@@ -1,0 +1,51 @@
+private node test {
+    input x;
+    input y;
+
+    output a: x;
+    output b: y;
+}
+
+private node empty {}
+
+private node half_good {
+    output b: 5;
+}
+
+private node even_harder {
+    input v;
+    default output _v: v;
+}
+
+private node confusion {
+    input some_input;
+    output test: test(some_input.a, some_input.b);  // UndefinedMember x4
+    output internal_test: internal_node->a;         // UndefinedMember
+
+    even_harder internal_node(
+        empty()
+    )
+}
+
+// Should work
+confusion good(
+    test(5, 5)
+)          
+
+// Should work
+confusion good_but_hard(
+    even_harder(
+        test(5, 5)
+    )^    
+)
+
+// Shouldn't work
+confusion bad(empty())      
+
+// Should only cause one error
+confusion half_good(half_good())
+
+// Should only cause one error
+confusion bad_and_hard(
+    even_harder(half_good())^
+)

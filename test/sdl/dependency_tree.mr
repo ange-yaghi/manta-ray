@@ -1,0 +1,10 @@
+public import "sample_lib/example_dependency"
+private import "sample_lib/dependency_tree"
+
+NewNode1 test(
+    A: "Input"
+)
+
+NewNode2 test2(
+    A: "Input"
+)

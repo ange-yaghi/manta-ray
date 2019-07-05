@@ -1,0 +1,10 @@
+private import "atomic_types.mr" as types
+
+public node sRGB => __builtin__srgb {
+    input r: 0.0;
+    input g: 0.0;
+    input b: 0.0;
+    input a: 0.0;
+
+    default output color: [types::vector];
+}

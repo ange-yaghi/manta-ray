@@ -1,0 +1,17 @@
+private import "lib/atomic_types.mr" as types
+private import "lib/lambertian_bsdf.mr" as lambert
+private import "lib/simple_bsdf_material.mr" as simple_bsdf
+
+SimpleBsdfMaterial block_material(
+    name:           "Block",
+    bsdf:           LambertianBsdf(),
+    reflectance:    types::vector(0.5, 0.4, 0.4, 1.0),
+    emission:       types::vector(0.0, 0.0, 0.0, 0.0)
+)
+
+SimpleBsdfMaterial ground_material(
+    name:           "Ground",
+    bsdf:           LambertianBsdf(),
+    reflectance:    types::vector(0.1, 0.1, 0.1, 1.0),
+    emission:       types::vector(0.0, 0.0, 0.0, 0.0)
+)

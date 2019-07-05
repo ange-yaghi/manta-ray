@@ -59,6 +59,18 @@
     <ClCompile Include="..\..\test\node_tests.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test\file_operations_tests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\sdl_construction_tests.cpp">
+      <Filter>Tests\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\sdl_tests.cpp">
+      <Filter>Tests\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\test\sdl_stress_tests.cpp">
+      <Filter>Tests\sdl</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -69,6 +81,9 @@
   <ItemGroup>
     <Filter Include="Tests">
       <UniqueIdentifier>{9bf0ba03-5ea5-4087-87f9-2f861d6fcb84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tests\sdl">
+      <UniqueIdentifier>{4290ba0c-f154-453e-8dbf-cf545a56a5a2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

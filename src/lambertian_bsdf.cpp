@@ -1,7 +1,7 @@
 #include <lambertian_bsdf.h>
 
 manta::LambertianBSDF::LambertianBSDF() {
-	/* void */
+	this->m_output.setBsdf(this);
 }
 
 manta::LambertianBSDF::~LambertianBSDF() {

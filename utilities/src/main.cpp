@@ -2,6 +2,7 @@
 #include <string>
 #include <sstream>
 
+#include <manta.h>
 #include <raw_file.h>
 #include <image_plane.h>
 #include <image_handling.h>

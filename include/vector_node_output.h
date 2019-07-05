@@ -14,15 +14,16 @@ namespace manta {
 		static const NodeType VectorType;
 
 	public:
-		VectorNodeOutput() : NodeOutput(&VectorType) {
-			/* void */
-		}
-
-		virtual ~VectorNodeOutput() {
-			/* void */
-		}
+		VectorNodeOutput(bool scalar = false);
+		virtual ~VectorNodeOutput();
 
 		virtual void fullCompute(void *target) const;
+
+	protected:
+		virtual Node *generateInterface();
+
+	protected:
+		bool m_scalar;
 	};
 
 } /* namespace manta */

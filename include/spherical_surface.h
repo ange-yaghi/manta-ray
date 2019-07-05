@@ -18,7 +18,7 @@ namespace manta {
 		virtual bool transformLightRay(const LightRay *ray, bool convex, 
 			bool incoming, LightRay *transformed) const;
 
-		SpherePrimitive *getSphere() { return &m_sphere; };
+		SpherePrimitive *getSphere() { return &m_sphere; }
 
 		math::real getRadius() const { return m_sphere.getRadius(); }
 
