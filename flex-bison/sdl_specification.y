@@ -160,7 +160,6 @@
 
 sdl 
   : END 
-  | MODULE '{' decorator_list '}' statement_list END
   | statement_list END
   ;
 
@@ -177,6 +176,7 @@ statement
   : node 							{ driver.addNode($1); }
   | import_statement_short_name		{ driver.addImportStatement($1); }
   | node_decorator					{ driver.addNodeDefinition($1); }
+  | MODULE '{' decorator_list '}'	{ }
   ;
 
 statement_list 

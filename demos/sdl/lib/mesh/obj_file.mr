@@ -1,8 +1,0 @@
-private node NullInterface {
-    /* void */
-}
-
-public node ObjFile => __builtin__ObjFile {
-    input filename;
-    output mesh: [NullInterface];
-}

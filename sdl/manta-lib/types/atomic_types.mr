@@ -1,0 +1,88 @@
+module {
+    @name           = "MantaRay Atomic Types"
+    @author         = "Ange Yaghi"
+    @maintainer     = "Ange Yaghi"
+    @copyright      = "Copyright 2019, Ange Yaghi"
+    @doc            = "Defines all atomic types used by MantaRay"
+    @version        = "0.0.1a"
+    @github         = "github.com/ange-yaghi/manta-ray"
+}
+
+@doc = "Single float (decimal) type"
+public node float => __builtin__float {
+
+    @doc = "Input value to be converted to decimal"
+    default input __in: 0.0;
+}
+
+@doc = "Single integer (whole number) type"
+public node int => __builtin__int {
+
+    @doc = "Input value to be converted to an integer"
+    default input __in: 0;
+}
+
+@doc = "4D plain vector"
+public node vector => __builtin__vector {
+
+    @doc = "x/r component"
+    input in_x: 0.0;
+
+    @doc = "y/g component"
+    input in_y: 0.0;
+
+    @doc = "z/b component"
+    input in_z: 0.0;
+
+    @doc = "w/a component"
+    input in_w: 0.0;
+
+    /// Outputs
+
+    @doc = "x component"
+    output x: [::float];
+
+    @doc = "x component"
+    output y: [::float];
+
+    @doc = "z component"
+    output z: [::float];
+
+    @doc = "w component"
+    output w: [::float];
+
+    @doc = "Red channel (aliases x component)"
+    output r: [::float];
+
+    @doc = "Green channel (aliases y component)"
+    output g: [::float];
+
+    @doc = "Blue channel (aliases z component)"
+    output b: [::float];
+
+    @doc = "Alpha channel (aliases w component)"
+    output a: [::float];
+}
+
+@doc = "Fills a vector with a single number"
+public node s_vector {
+
+    @doc = "Input scalar value"
+    default input in_s: 0.0;
+
+    /// Outputs
+
+    @doc = "Vector with all values equal to the input"
+    default output vector: 
+        ::vector(in_s, in_s, in_s, in_s);
+
+    @doc = "Alias to the original value passed in"
+    output s: in_s;
+}
+
+@doc = "String type"
+public node string => __builtin__string {
+
+    @doc = "Input to be converted to a string"
+    default input __in: "";
+}

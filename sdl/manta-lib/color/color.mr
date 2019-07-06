@@ -1,0 +1,30 @@
+module {
+    @name           = "MantaRay Color"
+    @author         = "Ange Yaghi"
+    @maintainer     = "Ange Yaghi"
+    @copyright      = "Copyright 2019, Ange Yaghi"
+    @doc            = "Color utilities and interfaces"
+    @version        = "0.0.1a"
+    @github         = "github.com/ange-yaghi/manta-ray"
+}
+
+private import "../types/atomic_types.mr" as types
+
+@doc = "Corrects gamma according to the sRGB color space."
+public node sRGB => __builtin__srgb {
+    
+    @doc = "Red channel (0.0 - 1.0) or (0 - 255)"
+    input r: 0.0;
+
+    @doc = "Green channel (0.0 - 1.0) or (0 - 255)"
+    input g: 0.0;
+
+    @doc = "Blue channel (0.0 - 1.0) or (0 - 255)"
+    input b: 0.0;
+
+    @doc = "Alpha channel (0.0 - 1.0) or (0 - 255)"
+    input a: 0.0;
+
+    @doc = "Gamma corrected color in vector form"
+    default output color: [types::vector];
+}
