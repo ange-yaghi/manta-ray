@@ -44,7 +44,7 @@ if __name__ == "__main__":
     mypath = os.path.dirname(os.path.realpath(__file__)) + "/../"
 
     extensions = ['.h', '.cpp', '.py', '.cl', '.y', '.l', '.mr']
-    directories = ['src', 'test', 'include', 'scripts', 'opencl_programs', 'demos', 'utilities', 'flex-bison']
+    directories = ['src', 'test', 'include', 'scripts', 'opencl_programs', 'demos', 'utilities', 'flex-bison', 'sdl']
     
     # Find the right file (previous versions used different naming conventions)
     possible_file_names = ['build_version.txt', 'BuildVersion.txt']

@@ -1,0 +1,31 @@
+module {
+    @name           = "MantaRay Phong Distribution and BSDF"
+    @author         = "Ange Yaghi"
+    @maintainer     = "Ange Yaghi"
+    @copyright      = "Copyright 2019, Ange Yaghi"
+    @doc            = "Defines the interface to the Phong microfacet model"
+    @version        = "0.0.1a"
+    @github         = "github.com/ange-yaghi/manta-ray"
+}
+
+private import "microfacet_refl_bsdf.mr" as microfacet
+
+@doc = "Phong microfacet distribution"
+public node PhongDistribution => __builtin__PhongDistribution {
+
+    @doc = "Phong power parameter (ie. shininess)"
+    input power: 32.0;
+}
+
+@doc = "Full Phong BSDF"
+public node PhongBsdf {
+
+    @doc = "Phong power parameter (ie. shininess)"
+    input power: 32.0;
+
+    @doc = "BSDF based on a Phong distribution"
+    default output bsdf: 
+        microfacet::MicrofacetReflBsdf(
+            ::PhongDistribution(power)
+        );
+}

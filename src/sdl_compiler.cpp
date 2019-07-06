@@ -50,9 +50,15 @@ manta::SdlCompilationUnit *manta::SdlCompiler::analyze(const SdlPath &scriptPath
 			}
 
 			if (!fullImportPath.exists()) {
-				newUnit->addCompilationError(new SdlCompilationError(*s->getSummaryToken(), 
-					SdlErrorCode::FileOpenFailed));
-				continue;
+				Path resolvedPath;
+				bool fileFound = resolvePath(importPath, &resolvedPath);
+
+				if (!fileFound) {
+					newUnit->addCompilationError(new SdlCompilationError(*s->getSummaryToken(),
+						SdlErrorCode::FileOpenFailed));
+					continue;
+				}
+				else fullImportPath = resolvedPath;
 			}
 
 			// Recursively build
@@ -62,9 +68,7 @@ manta::SdlCompilationUnit *manta::SdlCompiler::analyze(const SdlPath &scriptPath
 				newUnit->addCompilationError(new SdlCompilationError(*s->getSummaryToken(),
 					SdlErrorCode::FileOpenFailed));
 			}
-			else {
-				newUnit->addDependency(importUnit);
-			}
+			else newUnit->addDependency(importUnit);
 		}
 	}
 
@@ -99,6 +103,29 @@ manta::SdlCompilationUnit *manta::SdlCompiler::getUnit(const SdlPath &scriptPath
 	return nullptr;
 }
 
+void manta::SdlCompiler::addSearchPath(const SdlPath &path) {
+	m_searchPaths.push_back(path);
+}
+
+bool manta::SdlCompiler::resolvePath(const SdlPath &path, SdlPath *target) const {
+	if (path.exists()) {
+		*target = path;
+		return true;
+	}
+
+	int searchPathCount = getSearchPathCount();
+	for (int i = 0; i < searchPathCount; i++) {
+		SdlPath total = m_searchPaths[i].append(path);
+
+		if (total.exists()) {
+			*target = total;
+			return true;
+		}
+	}
+
+	return false;
+}
+
 bool manta::SdlCompiler::isPathEquivalent(const SdlPath &a, const SdlPath &b) const {
 	return (a == b);
 }
@@ -107,9 +134,7 @@ bool manta::SdlCompiler::hasEnding(std::string const &fullString, std::string co
 	if (fullString.length() >= ending.length()) {
 		return (0 == fullString.compare(fullString.length() - ending.length(), ending.length(), ending));
 	}
-	else {
-		return false;
-	}
+	else return false;
 }
 
 void manta::SdlCompiler::expand() {

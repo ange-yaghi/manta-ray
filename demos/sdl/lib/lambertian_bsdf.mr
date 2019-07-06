@@ -1,3 +1,0 @@
-public node LambertianBsdf => __builtin__LambertianBsdf {
-    /* empty */
-}
