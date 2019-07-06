@@ -17,6 +17,8 @@ namespace manta {
 		pNodeInput *getStringConnection() { return &m_stringInput; }
 		const NodeOutput *getStringOutput() { return m_stringInput; }
 
+		virtual void registerInputs();
+
 	protected:
 		pNodeInput m_stringInput;
 	};

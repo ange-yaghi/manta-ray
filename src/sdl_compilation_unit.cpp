@@ -229,7 +229,7 @@ int manta::SdlCompilationUnit::countSymbolIncidence(const std::string &name) con
 	int nodeCount = getNodeCount();
 	for (int i = 0; i < nodeCount; i++) {
 		SdlNode *node = m_nodes[i];
-		if (node->getName() == name) {
+		if (!name.empty() && node->getName() == name) {
 			count++;
 		}
 	}

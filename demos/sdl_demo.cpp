@@ -4,6 +4,7 @@
 #include <simple_bsdf_material_node.h>
 #include <sdl_node.h>
 #include <sdl_compilation_unit.h>
+#include <sdl_compilation_error.h>
 
 using namespace manta;
 
@@ -13,7 +14,7 @@ void manta_demo::sdlDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	constexpr bool DETERMINISTIC_SEED_MODE = false;
 	constexpr bool TRACE_SINGLE_PIXEL = false;
 	constexpr bool WRITE_KDTREE_TO_FILE = false;
-	constexpr bool LENS_SIMULATION = false;
+	constexpr bool LENS_SIMULATION = true;
 	constexpr bool POLYGON_APERTURE = true;
 
 	Scene scene;

@@ -45,7 +45,10 @@ manta::SdlContextTree *manta::SdlContextTree::findContext(SdlParserStructure *co
 
 manta::SdlParserStructure *manta::SdlContextTree::resolveDefinition(SdlAttributeDefinition *definition) {
 	if (m_context != nullptr) {
-		return m_context->getAttributes()->getAttribute(definition);
+		SdlAttributeList *attributes = m_context->getAttributes();
+		if (attributes != nullptr) {
+			return attributes->getAttribute(definition);
+		}
 	}
 
 	return nullptr;
