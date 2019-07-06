@@ -1,0 +1,21 @@
+module {
+    @name           = "MantaRay .obj File Loader"
+    @author         = "Ange Yaghi"
+    @maintainer     = "Ange Yaghi"
+    @copyright      = "Copyright 2019, Ange Yaghi"
+    @doc            = "Specifies a null interface for convenience"
+    @version        = "0.0.1a"
+    @github         = "github.com/ange-yaghi/manta-ray"
+}
+
+private import "../utilities/null_interface.mr" as null
+
+@doc = "Loads a .obj file and convert it to a MantaRay mesh"
+public node ObjFile => __builtin__ObjFile {
+
+    @doc = "Filename/path of the .obj file"
+    input filename;
+
+    @doc = "Output mesh"
+    output mesh: [null::NullInterface];
+}

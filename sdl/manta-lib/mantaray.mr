@@ -1,0 +1,22 @@
+module {
+    @name           = "MantaRay Standard Library"
+    @author         = "Ange Yaghi"
+    @maintainer     = "Ange Yaghi"
+    @copyright      = "Copyright 2019, Ange Yaghi"
+    @doc            = "Imports all MantaRay standard library modules"
+    @version        = "0.0.1a"
+    @github         = "github.com/ange-yaghi/manta-ray"
+}
+
+public import "types/atomic_types.mr"
+
+public import "microfacet-models/ggx_bsdf.mr"
+public import "microfacet-models/lambertian_bsdf.mr"
+public import "microfacet-models/microfacet_refl_bsdf.mr"
+public import "microfacet-models/phong_bsdf.mr"
+
+public import "mesh/obj_file.mr"
+
+public import "materials/simple_bsdf_material.mr"
+
+public import "color/color.mr"

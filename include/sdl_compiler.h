@@ -25,6 +25,11 @@ namespace manta {
 
 		const SdlErrorList *getErrorList() const { return &m_errorList; }
 
+		void addSearchPath(const SdlPath &path);
+		int getSearchPathCount() const { return (int)m_searchPaths.size(); }
+
+		bool resolvePath(const SdlPath &path, SdlPath *target) const;
+
 	protected:
 		SdlCompilationUnit *analyze(const SdlPath &scriptPath);
 		bool isPathEquivalent(const SdlPath &a, const SdlPath &b) const;
@@ -40,6 +45,8 @@ namespace manta {
 	protected:
 		SdlErrorList m_errorList;
 		std::vector<SdlCompilationUnit *> m_units;
+
+		std::vector<SdlPath> m_searchPaths;
 	};
 
 } /* namespace manta */
