@@ -1,19 +1,17 @@
 private import "lib/atomic_types.mr" as types
 private import "lib/lambertian_bsdf.mr" as lambert
 private import "lib/simple_bsdf_material.mr" as simple_bsdf
-private import "lib/phong_bsdf.mr" as phong
-private import "lib/microfacet_refl_bsdf.mr" as microfacet
+private import "lib/microfacet-models/phong_bsdf.mr" as phong
+private import "lib/microfacet-models/ggx_bsdf.mr" as ggx
 
-SimpleBsdfMaterial block_material(
+SimpleBsdfMaterial(
     name:           "Block",
-    bsdf:           PhongBsdf(512.0),
-    reflectance:    types::vector(0.5, 0.4, 0.4, 1.0),
-    emission:       types::vector(0.2, 0.2, 0.2, 0.0)
+    bsdf:           GgxBsdf(0.01).bsdf,
+    reflectance:    types::vector(0.05882, 0.18823, 0.35686, 1.0)
 )
 
-SimpleBsdfMaterial ground_material(
+SimpleBsdfMaterial(
     name:           "Ground",
-    bsdf:           LambertianBsdf(),
-    reflectance:    types::vector(0.1, 0.1, 0.1, 1.0),
-    emission:       types::vector(0.0, 0.0, 0.0, 0.0)
+    bsdf:           GgxBsdf(0.3).bsdf,
+    reflectance:    types::vector(0.32157, 0.54902, 0.619607, 1.0)
 )

@@ -5,6 +5,7 @@
 #include <manta_math.h>
 
 #include <string>
+#include <vector>
 
 namespace manta {
 
@@ -27,6 +28,9 @@ namespace manta {
 		virtual void discreteSample2D(int x, int y, void *target) const { /* void */ }
 		virtual void fullCompute(void *target) const { /* void */ }
 		virtual void getDataReference(const void **target) const { *target = nullptr; }
+
+		void evaluate();
+		virtual void registerInputs() {}
 
 		int getSize(int dim) const { return m_dimensions[dim]; }
 		int getDimensions() const { return m_dimensionCount; }
@@ -68,6 +72,13 @@ namespace manta {
 		Node *m_interface;
 
 		bool m_dimensionsEvaluated;
+		bool m_evaluated;
+
+	protected:
+		virtual void registerInput(NodeOutput **nodeInput) { m_inputs.push_back(nodeInput); }
+		int getInputCount() const { return (int)m_inputs.size(); }
+
+		std::vector<NodeOutput **> m_inputs;
 	};
 
 	// Type to reduce confusion

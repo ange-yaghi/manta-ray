@@ -6,7 +6,7 @@
 
 manta::GgxDistribution::GgxDistribution() {
 	m_width = (math::real)1.0;
-	m_minMapWidth = (math::real)1.0;
+	m_minMapWidth = (math::real)0.0;
 	m_widthNode = nullptr;
 }
 

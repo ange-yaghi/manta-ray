@@ -1,0 +1,13 @@
+private import "microfacet_refl_bsdf.mr" as microfacet
+
+public node GgxDistribution => __builtin__GgxDistribution {
+    input width: 32.0;
+}
+
+public node GgxBsdf {
+    input width: 32.0;
+    default output bsdf: 
+        MicrofacetReflBsdf(
+            GgxDistribution(width)
+        );
+}
