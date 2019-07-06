@@ -15,7 +15,7 @@ manta::SimpleBSDFMaterial::SimpleBSDFMaterial() {
 	m_bsdf = nullptr;
 
 	m_reflectance = math::constants::One;
-	m_emission = math::constants::Zero;
+	m_emission = math::constants::One;
 }
 
 manta::SimpleBSDFMaterial::~SimpleBSDFMaterial() {

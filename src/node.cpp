@@ -40,16 +40,8 @@ void manta::Node::evaluate() {
 	for (int i = 0; i < inputCount; i++) {
 		pNodeInput *node = m_inputs[i].input;
 		if (node != nullptr && *node != nullptr) {
-			Node *parentNode = (*node)->getParentNode();
-			if (parentNode != nullptr) parentNode->evaluate();
+			(*node)->evaluate();
 		}
-	}
-
-	int outputReferenceCount = getOutputReferenceCount();
-	for (int i = 0; i < outputReferenceCount; i++) {
-		const NodeOutput *node = *m_outputReferences[i].output;
-		Node *parentNode = node->getParentNode();
-		if (parentNode != nullptr) parentNode->evaluate();
 	}
 
 	// Node can now self-evaluate
@@ -61,6 +53,12 @@ void manta::Node::evaluate() {
 	for (int i = 0; i < outputCount; i++) {
 		NodeOutput *node = m_outputs[i].output;
 		node->evaluateDimensions();
+	}
+
+	int outputReferenceCount = getOutputReferenceCount();
+	for (int i = 0; i < outputReferenceCount; i++) {
+		NodeOutput *node = *m_outputReferences[i].output;
+		node->evaluate();
 	}
 }
 
@@ -145,7 +143,7 @@ void manta::Node::registerOutput(NodeOutput *node, const std::string &name) {
 
 void manta::Node::setPrimaryOutput(NodeOutput *node) {
 	m_primaryOutput = node;
-	registerOutput(m_primaryOutput, "$PRIMARY");
+	//registerOutput(m_primaryOutput, "$PRIMARY");
 }
 
 void manta::Node::registerOutputReference(NodeOutput *const *node, const std::string &name) {

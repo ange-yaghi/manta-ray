@@ -21,6 +21,8 @@ namespace manta {
 
 		const NodeOutput *getXOutput() { return m_x; }
 
+		void registerInputs();
+
 	protected:
 		pNodeInput m_x;
 		pNodeInput m_y;

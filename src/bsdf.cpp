@@ -10,4 +10,6 @@ manta::BSDF::~BSDF() {
 
 void manta::BSDF::registerOutputs() {
 	setPrimaryOutput(&m_output);
+
+	registerOutput(&m_output, "$primary");
 }

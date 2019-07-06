@@ -6,7 +6,7 @@
 
 manta::GgxDistribution::GgxDistribution() {
 	m_width = (math::real)1.0;
-	m_minMapWidth = (math::real)1.0;
+	m_minMapWidth = (math::real)0.0;
 	m_widthNode = nullptr;
 }
 
@@ -91,5 +91,5 @@ manta::math::real manta::GgxDistribution::calculateG1(const math::Vector &v,
 }
 
 void manta::GgxDistribution::registerInputs() {
-	registerInput(&m_widthNode, "Width");
+	registerInput(&m_widthNode, "width");
 }
