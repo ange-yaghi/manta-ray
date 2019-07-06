@@ -6,7 +6,7 @@
 namespace manta {
 
 	class StringNodeOutput : public NodeOutput {
-	protected:
+	public:
 		static const NodeType StringType;
 
 	public:

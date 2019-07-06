@@ -5,7 +5,6 @@
 #include <job_queue.h>
 #include <manta_math.h>
 #include <manta_build_conf.h>
-#include <material_manager.h>
 #include <runtime_statistics.h>
 
 #include <atomic>
@@ -37,6 +36,7 @@ namespace manta {
 	class PathRecorder;
 	class RayContainer;
 	class ImagePlane;
+	class MaterialManager;
 
 	class RayTracer {
 	public:
@@ -70,8 +70,9 @@ namespace manta {
 
 		void setPathRecordingOutputDirectory(const std::string &s) { m_pathRecordingOutputDirectory = s; }
 		std::string getPathRecordingOutputDirector() const { return m_pathRecordingOutputDirectory; }
-
-		MaterialManager *getMaterialManager() { return &m_materialManager; }
+		 
+		void setMaterialManager(MaterialManager *materialManager) { m_materialManager = materialManager; }
+		MaterialManager *getMaterialManager() { return m_materialManager; }
 
 	protected:
 		// Multithreading features
@@ -104,7 +105,7 @@ namespace manta {
 
 	protected:
 		// Material library
-		MaterialManager m_materialManager;
+		MaterialManager *m_materialManager;
 
 	protected:
 		// Statistics

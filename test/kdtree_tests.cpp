@@ -14,7 +14,7 @@ using namespace manta;
 
 TEST(KDTreeTests, KDTreeSanityTest) {
 	ObjFileLoader singleTriangleObj;
-	bool result = singleTriangleObj.readObjFile("../../../test/geometry/single_triangle.obj");
+	bool result = singleTriangleObj.loadObjFile("../../../test/geometry/single_triangle.obj");
 
 	Mesh mesh;
 	mesh.loadObjFileData(&singleTriangleObj);
@@ -42,7 +42,7 @@ TEST(KDTreeTests, KDTreeSanityTest) {
 
 TEST(KDTreeTests, KDTreeIntersectionTest) {
 	ObjFileLoader singleTriangleObj;
-	bool result = singleTriangleObj.readObjFile("../../../test/geometry/single_triangle.obj");
+	bool result = singleTriangleObj.loadObjFile("../../../test/geometry/single_triangle.obj");
 
 	Mesh mesh;
 	mesh.loadObjFileData(&singleTriangleObj);
@@ -73,7 +73,7 @@ TEST(KDTreeTests, KDTreeIntersectionTest) {
 
 TEST(KDTreeTests, KDTreeCubeTest) {
 	ObjFileLoader singleTriangleObj;
-	bool result = singleTriangleObj.readObjFile("../../../test/geometry/cube.obj");
+	bool result = singleTriangleObj.loadObjFile("../../../test/geometry/cube.obj");
 
 	Mesh mesh;
 	mesh.loadObjFileData(&singleTriangleObj);
@@ -104,7 +104,7 @@ TEST(KDTreeTests, KDTreeCubeTest) {
 
 TEST(KDTreeTests, KDTreeDoubleCubeTest) {
 	ObjFileLoader singleTriangleObj;
-	bool result = singleTriangleObj.readObjFile("../../../test/geometry/two_cubes.obj");
+	bool result = singleTriangleObj.loadObjFile("../../../test/geometry/two_cubes.obj");
 
 	Mesh mesh;
 	mesh.loadObjFileData(&singleTriangleObj);
@@ -151,7 +151,7 @@ TEST(KDTreeTests, KDTreeDoubleCubeTest) {
 
 TEST(KDTreeTests, KDTreeDoubleCubeSideTest) {
 	ObjFileLoader singleTriangleObj;
-	bool result = singleTriangleObj.readObjFile("../../../test/geometry/two_cubes.obj");
+	bool result = singleTriangleObj.loadObjFile("../../../test/geometry/two_cubes.obj");
 
 	Mesh mesh;
 	mesh.loadObjFileData(&singleTriangleObj);

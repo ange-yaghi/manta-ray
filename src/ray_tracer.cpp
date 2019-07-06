@@ -19,6 +19,7 @@
 #include <coarse_intersection.h>
 #include <image_plane.h>
 #include <os_utilities.h>
+#include <material_manager.h>
 
 #include <iostream>
 #include <thread>
@@ -335,7 +336,7 @@ void manta::RayTracer::traceRay(const Scene *scene, LightRay *ray, int degree, S
 			material = sceneObject->getDefaultMaterial();
 		}
 		else {
-			material = m_materialManager.getMaterial(point.m_material);
+			material = m_materialManager->getMaterial(point.m_material);
 		}
 		
 		// Create a new container

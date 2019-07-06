@@ -5,6 +5,7 @@
 #include <sdl_node.h>
 #include <sdl_compilation_unit.h>
 #include <sdl_compilation_error.h>
+#include <node_program.h>
 
 using namespace manta;
 
@@ -18,23 +19,17 @@ void manta_demo::sdlDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	constexpr bool POLYGON_APERTURE = true;
 
 	Scene scene;
+	NodeProgram program;
 	RayTracer rayTracer;
+	rayTracer.setMaterialManager(program.getMaterialManager());
 
 	// Create all materials
 	SdlCompiler compiler;
 	SdlCompilationUnit *unit = compiler.compile(SDL_PATH "sdl_demo.mr");
 	const SdlErrorList *errors = compiler.getErrorList();
 
-	int nodeCount = unit->getNodeCount();
-
-	for (int i = 0; i < nodeCount; i++) {
-		SdlNode *node = unit->getNode(i);
-		SimpleBsdfMaterialNode *generatedNode = (SimpleBsdfMaterialNode *)node->generateNode();
-		generatedNode->setMaterialManager(rayTracer.getMaterialManager());
-		generatedNode->evaluate();
-
-		int a = 0;
-	}
+	unit->build(&program);
+	program.execute();
 
 	LambertianBSDF lambert;
 	SimpleBSDFMaterial *defaultMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
@@ -42,20 +37,7 @@ void manta_demo::sdlDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	defaultMaterial->setBSDF(&lambert);
 
 	// Create all scene geometry
-	ObjFileLoader boxCityObj;
-	bool result = boxCityObj.readObjFile(MODEL_PATH "box_city.obj");
-
-	if (!result) {
-		std::cout << "Could not open geometry file" << std::endl;
-
-		boxCityObj.destroy();
-
-		return;
-	}
-
-	Mesh boxCity;
-	boxCity.loadObjFileData(&boxCityObj, rayTracer.getMaterialManager());
-	boxCity.setFastIntersectEnabled(false);
+	Mesh *boxCity = static_cast<ObjFileNode *>(program.getNode(1))->getMesh();
 
 	SpherePrimitive outdoorTopLightGeometry;
 	outdoorTopLightGeometry.setRadius((math::real)10.0);
@@ -64,7 +46,7 @@ void manta_demo::sdlDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	// Create scene objects
 	KDTree kdtree;
 	kdtree.initialize(1000.0f, math::constants::Zero);
-	kdtree.analyzeWithProgress(&boxCity, 2);
+	kdtree.analyzeWithProgress(boxCity, 2);
 
 	if (WRITE_KDTREE_TO_FILE) {
 		kdtree.writeToObjFile("../../workspace/test_results/box_city_kdtree.obj");
@@ -72,7 +54,7 @@ void manta_demo::sdlDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 
 	SceneObject *boxCityObject = scene.createSceneObject();
 	if (USE_ACCELERATION_STRUCTURE) boxCityObject->setGeometry(&kdtree);
-	else boxCityObject->setGeometry(&boxCity);
+	else boxCityObject->setGeometry(boxCity);
 	boxCityObject->setDefaultMaterial(defaultMaterial);
 
 	SceneObject *outdoorTopLightObject = scene.createSceneObject();
@@ -179,8 +161,8 @@ void manta_demo::sdlDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	sceneBuffer.destroy();
 	rayTracer.destroy();
 
-	boxCity.destroy();
-	boxCityObj.destroy();
+	boxCity->destroy();
+	//boxCityObj.destroy();
 	kdtree.destroy();
 	polygonalAperture.destroy();
 

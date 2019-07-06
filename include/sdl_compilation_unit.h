@@ -22,6 +22,7 @@ namespace manta {
 	class SdlImportStatement;
 	class SdlCompilationError;
 	class SdlErrorList;
+	class NodeProgram;
 
 	class SdlCompilationUnit : public SdlParserStructure {
 	public:
@@ -34,6 +35,8 @@ namespace manta {
 	public:
 		SdlCompilationUnit() = default;
 		virtual ~SdlCompilationUnit();
+
+		void build(NodeProgram *program);
 
 		ParseResult parseFile(const Path &filename, SdlCompilationUnit *topLevel = nullptr);
 		ParseResult parse(const char *sdl, SdlCompilationUnit *topLevel = nullptr);

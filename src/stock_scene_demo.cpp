@@ -13,6 +13,8 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
 	constexpr bool ALT_VERSION = false;
 
 	RayTracer rayTracer;
+	rayTracer.setMaterialManager(new MaterialManager);
+
 	Scene scene;
 
 	// Load all textures
@@ -49,7 +51,7 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
 
 	// Load all object files
 	ObjFileLoader stageObj;
-	bool result = stageObj.readObjFile(MODEL_PATH "stock_scene_alt.obj");
+	bool result = stageObj.loadObjFile(MODEL_PATH "stock_scene_alt.obj");
 
 	if (!result) {
 		std::cout << "Could not open geometry file(s)" << std::endl;

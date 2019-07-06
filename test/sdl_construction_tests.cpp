@@ -17,6 +17,7 @@
 #include <sdl_generator.h>
 #include <rgb_space.h>
 #include <material_manager.h>
+#include <node_program.h>
 
 #include "utilities.h"
 
@@ -36,7 +37,8 @@ TEST(SdlConstructionTests, SdlVectorTest) {
 	EXPECT_EQ(node->getType(), "vector");
 	EXPECT_EQ(node->getName(), "test_vector");
 
-	Node *generatedNode = node->generateNode();
+	NodeProgram program;
+	Node *generatedNode = node->generateNode(nullptr, &program);
 
 	math::Vector test;
 	generatedNode->getPrimaryOutput()->sample(nullptr, (void *)&test);
@@ -68,7 +70,8 @@ TEST(SdlConstructionTests, SdlVectorTest2) {
 	EXPECT_EQ(node->getType(), "vector");
 	EXPECT_EQ(node->getName(), "test_vector");
 
-	Node *generatedNode = node->generateNode();
+	NodeProgram program;
+	Node *generatedNode = node->generateNode(nullptr, &program);
 
 	math::Vector test;
 	generatedNode->getPrimaryOutput()->sample(nullptr, (void *)&test);
@@ -105,7 +108,8 @@ TEST(SdlConstructionTests, SdlColorTest) {
 	EXPECT_EQ(vectorNode->getType(), "vector");
 	EXPECT_EQ(vectorNode->getName(), "v2");
 
-	Node *vectorGeneratedNode = vectorNode->generateNode();
+	NodeProgram program;
+	Node *vectorGeneratedNode = vectorNode->generateNode(nullptr, &program);
 
 	math::Vector out;
 	vectorGeneratedNode->getPrimaryOutput()->sample(nullptr, (void *)&out);
@@ -133,7 +137,8 @@ TEST(SdlConstructionTests, SdlInlineTest) {
 	EXPECT_EQ(node->getType(), "Container");
 	EXPECT_EQ(node->getName(), "test");
 
-	Node *vectorGeneratedNode = node->generateNode();
+	NodeProgram program;
+	Node *vectorGeneratedNode = node->generateNode(nullptr, &program);
 
 	math::Vector out;
 	vectorGeneratedNode->getPrimaryOutput()->sample(nullptr, (void *)&out);
@@ -156,7 +161,8 @@ TEST(SdlConstructionTests, SdlDoubleInlineTest) {
 	EXPECT_EQ(node->getType(), "Container");
 	EXPECT_EQ(node->getName(), "test");
 
-	Node *vectorGeneratedNode = node->generateNode();
+	NodeProgram program;
+	Node *vectorGeneratedNode = node->generateNode(nullptr, &program);
 
 	math::Vector out;
 	vectorGeneratedNode->getPrimaryOutput()->sample(nullptr, (void *)&out);
@@ -179,7 +185,8 @@ TEST(SdlConstructionTests, SdlStringTest) {
 	EXPECT_EQ(node->getType(), "TestSetup");
 	EXPECT_EQ(node->getName(), "test");
 
-	Node *generatedNode = node->generateNode();
+	NodeProgram program;
+	Node *generatedNode = node->generateNode(nullptr, &program);
 
 	std::string out_s, out_convert, out_empty;
 	generatedNode->getPrimaryOutput()->sample(nullptr, (void *)&out_s);
@@ -204,5 +211,6 @@ TEST(SdlConstructionTests, SdlMaterialTest) {
 	EXPECT_EQ(node->getType(), "SimpleBsdfMaterial");
 	EXPECT_EQ(node->getName(), "material");
 
-	Node *generatedNode = node->generateNode();
+	NodeProgram program;
+	Node *generatedNode = node->generateNode(nullptr, &program);
 }

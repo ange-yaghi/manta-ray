@@ -2,6 +2,7 @@
 
 #include <node_output.h>
 #include <stack_allocator.h>
+#include <node_program.h>
 
 manta::Node::Node() {
 	m_id = -1;
@@ -42,6 +43,12 @@ void manta::Node::evaluate() {
 		if (node != nullptr && *node != nullptr) {
 			(*node)->evaluate();
 		}
+	}
+
+	if (requiresMaterials()) {
+		getProgram()
+			->getMaterialManager()
+			->evaluateAllMaterialNodes();
 	}
 
 	// Node can now self-evaluate
@@ -143,7 +150,6 @@ void manta::Node::registerOutput(NodeOutput *node, const std::string &name) {
 
 void manta::Node::setPrimaryOutput(NodeOutput *node) {
 	m_primaryOutput = node;
-	//registerOutput(m_primaryOutput, "$PRIMARY");
 }
 
 void manta::Node::registerOutputReference(NodeOutput *const *node, const std::string &name) {

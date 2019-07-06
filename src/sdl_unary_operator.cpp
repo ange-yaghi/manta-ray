@@ -69,29 +69,29 @@ manta::SdlParserStructure *manta::SdlUnaryOperator::getImmediateReference(const 
 	return nullptr;
 }
 
-manta::NodeOutput *manta::SdlUnaryOperator::_generateNodeOutput(SdlContextTree *context) {
+manta::NodeOutput *manta::SdlUnaryOperator::_generateNodeOutput(SdlContextTree *context, NodeProgram *program) {
 	SdlValue *resolvedOperand = m_operand;
 
 	if (resolvedOperand == nullptr) return nullptr;
 
-	Node *node = generateNode(context);
+	Node *node = generateNode(context, program);
 	SdlNode *asNode = resolvedOperand->getAsNode();
 	SdlValue *value = resolvedOperand->getAsValue();
 	
 	if (m_operator == DEFAULT) {
-		return value->generateNode(context)->getPrimaryOutput();
+		return value->generateNode(context, program)->getPrimaryOutput();
 	}
 
 	return nullptr;
 }
 
-manta::Node *manta::SdlUnaryOperator::_generateNode(SdlContextTree *context) {
+manta::Node *manta::SdlUnaryOperator::_generateNode(SdlContextTree *context, NodeProgram *program) {
 	SdlValue *resolvedOperand = m_operand;
 
 	if (resolvedOperand == nullptr) return nullptr;
 
 	SdlValue *value = resolvedOperand->getAsValue();
-	Node *node = value->generateNode(context);
+	Node *node = value->generateNode(context, program);
 
 	if (m_operator == DEFAULT) {
 		return nullptr;
