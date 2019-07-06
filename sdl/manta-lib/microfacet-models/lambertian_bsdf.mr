@@ -1,0 +1,14 @@
+module {
+    @name           = "MantaRay Lambertian BSDF"
+    @author         = "Ange Yaghi"
+    @maintainer     = "Ange Yaghi"
+    @copyright      = "Copyright 2019, Ange Yaghi"
+    @doc            = "Defines the interface to the Lambert BSDF model"
+    @version        = "0.0.1a"
+    @github         = "github.com/ange-yaghi/manta-ray"
+}
+
+@doc = "Lambert BSDF"
+public node LambertianBsdf => __builtin__LambertianBsdf {
+    /* empty */
+}

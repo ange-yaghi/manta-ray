@@ -1,0 +1,14 @@
+module {
+    @name           = "MantaRay Null Interface"
+    @author         = "Ange Yaghi"
+    @maintainer     = "Ange Yaghi"
+    @copyright      = "Copyright 2019, Ange Yaghi"
+    @doc            = "Specifies a null interface for convenience"
+    @version        = "0.0.1a"
+    @github         = "github.com/ange-yaghi/manta-ray"
+}
+
+@doc = "Null interface (ie. without inputs or outputs)"
+public node NullInterface {
+    /* void */
+}

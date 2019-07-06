@@ -11,6 +11,8 @@
 #if EXECUTION_ENV == VISUAL_STUDIO
 
 #define WORKSPACE_PATH "../../workspace/"
+#define SOURCE_PATH "../../"
+#define SDL_LIB_PATH (SOURCE_PATH "sdl/manta-lib/")
 #define TMP_PATH (WORKSPACE_PATH "tmp/")
 #define MODEL_PATH "../../demos/models/"
 #define TEXTURE_PATH "../../demos/textures/"

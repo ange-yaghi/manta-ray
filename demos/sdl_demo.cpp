@@ -6,6 +6,7 @@
 #include <sdl_compilation_unit.h>
 #include <sdl_compilation_error.h>
 #include <node_program.h>
+#include <path.h>
 
 using namespace manta;
 
@@ -25,6 +26,7 @@ void manta_demo::sdlDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 
 	// Create all materials
 	SdlCompiler compiler;
+	compiler.addSearchPath(SDL_LIB_PATH);
 	SdlCompilationUnit *unit = compiler.compile(SDL_PATH "sdl_demo.mr");
 	const SdlErrorList *errors = compiler.getErrorList();
 
