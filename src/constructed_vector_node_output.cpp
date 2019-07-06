@@ -38,3 +38,10 @@ void manta::ConstructedVectorNodeOutput::fullOutput(const void **_target) const 
 	// TODO
 	*_target = nullptr;
 }
+
+void manta::ConstructedVectorNodeOutput::registerInputs() {
+	registerInput(&m_x);
+	registerInput(&m_y);
+	registerInput(&m_z);
+	registerInput(&m_w);
+}

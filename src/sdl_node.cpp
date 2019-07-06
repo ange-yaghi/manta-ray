@@ -18,6 +18,9 @@
 #include <constructed_string_node.h>
 #include <simple_bsdf_material_node.h>
 #include <lambertian_bsdf.h>
+#include <phong_distribution.h>
+#include <ggx_distribution.h>
+#include <microfacet_reflection_bsdf.h>
 
 manta::SdlNode::SdlNode() {
 	/* void */
@@ -184,9 +187,12 @@ void manta::SdlNode::_checkInstantiation() {
 	SdlContextTree *parentContext = new SdlContextTree(nullptr);
 	SdlContextTree *mainContext = parentContext->newChild(this, true);
 
-	int attributeCount = getAttributes()->getAttributeCount();
-	for (int i = 0; i < attributeCount; i++) {
-		m_attributes->getAttribute(i)->checkReferences(parentContext);
+	SdlAttributeList *attributes = getAttributes();
+	if (attributes != nullptr) {
+		int attributeCount = attributes->getAttributeCount();
+		for (int i = 0; i < attributeCount; i++) {
+			attributes->getAttribute(i)->checkReferences(parentContext);
+		}
 	}
 
 	if (m_definition != nullptr) {
@@ -370,21 +376,26 @@ manta::Node *manta::SdlNode::generateNode(SdlContextTree *context) {
 		if (definition->getBuiltinName() == "__builtin__vector") {
 			newNode = StandardAllocator::Global()->allocate<ConstructedVectorNode>();
 		}
-
-		if (definition->getBuiltinName() == "__builtin__srgb") {
+		else if (definition->getBuiltinName() == "__builtin__srgb") {
 			newNode = StandardAllocator::Global()->allocate<SrgbNode>();
 		}
-
-		if (definition->getBuiltinName() == "__builtin__string") {
+		else if (definition->getBuiltinName() == "__builtin__string") {
 			newNode = StandardAllocator::Global()->allocate<ConstructedStringNode>();
 		}
-
-		if (definition->getBuiltinName() == "__builtin__simple_bsdf_material") {
+		else if (definition->getBuiltinName() == "__builtin__simple_bsdf_material") {
 			newNode = StandardAllocator::Global()->allocate<SimpleBsdfMaterialNode>();
 		}
-
-		if (definition->getBuiltinName() == "__builtin__LambertianBsdf") {
+		else if (definition->getBuiltinName() == "__builtin__LambertianBsdf") {
 			newNode = StandardAllocator::Global()->allocate<LambertianBSDF>();
+		}
+		else if (definition->getBuiltinName() == "__builtin__PhongDistribution") {
+			newNode = StandardAllocator::Global()->allocate<PhongDistribution>();
+		}
+		else if (definition->getBuiltinName() == "__builtin__GgxDistribution") {
+			newNode = StandardAllocator::Global()->allocate<GgxDistribution>();
+		}
+		else if (definition->getBuiltinName() == "__builtin__MicrofacetReflectionBSDF") {
+			newNode = StandardAllocator::Global()->allocate<MicrofacetReflectionBSDF>();
 		}
 	}
 	else {
@@ -402,6 +413,8 @@ manta::Node *manta::SdlNode::generateNode(SdlContextTree *context) {
 	}
 
 	if (newNode != nullptr) {
+		newNode->setName(getName());
+		newNode->setSdlNode(this);
 		newNode->initialize();
 
 		for (int i = 0; i < inputCount; i++) {
@@ -463,10 +476,13 @@ void manta::SdlNode::writeTraceToFile(std::ofstream &file) {
 
 void manta::SdlNode::checkReferences(SdlContextTree *inputContext) {
 	SdlContextTree *thisContext = inputContext->newChild(this, false);
+	SdlAttributeList *attributes = getAttributes();
 
-	int attributeCount = getAttributes()->getAttributeCount();
-	for (int i = 0; i < attributeCount; i++) {
-		m_attributes->getAttribute(i)->checkReferences(inputContext);
+	if (attributes != nullptr) {
+		int attributeCount = attributes->getAttributeCount();
+		for (int i = 0; i < attributeCount; i++) {
+			attributes->getAttribute(i)->checkReferences(inputContext);
+		}
 	}
 
 	if (m_definition != nullptr) {

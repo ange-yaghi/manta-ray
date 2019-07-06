@@ -4,9 +4,13 @@
 
 manta::MicrofacetReflectionBSDF::MicrofacetReflectionBSDF() {
 	m_distribution = nullptr;
+	m_distributionInput = nullptr;
+
+	m_output.setBsdf(this);
 }
 
 manta::MicrofacetReflectionBSDF::~MicrofacetReflectionBSDF() {
+	/* void */
 }
 
 void manta::MicrofacetReflectionBSDF::initializeSessionMemory(
@@ -74,4 +78,13 @@ manta::math::real manta::MicrofacetReflectionBSDF::calculatePDF(
 	m_distribution->destroySessionMemory(&s, stackAllocator);
 
 	return pdf;
+}
+
+void manta::MicrofacetReflectionBSDF::_evaluate() {
+	MicrofacetDistributionNodeOutput *distInput = static_cast<MicrofacetDistributionNodeOutput *>(m_distributionInput);
+	m_distribution = distInput->getDistribution();
+}
+
+void manta::MicrofacetReflectionBSDF::registerInputs() {
+	registerInput(&m_distributionInput, "distribution");
 }

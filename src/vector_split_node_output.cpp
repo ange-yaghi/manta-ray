@@ -34,3 +34,7 @@ void manta::VectorSplitNodeOutput::fullOutput(const void **_target) const {
 	// TODO
 	*_target = nullptr;
 }
+
+void manta::VectorSplitNodeOutput::registerInputs() {
+	registerInput(&m_input);
+}

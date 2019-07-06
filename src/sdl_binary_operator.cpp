@@ -202,15 +202,16 @@ manta::Node *manta::SdlBinaryOperator::_generateNode(SdlContextTree *context) {
 
 	// The dot is the reference operator
 	if (m_operator == DOT || m_operator == POINTER) {
+		SdlReferenceInfo info;
 		SdlReferenceQuery query;
 		query.inputContext = context;
 		query.recordErrors = false;
 
-		SdlParserStructure *reference = getReference(query);
+		SdlParserStructure *reference = getReference(query, &info);
 		SdlNode *asNode = reference->getAsNode();
 
 		if (asNode != nullptr) {
-			return asNode->generateNode(context);
+			return asNode->generateNode(info.newContext);
 		}
 	}
 

@@ -22,11 +22,17 @@ namespace manta {
 		virtual math::real calculatePDF(const IntersectionPoint *surfaceInteraction, 
 			const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) const;
 
-		void setDistribution(MicrofacetDistribution *distribution) { m_distribution = distribution; }
-		MicrofacetDistribution *getDistribution() const { return m_distribution; }
+		void setDistribution(const MicrofacetDistribution *distribution) { m_distribution = distribution; }
+		const MicrofacetDistribution *getDistribution() const { return m_distribution; }
 
 	protected:
-		MicrofacetDistribution *m_distribution;
+		virtual void _evaluate();
+
+	protected:
+		pNodeInput m_distributionInput;
+		const MicrofacetDistribution *m_distribution;
+		
+		virtual void registerInputs();
 	};
 
 } /* namespace manta */

@@ -52,3 +52,10 @@ void manta::SrgbNodeOutput::fullOutput(const void **_target) const {
 	// TODO
 	*_target = nullptr;
 }
+
+void manta::SrgbNodeOutput::registerInputs() {
+	registerInput(&m_a);
+	registerInput(&m_a);
+	registerInput(&m_a);
+	registerInput(&m_a);
+}

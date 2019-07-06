@@ -5,13 +5,13 @@
 #include <assert.h>
 
 manta::PhongDistribution::PhongDistribution() {
-	m_power = (math::real)1.0;
+	m_power = (math::real)2.0;
 	m_minMapPower = (math::real)1.0;
 	m_powerNode = nullptr;
 }
 
 manta::PhongDistribution::~PhongDistribution() {
-
+	/* void */
 }
 
 void manta::PhongDistribution::initializeSessionMemory(
@@ -95,5 +95,5 @@ manta::math::real manta::PhongDistribution::calculateG1(
 }
 
 void manta::PhongDistribution::registerInputs() {
-	registerInput((pNodeInput *)m_powerNode, "Power");
+	registerInput(&m_powerNode, "power");
 }

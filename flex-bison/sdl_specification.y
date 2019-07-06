@@ -237,6 +237,13 @@ type_name_namespace
 
 node
   : type_name_namespace LABEL connection_block			{ $$ = new SdlNode($1.data[1], $2, $3, $1.data[0]); }
+  | type_name_namespace connection_block				{
+															SdlTokenInfo_string name;
+															name.specified = false;
+															name.data = "";
+
+															$$ = new SdlNode($1.data[1], name, $2, $1.data[0]);
+														}
   ;
 
 node_list

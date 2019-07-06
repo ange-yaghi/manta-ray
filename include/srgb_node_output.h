@@ -19,6 +19,8 @@ namespace manta {
 		pNodeInput *getBConnection() { return &m_b; }
 		pNodeInput *getAConnection() { return &m_a; }
 
+		virtual void registerInputs();
+
 	protected:
 		pNodeInput m_r;
 		pNodeInput m_g;

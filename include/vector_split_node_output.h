@@ -19,6 +19,8 @@ namespace manta {
 
 		pNodeInput *getInputConnection() { return &m_input; }
 
+		virtual void registerInputs();
+
 	protected:
 		pNodeInput m_input;
 		int m_valueIndex;

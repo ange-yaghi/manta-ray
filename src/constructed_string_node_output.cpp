@@ -29,3 +29,7 @@ void manta::ConstructedStringNodeOutput::discreteSample2D(int x, int y, void *ta
 void manta::ConstructedStringNodeOutput::fullCompute(void *target) const {
 	sample(nullptr, target);
 }
+
+void manta::ConstructedStringNodeOutput::registerInputs() {
+	registerInput(&m_stringInput);
+}

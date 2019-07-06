@@ -11,6 +11,7 @@ namespace manta {
 
 	struct IntersectionPoint;
 	class StackAllocator;
+	class SdlNode;
 
 	class Node {
 	public:
@@ -62,6 +63,9 @@ namespace manta {
 		bool isInitialized() const { return m_initialized; }
 		bool isEvaluated() const { return m_evaluated; }
 
+		void setSdlNode(SdlNode *node) { m_sdlNode = node; }
+		SdlNode *getSdlNode() const { return m_sdlNode; }
+
 		// Main Interface
 	public:
 		virtual void initializeSessionMemory(const IntersectionPoint *surfaceInteraction, 
@@ -78,6 +82,8 @@ namespace manta {
 	protected:
 		int m_id;
 		std::string m_name;
+
+		SdlNode *m_sdlNode;
 
 	protected:
 		std::vector<NodeInputPort> m_inputs;
