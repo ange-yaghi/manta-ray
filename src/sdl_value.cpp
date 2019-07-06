@@ -10,12 +10,12 @@ manta::SdlValue::~SdlValue() {
 	/* void */
 }
 
-manta::NodeOutput *manta::SdlValue::generateNodeOutput(SdlContextTree *context) {
+manta::NodeOutput *manta::SdlValue::generateNodeOutput(SdlContextTree *context, NodeProgram *program) {
 	GenerationTableEntry *entry = getEntry(context);
 	if (entry == nullptr) entry = newEntry(context);
 
 	if (entry->nodeReference == nullptr) {
-		entry->nodeReference = generateNode(context);
+		entry->nodeReference = generateNode(context, program);
 	}
 
 	if (entry->nodeReference != nullptr) {
@@ -23,28 +23,28 @@ manta::NodeOutput *manta::SdlValue::generateNodeOutput(SdlContextTree *context) 
 	}
 
 	if (entry->nodeGeneratedOutput == nullptr) {
-		entry->nodeGeneratedOutput = _generateNodeOutput(context);
+		entry->nodeGeneratedOutput = _generateNodeOutput(context, program);
 	}
 
 	return entry->nodeGeneratedOutput;
 }
 
-manta::Node *manta::SdlValue::generateNode(SdlContextTree *context) {
+manta::Node *manta::SdlValue::generateNode(SdlContextTree *context, NodeProgram *program) {
 	GenerationTableEntry *entry = getEntry(context);
 	if (entry == nullptr) entry = newEntry(context);
 
 	if (entry->nodeReference == nullptr) {
-		entry->nodeReference = _generateNode(context);
+		entry->nodeReference = _generateNode(context, program);
 		return entry->nodeReference;
 	}
 	else return entry->nodeReference;
 }
 
-manta::NodeOutput *manta::SdlValue::_generateNodeOutput(SdlContextTree *context) {
+manta::NodeOutput *manta::SdlValue::_generateNodeOutput(SdlContextTree *context, NodeProgram *program) {
 	return nullptr;
 }
 
-manta::Node *manta::SdlValue::_generateNode(SdlContextTree *context) {
+manta::Node *manta::SdlValue::_generateNode(SdlContextTree *context, NodeProgram *program) {
 	return nullptr;
 }
 

@@ -12,6 +12,7 @@ namespace manta {
 	struct IntersectionPoint;
 	class StackAllocator;
 	class SdlNode;
+	class NodeProgram;
 
 	class Node {
 	public:
@@ -66,6 +67,13 @@ namespace manta {
 		void setSdlNode(SdlNode *node) { m_sdlNode = node; }
 		SdlNode *getSdlNode() const { return m_sdlNode; }
 
+		void setProgram(NodeProgram *program) { m_program = program; }
+		NodeProgram *getProgram() const { return m_program; }
+
+		// Context dependencies
+		virtual bool isMaterial() const { return false; }
+		virtual bool requiresMaterials() const { return false; }
+
 		// Main Interface
 	public:
 		virtual void initializeSessionMemory(const IntersectionPoint *surfaceInteraction, 
@@ -106,6 +114,10 @@ namespace manta {
 		// Initialization status
 		bool m_initialized;
 		bool m_evaluated;
+
+	protected:
+		// Context
+		NodeProgram *m_program;
 	};
 
 } /* namespace manta */

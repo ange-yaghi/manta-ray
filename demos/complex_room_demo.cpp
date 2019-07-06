@@ -16,10 +16,10 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 
 	// Load all object files
 	ObjFileLoader complexRoomObj;
-	bool result = complexRoomObj.readObjFile(MODEL_PATH "complex_room.obj");
+	bool result = complexRoomObj.loadObjFile(MODEL_PATH "complex_room.obj");
 
 	ObjFileLoader roomShuttersObj;
-	result &= roomShuttersObj.readObjFile(MODEL_PATH "complex_room_shutters.obj");
+	result &= roomShuttersObj.loadObjFile(MODEL_PATH "complex_room_shutters.obj");
 
 	if (!result) {
 		std::cout << "Could not open geometry file(s)" << std::endl;
@@ -31,6 +31,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	}
 
 	RayTracer rayTracer;
+	rayTracer.setMaterialManager(new MaterialManager);
 	
 	DielectricMediaInterface glassFresnel;
 	glassFresnel.setIorIncident(1.0f);

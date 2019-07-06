@@ -128,7 +128,7 @@ struct GPULightRay {
 TEST(OpenCLTests, OpenCLIntersectionTeapotTest) {
 	// Load mesh
 	ObjFileLoader teapotObj;
-	bool result = teapotObj.readObjFile("../../../demos/models/teapot.obj");
+	bool result = teapotObj.loadObjFile("../../../demos/models/teapot.obj");
 
 	Mesh mesh;
 	mesh.loadObjFileData(&teapotObj);
@@ -218,7 +218,7 @@ TEST(OpenCLTests, OpenCLIntersectionTeapotTest) {
 TEST(OpenCLTests, OpenCLIntersectionHighStressTest) {
 	// Load mesh
 	ObjFileLoader teapotObj;
-	bool result = teapotObj.readObjFile("../../../demos/models/teapot.obj");
+	bool result = teapotObj.loadObjFile("../../../demos/models/teapot.obj");
 
 	Mesh mesh;
 	mesh.loadObjFileData(&teapotObj);

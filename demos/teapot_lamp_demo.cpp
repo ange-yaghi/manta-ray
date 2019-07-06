@@ -28,20 +28,20 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 
 	// Load all object files
 	ObjFileLoader lampObj;
-	bool lampObjResult = lampObj.readObjFile(MODEL_PATH "lamp2.obj");
+	bool lampObjResult = lampObj.loadObjFile(MODEL_PATH "lamp2.obj");
 
 	ObjFileLoader teapotObj;
 	bool teapotObjResult;
 	
 	if (OBJECT == TEAPOT) {
-		teapotObjResult = teapotObj.readObjFile(MODEL_PATH "lamp_teapot.obj");
+		teapotObjResult = teapotObj.loadObjFile(MODEL_PATH "lamp_teapot.obj");
 	}
 	else if (OBJECT == SPHERE) {
-		teapotObjResult = teapotObj.readObjFile(MODEL_PATH "sphere_lamp.obj");
+		teapotObjResult = teapotObj.loadObjFile(MODEL_PATH "sphere_lamp.obj");
 	}
 
 	ObjFileLoader lampBlockObj;
-	bool lampBlockObjResult = lampBlockObj.readObjFile(MODEL_PATH "lampblock.obj");
+	bool lampBlockObjResult = lampBlockObj.loadObjFile(MODEL_PATH "lampblock.obj");
 
 	if (!lampObjResult || !teapotObjResult || !lampBlockObjResult) {
 		std::cout << "Could not open geometry file" << std::endl;
@@ -54,6 +54,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	}
 
 	RayTracer rayTracer;
+	rayTracer.setMaterialManager(new MaterialManager);
 
 	// Create all materials
 	LambertianBSDF lambert;

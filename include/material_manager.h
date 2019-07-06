@@ -7,6 +7,7 @@ namespace manta {
 
 	// Forward declarations
 	class Material;
+	class Node;
 
 	class MaterialManager {
 	public:
@@ -26,7 +27,11 @@ namespace manta {
 		Material *getMaterial(int index) const { return m_materials[index]; }
 		Material *searchByName(const std::string &name) const;
 
+		void addMaterialNode(Node *);
+		void evaluateAllMaterialNodes();
+
 	protected:
+		std::vector<Node *> m_nodes;
 		std::vector<Material *> m_materials;
 		int m_currentIndex;
 	};

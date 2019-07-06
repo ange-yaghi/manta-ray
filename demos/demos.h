@@ -62,6 +62,8 @@
 #include <multiply_node.h>
 #include <ramp_node.h>
 #include <step_node.h>
+#include <material_manager.h>
+#include <obj_file_node.h>
 
 namespace manta_demo {
 

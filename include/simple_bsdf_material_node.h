@@ -7,14 +7,12 @@
 
 namespace manta {
 
-	class MaterialManager;
-
 	class SimpleBsdfMaterialNode : public Node {
 	public:
 		SimpleBsdfMaterialNode();
 		virtual ~SimpleBsdfMaterialNode();
 
-		void setMaterialManager(MaterialManager *manager) { m_materialManager = manager; }
+		virtual bool isMaterial() const { return true; }
 
 	protected:
 		virtual void _initialize();
@@ -29,8 +27,6 @@ namespace manta {
 		pNodeInput m_bsdf;
 		pNodeInput m_emission;
 		pNodeInput m_reflectance;
-
-		MaterialManager *m_materialManager;
 	};
 
 } /* namespace manta */

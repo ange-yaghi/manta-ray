@@ -20,6 +20,8 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	constexpr bool ENABLE_SMUDGE = true;
 
 	RayTracer rayTracer;
+	rayTracer.setMaterialManager(new MaterialManager);
+
 	Scene scene;
 
 	// Load all textures
@@ -53,13 +55,13 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	bool result;
 
 	if (SCENE == FACE_ON_SCENE) {
-		result = phoneObj.readObjFile(MODEL_PATH "samsung_a8_face_on_scene.obj");
+		result = phoneObj.loadObjFile(MODEL_PATH "samsung_a8_face_on_scene.obj");
 	}
 	else if (SCENE == UPRIGHT_SCENE) {
-		result = phoneObj.readObjFile(MODEL_PATH "samsung_a8_upright_scene.obj");
+		result = phoneObj.loadObjFile(MODEL_PATH "samsung_a8_upright_scene.obj");
 	}
 	else if (SCENE == BANNER_SCENE) {
-		result = phoneObj.readObjFile(MODEL_PATH "samsung_a8_banner_scene.obj");
+		result = phoneObj.loadObjFile(MODEL_PATH "samsung_a8_banner_scene.obj");
 	}
 
 	if (!result) {

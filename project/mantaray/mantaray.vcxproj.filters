@@ -388,6 +388,18 @@
     <Filter Include="Source Files\nodes\output-ports\color">
       <UniqueIdentifier>{7053271c-7fb1-4fa2-b174-ef342aa6e764}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\nodes\output-ports\mesh">
+      <UniqueIdentifier>{0ec3c6c3-5682-4e6e-8012-c08886a8ccdb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\nodes\output-ports\mesh">
+      <UniqueIdentifier>{4662a59b-9acc-45d6-9600-2af99019b456}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\nodes\output-ports\atomic-types\single">
+      <UniqueIdentifier>{d2c2dda7-047f-447c-b9d6-fcf2ec43ffa4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\nodes\output-ports\atomic-types\single">
+      <UniqueIdentifier>{5ecb1959-24fc-4269-ad04-5568d8687ddc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -796,6 +808,18 @@
       <Filter>Source Files\nodes\library\sdl</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\simple_bsdf_material_node.cpp">
+      <Filter>Source Files\nodes\library\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mesh_node_output.cpp">
+      <Filter>Source Files\nodes\output-ports\mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\obj_file_node.cpp">
+      <Filter>Source Files\nodes\library\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\constructed_float_node_output.cpp">
+      <Filter>Source Files\nodes\output-ports\atomic-types\single</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\constructed_float_node.cpp">
       <Filter>Source Files\nodes\library\sdl</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1282,6 +1306,18 @@
     </ClInclude>
     <ClInclude Include="..\..\include\sdl_parser_structure.h">
       <Filter>Header Files\sdl-parser\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\mesh_node_output.h">
+      <Filter>Header Files\nodes\output-ports\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\obj_file_node.h">
+      <Filter>Header Files\nodes\library\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\constructed_float_node.h">
+      <Filter>Header Files\nodes\library\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\constructed_float_node_output.h">
+      <Filter>Header Files\nodes\output-ports\atomic-types\single</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

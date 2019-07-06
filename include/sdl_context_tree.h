@@ -31,6 +31,8 @@ namespace manta {
 
 		bool isMainContext() const { return m_mainContext; }
 
+		bool isEqual(const SdlContextTree *ref) const;
+
 	protected:
 		SdlNode *m_context;
 		bool m_mainContext;

@@ -10,6 +10,7 @@ namespace manta {
 	class SdlAttribute;
 	class NodeOutput;
 	class Node;
+	class NodeProgram;
 	class SdlContextTree;
 
 	class SdlValue : public SdlParserStructure {
@@ -49,12 +50,12 @@ namespace manta {
 		VALUE_TYPE m_type;
 
 	public:
-		NodeOutput *generateNodeOutput(SdlContextTree *context);
-		Node *generateNode(SdlContextTree *context);
+		NodeOutput *generateNodeOutput(SdlContextTree *context, NodeProgram *program);
+		Node *generateNode(SdlContextTree *context, NodeProgram *program);
 
 	protected:
-		virtual NodeOutput *_generateNodeOutput(SdlContextTree *context);
-		virtual Node *_generateNode(SdlContextTree *context);
+		virtual NodeOutput *_generateNodeOutput(SdlContextTree *context, NodeProgram *program);
+		virtual Node *_generateNode(SdlContextTree *context, NodeProgram *program);
 
 		GenerationTableEntry *getEntry(SdlContextTree *context);
 		GenerationTableEntry *newEntry(SdlContextTree *context);

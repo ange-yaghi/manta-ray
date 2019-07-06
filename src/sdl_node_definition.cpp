@@ -57,6 +57,8 @@ manta::SdlParserStructure *manta::SdlNodeDefinition::resolveName(const std::stri
 }
 
 int manta::SdlNodeDefinition::countSymbolIncidence(const std::string &name) const {
+	if (name.empty()) return 0;
+
 	int count = 0;
 	if (m_attributes != nullptr) {
 		int attributeCount = m_attributes->getDefinitionCount();

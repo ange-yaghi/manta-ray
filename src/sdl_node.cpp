@@ -15,12 +15,15 @@
 
 #include <srgb_node.h>
 #include <constructed_vector_node.h>
+#include <constructed_float_node.h>
 #include <constructed_string_node.h>
 #include <simple_bsdf_material_node.h>
 #include <lambertian_bsdf.h>
 #include <phong_distribution.h>
 #include <ggx_distribution.h>
 #include <microfacet_reflection_bsdf.h>
+#include <obj_file_node.h>
+#include <node_program.h>
 
 manta::SdlNode::SdlNode() {
 	/* void */
@@ -291,16 +294,14 @@ void manta::SdlNode::resolveAttributeDefinitions() {
 	}
 }
 
-manta::Node *manta::SdlNode::generateNode(SdlContextTree *context) {
+manta::Node *manta::SdlNode::generateNode(SdlContextTree *context, NodeProgram *program) {
 	SdlContextTree *newContext;
 	SdlContextTree *parentContext = context;
 	if (parentContext == nullptr) {
 		parentContext = new SdlContextTree(nullptr);
-		newContext = parentContext->newChild(this);
 	}
-	else {
-		newContext = parentContext->newChild(this);
-	}
+
+	newContext = parentContext->newChild(this);
 
 	NodeTableEntry *entry = getTableEntry(parentContext);
 	if (entry != nullptr) return entry->generatedNode;
@@ -335,7 +336,7 @@ manta::Node *manta::SdlNode::generateNode(SdlContextTree *context) {
 				SdlValue *asValue = attribute->getImmediateReference(query, nullptr)->getAsValue();
 
 				Mapping inputPort;
-				inputPort.output = asValue->generateNodeOutput(parentContext);
+				inputPort.output = asValue->generateNodeOutput(parentContext, program);
 				inputPort.name = attributeDefinition->getName();
 				inputs.push_back(inputPort);
 			}
@@ -347,7 +348,7 @@ manta::Node *manta::SdlNode::generateNode(SdlContextTree *context) {
 				SdlValue *asValue = attributeDefinition->getImmediateReference(query, nullptr)->getAsValue();
 
 				Mapping inputPort;
-				inputPort.output = asValue->generateNodeOutput(parentContext);
+				inputPort.output = asValue->generateNodeOutput(parentContext, program);
 				inputPort.name = attributeDefinition->getName();
 				inputs.push_back(inputPort);
 			}
@@ -360,11 +361,21 @@ manta::Node *manta::SdlNode::generateNode(SdlContextTree *context) {
 			SdlValue *asValue = attributeDefinition->getImmediateReference(query, nullptr)->getAsValue();
 
 			Mapping outputPort;
-			outputPort.output = asValue->generateNodeOutput(newContext);
+			outputPort.output = asValue->generateNodeOutput(newContext, program);
 			outputPort.name = attributeDefinition->getName();
 			outputPort.primary = (asValue == getDefaultOutputValue());
 
 			outputs.push_back(outputPort);
+		}
+	}
+
+	// Generate internal nodes
+	SdlNodeList *nestedNodeList = definition->getBody();
+	if (nestedNodeList != nullptr) {
+		int nestedNodeCount = nestedNodeList->getItemCount();
+		for (int i = 0; i < nestedNodeCount; i++) {
+			SdlNode *node = nestedNodeList->getItem(i);
+			node->generateNode(newContext, program);
 		}
 	}
 
@@ -382,6 +393,9 @@ manta::Node *manta::SdlNode::generateNode(SdlContextTree *context) {
 		else if (definition->getBuiltinName() == "__builtin__string") {
 			newNode = StandardAllocator::Global()->allocate<ConstructedStringNode>();
 		}
+		else if (definition->getBuiltinName() == "__builtin__float") {
+			newNode = StandardAllocator::Global()->allocate<ConstructedFloatNode>();
+		}
 		else if (definition->getBuiltinName() == "__builtin__simple_bsdf_material") {
 			newNode = StandardAllocator::Global()->allocate<SimpleBsdfMaterialNode>();
 		}
@@ -396,6 +410,9 @@ manta::Node *manta::SdlNode::generateNode(SdlContextTree *context) {
 		}
 		else if (definition->getBuiltinName() == "__builtin__MicrofacetReflectionBSDF") {
 			newNode = StandardAllocator::Global()->allocate<MicrofacetReflectionBSDF>();
+		}
+		else if (definition->getBuiltinName() == "__builtin__ObjFile") {
+			newNode = StandardAllocator::Global()->allocate<ObjFileNode>();
 		}
 	}
 	else {
@@ -422,6 +439,9 @@ manta::Node *manta::SdlNode::generateNode(SdlContextTree *context) {
 		}
 	}
 
+	// Add the new node to the program
+	program->addNode(newNode);
+
 	entry->generatedNode = newNode;
 	return newNode;
 }
@@ -429,8 +449,8 @@ manta::Node *manta::SdlNode::generateNode(SdlContextTree *context) {
 manta::SdlNode::NodeTableEntry *manta::SdlNode::getTableEntry(SdlContextTree *context) {
 	int entryCount = (int)m_nodeTable.size();
 	for (int i = 0; i < entryCount; i++) {
-		if (m_nodeTable[i].context == context) {
-			return &m_nodeTable[i];
+		if (m_nodeTable[i]->context->isEqual(context)) {
+			return m_nodeTable[i];
 		}
 	}
 
@@ -441,6 +461,8 @@ manta::SdlNode::NodeTableEntry *manta::SdlNode::newTableEntry(SdlContextTree *co
 	NodeTableEntry *newEntry = new NodeTableEntry();
 	newEntry->context = context;
 	newEntry->generatedNode = nullptr;
+
+	m_nodeTable.push_back(newEntry);
 
 	return newEntry;
 }

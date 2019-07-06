@@ -20,6 +20,7 @@ namespace manta {
 		NodeOutput(const NodeType *singleType);
 		virtual ~NodeOutput();
 
+		bool isType(const NodeType &type) const { return m_singleType == &type; }
 		const NodeType *getType() const { return m_singleType; }
 
 		void initialize();

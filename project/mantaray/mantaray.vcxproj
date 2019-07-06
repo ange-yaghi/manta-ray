@@ -22,12 +22,16 @@
     <ClCompile Include="..\..\autogen\sdl_parser.auto.cpp" />
     <ClCompile Include="..\..\autogen\sdl_scanner.auto.cpp" />
     <ClCompile Include="..\..\src\aperture.cpp" />
+    <ClCompile Include="..\..\src\constructed_float_node.cpp" />
+    <ClCompile Include="..\..\src\constructed_float_node_output.cpp" />
     <ClCompile Include="..\..\src\constructed_string_node.cpp" />
     <ClCompile Include="..\..\src\constructed_string_node_output.cpp" />
     <ClCompile Include="..\..\src\constructed_vector_node_output.cpp" />
     <ClCompile Include="..\..\src\custom_node.cpp" />
+    <ClCompile Include="..\..\src\mesh_node_output.cpp" />
     <ClCompile Include="..\..\src\node_output.cpp" />
     <ClCompile Include="..\..\src\node_program.cpp" />
+    <ClCompile Include="..\..\src\obj_file_node.cpp" />
     <ClCompile Include="..\..\src\path.cpp" />
     <ClCompile Include="..\..\src\float_node_output.cpp" />
     <ClCompile Include="..\..\src\sdl_attribute_definition.cpp" />
@@ -172,6 +176,8 @@
     <ClInclude Include="..\..\include\color.h" />
     <ClInclude Include="..\..\include\complex_map_2d.h" />
     <ClInclude Include="..\..\include\complex_math.h" />
+    <ClInclude Include="..\..\include\constructed_float_node.h" />
+    <ClInclude Include="..\..\include\constructed_float_node_output.h" />
     <ClInclude Include="..\..\include\constructed_string_node.h" />
     <ClInclude Include="..\..\include\constructed_string_node_output.h" />
     <ClInclude Include="..\..\include\constructed_vector_node_output.h" />
@@ -184,6 +190,8 @@
     <ClInclude Include="..\..\include\grid_sampler.h" />
     <ClInclude Include="..\..\include\node_program.h" />
     <ClInclude Include="..\..\include\float_node_output.h" />
+    <ClInclude Include="..\..\include\mesh_node_output.h" />
+    <ClInclude Include="..\..\include\obj_file_node.h" />
     <ClInclude Include="..\..\include\sdl_context_tree.h" />
     <ClInclude Include="..\..\include\sdl_generator.h" />
     <ClInclude Include="..\..\include\sdl_generic_value.h" />

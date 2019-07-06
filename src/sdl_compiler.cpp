@@ -12,7 +12,7 @@ manta::SdlCompiler::~SdlCompiler() {
 	/* void */
 }
 
-manta::SdlCompilationUnit *manta::SdlCompiler::build(const SdlPath &scriptPath) {
+manta::SdlCompilationUnit *manta::SdlCompiler::analyze(const SdlPath &scriptPath) {
 	SdlCompilationUnit *newUnit = getUnit(scriptPath);
 	Path rootDir;
 	scriptPath.getParentPath(&rootDir);
@@ -56,7 +56,7 @@ manta::SdlCompilationUnit *manta::SdlCompiler::build(const SdlPath &scriptPath) 
 			}
 
 			// Recursively build
-			SdlCompilationUnit *importUnit = build(fullImportPath);
+			SdlCompilationUnit *importUnit = analyze(fullImportPath);
 			s->setUnit(importUnit);
 			if (importUnit == nullptr) {
 				newUnit->addCompilationError(new SdlCompilationError(*s->getSummaryToken(),
@@ -72,7 +72,7 @@ manta::SdlCompilationUnit *manta::SdlCompiler::build(const SdlPath &scriptPath) 
 }
 
 manta::SdlCompilationUnit *manta::SdlCompiler::compile(const SdlPath &scriptPath) {
-	SdlCompilationUnit *topLevel = build(scriptPath);
+	SdlCompilationUnit *topLevel = analyze(scriptPath);
 
 	// Expansion step
 	expand();

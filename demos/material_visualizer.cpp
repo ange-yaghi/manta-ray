@@ -12,6 +12,8 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
 	constexpr const char *MATERIAL = "Steel2";
 
 	RayTracer rayTracer;
+	rayTracer.setMaterialManager(new MaterialManager);
+
 	Scene scene;
 
 	// Load all textures
@@ -22,7 +24,7 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
 
 	// Load all object files
 	ObjFileLoader stageObj;
-	bool result = stageObj.readObjFile(MODEL_PATH "material_visualizer.obj");
+	bool result = stageObj.loadObjFile(MODEL_PATH "material_visualizer.obj");
 
 	if (!result) {
 		std::cout << "Could not open geometry file(s)" << std::endl;
