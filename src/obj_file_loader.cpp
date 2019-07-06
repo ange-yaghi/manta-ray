@@ -47,11 +47,11 @@ manta::ObjFileLoader::~ObjFileLoader() {
 	// TODO: check that object is actually destroyed
 }
 
-bool manta::ObjFileLoader::readObjFile(const char *fname) {
+bool manta::ObjFileLoader::loadObjFile(const char *fname) {
 	std::ifstream inputFile(fname, std::ios::in);
 
 	if (inputFile.is_open()) {
-		return readObjFile(inputFile);
+		return loadObjFile(inputFile);
 	}
 	else {
 		// The file could not be loaded
@@ -59,7 +59,7 @@ bool manta::ObjFileLoader::readObjFile(const char *fname) {
 	}
 }
 
-bool manta::ObjFileLoader::readObjFile(std::istream &stream) {
+bool manta::ObjFileLoader::loadObjFile(std::istream &stream) {
 	m_currentLine = 0;
 	m_currentMaterial = nullptr;
 	

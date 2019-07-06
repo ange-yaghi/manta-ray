@@ -29,8 +29,8 @@ namespace manta {
 		SdlValue *m_operand;
 
 	protected:
-		virtual NodeOutput *_generateNodeOutput(SdlContextTree *context);
-		virtual Node *_generateNode(SdlContextTree *context);
+		virtual NodeOutput *_generateNodeOutput(SdlContextTree *context, NodeProgram *program);
+		virtual Node *_generateNode(SdlContextTree *context, NodeProgram *program);
 	};
 
 } /* namespace manta */

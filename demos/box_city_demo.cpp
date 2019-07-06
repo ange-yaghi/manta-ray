@@ -14,9 +14,10 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
 	Scene scene;
 	RayTracer rayTracer;
+	rayTracer.setMaterialManager(new MaterialManager);
 
 	ObjFileLoader boxCityObj;
-	bool result = boxCityObj.readObjFile(MODEL_PATH "box_city.obj");
+	bool result = boxCityObj.loadObjFile(MODEL_PATH "box_city.obj");
 
 	if (!result) {
 		std::cout << "Could not open geometry file" << std::endl;

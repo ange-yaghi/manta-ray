@@ -35,7 +35,7 @@ namespace manta {
 		ObjFileLoader();
 		~ObjFileLoader();
 
-		bool readObjFile(const char *fname);
+		bool loadObjFile(const char *fname);
 
 		unsigned int getVertexCount() const { return (unsigned int)m_vertices.size(); }
 		unsigned int getFaceCount() const { return (unsigned int)m_faces.size(); }
@@ -50,7 +50,7 @@ namespace manta {
 		void destroy();
 
 	protected:
-		bool readObjFile(std::istream &stream);
+		bool loadObjFile(std::istream &stream);
 		bool readVertexPosition(std::stringstream &s, math::Vector3 *vertex) const;
 		bool readVertexNormal(std::stringstream &s, math::Vector3 *normal) const;
 		bool readVertexTextureCoords(std::stringstream &s, math::Vector2 *texCoords) const;

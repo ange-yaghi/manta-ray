@@ -56,7 +56,7 @@ namespace manta {
 		virtual void setValue(const T &value) { m_value = value; }
 		T getValue() const { return m_value; }
 
-		virtual NodeOutput *_generateNodeOutput(SdlContextTree *context) {
+		virtual NodeOutput *_generateNodeOutput(SdlContextTree *context, NodeProgram *program) {
 			return generateNodeOutput(m_value, context);
 		}
 
@@ -91,22 +91,7 @@ namespace manta {
 			return reference;
 		}
 
-		virtual Node *_generateNode(SdlContextTree *context) {
-			SdlReferenceInfo info;
-			SdlReferenceQuery query;
-			query.inputContext = context;
-			query.recordErrors = false;
-			SdlParserStructure *reference = getImmediateReference(query, &info);
-			if (reference == nullptr) return nullptr;
-
-			SdlNode *asNode = reference->getAsNode();
-			if (asNode != nullptr) {
-				return asNode->generateNode(info.newContext);
-			}
-			else return nullptr;
-		}
-
-		virtual NodeOutput *_generateNodeOutput(SdlContextTree *context) {
+		virtual Node *_generateNode(SdlContextTree *context, NodeProgram *program) {
 			SdlReferenceInfo info;
 			SdlReferenceQuery query;
 			query.inputContext = context;
@@ -116,13 +101,28 @@ namespace manta {
 
 			SdlNode *asNode = reference->getAsNode();
 			if (asNode != nullptr) {
-				Node *generatedNode = asNode->generateNode(info.newContext);
+				return asNode->generateNode(info.newContext, program);
+			}
+			else return nullptr;
+		}
+
+		virtual NodeOutput *_generateNodeOutput(SdlContextTree *context, NodeProgram *program) {
+			SdlReferenceInfo info;
+			SdlReferenceQuery query;
+			query.inputContext = context;
+			query.recordErrors = false;
+			SdlParserStructure *reference = getReference(query, &info);
+			if (reference == nullptr) return nullptr;
+
+			SdlNode *asNode = reference->getAsNode();
+			if (asNode != nullptr) {
+				Node *generatedNode = asNode->generateNode(info.newContext, program);
 				if (generatedNode != nullptr) {
 					return generatedNode->getPrimaryOutput();
 				}
 			}
 
-			return reference->getAsValue()->generateNodeOutput(info.newContext);
+			return reference->getAsValue()->generateNodeOutput(info.newContext, program);
 		}
 	};
 
@@ -147,11 +147,11 @@ namespace manta {
 			return m_value;
 		}
 
-		virtual Node *_generateNode(SdlContextTree *context) {
-			return m_value->generateNode(context);
+		virtual Node *_generateNode(SdlContextTree *context, NodeProgram *program) {
+			return m_value->generateNode(context, program);
 		}
 
-		virtual NodeOutput *_generateNodeOutput(SdlContextTree *context) {
+		virtual NodeOutput *_generateNodeOutput(SdlContextTree *context, NodeProgram *program) {
 			return nullptr;
 		}
 	};

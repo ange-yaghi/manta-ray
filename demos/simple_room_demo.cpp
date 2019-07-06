@@ -14,13 +14,14 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 
 	Scene scene;
 	RayTracer rayTracer;
+	rayTracer.setMaterialManager(new MaterialManager);
 
 	// Load all object files
 	ObjFileLoader smallHouseObj;
-	bool result = smallHouseObj.readObjFile(MODEL_PATH "small_house.obj");
+	bool result = smallHouseObj.loadObjFile(MODEL_PATH "small_house.obj");
 
 	ObjFileLoader shutterObj;
-	result &= shutterObj.readObjFile(MODEL_PATH "room_shutters.obj");
+	result &= shutterObj.loadObjFile(MODEL_PATH "room_shutters.obj");
 
 	if (!result) {
 		std::cout << "Could not open geometry file" << std::endl;

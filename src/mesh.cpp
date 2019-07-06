@@ -11,6 +11,8 @@
 #include <runtime_statistics.h>
 
 manta::Mesh::Mesh() {
+	CHECK_ALIGNMENT(this, 16);
+
 	m_faces = nullptr;
 	m_auxFaceData = nullptr;
 	m_quadFaces = nullptr;

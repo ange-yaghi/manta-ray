@@ -11,9 +11,10 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 
 	Scene scene;
 	RayTracer rayTracer;
+	rayTracer.setMaterialManager(new MaterialManager);
 
 	ObjFileLoader blocksObj;
-	bool result = blocksObj.readObjFile(MODEL_PATH "blocks_floor.obj");
+	bool result = blocksObj.loadObjFile(MODEL_PATH "blocks_floor.obj");
 
 	if (!result) {
 		std::cout << "Could not open geometry file" << std::endl;

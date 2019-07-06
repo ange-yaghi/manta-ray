@@ -149,7 +149,7 @@ manta::SdlParserStructure *manta::SdlBinaryOperator::getImmediateReference(
 	return nullptr;
 }
 
-manta::NodeOutput *manta::SdlBinaryOperator::_generateNodeOutput(SdlContextTree *context) {
+manta::NodeOutput *manta::SdlBinaryOperator::_generateNodeOutput(SdlContextTree *context, NodeProgram *program) {
 	if (m_leftOperand == nullptr || m_rightOperand == nullptr) {
 		// There was a syntax error so this step can be skipped
 		return nullptr;
@@ -161,8 +161,8 @@ manta::NodeOutput *manta::SdlBinaryOperator::_generateNodeOutput(SdlContextTree 
 
 		SdlValueLabel *labelConstant = static_cast<SdlValueLabel *>(m_rightOperand);
 
-		const NodeOutput *leftOutput = m_leftOperand->generateNodeOutput(context);
-		const Node *leftNode = m_leftOperand->generateNode(context);
+		const NodeOutput *leftOutput = m_leftOperand->generateNodeOutput(context, program);
+		const Node *leftNode = m_leftOperand->generateNode(context, program);
 
 		if (leftOutput == nullptr && leftNode == nullptr) return nullptr;
 		if (leftNode != nullptr) {
@@ -182,10 +182,16 @@ manta::NodeOutput *manta::SdlBinaryOperator::_generateNodeOutput(SdlContextTree 
 
 		if (leftOutput != nullptr) {
 			if (m_operator == DOT) {
-				return leftOutput->getInterface()->getOutput(labelConstant->getValue().c_str());
+				return leftOutput
+					->getInterface()
+					->getOutput(labelConstant->getValue().c_str());
 			}
 			else if (m_operator == POINTER) {
-				return leftOutput->getInterface()->getPrimaryOutput()->getInterface()->getOutput(labelConstant->getValue().c_str());
+				return leftOutput
+					->getInterface()
+					->getPrimaryOutput()
+					->getInterface()
+					->getOutput(labelConstant->getValue().c_str());
 			}
 		}
 	}
@@ -194,7 +200,7 @@ manta::NodeOutput *manta::SdlBinaryOperator::_generateNodeOutput(SdlContextTree 
 	return nullptr;
 }
 
-manta::Node *manta::SdlBinaryOperator::_generateNode(SdlContextTree *context) {
+manta::Node *manta::SdlBinaryOperator::_generateNode(SdlContextTree *context, NodeProgram *program) {
 	if (m_leftOperand == nullptr || m_rightOperand == nullptr) {
 		// There was a syntax error so this step can be skipped
 		return nullptr;
@@ -211,7 +217,7 @@ manta::Node *manta::SdlBinaryOperator::_generateNode(SdlContextTree *context) {
 		SdlNode *asNode = reference->getAsNode();
 
 		if (asNode != nullptr) {
-			return asNode->generateNode(info.newContext);
+			return asNode->generateNode(info.newContext, program);
 		}
 	}
 

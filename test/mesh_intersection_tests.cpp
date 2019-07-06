@@ -13,7 +13,7 @@ using namespace manta;
 
 TEST(MeshIntersectionTests, MeshIntersectionSanityCheck) {
 	ObjFileLoader singleTriangleObj;
-	bool result = singleTriangleObj.readObjFile("../../../test/geometry/single_triangle.obj");
+	bool result = singleTriangleObj.loadObjFile("../../../test/geometry/single_triangle.obj");
 
 	Mesh mesh;
 	mesh.loadObjFileData(&singleTriangleObj);
@@ -36,7 +36,7 @@ TEST(MeshIntersectionTests, MeshIntersectionSanityCheck) {
 
 TEST(MeshIntersectionTests, MeshIntersectionSanityCheckOppositeSide) {
 	ObjFileLoader singleTriangleObj;
-	bool result = singleTriangleObj.readObjFile("../../../test/geometry/single_triangle.obj");
+	bool result = singleTriangleObj.loadObjFile("../../../test/geometry/single_triangle.obj");
 
 	Mesh mesh;
 	mesh.loadObjFileData(&singleTriangleObj);
@@ -59,7 +59,7 @@ TEST(MeshIntersectionTests, MeshIntersectionSanityCheckOppositeSide) {
 
 TEST(MeshIntersectionTests, MeshIntersectionSanityCheckNoHit) {
 	ObjFileLoader singleTriangleObj;
-	bool result = singleTriangleObj.readObjFile("../../../test/geometry/single_triangle.obj");
+	bool result = singleTriangleObj.loadObjFile("../../../test/geometry/single_triangle.obj");
 
 	Mesh mesh;
 	mesh.loadObjFileData(&singleTriangleObj);
@@ -81,7 +81,7 @@ TEST(MeshIntersectionTests, MeshIntersectionSanityCheckNoHit) {
 
 TEST(MeshIntersectionTests, MeshIntersectionCheckVertex) {
 	ObjFileLoader singleTriangleObj;
-	bool result = singleTriangleObj.readObjFile("../../../test/geometry/single_triangle.obj");
+	bool result = singleTriangleObj.loadObjFile("../../../test/geometry/single_triangle.obj");
 
 	Mesh mesh;
 	mesh.loadObjFileData(&singleTriangleObj);
@@ -104,7 +104,7 @@ TEST(MeshIntersectionTests, MeshIntersectionCheckVertex) {
 
 TEST(MeshIntersectionTests, MeshIntersectionSideIntersection) {
 	ObjFileLoader singleTriangleObj;
-	bool result = singleTriangleObj.readObjFile("../../../test/geometry/single_triangle.obj");
+	bool result = singleTriangleObj.loadObjFile("../../../test/geometry/single_triangle.obj");
 
 	Mesh mesh;
 	mesh.loadObjFileData(&singleTriangleObj);
@@ -126,7 +126,7 @@ TEST(MeshIntersectionTests, MeshIntersectionSideIntersection) {
 
 TEST(MeshIntersectionTests, PlaneWithQuads) {
 	ObjFileLoader planeObj;
-	bool result = planeObj.readObjFile("../../../test/geometry/plane.obj");
+	bool result = planeObj.loadObjFile("../../../test/geometry/plane.obj");
 
 	Mesh mesh;
 	mesh.loadObjFileData(&planeObj);
@@ -192,7 +192,7 @@ TEST(MeshIntersectionTests, PlaneWithQuads) {
 
 TEST(MeshIntersectionTests, MeshIntersectionQuadsSanityCheck) {
 	ObjFileLoader singleTriangleObj;
-	bool result = singleTriangleObj.readObjFile("../../../test/geometry/plane.obj");
+	bool result = singleTriangleObj.loadObjFile("../../../test/geometry/plane.obj");
 
 	Mesh mesh;
 	mesh.loadObjFileData(&singleTriangleObj);
@@ -257,7 +257,7 @@ TEST(MeshIntersectionTests, MeshIntersectionQuadsSanityCheck) {
 
 TEST(MeshIntersectionTests, MeshIntersectionQuadsObliqueCheck) {
 	ObjFileLoader singleTriangleObj;
-	bool result = singleTriangleObj.readObjFile("../../../test/geometry/plane.obj");
+	bool result = singleTriangleObj.loadObjFile("../../../test/geometry/plane.obj");
 
 	Mesh mesh;
 	mesh.loadObjFileData(&singleTriangleObj);
