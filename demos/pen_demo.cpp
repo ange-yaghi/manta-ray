@@ -13,6 +13,8 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	constexpr bool ENABLE_FRAUNHOFER_DIFFRACTION = true;
 
 	RayTracer rayTracer;
+	rayTracer.setMaterialManager(new MaterialManager);
+
 	Scene scene;
 
 	// Load all textures
@@ -38,7 +40,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 
 	// Load all object files
 	ObjFileLoader penObj;
-	bool result = penObj.readObjFile(MODEL_PATH "pen.obj");
+	bool result = penObj.loadObjFile(MODEL_PATH "pen.obj");
 
 	if (!result) {
 		std::cout << "Could not open geometry file(s)" << std::endl;

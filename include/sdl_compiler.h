@@ -26,7 +26,7 @@ namespace manta {
 		const SdlErrorList *getErrorList() const { return &m_errorList; }
 
 	protected:
-		SdlCompilationUnit *build(const SdlPath &scriptPath);
+		SdlCompilationUnit *analyze(const SdlPath &scriptPath);
 		bool isPathEquivalent(const SdlPath &a, const SdlPath &b) const;
 
 		static bool hasEnding(std::string const &fullString, std::string const &ending);

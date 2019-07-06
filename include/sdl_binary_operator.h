@@ -29,8 +29,8 @@ namespace manta {
 		virtual SdlParserStructure *getImmediateReference(const SdlReferenceQuery &query, SdlReferenceInfo *output);
 
 	protected:
-		virtual NodeOutput *_generateNodeOutput(SdlContextTree *context);
-		virtual Node *_generateNode(SdlContextTree *context);
+		virtual NodeOutput *_generateNodeOutput(SdlContextTree *context, NodeProgram *program);
+		virtual Node *_generateNode(SdlContextTree *context, NodeProgram *program);
 
 	protected:
 		OPERATOR m_operator;

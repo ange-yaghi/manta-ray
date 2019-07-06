@@ -19,6 +19,13 @@ manta::SdlCompilationUnit::~SdlCompilationUnit() {
 	m_parser = nullptr;
 }
 
+void manta::SdlCompilationUnit::build(NodeProgram *program) {
+	int nodeCount = getNodeCount();
+	for (int i = 0; i < nodeCount; i++) {
+		m_nodes[i]->generateNode(nullptr, program);
+	}
+}
+
 manta::SdlCompilationUnit::ParseResult manta::SdlCompilationUnit::parseFile(const Path &filename, 
 																		SdlCompilationUnit *topLevel) {
 	m_path = filename;

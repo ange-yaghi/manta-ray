@@ -14,10 +14,11 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 
 	Scene scene;
 	RayTracer rayTracer;
+	rayTracer.setMaterialManager(new MaterialManager);
 
 	// Load all object files
 	ObjFileLoader stressSpidersObj;
-	bool result = stressSpidersObj.readObjFile(MODEL_PATH "stress_spiders.obj");
+	bool result = stressSpidersObj.loadObjFile(MODEL_PATH "stress_spiders.obj");
 
 	if (!result) {
 		std::cout << "Could not open geometry file" << std::endl;

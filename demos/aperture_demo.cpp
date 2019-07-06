@@ -11,9 +11,10 @@ void manta_demo::apertureDemo(int samplesPerPixel, int resolutionX, int resoluti
 
 	Scene scene;
 	RayTracer rayTracer;
+	rayTracer.setMaterialManager(new MaterialManager);
 
 	ObjFileLoader blocksObj;
-	bool result = blocksObj.readObjFile(MODEL_PATH "aperture_test.obj");
+	bool result = blocksObj.loadObjFile(MODEL_PATH "aperture_test.obj");
 
 	if (!result) {
 		std::cout << "Could not open geometry file" << std::endl;

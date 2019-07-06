@@ -15,8 +15,9 @@ namespace manta {
 	class SdlCompilationUnit;
 	class SdlAttribute;
 	class SdlAttributeDefinition;
-	class Node;
 	class SdlContextTree;
+	class Node;
+	class NodeProgram;
 
 	class SdlNode : public SdlParserStructure {
 	public:
@@ -74,7 +75,7 @@ namespace manta {
 		SdlNodeDefinition *m_definition;
 
 	public:
-		Node *generateNode(SdlContextTree *context = nullptr);
+		Node *generateNode(SdlContextTree *context, NodeProgram *program);
 
 	protected:
 		struct NodeTableEntry {
@@ -85,7 +86,7 @@ namespace manta {
 		NodeTableEntry *getTableEntry(SdlContextTree *context);
 		NodeTableEntry *newTableEntry(SdlContextTree *context);
 
-		std::vector<NodeTableEntry> m_nodeTable;
+		std::vector<NodeTableEntry *> m_nodeTable;
 	};
 
 } /* namespace manta */

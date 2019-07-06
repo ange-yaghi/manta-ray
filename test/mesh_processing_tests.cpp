@@ -12,7 +12,7 @@ using namespace manta;
 
 TEST(MeshProcessingTests, NoQuadSanityTest) {
 	ObjFileLoader singleTriangleObj;
-	bool result = singleTriangleObj.readObjFile("../../../test/geometry/single_triangle.obj");
+	bool result = singleTriangleObj.loadObjFile("../../../test/geometry/single_triangle.obj");
 
 	Mesh mesh;
 	mesh.loadObjFileData(&singleTriangleObj);
@@ -30,7 +30,7 @@ TEST(MeshProcessingTests, NoQuadSanityTest) {
 
 TEST(MeshProcessingTests, CubeTest) {
 	ObjFileLoader cubeObj;
-	bool result = cubeObj.readObjFile("../../../test/geometry/cube.obj");
+	bool result = cubeObj.loadObjFile("../../../test/geometry/cube.obj");
 
 	Mesh mesh;
 	mesh.loadObjFileData(&cubeObj);
@@ -50,7 +50,7 @@ TEST(MeshProcessingTests, CubeTest) {
 
 TEST(MeshProcessingTests, DoubleCubeTest) {
 	ObjFileLoader cubeObj;
-	bool result = cubeObj.readObjFile("../../../test/geometry/two_cubes.obj");
+	bool result = cubeObj.loadObjFile("../../../test/geometry/two_cubes.obj");
 
 	Mesh mesh;
 	mesh.loadObjFileData(&cubeObj);
@@ -70,7 +70,7 @@ TEST(MeshProcessingTests, DoubleCubeTest) {
 
 TEST(MeshProcessingTests, PlaneTest) {
 	ObjFileLoader cubeObj;
-	bool result = cubeObj.readObjFile("../../../test/geometry/plane.obj");
+	bool result = cubeObj.loadObjFile("../../../test/geometry/plane.obj");
 
 	Mesh mesh;
 	mesh.loadObjFileData(&cubeObj);

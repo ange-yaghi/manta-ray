@@ -53,3 +53,18 @@ manta::SdlParserStructure *manta::SdlContextTree::resolveDefinition(SdlAttribute
 
 	return nullptr;
 }
+
+bool manta::SdlContextTree::isEqual(const SdlContextTree *ref) const {
+	const SdlContextTree *currentRefNode = ref;
+	const SdlContextTree *currentNode = this;
+
+	while (true) {
+		if (currentNode->getContext() != currentRefNode->getContext()) return false;
+		if (currentNode->getContext() == nullptr || currentRefNode->getContext() == nullptr) break;
+
+		currentRefNode = currentRefNode->getParent();
+		currentNode = currentNode->getParent();
+	}
+
+	return (currentNode->getContext() == currentRefNode->getContext());
+}
