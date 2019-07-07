@@ -7,34 +7,23 @@ namespace manta {
 
 	class NodeType {
 	public:
-		NodeType() { initialize(""); }
-		NodeType(const char *type) { initialize(type); }
-		~NodeType() {}
+		NodeType();
+		NodeType(const char *type, const NodeType *parent = nullptr);
+		~NodeType();
 
-		void initialize(const char *type) { m_typeString = type; m_hash = generateHash(type); }
+		void initialize(const char *type, const NodeType *parent);
 
 	public:
 		const char *getType() const { return m_typeString; }
-
-		bool operator==(const NodeType &t) const {
-			bool hashCheck = (m_hash == t.m_hash);
-			if (!hashCheck) return false;
-			else return (strcmp(t.m_typeString, m_typeString) == 0);
-		}
+		bool isCompatibleWith(const NodeType &t) const;
+		bool operator==(const NodeType &t) const;
 
 	private:
-		static int generateHash(const char *string) {
-			// Simple hash for now
-			int sum = 0, i = 0;
-			while (string[i] != '\0') {
-				sum += (int)string[i++];
-			}
-			return sum;
-		}
-
+		static int generateHash(const char *string);
 		int getHash() const { return m_hash; }
 
 	private:
+		const NodeType *m_parent;
 		int m_hash;
 		const char *m_typeString;
 	};

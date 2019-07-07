@@ -1,13 +1,13 @@
 #ifndef MESH_NODE_OUTPUT_H
 #define MESH_NODE_OUTPUT_H
 
-#include <node_output.h>
+#include <scene_geometry_node_output.h>
 
 #include <mesh.h>
 
 namespace manta {
 
-	class MeshNodeOutput : public NodeOutput {
+	class MeshNodeOutput : public SceneGeometryNodeOutput {
 	public:
 		static const NodeType MeshNodeType;
 
@@ -15,11 +15,8 @@ namespace manta {
 		MeshNodeOutput();
 		virtual ~MeshNodeOutput();
 
-		Mesh *getMesh() const { return m_mesh; }
-		void setMesh(Mesh *mesh) { m_mesh = mesh; }
-
-	protected:
-		Mesh *m_mesh;
+		Mesh *getMesh() const;
+		void setMesh(Mesh *mesh);
 	};
 
 } /* namespace manta */

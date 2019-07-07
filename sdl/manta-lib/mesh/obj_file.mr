@@ -17,5 +17,5 @@ public node ObjFile => __builtin__ObjFile {
     input filename;
 
     @doc = "Output mesh"
-    output mesh: [null::NullInterface];
+    default output mesh: [null::NullInterface];
 }

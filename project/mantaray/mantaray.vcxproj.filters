@@ -822,6 +822,15 @@
     <ClCompile Include="..\..\src\constructed_float_node.cpp">
       <Filter>Source Files\nodes\library\sdl</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\node_type.cpp">
+      <Filter>Source Files\nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\scene_geometry_node_output.cpp">
+      <Filter>Source Files\nodes\output-ports\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kd_tree_node.cpp">
+      <Filter>Source Files\nodes\library\sdl</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\sphere_primitive.h">
@@ -1318,6 +1327,12 @@
     </ClInclude>
     <ClInclude Include="..\..\include\constructed_float_node_output.h">
       <Filter>Header Files\nodes\output-ports\atomic-types\single</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\scene_geometry_node_output.h">
+      <Filter>Header Files\nodes\output-ports\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\kd_tree_node.h">
+      <Filter>Header Files\nodes\library\sdl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

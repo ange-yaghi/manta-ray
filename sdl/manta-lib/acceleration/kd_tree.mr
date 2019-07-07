@@ -1,0 +1,16 @@
+module {
+    @name           = "MantaRay KD Tree"
+    @author         = "Ange Yaghi"
+    @maintainer     = "Ange Yaghi"
+    @copyright      = "Copyright 2019, Ange Yaghi"
+    @doc            = "Accelerates ray intersection with a mesh object"
+    @version        = "0.0.1a"
+    @github         = "github.com/ange-yaghi/manta-ray"
+}
+
+@doc = "KD Tree to accelerate intersection detection"
+public node KdTree => __builtin__KdTree {
+
+    @doc = "Mesh to construct a KD tree with"
+    input mesh;
+}
