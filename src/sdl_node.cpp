@@ -23,6 +23,7 @@
 #include <ggx_distribution.h>
 #include <microfacet_reflection_bsdf.h>
 #include <obj_file_node.h>
+#include <kd_tree_node.h>
 #include <node_program.h>
 
 manta::SdlNode::SdlNode() {
@@ -413,6 +414,9 @@ manta::Node *manta::SdlNode::generateNode(SdlContextTree *context, NodeProgram *
 		}
 		else if (definition->getBuiltinName() == "__builtin__ObjFile") {
 			newNode = StandardAllocator::Global()->allocate<ObjFileNode>();
+		}
+		else if (definition->getBuiltinName() == "__builtin__KdTree") {
+			newNode = StandardAllocator::Global()->allocate<KdTreeNode>();
 		}
 	}
 	else {

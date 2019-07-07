@@ -8,7 +8,9 @@ private node settings {
 private node object_data {
     input settings;
 
-    ObjFile(settings.model_path)
+    KdTree(
+        mesh: ObjFile(settings.model_path)
+    )
 }
 
 private node material_library {
