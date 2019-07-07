@@ -40,22 +40,18 @@ void manta_demo::sdlDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 
 	// Create all scene geometry
 	Mesh *boxCity = static_cast<ObjFileNode *>(program.getNode(1))->getMesh();
+	KDTree *boxKdTree = static_cast<KdTreeNode *>(program.getNode(2))->getKdTree();
 
 	SpherePrimitive outdoorTopLightGeometry;
 	outdoorTopLightGeometry.setRadius((math::real)10.0);
 	outdoorTopLightGeometry.setPosition(math::loadVector(20.f, 30.0f, -13.5f));
 
-	// Create scene objects
-	KDTree kdtree;
-	kdtree.initialize(1000.0f, math::constants::Zero);
-	kdtree.analyzeWithProgress(boxCity, 2);
-
 	if (WRITE_KDTREE_TO_FILE) {
-		kdtree.writeToObjFile("../../workspace/test_results/box_city_kdtree.obj");
+		boxKdTree->writeToObjFile("../../workspace/test_results/box_city_kdtree.obj");
 	}
 
 	SceneObject *boxCityObject = scene.createSceneObject();
-	if (USE_ACCELERATION_STRUCTURE) boxCityObject->setGeometry(&kdtree);
+	if (USE_ACCELERATION_STRUCTURE) boxCityObject->setGeometry(boxKdTree);
 	else boxCityObject->setGeometry(boxCity);
 	boxCityObject->setDefaultMaterial(defaultMaterial);
 
@@ -165,7 +161,7 @@ void manta_demo::sdlDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 
 	boxCity->destroy();
 	//boxCityObj.destroy();
-	kdtree.destroy();
+	//kdtree.destroy();
 	polygonalAperture.destroy();
 
 	std::cout << "Standard allocator memory leaks:     " << StandardAllocator::Global()->getLedger() << ", " << StandardAllocator::Global()->getCurrentUsage() << std::endl;

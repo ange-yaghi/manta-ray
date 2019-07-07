@@ -64,6 +64,7 @@
 #include <step_node.h>
 #include <material_manager.h>
 #include <obj_file_node.h>
+#include <kd_tree_node.h>
 
 namespace manta_demo {
 

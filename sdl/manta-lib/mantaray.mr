@@ -17,6 +17,8 @@ public import "microfacet-models/phong_bsdf.mr"
 
 public import "mesh/obj_file.mr"
 
+public import "acceleration/kd_tree.mr"
+
 public import "materials/simple_bsdf_material.mr"
 
 public import "color/color.mr"
