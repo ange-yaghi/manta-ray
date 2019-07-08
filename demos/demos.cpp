@@ -1,4 +1,4 @@
-#include <demos.h>
+#include "demos.h"
 
 void manta_demo::runDemo(DEMO demo, int samplesPerPixel, int resolutionX, int resolutionY) {
 	switch (demo) {
