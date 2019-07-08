@@ -9,7 +9,8 @@ import sys
 import os
 import os.path
 import shutil
-from distutils.dir_util import copy_tree
+import distutils
+import distutils.dir_util
 from standard_logging import *
 
 SCRIPT_PATH = os.path.dirname(os.path.realpath(__file__))
@@ -31,7 +32,7 @@ def make_directory(name):
 def copy_piranha():
     log("INFO", "Copying local Piranha build")
     try:
-        copy_tree(PIRANHA_BUILD, DEPENDENCY_PATH)
+        distutils.dir_util.copy_tree(PIRANHA_BUILD, DEPENDENCY_PATH)
         log("INFO", "Found local Piranha build; merging it with dependencies")
 
         # Get build info from the info file
@@ -46,7 +47,7 @@ def copy_piranha():
         
         log("INFO", ', '.join(info_elements))
 
-    except FileNotFoundError as e:
+    except (FileNotFoundError, distutils.errors.DistutilsFileError):
         log("INFO", "Local Piranha build not found; using what's already present in dependencies")
 
 
