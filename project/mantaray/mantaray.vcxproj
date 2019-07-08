@@ -379,14 +379,14 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -421,24 +421,32 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)\..\autogen\;$(SolutionDir)\..\dependencies\libraries\flex\include;$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\..\Common\SDL2-2.0.9\include;$(SolutionDir)\..\include;$(IncludePath);$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include</IncludePath>
+    <IncludePath>$(ProjectDir)\..\..\dependencies\libraries\SDL\include;$(SolutionDir)\..\autogen\;$(SolutionDir)\..\dependencies\libraries\flex\include;$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\..\Common\SDL2-2.0.9\include;$(SolutionDir)\..\include;$(IncludePath);$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include</IncludePath>
     <LibraryPath>$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\x86;$(SolutionDir)\..\..\Common\SDL2-2.0.9\lib\x86;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)$(PlatformTarget)\$(Configuration)\</OutDir>
+    <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)\..\autogen\;$(SolutionDir)\..\dependencies\libraries\flex\include;$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\SDL\include;$(SolutionDir)\..\include;$(IncludePath);$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include</IncludePath>
+    <IncludePath>$(ProjectDir)\..\..\dependencies\libraries\SDL\include;$(SolutionDir)\..\autogen\;$(SolutionDir)\..\dependencies\libraries\flex\include;$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\SDL\include;$(SolutionDir)\..\include;$(IncludePath);$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include</IncludePath>
     <LibraryPath>$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\x64;$(SolutionDir)\..\dependencies\libraries\SDL\lib\x64;$(LibraryPath)</LibraryPath>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
+    <OutDir>$(SolutionDir)$(PlatformTarget)\$(Configuration)\</OutDir>
+    <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\x86;$(SolutionDir)\..\..\Common\SDL2-2.0.9\lib\x86;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)\..\autogen\;$(SolutionDir)\..\dependencies\libraries\flex\include;$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\..\Common\SDL2-2.0.9\include;$(SolutionDir)\..\include;$(IncludePath);$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include</IncludePath>
+    <IncludePath>$(ProjectDir)\..\..\dependencies\libraries\SDL\include;$(SolutionDir)\..\autogen\;$(SolutionDir)\..\dependencies\libraries\flex\include;$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\..\Common\SDL2-2.0.9\include;$(SolutionDir)\..\include;$(IncludePath);$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include</IncludePath>
+    <OutDir>$(SolutionDir)$(PlatformTarget)\$(Configuration)\</OutDir>
+    <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)\..\autogen\;$(SolutionDir)\..\dependencies\libraries\flex\include;$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\SDL\include;$(SolutionDir)\..\include;$(IncludePath);$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include</IncludePath>
+    <IncludePath>$(ProjectDir)\..\..\dependencies\libraries\SDL\include;$(SolutionDir)\..\autogen\;$(SolutionDir)\..\dependencies\libraries\flex\include;$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\SDL\include;$(SolutionDir)\..\include;$(IncludePath);$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include</IncludePath>
     <LibraryPath>$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\x64;$(SolutionDir)\..\dependencies\libraries\SDL\lib\x64;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)$(PlatformTarget)\$(Configuration)\</OutDir>
+    <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -459,8 +467,13 @@
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <PreBuildEvent>
-      <Command>$(SolutionDir)/../scripts/compile_flex_bison.bat</Command>
+      <Command>py $(SolutionDir)\..\scripts\run_batch_file.py compile_flex_bison.bat
+py $(SolutionDir)\..\scripts\get_piranha.py</Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>py $(SolutionDir)\..\scripts\increment_build_version.py
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -478,18 +491,20 @@
       <AdditionalDependencies>SDL2.lib;OpenCL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>python $(TargetDir)..\..\..\scripts\increment_build_version.py</Command>
+      <Command>py $(SolutionDir)\..\scripts\increment_build_version.py
+</Command>
     </PostBuildEvent>
     <Lib>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <PreBuildEvent>
-      <Command>$(SolutionDir)/../scripts/compile_flex_bison.bat</Command>
+      <Command>py $(SolutionDir)\..\scripts\run_batch_file.py compile_flex_bison.bat
+py $(SolutionDir)\..\scripts\get_piranha.py</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -509,8 +524,13 @@
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <PreBuildEvent>
-      <Command>$(SolutionDir)/../scripts/compile_flex_bison.bat</Command>
+      <Command>py $(SolutionDir)\..\scripts\run_batch_file.py compile_flex_bison.bat
+py $(SolutionDir)\..\scripts\get_piranha.py</Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>py $(SolutionDir)\..\scripts\increment_build_version.py
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -532,13 +552,15 @@
       <AdditionalDependencies>SDL2.lib;OpenCL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>python $(TargetDir)..\..\..\scripts\increment_build_version.py</Command>
+      <Command>py $(SolutionDir)\..\scripts\increment_build_version.py
+</Command>
     </PostBuildEvent>
     <Lib>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <PreBuildEvent>
-      <Command>$(SolutionDir)/../scripts/compile_flex_bison.bat</Command>
+      <Command>py $(SolutionDir)\..\scripts\run_batch_file.py compile_flex_bison.bat
+py $(SolutionDir)\..\scripts\get_piranha.py</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -9,6 +9,7 @@ from os import listdir
 from os.path import isfile, join
 
 from datetime import datetime, date, time
+from standard_logging import *
 
 def get_file_line_count(filename):
     f = open(filename)
@@ -37,7 +38,7 @@ def scan_directory(root_path, directory, ignore_files, extensions):
 
 
 if __name__ == "__main__":
-    buildVersion = 0
+    build_version = 0
     line_count = 0
     buildLog = []
 
@@ -66,7 +67,7 @@ if __name__ == "__main__":
             match = re.search('BUILD VERSION:\s*(\d+)', fileVersionLine)
 
             if match is not None:
-                buildVersion = int(match.group(1))
+                build_version = int(match.group(1))
             
             # Save the build log
             for line in f:
@@ -82,13 +83,19 @@ if __name__ == "__main__":
             pass
         
     # Increment the build version
-    buildVersion += 1
+    build_version += 1
     
     # Calculate line count    
     ignoreFiles = ['sqlite3ext.h', 'sqlite3.h', 'shell.c', 'sqlite3.c']
 
     for directory in directories:
         line_count += scan_directory(mypath, directory, ignoreFiles, extensions)
+
+    print_full_header("Build Statistics")
+    print("INFO: Compiling and logging statistics")
+    print("INFO: Build number:  {}".format(build_version))
+    print("INFO: Lines of code: {}".format(line_count))
+    print_footer()
         
     # Rewrite the file
     f = open(mypath + '/workspace/tracking/build_version.txt', 'w')
@@ -96,11 +103,11 @@ if __name__ == "__main__":
     f.write('MantaRay 2019 Build Information\n')
     f.write('Ange Yaghi | 2019\n')
     
-    f.write('BUILD VERSION: %d\n\n' % (buildVersion))
+    f.write('BUILD VERSION: %d\n\n' % (build_version))
     
     dt = datetime.now()   
     dateString = dt.strftime('%Y-%m-%d %H:%M')
-    f.write('Build\t%s\t%d\t%d\n' % (dateString, line_count, buildVersion))
+    f.write('Build\t%s\t%d\t%d\n' % (dateString, line_count, build_version))
     
     for logEntry in buildLog:
         f.write(logEntry)

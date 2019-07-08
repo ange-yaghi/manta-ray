@@ -94,23 +94,33 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)\..\demos;$(SolutionDir)\..\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)$(Platform)\$(Configuration)\;$(SolutionDir)\..\dependencies\libraries\SDL\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\boost-filesystem\lib\$(PlatformTarget)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\..\include;$(SolutionDir)\..\demos;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\$(Platform)\$(Configuration)\;$(SolutionDir)\..\dependencies\libraries\SDL\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\boost-filesystem\lib\$(PlatformTarget)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <ReferencePath>$(ReferencePath)</ReferencePath>
+    <OutDir>$(SolutionDir)\$(PlatformTarget)\$(Configuration)\</OutDir>
+    <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>$(SolutionDir)$(Platform)\$(Configuration)\;$(SolutionDir)\..\dependencies\libraries\SDL\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\boost-filesystem\lib\$(PlatformTarget)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)\$(Platform)\$(Configuration)\;$(SolutionDir)\..\dependencies\libraries\SDL\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\boost-filesystem\lib\$(PlatformTarget)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\..\include;$(SolutionDir)\..\demos;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)\$(PlatformTarget)\$(Configuration)\</OutDir>
+    <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>$(SolutionDir)$(Platform)\$(Configuration)\;$(SolutionDir)\..\dependencies\libraries\SDL\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\boost-filesystem\lib\$(PlatformTarget)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)\$(Platform)\$(Configuration)\;$(SolutionDir)\..\dependencies\libraries\SDL\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\boost-filesystem\lib\$(PlatformTarget)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\..\include;$(SolutionDir)\..\demos;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)\$(PlatformTarget)\$(Configuration)\</OutDir>
+    <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)\..\demos;$(SolutionDir)\..\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)$(Platform)\$(Configuration)\;$(SolutionDir)\..\dependencies\libraries\SDL\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\boost-filesystem\lib\$(PlatformTarget)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\..\include;$(SolutionDir)\..\demos;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\$(Platform)\$(Configuration)\;$(SolutionDir)\..\dependencies\libraries\SDL\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\boost-filesystem\lib\$(PlatformTarget)\$(Configuration)\;$(LibraryPath)</LibraryPath>
     <ReferencePath>$(ReferencePath)</ReferencePath>
+    <OutDir>$(SolutionDir)\$(PlatformTarget)\$(Configuration)\</OutDir>
+    <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -127,10 +137,13 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>mantaray.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>py $(ProjectDir)\..\..\scripts\copy_dlls.py $(PlatformTarget) $(Configuration)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
@@ -141,11 +154,15 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>mantaray.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>py $(ProjectDir)\..\..\scripts\copy_dlls.py $(PlatformTarget) $(Configuration)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -160,7 +177,11 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>mantaray.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>py $(ProjectDir)\..\..\scripts\copy_dlls.py $(PlatformTarget) $(Configuration)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -181,6 +202,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>mantaray.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>py $(ProjectDir)\..\..\scripts\copy_dlls.py $(PlatformTarget) $(Configuration)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
