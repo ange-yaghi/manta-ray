@@ -11,8 +11,8 @@ namespace manta {
 	class RemapNodeOutput : public VectorNodeOutput {
 	public:
 		RemapNodeOutput() {
-			//setDimensions(1);
-			//setDimensionSize(0, 1);
+			setDimensions(1);
+			setDimensionSize(0, 1);
 
 			m_start = math::constants::One;
 			m_end = math::constants::Zero;

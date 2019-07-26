@@ -77,6 +77,7 @@
     <ClCompile Include="..\..\src\stack_allocator.cpp" />
     <ClCompile Include="..\..\src\step_node.cpp" />
     <ClCompile Include="..\..\src\step_node_output.cpp" />
+    <ClCompile Include="..\..\src\streaming_node_output.cpp" />
     <ClCompile Include="..\..\src\string_node_output.cpp" />
     <ClCompile Include="..\..\src\vector_map_2d.cpp" />
     <ClCompile Include="..\..\src\material_manager.cpp" />
@@ -166,6 +167,8 @@
     <ClInclude Include="..\..\include\kd_tree_node.h" />
     <ClInclude Include="..\..\include\float_node_output.h" />
     <ClInclude Include="..\..\include\mesh_node_output.h" />
+    <ClInclude Include="..\..\include\node.h" />
+    <ClInclude Include="..\..\include\streaming_node_output.h" />
     <ClInclude Include="..\..\include\obj_file_node.h" />
     <ClInclude Include="..\..\include\scene_geometry_node_output.h" />
     <ClInclude Include="..\..\include\image_byte_buffer.h" />
@@ -269,7 +272,6 @@
     <ClInclude Include="..\..\include\starburst_approximation.h" />
     <ClInclude Include="..\..\include\texture_node.h" />
     <ClInclude Include="..\..\include\vector_map_2d_node_output.h" />
-    <ClInclude Include="..\..\include\node_output.h" />
     <ClInclude Include="..\..\include\constructed_vector_node.h" />
     <ClInclude Include="..\..\include\vector_node_output.h" />
     <ClInclude Include="..\..\include\vector_split_node.h" />
