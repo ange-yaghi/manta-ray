@@ -12,8 +12,8 @@ namespace manta {
 	class RampNodeOutput : public VectorNodeOutput {
 	public:
 		RampNodeOutput() {
-			//setDimensions(1);
-			//setDimensionSize(0, 1);
+			setDimensions(1);
+			setDimensionSize(0, 1);
 
 			m_input = nullptr;
 			m_foot = nullptr;

@@ -12,8 +12,8 @@ namespace manta {
 	class PowerNodeOutput : public VectorNodeOutput {
 	public:
 		PowerNodeOutput() {
-			//setDimensions(1);
-			//setDimensionSize(0, 1);
+			setDimensions(1);
+			setDimensionSize(0, 1);
 
 			m_input = nullptr;
 			m_powerNode = nullptr;

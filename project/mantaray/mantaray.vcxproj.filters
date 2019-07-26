@@ -696,6 +696,9 @@
     <ClCompile Include="..\..\src\kd_tree_node.cpp">
       <Filter>Source Files\nodes\library\sdl</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\streaming_node_output.cpp">
+      <Filter>Source Files\nodes\output-ports</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\sphere_primitive.h">
@@ -1013,9 +1016,6 @@
     <ClInclude Include="..\..\include\vector_map_2d_node_output.h">
       <Filter>Header Files\nodes\output-ports</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\node_output.h">
-      <Filter>Header Files\nodes\output-ports</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\single_vector_node_output.h">
       <Filter>Header Files\nodes\output-ports</Filter>
     </ClInclude>
@@ -1111,6 +1111,12 @@
     </ClInclude>
     <ClInclude Include="..\..\include\kd_tree_node.h">
       <Filter>Header Files\nodes\library\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\node.h">
+      <Filter>Header Files\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\streaming_node_output.h">
+      <Filter>Header Files\nodes\output-ports</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,5 @@
-#ifndef INTERSECTION_POINT_H
-#define INTERSECTION_POINT_H
+#ifndef MANTARAY_INTERSECTION_POINT_H
+#define MANTARAY_INTERSECTION_POINT_H
 
 #include <manta_math.h>
 #include <media_interface.h>
@@ -23,4 +23,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* INTERSECTION_POINT_H */
+#endif /* MANTARAY_INTERSECTION_POINT_H */
