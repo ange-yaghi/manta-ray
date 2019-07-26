@@ -1,13 +1,13 @@
-#ifndef CONSTRUCTED_STRING_NODE_H
-#define CONSTRUCTED_STRING_NODE_H
+#ifndef MANTARAY_CONSTRUCTED_STRING_NODE_H
+#define MANTARAY_CONSTRUCTED_STRING_NODE_H
 
-#include <node.h>
+#include <piranha.h>
 
-#include <constructed_string_node_output.h>
+#include "constructed_string_node_output.h"
 
 namespace manta {
 
-	class ConstructedStringNode : public Node {
+	class ConstructedStringNode : public piranha::Node {
 	public:
 		ConstructedStringNode();
 		virtual ~ConstructedStringNode();
@@ -26,4 +26,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* CONSTRUCTED_STRING_NODE_H */
+#endif /* MANTARAY_CONSTRUCTED_STRING_NODE_H */

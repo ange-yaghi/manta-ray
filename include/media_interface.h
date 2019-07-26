@@ -1,14 +1,14 @@
-#ifndef MEDIA_INTERFACE_H
-#define MEDIA_INTERFACE_H
+#ifndef MANTARAY_MEDIA_INTERFACE_H
+#define MANTARAY_MEDIA_INTERFACE_H
 
-#include <node.h>
+#include <piranha.h>
 
 #include <media_interface_node_output.h>
 #include <manta_math.h>
 
 namespace manta {
 
-	class MediaInterface : public Node {
+	class MediaInterface : public piranha::Node {
 	public:
 		enum DIRECTION {
 			DIRECTION_IN,
@@ -36,4 +36,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* MEDIA_INTERFACE_H */
+#endif /* MANTARAY_MEDIA_INTERFACE_H */

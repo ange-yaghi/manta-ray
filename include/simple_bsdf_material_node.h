@@ -1,13 +1,13 @@
-#ifndef SIMPLE_BSDF_MATERIAL_NODE_H
-#define SIMPLE_BSDF_MATERIAL_NODE_H
+#ifndef MANTARAY_SIMPLE_BSDF_MATERIAL_NODE_H
+#define MANTARAY_SIMPLE_BSDF_MATERIAL_NODE_H
 
-#include <node.h>
+#include <piranha.h>
 
-#include <srgb_node_output.h>
+#include "srgb_node_output.h"
 
 namespace manta {
 
-	class SimpleBsdfMaterialNode : public Node {
+	class SimpleBsdfMaterialNode : public piranha::Node {
 	public:
 		SimpleBsdfMaterialNode();
 		virtual ~SimpleBsdfMaterialNode();
@@ -23,12 +23,12 @@ namespace manta {
 		virtual void registerInputs();
 
 	protected:
-		pNodeInput m_name;
-		pNodeInput m_bsdf;
-		pNodeInput m_emission;
-		pNodeInput m_reflectance;
+		piranha::pNodeInput m_name;
+        piranha::pNodeInput m_bsdf;
+        piranha::pNodeInput m_emission;
+        piranha::pNodeInput m_reflectance;
 	};
 
 } /* namespace manta */
 
-#endif /* SIMPLE_BSDF_MATERIAL_NODE_H */
+#endif /* MANTARAY_SIMPLE_BSDF_MATERIAL_NODE_H */

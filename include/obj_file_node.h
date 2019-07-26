@@ -1,13 +1,13 @@
-#ifndef OBJ_FILE_NODE_H
-#define OBJ_FILE_NODE_H
+#ifndef MANTARAY_OBJ_FILE_NODE_H
+#define MANTARAY_OBJ_FILE_NODE_H
 
-#include <node.h>
+#include <piranha.h>
 
-#include <mesh_node_output.h>
+#include "mesh_node_output.h"
 
 namespace manta {
 
-	class ObjFileNode : public Node {
+	class ObjFileNode : public piranha::Node {
 	public:
 		ObjFileNode();
 		virtual ~ObjFileNode();
@@ -25,7 +25,7 @@ namespace manta {
 		virtual void registerInputs();
 
 	protected:
-		pNodeInput m_filename;
+		piranha::pNodeInput m_filename;
 		MeshNodeOutput m_output;
 
 	protected:
@@ -34,4 +34,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* OBJ_FILE_NODE_H */
+#endif /* MANTARAY_OBJ_FILE_NODE_H */

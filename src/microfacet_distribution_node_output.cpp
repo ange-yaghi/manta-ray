@@ -1,3 +1,3 @@
-#include <microfacet_distribution_node_output.h>
+#include "../include/microfacet_distribution_node_output.h"
 
-const manta::NodeType manta::MicrofacetDistributionNodeOutput::MicrofacetDistributionNodeType("MicrofacetDistributionNodeType");
+const piranha::ChannelType manta::MicrofacetDistributionNodeOutput::MicrofacetDistributionNodeType("MicrofacetDistributionNodeType");

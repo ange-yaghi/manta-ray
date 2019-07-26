@@ -1,7 +1,7 @@
-#ifndef GGX_DISTRIBUTION_H
-#define GGX_DISTRIBUTION_H
+#ifndef MANTARAY_GGX_DISTRIBUTION_H
+#define MANTARAY_GGX_DISTRIBUTION_H
 
-#include <microfacet_distribution.h>
+#include "microfacet_distribution.h"
 
 namespace manta {
 
@@ -30,8 +30,8 @@ namespace manta {
 		void setWidth(math::real width) { m_width = width; }
 		math::real getWidth() const { return m_width; }
 
-		void setWidthNode(pNodeInput node) { m_widthNode = node; }
-		pNodeInput getWidthNode() const { return m_widthNode; }
+		void setWidthNode(piranha::pNodeInput node) { m_widthNode = node; }
+        piranha::pNodeInput getWidthNode() const { return m_widthNode; }
 
 		void setMinMapWidth(math::real power) { m_minMapWidth = power; }
 		math::real getMinMapWidth() const { return m_minMapWidth; }
@@ -40,11 +40,11 @@ namespace manta {
 		virtual void registerInputs();
 
 	protected:
-		pNodeInput m_widthNode;
+        piranha::pNodeInput m_widthNode;
 		math::real m_width;
 		math::real m_minMapWidth;
 	};
 
 } /* namespace manta */
 
-#endif /* GGX_DISTRIBUTION_H */
+#endif /* MANTARAY_GGX_DISTRIBUTION_H */

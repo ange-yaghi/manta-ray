@@ -1,13 +1,13 @@
-#ifndef VECTOR_SPLIT_NODE_H
-#define VECTOR_SPLIT_NODE_H
+#ifndef MANTARAY_VECTOR_SPLIT_NODE_H
+#define MANTARAY_VECTOR_SPLIT_NODE_H
 
-#include <node.h>
+#include <piranha.h>
 
 #include <vector_split_node_output.h>
 
 namespace manta {
 
-	class VectorSplitNode : public Node {
+	class VectorSplitNode : public piranha::Node {
 	public:
 		VectorSplitNode();
 		virtual ~VectorSplitNode();
@@ -29,5 +29,5 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* VECTOR_SPLIT_NODE_H */
+#endif /* MANTARAY_VECTOR_SPLIT_NODE_H */
 

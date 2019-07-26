@@ -1,7 +1,7 @@
-#ifndef MICROFACET_DISTRIBUTION_H
-#define MICROFACET_DISTRIBUTION_H
+#ifndef MANTARAY_MICROFACET_DISTRIBUTION_H
+#define MANTARAY_MICROFACET_DISTRIBUTION_H
 
-#include <node.h>
+#include <piranha.h>
 
 #include <manta_math.h>
 #include <intersection_point.h>
@@ -12,7 +12,7 @@ namespace manta {
 	// Forward declarations
 	class StackAllocator;
 
-	class MicrofacetDistribution : public Node {
+	class MicrofacetDistribution : public piranha::Node {
 	public:
 		MicrofacetDistribution();
 		virtual ~MicrofacetDistribution();
@@ -39,4 +39,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* MICROFACET_DISTRIBUTION_H */
+#endif /* MANTARAY_MICROFACET_DISTRIBUTION_H */

@@ -1,13 +1,13 @@
-#ifndef SRGB_NODE_H
-#define SRGB_NODE_H
+#ifndef MANTARAY_SRGB_NODE_H
+#define MANTARAY_SRGB_NODE_H
 
-#include <node.h>
+#include <piranha.h>
 
 #include <srgb_node_output.h>
 
 namespace manta {
 
-	class SrgbNode : public Node {
+	class SrgbNode : public piranha::Node {
 	public:
 		SrgbNode();
 		virtual ~SrgbNode();
@@ -28,4 +28,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* SRGB_NODE_H */
+#endif /* MANTARAY_SRGB_NODE_H */

@@ -1,13 +1,13 @@
-#ifndef CONSTRUCTED_FLOAT_NODE_H
-#define CONSTRUCTED_FLOAT_NODE_H
+#ifndef MANTARAY_CONSTRUCTED_FLOAT_NODE_H
+#define MANTARAY_CONSTRUCTED_FLOAT_NODE_H
 
-#include <node.h>
+#include <piranha.h>
 
-#include <constructed_float_node_output.h>
+#include "constructed_float_node_output.h"
 
 namespace manta {
 
-	class ConstructedFloatNode : public Node {
+	class ConstructedFloatNode : public piranha::Node {
 	public:
 		ConstructedFloatNode();
 		virtual ~ConstructedFloatNode();
@@ -26,4 +26,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* CONSTRUCTED_FLOAT_NODE_H */
+#endif /* MANTARAY_CONSTRUCTED_FLOAT_NODE_H */

@@ -39,6 +39,7 @@ void manta::MultiplyNodeOutput::getDataReference(const void **_target) const {
 }
 
 void manta::MultiplyNodeOutput::_evaluateDimensions() {
+    /*
 	if (m_inputA == nullptr && m_inputB == nullptr) {
 		setDimensions(1);
 		setDimensionSize(0, 1);
@@ -60,5 +61,5 @@ void manta::MultiplyNodeOutput::_evaluateDimensions() {
 		if (m_inputB != nullptr && m_inputB->getSize(i) > size) size = m_inputB->getSize(i);
 
 		setDimensionSize(i, size);
-	}
+	}*/
 }

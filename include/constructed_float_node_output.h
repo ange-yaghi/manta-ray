@@ -1,9 +1,9 @@
-#ifndef CONSTRUCTED_FLOAT_NODE_OUTPUT_H
-#define CONSTRUCTED_FLOAT_NODE_OUTPUT_H
+#ifndef MANTARAY_CONSTRUCTED_FLOAT_NODE_OUTPUT_H
+#define MANTARAY_CONSTRUCTED_FLOAT_NODE_OUTPUT_H
 
-#include <float_node_output.h>
+#include "float_node_output.h"
 
-#include <constructed_float_node_output.h>
+#include "intersection_point.h"
 
 namespace manta {
 
@@ -18,12 +18,12 @@ namespace manta {
 
 		virtual void registerInputs();
 
-		pNodeInput *getInputConnection() { return &m_input; }
+		piranha::pNodeInput *getInputConnection() { return &m_input; }
 
 	protected:
-		pNodeInput m_input;
+        piranha::pNodeInput m_input;
 	};
 
 } /* namespace manta */
 
-#endif /* CONSTRUCTED_FLOAT_NODE_OUTPUT_H */
+#endif /* MANTARAY_CONSTRUCTED_FLOAT_NODE_OUTPUT_H */

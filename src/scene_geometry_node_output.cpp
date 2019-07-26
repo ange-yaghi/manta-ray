@@ -1,6 +1,6 @@
-#include <scene_geometry_node_output.h>
+#include "../include/scene_geometry_node_output.h"
 
-const manta::NodeType manta::SceneGeometryNodeOutput::SceneGeometryNodeType("SceneGeometryNodeType");
+const piranha::ChannelType manta::SceneGeometryNodeOutput::SceneGeometryNodeType("SceneGeometryNodeType");
 
 manta::SceneGeometryNodeOutput::SceneGeometryNodeOutput() 
 	: NodeOutput(&SceneGeometryNodeType) 
@@ -8,7 +8,7 @@ manta::SceneGeometryNodeOutput::SceneGeometryNodeOutput()
 	/* void */
 }
 
-manta::SceneGeometryNodeOutput::SceneGeometryNodeOutput(const NodeType *nodeType) 
+manta::SceneGeometryNodeOutput::SceneGeometryNodeOutput(const piranha::ChannelType *nodeType) 
 	: NodeOutput(nodeType) 
 {
 	/* void */

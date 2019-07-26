@@ -1,15 +1,15 @@
-#ifndef MEDIA_INTERFACE_NODE_OUTPUT_H
-#define MEDIA_INTERFACE_NODE_OUTPUT_H
+#ifndef MANTARAY_MEDIA_INTERFACE_NODE_OUTPUT_H
+#define MANTARAY_MEDIA_INTERFACE_NODE_OUTPUT_H
 
-#include <node_output.h>
+#include <piranha.h>
 
 namespace manta {
 
 	class MediaInterface;
 
-	class MediaInterfaceNodeOutput : public NodeOutput {
+	class MediaInterfaceNodeOutput : public piranha::NodeOutput {
 	protected:
-		static const NodeType MediaInterfaceNodeType;
+        static const piranha::ChannelType MediaInterfaceNodeType;
 
 	public:
 		MediaInterfaceNodeOutput() : NodeOutput(&MediaInterfaceNodeType) {
@@ -31,4 +31,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* MEDIA_INTERFACE_NODE_OUTPUT_H */
+#endif /* MANTARAY_MEDIA_INTERFACE_NODE_OUTPUT_H */

@@ -1,10 +1,10 @@
-#ifndef MULTIPLY_NODE_OUTPUT_H
-#define MULTIPLY_NODE_OUTPUT_H
+#ifndef MANTARAY_MULTIPLY_NODE_OUTPUT_H
+#define MANTARAY_MULTIPLY_NODE_OUTPUT_H
 
-#include <vector_node_output.h>
+#include "vector_node_output.h"
 
-#include <node_type.h>
-#include <manta_math.h>
+#include "manta_math.h"
+#include "intersection_point.h"
 
 namespace manta {
 
@@ -26,11 +26,11 @@ namespace manta {
 		virtual void discreteSample2D(int x, int y, void *target) const;
 		virtual void getDataReference(const void **target) const;
 
-		void setInputA(pNodeInput input) { m_inputA = input; }
-		pNodeInput getInputA() const { return m_inputA; }
+		void setInputA(piranha::pNodeInput input) { m_inputA = input; }
+        piranha::pNodeInput getInputA() const { return m_inputA; }
 
-		void setInputB(pNodeInput input) { m_inputB = input; }
-		pNodeInput getInputB() const { return m_inputB; }
+		void setInputB(piranha::pNodeInput input) { m_inputB = input; }
+        piranha::pNodeInput getInputB() const { return m_inputB; }
 
 		void setDefaultA(const math::Vector &v) { m_defaultA = v; }
 		math::Vector getDefaultA() const { return m_defaultA; }
@@ -38,19 +38,19 @@ namespace manta {
 		void setDefaultB(const math::Vector &v) { m_defaultB = v; }
 		math::Vector getDefaultB() const { return m_defaultB; }
 
-		pNodeInput *getInputAConnection() { return &m_inputA; }
-		pNodeInput *getInputBConnection() { return &m_inputB; }
+        piranha::pNodeInput *getInputAConnection() { return &m_inputA; }
+        piranha::pNodeInput *getInputBConnection() { return &m_inputB; }
 
 	protected:
 		virtual void _evaluateDimensions();
 
 	protected:
-		pNodeInput m_inputA;
-		pNodeInput m_inputB;
+        piranha::pNodeInput m_inputA;
+        piranha::pNodeInput m_inputB;
 		math::Vector m_defaultA;
 		math::Vector m_defaultB;
 	};
 
 } /* namespace manta */
 
-#endif /* MULTIPLY_NODE_OUTPUT_H */
+#endif /* MANTARAY_MULTIPLY_NODE_OUTPUT_H */

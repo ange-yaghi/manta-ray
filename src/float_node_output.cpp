@@ -1,14 +1,15 @@
-#include <float_node_output.h>
+#include "../include/float_node_output.h"
 
-#include <vector_map_2d.h>
+#include "../include/vector_map_2d.h"
 
-const manta::NodeType manta::FloatNodeOutput::FloatType("FloatNodeType");
+const piranha::ChannelType manta::FloatNodeOutput::FloatType("FloatNodeType");
 
 void manta::FloatNodeOutput::fullCompute(void *_target) const {
 	VectorMap2D *target = reinterpret_cast<VectorMap2D *>(_target);
 
 	int width, height;
 
+    /*
 	int dimensions = getDimensions();
 	if (dimensions == 0) {
 		return;
@@ -34,5 +35,5 @@ void manta::FloatNodeOutput::fullCompute(void *_target) const {
 			discreteSample2D(i, j, &v);
 			target->set(v, i, j);
 		}
-	}
+	}*/
 }

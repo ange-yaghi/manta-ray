@@ -1,13 +1,13 @@
-#ifndef STRING_NODE_OUTPUT_H
-#define STRING_NODE_OUTPUT_H
+#ifndef MANTARAY_STRING_NODE_OUTPUT_H
+#define MANTARAY_STRING_NODE_OUTPUT_H
 
-#include <node_output.h>
+#include <piranha.h>
 
 namespace manta {
 
-	class StringNodeOutput : public NodeOutput {
+	class StringNodeOutput : public piranha::NodeOutput {
 	public:
-		static const NodeType StringType;
+		static const piranha::ChannelType StringType;
 
 	public:
 		StringNodeOutput();
@@ -16,4 +16,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* STRING_NODE_OUTPUT_H */
+#endif /* MANTARAY_STRING_NODE_OUTPUT_H */

@@ -1,13 +1,13 @@
-#ifndef FLOAT_NODE_OUTPUT_H
-#define FLOAT_NODE_OUTPUT_H
+#ifndef MANTARAY_FLOAT_NODE_OUTPUT_H
+#define MANTARAY_FLOAT_NODE_OUTPUT_H
 
-#include <node_output.h>
+#include <piranha.h>
 
 namespace manta {
 
-	class FloatNodeOutput: public NodeOutput {
+	class FloatNodeOutput: public piranha::NodeOutput {
 	protected:
-		static const NodeType FloatType;
+		static const piranha::ChannelType FloatType;
 
 	public:
 		FloatNodeOutput() : NodeOutput(&FloatType) {
@@ -23,4 +23,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* FLOAT_NODE_OUTPUT_H */
+#endif /* MANTARAY_FLOAT_NODE_OUTPUT_H */

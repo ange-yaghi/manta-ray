@@ -1,7 +1,7 @@
-#include <constructed_float_node_output.h>
+#include "../include/constructed_float_node_output.h"
 
-#include <float_node_output.h>
-#include <string_node_output.h>
+#include "../include/float_node_output.h"
+#include "../include/string_node_output.h"
 
 #include <sstream>
 

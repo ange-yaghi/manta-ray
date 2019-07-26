@@ -1,3 +1,3 @@
-#include <media_interface_node_output.h>
+#include "../include/media_interface_node_output.h"
 
-const manta::NodeType manta::MediaInterfaceNodeOutput::MediaInterfaceNodeType("MediaInterfaceNodeOutput");
+const piranha::ChannelType manta::MediaInterfaceNodeOutput::MediaInterfaceNodeType("MediaInterfaceNodeOutput");
