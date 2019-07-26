@@ -1,8 +1,8 @@
 #include <single_float_node_output.h>
 
 manta::SingleFloatNodeOutput::SingleFloatNodeOutput() {
-	setDimensions(1);
-	setDimensionSize(0, 1);
+	//setDimensions(1);
+	//setDimensionSize(0, 1);
 
 	m_value = math::constants::Zero;
 }

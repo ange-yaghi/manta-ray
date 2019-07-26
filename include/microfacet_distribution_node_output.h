@@ -1,15 +1,15 @@
-#ifndef MICROFACET_DISTRIBUTION_NODE_OUTPUT_H
-#define MICROFACET_DISTRIBUTION_NODE_OUTPUT_H
+#ifndef MANTARAY_MICROFACET_DISTRIBUTION_NODE_OUTPUT_H
+#define MANTARAY_MICROFACET_DISTRIBUTION_NODE_OUTPUT_H
 
-#include <node_output.h>
+#include <piranha.h>
 
 namespace manta {
 
 	class MicrofacetDistribution;
 
-	class MicrofacetDistributionNodeOutput : public NodeOutput {
+	class MicrofacetDistributionNodeOutput : public piranha::NodeOutput {
 	protected:
-		static const NodeType MicrofacetDistributionNodeType;
+        static const piranha::ChannelType MicrofacetDistributionNodeType;
 
 	public:
 		MicrofacetDistributionNodeOutput() : NodeOutput(&MicrofacetDistributionNodeType) {

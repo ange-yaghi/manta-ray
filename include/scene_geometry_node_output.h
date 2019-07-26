@@ -1,19 +1,19 @@
-#ifndef SCENE_GEOMETRY_NODE_OUTPUT_H
-#define SCENE_GEOMETRY_NODE_OUTPUT_H
+#ifndef MANTARAY_SCENE_GEOMETRY_NODE_OUTPUT_H
+#define MANTARAY_SCENE_GEOMETRY_NODE_OUTPUT_H
 
-#include <node_output.h>
+#include <piranha.h>
 
 namespace manta {
 
 	class SceneGeometry;
 
-	class SceneGeometryNodeOutput : public NodeOutput {
+	class SceneGeometryNodeOutput : public piranha::NodeOutput {
 	public:
-		static const NodeType SceneGeometryNodeType;
+		static const piranha::ChannelType SceneGeometryNodeType;
 
 	public:
 		SceneGeometryNodeOutput();
-		SceneGeometryNodeOutput(const NodeType *nodeType);
+        SceneGeometryNodeOutput(const piranha::ChannelType *nodeType);
 		virtual ~SceneGeometryNodeOutput();
 
 		SceneGeometry *getSceneGeometry() const { return m_sceneGeometry; }
@@ -25,4 +25,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* SCENE_OBJECT_NODE_OUTPUT_H */
+#endif /* MANTARAY_SCENE_OBJECT_NODE_OUTPUT_H */

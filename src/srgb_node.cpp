@@ -1,6 +1,4 @@
-#include <srgb_node.h>
-
-#include <node_output.h>
+#include "../include/srgb_node.h"
 
 manta::SrgbNode::SrgbNode() {
 	/* void */

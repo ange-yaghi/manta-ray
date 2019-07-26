@@ -1,5 +1,5 @@
-#ifndef MESH_NODE_OUTPUT_H
-#define MESH_NODE_OUTPUT_H
+#ifndef MANTARAY_MESH_NODE_OUTPUT_H
+#define MANTARAY_MESH_NODE_OUTPUT_H
 
 #include <scene_geometry_node_output.h>
 
@@ -9,7 +9,7 @@ namespace manta {
 
 	class MeshNodeOutput : public SceneGeometryNodeOutput {
 	public:
-		static const NodeType MeshNodeType;
+		static const piranha::ChannelType MeshNodeType;
 
 	public:
 		MeshNodeOutput();
@@ -21,4 +21,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* MESH_NODE_OUTPUT_H */
+#endif /* MANTARAY_MESH_NODE_OUTPUT_H */

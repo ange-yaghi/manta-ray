@@ -1,15 +1,15 @@
-#ifndef POWER_NODE_H
-#define POWER_NODE_H
+#ifndef MANTARAY_POWER_NODE_H
+#define MANTARAY_POWER_NODE_H
 
-#include <node.h>
+#include <piranha.h>
 
-#include <vector_node_output.h>
-#include <power_node_output.h>
-#include <manta_math.h>
+#include "vector_node_output.h"
+#include "power_node_output.h"
+#include "manta_math.h"
 
 namespace manta {
 
-	class PowerNode : public Node {
+	class PowerNode : public piranha::Node {
 	public:
 		PowerNode();
 		PowerNode(math::real power, VectorNodeOutput *input);
@@ -41,4 +41,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* POWER_NODE_H */
+#endif /* MANTARAY_POWER_NODE_H */

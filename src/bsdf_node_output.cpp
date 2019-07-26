@@ -1,3 +1,3 @@
-#include <bsdf_node_output.h>
+#include "../include/bsdf_node_output.h"
 
-const manta::NodeType manta::BSDFNodeOutput::BSDFNodeType("BSDFNodeType");
+const piranha::ChannelType manta::BSDFNodeOutput::BSDFNodeType("BSDFNodeType");

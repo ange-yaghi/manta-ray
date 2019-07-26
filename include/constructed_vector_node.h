@@ -1,13 +1,13 @@
-#ifndef CONSTRUCTED_VECTOR_NODE_H
-#define CONSTRUCTED_VECTOR_NODE_H
+#ifndef MANTARAY_CONSTRUCTED_VECTOR_NODE_H
+#define MANTARAY_CONSTRUCTED_VECTOR_NODE_H
 
-#include <node.h>
+#include <piranha.h>
 
-#include <constructed_vector_node_output.h>
+#include "constructed_vector_node_output.h"
 
 namespace manta {
 
-	class ConstructedVectorNode : public Node {
+	class ConstructedVectorNode : public piranha::Node {
 	public:
 		ConstructedVectorNode();
 		virtual ~ConstructedVectorNode();
@@ -26,4 +26,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* CONSTRUCTED_VECTOR_NODE_H */
+#endif /* MANTARAY_CONSTRUCTED_VECTOR_NODE_H */

@@ -1,4 +1,4 @@
-#include <remap_node.h>
+#include "../include/remap_node.h"
 
 #include <assert.h>
 
@@ -8,7 +8,7 @@ manta::RemapNode::RemapNode() {
 	m_output.setInput(nullptr);
 }
 
-manta::RemapNode::RemapNode(const math::Vector &start, const math::Vector &end, pNodeInput inputNode) {
+manta::RemapNode::RemapNode(const math::Vector &start, const math::Vector &end, piranha::pNodeInput inputNode) {
 	m_output.setEnd(end);
 	m_output.setStart(start);
 	m_output.setInput(inputNode);

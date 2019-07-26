@@ -1,10 +1,10 @@
-#include <vector_node_output.h>
+#include "../include/vector_node_output.h"
 
-#include <vector_map_2d.h>
-#include <vector_split_node.h>
-#include <standard_allocator.h>
+#include "../include/vector_map_2d.h"
+#include "../include/vector_split_node.h"
+#include "../include/standard_allocator.h"
 
-const manta::NodeType manta::VectorNodeOutput::VectorType("VectorNodeType");
+const piranha::ChannelType manta::VectorNodeOutput::VectorType("VectorNodeType");
 
 manta::VectorNodeOutput::VectorNodeOutput(bool scalar) : NodeOutput(&VectorType) {
 	m_scalar = scalar;
@@ -18,7 +18,7 @@ void manta::VectorNodeOutput::fullCompute(void *_target) const {
 	VectorMap2D *target = reinterpret_cast<VectorMap2D *>(_target);
 
 	int width, height;
-
+    /*
 	int dimensions = getDimensions();
 	if (dimensions == 0) {
 		return;
@@ -44,10 +44,10 @@ void manta::VectorNodeOutput::fullCompute(void *_target) const {
 			discreteSample2D(i, j, &v);
 			target->set(v, i, j);
 		}
-	}
+	}*/
 }
 
-manta::Node *manta::VectorNodeOutput::generateInterface() {
+piranha::Node *manta::VectorNodeOutput::generateInterface() {
 	if (!m_scalar) {
 		VectorSplitNode *vectorInterface = 
 			StandardAllocator::Global()->allocate<VectorSplitNode>(16);

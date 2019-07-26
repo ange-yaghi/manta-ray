@@ -1,8 +1,8 @@
-#include <mesh_node_output.h>
+#include "../include/mesh_node_output.h"
 
-#include <scene_geometry_node_output.h>
+#include "../include/scene_geometry_node_output.h"
 
-const manta::NodeType manta::MeshNodeOutput::MeshNodeType(
+const piranha::ChannelType manta::MeshNodeOutput::MeshNodeType(
 	"MeshNodeType", 
 	&SceneGeometryNodeOutput::SceneGeometryNodeType);
 

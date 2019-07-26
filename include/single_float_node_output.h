@@ -1,7 +1,9 @@
-#ifndef SINGLE_FLOAT_NODE_OUTPUT_H
-#define SINGLE_FLOAT_NODE_OUTPUT_H
+#ifndef PIRANHA_SINGLE_FLOAT_NODE_OUTPUT_H
+#define PIRANHA_SINGLE_FLOAT_NODE_OUTPUT_H
 
-#include <float_node_output.h>
+#include "float_node_output.h"
+
+#include "intersection_point.h"
 
 namespace manta {
 
@@ -23,4 +25,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* SINGLE_FLOAT_NODE_OUTPUT_H */
+#endif /* PIRANHA_SINGLE_FLOAT_NODE_OUTPUT_H */

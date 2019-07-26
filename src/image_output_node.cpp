@@ -1,8 +1,8 @@
-#include <image_output_node.h>
+#include "../include/image_output_node.h"
 
-#include <vector_node_output.h>
-#include <image_byte_buffer.h>
-#include <jpeg_writer.h>
+#include "../include/vector_node_output.h"
+#include "../include/image_byte_buffer.h"
+#include "../include/jpeg_writer.h"
 
 manta::ImageOutputNode::ImageOutputNode() {
 	m_outputFilename = "";

@@ -1,14 +1,14 @@
-#ifndef KD_TREE_NODE_H
-#define KD_TREE_NODE_H
+#ifndef MANTARAY_KD_TREE_NODE_H
+#define MANTARAY_KD_TREE_NODE_H
 
-#include <node.h>
+#include <piranha.h>
 
-#include <scene_geometry_node_output.h>
-#include <kd_tree.h>
+#include "scene_geometry_node_output.h"
+#include "kd_tree.h"
 
 namespace manta {
 
-	class KdTreeNode : public Node {
+	class KdTreeNode : public piranha::Node {
 	public:
 		KdTreeNode();
 		virtual ~KdTreeNode();
@@ -24,7 +24,7 @@ namespace manta {
 		virtual void registerInputs();
 
 	protected:
-		pNodeInput m_meshInput;
+		piranha::pNodeInput m_meshInput;
 		SceneGeometryNodeOutput m_output;
 
 	protected:
@@ -33,4 +33,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* KD_TREE_NODE_H */
+#endif /* MANTARAY_KD_TREE_NODE_H */

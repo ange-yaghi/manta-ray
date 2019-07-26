@@ -1,5 +1,5 @@
-#ifndef PHONG_DISTRIBUTION_H
-#define PHONG_DISTRIBUTION_H
+#ifndef MANTARAY_PHONG_DISTRIBUTION_H
+#define MANTARAY_PHONG_DISTRIBUTION_H
 
 #include <microfacet_distribution.h>
 
@@ -30,8 +30,8 @@ namespace manta {
 		void setPower(math::real power) { m_power = power; }
 		math::real getPower() const { return m_power; }
 
-		void setPowerNode(pNodeInput node) { m_powerNode = node; }
-		pNodeInput getPowerNode() const { return m_powerNode; }
+		void setPowerNode(piranha::pNodeInput node) { m_powerNode = node; }
+        piranha::pNodeInput getPowerNode() const { return m_powerNode; }
 
 		void setMinMapPower(math::real power) { m_minMapPower = power; }
 		math::real getMinMapPower() const { return m_minMapPower; }
@@ -40,11 +40,11 @@ namespace manta {
 		virtual void registerInputs();
 
 	protected:
-		pNodeInput m_powerNode;
+        piranha::pNodeInput m_powerNode;
 		math::real m_power;
 		math::real m_minMapPower;
 	};
 
 } /* namespace manta */
 
-#endif /* PHONG_DISTRIBUTION_H */
+#endif /* MANTARAY_PHONG_DISTRIBUTION_H */

@@ -1,19 +1,19 @@
-#ifndef RAMP_NODE_OUTPUT_H
-#define RAMP_NODE_OUTPUT_H
+#ifndef MANTARAY_RAMP_NODE_OUTPUT_H
+#define MANTARAY_RAMP_NODE_OUTPUT_H
 
-#include <vector_node_output.h>
+#include "vector_node_output.h"
 
-#include <node_type.h>
-#include <manta_math.h>
-#include <vector_map_2d.h>
+#include "manta_math.h"
+#include "vector_map_2d.h"
+#include "intersection_point.h"
 
 namespace manta {
 
 	class RampNodeOutput : public VectorNodeOutput {
 	public:
 		RampNodeOutput() {
-			setDimensions(1);
-			setDimensionSize(0, 1);
+			//setDimensions(1);
+			//setDimensionSize(0, 1);
 
 			m_input = nullptr;
 			m_foot = nullptr;
@@ -56,16 +56,16 @@ namespace manta {
 		static math::Vector ramp(const math::Vector &input, const math::Vector &dc, 
 			const math::Vector &foot, const math::Vector &slope);
 
-		pNodeInput *getInputConnection() { return &m_input; }
-		pNodeInput *getFootConnection() { return &m_foot; }
-		pNodeInput *getSlopeConnection() { return &m_slope; }
-		pNodeInput *getDcConnection() { return &m_dc; }
+		piranha::pNodeInput *getInputConnection() { return &m_input; }
+        piranha::pNodeInput *getFootConnection() { return &m_foot; }
+        piranha::pNodeInput *getSlopeConnection() { return &m_slope; }
+        piranha::pNodeInput *getDcConnection() { return &m_dc; }
 
 	protected:
-		pNodeInput m_input;
-		pNodeInput m_foot;
-		pNodeInput m_slope;
-		pNodeInput m_dc;
+        piranha::pNodeInput m_input;
+        piranha::pNodeInput m_foot;
+        piranha::pNodeInput m_slope;
+        piranha::pNodeInput m_dc;
 		math::Vector m_defaultFoot;
 		math::Vector m_defaultSlope;
 		math::Vector m_defaultDc;
@@ -73,4 +73,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* RAMP_NODE_OUTPUT_H */
+#endif /* MANTARAY_RAMP_NODE_OUTPUT_H */

@@ -1,15 +1,15 @@
-#ifndef BSDF_NODE_OUTPUT_H
-#define BSDF_NODE_OUTPUT_H
+#ifndef MANTARAY_BSDF_NODE_OUTPUT_H
+#define MANTARAY_BSDF_NODE_OUTPUT_H
 
-#include <node_output.h>
+#include <piranha.h>
 
 namespace manta {
 
 	class BSDF;
 
-	class BSDFNodeOutput : public NodeOutput {
+	class BSDFNodeOutput : public piranha::NodeOutput {
 	protected:
-		static const NodeType BSDFNodeType;
+		static const piranha::ChannelType BSDFNodeType;
 
 	public:
 		BSDFNodeOutput() : NodeOutput(&BSDFNodeType) {
@@ -29,4 +29,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* BSDF_NODE_OUTPUT_H */
+#endif /* MANTARAY_BSDF_NODE_OUTPUT_H */

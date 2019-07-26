@@ -1,4 +1,4 @@
-#include <constructed_string_node_output.h>
+#include "../include/constructed_string_node_output.h"
 
 manta::ConstructedStringNodeOutput::ConstructedStringNodeOutput() {
 	/* void */

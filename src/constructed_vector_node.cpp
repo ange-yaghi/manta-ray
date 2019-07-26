@@ -1,6 +1,4 @@
-#include <constructed_vector_node.h>
-
-#include <node_output.h>
+#include "../include/constructed_vector_node.h"
 
 manta::ConstructedVectorNode::ConstructedVectorNode() {
 	/* void */

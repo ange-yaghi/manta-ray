@@ -1,14 +1,14 @@
-#ifndef SINGLE_COLOR_NODE_H
-#define SINGLE_COLOR_NODE_H
+#ifndef MANTARAY_SINGLE_COLOR_NODE_H
+#define MANTARAY_SINGLE_COLOR_NODE_H
 
-#include <node.h>
+#include <piranha.h>
 
-#include <single_vector_node_output.h>
-#include <manta_math.h>
+#include "single_vector_node_output.h"
+#include "manta_math.h"
 
 namespace manta {
 
-	class SingleColorNode : public Node {
+	class SingleColorNode : public piranha::Node {
 	public:
 		SingleColorNode();
 		SingleColorNode(const math::Vector &color);
@@ -33,4 +33,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* SINGLE_COLOR_NODE_H */
+#endif /* MANTARAY_SINGLE_COLOR_NODE_H */

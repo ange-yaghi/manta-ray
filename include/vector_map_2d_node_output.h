@@ -1,11 +1,11 @@
-#ifndef VECTOR_MAP_2D_NODE_OUTPUT_H
-#define VECTOR_MAP_2D_NODE_OUTPUT_H
+#ifndef MANTARAY_VECTOR_MAP_2D_NODE_OUTPUT_H
+#define MANTARAY_VECTOR_MAP_2D_NODE_OUTPUT_H
 
-#include <vector_node_output.h>
+#include "vector_node_output.h"
 
-#include <node_type.h>
-#include <manta_math.h>
-#include <vector_map_2d.h>
+#include "manta_math.h"
+#include "vector_map_2d.h"
+#include "intersection_point.h"
 
 namespace manta {
 
@@ -35,4 +35,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* VECTOR_MAP_2D_NODE_OUTPUT_H */
+#endif /* MANTARAY_VECTOR_MAP_2D_NODE_OUTPUT_H */

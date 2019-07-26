@@ -1,9 +1,8 @@
-#include <obj_file_node.h>
+#include "../include/obj_file_node.h"
 
-#include <string_node_output.h>
-#include <obj_file_loader.h>
-#include <mesh.h>
-#include <node_program.h>
+#include "../include/string_node_output.h"
+#include "../include/obj_file_loader.h"
+#include "../include/mesh.h"
 
 #include <string>
 
@@ -27,7 +26,8 @@ void manta::ObjFileNode::_evaluate() {
 	loader.loadObjFile(filename.c_str());
 
 	Mesh *mesh = new Mesh;
-	mesh->loadObjFileData(&loader, getProgram()->getMaterialManager());
+    // TODO
+	//mesh->loadObjFileData(&loader, getProgram()->getMaterialManager());
 
 	m_output.setMesh(mesh);
 	m_mesh = mesh;

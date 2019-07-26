@@ -1,7 +1,9 @@
-#ifndef SINGLE_STRING_NODE_OUTPUT_H
-#define SINGLE_STRING_NODE_OUTPUT_H
+#ifndef MANTARAY_SINGLE_STRING_NODE_OUTPUT_H
+#define MANTARAY_SINGLE_STRING_NODE_OUTPUT_H
 
-#include <string_node_output.h>
+#include "string_node_output.h"
+
+#include "intersection_point.h"
 
 #include <string>
 
@@ -25,4 +27,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* SINGLE_STRING_NODE_OUTPUT_H */
+#endif /* MANTARAY_SINGLE_STRING_NODE_OUTPUT_H */

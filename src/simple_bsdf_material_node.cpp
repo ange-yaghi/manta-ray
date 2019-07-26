@@ -1,9 +1,8 @@
-#include <simple_bsdf_material_node.h>
+#include "../include/simple_bsdf_material_node.h"
 
-#include <simple_bsdf_material.h>
-#include <material_manager.h>
-#include <bsdf_node_output.h>
-#include <node_program.h>
+#include "../include/simple_bsdf_material.h"
+#include "../include/material_manager.h"
+#include "../include/bsdf_node_output.h"
 
 manta::SimpleBsdfMaterialNode::SimpleBsdfMaterialNode() {
 	/* void */
@@ -18,10 +17,11 @@ void manta::SimpleBsdfMaterialNode::_initialize() {
 }
 
 void manta::SimpleBsdfMaterialNode::_evaluate() {
-	SimpleBSDFMaterial *newMaterial = 
-		getProgram()
-		->getMaterialManager()
-		->newMaterial<SimpleBSDFMaterial>();
+    // TODO
+    SimpleBSDFMaterial *newMaterial = nullptr;// =
+	//	getProgram()
+	//	->getMaterialManager()
+	//	->newMaterial<SimpleBSDFMaterial>();
 
 	BSDF *bsdf;
 	std::string name;
