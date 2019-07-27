@@ -20,12 +20,12 @@ TEST(NodeTests, MultiplyNodeTest) {
 	node.evaluate();
 
 	// Check state
-	const NodeOutput *o = node.getOutput("Output");
+    const VectorNodeOutput *o = static_cast<VectorNodeOutput *>(node.getOutput("Output"));
 	EXPECT_EQ(o->getDimensions(), 1);
 	EXPECT_EQ(o->getSize(0), 1);
 
 	math::Vector result;
-	o->discreteSample2D(0, 0, (void *)&result);
+	o->discreteSample2d(0, 0, (void *)&result);
 	CHECK_VEC_EQ(result, math::constants::Double, 1E-4);
 
 	node.destroy();
@@ -46,13 +46,13 @@ TEST(NodeTests, MultiplyMapNodeTest) {
 	node.evaluate();
 
 	// Check state
-	const NodeOutput *o = node.getOutput("Output");
+    const VectorNodeOutput *o = static_cast<VectorNodeOutput *>(node.getOutput("Output"));
 	EXPECT_EQ(o->getDimensions(), 2);
 	EXPECT_EQ(o->getSize(0), 16);
 	EXPECT_EQ(o->getSize(1), 16);
 
 	math::Vector result;
-	o->discreteSample2D(0, 0, (void *)&result);
+	o->discreteSample2d(0, 0, (void *)&result);
 	CHECK_VEC_EQ(result, math::constants::Double, 1E-4);
 
 	node.destroy();
@@ -82,15 +82,15 @@ TEST(NodeTests, StepNode) {
 	node.evaluate();
 
 	// Check state
-	const NodeOutput *o = node.getOutput("Output");
+    const VectorNodeOutput *o = static_cast<VectorNodeOutput *>(node.getOutput("Output"));
 	EXPECT_EQ(o->getDimensions(), 1);
 	EXPECT_EQ(o->getSize(0), 1);
 
 	math::Vector result;
-	o->discreteSample2D(0, 0, (void *)&result);
+	o->discreteSample2d(0, 0, (void *)&result);
 	CHECK_VEC_EQ(result, math::constants::One, 1E-4);
 
-	o->discreteSample2D(1, 0, (void *)&result);
+	o->discreteSample2d(1, 0, (void *)&result);
 	CHECK_VEC_EQ(result, math::constants::Double, 1E-4);
 
 	node.destroy();

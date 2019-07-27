@@ -12,18 +12,23 @@ void manta::ConstructedVectorNodeOutput::sample(const IntersectionPoint *surface
 	(void)surfaceInteraction;
 
 	math::Vector *target = reinterpret_cast<math::Vector *>(_target);
-	math::Vector x, y, z, w;
+	math::Vector v_x, v_y, v_z, v_w;
 
-	m_x->sample(surfaceInteraction, (void *)&x);
-	m_y->sample(surfaceInteraction, (void *)&y);
-	m_z->sample(surfaceInteraction, (void *)&z);
-	m_w->sample(surfaceInteraction, (void *)&w);
+    VectorNodeOutput *x = static_cast<VectorNodeOutput *>(m_x);
+    VectorNodeOutput *y = static_cast<VectorNodeOutput *>(m_y);
+    VectorNodeOutput *z = static_cast<VectorNodeOutput *>(m_z);
+    VectorNodeOutput *w = static_cast<VectorNodeOutput *>(m_w);
+
+	x->sample(surfaceInteraction, (void *)&v_x);
+	y->sample(surfaceInteraction, (void *)&v_y);
+	z->sample(surfaceInteraction, (void *)&v_z);
+	w->sample(surfaceInteraction, (void *)&v_w);
 
 	*target = math::loadVector(
-		math::getScalar(x),
-		math::getScalar(y),
-		math::getScalar(z),
-		math::getScalar(w)
+		math::getScalar(v_x),
+		math::getScalar(v_y),
+		math::getScalar(v_z),
+		math::getScalar(v_w)
 	);
 }
 

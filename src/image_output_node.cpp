@@ -23,7 +23,8 @@ void manta::ImageOutputNode::_evaluate() {
 
 	// Resolve the input data
 	const VectorMap2D *map = nullptr;
-	m_input->getDataReference((const void **)&map);
+    VectorNodeOutput *input = static_cast<VectorNodeOutput *>(m_input);
+	input->getDataReference((const void **)&map);
 	if (map != nullptr) {
 		map->fillByteBuffer(&byteBuffer, m_gammaCorrection);
 	}

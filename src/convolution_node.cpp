@@ -21,8 +21,8 @@ void manta::ConvolutionNode::_initialize() {
 
 void manta::ConvolutionNode::_evaluate() {
 	// Cast inputs
-	const piranha::NodeOutput *a = m_base;
-	const piranha::NodeOutput *b = m_filter;
+	const VectorNodeOutput *a = static_cast<VectorNodeOutput *>(m_base);
+	const VectorNodeOutput *b = static_cast<VectorNodeOutput *>(m_filter);
 
 	Margins margins;
 	VectorMap2D a_mapSafe;

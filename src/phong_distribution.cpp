@@ -24,7 +24,8 @@ void manta::PhongDistribution::initializeSessionMemory(
 	if (m_powerNode != nullptr) {
 		// Sample the power input and save it in the state container
 		math::Vector rawPower;
-		m_powerNode->sample(surfaceInteraction, (void *)&rawPower);
+        VectorNodeOutput *powerNode = static_cast<VectorNodeOutput *>(m_powerNode);
+        powerNode->sample(surfaceInteraction, (void *)&rawPower);
 
 		math::real power = math::getScalar(rawPower);
 		phongMemory->power = power * (m_power - m_minMapPower) + m_minMapPower;

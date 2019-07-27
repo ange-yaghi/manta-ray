@@ -1,12 +1,12 @@
 #include "../include/obj_file_node.h"
 
-#include "../include/string_node_output.h"
 #include "../include/obj_file_loader.h"
 #include "../include/mesh.h"
 
+#include <piranha.h>
 #include <string>
 
-manta::ObjFileNode::ObjFileNode() {
+manta::ObjFileNode::ObjFileNode() : ObjectReferenceNode() {
 	/* void */
 }
 

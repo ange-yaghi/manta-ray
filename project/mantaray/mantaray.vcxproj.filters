@@ -343,6 +343,18 @@
     <Filter Include="Source Files\sdl">
       <UniqueIdentifier>{0a61cecd-e92f-42c3-8a01-ba734bf4809e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\nodes\output-ports\conversions">
+      <UniqueIdentifier>{ace77230-fce2-4e34-9adf-372ead6aa5c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\nodes\output-ports\conversions">
+      <UniqueIdentifier>{6e62ff47-6e07-4e60-8e0e-bf808f223b3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\nodes\library\objects">
+      <UniqueIdentifier>{e35939ed-a0de-4b9e-8292-4d8245159dd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\nodes\library\objects">
+      <UniqueIdentifier>{9684dc52-4251-448c-b4fa-55328a36ddb4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -480,9 +492,6 @@
     <ClCompile Include="..\..\src\os_utilities.cpp">
       <Filter>Source Files\os</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\single_color_node.cpp">
-      <Filter>Source Files\nodes\library</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\texture_node.cpp">
       <Filter>Source Files\nodes\library</Filter>
     </ClCompile>
@@ -582,9 +591,6 @@
     <ClCompile Include="..\..\src\vector_map_2d_node_output.cpp">
       <Filter>Source Files\nodes\output-ports</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\single_vector_node_output.cpp">
-      <Filter>Source Files\nodes\output-ports</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\power_node_output.cpp">
       <Filter>Source Files\nodes\output-ports\operations</Filter>
     </ClCompile>
@@ -639,20 +645,11 @@
     <ClCompile Include="..\..\src\path.cpp">
       <Filter>Source Files\os</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\float_node_output.cpp">
-      <Filter>Source Files\nodes\output-ports\atomic-types\types</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\single_float_node_output.cpp">
-      <Filter>Source Files\nodes\output-ports\atomic-types\constants</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\constructed_vector_node_output.cpp">
       <Filter>Source Files\nodes\output-ports\atomic-types\compound</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\srgb_node_output.cpp">
       <Filter>Source Files\nodes\output-ports\color</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\srgb_node.cpp">
-      <Filter>Source Files\nodes\library\sdl</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\constructed_vector_node.cpp">
       <Filter>Source Files\nodes\library\sdl</Filter>
@@ -663,41 +660,41 @@
     <ClCompile Include="..\..\src\vector_split_node.cpp">
       <Filter>Source Files\nodes\library\sdl</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\string_node_output.cpp">
-      <Filter>Source Files\nodes\output-ports\atomic-types\types</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\single_string_node_output.cpp">
-      <Filter>Source Files\nodes\output-ports\atomic-types\constants</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\constructed_string_node_output.cpp">
-      <Filter>Source Files\nodes\output-ports\atomic-types\compound</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\constructed_string_node.cpp">
-      <Filter>Source Files\nodes\library\sdl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\simple_bsdf_material_node.cpp">
-      <Filter>Source Files\nodes\library\sdl</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\mesh_node_output.cpp">
       <Filter>Source Files\nodes\output-ports\mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\obj_file_node.cpp">
-      <Filter>Source Files\nodes\library\sdl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\constructed_float_node_output.cpp">
-      <Filter>Source Files\nodes\output-ports\atomic-types\single</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\constructed_float_node.cpp">
-      <Filter>Source Files\nodes\library\sdl</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\scene_geometry_node_output.cpp">
       <Filter>Source Files\nodes\output-ports\objects</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\kd_tree_node.cpp">
-      <Filter>Source Files\nodes\library\sdl</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\streaming_node_output.cpp">
       <Filter>Source Files\nodes\output-ports</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\node.cpp">
+      <Filter>Source Files\nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\language_rules.cpp">
+      <Filter>Source Files\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\vector_conversions.cpp">
+      <Filter>Source Files\nodes\output-ports\conversions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\object_reference_node_output.cpp">
+      <Filter>Source Files\nodes\output-ports\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\object_reference_node.cpp">
+      <Filter>Source Files\nodes\library\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\kd_tree_node.cpp">
+      <Filter>Source Files\nodes\library\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\obj_file_node.cpp">
+      <Filter>Source Files\nodes\library\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\simple_bsdf_material_node.cpp">
+      <Filter>Source Files\nodes\library\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\srgb_node.cpp">
+      <Filter>Source Files\nodes\library\objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -887,9 +884,6 @@
     <ClInclude Include="..\..\include\os_utilities.h">
       <Filter>Header Files\os</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\single_color_node.h">
-      <Filter>Header Files\nodes\library</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\texture_node.h">
       <Filter>Header Files\nodes\library</Filter>
     </ClInclude>
@@ -1007,16 +1001,10 @@
     <ClInclude Include="..\..\include\vector_map_wrapper_node.h">
       <Filter>Header Files\nodes</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\vector_node_output.h">
-      <Filter>Header Files\nodes\output-ports</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\image_file_node.h">
       <Filter>Header Files\nodes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\vector_map_2d_node_output.h">
-      <Filter>Header Files\nodes\output-ports</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\single_vector_node_output.h">
       <Filter>Header Files\nodes\output-ports</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\bsdf_node_output.h">
@@ -1055,12 +1043,6 @@
     <ClInclude Include="..\..\include\path.h">
       <Filter>Header Files\os</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\float_node_output.h">
-      <Filter>Header Files\nodes\output-ports\atomic-types\types</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\single_float_node_output.h">
-      <Filter>Header Files\nodes\output-ports\atomic-types\constants</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\constructed_vector_node_output.h">
       <Filter>Header Files\nodes\output-ports\atomic-types\compound</Filter>
     </ClInclude>
@@ -1079,18 +1061,6 @@
     <ClInclude Include="..\..\include\vector_split_node.h">
       <Filter>Header Files\nodes\library\sdl</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\string_node_output.h">
-      <Filter>Header Files\nodes\output-ports\atomic-types\types</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\single_string_node_output.h">
-      <Filter>Header Files\nodes\output-ports\atomic-types\constants</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\constructed_string_node_output.h">
-      <Filter>Header Files\nodes\output-ports\atomic-types\compound</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\constructed_string_node.h">
-      <Filter>Header Files\nodes\library\sdl</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\simple_bsdf_material_node.h">
       <Filter>Header Files\nodes\library\sdl</Filter>
     </ClInclude>
@@ -1099,12 +1069,6 @@
     </ClInclude>
     <ClInclude Include="..\..\include\obj_file_node.h">
       <Filter>Header Files\nodes\library\sdl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\constructed_float_node.h">
-      <Filter>Header Files\nodes\library\sdl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\constructed_float_node_output.h">
-      <Filter>Header Files\nodes\output-ports\atomic-types\single</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\scene_geometry_node_output.h">
       <Filter>Header Files\nodes\output-ports\objects</Filter>
@@ -1117,6 +1081,24 @@
     </ClInclude>
     <ClInclude Include="..\..\include\streaming_node_output.h">
       <Filter>Header Files\nodes\output-ports</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\language_rules.h">
+      <Filter>Header Files\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\vector_node_output.h">
+      <Filter>Header Files\nodes\output-ports\atomic-types\types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\vector_conversions.h">
+      <Filter>Header Files\nodes\output-ports\conversions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\object_reference_node_output.h">
+      <Filter>Header Files\nodes\output-ports\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\object_channel_types.h">
+      <Filter>Header Files\nodes\output-ports\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\object_reference_node.h">
+      <Filter>Header Files\nodes\library\objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

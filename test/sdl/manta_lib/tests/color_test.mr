@@ -1,6 +1,0 @@
-import "../lib/color.mr" as color
-import "../lib/atomic_types.mr" as types
-
-color::sRGB c(0.5, 0.75, 1.0)
-types::vector v(c^.r, c->g, c.color.b, c->a)
-types::vector v2(v.r, v.g, 0.0, 0.0)

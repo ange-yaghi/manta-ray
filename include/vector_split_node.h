@@ -21,6 +21,8 @@ namespace manta {
 		virtual void registerInputs();
 
 	protected:
+        piranha::pNodeInput m_input;
+
 		VectorSplitNodeOutput m_x;
 		VectorSplitNodeOutput m_y;
 		VectorSplitNodeOutput m_z;

@@ -1,12 +1,8 @@
-#include <demos.h>
+#include "demos.h"
 
-#include <sdl_compiler.h>
-#include <simple_bsdf_material_node.h>
-#include <sdl_node.h>
-#include <sdl_compilation_unit.h>
-#include <sdl_compilation_error.h>
-#include <node_program.h>
-#include <path.h>
+#include <piranha.h>
+#include "../include/simple_bsdf_material_node.h"
+#include "../include/path.h"
 
 using namespace manta;
 
@@ -20,15 +16,16 @@ void manta_demo::sdlDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	constexpr bool POLYGON_APERTURE = true;
 
 	Scene scene;
-	NodeProgram program;
+	piranha::NodeProgram program;
 	RayTracer rayTracer;
-	rayTracer.setMaterialManager(program.getMaterialManager());
+    MaterialManager materialManager;
+	rayTracer.setMaterialManager(&materialManager);
 
 	// Create all materials
-	SdlCompiler compiler;
+    piranha::Compiler compiler;
 	compiler.addSearchPath(SDL_LIB_PATH);
-	SdlCompilationUnit *unit = compiler.compile(SDL_PATH "sdl_demo.mr");
-	const SdlErrorList *errors = compiler.getErrorList();
+	piranha::IrCompilationUnit *unit = compiler.compile(SDL_PATH "sdl_demo.mr");
+	const piranha::ErrorList *errors = compiler.getErrorList();
 
 	unit->build(&program);
 	program.execute();

@@ -1,37 +1,72 @@
 #ifndef MANTARAY_OBJ_FILE_NODE_H
 #define MANTARAY_OBJ_FILE_NODE_H
 
-#include <piranha.h>
-
-#include "mesh_node_output.h"
+#include "object_reference_node.h"
 
 namespace manta {
 
-	class ObjFileNode : public piranha::Node {
+    class Mesh;
+
+	class ObjFileNode : public ObjectReferenceNode<Mesh> {
 	public:
-		ObjFileNode();
+		ObjFileNode() : ObjectReferenceNode<Mesh>()
 		virtual ~ObjFileNode();
 
-		virtual bool requiresMaterials() const { return true; }
-
-		Mesh *getMesh() { return m_mesh; }
-
 	protected:
-		virtual void _initialize();
-		virtual void _evaluate();
-		virtual void _destroy();
+        virtual void _evaluate() {
+            std::string filename;
+            m_filename->fullCompute((void *)&filename);
 
-		virtual void registerOutputs();
-		virtual void registerInputs();
+            ObjFileLoader loader;
+            loader.loadObjFile(filename.c_str());
+
+            Mesh *mesh = new Mesh;
+            // TODO
+            //mesh->loadObjFileData(&loader, getProgram()->getMaterialManager());
+
+            m_output.setReference(mesh);
+        }
+
+        virtual void _destroy() {
+            /* void */
+        }
+
+        virtual void registerInputs() {
+            registerInput(&m_filename, "filename");
+        }
 
 	protected:
 		piranha::pNodeInput m_filename;
-		MeshNodeOutput m_output;
-
-	protected:
-		Mesh *m_mesh;
 	};
 
 } /* namespace manta */
 
 #endif /* MANTARAY_OBJ_FILE_NODE_H */
+
+
+void manta::ObjFileNode::_evaluate() {
+    std::string filename;
+    m_filename->fullCompute((void *)&filename);
+
+    ObjFileLoader loader;
+    loader.loadObjFile(filename.c_str());
+
+    Mesh *mesh = new Mesh;
+    // TODO
+    //mesh->loadObjFileData(&loader, getProgram()->getMaterialManager());
+
+    m_output.setMesh(mesh);
+    m_mesh = mesh;
+}
+
+void manta::ObjFileNode::_destroy() {
+    /* void */
+}
+
+void manta::ObjFileNode::registerOutputs() {
+
+}
+
+void manta::ObjFileNode::registerInputs() {
+    registerInput(&m_filename, "filename");
+}

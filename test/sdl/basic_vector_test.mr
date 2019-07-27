@@ -1,0 +1,4 @@
+private import "../../sdl/manta-lib/mantaray.mr"
+
+vector test(1.0, 2.0, 3.0, 4.0)
+scalar test_scalar(666.0)
