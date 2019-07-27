@@ -22,7 +22,8 @@ void manta::GgxDistribution::initializeSessionMemory(const IntersectionPoint *su
 	if (m_widthNode != nullptr) {
 		// Sample the power input and save it in the state container
 		math::Vector rawWidth;
-		m_widthNode->sample(surfaceInteraction, (void *)&rawWidth);
+        VectorNodeOutput *widthNode = static_cast<VectorNodeOutput *>(m_widthNode);
+		widthNode->sample(surfaceInteraction, (void *)&rawWidth);
 
 		math::real width = math::getScalar(rawWidth);
 		phongMemory->width = width * (m_width - m_minMapWidth) + m_minMapWidth;

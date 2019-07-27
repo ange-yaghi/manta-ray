@@ -94,30 +94,30 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)\..\include;$(SolutionDir)\..\demos;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\$(Platform)\$(Configuration)\;$(SolutionDir)\..\dependencies\libraries\SDL\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\boost-filesystem\lib\$(PlatformTarget)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\..\include;$(SolutionDir)\..\demos;$(ProjectDir)\..\..\dependencies\libraries\piranha\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\$(Platform)\$(Configuration)\;$(SolutionDir)\..\dependencies\libraries\SDL\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\boost-filesystem\lib\$(PlatformTarget)\$(Configuration)\;$(SolutionDir)\..\dependencies\libraries\piranha\lib\$(PlatformTarget)\$(Configuration);$(LibraryPath)</LibraryPath>
     <ReferencePath>$(ReferencePath)</ReferencePath>
     <OutDir>$(SolutionDir)\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>$(SolutionDir)\$(Platform)\$(Configuration)\;$(SolutionDir)\..\dependencies\libraries\SDL\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\boost-filesystem\lib\$(PlatformTarget)\$(Configuration)\;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)\..\include;$(SolutionDir)\..\demos;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\$(Platform)\$(Configuration)\;$(SolutionDir)\..\dependencies\libraries\SDL\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\boost-filesystem\lib\$(PlatformTarget)\$(Configuration)\;$(SolutionDir)\..\dependencies\libraries\piranha\lib\$(PlatformTarget)\$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\..\include;$(SolutionDir)\..\demos;$(ProjectDir)\..\..\dependencies\libraries\piranha\include\;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>$(SolutionDir)\$(Platform)\$(Configuration)\;$(SolutionDir)\..\dependencies\libraries\SDL\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\boost-filesystem\lib\$(PlatformTarget)\$(Configuration)\;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SolutionDir)\..\include;$(SolutionDir)\..\demos;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\$(Platform)\$(Configuration)\;$(SolutionDir)\..\dependencies\libraries\SDL\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\boost-filesystem\lib\$(PlatformTarget)\$(Configuration)\;$(SolutionDir)\..\dependencies\libraries\piranha\lib\$(PlatformTarget)\$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\..\include;$(SolutionDir)\..\demos;$(ProjectDir)\..\..\dependencies\libraries\piranha\include\;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)\..\include;$(SolutionDir)\..\demos;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\$(Platform)\$(Configuration)\;$(SolutionDir)\..\dependencies\libraries\SDL\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\boost-filesystem\lib\$(PlatformTarget)\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\..\include;$(SolutionDir)\..\demos;$(ProjectDir)\..\..\dependencies\libraries\piranha\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\$(Platform)\$(Configuration)\;$(SolutionDir)\..\dependencies\libraries\SDL\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\$(PlatformTarget);$(SolutionDir)\..\dependencies\libraries\boost-filesystem\lib\$(PlatformTarget)\$(Configuration)\;$(SolutionDir)\..\dependencies\libraries\piranha\lib\$(PlatformTarget)\$(Configuration);$(LibraryPath)</LibraryPath>
     <ReferencePath>$(ReferencePath)</ReferencePath>
     <OutDir>$(SolutionDir)\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>

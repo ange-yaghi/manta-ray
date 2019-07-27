@@ -1,5 +1,0 @@
-FileImage testImage (
-	test1:	test,
-	test2: 	InlineNode(inline_attrib:test),
-    test3:  InlineNode2(test)
-)

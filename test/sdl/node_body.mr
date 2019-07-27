@@ -1,8 +1,0 @@
-// For SdlNodeBodyTest
-
-import "sample_lib/test_lib"
-
-SampleNode test (
-    A: 5,
-    B: 5
-)

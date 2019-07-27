@@ -5,7 +5,7 @@
 
 namespace manta {
 
-	class IntersectionPoint;
+	struct IntersectionPoint;
 
 	class StreamingNodeOutput : public piranha::NodeOutput {
 	public:

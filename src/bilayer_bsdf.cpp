@@ -29,13 +29,15 @@ manta::math::Vector manta::BilayerBSDF::sampleF(const IntersectionPoint *surface
 
 	if (m_diffuseNode != nullptr) {
 		math::Vector diffuse;
-		m_diffuseNode->sample(surfaceInteraction, (void *)&diffuse);
+        VectorNodeOutput *diffuseNode = static_cast<VectorNodeOutput *>(m_diffuseNode);
+		diffuseNode->sample(surfaceInteraction, (void *)&diffuse);
 		diffuseR = math::mul(diffuse, diffuseR);
 	}
 
 	if (m_specularNode != nullptr) {
 		math::Vector specular;
-		m_specularNode->sample(surfaceInteraction, (void *)&specular);
+        VectorNodeOutput *specularNode = static_cast<VectorNodeOutput *>(m_specularNode);
+        specularNode->sample(surfaceInteraction, (void *)&specular);
 		specularR = math::mul(specular, specularR);
 	}
 	
@@ -46,11 +48,13 @@ manta::math::Vector manta::BilayerBSDF::sampleF(const IntersectionPoint *surface
 
 	math::Vector wh;
 
-	const MicrofacetDistribution *distribution = m_coatingDistribution->getDistribution();
+	const MicrofacetDistribution *distribution = 
+        static_cast<MicrofacetDistributionNodeOutput *>(m_coatingDistribution)->getDistribution();
 	NodeSessionMemory specularDistMem;
 	distribution->initializeSessionMemory(surfaceInteraction, &specularDistMem, stackAllocator);
 
-	PhongDistribution::PhongMemory *memory = reinterpret_cast<PhongDistribution::PhongMemory *>((void *)specularDistMem.memory);
+	PhongDistribution::PhongMemory *memory = 
+        reinterpret_cast<PhongDistribution::PhongMemory *>((void *)specularDistMem.memory);
 	math::real s = memory->power;
 
 	math::Vector m;

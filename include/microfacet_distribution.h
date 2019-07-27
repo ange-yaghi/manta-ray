@@ -1,18 +1,18 @@
 #ifndef MANTARAY_MICROFACET_DISTRIBUTION_H
 #define MANTARAY_MICROFACET_DISTRIBUTION_H
 
-#include <piranha.h>
+#include "node.h"
 
-#include <manta_math.h>
-#include <intersection_point.h>
-#include <microfacet_distribution_node_output.h>
+#include "manta_math.h"
+#include "intersection_point.h"
+#include "microfacet_distribution_node_output.h"
 
 namespace manta {
 
 	// Forward declarations
 	class StackAllocator;
 
-	class MicrofacetDistribution : public piranha::Node {
+	class MicrofacetDistribution : public Node {
 	public:
 		MicrofacetDistribution();
 		virtual ~MicrofacetDistribution();

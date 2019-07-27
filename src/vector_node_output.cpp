@@ -6,7 +6,7 @@
 
 const piranha::ChannelType manta::VectorNodeOutput::VectorType("VectorNodeType");
 
-manta::VectorNodeOutput::VectorNodeOutput(bool scalar) : NodeOutput(&VectorType) {
+manta::VectorNodeOutput::VectorNodeOutput(bool scalar) : StreamingNodeOutput(&VectorType) {
 	m_scalar = scalar;
 }
 
@@ -18,7 +18,6 @@ void manta::VectorNodeOutput::fullCompute(void *_target) const {
 	VectorMap2D *target = reinterpret_cast<VectorMap2D *>(_target);
 
 	int width, height;
-    /*
 	int dimensions = getDimensions();
 	if (dimensions == 0) {
 		return;
@@ -41,10 +40,10 @@ void manta::VectorNodeOutput::fullCompute(void *_target) const {
 	for (int i = 0; i < width; i++) {
 		for (int j = 0; j < height; j++) {
 			math::Vector v;
-			discreteSample2D(i, j, &v);
+			discreteSample2d(i, j, &v);
 			target->set(v, i, j);
 		}
-	}*/
+	}
 }
 
 piranha::Node *manta::VectorNodeOutput::generateInterface() {

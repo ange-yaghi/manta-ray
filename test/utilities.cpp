@@ -1,9 +1,10 @@
 #include <pch.h>
 
-#include <utilities.h>
+#include "utilities.h"
 
-#include <image_byte_buffer.h>
-#include <jpeg_writer.h>
+#include "../include/image_byte_buffer.h"
+#include "../include/jpeg_writer.h"
+#include "../include/language_rules.h"
 
 void writeToJpeg(const RealMap2D *scalarMap, const std::string &fname) {
 	ImageByteBuffer byteBuffer;
@@ -47,4 +48,17 @@ void writeToJpeg(const ComplexMap2D *plane, const std::string &fname, Margins *m
 	writer.write(&byteBuffer, fname.c_str());
 
 	byteBuffer.free();
+}
+
+piranha::IrCompilationUnit *compileFile(const std::string &filename, const piranha::ErrorList **errList) {
+    LanguageRules *rules = new LanguageRules();
+    rules->registerBuiltinNodeTypes();
+
+    piranha::Compiler *compiler = new piranha::Compiler(rules);
+    piranha::IrCompilationUnit *unit = compiler->compile(SDL_TEST_FILES + filename);
+    EXPECT_NE(unit, nullptr);
+
+    if (errList != nullptr) *errList = compiler->getErrorList();
+
+    return unit;
 }

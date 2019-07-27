@@ -34,7 +34,6 @@
 #include <media_interface.h>
 #include <dielectric_media_interface.h>
 #include <simple_bsdf_material.h>
-#include <single_color_node.h>
 #include <bilayer_bsdf.h>
 #include <phong_distribution.h>
 #include <lambertian_bsdf.h>

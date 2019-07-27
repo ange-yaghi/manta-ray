@@ -1,7 +1,7 @@
 #ifndef MANTARAY_BSDF_H
 #define MANTARAY_BSDF_H
 
-#include <piranha.h>
+#include "node.h"
 
 #include "manta_math.h"
 #include "media_interface.h"
@@ -15,7 +15,7 @@ namespace manta {
 	struct IntersectionPoint;
 	class StackAllocator;
 
-	class BSDF : public piranha::Node {
+	class BSDF : public Node {
 	public:
 		BSDF();
 		virtual ~BSDF();

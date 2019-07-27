@@ -9,7 +9,7 @@
 namespace manta {
 
 	class VectorNodeOutput : public StreamingNodeOutput {
-	protected:
+	public:
 		static const piranha::ChannelType VectorType;
 
 	public:

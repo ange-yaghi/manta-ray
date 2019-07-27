@@ -1,8 +1,8 @@
-#ifndef SCENE_GEOMETRY_H
-#define SCENE_GEOMETRY_H
+#ifndef MANTARAY_SCENE_GEOMETRY_H
+#define MANTARAY_SCENE_GEOMETRY_H
 
-#include <manta_math.h>
-#include <runtime_statistics.h>
+#include "manta_math.h"
+#include "runtime_statistics.h"
 
 namespace manta {
 
@@ -40,4 +40,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* SCENE_GEOMETRY_H */
+#endif /* MANTARAY_SCENE_GEOMETRY_H */

@@ -1,11 +1,11 @@
-#ifndef MESH_H
-#define MESH_H
+#ifndef MANTARAY_MESH_H
+#define MANTARAY_MESH_H
 
-#include <scene_geometry.h>
+#include "scene_geometry.h"
 
-#include <geometry.h>
-#include <manta_math.h>
-#include <primitives.h>
+#include "geometry.h"
+#include "manta_math.h"
+#include "primitives.h"
 
 namespace manta {
 
@@ -117,4 +117,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* MESH_H */
+#endif /* MANTARAY_MESH_H */

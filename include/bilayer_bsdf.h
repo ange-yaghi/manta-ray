@@ -1,15 +1,15 @@
 #ifndef MANTARAY_BILAYER_BSDF_H
 #define MANTARAY_BILAYER_BSDF_H
 
-#include <bsdf.h>
+#include "bsdf.h"
 
-#include <vector_node_output.h>
+#include "vector_node_output.h"
+#include "microfacet_distribution_node_output.h"
 
 namespace manta {
 	
 	class MediaInterface;
 	class LambertianBSDF;
-	class MicrofacetDistributionNodeOutput;
 
 	class BilayerBSDF : public BSDF {
 	public:
@@ -22,8 +22,7 @@ namespace manta {
 
 		void setCoatingDistribution(MicrofacetDistributionNodeOutput *coatingMaterial) 
 			{ m_coatingDistribution = coatingMaterial; }
-		const MicrofacetDistributionNodeOutput *getCoatingDistribution() 
-			{ return m_coatingDistribution; }
+		const piranha::pNodeInput getCoatingDistribution() { return m_coatingDistribution; }
 
 		void setDiffuseMaterial(LambertianBSDF *diffuseMaterial) 
 			{ m_diffuseMaterial = diffuseMaterial; }
@@ -45,7 +44,7 @@ namespace manta {
 		virtual void registerInputs();
 
 	protected:
-		MicrofacetDistributionNodeOutput *m_coatingDistribution;
+        piranha::pNodeInput m_coatingDistribution;
 		LambertianBSDF *m_diffuseMaterial;
 
         piranha::pNodeInput m_diffuseNode;

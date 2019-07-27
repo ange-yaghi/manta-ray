@@ -48,7 +48,6 @@ namespace piranha {
         extern const ErrorCode_struct OutputWithNoDefinition;
         extern const ErrorCode_struct BuiltinOutputWithDefinition;
         extern const ErrorCode_struct BuiltinOutputMissingType;
-        extern const ErrorCode_struct StandardOutputWithType;
         extern const ErrorCode_struct InputSpecifiedMultipleTimesPositional;
         extern const ErrorCode_struct DuplicateNodeDefinition;
         extern const ErrorCode_struct UndefinedBuiltinType;

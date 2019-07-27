@@ -9,6 +9,7 @@
 #include <complex_map_2d.h>
 #include <vector_map_2d.h>
 
+#include <piranha.h>
 #include <string>
 
 using namespace manta;
@@ -101,5 +102,7 @@ void writeToJpeg(const ComplexMap2D *plane, const std::string &fname, Margins *m
 	EXPECT_EQ((error)->getErrorCode().stage, code_.stage);	\
 	EXPECT_EQ((error)->getErrorCode().code, code_.code);	\
 	EXPECT_EQ((error)->getErrorLocation()->lineStart, line);
+
+piranha::IrCompilationUnit *compileFile(const std::string &filename, const piranha::ErrorList **errList);
 
 #endif /* TEST_UTILITIES_H */

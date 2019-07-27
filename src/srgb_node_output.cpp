@@ -16,17 +16,22 @@ void manta::SrgbNodeOutput::sample(const IntersectionPoint *surfaceInteraction, 
 	(void)surfaceInteraction;
 
 	math::Vector *target = reinterpret_cast<math::Vector *>(_target);
-	math::Vector r, g, b, a;
+	math::Vector v_r, v_g, v_b, v_a;
 
-	m_r->sample(surfaceInteraction, (void *)&r);
-	m_g->sample(surfaceInteraction, (void *)&g);
-	m_b->sample(surfaceInteraction, (void *)&b);
-	m_a->sample(surfaceInteraction, (void *)&a);
+    VectorNodeOutput *r = static_cast<VectorNodeOutput *>(m_r);
+    VectorNodeOutput *g = static_cast<VectorNodeOutput *>(m_g);
+    VectorNodeOutput *b = static_cast<VectorNodeOutput *>(m_b);
+    VectorNodeOutput *a = static_cast<VectorNodeOutput *>(m_a);
 
-	math::real_d r_d = math::getScalar(r);
-	math::real_d g_d = math::getScalar(g);
-	math::real_d b_d = math::getScalar(b);
-	math::real_d a_d = math::getScalar(a);
+	r->sample(surfaceInteraction, (void *)&v_r);
+	g->sample(surfaceInteraction, (void *)&v_g);
+	b->sample(surfaceInteraction, (void *)&v_b);
+	a->sample(surfaceInteraction, (void *)&v_a);
+
+	math::real_d r_d = math::getScalar(v_r);
+	math::real_d g_d = math::getScalar(v_g);
+	math::real_d b_d = math::getScalar(v_b);
+	math::real_d a_d = math::getScalar(v_a);
 
 	r_d = RgbSpace::srgb.applyGammaSrgb(r_d);
 	g_d = RgbSpace::srgb.applyGammaSrgb(g_d);
