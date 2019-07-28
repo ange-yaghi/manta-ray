@@ -1,5 +1,5 @@
-#ifndef PIRANHA_REMAP_NODE_H
-#define PIRANHA_REMAP_NODE_H
+#ifndef MANTARAY_REMAP_NODE_H
+#define MANTARAY_REMAP_NODE_H
 
 #include <piranha.h>
 
@@ -29,4 +29,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* PIRANHA_REMAP_NODE_H */
+#endif /* MANTARAY_REMAP_NODE_H */

@@ -2,7 +2,7 @@
 
 #include "../include/simple_bsdf_material.h"
 #include "../include/material_manager.h"
-#include "../include/bsdf_node_output.h"
+#include "../include/object_reference_node_output.h"
 
 manta::SimpleBsdfMaterialNode::SimpleBsdfMaterialNode() {
 	/* void */
@@ -26,7 +26,7 @@ void manta::SimpleBsdfMaterialNode::_evaluate() {
 	BSDF *bsdf;
 	std::string name;
 
-	bsdf = ((BSDFNodeOutput *)m_bsdf)->getBsdf();
+	bsdf = ((ObjectReferenceNodeOutput<BSDF> *)m_bsdf)->getReference();
 	m_name->fullCompute((void *)&name);
 
 	newMaterial->setName(name);

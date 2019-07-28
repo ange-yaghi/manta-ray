@@ -1,7 +1,7 @@
-#include <kd_tree_node.h>
+#include "../include/kd_tree_node.h"
 
-#include <mesh_node_output.h>
-#include <mesh.h>
+#include "../include/mesh_node_output.h"
+#include "../include/mesh.h"
 
 manta::KdTreeNode::KdTreeNode() {
 	/* void */
@@ -23,7 +23,7 @@ void manta::KdTreeNode::_evaluate() {
 
 	m_kdTree.analyzeWithProgress(mesh, 2);
 	
-	m_output.setSceneGeometry(&m_kdTree);
+	m_output.setReference(&m_kdTree);
 }
 
 void manta::KdTreeNode::_destroy() {
@@ -31,7 +31,7 @@ void manta::KdTreeNode::_destroy() {
 }
 
 void manta::KdTreeNode::registerOutputs() {
-	registerOutput(&m_output, "$primary");
+	registerOutput(&m_output, "__out");
 	setPrimaryOutput(&m_output);
 }
 

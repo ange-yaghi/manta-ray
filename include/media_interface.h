@@ -3,12 +3,11 @@
 
 #include <piranha.h>
 
-#include <media_interface_node_output.h>
-#include <manta_math.h>
+#include "manta_math.h"
 
 namespace manta {
 
-	class MediaInterface : public piranha::Node {
+	class MediaInterface {
 	public:
 		enum DIRECTION {
 			DIRECTION_IN,
@@ -27,11 +26,6 @@ namespace manta {
 		virtual math::real ior(DIRECTION d) const = 0;
 		virtual math::real no(DIRECTION d) const = 0;
 		virtual math::real ni(DIRECTION d) const = 0;
-		
-	protected:
-		MediaInterfaceNodeOutput m_output;
-
-		virtual void registerOutputs();
 	};
 
 } /* namespace manta */

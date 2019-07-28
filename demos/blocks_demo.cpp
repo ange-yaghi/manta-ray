@@ -62,7 +62,7 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 	floorBSDF.setSpecularAtNormal(math::loadVector(0.75f, 0.75f, 0.75f));
 
 	// Create all materials
-	SingleColorNode whiteNode(getColor(255, 255, 255));
+	CachedVectorNode whiteNode(getColor(255, 255, 255));
 	SimpleBSDFMaterial *simpleBlockMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	simpleBlockMaterial->setName("Block");
 	simpleBlockMaterial->setEmission(math::constants::Zero);
