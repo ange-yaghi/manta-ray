@@ -7,23 +7,25 @@ namespace manta {
 
     struct ObjectChannel {
         static const piranha::ChannelType MeshChannel;
+		static const piranha::ChannelType KdTreeChannel;
     };
 
     template <typename Type> 
-    const piranha::ChannelType *LookupTypeChannelType() { 
+    extern inline const piranha::ChannelType *LookupChannelType() { 
         static_assert(false, "Invalid type lookup"); 
         return nullptr;  
     }
 
     // Forward declaration of all types
     class Mesh;
+	class KDTree;
 
     // Helper macro
-#define ASSIGN_CHANNEL_TYPE(type, channel) template <> const piranha::ChannelType *LookupTypeChannelType<type>() { return &ObjectChannel::channel; }
+#define ASSIGN_CHANNEL_TYPE(type, channel) template <> extern inline const piranha::ChannelType *LookupChannelType<type>() { return &ObjectChannel::channel; }
 
     // Register all types
     ASSIGN_CHANNEL_TYPE(Mesh, MeshChannel);
-    
+	ASSIGN_CHANNEL_TYPE(KDTree, KdTreeChannel);
 
 } /* namespace manta */
 

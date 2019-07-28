@@ -8,11 +8,9 @@
 namespace manta {
 
     template <typename Type>
-    class ObjectReferenceNode : piranha::Node {
+    class ObjectReferenceNode : public piranha::Node {
     public:
-        ObjectReferenceNode(const piranha::ChannelType *channelType)
-            : m_output(channelType)
-        {
+        ObjectReferenceNode() {
             /* void */
         }
 
@@ -21,8 +19,10 @@ namespace manta {
         }
 
     protected:
-        virtual void _initialize();
-        virtual void registerOutputs();
+		virtual void registerOutputs() {
+			setPrimaryOutput(&m_output);
+			registerOutput(&m_output, "__out");
+		}
 
         ObjectReferenceNodeOutput<Type> m_output;
     };

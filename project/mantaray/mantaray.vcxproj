@@ -19,22 +19,20 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\include\cached_vector_output.cpp" />
     <ClCompile Include="..\..\src\aperture.cpp" />
+    <ClCompile Include="..\..\src\cached_vector_node.cpp" />
     <ClCompile Include="..\..\src\constructed_vector_node_output.cpp" />
     <ClCompile Include="..\..\src\kd_tree_node.cpp" />
     <ClCompile Include="..\..\src\language_rules.cpp" />
-    <ClCompile Include="..\..\src\mesh_node_output.cpp" />
     <ClCompile Include="..\..\src\node.cpp" />
-    <ClCompile Include="..\..\src\object_reference_node.cpp" />
-    <ClCompile Include="..\..\src\object_reference_node_output.cpp" />
+    <ClCompile Include="..\..\src\object_channel_types.cpp" />
     <ClCompile Include="..\..\src\obj_file_node.cpp" />
     <ClCompile Include="..\..\src\path.cpp" />
-    <ClCompile Include="..\..\src\scene_geometry_node_output.cpp" />
     <ClCompile Include="..\..\src\media_interface.cpp" />
     <ClCompile Include="..\..\src\biconvex_lens.cpp" />
     <ClCompile Include="..\..\src\bilayer_bsdf.cpp" />
     <ClCompile Include="..\..\src\bsdf.cpp" />
-    <ClCompile Include="..\..\src\bsdf_node_output.cpp" />
     <ClCompile Include="..\..\src\camera_ray_emitter.cpp" />
     <ClCompile Include="..\..\src\camera_ray_emitter_group.cpp" />
     <ClCompile Include="..\..\src\cft_estimator_2d.cpp" />
@@ -55,8 +53,6 @@
     <ClCompile Include="..\..\src\kd_tree.cpp" />
     <ClCompile Include="..\..\src\lambertian_bsdf.cpp" />
     <ClCompile Include="..\..\src\manta_math.cpp" />
-    <ClCompile Include="..\..\src\media_interface_node_output.cpp" />
-    <ClCompile Include="..\..\src\microfacet_distribution_node_output.cpp" />
     <ClCompile Include="..\..\src\multiply_node.cpp" />
     <ClCompile Include="..\..\src\multiply_node_output.cpp" />
     <ClCompile Include="..\..\src\opaque_media_interface.cpp" />
@@ -138,7 +134,8 @@
     <ClInclude Include="..\..\include\biconvex_lens.h" />
     <ClInclude Include="..\..\include\bilayer_bsdf.h" />
     <ClInclude Include="..\..\include\bsdf.h" />
-    <ClInclude Include="..\..\include\bsdf_node_output.h" />
+    <ClInclude Include="..\..\include\cached_vector_node.h" />
+    <ClInclude Include="..\..\include\cached_vector_output.h" />
     <ClInclude Include="..\..\include\camera_ray_emitter.h" />
     <ClInclude Include="..\..\include\camera_ray_emitter_group.h" />
     <ClInclude Include="..\..\include\cft_estimator_2d.h" />
@@ -164,7 +161,6 @@
     <ClInclude Include="..\..\include\object_reference_node_output.h" />
     <ClInclude Include="..\..\include\streaming_node_output.h" />
     <ClInclude Include="..\..\include\obj_file_node.h" />
-    <ClInclude Include="..\..\include\scene_geometry_node_output.h" />
     <ClInclude Include="..\..\include\image_byte_buffer.h" />
     <ClInclude Include="..\..\include\image_file_node.h" />
     <ClInclude Include="..\..\include\image_handling.h" />
@@ -175,8 +171,6 @@
     <ClInclude Include="..\..\include\lambertian_bsdf.h" />
     <ClInclude Include="..\..\include\margins.h" />
     <ClInclude Include="..\..\include\convolution_node.h" />
-    <ClInclude Include="..\..\include\media_interface_node_output.h" />
-    <ClInclude Include="..\..\include\microfacet_distribution_node_output.h" />
     <ClInclude Include="..\..\include\mipmap.h" />
     <ClInclude Include="..\..\include\multiply_node.h" />
     <ClInclude Include="..\..\include\multiply_node_output.h" />

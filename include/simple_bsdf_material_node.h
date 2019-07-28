@@ -1,18 +1,16 @@
 #ifndef MANTARAY_SIMPLE_BSDF_MATERIAL_NODE_H
 #define MANTARAY_SIMPLE_BSDF_MATERIAL_NODE_H
 
-#include <piranha.h>
+#include "object_reference_node.h"
 
-#include "srgb_node_output.h"
+#include "simple_bsdf_material.h"
 
 namespace manta {
 
-	class SimpleBsdfMaterialNode : public piranha::Node {
+	class SimpleBsdfMaterialNode : public ObjectReferenceNode<SimpleBSDFMaterial> {
 	public:
 		SimpleBsdfMaterialNode();
 		virtual ~SimpleBsdfMaterialNode();
-
-		virtual bool isMaterial() const { return true; }
 
 	protected:
 		virtual void _initialize();

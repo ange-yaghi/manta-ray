@@ -6,8 +6,8 @@
 #include <piranha.h>
 #include <string>
 
-manta::ObjFileNode::ObjFileNode() : ObjectReferenceNode() {
-	/* void */
+manta::ObjFileNode::ObjFileNode() : ObjectReferenceNode<Mesh>() {
+	m_mesh = nullptr;
 }
 
 manta::ObjFileNode::~ObjFileNode() {
@@ -26,21 +26,15 @@ void manta::ObjFileNode::_evaluate() {
 	loader.loadObjFile(filename.c_str());
 
 	Mesh *mesh = new Mesh;
-    // TODO
+	// TODO
 	//mesh->loadObjFileData(&loader, getProgram()->getMaterialManager());
 
-	m_output.setMesh(mesh);
+	m_output.setReference(mesh);
 	m_mesh = mesh;
 }
 
 void manta::ObjFileNode::_destroy() {
 	/* void */
-}
-
-void manta::ObjFileNode::registerOutputs() {
-	setPrimaryOutput(&m_output);
-
-	registerOutput(&m_output, "mesh");
 }
 
 void manta::ObjFileNode::registerInputs() {

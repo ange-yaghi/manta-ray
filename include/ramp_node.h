@@ -1,5 +1,5 @@
-#ifndef PIRANHA_RAMP_NODE_H
-#define PIRANHA_RAMP_NODE_H
+#ifndef MANTARAY_RAMP_NODE_H
+#define MANTARAY_RAMP_NODE_H
 
 #include <piranha.h>
 
@@ -27,4 +27,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* PIRANHA_RAMP_NODE_H */
+#endif /* MANTARAY_RAMP_NODE_H */

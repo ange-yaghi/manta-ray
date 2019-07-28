@@ -64,6 +64,7 @@
 #include <material_manager.h>
 #include <obj_file_node.h>
 #include <kd_tree_node.h>
+#include <cached_vector_node.h>
 
 namespace manta_demo {
 
