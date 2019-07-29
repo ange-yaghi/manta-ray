@@ -3,6 +3,8 @@
 #include "../include/vector_split_node.h"
 #include "../include/constructed_vector_node.h"
 #include "../include/vector_conversions.h"
+#include "../include/object_channel_types.h"
+#include "../include/phong_distribution.h"
 
 manta::LanguageRules::LanguageRules() {
     /* void */
@@ -24,10 +26,14 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__vector", &VectorNodeOutput::VectorType);
     registerBuiltinType <piranha::NoOpNode> (
         "__mantaray__string", &piranha::FundamentalType::StringType);
+    registerBuiltinType <piranha::NoOpNode>(
+        "__mantaray__microfacet_distribution", &ObjectChannel::MicrofacetDistributionChannel);
 
     // Constructors
     registerBuiltinType<ConstructedVectorNode>(
         "__mantaray__vector_constructor");
+    registerBuiltinType<PhongDistribution>(
+        "__mantaray__phong_distribution");
 
     // Literals
     registerBuiltinType<piranha::DefaultLiteralFloatNode>(

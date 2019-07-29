@@ -1,7 +1,7 @@
 #include <lambertian_bsdf.h>
 
 manta::LambertianBSDF::LambertianBSDF() {
-	this->m_output.setBsdf(this);
+	m_output.setReference(this);
 }
 
 manta::LambertianBSDF::~LambertianBSDF() {

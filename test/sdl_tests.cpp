@@ -55,3 +55,15 @@ TEST(SdlTests, SdlStringTest) {
 
     EXPECT_EQ(data, "Hello world");
 }
+
+TEST(SdlTests, SdlPhongTest) {
+    const piranha::ErrorList *errList;
+    piranha::IrCompilationUnit *unit = compileFile("basic_phong_test.mr", &errList);
+
+    piranha::NodeProgram program;
+    unit->build(&program);
+
+    program.execute();
+    
+    int a = 0;
+}

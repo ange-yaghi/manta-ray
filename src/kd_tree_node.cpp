@@ -1,6 +1,5 @@
 #include "../include/kd_tree_node.h"
 
-#include "../include/mesh_node_output.h"
 #include "../include/mesh.h"
 
 manta::KdTreeNode::KdTreeNode() {
@@ -19,7 +18,7 @@ void manta::KdTreeNode::_evaluate() {
 	m_kdTree.initialize((math::real)1000.0, math::constants::Zero);
 
 	Mesh *mesh = nullptr;
-	mesh = ((MeshNodeOutput *)m_meshInput)->getMesh();
+	mesh = ((ObjectReferenceNodeOutput<Mesh> *)m_meshInput)->getReference();
 
 	m_kdTree.analyzeWithProgress(mesh, 2);
 	

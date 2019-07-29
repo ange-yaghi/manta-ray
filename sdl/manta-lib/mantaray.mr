@@ -10,3 +10,4 @@ module {
 
 public import "types/atomic_types.mr"
 public import "types/conversions.mr"
+public import "types/microfacet_distributions.mr"

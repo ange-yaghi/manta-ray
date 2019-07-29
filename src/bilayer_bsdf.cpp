@@ -3,7 +3,6 @@
 #include <microfacet_reflection_bsdf.h>
 #include <lambertian_bsdf.h>
 #include <microfacet_distribution.h>
-#include <microfacet_distribution_node_output.h>
 #include <phong_distribution.h>
 
 #include <iostream>
@@ -49,7 +48,7 @@ manta::math::Vector manta::BilayerBSDF::sampleF(const IntersectionPoint *surface
 	math::Vector wh;
 
 	const MicrofacetDistribution *distribution = 
-        static_cast<MicrofacetDistributionNodeOutput *>(m_coatingDistribution)->getDistribution();
+        static_cast<ObjectReferenceNodeOutput<MicrofacetDistribution> *>(m_coatingDistribution)->getReference();
 	NodeSessionMemory specularDistMem;
 	distribution->initializeSessionMemory(surfaceInteraction, &specularDistMem, stackAllocator);
 

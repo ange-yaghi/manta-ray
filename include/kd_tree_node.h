@@ -3,7 +3,6 @@
 
 #include "object_reference_node.h"
 
-#include "scene_geometry_node_output.h"
 #include "kd_tree.h"
 
 namespace manta {
