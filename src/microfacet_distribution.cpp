@@ -3,7 +3,7 @@
 #include <stack_allocator.h>
 
 manta::MicrofacetDistribution::MicrofacetDistribution() {
-	m_output.setDistribution(this);
+    m_output.setReference(this);
 }
 
 manta::MicrofacetDistribution::~MicrofacetDistribution() {
@@ -27,8 +27,4 @@ manta::math::real manta::MicrofacetDistribution::smithBidirectionalShadowMasking
 		const math::Vector &i, const math::Vector &o, 
 		const math::Vector &m, NodeSessionMemory *mem) const {
 	return calculateG1(i, m, mem) * calculateG1(o, m, mem);
-}
-
-void manta::MicrofacetDistribution::registerOutputs() {
-	setPrimaryOutput(&m_output);
 }

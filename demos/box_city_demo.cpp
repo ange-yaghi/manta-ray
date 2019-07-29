@@ -46,6 +46,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	SimpleBSDFMaterial *blockMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	blockMaterial->setName("Block");
 	blockMaterial->setBSDF(&blockBSDF);
+    blockMaterial->setEmission(math::constants::Zero);
 	//blockMaterial->setReflectance(math::loadVector(0.01f, 0.01f, 0.01f));
 
 	SimpleBSDFMaterial outdoorTopLightMaterial;
@@ -54,6 +55,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
 	SimpleBSDFMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
 	groundMaterial->setName("Ground");
+    groundMaterial->setEmission(math::constants::Zero);
 	//groundMaterial->setReflectance(math::loadVector(0.01f, 0.01f, 0.01f));
 	groundMaterial->setBSDF(&lambert);
 
@@ -75,15 +77,17 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
 	// Create scene objects
 	KDTree kdtree;
-	kdtree.initialize(1000.0f, math::constants::Zero);
-	kdtree.analyzeWithProgress(&boxCity, 2);
 
 	if (WRITE_KDTREE_TO_FILE) {
 		kdtree.writeToObjFile("../../workspace/test_results/box_city_kdtree.obj");
 	}
 
 	SceneObject *boxCityObject = scene.createSceneObject();
-	if (USE_ACCELERATION_STRUCTURE) boxCityObject->setGeometry(&kdtree);
+    if (USE_ACCELERATION_STRUCTURE) {
+        kdtree.initialize(1000.0f, math::constants::Zero);
+        kdtree.analyzeWithProgress(&boxCity, 2);
+        boxCityObject->setGeometry(&kdtree);
+    }
 	else boxCityObject->setGeometry(&boxCity);
 	boxCityObject->setDefaultMaterial(blockMaterial);
 

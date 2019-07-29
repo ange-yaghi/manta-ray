@@ -4,12 +4,12 @@
 #include "bsdf.h"
 
 #include "vector_node_output.h"
-#include "microfacet_distribution_node_output.h"
 
 namespace manta {
 	
 	class MediaInterface;
 	class LambertianBSDF;
+    class MicrofacetDistribution;
 
 	class BilayerBSDF : public BSDF {
 	public:
@@ -20,7 +20,7 @@ namespace manta {
 			const math::Vector &i, math::Vector *o, math::real *pdf, 
 			StackAllocator *stackAllocator) const;
 
-		void setCoatingDistribution(MicrofacetDistributionNodeOutput *coatingMaterial) 
+		void setCoatingDistribution(ObjectReferenceNodeOutput<MicrofacetDistribution> *coatingMaterial) 
 			{ m_coatingDistribution = coatingMaterial; }
 		const piranha::pNodeInput getCoatingDistribution() { return m_coatingDistribution; }
 

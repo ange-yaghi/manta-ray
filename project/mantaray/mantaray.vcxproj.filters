@@ -325,9 +325,6 @@
     <Filter Include="Source Files\nodes\output-ports\color">
       <UniqueIdentifier>{7053271c-7fb1-4fa2-b174-ef342aa6e764}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\nodes\output-ports\mesh">
-      <UniqueIdentifier>{0ec3c6c3-5682-4e6e-8012-c08886a8ccdb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\nodes\output-ports\atomic-types\single">
       <UniqueIdentifier>{d2c2dda7-047f-447c-b9d6-fcf2ec43ffa4}</UniqueIdentifier>
     </Filter>
@@ -1048,9 +1045,6 @@
     </ClInclude>
     <ClInclude Include="..\..\include\vector_split_node.h">
       <Filter>Header Files\nodes\library\sdl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\mesh_node_output.h">
-      <Filter>Header Files\nodes\output-ports\mesh</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\node.h">
       <Filter>Header Files\nodes</Filter>

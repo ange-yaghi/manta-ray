@@ -1,14 +1,14 @@
 #ifndef MANTARAY_OBJECT_REFERENCE_NODE_H
 #define MANTARAY_OBJECT_REFERENCE_NODE_H
 
-#include <piranha.h>
+#include "node.h"
 
 #include "object_reference_node_output.h"
 
 namespace manta {
 
     template <typename Type>
-    class ObjectReferenceNode : public piranha::Node {
+    class ObjectReferenceNode : public Node {
     public:
         ObjectReferenceNode() {
             /* void */
