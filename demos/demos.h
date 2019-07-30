@@ -61,7 +61,7 @@
 #include <multiply_node.h>
 #include <ramp_node.h>
 #include <step_node.h>
-#include <material_manager.h>
+#include <material_library.h>
 #include <obj_file_node.h>
 #include <kd_tree_node.h>
 #include <cached_vector_node.h>

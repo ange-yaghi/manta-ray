@@ -11,9 +11,9 @@ module {
 private import "atomic_types.mr" as types
 private import "conversions.mr"
 
-public node microfacet_distribution_channel => __mantaray__microfacet_distribution { /* void */ }
+public node microfacet_distribution => __mantaray__microfacet_distribution { /* void */ }
 
 public node phong_distribution => __mantaray__phong_distribution {
     input power         [types::scalar] : 8.0;
-    alias output __out  [::microfacet_distribution_channel];
+    alias output __out  [::microfacet_distribution];
 }

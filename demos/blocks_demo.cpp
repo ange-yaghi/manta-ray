@@ -11,7 +11,7 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 
 	Scene scene;
 	RayTracer rayTracer;
-	rayTracer.setMaterialManager(new MaterialManager);
+	rayTracer.setMaterialLibrary(new MaterialLibrary);
 
 	ObjFileLoader blocksObj;
 	bool result = blocksObj.loadObjFile(MODEL_PATH "blocks_floor.obj");
@@ -63,19 +63,19 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 
 	// Create all materials
 	CachedVectorNode whiteNode(getColor(255, 255, 255));
-	SimpleBSDFMaterial *simpleBlockMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *simpleBlockMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	simpleBlockMaterial->setName("Block");
 	simpleBlockMaterial->setEmission(math::constants::Zero);
 	simpleBlockMaterial->setReflectanceNode(whiteNode.getMainOutput());
 	simpleBlockMaterial->setBSDF(&blockBSDF);
 
-	SimpleBSDFMaterial *simpleLetterMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *simpleLetterMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	simpleLetterMaterial->setName("Letters");
 	simpleLetterMaterial->setEmission(math::constants::Zero);
 	simpleLetterMaterial->setReflectanceNode(whiteNode.getMainOutput());
 	simpleLetterMaterial->setBSDF(&blockBSDF);
 
-	SimpleBSDFMaterial *simpleGroundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *simpleGroundMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	simpleGroundMaterial->setName("Ground");
 	simpleGroundMaterial->setEmission(math::constants::Zero);
 	simpleGroundMaterial->setReflectanceNode(whiteNode.getMainOutput());
@@ -87,7 +87,7 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 
 	// Create all scene geometry
 	Mesh blocks;
-	blocks.loadObjFileData(&blocksObj, rayTracer.getMaterialManager());
+	blocks.loadObjFileData(&blocksObj, rayTracer.getMaterialLibrary());
 	blocks.setFastIntersectEnabled(false);
 	blocksObj.destroy();
 

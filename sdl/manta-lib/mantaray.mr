@@ -11,3 +11,8 @@ module {
 public import "types/atomic_types.mr"
 public import "types/conversions.mr"
 public import "types/microfacet_distributions.mr"
+public import "types/bsdf.mr"
+public import "types/material_library.mr"
+public import "types/material.mr"
+public import "types/simple_bsdf_material.mr"
+public import "types/bilayer_bsdf.mr"

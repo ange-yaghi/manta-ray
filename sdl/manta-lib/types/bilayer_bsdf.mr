@@ -1,0 +1,12 @@
+private import "atomic_types.mr" as types
+private import "microfacet_distributions.mr"
+private import "conversions.mr"
+private import "bsdf.mr"
+
+public node bilayer_bsdf => __mantaray__bilayer_bsdf {
+    input coating   [microfacet_distribution];
+    input diffuse   [types::vector]: 1.0;
+    input specular  [types::vector]: 1.0;
+
+    alias output __out  [bsdf];
+}

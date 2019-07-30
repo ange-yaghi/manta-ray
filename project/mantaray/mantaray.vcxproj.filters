@@ -166,18 +166,6 @@
     <Filter Include="Source Files\material\interface\library">
       <UniqueIdentifier>{71e49133-c41b-4971-ad99-3ef7ed4c1628}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\material\surface-modeling">
-      <UniqueIdentifier>{b6f488fd-35a7-4ab8-94ba-143b4f1491e0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\material\surface-modeling\bsdf">
-      <UniqueIdentifier>{f7860d8f-8017-4ff9-93df-7cac58efda08}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\material\surface-modeling\bsdf\library">
-      <UniqueIdentifier>{ff7e7e50-0e34-4be3-9502-654fe2c2bce3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\material\surface-modeling\media-interface">
-      <UniqueIdentifier>{3c8dba32-1d04-4217-9ee1-183697545ab3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\material\surface-modeling\media-interface">
       <UniqueIdentifier>{c6a7a6ee-afee-4419-baff-211150384661}</UniqueIdentifier>
     </Filter>
@@ -207,9 +195,6 @@
     </Filter>
     <Filter Include="Source Files\os">
       <UniqueIdentifier>{df3763e2-a1e5-4c08-aaa4-6785b6d57a7e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\material\surface-modeling\microfacet-model">
-      <UniqueIdentifier>{eda51e41-f495-457e-a594-0cb7c2378661}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\material\surface-modeling\microfacet-distribution">
       <UniqueIdentifier>{38f44da1-6469-457c-b9e5-a0af4566f4e7}</UniqueIdentifier>
@@ -361,6 +346,21 @@
     <Filter Include="Source Files\nodes\library\cache">
       <UniqueIdentifier>{605343ba-250d-4fe3-a51a-88428f790e0b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\material\interface\surface-modeling">
+      <UniqueIdentifier>{b6f488fd-35a7-4ab8-94ba-143b4f1491e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\material\interface\surface-modeling\bsdf">
+      <UniqueIdentifier>{f7860d8f-8017-4ff9-93df-7cac58efda08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\material\interface\surface-modeling\bsdf\library">
+      <UniqueIdentifier>{ff7e7e50-0e34-4be3-9502-654fe2c2bce3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\material\interface\surface-modeling\media-interface">
+      <UniqueIdentifier>{3c8dba32-1d04-4217-9ee1-183697545ab3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\material\interface\surface-modeling\microfacet-model">
+      <UniqueIdentifier>{eda51e41-f495-457e-a594-0cb7c2378661}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -451,19 +451,16 @@
       <Filter>Source Files\memory-management</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\bsdf.cpp">
-      <Filter>Source Files\material\surface-modeling\bsdf</Filter>
+      <Filter>Source Files\material\interface\surface-modeling\bsdf</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\material.cpp">
       <Filter>Source Files\material\interface</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\material_manager.cpp">
-      <Filter>Source Files\material\interface</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\dielectric_media_interface.cpp">
-      <Filter>Source Files\material\surface-modeling\media-interface</Filter>
+      <Filter>Source Files\material\interface\surface-modeling\media-interface</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\lambertian_bsdf.cpp">
-      <Filter>Source Files\material\surface-modeling\bsdf\library</Filter>
+      <Filter>Source Files\material\interface\surface-modeling\bsdf\library</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\sampler_2d.cpp">
       <Filter>Source Files\emitter\sampler</Filter>
@@ -502,28 +499,28 @@
       <Filter>Source Files\nodes\library</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\perfect_specular_reflection_bsdf.cpp">
-      <Filter>Source Files\material\surface-modeling\bsdf\library</Filter>
+      <Filter>Source Files\material\interface\surface-modeling\bsdf\library</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\microfacet_distribution.cpp">
-      <Filter>Source Files\material\surface-modeling\microfacet-model</Filter>
+      <Filter>Source Files\material\interface\surface-modeling\microfacet-model</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\phong_distribution.cpp">
-      <Filter>Source Files\material\surface-modeling\microfacet-model</Filter>
+      <Filter>Source Files\material\interface\surface-modeling\microfacet-model</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\microfacet_reflection_bsdf.cpp">
-      <Filter>Source Files\material\surface-modeling\bsdf\library</Filter>
+      <Filter>Source Files\material\interface\surface-modeling\bsdf\library</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\bilayer_bsdf.cpp">
-      <Filter>Source Files\material\surface-modeling\bsdf\library</Filter>
+      <Filter>Source Files\material\interface\surface-modeling\bsdf\library</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\simple_bsdf_material.cpp">
       <Filter>Source Files\material\interface\library</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\microfacet_transmission_bsdf.cpp">
-      <Filter>Source Files\material\surface-modeling\bsdf\library</Filter>
+      <Filter>Source Files\material\interface\surface-modeling\bsdf\library</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\microfacet_glass_bsdf.cpp">
-      <Filter>Source Files\material\surface-modeling\bsdf\library</Filter>
+      <Filter>Source Files\material\interface\surface-modeling\bsdf\library</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\material_pointer.cpp">
       <Filter>Source Files\material\interface\library</Filter>
@@ -541,7 +538,7 @@
       <Filter>Source Files\output</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\ggx_distribution.cpp">
-      <Filter>Source Files\material\surface-modeling\microfacet-model</Filter>
+      <Filter>Source Files\material\interface\surface-modeling\microfacet-model</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\square_aperture.cpp">
       <Filter>Source Files\camera-emulation\apertures</Filter>
@@ -631,10 +628,10 @@
       <Filter>Source Files\camera-emulation</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\opaque_media_interface.cpp">
-      <Filter>Source Files\material\surface-modeling\media-interface</Filter>
+      <Filter>Source Files\material\interface\surface-modeling\media-interface</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\media_interface.cpp">
-      <Filter>Source Files\material\surface-modeling\media-interface</Filter>
+      <Filter>Source Files\material\interface\surface-modeling\media-interface</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\stack_allocator.cpp">
       <Filter>Source Files\memory-management</Filter>
@@ -675,9 +672,6 @@
     <ClCompile Include="..\..\src\obj_file_node.cpp">
       <Filter>Source Files\nodes\library\objects</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\simple_bsdf_material_node.cpp">
-      <Filter>Source Files\nodes\library\objects</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\srgb_node.cpp">
       <Filter>Source Files\nodes\library\objects</Filter>
     </ClCompile>
@@ -689,6 +683,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\object_channel_types.cpp">
       <Filter>Source Files\nodes\output-ports\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\material_library.cpp">
+      <Filter>Source Files\material\interface</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -819,9 +816,6 @@
       <Filter>Header Files\material\surface-modeling\bsdf</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\material.h">
-      <Filter>Header Files\material\interface</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\material_manager.h">
       <Filter>Header Files\material\interface</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\media_interface.h">
@@ -1082,8 +1076,8 @@
     <ClInclude Include="..\..\include\object_reference_node_output.h">
       <Filter>Header Files\nodes\output-ports\objects</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\simple_bsdf_material_node.h">
-      <Filter>Header Files\nodes\library\objects</Filter>
+    <ClInclude Include="..\..\include\material_library.h">
+      <Filter>Header Files\material\interface</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

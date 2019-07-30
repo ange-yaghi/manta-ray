@@ -13,7 +13,7 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
 	constexpr bool ALT_VERSION = false;
 
 	RayTracer rayTracer;
-	rayTracer.setMaterialManager(new MaterialManager);
+	rayTracer.setMaterialLibrary(new MaterialLibrary);
 
 	Scene scene;
 
@@ -93,15 +93,15 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
 	MicrofacetReflectionBSDF shinySteelBSDF;
 	shinySteelBSDF.setDistribution(&phongShinySteel);
 
-	SimpleBSDFMaterial *steelMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *steelMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	steelMaterial->setName("Steel");
 	steelMaterial->setBSDF(&steelBSDF);
 
-	SimpleBSDFMaterial *shinySteelMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *shinySteelMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	shinySteelMaterial->setName("ShinySteel");
 	shinySteelMaterial->setBSDF(&shinySteelBSDF);
 
-	SimpleBSDFMaterial *blackSteelMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *blackSteelMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	blackSteelMaterial->setName("BlackSteel");
 	blackSteelMaterial->setReflectance(getColor(0xC0, 0xC0, 0xC0));
 	blackSteelMaterial->setBSDF(&steelBSDF);
@@ -113,7 +113,7 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
 	MicrofacetReflectionBSDF graphiteBSDF;
 	graphiteBSDF.setDistribution(&phongGraphite);
 
-	SimpleBSDFMaterial *graphiteMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *graphiteMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	graphiteMaterial->setName("Graphite");
 	graphiteMaterial->setReflectance(getColor(0x29, 0x29, 0x29));
 	graphiteMaterial->setBSDF(&graphiteBSDF);
@@ -131,32 +131,32 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
 	paintBSDF.setSpecularAtNormal(math::loadScalar(0.1f));
 	paintBSDF.setDiffuseMaterial(&lambert);
 
-	SimpleBSDFMaterial *paintMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *paintMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	paintMaterial->setName("PencilPaint");
 	paintMaterial->setBSDF(&paintBSDF);
 
-	SimpleBSDFMaterial *defaultLambert = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *defaultLambert = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	defaultLambert->setBSDF(&lambert);
 	defaultLambert->setName("Default");
 
-	SimpleBSDFMaterial *rubber = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *rubber = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	rubber->setBSDF(&lambert);
 	rubber->setName("Eraser");
 	rubber->setReflectance(getColor(0xFF, 0xFF, 0xFF));
 	rubber->setReflectanceNode(eraserTexture.getMainOutput());
 
-	SimpleBSDFMaterial *wood = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *wood = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	wood->setBSDF(&lambert);
 	wood->setName("Wood");
 	wood->setReflectance(getColor(0xFF, 0xFF, 0xFF));
 	wood->setReflectanceNode(woodTexture.getMainOutput());
 
-	SimpleBSDFMaterial *floorMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *floorMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	floorMaterial->setBSDF(&lambert);
 	floorMaterial->setName("Floor");
 	floorMaterial->setReflectanceNode(floorTexture.getMainOutput());
 
-	SimpleBSDFMaterial *mainLight = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *mainLight = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	mainLight->setBSDF(nullptr);
 	mainLight->setName("Light");
 	mainLight->setEmission(math::loadScalar(4.0f));
@@ -164,7 +164,7 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
 
 	// Create all scene geometry
 	Mesh stage;
-	stage.loadObjFileData(&stageObj, rayTracer.getMaterialManager(), defaultLambert->getIndex(), 0);
+	stage.loadObjFileData(&stageObj, rayTracer.getMaterialLibrary(), defaultLambert->getIndex(), 0);
 
 	// Destroy file loaders
 	stageObj.destroy();

@@ -13,7 +13,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	constexpr bool ENABLE_FRAUNHOFER_DIFFRACTION = true;
 
 	RayTracer rayTracer;
-	rayTracer.setMaterialManager(new MaterialManager);
+	rayTracer.setMaterialLibrary(new MaterialLibrary);
 
 	Scene scene;
 
@@ -79,32 +79,32 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	MicrofacetReflectionBSDF floorBSDF;
 	floorBSDF.setDistribution(&floorDistribution);
 
-	SimpleBSDFMaterial *paintMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *paintMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	paintMaterial->setBSDF(&paintBsdf);
 	paintMaterial->setName("PenBody");
 
-	SimpleBSDFMaterial *chromeMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *chromeMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	chromeMaterial->setBSDF(&chromeBSDF);
 	chromeMaterial->setName("Chrome");
 
-	SimpleBSDFMaterial *floorMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *floorMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	floorMaterial->setBSDF(&floorBSDF);
 	floorMaterial->setReflectanceNode(floorWood.getMainOutput());
 	floorMaterial->setName("Backdrop");
 
-	SimpleBSDFMaterial *strongLight = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *strongLight = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	strongLight->setEmission(math::loadVector(2.0f, 2.0f, 2.0f));
 	strongLight->setReflectance(math::constants::Zero);
 	strongLight->setName("StrongLight");
 
-	SimpleBSDFMaterial *weakLight = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *weakLight = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	weakLight->setEmission(math::loadVector(1.0f, 1.0f, 1.0f));
 	weakLight->setReflectance(math::constants::Zero);
 	weakLight->setName("WeakLight");
 
 	// Create all scene geometry
 	Mesh pen;
-	pen.loadObjFileData(&penObj, rayTracer.getMaterialManager(), chromeMaterial->getIndex(), 0);
+	pen.loadObjFileData(&penObj, rayTracer.getMaterialLibrary(), chromeMaterial->getIndex(), 0);
 
 	// Destroy file loaders
 	penObj.destroy();

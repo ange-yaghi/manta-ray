@@ -5,6 +5,10 @@
 #include "../include/vector_conversions.h"
 #include "../include/object_channel_types.h"
 #include "../include/phong_distribution.h"
+#include "../include/bsdf.h"
+#include "../include/simple_bsdf_material.h"
+#include "../include/bilayer_bsdf.h"
+#include "../include/material_library.h"
 
 manta::LanguageRules::LanguageRules() {
     /* void */
@@ -28,12 +32,22 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__string", &piranha::FundamentalType::StringType);
     registerBuiltinType <piranha::NoOpNode>(
         "__mantaray__microfacet_distribution", &ObjectChannel::MicrofacetDistributionChannel);
+	registerBuiltinType <piranha::NoOpNode>(
+		"__mantaray__material", &ObjectChannel::MaterialChannel);
+	registerBuiltinType <MaterialLibrary>(
+		"__mantaray__material_library", &ObjectChannel::MaterialLibraryChannel);
+	registerBuiltinType <piranha::NoOpNode>(
+		"__mantaray__bsdf", &ObjectChannel::BsdfChannel);
 
     // Constructors
     registerBuiltinType<ConstructedVectorNode>(
         "__mantaray__vector_constructor");
     registerBuiltinType<PhongDistribution>(
         "__mantaray__phong_distribution");
+	registerBuiltinType<SimpleBSDFMaterial>(
+		"__mantaray__simple_bsdf_material");
+	registerBuiltinType<BilayerBSDF>(
+		"__mantaray__bilayer_bsdf");
 
     // Literals
     registerBuiltinType<piranha::DefaultLiteralFloatNode>(

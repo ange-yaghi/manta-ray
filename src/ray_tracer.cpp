@@ -19,7 +19,7 @@
 #include <coarse_intersection.h>
 #include <image_plane.h>
 #include <os_utilities.h>
-#include <material_manager.h>
+#include "../include/material_library.h"
 
 #include <iostream>
 #include <thread>
