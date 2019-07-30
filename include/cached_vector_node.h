@@ -13,7 +13,7 @@ namespace manta {
 		CachedVectorNode(const math::Vector &v);
 		virtual ~CachedVectorNode();
 
-		const CachedVectorOutput *getMainOutput() const { return &m_output; }
+		CachedVectorOutput *getMainOutput() { return &m_output; }
 
 	protected:
 		virtual void _initialize();

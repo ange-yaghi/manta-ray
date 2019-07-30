@@ -14,7 +14,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
 	Scene scene;
 	RayTracer rayTracer;
-	rayTracer.setMaterialManager(new MaterialManager);
+	rayTracer.setMaterialLibrary(new MaterialLibrary);
 
 	ObjFileLoader boxCityObj;
 	bool result = boxCityObj.loadObjFile(MODEL_PATH "box_city.obj");
@@ -43,7 +43,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	//blockBSDF.setDiffuse(getColor(129, 216, 208)); // 0xf1, 0xc4, 0x0f
 	blockBSDF.setDiffuseNode(blockWood.getMainOutput());
 	blockBSDF.setSpecularAtNormal(math::loadVector(0.02f, 0.02f, 0.02f));
-	SimpleBSDFMaterial *blockMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *blockMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	blockMaterial->setName("Block");
 	blockMaterial->setBSDF(&blockBSDF);
     blockMaterial->setEmission(math::constants::Zero);
@@ -53,13 +53,13 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	outdoorTopLightMaterial.setEmission(math::loadVector(1.f, 1.f, 1.f));
 	outdoorTopLightMaterial.setReflectance(math::constants::Zero);
 
-	SimpleBSDFMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *groundMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	groundMaterial->setName("Ground");
     groundMaterial->setEmission(math::constants::Zero);
 	//groundMaterial->setReflectance(math::loadVector(0.01f, 0.01f, 0.01f));
 	groundMaterial->setBSDF(&lambert);
 
-	SimpleBSDFMaterial *sunMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *sunMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	sunMaterial->setName("Sun");
 	sunMaterial->setReflectance(math::loadVector(0.0f, 0.0f, 0.0f));
 	sunMaterial->setEmission(math::loadVector(100.0f, 100.0f, 100.0f));
@@ -67,7 +67,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
 	// Create all scene geometry
 	Mesh boxCity;
-	boxCity.loadObjFileData(&boxCityObj, rayTracer.getMaterialManager());
+	boxCity.loadObjFileData(&boxCityObj, rayTracer.getMaterialLibrary());
 	boxCity.setFastIntersectEnabled(false);
 	//boxCity.findQuads();
 

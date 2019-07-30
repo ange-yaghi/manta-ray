@@ -1,7 +1,6 @@
 #include "demos.h"
 
 #include <piranha.h>
-#include "../include/simple_bsdf_material_node.h"
 #include "../include/path.h"
 
 using namespace manta;
@@ -18,8 +17,8 @@ void manta_demo::sdlDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	Scene scene;
 	piranha::NodeProgram program;
 	RayTracer rayTracer;
-    MaterialManager materialManager;
-	rayTracer.setMaterialManager(&materialManager);
+    MaterialLibrary materialLibrary;
+	rayTracer.setMaterialLibrary(&materialLibrary);
 
 	// Create all materials
     piranha::Compiler compiler;
@@ -31,7 +30,7 @@ void manta_demo::sdlDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	program.execute();
 
 	LambertianBSDF lambert;
-	SimpleBSDFMaterial *defaultMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *defaultMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	defaultMaterial->setName("Default");
 	defaultMaterial->setBSDF(&lambert);
 

@@ -150,7 +150,7 @@ manta::math::Vector manta::BilayerBSDF::sampleF(const IntersectionPoint *surface
 }
 
 void manta::BilayerBSDF::registerInputs() {
-	registerInput(&m_coatingDistribution, "Coating");
-	registerInput(&m_diffuseNode, "Diffuse");
-	registerInput(&m_specularNode, "Specular");
+	registerInput(&m_coatingDistribution, "coating");
+	registerInput(&m_diffuseNode, "diffuse");
+	registerInput(&m_specularNode, "specular");
 }

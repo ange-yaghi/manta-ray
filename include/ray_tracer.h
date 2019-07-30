@@ -36,7 +36,7 @@ namespace manta {
 	class PathRecorder;
 	class RayContainer;
 	class ImagePlane;
-	class MaterialManager;
+	class MaterialLibrary;
 
 	class RayTracer {
 	public:
@@ -71,8 +71,8 @@ namespace manta {
 		void setPathRecordingOutputDirectory(const std::string &s) { m_pathRecordingOutputDirectory = s; }
 		std::string getPathRecordingOutputDirector() const { return m_pathRecordingOutputDirectory; }
 		 
-		void setMaterialManager(MaterialManager *materialManager) { m_materialManager = materialManager; }
-		MaterialManager *getMaterialManager() { return m_materialManager; }
+		void setMaterialLibrary(MaterialLibrary *materialManager) { m_materialManager = materialManager; }
+		MaterialLibrary *getMaterialLibrary() { return m_materialManager; }
 
 	protected:
 		// Multithreading features
@@ -105,7 +105,7 @@ namespace manta {
 
 	protected:
 		// Material library
-		MaterialManager *m_materialManager;
+		MaterialLibrary *m_materialManager;
 
 	protected:
 		// Statistics

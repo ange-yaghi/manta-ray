@@ -31,7 +31,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	}
 
 	RayTracer rayTracer;
-	rayTracer.setMaterialManager(new MaterialManager);
+	rayTracer.setMaterialLibrary(new MaterialLibrary);
 	
 	DielectricMediaInterface glassFresnel;
 	glassFresnel.setIorIncident(1.0f);
@@ -48,7 +48,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	wallBSDF.setSpecularAtNormal(getColor(0x00, 0x00, 0x00));
 	wallBSDF.setCoatingDistribution(wallCoating.getMainOutput());
 	wallBSDF.setDiffuseMaterial(&lambert);
-	SimpleBSDFMaterial *wallMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *wallMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	wallMaterial->setName("WallMaterial");
 	wallMaterial->setBSDF(&wallBSDF);
 
@@ -60,7 +60,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	floorBSDF.setSpecularAtNormal(math::loadVector(1.0f, 1.0f, 1.0f));
 	floorBSDF.setCoatingDistribution(wallCoating.getMainOutput());
 	floorBSDF.setDiffuseMaterial(&lambert);
-	SimpleBSDFMaterial *floorMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *floorMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	floorMaterial->setName("FloorMaterial");
 	floorMaterial->setBSDF(&floorBSDF);
 
@@ -72,7 +72,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	carpetBSDF.setSpecularAtNormal(math::loadVector(0.0f, 0.0f, 0.0f));
 	carpetBSDF.setCoatingDistribution(wallCoating.getMainOutput());
 	carpetBSDF.setDiffuseMaterial(&lambert);
-	SimpleBSDFMaterial *carpetMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *carpetMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	carpetMaterial->setName("CarpetMaterial");
 	carpetMaterial->setBSDF(&carpetBSDF);
 
@@ -84,7 +84,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	tableSteelBSDF.setSpecularAtNormal(math::loadVector(1.0f, 1.0f, 1.0f));
 	tableSteelBSDF.setCoatingDistribution(tableSteelCoating.getMainOutput());
 	tableSteelBSDF.setDiffuseMaterial(&lambert);
-	SimpleBSDFMaterial *tableSteel = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *tableSteel = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	tableSteel->setName("TableSteel");
 	tableSteel->setBSDF(&tableSteelBSDF);
 
@@ -96,7 +96,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	tableTopBSDF.setSpecularAtNormal(math::loadVector(0.2f, 0.2f, 0.2f));
 	tableTopBSDF.setCoatingDistribution(tableTopCoating.getMainOutput());
 	tableTopBSDF.setDiffuseMaterial(&lambert);
-	SimpleBSDFMaterial *tableTop = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *tableTop = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	tableTop->setName("TableTop");
 	tableTop->setBSDF(&tableTopBSDF);
 
@@ -108,18 +108,18 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 	bookBSDF.setSpecularAtNormal(math::loadVector(0.0f, 0.0f, 0.0f));
 	bookBSDF.setCoatingDistribution(tableTopCoating.getMainOutput());
 	bookBSDF.setDiffuseMaterial(&lambert);
-	SimpleBSDFMaterial *book = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *book = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	book->setName("Book");
 	book->setBSDF(&bookBSDF);
 
 	// Create all scene geometry
 	Mesh roomGeometry;
-	roomGeometry.loadObjFileData(&complexRoomObj, rayTracer.getMaterialManager());
+	roomGeometry.loadObjFileData(&complexRoomObj, rayTracer.getMaterialLibrary());
 	roomGeometry.setFastIntersectEnabled(false);
 
 	if (BLOCK_ALL_LIGHT) {
 		Mesh roomShutters;
-		roomShutters.loadObjFileData(&roomShuttersObj, rayTracer.getMaterialManager(), wallMaterial->getIndex());
+		roomShutters.loadObjFileData(&roomShuttersObj, rayTracer.getMaterialLibrary(), wallMaterial->getIndex());
 		roomShutters.setFastIntersectEnabled(false);
 
 		roomGeometry.merge(&roomShutters);

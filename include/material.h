@@ -1,9 +1,10 @@
-#ifndef MATERIAL_H
-#define MATERIAL_H
+#ifndef MANTARAY_MATERIAL_H
+#define MANTARAY_MATERIAL_H
 
-#include <manta_math.h>
+#include "object_reference_node.h"
 
-#include <stack_allocator.h>
+#include "manta_math.h"
+#include "stack_allocator.h"
 
 #include <new>
 #include <string>
@@ -15,7 +16,7 @@ namespace manta {
 	class RayContainer;
 	class LightRay;
 
-	class Material {
+	class Material : public ObjectReferenceNode<Material> {
 	public:
 		Material();
 		virtual	~Material();
@@ -33,6 +34,16 @@ namespace manta {
 		int getIndex() const { return m_index; }
 
 	protected:
+		virtual void _initialize();
+		virtual void _evaluate();
+
+		virtual void registerInputs();
+
+	protected:
+		piranha::pNodeInput m_library;
+		piranha::pNodeInput m_nameInput;
+
+	protected:
 		std::string m_name;
 
 	protected:
@@ -41,4 +52,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* MATERIAL_H */
+#endif /* MANTARAY_MATERIAL_H */

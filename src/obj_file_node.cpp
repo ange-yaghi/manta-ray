@@ -27,7 +27,7 @@ void manta::ObjFileNode::_evaluate() {
 
 	Mesh *mesh = new Mesh;
 	// TODO
-	//mesh->loadObjFileData(&loader, getProgram()->getMaterialManager());
+	//mesh->loadObjFileData(&loader, getProgram()->getMaterialLibrary());
 
 	m_output.setReference(mesh);
 	m_mesh = mesh;

@@ -105,7 +105,8 @@ namespace piranha {
 
     protected:
         std::vector<NodeInputPort> m_inputs;
-        void registerInput(pNodeInput *node, const std::string &name);
+        void registerInput(
+			pNodeInput *node, const std::string &name, bool modifiesInput=false);
 
         std::vector<NodeOutputPort> m_outputs;
         void registerOutput(NodeOutput *node, const std::string &name);

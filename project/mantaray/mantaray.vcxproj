@@ -62,7 +62,6 @@
     <ClCompile Include="..\..\src\remap_node_output.cpp" />
     <ClCompile Include="..\..\src\rgb_space.cpp" />
     <ClCompile Include="..\..\src\signal_processing.cpp" />
-    <ClCompile Include="..\..\src\simple_bsdf_material_node.cpp" />
     <ClCompile Include="..\..\src\spectrum.cpp" />
     <ClCompile Include="..\..\src\srgb_node.cpp" />
     <ClCompile Include="..\..\src\srgb_node_output.cpp" />
@@ -72,7 +71,7 @@
     <ClCompile Include="..\..\src\streaming_node_output.cpp" />
     <ClCompile Include="..\..\src\vector_conversions.cpp" />
     <ClCompile Include="..\..\src\vector_map_2d.cpp" />
-    <ClCompile Include="..\..\src\material_manager.cpp" />
+    <ClCompile Include="..\..\src\material_library.cpp" />
     <ClCompile Include="..\..\src\material_pointer.cpp" />
     <ClCompile Include="..\..\src\microfacet_distribution.cpp" />
     <ClCompile Include="..\..\src\microfacet_glass_bsdf.cpp" />
@@ -180,7 +179,6 @@
     <ClInclude Include="..\..\include\rgb_space.h" />
     <ClInclude Include="..\..\include\scalar_map_2d.h" />
     <ClInclude Include="..\..\include\signal_processing.h" />
-    <ClInclude Include="..\..\include\simple_bsdf_material_node.h" />
     <ClInclude Include="..\..\include\srgb_node.h" />
     <ClInclude Include="..\..\include\srgb_node_output.h" />
     <ClInclude Include="..\..\include\step_node.h" />
@@ -189,7 +187,7 @@
     <ClInclude Include="..\..\include\vector_map_wrapper_node.h" />
     <ClInclude Include="..\..\include\spectrum.h" />
     <ClInclude Include="..\..\include\vector_map_2d.h" />
-    <ClInclude Include="..\..\include\material_manager.h" />
+    <ClInclude Include="..\..\include\material_library.h" />
     <ClInclude Include="..\..\include\material_pointer.h" />
     <ClInclude Include="..\..\include\media_interface.h" />
     <ClInclude Include="..\..\include\microfacet_distribution.h" />

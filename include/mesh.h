@@ -10,7 +10,7 @@
 namespace manta {
 
 	class ObjFileLoader;
-	class MaterialManager;
+	class MaterialLibrary;
 
 	struct CoarseCollisionOutput {
 		math::real depth;
@@ -69,7 +69,7 @@ namespace manta {
 		void setFastIntersectRadius(math::real radius) { m_fastIntersectRadius = radius; }
 		void setFastIntersectPosition(math::Vector pos) { m_fastIntersectPosition = pos; }
 
-		void loadObjFileData(ObjFileLoader *data, MaterialManager *materialLibrary = nullptr, 
+		void loadObjFileData(ObjFileLoader *data, MaterialLibrary *materialLibrary = nullptr, 
 			int defaultMaterialIndex = -1, unsigned int globalId = 0);
 
 		void merge(const Mesh *mesh);
