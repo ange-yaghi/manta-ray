@@ -1,7 +1,7 @@
-#ifndef SIMPLE_SAMPLER_H
-#define SIMPLE_SAMPLER_H
+#ifndef MANTARAY_SIMPLE_SAMPLER_H
+#define MANTARAY_SIMPLE_SAMPLER_H
 
-#include <sampler_2d.h>
+#include "sampler_2d.h"
 
 namespace manta {
 
@@ -16,4 +16,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* SIMPLE_SAMPLER_H */
+#endif /* MANTARAY_SIMPLE_SAMPLER_H */

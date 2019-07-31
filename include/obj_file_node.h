@@ -23,6 +23,7 @@ namespace manta {
 
 	protected:
 		piranha::pNodeInput m_filename;
+        piranha::pNodeInput m_materialLibrary;
 
 		Mesh *m_mesh;
 	};

@@ -14,6 +14,7 @@ namespace manta {
 
 	public:
 		VectorNodeOutput(bool scalar = false);
+        VectorNodeOutput(const piranha::ChannelType *channelType);
 		virtual ~VectorNodeOutput();
 
 		virtual void fullCompute(void *target) const;

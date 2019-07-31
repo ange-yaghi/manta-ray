@@ -68,7 +68,7 @@ manta::math::Vector manta::BilayerBSDF::sampleF(const IntersectionPoint *surface
 	else {
 		// Ray is transmitted through the coating material
 		math::Vector diffuseO;
-		m_diffuseMaterial->sampleF(surfaceInteraction, i, &diffuseO, &diffusePDF, stackAllocator);
+		m_diffuseMaterial.sampleF(surfaceInteraction, i, &diffuseO, &diffusePDF, stackAllocator);
 		wh = math::add(diffuseO, i);
 
 		*o = diffuseO;

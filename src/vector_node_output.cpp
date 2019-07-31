@@ -10,6 +10,12 @@ manta::VectorNodeOutput::VectorNodeOutput(bool scalar) : StreamingNodeOutput(&Ve
 	m_scalar = scalar;
 }
 
+manta::VectorNodeOutput::VectorNodeOutput(const piranha::ChannelType *channelType) 
+    : StreamingNodeOutput(channelType) 
+{
+    m_scalar = false;
+}
+
 manta::VectorNodeOutput::~VectorNodeOutput() {
 	/* void */
 }

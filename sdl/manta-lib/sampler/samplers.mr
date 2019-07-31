@@ -1,0 +1,16 @@
+private import "../types/atomic_types.mr"
+
+public node sampler_2d => __mantaray__sampler { /* void */ }
+
+public node grid_sampler => __mantaray__grid_sampler {
+    input grid_width [int]: 4;
+    alias output __out [sampler_2d];
+}
+
+public node random_sampler => __mantaray__random_sampler { 
+    alias output __out [sampler_2d];
+}
+
+public node simple_sampler => __mantaray__simple_sampler { 
+    alias output __out [sampler_2d];
+}

@@ -294,7 +294,7 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	phoneObj.destroy();
 
 	KDTree kdtree;
-	kdtree.initialize(1000, math::constants::Zero);
+	kdtree.configure(1000, math::constants::Zero);
 	kdtree.analyzeWithProgress(&phone, 2);
 
 	// Create scene objects
@@ -362,7 +362,7 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 	group = camera;
 
 	// Create the raytracer
-	rayTracer.initialize(200 * MB, 50 * MB, 12, 100, true);
+	rayTracer.configure(200 * MB, 50 * MB, 12, 100, true);
 	rayTracer.setBackgroundColor(getColor(0, 0, 0));
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");

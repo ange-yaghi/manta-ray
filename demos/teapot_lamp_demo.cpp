@@ -130,7 +130,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	objectMesh.findQuads();
 
 	KDTree kdtree;
-	kdtree.initialize(4.0f, math::constants::Zero);
+	kdtree.configure(4.0f, math::constants::Zero);
 	kdtree.analyzeWithProgress(&objectMesh, 4);
 
 	SpherePrimitive bulb;
@@ -179,7 +179,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	camera.setSampler(&randomSampler);
 
 	// Create the raytracer
-	rayTracer.initialize(200 * MB, 100 * MB, 12, 100, true);
+	rayTracer.configure(200 * MB, 100 * MB, 12, 100, true);
 	rayTracer.setBackgroundColor(getColor(0, 0, 0));
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");

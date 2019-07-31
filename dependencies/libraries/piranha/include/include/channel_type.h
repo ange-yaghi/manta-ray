@@ -16,7 +16,7 @@ namespace piranha {
     public:
         const char *getType() const { return m_typeString; }
         bool isCompatibleWith(const ChannelType &t) const;
-        bool operator==(const ChannelType &t) const;
+        bool isEqual(const ChannelType &t) const;
 
     private:
         static int generateHash(const char *string);

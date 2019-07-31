@@ -1,9 +1,10 @@
-#include <grid_sampler.h>
+#include "../include/grid_sampler.h"
 
 #include <assert.h>
 
 manta::GridSampler::GridSampler() {
 	m_gridWidth = 0;
+    m_gridWidthInput = nullptr;
 }
 
 manta::GridSampler::~GridSampler() {
@@ -59,5 +60,18 @@ int manta::GridSampler::getTotalSampleCount(int sampleCount) const {
 	if (s_mod_l != 0) {
 		actualSampleCount += (latticePoints - s_mod_l);
 	}
+
 	return actualSampleCount;
+}
+
+void manta::GridSampler::_initialize() {
+    /* void */
+}
+
+void manta::GridSampler::_evaluate() {
+    static_cast<piranha::IntValueOutput *>(m_gridWidthInput)->fullCompute((void *)&m_gridWidth);
+}
+
+void manta::GridSampler::registerInputs() {
+    registerInput(&m_gridWidthInput, "grid_width");
 }

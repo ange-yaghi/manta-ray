@@ -40,6 +40,7 @@ namespace manta {
 		const BSDF *getDefaultBSDF() const { return m_defaultBsdf; }
 
 	protected:
+        virtual void _evaluate();
 		virtual void _initialize();
 		virtual void registerInputs();
 
@@ -49,12 +50,13 @@ namespace manta {
 		piranha::pNodeInput m_emissionNode;
 
 		// Single BSDF
-		piranha::pNodeInput m_bsdf;
-		const BSDF *m_defaultBsdf;
+		piranha::pNodeInput m_bsdfInput;
 
 		// Fixed parameters
+        const BSDF *m_bsdf;
 		math::Vector m_emission;
 		math::Vector m_reflectance;
+        const BSDF *m_defaultBsdf;
 	};
 
 } /* namespace manta */

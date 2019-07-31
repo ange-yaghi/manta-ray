@@ -97,7 +97,7 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 
 	// Create scene objects
 	KDTree kdtree;
-	kdtree.initialize((math::real)500.0, math::constants::Zero);
+	kdtree.configure((math::real)500.0, math::constants::Zero);
 	kdtree.analyzeWithProgress(&blocks, 4);
 
 	SceneObject *boxCityObject = scene.createSceneObject();
@@ -172,7 +172,7 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 	ImagePlane sceneBuffer;
 
 	// Run the ray tracer
-	rayTracer.initialize(200 * MB, 50 * MB, 12, 100, true);
+	rayTracer.configure(200 * MB, 50 * MB, 12, 100, true);
 	rayTracer.setBackgroundColor(getColor(0, 0, 0));
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 

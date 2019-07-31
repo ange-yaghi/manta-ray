@@ -84,7 +84,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
 	SceneObject *boxCityObject = scene.createSceneObject();
     if (USE_ACCELERATION_STRUCTURE) {
-        kdtree.initialize(1000.0f, math::constants::Zero);
+        kdtree.configure(1000.0f, math::constants::Zero);
         kdtree.analyzeWithProgress(&boxCity, 2);
         boxCityObject->setGeometry(&kdtree);
     }
@@ -172,7 +172,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	ImagePlane sceneBuffer;
 
 	// Initialize and run the ray tracer
-	rayTracer.initialize(200 * MB, 50 * MB, 12, 100, true);
+	rayTracer.configure(200 * MB, 50 * MB, 12, 100, true);
 	rayTracer.setBackgroundColor(math::loadScalar(1.1f));
 	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);

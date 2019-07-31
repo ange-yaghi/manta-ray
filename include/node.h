@@ -8,6 +8,7 @@
 namespace manta {
 
     struct IntersectionPoint;
+    class Path;
 
 	class Node : public piranha::Node {
 	public:
@@ -23,6 +24,8 @@ namespace manta {
         virtual void initializeSessionMemory(const IntersectionPoint *surfaceInteraction,
             NodeSessionMemory *memory, StackAllocator *stackAllocator) const;
         void destroySessionMemory(NodeSessionMemory *memory, StackAllocator *stackAllocator) const;
+
+        void resolvePath(const Path *relative, Path *target) const;
 	};
 
 } /* namespace manta */

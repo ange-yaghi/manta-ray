@@ -3,12 +3,12 @@
 
 #include "bsdf.h"
 
+#include "lambertian_bsdf.h"
 #include "vector_node_output.h"
 
 namespace manta {
 	
 	class MediaInterface;
-	class LambertianBSDF;
     class MicrofacetDistribution;
 
 	class BilayerBSDF : public BSDF {
@@ -24,9 +24,8 @@ namespace manta {
 			{ m_coatingDistribution = coatingMaterial; }
 		const piranha::pNodeInput getCoatingDistribution() { return m_coatingDistribution; }
 
-		void setDiffuseMaterial(LambertianBSDF *diffuseMaterial) 
-			{ m_diffuseMaterial = diffuseMaterial; }
-		LambertianBSDF *getDiffuseMaterial() { return m_diffuseMaterial; }
+		void setDiffuseMaterial(LambertianBSDF *diffuseMaterial) {}
+		//LambertianBSDF *getDiffuseMaterial() { return m_diffuseMaterial; }
 
 		void setSpecularAtNormal(const math::Vector &specular) { m_specular = specular; }
 		math::Vector getSpecularAtNormal() const { return m_specular; }
@@ -45,7 +44,7 @@ namespace manta {
 
 	protected:
         piranha::pNodeInput m_coatingDistribution;
-		LambertianBSDF *m_diffuseMaterial;
+		LambertianBSDF m_diffuseMaterial;
 
         piranha::pNodeInput m_diffuseNode;
         piranha::pNodeInput m_specularNode;

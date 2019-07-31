@@ -1,13 +1,13 @@
-#ifndef IMAGE_OUTPUT_NODE_H
-#define IMAGE_OUTPUT_NODE_H
+#ifndef MANTARAY_IMAGE_OUTPUT_NODE_H
+#define MANTARAY_IMAGE_OUTPUT_NODE_H
 
-#include <piranha.h>
+#include "node.h"
 
 #include "vector_map_2d_node_output.h"
 
 namespace manta {
 
-	class ImageOutputNode : public piranha::Node {
+	class ImageOutputNode : public Node {
 	public:
 		ImageOutputNode();
 		~ImageOutputNode();
@@ -37,6 +37,9 @@ namespace manta {
 		bool m_gammaCorrection;
 
         piranha::pNodeInput m_input;
+        piranha::pNodeInput m_correctGammaInput;
+        piranha::pNodeInput m_jpegQualityInput;
+        piranha::pNodeInput m_filenameInput;
 	};
 
 } /* namespace manta */

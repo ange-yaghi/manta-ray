@@ -13,6 +13,7 @@ manta::SimpleBSDFMaterial::SimpleBSDFMaterial() {
 	m_reflectanceNode = nullptr;
 
 	m_bsdf = nullptr;
+    m_defaultBsdf = nullptr;
 
 	m_reflectance = math::constants::One;
 	m_emission = math::constants::One;
@@ -63,6 +64,12 @@ const manta::VectorNodeOutput *manta::SimpleBSDFMaterial::getEmissionNode() cons
 	return static_cast<manta::VectorNodeOutput *>(m_emissionNode);
 }
 
+void manta::SimpleBSDFMaterial::_evaluate() {
+    Material::_evaluate();
+
+    m_bsdf = static_cast<ObjectReferenceNodeOutput<BSDF> *>(m_bsdfInput)->getReference();
+}
+
 void manta::SimpleBSDFMaterial::_initialize() {
 	/* void */
 }
@@ -71,7 +78,7 @@ void manta::SimpleBSDFMaterial::registerInputs() {
 	Material::registerInputs();
 	registerInput(&m_reflectanceNode, "reflectance");
 	registerInput(&m_emissionNode, "emission");
-	registerInput(&m_bsdf, "bsdf");
+	registerInput(&m_bsdfInput, "bsdf");
 }
 
 void manta::SimpleBSDFMaterial::generateRays(RayContainer *rays, const LightRay &incidentRay, const IntersectionPoint &intersectionPoint, int degree, StackAllocator *stackAllocator) const {
@@ -111,10 +118,7 @@ void manta::SimpleBSDFMaterial::generateRays(RayContainer *rays, const LightRay 
 	math::Vector outgoing_t;
 	math::real pdf;
 	
-	const BSDF *bsdf = m_defaultBsdf;
-	if (m_bsdf != nullptr) {
-		bsdf = static_cast<ObjectReferenceNodeOutput<BSDF> *>(m_bsdf)->getReference();
-	}
+    const BSDF *bsdf = m_bsdf;
 
 	math::Vector reflectance = bsdf->sampleF(&intersectionPoint, t_dir, &outgoing_t, &pdf, stackAllocator);
 

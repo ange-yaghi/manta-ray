@@ -1,0 +1,18 @@
+private import "../types/atomic_types.mr"
+private import "../sampler/samplers.mr"
+
+public node camera => __mantaray__camera { /* void */ }
+
+public node standard_camera => __mantaray__standard_camera {
+    input up [vector];
+    input position [vector];
+    input direction [vector];
+    input resolution_x [int];
+    input resolution_y [int];
+    input plane_height [float];
+    input plane_distance [float];
+    input samples [int];
+    input sampler [sampler_2d]: simple_sampler();
+
+    alias output __out [::camera];
+}

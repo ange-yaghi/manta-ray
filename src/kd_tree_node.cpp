@@ -15,7 +15,7 @@ void manta::KdTreeNode::_initialize() {
 }
 
 void manta::KdTreeNode::_evaluate() {
-	m_kdTree.initialize((math::real)1000.0, math::constants::Zero);
+	m_kdTree.configure((math::real)1000.0, math::constants::Zero);
 
 	Mesh *mesh = nullptr;
 	mesh = ((ObjectReferenceNodeOutput<Mesh> *)m_meshInput)->getReference();

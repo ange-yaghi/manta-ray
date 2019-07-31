@@ -1,0 +1,6 @@
+private import "atomic_types.mr"
+
+public node float_negate => __mantaray__float_negate {
+    input __in [float];
+    alias output __out [float];
+}

@@ -20,6 +20,7 @@
 #include <image_plane.h>
 #include <os_utilities.h>
 #include "../include/material_library.h"
+#include "../include/vector_node_output.h"
 
 #include <iostream>
 #include <thread>
@@ -45,7 +46,7 @@ void manta::RayTracer::traceAll(const Scene *scene, CameraRayEmitterGroup *group
 	m_currentRay = 0;
 
 	// Set up the emitter group
-	group->initialize();
+	group->configure();
 
 	// Initialize the target
 	int resX = group->getResolutionX();
@@ -204,7 +205,7 @@ void manta::RayTracer::traceRayEmitter(const CameraRayEmitter *emitter, RayConta
 	container->calculateIntensity();
 }
 
-void manta::RayTracer::initialize(mem_size stackSize, mem_size workerStackSize, int threadCount, int renderBlockSize, bool multithreaded) {
+void manta::RayTracer::configure(mem_size stackSize, mem_size workerStackSize, int threadCount, int renderBlockSize, bool multithreaded) {
 	m_stack.initialize(stackSize);
 	m_renderBlockSize = renderBlockSize;
 	m_multithreaded = multithreaded;
@@ -228,6 +229,59 @@ void manta::RayTracer::incrementRayCompletion(const Job *job, int increment) {
 	}
 
 	m_outputLock.unlock();
+}
+
+void manta::RayTracer::_evaluate() {
+    int threadCount;
+    int renderBlockSize;
+    bool multithreaded;
+    bool deterministicSeed;
+    CameraRayEmitterGroup *camera;
+    Scene *scene;
+
+    static_cast<piranha::NodeOutput *>(m_multithreadedInput)->fullCompute((void *)&multithreaded);
+    static_cast<piranha::NodeOutput *>(m_threadCountInput)->fullCompute((void *)&threadCount);
+    static_cast<piranha::NodeOutput *>(m_renderBlockSizeInput)->fullCompute((void *)&renderBlockSize);
+    static_cast<piranha::NodeOutput *>(m_deterministicSeedInput)->fullCompute((void *)&deterministicSeed);
+    static_cast<VectorNodeOutput *>(m_backgroundColorInput)->sample(nullptr, (void *)&m_backgroundColor);
+
+    m_materialManager = 
+        static_cast<ObjectReferenceNodeOutput<MaterialLibrary> *>(m_materialLibraryInput)->getReference();
+    camera =
+        static_cast<ObjectReferenceNodeOutput<CameraRayEmitterGroup> *>(m_cameraInput)->getReference();
+    scene =
+        static_cast<ObjectReferenceNodeOutput<Scene> *>(m_sceneInput)->getReference();
+
+    configure(200 * MB, 50 * MB, threadCount, renderBlockSize, multithreaded);
+    setDeterministicSeedMode(deterministicSeed);
+
+    ImagePlane imagePlane;
+    traceAll(scene, camera, &imagePlane);
+
+    VectorMap2D *vectorMap = new VectorMap2D();
+    vectorMap->copy(&imagePlane);
+    imagePlane.destroy();
+
+    m_output.setMap(vectorMap);
+}
+
+void manta::RayTracer::_initialize() {
+    /* void */
+}
+
+void manta::RayTracer::registerInputs() {
+    registerInput(&m_multithreadedInput, "multithreaded");
+    registerInput(&m_threadCountInput, "threads");
+    registerInput(&m_renderBlockSizeInput, "block_size");
+    registerInput(&m_backgroundColorInput, "background");
+    registerInput(&m_deterministicSeedInput, "deterministic_seed");
+    registerInput(&m_materialLibraryInput, "materials");
+    registerInput(&m_sceneInput, "scene");
+    registerInput(&m_cameraInput, "camera");
+}
+
+void manta::RayTracer::registerOutputs() {
+    registerOutput(&m_output, "image");
 }
 
 void manta::RayTracer::createWorkers() {

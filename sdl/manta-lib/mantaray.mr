@@ -8,11 +8,34 @@ module {
     @github:        "github.com/ange-yaghi/manta-ray"
 }
 
+public import "ray-tracer/ray_tracer.mr"
+
+public import "image/image_output.mr"
+
 public import "types/atomic_types.mr"
 public import "types/conversions.mr"
-public import "types/microfacet_distributions.mr"
-public import "types/bsdf.mr"
-public import "types/material_library.mr"
-public import "types/material.mr"
-public import "types/simple_bsdf_material.mr"
-public import "types/bilayer_bsdf.mr"
+
+public import "microfacet-models/microfacet_distributions.mr"
+
+public import "bsdf/bsdf.mr"
+public import "bsdf/bilayer_bsdf.mr"
+public import "bsdf/lambertian_bsdf.mr"
+
+public import "mesh/mesh.mr"
+public import "mesh/obj_file.mr"
+
+public import "scene/scene_geometry.mr"
+public import "scene/scene_object.mr"
+public import "scene/scene.mr"
+
+public import "acceleration/kd_tree.mr"
+
+public import "materials/material_library.mr"
+public import "materials/material.mr"
+public import "materials/simple_bsdf_material.mr"
+
+public import "camera/cameras.mr"
+
+public import "sampler/samplers.mr"
+
+public import "types/operations.mr"

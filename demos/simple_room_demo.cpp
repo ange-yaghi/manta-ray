@@ -72,7 +72,7 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 	}
 
 	KDTree kdtree;
-	kdtree.initialize(100.f, math::loadVector(0, 0, 0));
+	kdtree.configure(100.f, math::loadVector(0, 0, 0));
 	kdtree.analyzeWithProgress(&smallHouse, 4);
 
 	if (WRITE_KDTREE_TO_FILE) {
@@ -120,7 +120,7 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 	ImagePlane sceneBuffer;
 
 	// Create the raytracer
-	rayTracer.initialize(200 * MB, 100 * MB, 12, 100, true);
+	rayTracer.configure(200 * MB, 100 * MB, 12, 100, true);
 	rayTracer.setBackgroundColor(getColor(135, 206, 235));
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 
