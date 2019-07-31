@@ -361,6 +361,24 @@
     <Filter Include="Source Files\material\interface\surface-modeling\microfacet-model">
       <UniqueIdentifier>{eda51e41-f495-457e-a594-0cb7c2378661}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\nodes\output-ports\operations\binary">
+      <UniqueIdentifier>{c061edc4-bb76-4d2b-abf5-380a426dc9b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\nodes\output-ports\operations\binary">
+      <UniqueIdentifier>{e6161bde-c428-46bc-9101-9e05975ed498}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\nodes\library\binary">
+      <UniqueIdentifier>{43363fec-3ae4-40e0-9ed9-0db1a9ef656f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\nodes\library\binary">
+      <UniqueIdentifier>{33da4a78-bc38-4d35-a482-f147d082fd19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\nodes\output-ports\operations\unary">
+      <UniqueIdentifier>{82f112ca-c4b6-4103-9bc3-5e6b99e2bb81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\nodes\library\unary">
+      <UniqueIdentifier>{26cae926-50c6-4fa1-8fb4-b5d79137afe8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -612,9 +630,6 @@
     <ClCompile Include="..\..\src\remap_node.cpp">
       <Filter>Source Files\nodes</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\multiply_node_output.cpp">
-      <Filter>Source Files\nodes\output-ports\operations</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\multiply_node.cpp">
       <Filter>Source Files\nodes\library</Filter>
     </ClCompile>
@@ -686,6 +701,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\material_library.cpp">
       <Filter>Source Files\material\interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\multiply_node_output.cpp">
+      <Filter>Source Files\nodes\output-ports\operations\binary</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\subtract_node_output.cpp">
+      <Filter>Source Files\nodes\output-ports\operations\binary</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1007,9 +1028,6 @@
     <ClInclude Include="..\..\include\ramp_node.h">
       <Filter>Header Files\nodes\library</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\multiply_node_output.h">
-      <Filter>Header Files\nodes\output-ports\operations</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\multiply_node.h">
       <Filter>Header Files\nodes\library</Filter>
     </ClInclude>
@@ -1078,6 +1096,24 @@
     </ClInclude>
     <ClInclude Include="..\..\include\material_library.h">
       <Filter>Header Files\material\interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\multiply_node_output.h">
+      <Filter>Header Files\nodes\output-ports\operations\binary</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\subtract_node_output.h">
+      <Filter>Header Files\nodes\output-ports\operations\binary</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\binary_node_output.h">
+      <Filter>Header Files\nodes\output-ports\operations\binary</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\binary_node.h">
+      <Filter>Header Files\nodes\library\binary</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\unary_node_output.h">
+      <Filter>Header Files\nodes\output-ports\operations\unary</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\unary_node.h">
+      <Filter>Header Files\nodes\library\unary</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

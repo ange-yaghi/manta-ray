@@ -22,6 +22,8 @@
 #include "../include/standard_camera_ray_emitter_group.h"
 #include "../include/ray_tracer.h"
 #include "../include/image_output_node.h"
+#include "../include/binary_node.h"
+#include "../include/unary_node.h"
 
 manta::LanguageRules::LanguageRules() {
     /* void */
@@ -121,7 +123,28 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__float_to_vector");
 
     // Unary operations
-    registerBuiltinType<piranha::NumNegateOperationNode<piranha::native_float>>("__mantaray__float_negate");
+    registerBuiltinType<piranha::NumNegateOperationNode<piranha::native_float>>(
+		"__mantaray__float_negate");
+	registerBuiltinType<NegateNode>(
+		"__mantaray__vector_negate");
+	registerBuiltinType<MagnitudeNode>(
+		"__mantaray__vector_magnitude");
+	registerBuiltinType<NormalizeNode>(
+		"__mantaray__vector_normalize");
+
+	// Binary operations
+	registerBuiltinType<AddNode>(
+		"__mantaray__vector_add");
+	registerBuiltinType<SubtractNode>(
+		"__mantaray__vector_sub");
+	registerBuiltinType<DivideNode>(
+		"__mantaray__vector_div");
+	registerBuiltinType<MultiplyNode>(
+		"__mantaray__vector_mul");
+	registerBuiltinType<DotNode>(
+		"__mantaray__vector_dot");
+	registerBuiltinType<CrossNode>(
+		"__mantaray__vector_cross");
 
     // ====================================================
     // Literal types
@@ -139,8 +162,35 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__float_to_vector"
     );
 
+	// ====================================================
+	// Binary operators
+	// ====================================================
+	registerOperator(
+		{ piranha::IrBinaryOperator::MUL, &VectorNodeOutput::VectorType, &VectorNodeOutput::VectorType },
+		"__piranha__vector_multiply"
+	);
+	registerOperator(
+		{ piranha::IrBinaryOperator::DIV, &VectorNodeOutput::VectorType, &VectorNodeOutput::VectorType },
+		"__piranha__vector_divide"
+	);
+	registerOperator(
+		{ piranha::IrBinaryOperator::ADD, &VectorNodeOutput::VectorType, &VectorNodeOutput::VectorType },
+		"__piranha__vector_add"
+	);
+	registerOperator(
+		{ piranha::IrBinaryOperator::SUB, &VectorNodeOutput::VectorType, &VectorNodeOutput::VectorType },
+		"__piranha__vector_sub"
+	);
+
+	// ====================================================
+	// Unary operators
+	// ====================================================
     registerUnaryOperator(
         { piranha::IrUnaryOperator::NUM_NEGATE, &piranha::FundamentalType::FloatType },
         "__mantaray__float_negate"
     );
+	registerUnaryOperator(
+		{ piranha::IrUnaryOperator::NUM_NEGATE, &VectorNodeOutput::VectorType },
+		"__mantaray__vector_negate"
+	);
 }
