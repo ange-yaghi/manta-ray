@@ -8,6 +8,8 @@ module {
     @github:        "github.com/ange-yaghi/manta-ray"
 }
 
+private import "conversions.mr"
+
 // ========================================================
 //  Channels
 // ========================================================
@@ -34,6 +36,12 @@ private node vector_channel => __mantaray__vector {
 @doc: "String channel type"
 private node string_channel => __mantaray__string { /* void */ }
 
+@doc: "Integer channel type"
+private node int_channel => __mantaray__int { /* void */ }
+
+@doc: "Bool channel type"
+private node bool_channel => __mantaray__bool { /* void */ }
+
 // ========================================================
 //  Literals
 // ========================================================
@@ -46,13 +54,21 @@ public node literal_float => __mantaray__literal_float {
     alias output __out [::float];
 }
 
+public node literal_int => __mantaray__literal_int {
+    alias output __out [::int];
+}
+
+public node literal_bool => __mantaray__literal_bool {
+    alias output __out [::bool];
+}
+
 // ========================================================
 //  Types
 // ========================================================
 
 @doc: "Scalar type with vector internal representation"
 public node scalar {
-    input s [::scalar_channel];
+    input s [::scalar_channel]: 0.0;
     alias output __out [::scalar_channel]: s;
 }
 
@@ -61,15 +77,31 @@ public node scalar {
          "a float type"
 public node float {
     input __in [::float_channel]: 0.0;
-    alias output __out: __in;
+    alias output __out [::float_channel]: __in;
+}
+
+@doc: "Integer cast type"
+@detail: "Converts anything connected to __in to "
+         "an integer type"
+public node int {
+    input __in [::int_channel]: 0;
+    alias output __out [::int_channel]: __in;
+}
+
+@doc: "Boolean cast type"
+@detail: "Converts anything connected to __in to "
+         "a boolean type"
+public node bool {
+    input __in [::bool_channel]: false;
+    alias output __out [::bool_channel]: __in;
 }
 
 @doc: "Vector constructor type"
 public node vector => __mantaray__vector_constructor {
-    input x [::scalar];
-    input y [::scalar];
-    input z [::scalar];
-    input w [::scalar];
+    input x [::scalar]: 0.0;
+    input y [::scalar]: 0.0;
+    input z [::scalar]: 0.0;
+    input w [::scalar]: 0.0;
 
     alias output __out [::vector_channel];
 }

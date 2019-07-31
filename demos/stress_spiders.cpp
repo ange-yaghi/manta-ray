@@ -64,7 +64,7 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 	stressSpidersObj.destroy();
 
 	KDTree kdtree;
-	kdtree.initialize(100.0f, math::constants::Zero);
+	kdtree.configure(100.0f, math::constants::Zero);
 	kdtree.analyzeWithProgress(&stressSpiders, 4);
 
 	SpherePrimitive outdoorTopLightGeometry;
@@ -148,7 +148,7 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 	}
 
 	// Create the raytracer
-	rayTracer.initialize(200 * MB, 100 * MB, 12, 100, true);
+	rayTracer.configure(200 * MB, 100 * MB, 12, 100, true);
 	rayTracer.setBackgroundColor(getColor(255, 255, 255));
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 

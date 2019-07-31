@@ -189,7 +189,7 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
 	stageObj.destroy();
 
 	KDTree kdtree;
-	kdtree.initialize(20, math::constants::Zero);
+	kdtree.configure(20, math::constants::Zero);
 	kdtree.analyzeWithProgress(&stage, 4);
 
 	// Create scene objects
@@ -230,7 +230,7 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
 	group = camera;
 
 	// Create the raytracer
-	rayTracer.initialize(200 * MB, 50 * MB, 12, 100, true);
+	rayTracer.configure(200 * MB, 50 * MB, 12, 100, true);
 	rayTracer.setBackgroundColor(getColor(100, 100, 100));
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");

@@ -1,27 +1,15 @@
-module {
-    @name           = "MantaRay Simple BSDF Material"
-    @author         = "Ange Yaghi"
-    @maintainer     = "Ange Yaghi"
-    @copyright      = "Copyright 2019, Ange Yaghi"
-    @doc            = "Interface for a single BSDF material"
-    @version        = "0.0.1a"
-    @github         = "github.com/ange-yaghi/manta-ray"
-}
-
 private import "../types/atomic_types.mr" as types
+private import "../types/conversions.mr"
+private import "../bsdf/bsdf.mr"
+private import "../materials/material_library.mr"
+private import "../materials/material.mr"
 
-@doc = "Single BSDF material"
-public node SimpleBsdfMaterial => __builtin__simple_bsdf_material {
+public node simple_bsdf_material => __mantaray__simple_bsdf_material {
+    input name          [types::string]: "";
+    modify library      [material_library];
+    input bsdf          [bsdf];
+    input reflectance   [types::vector]: 1.0;
+    input emission      [types::vector]: 0.0;
 
-    @doc = "Material name for binding to geometry"
-    input name;
-
-    @doc = "BSDF input"
-    input bsdf;
-
-    @doc = "Emission input (ie. color of emitted light)"
-    input emission:     types::vector(0.0, 0.0, 0.0, 0.0);
-
-    @doc = "Reflectance (ie. color)"
-    input reflectance:  types::vector(1.0, 1.0, 1.0, 1.0);
+    alias output __out  [material];
 }

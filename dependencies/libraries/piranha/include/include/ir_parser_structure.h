@@ -146,7 +146,10 @@ namespace piranha {
 
         // Compilation flags
         bool m_definitionsResolved;
+        bool m_expanded;
         bool m_validated;
+        bool m_typesChecked;
+        bool m_instantiationChecked;
 
         bool m_checkReferences;
 

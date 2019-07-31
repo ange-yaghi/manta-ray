@@ -20,19 +20,27 @@ def get_file_line_count(filename):
     
     return line_count
 
-def scan_directory(root_path, directory, ignore_files, extensions):
+def scan_directory(root_path, directory, ignore_files, extensions, breakdown):
     line_count = 0
     for root, sub_dirs, files in os.walk(root_path + directory):
         for file_entry in files:
             correct_extension = False
+            extension = None
             for ext in extensions:
                 if file_entry.endswith(ext):
                     correct_extension = True
+                    extension = ext
                     break
 
             if correct_extension:
+                file_line_count = get_file_line_count(os.path.join(root, file_entry.strip()))
+
+                if ext not in breakdown.keys():
+                    breakdown[ext] = 0
+
                 if file_entry not in ignore_files:
-                    line_count += get_file_line_count(os.path.join(root, file_entry.strip()))
+                    breakdown[ext] += file_line_count
+                    line_count += file_line_count
 
     return line_count
 
@@ -88,10 +96,16 @@ if __name__ == "__main__":
     # Calculate line count    
     ignoreFiles = ['sqlite3ext.h', 'sqlite3.h', 'shell.c', 'sqlite3.c']
 
+    breakdown = {}
+
     for directory in directories:
-        line_count += scan_directory(mypath, directory, ignoreFiles, extensions)
+        line_count += scan_directory(mypath, directory, ignoreFiles, extensions, breakdown)
 
     print_full_header("Build Statistics")
+
+    for ext in breakdown.keys():
+        print("INFO: lines in {} files: {}".format(ext, breakdown[ext]))
+
     print("INFO: Compiling and logging statistics")
     print("INFO: Build number:  {}".format(build_version))
     print("INFO: Lines of code: {}".format(line_count))

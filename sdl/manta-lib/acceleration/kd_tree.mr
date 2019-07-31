@@ -1,16 +1,9 @@
-module {
-    @name:           "MantaRay KD Tree"
-    @author:         "Ange Yaghi"
-    @maintainer:     "Ange Yaghi"
-    @copyright:      "Copyright 2019, Ange Yaghi"
-    @doc:            "Accelerates ray intersection with a mesh object"
-    @version:        "0.0.1a"
-    @github:         "github.com/ange-yaghi/manta-ray"
-}
+private import "../types/atomic_types.mr"
+private import "../types/conversions.mr"
+private import "../mesh/mesh.mr"
+private import "../scene/scene_geometry.mr"
 
-@doc: "KD Tree to accelerate intersection detection"
-public node KdTree => __builtin__KdTree {
-
-    @doc: "Mesh to construct a KD tree with"
-    input mesh;
+public node kd_tree => __mantaray__kd_tree {
+    input mesh          [mesh];
+    alias output __out  [scene_geometry];
 }

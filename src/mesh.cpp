@@ -13,6 +13,8 @@
 manta::Mesh::Mesh() {
 	CHECK_ALIGNMENT(this, 16);
 
+    overrideType<Mesh>();
+
 	m_faces = nullptr;
 	m_auxFaceData = nullptr;
 	m_quadFaces = nullptr;

@@ -21,7 +21,7 @@ TEST(KDTreeTests, KDTreeSanityTest) {
 	mesh.setFastIntersectEnabled(false);
 
 	KDTree kdTree;
-	kdTree.initialize(10, math::constants::Zero);
+	kdTree.configure(10, math::constants::Zero);
 
 	LightRay ray;
 	ray.setDirection(math::loadVector(0.0, 0.0, -1.0));
@@ -49,7 +49,7 @@ TEST(KDTreeTests, KDTreeIntersectionTest) {
 	mesh.setFastIntersectEnabled(false);
 
 	KDTree kdTree;
-	kdTree.initialize(10, math::constants::Zero);
+	kdTree.configure(10, math::constants::Zero);
 
 	LightRay ray;
 	ray.setDirection(math::loadVector(0.0, 0.0, -1.0));
@@ -80,7 +80,7 @@ TEST(KDTreeTests, KDTreeCubeTest) {
 	mesh.setFastIntersectEnabled(false);
 
 	KDTree kdTree;
-	kdTree.initialize(10, math::constants::Zero);
+	kdTree.configure(10, math::constants::Zero);
 
 	LightRay ray;
 	ray.setDirection(math::loadVector(0.0, 0.0, -1.0));
@@ -111,7 +111,7 @@ TEST(KDTreeTests, KDTreeDoubleCubeTest) {
 	mesh.setFastIntersectEnabled(false);
 
 	KDTree kdTree;
-	kdTree.initialize(10, math::constants::Zero);
+	kdTree.configure(10, math::constants::Zero);
 
 	LightRay ray1;
 	ray1.setDirection(math::loadVector(0.0, -1.0, 0.0));
@@ -158,7 +158,7 @@ TEST(KDTreeTests, KDTreeDoubleCubeSideTest) {
 	mesh.setFastIntersectEnabled(false);
 
 	KDTree kdTree;
-	kdTree.initialize(10, math::constants::Zero);
+	kdTree.configure(10, math::constants::Zero);
 
 	LightRay ray1;
 	ray1.setDirection(math::loadVector(1.0, 0.0, 0.0));

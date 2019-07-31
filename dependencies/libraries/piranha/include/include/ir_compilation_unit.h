@@ -69,6 +69,9 @@ namespace piranha {
         void setErrorList(ErrorList *list) { m_errorList = list; }
         ErrorList *getErrorList() const { return m_errorList; }
 
+        void resolveAll();
+        void validateAll();
+
     protected:
         virtual void _expand();
         virtual void _checkInstantiation();
@@ -86,6 +89,9 @@ namespace piranha {
         std::vector<IrImportStatement *> m_importStatements;
         std::vector<IrNodeDefinition *> m_nodeDefinitions;
         std::vector<IrCompilationUnit *> m_dependencies;
+
+        bool m_unitResolved = false;
+        bool m_unitValidated = false;
 
         ErrorList *m_errorList = nullptr;
 

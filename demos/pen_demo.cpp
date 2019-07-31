@@ -110,7 +110,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	penObj.destroy();
 
 	KDTree kdtree;
-	kdtree.initialize(150.f, math::constants::Zero);
+	kdtree.configure(150.f, math::constants::Zero);
 	kdtree.analyzeWithProgress(&pen, 4);
 
 	// Create scene objects
@@ -189,7 +189,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 	}
 
 	// Create the raytracer
-	rayTracer.initialize(200 * MB, 5 * MB, 12, 100, true);
+	rayTracer.configure(200 * MB, 5 * MB, 12, 100, true);
 	rayTracer.setBackgroundColor(getColor(0, 0, 0));
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");

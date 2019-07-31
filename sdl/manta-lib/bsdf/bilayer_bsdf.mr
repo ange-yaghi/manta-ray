@@ -1,6 +1,6 @@
-private import "atomic_types.mr" as types
-private import "microfacet_distributions.mr"
-private import "conversions.mr"
+private import "../types/atomic_types.mr" as types
+private import "../microfacet-models/microfacet_distributions.mr"
+private import "../types/conversions.mr"
 private import "bsdf.mr"
 
 public node bilayer_bsdf => __mantaray__bilayer_bsdf {

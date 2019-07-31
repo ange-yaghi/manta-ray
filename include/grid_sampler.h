@@ -1,7 +1,7 @@
-#ifndef GRID_SAMPLER_H
-#define GRID_SAMPLER_H
+#ifndef MANTARAY_GRID_SAMPLER_H
+#define MANTARAY_GRID_SAMPLER_H
 
-#include <sampler_2d.h>
+#include "sampler_2d.h"
 
 namespace manta {
 
@@ -16,10 +16,17 @@ namespace manta {
 		void setGridWidth(int gridWidth) { m_gridWidth = gridWidth; }
 		int getGridWidth() const { return m_gridWidth; }
 
+    protected:
+        virtual void _initialize();
+        virtual void _evaluate();
+        virtual void registerInputs();
+
+        piranha::pNodeInput m_gridWidthInput;
+
 	protected:
 		int m_gridWidth;
 	};
 
 } /* namespace manta */
 
-#endif /* GRID_SAMPLER_H */
+#endif /* MANTARAY_GRID_SAMPLER_H */

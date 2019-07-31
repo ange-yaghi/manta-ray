@@ -1,9 +1,9 @@
-#ifndef STANDARD_CAMERA_RAY_EMITTER_GROUP_H
-#define STANDARD_CAMERA_RAY_EMITTER_GROUP_H
+#ifndef MANTARAY_STANDARD_CAMERA_RAY_EMITTER_GROUP_H
+#define MANTARAY_STANDARD_CAMERA_RAY_EMITTER_GROUP_H
 
-#include <camera_ray_emitter_group.h>
+#include "camera_ray_emitter_group.h"
 
-#include <manta_math.h>
+#include "manta_math.h"
 
 namespace manta {
 
@@ -14,7 +14,7 @@ namespace manta {
 		StandardCameraRayEmitterGroup();
 		virtual ~StandardCameraRayEmitterGroup();
 
-		virtual void initialize();
+		virtual void configure();
 		virtual CameraRayEmitter *createEmitter(int ix, int iy, 
 			StackAllocator *stackAllocator) const;
 
@@ -28,4 +28,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* STANDARD_CAMERA_RAY_EMITTER_GROUP_H */
+#endif /* MANTARAY_STANDARD_CAMERA_RAY_EMITTER_GROUP_H */

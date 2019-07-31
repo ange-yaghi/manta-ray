@@ -2,6 +2,8 @@
 
 manta::SceneGeometry::SceneGeometry() {
 	m_id = -1;
+
+    m_output.setReference(this);
 }
 
 manta::SceneGeometry::~SceneGeometry() {

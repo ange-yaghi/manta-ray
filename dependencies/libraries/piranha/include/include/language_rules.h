@@ -25,9 +25,22 @@ namespace piranha {
     struct NodeTypeConversion {
         const ChannelType *startingType;
         const ChannelType *targetType;
+        bool isBase = true;
 
         bool operator==(const NodeTypeConversion &ref) const {
-            return (startingType == ref.startingType) && (targetType == ref.targetType);
+            const NodeTypeConversion *base;
+            const NodeTypeConversion *cmp;
+            if (isBase) {
+                base = this;
+                cmp = &ref;
+            }
+            else {
+                base = &ref;
+                cmp = this;
+            }
+
+            return (cmp->startingType->isCompatibleWith(*base->startingType)) 
+                && (cmp->targetType->isCompatibleWith(*base->targetType));
         }
     };
 
@@ -36,11 +49,25 @@ namespace piranha {
         const ChannelType *leftType;
         const ChannelType *rightType;
         bool reversible = true;
+        bool isBase = true;
 
         bool operator==(const OperatorMapping &ref) const {
-            bool typesMatch = leftType == ref.leftType && rightType == ref.rightType;
-            if (!typesMatch && ref.reversible && reversible) {
-                typesMatch = (leftType == ref.rightType && rightType == ref.leftType);
+            const OperatorMapping *base;
+            const OperatorMapping *cmp;
+            if (isBase) {
+                base = this;
+                cmp = &ref;
+            }
+            else {
+                base = &ref;
+                cmp = this;
+            }
+
+            bool typesMatch = cmp->leftType->isCompatibleWith(*base->leftType) 
+                && cmp->rightType->isCompatibleWith(*base->rightType);
+            if (!typesMatch && base->reversible) {
+                typesMatch = cmp->leftType->isCompatibleWith(*base->rightType)
+                    && cmp->rightType->isCompatibleWith(*base->leftType);
             }
 
             return typesMatch && (op == ref.op);
@@ -50,9 +77,21 @@ namespace piranha {
     struct UnaryOperatorMapping {
         IrUnaryOperator::OPERATOR op;
         const ChannelType *type;
+        bool isBase = true;
 
         bool operator==(const UnaryOperatorMapping &ref) const {
-            bool typesMatch = type == ref.type;
+            const UnaryOperatorMapping *base;
+            const UnaryOperatorMapping *cmp;
+            if (isBase) {
+                base = this;
+                cmp = &ref;
+            }
+            else {
+                base = &ref;
+                cmp = this;
+            }
+
+            bool typesMatch = cmp->type->isCompatibleWith(*base->type);
             return typesMatch && (op == ref.op);
         }
     };
@@ -100,9 +139,9 @@ namespace piranha {
         template<> std::string getLiteralBuiltinName<piranha::native_int>() const  { return *m_literalRules.lookup(LITERAL_INT); }
         template<> std::string getLiteralBuiltinName<piranha::native_float>() const { return *m_literalRules.lookup(LITERAL_FLOAT); }
 
-        bool checkConversion(const NodeTypeConversion &conversion) const;
-        Node *generateConversion(const NodeTypeConversion &conversion);
-        std::string resolveConversionBuiltinType(const NodeTypeConversion &conversion) const;
+        bool checkConversion(const ChannelType *input, const ChannelType *output) const;
+        Node *generateConversion(const ChannelType *input, const ChannelType *output);
+        std::string resolveConversionBuiltinType(const ChannelType *input, const ChannelType *output) const;
 
         bool checkBuiltinType(const std::string &builtinType) const;
 

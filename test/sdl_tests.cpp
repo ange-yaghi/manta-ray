@@ -64,8 +64,6 @@ TEST(SdlTests, SdlPhongTest) {
     unit->build(&program);
 
     program.execute();
-    
-    int a = 0;
 }
 
 TEST(SdlTests, SdlSimpleMaterialTest) {
@@ -76,6 +74,16 @@ TEST(SdlTests, SdlSimpleMaterialTest) {
 	unit->build(&program);
 
 	program.execute();
+}
 
-	int a = 0;
+TEST(SdlTests, SdlObjectNodeTest) {
+    const piranha::ErrorList *errList;
+    piranha::IrCompilationUnit *unit = compileFile("basic_object_file_test.mr", &errList);
+
+    piranha::NodeProgram program;
+    unit->build(&program);
+
+    program.execute();
+
+    int a = 0;
 }

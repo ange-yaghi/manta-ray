@@ -2,8 +2,8 @@ private import "../../sdl/manta-lib/mantaray.mr"
 
 bilayer_bsdf bsdf(
     coating: phong_distribution(16.0),
-    diffuse: vector(0.1, 0.2, 0.3, 0.0),
-    specular: vector(0.4, 0.5, 0.6, 0.0)
+    diffuse: vector(0.1, 0.2, 0.3),
+    specular: vector(0.4, 0.5, 0.6)
 )
 
 material_library lib()

@@ -40,9 +40,9 @@ namespace piranha {
 
         Node *getInterface() const { return m_interface; }
 
-    protected:
         void overrideType(const ChannelType *type) { m_singleType = type; }
 
+    protected:
         virtual Node *generateInterface() { return nullptr; }
 
     private:

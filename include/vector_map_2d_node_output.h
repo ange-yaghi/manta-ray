@@ -10,14 +10,12 @@
 namespace manta {
 
 	class VectorMap2DNodeOutput : public VectorNodeOutput {
-	public:
-		VectorMap2DNodeOutput() {
-			m_map = nullptr;
-		}
+    public:
+        static const piranha::ChannelType VectorMap2dType;
 
-		virtual ~VectorMap2DNodeOutput() {
-			/* void */
-		}
+	public:
+        VectorMap2DNodeOutput();
+        virtual ~VectorMap2DNodeOutput();
 
 		virtual void sample(const IntersectionPoint *surfaceInteraction, void *target) const;
 		virtual void discreteSample2D(int x, int y, void *target) const;

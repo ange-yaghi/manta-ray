@@ -5,6 +5,8 @@
 manta::Material::Material() {
 	m_name = "";
 	m_index = -1;
+
+    m_output.setReference(this);
 }
 
 manta::Material::~Material() {
@@ -21,6 +23,8 @@ void manta::Material::_evaluate() {
 			->getReference();
 
 	library->addMaterial(this);
+
+    static_cast<piranha::NodeOutput *>(m_nameInput)->fullCompute((void *)&m_name);
 }
 
 void manta::Material::registerInputs() {

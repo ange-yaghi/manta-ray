@@ -1,8 +1,10 @@
-#ifndef CAMERA_RAY_EMITTER_GROUP_H
-#define CAMERA_RAY_EMITTER_GROUP_H
+#ifndef MANTARAY_CAMERA_RAY_EMITTER_GROUP_H
+#define MANTARAY_CAMERA_RAY_EMITTER_GROUP_H
 
-#include <manta_math.h>
-#include <stack_allocator.h>
+#include "object_reference_node.h"
+
+#include "manta_math.h"
+#include "stack_allocator.h"
 
 namespace manta {
 
@@ -11,7 +13,7 @@ namespace manta {
 	class CameraRayEmitter;
 	class RayContainer;
 
-	class CameraRayEmitterGroup {
+	class CameraRayEmitterGroup : public ObjectReferenceNode<CameraRayEmitterGroup> {
 	public:
 		CameraRayEmitterGroup();
 		virtual ~CameraRayEmitterGroup();
@@ -26,10 +28,10 @@ namespace manta {
 		int getResolutionY() const { return m_resolutionY; }
 
 		void setPlaneHeight(float planeHeight) { m_planeHeight = planeHeight; }
-		float getPlaneHeight() const { return m_planeHeight; }
+		math::real_d getPlaneHeight() const { return m_planeHeight; }
 
 		void setPlaneDistance(float planeDistance) { m_planeDistance = planeDistance; }
-		float getPlaneDistance() const { return m_planeDistance; }
+		math::real_d getPlaneDistance() const { return m_planeDistance; }
 
 		void setPosition(const math::Vector &position) { m_position = position; }
 		math::Vector getPosition() const { return m_position; }
@@ -43,7 +45,7 @@ namespace manta {
 		void setSampler(Sampler2D *sampler) { m_sampler = sampler; }
 		Sampler2D *getSampler() const { return m_sampler; }
 
-		virtual void initialize() = 0;
+		virtual void configure() = 0;
 
 		virtual CameraRayEmitter *createEmitter(int ix, int iy, 
 			StackAllocator *stackAllocator) const = 0;
@@ -65,6 +67,21 @@ namespace manta {
 			return newEmitter;
 		}
 
+    protected:
+        virtual void _evaluate();
+        virtual void _initialize();
+        virtual void registerInputs();
+
+        piranha::pNodeInput m_upInput;
+        piranha::pNodeInput m_positionInput;
+        piranha::pNodeInput m_directionInput;
+        piranha::pNodeInput m_resolutionXInput;
+        piranha::pNodeInput m_resolutionYInput;
+        piranha::pNodeInput m_planeHeightInput;
+        piranha::pNodeInput m_planeDistanceInput;
+        piranha::pNodeInput m_sampleInput;
+        piranha::pNodeInput m_samplerInput;
+
 	protected:
 		math::Vector m_up;
 		math::Vector m_position;
@@ -73,8 +90,8 @@ namespace manta {
 		int m_resolutionX;
 		int m_resolutionY;
 
-		float m_planeHeight;
-		float m_planeDistance;
+		math::real_d m_planeHeight;
+		math::real_d m_planeDistance;
 
 		int m_samples;
 		Sampler2D *m_sampler;
@@ -82,4 +99,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* CAMERA_RAY_EMITTER_GROUP_H */
+#endif /* MANTARAY_CAMERA_RAY_EMITTER_GROUP_H */
