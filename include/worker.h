@@ -23,54 +23,54 @@
 
 namespace manta {
 
-	struct Job;
-	class CameraRayEmitterGroup;
-	class Scene;
-	class RayTracer;
+    struct Job;
+    class CameraRayEmitterGroup;
+    class Scene;
+    class RayTracer;
 
-	class Worker {
-	public:
-		Worker();
-		~Worker();
+    class Worker {
+    public:
+        Worker();
+        ~Worker();
 
-		void initialize(mem_size stackSize, RayTracer *rayTracer, int workerId, 
-			bool deterministicSeed, const std::string &pathRecorderOutputDirectory);
-		void start(bool multithreaded = true);
-		void join();
-		void destroy();
+        void initialize(mem_size stackSize, RayTracer *rayTracer, int workerId, 
+            bool deterministicSeed, const std::string &pathRecorderOutputDirectory);
+        void start(bool multithreaded = true);
+        void join();
+        void destroy();
 
-		mem_size getMaxMemoryUsage() const { return m_maxMemoryUsage; }
-		std::string getTreeName(int pixelIndex, int sample) const;
+        mem_size getMaxMemoryUsage() const { return m_maxMemoryUsage; }
+        std::string getTreeName(int pixelIndex, int sample) const;
 
-		const RuntimeStatistics *getStatistics() const { return &m_statistics; }
+        const RuntimeStatistics *getStatistics() const { return &m_statistics; }
 
-	protected:
-		void work();
-		void doJob(const Job *job);
+    protected:
+        void work();
+        void doJob(const Job *job);
 
-		StackAllocator *m_stack;
-		RayTracer *m_rayTracer;
+        StackAllocator *m_stack;
+        RayTracer *m_rayTracer;
 
-		std::thread *m_thread;
+        std::thread *m_thread;
 
-	protected:
-		// Debugging/Path recording
-		RuntimeStatistics m_statistics;
+    protected:
+        // Debugging/Path recording
+        RuntimeStatistics m_statistics;
 
-		std::string getObjFname();
+        std::string getObjFname();
 
-		PathRecorder m_pathRecorder;
-		std::string m_pathRecorderOutputDirectory;
-		bool m_deterministicSeed;
+        PathRecorder m_pathRecorder;
+        std::string m_pathRecorderOutputDirectory;
+        bool m_deterministicSeed;
 
-	protected:
-		// Identification
-		int m_workerId;
+    protected:
+        // Identification
+        int m_workerId;
 
-	protected:
-		// Statistics
-		mem_size m_maxMemoryUsage;
-	};
+    protected:
+        // Statistics
+        mem_size m_maxMemoryUsage;
+    };
 
 } /* namespace manta */
 

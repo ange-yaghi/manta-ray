@@ -5,17 +5,17 @@
 
 namespace manta {
 
-	class StackAllocator;
+    class StackAllocator;
 
-	class PerfectSpecularReflectionBSDF : public BSDF {
-	public:
-		PerfectSpecularReflectionBSDF();
-		virtual ~PerfectSpecularReflectionBSDF();
+    class PerfectSpecularReflectionBSDF : public BSDF {
+    public:
+        PerfectSpecularReflectionBSDF();
+        virtual ~PerfectSpecularReflectionBSDF();
 
-		virtual math::Vector sampleF(const IntersectionPoint *surfaceInteraction, 
-			const math::Vector &i, math::Vector *o, math::real *pdf, 
-			StackAllocator *stackAllocator) const;
-	};
+        virtual math::Vector sampleF(const IntersectionPoint *surfaceInteraction, 
+            const math::Vector &i, math::Vector *o, math::real *pdf, 
+            StackAllocator *stackAllocator) const;
+    };
 
 } /* namespace manta */
 

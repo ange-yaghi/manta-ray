@@ -5,13 +5,13 @@
 
 namespace manta {
 
-	class CircularAperture : public Aperture {
-	public:
-		CircularAperture();
-		virtual ~CircularAperture();
+    class CircularAperture : public Aperture {
+    public:
+        CircularAperture();
+        virtual ~CircularAperture();
 
-		virtual bool filter(math::real x, math::real y) const;
-	};
+        virtual bool filter(math::real x, math::real y) const;
+    };
 
 } /* namespace manta */
 

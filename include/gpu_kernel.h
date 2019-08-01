@@ -6,18 +6,18 @@
 
 namespace manta {
 
-	// Forward declarations
-	class GPUMemory;
+    // Forward declarations
+    class GPUMemory;
 
-	class GPUKernel {
-	public:
-		GPUKernel() {}
-		virtual ~GPUKernel() {}
+    class GPUKernel {
+    public:
+        GPUKernel() {}
+        virtual ~GPUKernel() {}
 
-		virtual void setArgument(int argument, GPUMemory *memory) = 0;
-		virtual void run(unsigned int elements) = 0;
-		virtual void free() = 0;
-	};
+        virtual void setArgument(int argument, GPUMemory *memory) = 0;
+        virtual void run(unsigned int elements) = 0;
+        virtual void free() = 0;
+    };
 
 } /* namespace manta */
 

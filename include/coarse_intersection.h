@@ -5,21 +5,21 @@
 
 namespace manta {
 
-	class SceneObject;
-	class SceneGeometry;
+    class SceneObject;
+    class SceneGeometry;
 
-	struct CoarseIntersection {
-		SceneObject *sceneObject;
-		const SceneGeometry *sceneGeometry;
-		math::real depth;
-		int faceHint;
-		int subdivisionHint;
-		int globalHint;
+    struct CoarseIntersection {
+        SceneObject *sceneObject;
+        const SceneGeometry *sceneGeometry;
+        math::real depth;
+        int faceHint;
+        int subdivisionHint;
+        int globalHint;
 
-		math::real su, sv, sw;
-		
-		bool valid;
-	};
+        math::real su, sv, sw;
+        
+        bool valid;
+    };
 
 }
 

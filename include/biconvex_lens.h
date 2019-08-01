@@ -7,24 +7,24 @@
 
 namespace manta {
 
-	class BiconvexLens : public LensElement {
-	public:
-		BiconvexLens();
-		virtual ~BiconvexLens();
+    class BiconvexLens : public LensElement {
+    public:
+        BiconvexLens();
+        virtual ~BiconvexLens();
 
-		void setInputSurfaceRadius(math::real radius);
-		void setOutputSurfaceRadius(math::real radius);
+        void setInputSurfaceRadius(math::real radius);
+        void setOutputSurfaceRadius(math::real radius);
 
-		void configure();
-		virtual bool transformLightRay(const LightRay *ray, LightRay *transformed) const;
-		virtual bool transformLightRayReverse(const LightRay *ray, LightRay *transformed) const;
+        void configure();
+        virtual bool transformLightRay(const LightRay *ray, LightRay *transformed) const;
+        virtual bool transformLightRayReverse(const LightRay *ray, LightRay *transformed) const;
 
-		virtual math::real calculateFocalLength() const;
+        virtual math::real calculateFocalLength() const;
 
-	protected:
-		SphericalSurface m_outputSurface;
-		SphericalSurface m_inputSurface;		
-	};
+    protected:
+        SphericalSurface m_outputSurface;
+        SphericalSurface m_inputSurface;        
+    };
 
 } /* namespace manta */
 

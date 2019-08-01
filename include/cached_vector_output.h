@@ -5,21 +5,21 @@
 
 namespace manta {
 
-	class CachedVectorOutput : public VectorNodeOutput {
-	public:
-		CachedVectorOutput();
-		~CachedVectorOutput();
+    class CachedVectorOutput : public VectorNodeOutput {
+    public:
+        CachedVectorOutput();
+        ~CachedVectorOutput();
 
-		virtual void sample(const IntersectionPoint *surfaceInteraction, void *target) const;
-		virtual void discreteSample2D(int x, int y, void *target) const;
-		virtual void fullOutput(const void **target) const;
+        virtual void sample(const IntersectionPoint *surfaceInteraction, void *target) const;
+        virtual void discreteSample2D(int x, int y, void *target) const;
+        virtual void fullOutput(const void **target) const;
 
-		void setValue(const math::Vector &v) { m_value = v; }
-		math::Vector getValue() const { return m_value; }
+        void setValue(const math::Vector &v) { m_value = v; }
+        math::Vector getValue() const { return m_value; }
 
-	protected:
-		math::Vector m_value;
-	};
+    protected:
+        math::Vector m_value;
+    };
 
 } /* namespcae manta */
 

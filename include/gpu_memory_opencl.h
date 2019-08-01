@@ -9,33 +9,33 @@
 #include <CL/opencl.h>
 
 namespace manta {
-	
-	// Forward declarations
-	class GPUManagerOpenCL;
+    
+    // Forward declarations
+    class GPUManagerOpenCL;
 
-	class GPUMemoryOpenCL : GPUMemory {
-	public:
-		GPUMemoryOpenCL();
-		~GPUMemoryOpenCL();
+    class GPUMemoryOpenCL : GPUMemory {
+    public:
+        GPUMemoryOpenCL();
+        ~GPUMemoryOpenCL();
 
-		virtual void read(void *target);
-		virtual void write(const void *data);
-		virtual void free();
+        virtual void read(void *target);
+        virtual void write(const void *data);
+        virtual void free();
 
-		virtual unsigned int getSize() const { return m_size; }
+        virtual unsigned int getSize() const { return m_size; }
 
-		void setManager(GPUManagerOpenCL *manager) { m_manager = manager; }
-		void setSize(unsigned int size) { m_size = size; }
+        void setManager(GPUManagerOpenCL *manager) { m_manager = manager; }
+        void setSize(unsigned int size) { m_size = size; }
 
-		virtual void setObject(cl_mem memoryObject) { m_memoryObject = memoryObject; }
-		cl_mem getObject() const { return m_memoryObject; }
+        virtual void setObject(cl_mem memoryObject) { m_memoryObject = memoryObject; }
+        cl_mem getObject() const { return m_memoryObject; }
 
-	protected:
-		GPUManagerOpenCL *m_manager;
-		unsigned int m_size;
+    protected:
+        GPUManagerOpenCL *m_manager;
+        unsigned int m_size;
 
-		cl_mem m_memoryObject;
-	};
+        cl_mem m_memoryObject;
+    };
 
 } /* namespace manta */
 

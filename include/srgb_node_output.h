@@ -7,28 +7,28 @@
 
 namespace manta {
 
-	class SrgbNodeOutput : public VectorNodeOutput {
-	public:
-		SrgbNodeOutput();
-		virtual ~SrgbNodeOutput();
+    class SrgbNodeOutput : public VectorNodeOutput {
+    public:
+        SrgbNodeOutput();
+        virtual ~SrgbNodeOutput();
 
-		virtual void sample(const IntersectionPoint *surfaceInteraction, void *target) const;
-		virtual void discreteSample2D(int x, int y, void *target) const;
-		virtual void fullOutput(const void **target) const;
+        virtual void sample(const IntersectionPoint *surfaceInteraction, void *target) const;
+        virtual void discreteSample2D(int x, int y, void *target) const;
+        virtual void fullOutput(const void **target) const;
 
-		piranha::pNodeInput *getRConnection() { return &m_r; }
+        piranha::pNodeInput *getRConnection() { return &m_r; }
         piranha::pNodeInput *getGConnection() { return &m_g; }
         piranha::pNodeInput *getBConnection() { return &m_b; }
         piranha::pNodeInput *getAConnection() { return &m_a; }
 
-		virtual void registerInputs();
+        virtual void registerInputs();
 
-	protected:
+    protected:
         piranha::pNodeInput m_r;
         piranha::pNodeInput m_g;
         piranha::pNodeInput m_b;
         piranha::pNodeInput m_a;
-	};
+    };
 
 } /* namespace manta */
 
