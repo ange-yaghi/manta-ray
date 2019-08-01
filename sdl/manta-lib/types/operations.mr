@@ -1,0 +1,59 @@
+private import "atomic_types.mr"
+
+public node float_negate => __mantaray__float_negate {
+    input __in [float];
+    alias output __out [float];
+}
+
+// Vector operations
+
+public node vector_add => __mantaray__vector_add {
+    input __left [vector];
+    input __right [vector];
+    alias output __out [vector];
+}
+
+public node vector_sub => __mantaray__vector_sub {
+    input __left [vector];
+    input __right [vector];
+    alias output __out [vector];
+}
+
+public node vector_div => __mantaray__vector_div {
+    input __left [vector];
+    input __right [vector];
+    alias output __out [vector];
+}
+
+public node vector_mul => __mantaray__vector_mul {
+    input __left [vector];
+    input __right [vector];
+    alias output __out [vector];
+}
+
+public node dot => __mantaray__vector_dot {
+    input __left [vector];
+    input __right [vector];
+    alias output __out [vector];
+}
+
+public node cross => __mantaray__vector_cross {
+    input __left [vector];
+    input __right [vector];
+    alias output __out [vector];
+}
+
+public node vector_negate => __mantaray__vector_negate {
+    input __in [vector];
+    alias output __out [vector];
+}
+
+public node normalize => __mantaray__vector_normalize {
+    input __in [vector];
+    alias output __out [vector];
+}
+
+public node magnitude => __mantaray__vector_magnitude {
+    input __in [vector];
+    alias output __out [vector];
+}

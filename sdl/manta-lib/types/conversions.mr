@@ -1,0 +1,16 @@
+module {
+    @name:          "MantaRay Conversions"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "Defines all conversions between atomic types"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
+private import "atomic_types.mr"
+
+public node float_to_vector => __mantaray__float_to_vector {
+    input __in [float];
+    alias output __out [scalar];
+}

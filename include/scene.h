@@ -1,5 +1,7 @@
-#ifndef SCENE_H
-#define SCENE_H
+#ifndef MANTARAY_SCENE_H
+#define MANTARAY_SCENE_H
+
+#include "object_reference_node.h"
 
 #include <vector>
 
@@ -7,12 +9,13 @@ namespace manta {
 
 	class SceneObject;
 
-	class Scene {
+	class Scene : public ObjectReferenceNode<Scene> {
 	public:
 		Scene();
-		~Scene();
+		virtual ~Scene();
 
 		SceneObject *createSceneObject();
+        void addSceneObject(SceneObject *object);
 
 		SceneObject *getSceneObject(int index) const { return m_sceneObjects[index]; }
 		int getSceneObjectCount() const { return (int)m_sceneObjects.size(); }
@@ -23,4 +26,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* SCENE_H */
+#endif /* MANTARAY_SCENE_H */

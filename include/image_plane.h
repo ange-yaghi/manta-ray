@@ -1,5 +1,5 @@
-#ifndef IMAGE_PLANE_H
-#define IMAGE_PLANE_H
+#ifndef MANTARAY_IMAGE_PLANE_H
+#define MANTARAY_IMAGE_PLANE_H
 
 #include <manta_math.h>
 
@@ -62,4 +62,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* IMAGE_PLANE_H */
+#endif /* MANTARAY_IMAGE_PLANE_H */

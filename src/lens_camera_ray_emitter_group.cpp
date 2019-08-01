@@ -1,8 +1,8 @@
-#include <lens_camera_ray_emitter_group.h>
+#include "../include/lens_camera_ray_emitter_group.h"
 
-#include <lens_camera_ray_emitter.h>
-#include <lens.h>
-#include <sampler_2d.h>
+#include "../include/lens_camera_ray_emitter.h"
+#include "../include/lens.h"
+#include "../include/sampler_2d.h"
 
 manta::LensCameraRayEmitterGroup::LensCameraRayEmitterGroup() {
 	m_lens = nullptr;
@@ -12,7 +12,7 @@ manta::LensCameraRayEmitterGroup::~LensCameraRayEmitterGroup() {
 	/* void */
 }
 
-void manta::LensCameraRayEmitterGroup::initialize() {
+void manta::LensCameraRayEmitterGroup::configure() {
 	int resolutionX = m_lens->getSensorResolutionX();
 	int resolutionY = m_lens->getSensorResolutionY();
 

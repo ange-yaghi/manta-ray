@@ -1,7 +1,7 @@
-#include <convolution_node.h>
+#include "../include/convolution_node.h"
 
-#include <complex_map_2d.h>
-#include <vector_map_2d_node_output.h>
+#include "../include/complex_map_2d.h"
+#include "../include/vector_map_2d_node_output.h"
 
 manta::ConvolutionNode::ConvolutionNode() {
 	m_base = nullptr;
@@ -21,8 +21,8 @@ void manta::ConvolutionNode::_initialize() {
 
 void manta::ConvolutionNode::_evaluate() {
 	// Cast inputs
-	const NodeOutput *a = m_base;
-	const NodeOutput *b = m_filter;
+	const VectorNodeOutput *a = static_cast<VectorNodeOutput *>(m_base);
+	const VectorNodeOutput *b = static_cast<VectorNodeOutput *>(m_filter);
 
 	Margins margins;
 	VectorMap2D a_mapSafe;

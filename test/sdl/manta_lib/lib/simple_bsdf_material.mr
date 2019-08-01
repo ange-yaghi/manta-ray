@@ -1,8 +1,0 @@
-private import "atomic_types.mr" as types
-
-public node SimpleBsdfMaterial => __builtin__simple_bsdf_material {
-    input name;
-    input bsdf;
-    input emission:     vector(0.0, 0.0, 0.0, 0.0);
-    input reflectance:  vector(1.0, 1.0, 1.0, 1.0);
-}

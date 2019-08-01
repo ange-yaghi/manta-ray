@@ -1,15 +1,15 @@
-#ifndef IMAGE_FILE_NODE_H
-#define IMAGE_FILE_NODE_H
+#ifndef MANTARAY_IMAGE_FILE_NODE_H
+#define MANTARAY_IMAGE_FILE_NODE_H
 
-#include <node.h>
+#include <piranha.h>
 
-#include <vector_map_2d.h>
+#include "vector_map_2d.h"
 
 struct SDL_Surface;
 
 namespace manta {
 
-	class ImageFileNode : public Node {
+	class ImageFileNode : public piranha::Node {
 	public:
 		struct Pixel {
 			unsigned char r;
@@ -45,4 +45,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* IMAGE_FILE_NODE_H */
+#endif /* MANTARAY_IMAGE_FILE_NODE_H */

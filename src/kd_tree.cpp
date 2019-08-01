@@ -1,10 +1,10 @@
-#include <kd_tree.h>
+#include "../include/kd_tree.h"
 
-#include <mesh.h>
-#include <standard_allocator.h>
-#include <coarse_intersection.h>
-#include <runtime_statistics.h>
-#include <os_utilities.h>
+#include "../include/mesh.h"
+#include "../include/standard_allocator.h"
+#include "../include/coarse_intersection.h"
+#include "../include/runtime_statistics.h"
+#include "../include/os_utilities.h"
 
 #include <algorithm>
 #include <thread>
@@ -32,7 +32,20 @@ manta::KDTree::~KDTree() {
 	assert(m_nodes == nullptr);
 }
 
-void manta::KDTree::initialize(math::real width, const math::Vector &position) {
+void manta::KDTree::_evaluate() {
+    configure((math::real)1000.0, math::constants::Zero);
+
+    Mesh *mesh = nullptr;
+    mesh = ((ObjectReferenceNodeOutput<Mesh> *)m_meshInput)->getReference();
+
+    analyzeWithProgress(mesh, 4);
+}
+
+void manta::KDTree::registerInputs() {
+    registerInput(&m_meshInput, "mesh");
+}
+
+void manta::KDTree::configure(math::real width, const math::Vector &position) {
 	m_width = width;
 
 	m_bounds.maxPoint = math::add(position, math::loadScalar(width));

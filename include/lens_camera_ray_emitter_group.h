@@ -1,5 +1,5 @@
-#ifndef LENS_CAMERA_RAY_EMITTER_GROUP_H
-#define LENS_CAMERA_RAY_EMITTER_GROUP_H
+#ifndef MANTARAY_LENS_CAMERA_RAY_EMITTER_GROUP_H
+#define MANTARAY_LENS_CAMERA_RAY_EMITTER_GROUP_H
 
 #include <camera_ray_emitter_group.h>
 
@@ -14,7 +14,7 @@ namespace manta {
 		LensCameraRayEmitterGroup();
 		virtual ~LensCameraRayEmitterGroup();
 
-		virtual void initialize();
+		virtual void configure();
 		virtual CameraRayEmitter *createEmitter(int ix, int iy, 
 			StackAllocator *stackAllocator) const;
 
@@ -27,4 +27,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* LENS_CAMERA_RAY_EMITTER_GROUP_H */
+#endif /* MANTARAY_LENS_CAMERA_RAY_EMITTER_GROUP_H */

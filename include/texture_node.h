@@ -1,17 +1,17 @@
-#ifndef TEXTURE_MAP_H
-#define TEXTURE_MAP_H
+#ifndef MANTARAY_TEXTURE_MAP_H
+#define MANTARAY_TEXTURE_MAP_H
 
-#include <node.h>
+#include <piranha.h>
 
-#include <manta_math.h>
-#include <image_file_node.h>
-#include <vector_map_2d_node_output.h>
+#include "manta_math.h"
+#include "image_file_node.h"
+#include "vector_map_2d_node_output.h"
 
 namespace manta {
 
 	struct IntersectionPoint;
 
-	class TextureNode : public Node {
+	class TextureNode : public piranha::Node {
 	public:
 		TextureNode();
 		virtual ~TextureNode();
@@ -36,4 +36,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* TEXTURE_MAP_H */
+#endif /* MANTARAY_TEXTURE_MAP_H */

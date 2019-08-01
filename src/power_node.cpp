@@ -1,4 +1,4 @@
-#include <power_node.h>
+#include "../include/power_node.h"
 
 #include <assert.h>
 
@@ -33,8 +33,8 @@ void manta::PowerNode::_initialize() {
 }
 
 void manta::PowerNode::registerInputs() {
-	registerInput((pNodeInput *)&m_inputNode, "Input");
-	registerInput((pNodeInput *)&m_powerNode, "Power");
+	registerInput((piranha::pNodeInput *)&m_inputNode, "Input");
+	registerInput((piranha::pNodeInput *)&m_powerNode, "Power");
 }
 
 void manta::PowerNode::registerOutputs() {

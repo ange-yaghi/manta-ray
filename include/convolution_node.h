@@ -1,19 +1,19 @@
-#ifndef CONVOLUTION_NODE_H
-#define CONVOLUTION_NODE_H
+#ifndef MANTARAY_CONVOLUTION_NODE_H
+#define MANTARAY_CONVOLUTION_NODE_H
 
-#include <node.h>
+#include <piranha.h>
 
-#include <vector_map_2d.h>
-#include <vector_map_2d_node_output.h>
+#include "vector_map_2d.h"
+#include "vector_map_2d_node_output.h"
 
 namespace manta {
 
-	class ConvolutionNode : public Node {
+    class ConvolutionNode : public piranha::Node{
 	public:
 		ConvolutionNode();
 		~ConvolutionNode();
 
-		void setInputs(NodeOutput *base, NodeOutput *filter) { m_base = base; m_filter = filter; }
+		void setInputs(piranha::NodeOutput *base, piranha::NodeOutput *filter) { m_base = base; m_filter = filter; }
 
 		void setResize(bool resize) { m_resize = resize; }
 		bool getResize() const { return m_resize; }
@@ -32,8 +32,8 @@ namespace manta {
 		virtual void registerOutputs();
 
 	protected:
-		NodeOutput *m_base;
-		NodeOutput *m_filter;
+        piranha::NodeOutput *m_base;
+        piranha::NodeOutput *m_filter;
 		VectorMap2DNodeOutput m_output;
 		bool m_resize;
 		bool m_clip;
@@ -43,5 +43,5 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* IMAGE_OUTPUT_NODE_H */
+#endif /* MANTARAY_CONVOLUTION_NODE_H */
 

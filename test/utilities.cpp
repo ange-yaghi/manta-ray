@@ -1,11 +1,10 @@
 #include <pch.h>
 
-#include <utilities.h>
+#include "utilities.h"
 
-#include <image_byte_buffer.h>
-#include <jpeg_writer.h>
-#include <sdl_compilation_error.h>
-#include <sdl_error_list.h>
+#include "../include/image_byte_buffer.h"
+#include "../include/jpeg_writer.h"
+#include "../include/language_rules.h"
 
 void writeToJpeg(const RealMap2D *scalarMap, const std::string &fname) {
 	ImageByteBuffer byteBuffer;
@@ -51,22 +50,15 @@ void writeToJpeg(const ComplexMap2D *plane, const std::string &fname, Margins *m
 	byteBuffer.free();
 }
 
-bool findError(const SdlErrorList *errorList, const SdlErrorCode_struct &errorCode, int line, 
-										const SdlCompilationUnit *unit, bool instantiationError) {
-	int errorCount = errorList->getErrorCount();
+piranha::IrCompilationUnit *compileFile(const std::string &filename, const piranha::ErrorList **errList) {
+    LanguageRules *rules = new LanguageRules();
+    rules->registerBuiltinNodeTypes();
 
-	for (int i = 0; i < errorCount; i++) {
-		SdlCompilationError *error = errorList->getCompilationError(i);
-		if (unit == nullptr || error->getCompilationUnit() == unit) {
-			if (error->getErrorCode().code == errorCode.code && error->getErrorCode().stage == errorCode.stage) {
-				if (line == -1 || error->getErrorLocation()->lineStart == line) {
-					if (error->isInstantiationError() == instantiationError) {
-						return true;
-					}
-				}
-			}
-		}
-	}
+    piranha::Compiler *compiler = new piranha::Compiler(rules);
+    piranha::IrCompilationUnit *unit = compiler->compile(SDL_TEST_FILES + filename);
+    EXPECT_NE(unit, nullptr);
 
-	return false;
+    if (errList != nullptr) *errList = compiler->getErrorList();
+
+    return unit;
 }

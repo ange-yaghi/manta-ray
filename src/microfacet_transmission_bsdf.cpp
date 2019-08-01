@@ -1,12 +1,13 @@
-#include <microfacet_transmission_bsdf.h>
+#include "../include/microfacet_transmission_bsdf.h"
 
-#include <microfacet_distribution.h>
+#include "../include/microfacet_distribution.h"
 
 manta::MicrofacetTransmissionBSDF::MicrofacetTransmissionBSDF() {
 	m_distribution = nullptr;
 }
 
 manta::MicrofacetTransmissionBSDF::~MicrofacetTransmissionBSDF() {
+    /* void */
 }
 
 void manta::MicrofacetTransmissionBSDF::initializeSessionMemory(

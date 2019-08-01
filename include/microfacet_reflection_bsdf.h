@@ -1,5 +1,5 @@
-#ifndef MICROFACET_REFLECTION_BSDF_H
-#define MICROFACET_REFLECTION_BSDF_H
+#ifndef MANTARAY_MICROFACET_REFLECTION_BSDF_H
+#define MANTARAY_MICROFACET_REFLECTION_BSDF_H
 
 #include <bsdf.h>
 
@@ -29,7 +29,7 @@ namespace manta {
 		virtual void _evaluate();
 
 	protected:
-		pNodeInput m_distributionInput;
+		piranha::pNodeInput m_distributionInput;
 		const MicrofacetDistribution *m_distribution;
 		
 		virtual void registerInputs();
@@ -37,4 +37,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* MICROFACET_REFLECTION_BSDF_H */
+#endif /* MANTARAY_MICROFACET_REFLECTION_BSDF_H */

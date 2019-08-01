@@ -1,0 +1,3 @@
+private import "../../sdl/manta-lib/mantaray.mr"
+
+string test("Hello world")

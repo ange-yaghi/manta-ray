@@ -1,0 +1,10 @@
+private import "../types/atomic_types.mr" as types
+private import "../microfacet-models/microfacet_distributions.mr"
+private import "../types/conversions.mr"
+private import "bsdf.mr"
+private import "../microfacet-models/microfacet_distributions.mr"
+
+public node microfacet_reflection_bsdf => __mantaray__microfacet_reflection_bsdf {
+    input distribution      [microfacet_distribution]: ggx_distribution(0.5);
+    alias output __out      [bsdf];
+}

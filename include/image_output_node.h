@@ -1,10 +1,9 @@
-#ifndef IMAGE_OUTPUT_NODE_H
-#define IMAGE_OUTPUT_NODE_H
+#ifndef MANTARAY_IMAGE_OUTPUT_NODE_H
+#define MANTARAY_IMAGE_OUTPUT_NODE_H
 
-#include <node.h>
+#include "node.h"
 
-#include <node_output.h>
-#include <vector_map_2d_node_output.h>
+#include "vector_map_2d_node_output.h"
 
 namespace manta {
 
@@ -22,7 +21,7 @@ namespace manta {
 		void setJpegQuality(int quality) { m_jpegQuality = quality; }
 		int getJpegQuality() const { return m_jpegQuality; }
 
-		void setInput(pNodeInput inputNode) { m_input = inputNode; }
+		void setInput(piranha::pNodeInput inputNode) { m_input = inputNode; }
 
 	protected:
 		virtual void _initialize();
@@ -37,7 +36,10 @@ namespace manta {
 		std::string m_outputFilename;
 		bool m_gammaCorrection;
 
-		pNodeInput m_input;
+        piranha::pNodeInput m_input;
+        piranha::pNodeInput m_correctGammaInput;
+        piranha::pNodeInput m_jpegQualityInput;
+        piranha::pNodeInput m_filenameInput;
 	};
 
 } /* namespace manta */

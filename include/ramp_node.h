@@ -1,15 +1,15 @@
-#ifndef RAMP_NODE_H
-#define RAMP_NODE_H
+#ifndef MANTARAY_RAMP_NODE_H
+#define MANTARAY_RAMP_NODE_H
 
-#include <node.h>
+#include <piranha.h>
 
-#include <vector_node_output.h>
-#include <ramp_node_output.h>
-#include <manta_math.h>
+#include "vector_node_output.h"
+#include "ramp_node_output.h"
+#include "manta_math.h"
 
 namespace manta {
 
-	class RampNode : public Node {
+	class RampNode : public piranha::Node {
 	public:
 		RampNode();
 		virtual ~RampNode();
@@ -27,4 +27,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* RAMP_NODE_H */
+#endif /* MANTARAY_RAMP_NODE_H */

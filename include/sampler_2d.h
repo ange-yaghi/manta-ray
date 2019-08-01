@@ -1,13 +1,15 @@
-#ifndef SAMPLER_2D_H
-#define SAMPLER_2D_H
+#ifndef MANTARAY_SAMPLER_2D_H
+#define MANTARAY_SAMPLER_2D_H
 
-#include <manta_math.h>
+#include "object_reference_node.h"
+
+#include "manta_math.h"
 
 namespace manta {
 
 	class StackAllocator;
 
-	class Sampler2D {
+    class Sampler2D : public ObjectReferenceNode<Sampler2D> {
 	public:
 		Sampler2D();
 		~Sampler2D();
@@ -36,4 +38,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* SAMPLER_2D_H */
+#endif /* MANTARAY_SAMPLER_2D_H */

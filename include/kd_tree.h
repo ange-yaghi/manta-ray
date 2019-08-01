@@ -129,7 +129,16 @@ namespace manta {
 		KDTree();
 		~KDTree();
 
-		void initialize(math::real width, const math::Vector &position);
+    public:
+        // Node interface
+        virtual void _evaluate();
+        virtual void registerInputs();
+
+    protected:
+        piranha::pNodeInput m_meshInput;
+
+    public:
+		void configure(math::real width, const math::Vector &position);
 		void destroy();
 
 		virtual bool findClosestIntersection(const LightRay *ray, 

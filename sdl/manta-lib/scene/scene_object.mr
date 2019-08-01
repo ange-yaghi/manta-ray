@@ -1,0 +1,15 @@
+private import "scene.mr"
+private import "scene_geometry.mr"
+private import "../materials/material.mr"
+private import "../types/atomic_types.mr"
+
+public node scene_object_channel => __mantaray__scene_object_channel { /* void */ }
+
+public node scene_object => __mantaray__scene_object {
+    input name                  [string]: "";
+    input geometry              [scene_geometry];
+    modify scene                [scene];
+    input default_material      [material];
+
+    alias output __out          [scene_object_channel];
+}

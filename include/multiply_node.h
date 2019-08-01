@@ -1,15 +1,15 @@
-#ifndef MULTIPLY_NODE_H
-#define MULTIPLY_NODE_H
+#ifndef MANTARAY_MULTIPLY_NODE_H
+#define MANTARAY_MULTIPLY_NODE_H
 
-#include <node.h>
+#include <piranha.h>
 
-#include <vector_node_output.h>
-#include <multiply_node_output.h>
-#include <manta_math.h>
+#include "vector_node_output.h"
+#include "multiply_node_output.h"
+#include "manta_math.h"
 
 namespace manta {
 
-	class MultiplyNode : public Node {
+	class MultiplyNode : public piranha::Node {
 	public:
 		MultiplyNode();
 		virtual ~MultiplyNode();
@@ -27,4 +27,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* MULTIPLY_NODE_H */
+#endif /* MANTARAY_MULTIPLY_NODE_H */

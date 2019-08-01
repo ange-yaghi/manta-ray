@@ -1,0 +1,5 @@
+private import "bsdf.mr"
+
+public node lambertian_bsdf => __mantaray__lambertian_bsdf {
+    alias output __out [bsdf];
+}

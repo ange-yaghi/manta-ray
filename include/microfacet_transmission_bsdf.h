@@ -1,7 +1,7 @@
-#ifndef MICROFACET_TRANSMISSION_BSDF_H
-#define MICROFACET_TRANSMISSION_BSDF_H
+#ifndef MANTARAY_MICROFACET_TRANSMISSION_BSDF_H
+#define MANTARAY_MICROFACET_TRANSMISSION_BSDF_H
 
-#include <bsdf.h>
+#include "bsdf.h"
 
 namespace manta {
 
@@ -37,4 +37,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* MICROFACET_TRANSMISSION_BSDF_H */
+#endif /* MANTARAY_MICROFACET_TRANSMISSION_BSDF_H */

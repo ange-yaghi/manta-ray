@@ -1,6 +1,4 @@
-#include <vector_split_node.h>
-
-#include <node_output.h>
+#include "../include/vector_split_node.h"
 
 manta::VectorSplitNode::VectorSplitNode() {
 	/* void */
@@ -26,6 +24,8 @@ void manta::VectorSplitNode::_destroy() {
 }
 
 void manta::VectorSplitNode::registerOutputs() {
+    setPrimaryOutputReference(&m_input);
+
 	registerOutput(&m_x, "x");
 	registerOutput(&m_y, "y");
 	registerOutput(&m_z, "z");
@@ -38,6 +38,7 @@ void manta::VectorSplitNode::registerOutputs() {
 }
 
 void manta::VectorSplitNode::registerInputs() {
+    registerInput(&m_input, "__in");
 	registerInput(m_x.getInputConnection(), "__in");
 	registerInput(m_y.getInputConnection(), "__in");
 	registerInput(m_z.getInputConnection(), "__in");

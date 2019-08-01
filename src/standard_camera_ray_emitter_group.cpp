@@ -1,7 +1,7 @@
-#include <standard_camera_ray_emitter_group.h>
+#include "../include/standard_camera_ray_emitter_group.h"
 
-#include <standard_camera_ray_emitter.h>
-#include <sampler_2d.h>
+#include "../include/standard_camera_ray_emitter.h"
+#include "../include/sampler_2d.h"
 
 manta::StandardCameraRayEmitterGroup::StandardCameraRayEmitterGroup() {
 	/* void */
@@ -11,14 +11,14 @@ manta::StandardCameraRayEmitterGroup::~StandardCameraRayEmitterGroup() {
 	/* void */
 }
 
-void manta::StandardCameraRayEmitterGroup::initialize() {
-	m_planeWidth = (m_resolutionX / (math::real)m_resolutionY) * m_planeHeight;
+void manta::StandardCameraRayEmitterGroup::configure() {
+	m_planeWidth = (m_resolutionX / (math::real)m_resolutionY) * (math::real)m_planeHeight;
 
 	m_xIncrement = m_planeWidth / m_resolutionX;
-	m_yIncrement = m_planeHeight / m_resolutionY;
+	m_yIncrement = (math::real)m_planeHeight / m_resolutionY;
 
 	m_right = math::cross(m_direction, m_up);
-	m_planeCenter = math::add(m_position, math::mul(m_direction, math::loadScalar(m_planeDistance)));
+	m_planeCenter = math::add(m_position, math::mul(m_direction, math::loadScalar((math::real)m_planeDistance)));
 
 	m_sampler->setAxis1(m_right);
 	m_sampler->setAxis2(m_up);
@@ -33,8 +33,8 @@ manta::CameraRayEmitter *manta::StandardCameraRayEmitterGroup::createEmitter(int
 	math::real x = ix * m_xIncrement;
 	math::real y = iy * m_yIncrement;
 
-	math::Vector loc = math::mul(m_right, math::loadScalar(x - m_planeWidth / 2.0f));
-	loc = math::sub(loc, math::mul(m_up, math::loadScalar(y - m_planeHeight / 2.0f)));
+	math::Vector loc = math::mul(m_right, math::loadScalar(x - m_planeWidth / (math::real)2.0));
+	loc = math::sub(loc, math::mul(m_up, math::loadScalar(y - (math::real)m_planeHeight / (math::real)2.0)));
 	loc = math::add(loc, m_planeCenter);
 
 	newEmitter->setPosition(m_position);

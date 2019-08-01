@@ -1,0 +1,30 @@
+private import "../types/atomic_types.mr"
+private import "../types/operations.mr"
+private import "../types/conversions.mr"
+
+public node camera_target {
+    input position;
+    input target;
+    input up: vector(0.0, 1.0, 0.0);
+
+    alias output __out: 
+        __camera_target(
+            __position: position, 
+            __target: target, 
+            __up: up
+        );
+}
+
+private node __camera_target {
+    input __position;
+    input __target;
+    input __up;
+
+    output up:
+        cross(
+            cross(direction, __up),
+            direction
+        );
+    output position: __position;
+    output direction: normalize(__target - __position);
+}

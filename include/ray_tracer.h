@@ -1,11 +1,14 @@
-#ifndef RAY_TRACER_H
-#define RAY_TRACER_H
+#ifndef MANTARAY_RAY_TRACER_H
+#define MANTARAY_RAY_TRACER_H
 
-#include <stack_allocator.h>
-#include <job_queue.h>
-#include <manta_math.h>
-#include <manta_build_conf.h>
-#include <runtime_statistics.h>
+#include "node.h"
+
+#include "stack_allocator.h"
+#include "job_queue.h"
+#include "manta_math.h"
+#include "manta_build_conf.h"
+#include "runtime_statistics.h"
+#include "vector_map_2d_node_output.h"
 
 #include <atomic>
 #include <mutex>
@@ -36,9 +39,9 @@ namespace manta {
 	class PathRecorder;
 	class RayContainer;
 	class ImagePlane;
-	class MaterialManager;
+	class MaterialLibrary;
 
-	class RayTracer {
+	class RayTracer : public Node {
 	public:
 		RayTracer();
 		~RayTracer();
@@ -52,7 +55,7 @@ namespace manta {
 
 		int getThreadCount() const { return m_threadCount; }
 
-		void initialize(mem_size stackSize, mem_size workerStackSize, int threadCount, 
+		void configure(mem_size stackSize, mem_size workerStackSize, int threadCount, 
 			int renderBlockSize, bool multithreaded);
 		void destroy();
 
@@ -71,8 +74,25 @@ namespace manta {
 		void setPathRecordingOutputDirectory(const std::string &s) { m_pathRecordingOutputDirectory = s; }
 		std::string getPathRecordingOutputDirector() const { return m_pathRecordingOutputDirectory; }
 		 
-		void setMaterialManager(MaterialManager *materialManager) { m_materialManager = materialManager; }
-		MaterialManager *getMaterialManager() { return m_materialManager; }
+		void setMaterialLibrary(MaterialLibrary *materialLibrary) { m_materialManager = materialLibrary; }
+		MaterialLibrary *getMaterialLibrary() { return m_materialManager; }
+
+    protected:
+        virtual void _evaluate();
+        virtual void _initialize();
+        virtual void registerInputs();
+        virtual void registerOutputs();
+
+        piranha::pNodeInput m_multithreadedInput;
+        piranha::pNodeInput m_threadCountInput;
+        piranha::pNodeInput m_renderBlockSizeInput;
+        piranha::pNodeInput m_backgroundColorInput;
+        piranha::pNodeInput m_deterministicSeedInput;
+        piranha::pNodeInput m_materialLibraryInput;
+        piranha::pNodeInput m_sceneInput;
+        piranha::pNodeInput m_cameraInput;
+
+        VectorMap2DNodeOutput m_output;
 
 	protected:
 		// Multithreading features
@@ -105,7 +125,7 @@ namespace manta {
 
 	protected:
 		// Material library
-		MaterialManager *m_materialManager;
+		MaterialLibrary *m_materialManager;
 
 	protected:
 		// Statistics
@@ -122,4 +142,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* RAY_TRACER_H */
+#endif /* MANTARAY_RAY_TRACER_H */

@@ -1,4 +1,4 @@
-#include <sampler_2d.h>
+#include "../include/sampler_2d.h"
 
 manta::Sampler2D::Sampler2D() {
 	m_axis1 = math::constants::Zero;
@@ -6,6 +6,8 @@ manta::Sampler2D::Sampler2D() {
 
 	m_boundaryWidth = (math::real)0.0;
 	m_boundaryHeight = (math::real)0.0;
+
+    m_output.setReference(this);
 }
 
 manta::Sampler2D::~Sampler2D() {

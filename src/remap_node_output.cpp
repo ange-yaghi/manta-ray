@@ -3,7 +3,10 @@
 void manta::RemapNodeOutput::sample(const IntersectionPoint *surfaceInteraction, void *_target) const {
 	math::Vector *target = reinterpret_cast<math::Vector *>(_target);
 	math::Vector raw;
-	m_input->sample(surfaceInteraction, (void *)&raw);
+
+    VectorNodeOutput *input = static_cast<VectorNodeOutput *>(m_input);
+
+	input->sample(surfaceInteraction, (void *)&raw);
 
 	*target = remap(raw);
 }
@@ -11,7 +14,10 @@ void manta::RemapNodeOutput::sample(const IntersectionPoint *surfaceInteraction,
 void manta::RemapNodeOutput::discreteSample2D(int x, int y, void *_target) const {
 	math::Vector *target = reinterpret_cast<math::Vector *>(_target);
 	math::Vector raw;
-	m_input->discreteSample2D(x, y, (void *)&raw);
+
+    VectorNodeOutput *input = static_cast<VectorNodeOutput *>(m_input);
+
+	input->discreteSample2d(x, y, (void *)&raw);
 
 	*target = remap(raw);
 }
