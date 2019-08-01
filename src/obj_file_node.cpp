@@ -9,20 +9,20 @@
 #include <string>
 
 manta::ObjFileNode::ObjFileNode() : ObjectReferenceNode<Mesh>() {
-	m_mesh = nullptr;
+    m_mesh = nullptr;
 }
 
 manta::ObjFileNode::~ObjFileNode() {
-	/* void */
+    /* void */
 }
 
 void manta::ObjFileNode::_initialize() {
-	/* void */
+    /* void */
 }
 
 void manta::ObjFileNode::_evaluate() {
-	std::string filename;
-	m_filename->fullCompute((void *)&filename);
+    std::string filename;
+    m_filename->fullCompute((void *)&filename);
 
     Path resolvedPath;
     resolvePath(&Path(filename.c_str()), &resolvedPath);
@@ -30,21 +30,21 @@ void manta::ObjFileNode::_evaluate() {
     MaterialLibrary *library =
         static_cast<ObjectReferenceNodeOutput<MaterialLibrary> *>(m_materialLibrary)->getReference();
 
-	ObjFileLoader loader;
-	loader.loadObjFile(resolvedPath.toString().c_str());
+    ObjFileLoader loader;
+    loader.loadObjFile(resolvedPath.toString().c_str());
 
-	Mesh *mesh = new Mesh;
-	mesh->loadObjFileData(&loader, library);
+    Mesh *mesh = new Mesh;
+    mesh->loadObjFileData(&loader, library);
 
-	m_output.setReference(mesh);
-	m_mesh = mesh;
+    m_output.setReference(mesh);
+    m_mesh = mesh;
 }
 
 void manta::ObjFileNode::_destroy() {
-	/* void */
+    /* void */
 }
 
 void manta::ObjFileNode::registerInputs() {
-	registerInput(&m_filename, "filename");
+    registerInput(&m_filename, "filename");
     registerInput(&m_materialLibrary, "materials");
 }

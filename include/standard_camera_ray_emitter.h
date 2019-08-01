@@ -5,21 +5,21 @@
 
 namespace manta {
 
-	class RayContainer;
+    class RayContainer;
 
-	class StandardCameraRayEmitter : public CameraRayEmitter {
-	public:
-		StandardCameraRayEmitter();
-		virtual ~StandardCameraRayEmitter();
+    class StandardCameraRayEmitter : public CameraRayEmitter {
+    public:
+        StandardCameraRayEmitter();
+        virtual ~StandardCameraRayEmitter();
 
-		virtual void generateRays(RayContainer *rayContainer) const;
+        virtual void generateRays(RayContainer *rayContainer) const;
 
-		void setTargetOrigin(const math::Vector &origin) { m_targetOrigin = origin; }
-		math::Vector getTargetOrigin() const { return m_targetOrigin; }
+        void setTargetOrigin(const math::Vector &origin) { m_targetOrigin = origin; }
+        math::Vector getTargetOrigin() const { return m_targetOrigin; }
 
-	protected:
-		math::Vector m_targetOrigin;
-	};
+    protected:
+        math::Vector m_targetOrigin;
+    };
 
 } /* namespace manta */
 

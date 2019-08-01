@@ -1,35 +1,35 @@
 #include "../include/remap_node_output.h"
 
 void manta::RemapNodeOutput::sample(const IntersectionPoint *surfaceInteraction, void *_target) const {
-	math::Vector *target = reinterpret_cast<math::Vector *>(_target);
-	math::Vector raw;
+    math::Vector *target = reinterpret_cast<math::Vector *>(_target);
+    math::Vector raw;
 
     VectorNodeOutput *input = static_cast<VectorNodeOutput *>(m_input);
 
-	input->sample(surfaceInteraction, (void *)&raw);
+    input->sample(surfaceInteraction, (void *)&raw);
 
-	*target = remap(raw);
+    *target = remap(raw);
 }
 
 void manta::RemapNodeOutput::discreteSample2D(int x, int y, void *_target) const {
-	math::Vector *target = reinterpret_cast<math::Vector *>(_target);
-	math::Vector raw;
+    math::Vector *target = reinterpret_cast<math::Vector *>(_target);
+    math::Vector raw;
 
     VectorNodeOutput *input = static_cast<VectorNodeOutput *>(m_input);
 
-	input->discreteSample2d(x, y, (void *)&raw);
+    input->discreteSample2d(x, y, (void *)&raw);
 
-	*target = remap(raw);
+    *target = remap(raw);
 }
 
 void manta::RemapNodeOutput::fullOutput(const void **_target) const {
-	*_target = nullptr;
+    *_target = nullptr;
 }
 
 manta::math::Vector manta::RemapNodeOutput::remap(const math::Vector &s) const {
-	math::Vector remapped = math::add(
-		math::mul(m_start, math::sub(math::constants::One, s)),
-		math::mul(m_end, s));
+    math::Vector remapped = math::add(
+        math::mul(m_start, math::sub(math::constants::One, s)),
+        math::mul(m_end, s));
 
-	return remapped;
+    return remapped;
 }

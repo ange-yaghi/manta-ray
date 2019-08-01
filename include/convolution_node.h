@@ -9,37 +9,37 @@
 namespace manta {
 
     class ConvolutionNode : public piranha::Node{
-	public:
-		ConvolutionNode();
-		~ConvolutionNode();
+    public:
+        ConvolutionNode();
+        ~ConvolutionNode();
 
-		void setInputs(piranha::NodeOutput *base, piranha::NodeOutput *filter) { m_base = base; m_filter = filter; }
+        void setInputs(piranha::NodeOutput *base, piranha::NodeOutput *filter) { m_base = base; m_filter = filter; }
 
-		void setResize(bool resize) { m_resize = resize; }
-		bool getResize() const { return m_resize; }
+        void setResize(bool resize) { m_resize = resize; }
+        bool getResize() const { return m_resize; }
 
-		void setClip(bool clip) { m_clip = clip; }
-		bool getClip() const { return m_clip; }
+        void setClip(bool clip) { m_clip = clip; }
+        bool getClip() const { return m_clip; }
 
-		VectorMap2DNodeOutput *getMainOutput() { return &m_output; }
+        VectorMap2DNodeOutput *getMainOutput() { return &m_output; }
 
-	protected:
-		virtual void _initialize();
-		virtual void _evaluate();
-		virtual void _destroy();
+    protected:
+        virtual void _initialize();
+        virtual void _evaluate();
+        virtual void _destroy();
 
-		virtual void registerInputs();
-		virtual void registerOutputs();
+        virtual void registerInputs();
+        virtual void registerOutputs();
 
-	protected:
+    protected:
         piranha::NodeOutput *m_base;
         piranha::NodeOutput *m_filter;
-		VectorMap2DNodeOutput m_output;
-		bool m_resize;
-		bool m_clip;
+        VectorMap2DNodeOutput m_output;
+        bool m_resize;
+        bool m_clip;
 
-		VectorMap2D m_outputMap;
-	};
+        VectorMap2D m_outputMap;
+    };
 
 } /* namespace manta */
 

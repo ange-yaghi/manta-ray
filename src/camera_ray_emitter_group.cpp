@@ -15,11 +15,11 @@ manta::CameraRayEmitterGroup::CameraRayEmitterGroup() {
 }
 
 manta::CameraRayEmitterGroup::~CameraRayEmitterGroup() {
-	/* void */
+    /* void */
 }
 
 void manta::CameraRayEmitterGroup::freeEmitter(CameraRayEmitter *rayEmitter, StackAllocator *stackAllocator) const {
-	stackAllocator->free(rayEmitter);
+    stackAllocator->free(rayEmitter);
 }
 
 void manta::CameraRayEmitterGroup::_evaluate() {

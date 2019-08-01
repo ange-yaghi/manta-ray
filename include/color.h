@@ -5,9 +5,9 @@
 
 namespace manta {
 
-	typedef math::Vector3_t<math::real_d> ColorXyz;
-	typedef math::Vector3_t<math::real_d> ColorXyy;
-	typedef math::Vector3_t<math::real_d> ColorRgb;
+    typedef math::Vector3_t<math::real_d> ColorXyz;
+    typedef math::Vector3_t<math::real_d> ColorXyy;
+    typedef math::Vector3_t<math::real_d> ColorRgb;
 
 } /* namespace manta */
 

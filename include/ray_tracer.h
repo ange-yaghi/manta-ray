@@ -28,54 +28,54 @@
 
 namespace manta {
 
-	struct IntersectionPoint;
-	struct CoarseIntersection;
-	class LightRay;
-	class Scene;
-	class CameraRayEmitter;
-	class CameraRayEmitterGroup;
-	class SceneObject;
-	class Worker;
-	class PathRecorder;
-	class RayContainer;
-	class ImagePlane;
-	class MaterialLibrary;
+    struct IntersectionPoint;
+    struct CoarseIntersection;
+    class LightRay;
+    class Scene;
+    class CameraRayEmitter;
+    class CameraRayEmitterGroup;
+    class SceneObject;
+    class Worker;
+    class PathRecorder;
+    class RayContainer;
+    class ImagePlane;
+    class MaterialLibrary;
 
-	class RayTracer : public Node {
-	public:
-		RayTracer();
-		~RayTracer();
+    class RayTracer : public Node {
+    public:
+        RayTracer();
+        ~RayTracer();
 
-		void traceAll(const Scene *scene, CameraRayEmitterGroup *rayEmitterGroup, 
-			ImagePlane *target);
-		void tracePixel(int px, int py, const Scene *scene, 
-			CameraRayEmitterGroup *rayEmitterGroup, ImagePlane *target);
-		void traceRayEmitter(const CameraRayEmitter *emitter, RayContainer *container, 
-			const Scene *scene, StackAllocator *s /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const;
+        void traceAll(const Scene *scene, CameraRayEmitterGroup *rayEmitterGroup, 
+            ImagePlane *target);
+        void tracePixel(int px, int py, const Scene *scene, 
+            CameraRayEmitterGroup *rayEmitterGroup, ImagePlane *target);
+        void traceRayEmitter(const CameraRayEmitter *emitter, RayContainer *container, 
+            const Scene *scene, StackAllocator *s /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const;
 
-		int getThreadCount() const { return m_threadCount; }
+        int getThreadCount() const { return m_threadCount; }
 
-		void configure(mem_size stackSize, mem_size workerStackSize, int threadCount, 
-			int renderBlockSize, bool multithreaded);
-		void destroy();
+        void configure(mem_size stackSize, mem_size workerStackSize, int threadCount, 
+            int renderBlockSize, bool multithreaded);
+        void destroy();
 
-		void setBackgroundColor(const math::Vector &color) { m_backgroundColor = color; }
+        void setBackgroundColor(const math::Vector &color) { m_backgroundColor = color; }
 
-		// Interface to workers
-		JobQueue *getJobQueue() { return &m_jobQueue; }
-		
-		void traceRay(const Scene *scene, LightRay *ray, int degree, 
-			StackAllocator *s /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const;
-		void incrementRayCompletion(const Job *job, int increment = 1);
+        // Interface to workers
+        JobQueue *getJobQueue() { return &m_jobQueue; }
+        
+        void traceRay(const Scene *scene, LightRay *ray, int degree, 
+            StackAllocator *s /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const;
+        void incrementRayCompletion(const Job *job, int increment = 1);
 
-		void setDeterministicSeedMode(bool enable) { m_deterministicSeed = enable; }
-		bool isDeterministicSeedMode() const { return m_deterministicSeed; }
+        void setDeterministicSeedMode(bool enable) { m_deterministicSeed = enable; }
+        bool isDeterministicSeedMode() const { return m_deterministicSeed; }
 
-		void setPathRecordingOutputDirectory(const std::string &s) { m_pathRecordingOutputDirectory = s; }
-		std::string getPathRecordingOutputDirector() const { return m_pathRecordingOutputDirectory; }
-		 
-		void setMaterialLibrary(MaterialLibrary *materialLibrary) { m_materialManager = materialLibrary; }
-		MaterialLibrary *getMaterialLibrary() { return m_materialManager; }
+        void setPathRecordingOutputDirectory(const std::string &s) { m_pathRecordingOutputDirectory = s; }
+        std::string getPathRecordingOutputDirector() const { return m_pathRecordingOutputDirectory; }
+         
+        void setMaterialLibrary(MaterialLibrary *materialLibrary) { m_materialManager = materialLibrary; }
+        MaterialLibrary *getMaterialLibrary() { return m_materialManager; }
 
     protected:
         virtual void _evaluate();
@@ -94,51 +94,51 @@ namespace manta {
 
         VectorMap2DNodeOutput m_output;
 
-	protected:
-		// Multithreading features
-		JobQueue m_jobQueue;
-		Worker *m_workers;
-		Worker *m_singleThreadedWorker;
+    protected:
+        // Multithreading features
+        JobQueue m_jobQueue;
+        Worker *m_workers;
+        Worker *m_singleThreadedWorker;
 
-		mem_size m_workerStackSize;
-		int m_rayCount;
-		int m_threadCount;
-		int m_renderBlockSize;
-		bool m_multithreaded;
+        mem_size m_workerStackSize;
+        int m_rayCount;
+        int m_threadCount;
+        int m_renderBlockSize;
+        bool m_multithreaded;
 
-		void createWorkers();
-		void startWorkers();
-		void waitForWorkers();
-		void destroyWorkers();
+        void createWorkers();
+        void startWorkers();
+        void waitForWorkers();
+        void destroyWorkers();
 
-	protected:
-		// Ray tracing features
-		void depthCull(const Scene *scene, const LightRay *ray, SceneObject **closestObject, 
-			IntersectionPoint *point, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const;
-		void refineContact(const LightRay *ray, math::real depth, IntersectionPoint *point, 
-			SceneObject **closestObject, StackAllocator *s) const;
+    protected:
+        // Ray tracing features
+        void depthCull(const Scene *scene, const LightRay *ray, SceneObject **closestObject, 
+            IntersectionPoint *point, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const;
+        void refineContact(const LightRay *ray, math::real depth, IntersectionPoint *point, 
+            SceneObject **closestObject, StackAllocator *s) const;
 
-		void traceRays(const Scene *scene, const RayContainer &rayContainer, 
-			StackAllocator *s /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const;
+        void traceRays(const Scene *scene, const RayContainer &rayContainer, 
+            StackAllocator *s /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const;
 
-		math::Vector m_backgroundColor;
+        math::Vector m_backgroundColor;
 
-	protected:
-		// Material library
-		MaterialLibrary *m_materialManager;
+    protected:
+        // Material library
+        MaterialLibrary *m_materialManager;
 
-	protected:
-		// Statistics
-		std::atomic<int> m_currentRay;
-		std::mutex m_outputLock;
+    protected:
+        // Statistics
+        std::atomic<int> m_currentRay;
+        std::mutex m_outputLock;
 
-		StackAllocator m_stack;
+        StackAllocator m_stack;
 
-	protected:
-		// Debugging and path recording
-		std::string m_pathRecordingOutputDirectory;
-		bool m_deterministicSeed;
-	};
+    protected:
+        // Debugging and path recording
+        std::string m_pathRecordingOutputDirectory;
+        bool m_deterministicSeed;
+    };
 
 } /* namespace manta */
 

@@ -7,24 +7,24 @@
 
 namespace manta {
 
-	class ImagePlane;
+    class ImagePlane;
 
-	class StandardCameraRayEmitterGroup : public CameraRayEmitterGroup {
-	public:
-		StandardCameraRayEmitterGroup();
-		virtual ~StandardCameraRayEmitterGroup();
+    class StandardCameraRayEmitterGroup : public CameraRayEmitterGroup {
+    public:
+        StandardCameraRayEmitterGroup();
+        virtual ~StandardCameraRayEmitterGroup();
 
-		virtual void configure();
-		virtual CameraRayEmitter *createEmitter(int ix, int iy, 
-			StackAllocator *stackAllocator) const;
+        virtual void configure();
+        virtual CameraRayEmitter *createEmitter(int ix, int iy, 
+            StackAllocator *stackAllocator) const;
 
-	protected:
-		math::real m_planeWidth;
-		math::real m_xIncrement;
-		math::real m_yIncrement;
-		math::Vector m_right;
-		math::Vector m_planeCenter;
-	};
+    protected:
+        math::real m_planeWidth;
+        math::real m_xIncrement;
+        math::real m_yIncrement;
+        math::Vector m_right;
+        math::Vector m_planeCenter;
+    };
 
 } /* namespace manta */
 

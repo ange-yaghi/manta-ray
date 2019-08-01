@@ -3,9 +3,9 @@
 #include "../include/scene.h"
 
 manta::SceneObject::SceneObject() {
-	m_name = "";
-	m_defaultMaterial = nullptr;
-	m_geometry = nullptr;
+    m_name = "";
+    m_defaultMaterial = nullptr;
+    m_geometry = nullptr;
 
     m_output.setReference(this);
 }

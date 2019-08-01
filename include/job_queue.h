@@ -6,32 +6,32 @@
 
 namespace manta {
 
-	class CameraRayEmitterGroup;
-	class Scene;
-	class ImagePlane;
+    class CameraRayEmitterGroup;
+    class Scene;
+    class ImagePlane;
 
-	struct Job {
-		CameraRayEmitterGroup *group;
-		ImagePlane *target;
-		const Scene *scene;
-		int startX;
-		int startY;
-		int endX;
-		int endY;
-	};
+    struct Job {
+        CameraRayEmitterGroup *group;
+        ImagePlane *target;
+        const Scene *scene;
+        int startX;
+        int startY;
+        int endX;
+        int endY;
+    };
 
-	class JobQueue {
-	public:
-		JobQueue();
-		~JobQueue();
+    class JobQueue {
+    public:
+        JobQueue();
+        ~JobQueue();
 
-		void push(const Job &job);
-		bool pop(Job *job);
+        void push(const Job &job);
+        bool pop(Job *job);
 
-	protected:
-		std::queue<Job> m_queue;
-		std::mutex m_queueLock;
-	};
+    protected:
+        std::queue<Job> m_queue;
+        std::mutex m_queueLock;
+    };
 
 } /* namespace manta */
 

@@ -9,21 +9,21 @@
 
 namespace manta {
 
-	class RampNode : public piranha::Node {
-	public:
-		RampNode();
-		virtual ~RampNode();
+    class RampNode : public piranha::Node {
+    public:
+        RampNode();
+        virtual ~RampNode();
 
-		RampNodeOutput *getMainOutput() { return &m_output; }
+        RampNodeOutput *getMainOutput() { return &m_output; }
 
-	protected:
-		RampNodeOutput m_output;
+    protected:
+        RampNodeOutput m_output;
 
-		virtual void _initialize();
+        virtual void _initialize();
 
-		virtual void registerInputs();
-		virtual void registerOutputs();
-	};
+        virtual void registerInputs();
+        virtual void registerOutputs();
+    };
 
 } /* namespace manta */
 

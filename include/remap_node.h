@@ -8,24 +8,24 @@
 
 namespace manta {
 
-	class NodeOutput;
+    class NodeOutput;
 
-	class RemapNode : public piranha::Node {
-	public:
-		RemapNode();
-		RemapNode(const math::Vector &start, const math::Vector &end, piranha::pNodeInput inputNode);
-		virtual ~RemapNode();
+    class RemapNode : public piranha::Node {
+    public:
+        RemapNode();
+        RemapNode(const math::Vector &start, const math::Vector &end, piranha::pNodeInput inputNode);
+        virtual ~RemapNode();
 
-		piranha::NodeOutput *getMainOutput() { return &m_output; }
+        piranha::NodeOutput *getMainOutput() { return &m_output; }
 
-	protected:
-		virtual void _evaluate();
+    protected:
+        virtual void _evaluate();
 
-		virtual void registerInputs();
-		virtual void registerOutputs();
+        virtual void registerInputs();
+        virtual void registerOutputs();
 
-		RemapNodeOutput m_output;
-	};
+        RemapNodeOutput m_output;
+    };
 
 } /* namespace manta */
 

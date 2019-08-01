@@ -12,118 +12,118 @@
 using namespace manta;
 
 TEST(PrimitiveTests, SphereSanityCheck) {
-	SpherePrimitive sphere;
-	sphere.setRadius(10.0f);
+    SpherePrimitive sphere;
+    sphere.setRadius(10.0f);
 
-	EXPECT_FLOAT_EQ((float)sphere.getRadius(), 10.0f);
+    EXPECT_FLOAT_EQ((float)sphere.getRadius(), 10.0f);
 
-	sphere.setId(1);
+    sphere.setId(1);
 
-	EXPECT_EQ(sphere.getId(), 1);
+    EXPECT_EQ(sphere.getId(), 1);
 }
 
 TEST(PrimitiveTests, SphereIntersection) {
-	SpherePrimitive sphere;
-	sphere.setRadius(1.0f);
-	sphere.setPosition(math::constants::Zero);
+    SpherePrimitive sphere;
+    sphere.setRadius(1.0f);
+    sphere.setPosition(math::constants::Zero);
 
-	LightRay ray;
-	ray.setDirection(math::loadVector(-1.0f, 0.0f, 0.0f));
-	ray.setSource(math::loadVector(10.0f, 0.0f, 0.0f));
+    LightRay ray;
+    ray.setDirection(math::loadVector(-1.0f, 0.0f, 0.0f));
+    ray.setSource(math::loadVector(10.0f, 0.0f, 0.0f));
 
-	/* TODO */
+    /* TODO */
 }
 
 TEST(PrimitiveTests, SphereMiss) {
-	SpherePrimitive sphere;
-	sphere.setRadius(1.0f);
-	sphere.setPosition(math::constants::Zero);
+    SpherePrimitive sphere;
+    sphere.setRadius(1.0f);
+    sphere.setPosition(math::constants::Zero);
 
-	LightRay ray;
-	ray.setDirection(math::loadVector(-1.0f, 0.0f, 0.0f));
-	ray.setSource(math::loadVector(10.0f, 2.0f, 0.0f));
+    LightRay ray;
+    ray.setDirection(math::loadVector(-1.0f, 0.0f, 0.0f));
+    ray.setSource(math::loadVector(10.0f, 2.0f, 0.0f));
 
-	/* TODO */
+    /* TODO */
 }
 
 TEST(PrimitiveTests, SphereIntersectionInside) {
-	SpherePrimitive sphere;
-	sphere.setRadius(1.0f);
-	sphere.setPosition(math::constants::Zero);
+    SpherePrimitive sphere;
+    sphere.setRadius(1.0f);
+    sphere.setPosition(math::constants::Zero);
 
-	LightRay ray;
-	ray.setDirection(math::loadVector(-1.0f, 0.0f, 0.0f));
-	ray.setSource(math::loadVector(0.0f, 0.0f, 0.0f));
+    LightRay ray;
+    ray.setDirection(math::loadVector(-1.0f, 0.0f, 0.0f));
+    ray.setSource(math::loadVector(0.0f, 0.0f, 0.0f));
 
-	/* TODO */
+    /* TODO */
 }
 
 TEST(PrimitiveTests, AABBSanityCheck) {
-	LightRay ray;
-	ray.setDirection(math::loadVector(-1.0, 0.0, 0.0));
-	ray.setSource(math::loadVector(0.0, 0.0, 0.0));
-	ray.calculateTransformations();
+    LightRay ray;
+    ray.setDirection(math::loadVector(-1.0, 0.0, 0.0));
+    ray.setSource(math::loadVector(0.0, 0.0, 0.0));
+    ray.calculateTransformations();
 
-	AABB aabb;
-	aabb.maxPoint = math::loadVector(1.0, 1.0, 1.0);
-	aabb.minPoint = math::loadVector(-1.0, -1.0, -1.0);
+    AABB aabb;
+    aabb.maxPoint = math::loadVector(1.0, 1.0, 1.0);
+    aabb.minPoint = math::loadVector(-1.0, -1.0, -1.0);
 
-	math::real tmin, tmax;
-	bool detected = aabb.rayIntersect(ray, &tmin, &tmax);
+    math::real tmin, tmax;
+    bool detected = aabb.rayIntersect(ray, &tmin, &tmax);
 
-	EXPECT_EQ(tmin, 0.0);
-	EXPECT_EQ(tmax, 1.0);
-	EXPECT_TRUE(detected);
+    EXPECT_EQ(tmin, 0.0);
+    EXPECT_EQ(tmax, 1.0);
+    EXPECT_TRUE(detected);
 }
 
 TEST(PrimitiveTests, AABBCheck1) {
-	LightRay ray;
-	ray.setDirection(math::loadVector(-1.0, 0.0, 0.0));
-	ray.setSource(math::loadVector(2.0, 0.0, 0.0));
-	ray.calculateTransformations();
+    LightRay ray;
+    ray.setDirection(math::loadVector(-1.0, 0.0, 0.0));
+    ray.setSource(math::loadVector(2.0, 0.0, 0.0));
+    ray.calculateTransformations();
 
-	AABB aabb;
-	aabb.maxPoint = math::loadVector(1.0, 1.0, 1.0);
-	aabb.minPoint = math::loadVector(-1.0, -1.0, -1.0);
+    AABB aabb;
+    aabb.maxPoint = math::loadVector(1.0, 1.0, 1.0);
+    aabb.minPoint = math::loadVector(-1.0, -1.0, -1.0);
 
-	math::real tmin, tmax;
-	bool detected = aabb.rayIntersect(ray, &tmin, &tmax);
+    math::real tmin, tmax;
+    bool detected = aabb.rayIntersect(ray, &tmin, &tmax);
 
-	EXPECT_EQ(tmin, 1.0);
-	EXPECT_EQ(tmax, 3.0);
-	EXPECT_TRUE(detected);
+    EXPECT_EQ(tmin, 1.0);
+    EXPECT_EQ(tmax, 3.0);
+    EXPECT_TRUE(detected);
 }
 
 TEST(PrimitiveTests, AABBEdgeTest) {
-	LightRay ray;
-	ray.setDirection(math::loadVector(-1.0f, 0.0f, 0.0f));
-	ray.setSource(math::loadVector(2.0f, 1.0f, 1.0f));
-	ray.calculateTransformations();
+    LightRay ray;
+    ray.setDirection(math::loadVector(-1.0f, 0.0f, 0.0f));
+    ray.setSource(math::loadVector(2.0f, 1.0f, 1.0f));
+    ray.calculateTransformations();
 
-	AABB aabb;
-	aabb.maxPoint = math::loadVector(1.0f, 1.0f, 1.0f);
-	aabb.minPoint = math::loadVector(-1.0f, -1.0f, -1.0f);
+    AABB aabb;
+    aabb.maxPoint = math::loadVector(1.0f, 1.0f, 1.0f);
+    aabb.minPoint = math::loadVector(-1.0f, -1.0f, -1.0f);
 
-	math::real tmin, tmax;
-	bool detected = aabb.rayIntersect(ray, &tmin, &tmax);
+    math::real tmin, tmax;
+    bool detected = aabb.rayIntersect(ray, &tmin, &tmax);
 
-	EXPECT_EQ(tmin, 1.0);
-	EXPECT_EQ(tmax, 3.0);
-	EXPECT_TRUE(detected);
+    EXPECT_EQ(tmin, 1.0);
+    EXPECT_EQ(tmax, 3.0);
+    EXPECT_TRUE(detected);
 }
 
 TEST(PrimitiveTests, AABBNoHitTest) {
-	LightRay ray;
-	ray.setDirection(math::loadVector(-1.0f, 0.0f, 0.0f));
-	ray.setSource(math::loadVector(2.0f, 1.1f, 1.0f));
-	ray.calculateTransformations();
+    LightRay ray;
+    ray.setDirection(math::loadVector(-1.0f, 0.0f, 0.0f));
+    ray.setSource(math::loadVector(2.0f, 1.1f, 1.0f));
+    ray.calculateTransformations();
 
-	AABB aabb;
-	aabb.maxPoint = math::loadVector(1.0f, 1.0f, 1.0f);
-	aabb.minPoint = math::loadVector(-1.0f, -1.0f, -1.0f);
-	
-	math::real tmin, tmax;
-	bool detected = aabb.rayIntersect(ray, &tmin, &tmax);
+    AABB aabb;
+    aabb.maxPoint = math::loadVector(1.0f, 1.0f, 1.0f);
+    aabb.minPoint = math::loadVector(-1.0f, -1.0f, -1.0f);
+    
+    math::real tmin, tmax;
+    bool detected = aabb.rayIntersect(ray, &tmin, &tmax);
 
-	EXPECT_FALSE(detected);
+    EXPECT_FALSE(detected);
 }

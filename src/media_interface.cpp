@@ -1,9 +1,9 @@
 #include "../include/media_interface.h"
 
 manta::MediaInterface::MediaInterface() {
-	/* void */
+    /* void */
 }
 
 manta::MediaInterface::~MediaInterface() {
-	/* void */
+    /* void */
 }

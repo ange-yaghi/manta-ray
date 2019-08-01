@@ -6,14 +6,14 @@
 
 namespace manta {
 
-	class NaiveFFT {
-	public:
-		static void fft(const math::Complex *input, math::Complex *target, int n);
-		static void fft_inverse(const math::Complex *input, math::Complex *target, int n);
+    class NaiveFFT {
+    public:
+        static void fft(const math::Complex *input, math::Complex *target, int n);
+        static void fft_inverse(const math::Complex *input, math::Complex *target, int n);
 
-	private:
-		static void fft_child(const math::Complex *input, math::Complex *target, int n, int s);
-	};
+    private:
+        static void fft_child(const math::Complex *input, math::Complex *target, int n, int s);
+    };
 
 } /* namespace manta */
 

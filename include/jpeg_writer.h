@@ -5,25 +5,25 @@
 
 namespace manta {
 
-	// Forward declarations
-	class ImageByteBuffer;
+    // Forward declarations
+    class ImageByteBuffer;
 
-	class JpegWriter {
-	public:
-		static const int DEFAULT_QUALITY = 95;
+    class JpegWriter {
+    public:
+        static const int DEFAULT_QUALITY = 95;
 
-	public:
-		JpegWriter();
-		~JpegWriter();
+    public:
+        JpegWriter();
+        ~JpegWriter();
 
-		bool write(ImageByteBuffer *buffer, const char *fileName);
+        bool write(ImageByteBuffer *buffer, const char *fileName);
 
-		void setQuality(int quality) { m_quality = quality; }
-		int getQuality() const { return m_quality; }
+        void setQuality(int quality) { m_quality = quality; }
+        int getQuality() const { return m_quality; }
 
-	protected:
-		int m_quality;
-	};
+    protected:
+        int m_quality;
+    };
 
 } /* namespace pft */
 
