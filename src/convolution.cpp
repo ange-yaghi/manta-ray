@@ -1,9 +1,9 @@
 #include "../include/convolution.h"
 
 manta::Convolution::Convolution() {
-	/* void */
+    /* void */
 }
 
 manta::Convolution::~Convolution() {
-	/* void */
+    /* void */
 }

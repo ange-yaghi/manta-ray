@@ -6,24 +6,24 @@
 
 namespace manta {
 
-	class GPUMemory {
-	public:
-		enum MODE {
-			READ_ONLY,
-			WRITE_ONLY
-		};
+    class GPUMemory {
+    public:
+        enum MODE {
+            READ_ONLY,
+            WRITE_ONLY
+        };
 
-	public:
-		GPUMemory() {}
-		virtual ~GPUMemory() {}
+    public:
+        GPUMemory() {}
+        virtual ~GPUMemory() {}
 
-		virtual void write(const void *data) = 0;
-		virtual void read(void *target) = 0;
+        virtual void write(const void *data) = 0;
+        virtual void read(void *target) = 0;
 
-		virtual void free() = 0;
+        virtual void free() = 0;
 
-		virtual unsigned int getSize() const = 0;
-	};
+        virtual unsigned int getSize() const = 0;
+    };
 
 } /* namespace manta */
 

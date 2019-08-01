@@ -24,10 +24,10 @@ namespace manta {
         }
 
     protected:
-		virtual void registerOutputs() {
-			setPrimaryOutput(&m_output);
-			registerOutput(&m_output, "__out");
-		}
+        virtual void registerOutputs() {
+            setPrimaryOutput(&m_output);
+            registerOutput(&m_output, "__out");
+        }
 
         ObjectReferenceNodeOutput<Type> m_output;
     };

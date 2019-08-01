@@ -1,13 +1,13 @@
 #include "../include/lens.h"
 
 manta::Lens::Lens() {
-	m_aperture = nullptr;
+    m_aperture = nullptr;
 }
 
 manta::Lens::~Lens() {
-	/* void */
+    /* void */
 }
 
 manta::math::Vector manta::Lens::getSensorRight() const {
-	return math::cross(m_direction, m_up);
+    return math::cross(m_direction, m_up);
 }

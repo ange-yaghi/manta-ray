@@ -67,13 +67,13 @@ TEST(SdlTests, SdlPhongTest) {
 }
 
 TEST(SdlTests, SdlSimpleMaterialTest) {
-	const piranha::ErrorList *errList;
-	piranha::IrCompilationUnit *unit = compileFile("basic_bsdf_test.mr", &errList);
+    const piranha::ErrorList *errList;
+    piranha::IrCompilationUnit *unit = compileFile("basic_bsdf_test.mr", &errList);
 
-	piranha::NodeProgram program;
-	unit->build(&program);
+    piranha::NodeProgram program;
+    unit->build(&program);
 
-	program.execute();
+    program.execute();
 }
 
 TEST(SdlTests, SdlObjectNodeTest) {

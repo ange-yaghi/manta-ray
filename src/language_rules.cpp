@@ -51,12 +51,12 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__string", &piranha::FundamentalType::StringType);
     registerBuiltinType <piranha::NoOpNode>(
         "__mantaray__microfacet_distribution", &ObjectChannel::MicrofacetDistributionChannel);
-	registerBuiltinType <piranha::NoOpNode>(
-		"__mantaray__material", &ObjectChannel::MaterialChannel);
-	registerBuiltinType <MaterialLibrary>(
-		"__mantaray__material_library", &ObjectChannel::MaterialLibraryChannel);
-	registerBuiltinType <piranha::NoOpNode>(
-		"__mantaray__bsdf", &ObjectChannel::BsdfChannel);
+    registerBuiltinType <piranha::NoOpNode>(
+        "__mantaray__material", &ObjectChannel::MaterialChannel);
+    registerBuiltinType <MaterialLibrary>(
+        "__mantaray__material_library", &ObjectChannel::MaterialLibraryChannel);
+    registerBuiltinType <piranha::NoOpNode>(
+        "__mantaray__bsdf", &ObjectChannel::BsdfChannel);
     registerBuiltinType <piranha::NoOpNode>(
         "__mantaray__mesh", &ObjectChannel::MeshChannel);
     registerBuiltinType <piranha::NoOpNode>(
@@ -85,10 +85,10 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__ggx_distribution");
     registerBuiltinType<MicrofacetReflectionBSDF>(
         "__mantaray__microfacet_reflection_bsdf");
-	registerBuiltinType<SimpleBSDFMaterial>(
-		"__mantaray__simple_bsdf_material");
-	registerBuiltinType<BilayerBSDF>(
-		"__mantaray__bilayer_bsdf");
+    registerBuiltinType<SimpleBSDFMaterial>(
+        "__mantaray__simple_bsdf_material");
+    registerBuiltinType<BilayerBSDF>(
+        "__mantaray__bilayer_bsdf");
     registerBuiltinType<ObjFileNode>(
         "__mantaray__obj_file");
     registerBuiltinType<ObjFileNode>(
@@ -124,27 +124,27 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
 
     // Unary operations
     registerBuiltinType<piranha::NumNegateOperationNode<piranha::native_float>>(
-		"__mantaray__float_negate");
-	registerBuiltinType<NegateNode>(
-		"__mantaray__vector_negate");
-	registerBuiltinType<MagnitudeNode>(
-		"__mantaray__vector_magnitude");
-	registerBuiltinType<NormalizeNode>(
-		"__mantaray__vector_normalize");
+        "__mantaray__float_negate");
+    registerBuiltinType<NegateNode>(
+        "__mantaray__vector_negate");
+    registerBuiltinType<MagnitudeNode>(
+        "__mantaray__vector_magnitude");
+    registerBuiltinType<NormalizeNode>(
+        "__mantaray__vector_normalize");
 
-	// Binary operations
-	registerBuiltinType<AddNode>(
-		"__mantaray__vector_add");
-	registerBuiltinType<SubtractNode>(
-		"__mantaray__vector_sub");
-	registerBuiltinType<DivideNode>(
-		"__mantaray__vector_div");
-	registerBuiltinType<MultiplyNode>(
-		"__mantaray__vector_mul");
-	registerBuiltinType<DotNode>(
-		"__mantaray__vector_dot");
-	registerBuiltinType<CrossNode>(
-		"__mantaray__vector_cross");
+    // Binary operations
+    registerBuiltinType<AddNode>(
+        "__mantaray__vector_add");
+    registerBuiltinType<SubtractNode>(
+        "__mantaray__vector_sub");
+    registerBuiltinType<DivideNode>(
+        "__mantaray__vector_div");
+    registerBuiltinType<MultiplyNode>(
+        "__mantaray__vector_mul");
+    registerBuiltinType<DotNode>(
+        "__mantaray__vector_dot");
+    registerBuiltinType<CrossNode>(
+        "__mantaray__vector_cross");
 
     // ====================================================
     // Literal types
@@ -162,35 +162,35 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__float_to_vector"
     );
 
-	// ====================================================
-	// Binary operators
-	// ====================================================
-	registerOperator(
-		{ piranha::IrBinaryOperator::MUL, &VectorNodeOutput::VectorType, &VectorNodeOutput::VectorType },
-		"__mantaray__vector_multiply"
-	);
-	registerOperator(
-		{ piranha::IrBinaryOperator::DIV, &VectorNodeOutput::VectorType, &VectorNodeOutput::VectorType },
-		"__mantaray__vector_divide"
-	);
-	registerOperator(
-		{ piranha::IrBinaryOperator::ADD, &VectorNodeOutput::VectorType, &VectorNodeOutput::VectorType },
-		"__mantaray__vector_add"
-	);
-	registerOperator(
-		{ piranha::IrBinaryOperator::SUB, &VectorNodeOutput::VectorType, &VectorNodeOutput::VectorType },
-		"__mantaray__vector_sub"
-	);
+    // ====================================================
+    // Binary operators
+    // ====================================================
+    registerOperator(
+        { piranha::IrBinaryOperator::MUL, &VectorNodeOutput::VectorType, &VectorNodeOutput::VectorType },
+        "__mantaray__vector_multiply"
+    );
+    registerOperator(
+        { piranha::IrBinaryOperator::DIV, &VectorNodeOutput::VectorType, &VectorNodeOutput::VectorType },
+        "__mantaray__vector_divide"
+    );
+    registerOperator(
+        { piranha::IrBinaryOperator::ADD, &VectorNodeOutput::VectorType, &VectorNodeOutput::VectorType },
+        "__mantaray__vector_add"
+    );
+    registerOperator(
+        { piranha::IrBinaryOperator::SUB, &VectorNodeOutput::VectorType, &VectorNodeOutput::VectorType },
+        "__mantaray__vector_sub"
+    );
 
-	// ====================================================
-	// Unary operators
-	// ====================================================
+    // ====================================================
+    // Unary operators
+    // ====================================================
     registerUnaryOperator(
         { piranha::IrUnaryOperator::NUM_NEGATE, &piranha::FundamentalType::FloatType },
         "__mantaray__float_negate"
     );
-	registerUnaryOperator(
-		{ piranha::IrUnaryOperator::NUM_NEGATE, &VectorNodeOutput::VectorType },
-		"__mantaray__vector_negate"
-	);
+    registerUnaryOperator(
+        { piranha::IrUnaryOperator::NUM_NEGATE, &VectorNodeOutput::VectorType },
+        "__mantaray__vector_negate"
+    );
 }

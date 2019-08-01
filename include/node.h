@@ -10,8 +10,8 @@ namespace manta {
     struct IntersectionPoint;
     class Path;
 
-	class Node : public piranha::Node {
-	public:
+    class Node : public piranha::Node {
+    public:
         struct NodeSessionMemory {
             unsigned char memory[64];
             void *extraMemory;
@@ -26,7 +26,7 @@ namespace manta {
         void destroySessionMemory(NodeSessionMemory *memory, StackAllocator *stackAllocator) const;
 
         void resolvePath(const Path *relative, Path *target) const;
-	};
+    };
 
 } /* namespace manta */
 

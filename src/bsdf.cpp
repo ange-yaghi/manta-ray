@@ -5,5 +5,5 @@ manta::BSDF::BSDF() : ObjectReferenceNode<BSDF>() {
 }
 
 manta::BSDF::~BSDF() {
-	/* void */
+    /* void */
 }

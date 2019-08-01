@@ -68,35 +68,35 @@
 
 namespace manta_demo {
 
-	enum DEMO {
-		SIMPLE_ROOM,
-		TEAPOT_LAMP,
-		BOX_CITY,
-		BLOCKS,
-		STRESS_SPIDERS,
-		PEN,
-		COMPLEX_ROOM,
-		SAMSUNG_A8,
-		MATERIAL_PREVIEW,
-		STOCK_SCENE,
-		APERTURE_DEMO,
-		SDL_DEMO
-	};
+    enum DEMO {
+        SIMPLE_ROOM,
+        TEAPOT_LAMP,
+        BOX_CITY,
+        BLOCKS,
+        STRESS_SPIDERS,
+        PEN,
+        COMPLEX_ROOM,
+        SAMSUNG_A8,
+        MATERIAL_PREVIEW,
+        STOCK_SCENE,
+        APERTURE_DEMO,
+        SDL_DEMO
+    };
 
-	void runDemo(DEMO demo, int samplesPerPixel, int resolutionX, int resolutionY);
+    void runDemo(DEMO demo, int samplesPerPixel, int resolutionX, int resolutionY);
 
-	void simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolutionY);
-	void teapotLampDemo(int samplesPerPixel, int resolutionX, int resolutionY);
-	void boxCityDemo(int samplesPerPixel, int resolutionX, int resolutionY);
-	void blocksDemo(int samplesPerPixel, int resolutionX, int resolutionY);
-	void stressSpidersDemo(int samplesPerPixel, int resolutionX, int resolutionY);
-	void penDemo(int samplesPerPixel, int resolutionX, int resolutionY);
-	void complexRoomDemo(int samplesPerPixel, int resolutionX, int resolutionY);
-	void samsungA8Demo(int samplesPerPixel, int resolutionX, int resolutionY);
-	void materialVisualizer(int samplesPerPixel, int resolutionX, int resolutionY);
-	void stockSceneDemo(int samplesPerPixel, int resolutionX, int resolutionY);
-	void apertureDemo(int samplesPerPixe, int resolutionX, int resolutionY);
-	void sdlDemo(int samplesPerPixe, int resolutionX, int resolutionY);
+    void simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolutionY);
+    void teapotLampDemo(int samplesPerPixel, int resolutionX, int resolutionY);
+    void boxCityDemo(int samplesPerPixel, int resolutionX, int resolutionY);
+    void blocksDemo(int samplesPerPixel, int resolutionX, int resolutionY);
+    void stressSpidersDemo(int samplesPerPixel, int resolutionX, int resolutionY);
+    void penDemo(int samplesPerPixel, int resolutionX, int resolutionY);
+    void complexRoomDemo(int samplesPerPixel, int resolutionX, int resolutionY);
+    void samsungA8Demo(int samplesPerPixel, int resolutionX, int resolutionY);
+    void materialVisualizer(int samplesPerPixel, int resolutionX, int resolutionY);
+    void stockSceneDemo(int samplesPerPixel, int resolutionX, int resolutionY);
+    void apertureDemo(int samplesPerPixe, int resolutionX, int resolutionY);
+    void sdlDemo(int samplesPerPixe, int resolutionX, int resolutionY);
 
 } /* namespace manta_demo */
 

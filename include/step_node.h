@@ -9,21 +9,21 @@
 
 namespace manta {
 
-	class StepNode : public piranha::Node {
-	public:
-		StepNode();
-		virtual ~StepNode();
+    class StepNode : public piranha::Node {
+    public:
+        StepNode();
+        virtual ~StepNode();
 
-		StepNodeOutput *getMainOutput() { return &m_output; }
+        StepNodeOutput *getMainOutput() { return &m_output; }
 
-	protected:
-		StepNodeOutput m_output;
+    protected:
+        StepNodeOutput m_output;
 
-		virtual void _initialize();
+        virtual void _initialize();
 
-		virtual void registerInputs();
-		virtual void registerOutputs();
-	};
+        virtual void registerInputs();
+        virtual void registerOutputs();
+    };
 
 } /* namespace manta */
 

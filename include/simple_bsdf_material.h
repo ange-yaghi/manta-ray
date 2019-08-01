@@ -7,57 +7,57 @@
 
 namespace manta {
 
-	// Forward declarations
-	class BSDF;
+    // Forward declarations
+    class BSDF;
 
-	class SimpleBSDFMaterial : public Material {
-	public:
-		SimpleBSDFMaterial();
-		virtual ~SimpleBSDFMaterial();
+    class SimpleBSDFMaterial : public Material {
+    public:
+        SimpleBSDFMaterial();
+        virtual ~SimpleBSDFMaterial();
 
-		void setMaxDegree(int degree) { m_maxDegree = degree; }
-		int getMaxDegree() const { return m_maxDegree; }
+        void setMaxDegree(int degree) { m_maxDegree = degree; }
+        int getMaxDegree() const { return m_maxDegree; }
 
-		void generateRays(RayContainer *rays, const LightRay &incidentRay, 
-			const IntersectionPoint &intersectionPoint, int degree, 
-			StackAllocator *stackAllocator = nullptr) const;
-		virtual void integrateRay(LightRay *ray, const RayContainer &rays, 
-			const IntersectionPoint &intersectionPoint) const;
+        void generateRays(RayContainer *rays, const LightRay &incidentRay, 
+            const IntersectionPoint &intersectionPoint, int degree, 
+            StackAllocator *stackAllocator = nullptr) const;
+        virtual void integrateRay(LightRay *ray, const RayContainer &rays, 
+            const IntersectionPoint &intersectionPoint) const;
 
-		void setReflectanceNode(VectorNodeOutput *node) { m_reflectanceNode = node; }
-		const VectorNodeOutput *getReflectanceNode() const;
+        void setReflectanceNode(VectorNodeOutput *node) { m_reflectanceNode = node; }
+        const VectorNodeOutput *getReflectanceNode() const;
 
-		void setEmissionNode(VectorNodeOutput *node) { m_emissionNode = node; }
-		const VectorNodeOutput *getEmissionNode() const;
+        void setEmissionNode(VectorNodeOutput *node) { m_emissionNode = node; }
+        const VectorNodeOutput *getEmissionNode() const;
 
-		void setEmission(const math::Vector &emission) { m_emission = emission; }
-		math::Vector getEmission() { return m_emission; }
+        void setEmission(const math::Vector &emission) { m_emission = emission; }
+        math::Vector getEmission() { return m_emission; }
 
-		void setReflectance(const math::Vector &reflectance) { m_reflectance = reflectance; }
-		math::Vector getReflectance() { return m_reflectance; }
+        void setReflectance(const math::Vector &reflectance) { m_reflectance = reflectance; }
+        math::Vector getReflectance() { return m_reflectance; }
 
-		void setBSDF(const BSDF *bsdf) { m_defaultBsdf = bsdf; }
-		const BSDF *getDefaultBSDF() const { return m_defaultBsdf; }
+        void setBSDF(const BSDF *bsdf) { m_defaultBsdf = bsdf; }
+        const BSDF *getDefaultBSDF() const { return m_defaultBsdf; }
 
-	protected:
+    protected:
         virtual void _evaluate();
-		virtual void _initialize();
-		virtual void registerInputs();
+        virtual void _initialize();
+        virtual void registerInputs();
 
-		int m_maxDegree;
+        int m_maxDegree;
 
-		piranha::pNodeInput m_reflectanceNode;
-		piranha::pNodeInput m_emissionNode;
+        piranha::pNodeInput m_reflectanceNode;
+        piranha::pNodeInput m_emissionNode;
 
-		// Single BSDF
-		piranha::pNodeInput m_bsdfInput;
+        // Single BSDF
+        piranha::pNodeInput m_bsdfInput;
 
-		// Fixed parameters
+        // Fixed parameters
         const BSDF *m_bsdf;
-		math::Vector m_emission;
-		math::Vector m_reflectance;
+        math::Vector m_emission;
+        math::Vector m_reflectance;
         const BSDF *m_defaultBsdf;
-	};
+    };
 
 } /* namespace manta */
 

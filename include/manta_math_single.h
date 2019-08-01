@@ -10,27 +10,27 @@
 
 namespace manta {
 
-	namespace math {
+    namespace math {
 
-		// Vector types
-		struct Generic {
-			union {
-				union {
-					struct {
-						real x, y, z, w;
-					};
-					struct {
-						real qw, qx, qy, qz;
-					};
-				};
-				real v[4];
-			};
-		};
+        // Vector types
+        struct Generic {
+            union {
+                union {
+                    struct {
+                        real x, y, z, w;
+                    };
+                    struct {
+                        real qw, qx, qy, qz;
+                    };
+                };
+                real v[4];
+            };
+        };
 
-		typedef Generic Vector;
-		typedef Generic Quaternion;
+        typedef Generic Vector;
+        typedef Generic Quaternion;
 
-	} /* namespace math */
+    } /* namespace math */
 
 } /* namespace manta */
 

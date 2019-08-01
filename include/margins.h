@@ -3,12 +3,12 @@
 
 namespace manta {
 
-	struct Margins {
-		int left;
-		int width;
-		int top;
-		int height;
-	};
+    struct Margins {
+        int left;
+        int width;
+        int top;
+        int height;
+    };
 
 } /* namespace manta */
 

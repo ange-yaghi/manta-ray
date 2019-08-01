@@ -6,9 +6,9 @@
 #include "../include/path.h"
 
 manta::ImageOutputNode::ImageOutputNode() {
-	m_outputFilename = "";
-	m_gammaCorrection = false;
-	m_jpegQuality = 95;
+    m_outputFilename = "";
+    m_gammaCorrection = false;
+    m_jpegQuality = 95;
 
     m_input = nullptr;
     m_correctGammaInput = nullptr;
@@ -17,15 +17,15 @@ manta::ImageOutputNode::ImageOutputNode() {
 }
 
 manta::ImageOutputNode::~ImageOutputNode() {
-	/* void */
+    /* void */
 }
 
 void manta::ImageOutputNode::_initialize() {
-	/* void */
+    /* void */
 }
 
 void manta::ImageOutputNode::_evaluate() {
-	ImageByteBuffer byteBuffer;
+    ImageByteBuffer byteBuffer;
 
     bool gammaCorrection = m_gammaCorrection;
     int jpegQuality = m_jpegQuality;
@@ -45,39 +45,39 @@ void manta::ImageOutputNode::_evaluate() {
         filename = finalPath.toString();
     }
 
-	// Resolve the input data
-	const VectorMap2D *map = nullptr;
+    // Resolve the input data
+    const VectorMap2D *map = nullptr;
     VectorMap2DNodeOutput *input = static_cast<VectorMap2DNodeOutput *>(m_input);
-	map = input->getMap();
-	if (map != nullptr) {
-		map->fillByteBuffer(&byteBuffer, gammaCorrection);
-	}
-	else {
-		// Map needs to be generated
-		VectorMap2D generatedMap;
-		m_input->fullCompute((void *)&generatedMap);
-		generatedMap.fillByteBuffer(&byteBuffer, gammaCorrection);
-		generatedMap.destroy();
-	}
+    map = input->getMap();
+    if (map != nullptr) {
+        map->fillByteBuffer(&byteBuffer, gammaCorrection);
+    }
+    else {
+        // Map needs to be generated
+        VectorMap2D generatedMap;
+        m_input->fullCompute((void *)&generatedMap);
+        generatedMap.fillByteBuffer(&byteBuffer, gammaCorrection);
+        generatedMap.destroy();
+    }
 
-	JpegWriter jpegWriter;
-	jpegWriter.setQuality(jpegQuality);
-	jpegWriter.write(&byteBuffer, filename.c_str());
+    JpegWriter jpegWriter;
+    jpegWriter.setQuality(jpegQuality);
+    jpegWriter.write(&byteBuffer, filename.c_str());
 
-	byteBuffer.free();
+    byteBuffer.free();
 }
 
 void manta::ImageOutputNode::_destroy() {
-	/* void */
+    /* void */
 }
 
 void manta::ImageOutputNode::registerInputs() {
-	registerInput(&m_input, "map");
+    registerInput(&m_input, "map");
     registerInput(&m_filenameInput, "filename");
     registerInput(&m_jpegQualityInput, "jpeg_quality");
     registerInput(&m_correctGammaInput, "correct_gamma");
 }
 
 void manta::ImageOutputNode::registerOutputs() {
-	/* void */
+    /* void */
 }

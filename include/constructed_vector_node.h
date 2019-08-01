@@ -7,22 +7,22 @@
 
 namespace manta {
 
-	class ConstructedVectorNode : public piranha::Node {
-	public:
-		ConstructedVectorNode();
-		virtual ~ConstructedVectorNode();
+    class ConstructedVectorNode : public piranha::Node {
+    public:
+        ConstructedVectorNode();
+        virtual ~ConstructedVectorNode();
 
-	protected:
-		virtual void _initialize();
-		virtual void _evaluate();
-		virtual void _destroy();
+    protected:
+        virtual void _initialize();
+        virtual void _evaluate();
+        virtual void _destroy();
 
-		virtual void registerOutputs();
-		virtual void registerInputs();
+        virtual void registerOutputs();
+        virtual void registerInputs();
 
-	protected:
-		ConstructedVectorNodeOutput m_output;
-	};
+    protected:
+        ConstructedVectorNodeOutput m_output;
+    };
 
 } /* namespace manta */
 

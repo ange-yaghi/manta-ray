@@ -12,16 +12,16 @@
 using namespace manta;
 
 TEST(OctreeTests, OctreeIntersectionTest) {
-	Octree octree;
-	octree.initialize(1.0, math::loadVector(100, 100, 100));
+    Octree octree;
+    octree.initialize(1.0, math::loadVector(100, 100, 100));
 
-	bool test = octree.checkTriangle(&octree.m_tree,
-		math::loadVector(0.0, 100.0, 0.0),
-		math::loadVector(100.0, 100.0, 100.0),
-		math::loadVector(0.0, 100.0, 110.0)
-	);
+    bool test = octree.checkTriangle(&octree.m_tree,
+        math::loadVector(0.0, 100.0, 0.0),
+        math::loadVector(100.0, 100.0, 100.0),
+        math::loadVector(0.0, 100.0, 110.0)
+    );
 }
 
 TEST(OctreeTests, OctreeTestSanityCheck) {
-	/* TODO */
+    /* TODO */
 }

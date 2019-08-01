@@ -7,27 +7,27 @@
 
 namespace manta {
 
-	class KdTreeNode : public ObjectReferenceNode<KDTree> {
-	public:
-		KdTreeNode();
-		virtual ~KdTreeNode();
+    class KdTreeNode : public ObjectReferenceNode<KDTree> {
+    public:
+        KdTreeNode();
+        virtual ~KdTreeNode();
 
-		KDTree *getKdTree() { return &m_kdTree; }
+        KDTree *getKdTree() { return &m_kdTree; }
 
-	protected:
-		virtual void _initialize();
-		virtual void _evaluate();
-		virtual void _destroy();
+    protected:
+        virtual void _initialize();
+        virtual void _evaluate();
+        virtual void _destroy();
 
-		virtual void registerOutputs();
-		virtual void registerInputs();
+        virtual void registerOutputs();
+        virtual void registerInputs();
 
-	protected:
-		piranha::pNodeInput m_meshInput;
+    protected:
+        piranha::pNodeInput m_meshInput;
 
-	protected:
-		KDTree m_kdTree;
-	};
+    protected:
+        KDTree m_kdTree;
+    };
 
 } /* namespace manta */
 

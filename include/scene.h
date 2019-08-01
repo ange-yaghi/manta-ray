@@ -7,22 +7,22 @@
 
 namespace manta {
 
-	class SceneObject;
+    class SceneObject;
 
-	class Scene : public ObjectReferenceNode<Scene> {
-	public:
-		Scene();
-		virtual ~Scene();
+    class Scene : public ObjectReferenceNode<Scene> {
+    public:
+        Scene();
+        virtual ~Scene();
 
-		SceneObject *createSceneObject();
+        SceneObject *createSceneObject();
         void addSceneObject(SceneObject *object);
 
-		SceneObject *getSceneObject(int index) const { return m_sceneObjects[index]; }
-		int getSceneObjectCount() const { return (int)m_sceneObjects.size(); }
+        SceneObject *getSceneObject(int index) const { return m_sceneObjects[index]; }
+        int getSceneObjectCount() const { return (int)m_sceneObjects.size(); }
 
-	protected:
-		std::vector<SceneObject *> m_sceneObjects;
-	};
+    protected:
+        std::vector<SceneObject *> m_sceneObjects;
+    };
 
 } /* namespace manta */
 

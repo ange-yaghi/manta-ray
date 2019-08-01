@@ -8,22 +8,22 @@
 
 namespace manta {
 
-	// Forward declarations
-	class GPUKernel;
+    // Forward declarations
+    class GPUKernel;
 
-	class GPUManager {
-	public:
-		GPUManager() {}
-		~GPUManager() {}
+    class GPUManager {
+    public:
+        GPUManager() {}
+        ~GPUManager() {}
 
-		virtual void initialize(const char *programLocation) = 0;
-		virtual void destroy() = 0;
+        virtual void initialize(const char *programLocation) = 0;
+        virtual void destroy() = 0;
 
-		virtual GPUMemory *createMemoryBuffer(unsigned int size, GPUMemory::MODE mode) = 0;
-		virtual GPUKernel *createKernel(const char *name, const void *optionalData = nullptr) = 0;
+        virtual GPUMemory *createMemoryBuffer(unsigned int size, GPUMemory::MODE mode) = 0;
+        virtual GPUKernel *createKernel(const char *name, const void *optionalData = nullptr) = 0;
 
-		virtual const char *getDeviceName() const = 0;
-	};
+        virtual const char *getDeviceName() const = 0;
+    };
 
 } /* namespace manta */
 

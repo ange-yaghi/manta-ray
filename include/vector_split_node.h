@@ -7,27 +7,27 @@
 
 namespace manta {
 
-	class VectorSplitNode : public piranha::Node {
-	public:
-		VectorSplitNode();
-		virtual ~VectorSplitNode();
+    class VectorSplitNode : public piranha::Node {
+    public:
+        VectorSplitNode();
+        virtual ~VectorSplitNode();
 
-	protected:
-		virtual void _initialize();
-		virtual void _evaluate();
-		virtual void _destroy();
+    protected:
+        virtual void _initialize();
+        virtual void _evaluate();
+        virtual void _destroy();
 
-		virtual void registerOutputs();
-		virtual void registerInputs();
+        virtual void registerOutputs();
+        virtual void registerInputs();
 
-	protected:
+    protected:
         piranha::pNodeInput m_input;
 
-		VectorSplitNodeOutput m_x;
-		VectorSplitNodeOutput m_y;
-		VectorSplitNodeOutput m_z;
-		VectorSplitNodeOutput m_w;
-	};
+        VectorSplitNodeOutput m_x;
+        VectorSplitNodeOutput m_y;
+        VectorSplitNodeOutput m_z;
+        VectorSplitNodeOutput m_w;
+    };
 
 } /* namespace manta */
 

@@ -5,28 +5,28 @@
 
 namespace manta {
 
-	class Mesh;
+    class Mesh;
 
-	class ObjFileNode : public ObjectReferenceNode<Mesh> {
-	public:
-		ObjFileNode();
-		virtual ~ObjFileNode();
+    class ObjFileNode : public ObjectReferenceNode<Mesh> {
+    public:
+        ObjFileNode();
+        virtual ~ObjFileNode();
 
-		Mesh *getMesh() const { return m_mesh; }
+        Mesh *getMesh() const { return m_mesh; }
 
-	protected:
-		virtual void _initialize();
-		virtual void _evaluate();
-		virtual void _destroy();
+    protected:
+        virtual void _initialize();
+        virtual void _evaluate();
+        virtual void _destroy();
 
-		virtual void registerInputs();
+        virtual void registerInputs();
 
-	protected:
-		piranha::pNodeInput m_filename;
+    protected:
+        piranha::pNodeInput m_filename;
         piranha::pNodeInput m_materialLibrary;
 
-		Mesh *m_mesh;
-	};
+        Mesh *m_mesh;
+    };
 
 } /* namespace manta */
 

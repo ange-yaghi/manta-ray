@@ -7,26 +7,26 @@
 
 namespace manta {
 
-	class VectorSplitNodeOutput : public VectorNodeOutput {
-	public:
-		VectorSplitNodeOutput();
-		virtual ~VectorSplitNodeOutput();
+    class VectorSplitNodeOutput : public VectorNodeOutput {
+    public:
+        VectorSplitNodeOutput();
+        virtual ~VectorSplitNodeOutput();
 
-		void setValueIndex(int valueIndex) { m_valueIndex = valueIndex; }
-		int getValueIndex() const { return m_valueIndex; }
+        void setValueIndex(int valueIndex) { m_valueIndex = valueIndex; }
+        int getValueIndex() const { return m_valueIndex; }
 
-		virtual void sample(const IntersectionPoint *surfaceInteraction, void *target) const;
-		virtual void discreteSample2D(int x, int y, void *target) const;
-		virtual void fullOutput(const void **target) const;
+        virtual void sample(const IntersectionPoint *surfaceInteraction, void *target) const;
+        virtual void discreteSample2D(int x, int y, void *target) const;
+        virtual void fullOutput(const void **target) const;
 
-		piranha::pNodeInput *getInputConnection() { return &m_input; }
+        piranha::pNodeInput *getInputConnection() { return &m_input; }
 
-		virtual void registerInputs();
+        virtual void registerInputs();
 
-	protected:
-		piranha::pNodeInput m_input;
-		int m_valueIndex;
-	};
+    protected:
+        piranha::pNodeInput m_input;
+        int m_valueIndex;
+    };
 
 } /* namespace manta */
 

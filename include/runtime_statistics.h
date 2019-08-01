@@ -22,57 +22,57 @@
 
 namespace manta {
 
-	struct RuntimeStatistics {
-		enum COUNTER {
-			// Counters
-			TRIANGLE_TESTS,
-			QUAD_TESTS,
-			RAYS_CAST,
-			TOTAL_BV_TESTS,
-			TOTAL_BV_HITS,
-			UNNECESSARY_PRIMITIVE_TESTS,
+    struct RuntimeStatistics {
+        enum COUNTER {
+            // Counters
+            TRIANGLE_TESTS,
+            QUAD_TESTS,
+            RAYS_CAST,
+            TOTAL_BV_TESTS,
+            TOTAL_BV_HITS,
+            UNNECESSARY_PRIMITIVE_TESTS,
 
-			// Special label for counter count
-			COUNTER_COUNT
-		};
+            // Special label for counter count
+            COUNTER_COUNT
+        };
 
-		// Increment an individual counter
-		inline void incrementCounter(COUNTER counter) { counters[(int)counter]++; }
-		inline void incrementCounter(COUNTER counter, int amount) { counters[(int)counter] += amount; }
-		void reset() {
-			for (int i = 0; i < COUNTER_COUNT; i++) {
-				counters[i] = 0;
-			}
-		}
+        // Increment an individual counter
+        inline void incrementCounter(COUNTER counter) { counters[(int)counter]++; }
+        inline void incrementCounter(COUNTER counter, int amount) { counters[(int)counter] += amount; }
+        void reset() {
+            for (int i = 0; i < COUNTER_COUNT; i++) {
+                counters[i] = 0;
+            }
+        }
 
-		void add(const RuntimeStatistics *r) {
-			for (int i = 0; i < COUNTER_COUNT; i++) {
-				counters[i] += r->counters[i];
-			}
-		}
+        void add(const RuntimeStatistics *r) {
+            for (int i = 0; i < COUNTER_COUNT; i++) {
+                counters[i] += r->counters[i];
+            }
+        }
 
-		const char *getCounterName(COUNTER counter) const {
-			switch (counter) {
-			case TRIANGLE_TESTS:
-				return "TRIANGLE TESTS";
-			case QUAD_TESTS:
-				return "QUAD TESTS";
-			case RAYS_CAST:
-				return "RAYS CAST";
-			case TOTAL_BV_HITS:
-				return "TOTAL BV HITS";
-			case TOTAL_BV_TESTS:
-				return "TOTAL BV TESTS";
-			case UNNECESSARY_PRIMITIVE_TESTS:
-				return "UNNECESSARY PRIMITIVE TESTS";
-			default:
-				return "UNKNOWN COUNTER";
-			}
-		}
+        const char *getCounterName(COUNTER counter) const {
+            switch (counter) {
+            case TRIANGLE_TESTS:
+                return "TRIANGLE TESTS";
+            case QUAD_TESTS:
+                return "QUAD TESTS";
+            case RAYS_CAST:
+                return "RAYS CAST";
+            case TOTAL_BV_HITS:
+                return "TOTAL BV HITS";
+            case TOTAL_BV_TESTS:
+                return "TOTAL BV TESTS";
+            case UNNECESSARY_PRIMITIVE_TESTS:
+                return "UNNECESSARY PRIMITIVE TESTS";
+            default:
+                return "UNKNOWN COUNTER";
+            }
+        }
 
-		// All counters
-		unsigned __int64 counters[COUNTER_COUNT];
-	};
+        // All counters
+        unsigned __int64 counters[COUNTER_COUNT];
+    };
 
 } /* namespace manta */
 
