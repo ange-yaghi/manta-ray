@@ -8,9 +8,8 @@
 #include <image_plane.h>
 #include <complex_map_2d.h>
 #include <vector_map_2d.h>
-#include <sdl_error_list.h>
-#include <sdl_compilation_error.h>
 
+#include <piranha.h>
 #include <string>
 
 using namespace manta;
@@ -104,7 +103,6 @@ void writeToJpeg(const ComplexMap2D *plane, const std::string &fname, Margins *m
 	EXPECT_EQ((error)->getErrorCode().code, code_.code);	\
 	EXPECT_EQ((error)->getErrorLocation()->lineStart, line);
 
-bool findError(const SdlErrorList *errorList, const SdlErrorCode_struct &errorCode,
-	int line = -1, const SdlCompilationUnit *unit = nullptr, bool instantiationError = false);
+piranha::IrCompilationUnit *compileFile(const std::string &filename, const piranha::ErrorList **errList);
 
 #endif /* TEST_UTILITIES_H */

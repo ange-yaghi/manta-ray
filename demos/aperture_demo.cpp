@@ -11,7 +11,7 @@ void manta_demo::apertureDemo(int samplesPerPixel, int resolutionX, int resoluti
 
 	Scene scene;
 	RayTracer rayTracer;
-	rayTracer.setMaterialManager(new MaterialManager);
+	rayTracer.setMaterialLibrary(new MaterialLibrary);
 
 	ObjFileLoader blocksObj;
 	bool result = blocksObj.loadObjFile(MODEL_PATH "aperture_test.obj");
@@ -23,18 +23,18 @@ void manta_demo::apertureDemo(int samplesPerPixel, int resolutionX, int resoluti
 		return;
 	}
 
-	SimpleBSDFMaterial *brightMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *brightMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	brightMaterial->setName("Bright");
 	brightMaterial->setEmission(math::loadVector(100.f, 100.f, 100.f));
 	brightMaterial->setReflectance(math::constants::Zero);
 
-	SimpleBSDFMaterial *backdropMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *backdropMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	backdropMaterial->setName("Backdrop");
 	backdropMaterial->setReflectance(math::constants::Zero);
 
 	// Create all scene geometry
 	Mesh blocks;
-	blocks.loadObjFileData(&blocksObj, rayTracer.getMaterialManager());
+	blocks.loadObjFileData(&blocksObj, rayTracer.getMaterialLibrary());
 	blocks.setFastIntersectEnabled(false);
 	blocksObj.destroy();
 
@@ -44,7 +44,7 @@ void manta_demo::apertureDemo(int samplesPerPixel, int resolutionX, int resoluti
 
 	// Create scene objects
 	KDTree kdtree;
-	kdtree.initialize((math::real)500.0, math::constants::Zero);
+	kdtree.configure((math::real)500.0, math::constants::Zero);
 	kdtree.analyzeWithProgress(&blocks, 4);
 
 	SceneObject *boxCityObject = scene.createSceneObject();
@@ -120,7 +120,7 @@ void manta_demo::apertureDemo(int samplesPerPixel, int resolutionX, int resoluti
 	ImagePlane sceneBuffer;
 
 	// Run the ray tracer
-	rayTracer.initialize(200 * MB, 50 * MB, 12, 100, true);
+	rayTracer.configure(200 * MB, 50 * MB, 12, 100, true);
 	rayTracer.setBackgroundColor(getColor(0, 0, 0));
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 

@@ -14,7 +14,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
 	Scene scene;
 	RayTracer rayTracer;
-	rayTracer.setMaterialManager(new MaterialManager);
+	rayTracer.setMaterialLibrary(new MaterialLibrary);
 
 	ObjFileLoader boxCityObj;
 	bool result = boxCityObj.loadObjFile(MODEL_PATH "box_city.obj");
@@ -43,21 +43,23 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	//blockBSDF.setDiffuse(getColor(129, 216, 208)); // 0xf1, 0xc4, 0x0f
 	blockBSDF.setDiffuseNode(blockWood.getMainOutput());
 	blockBSDF.setSpecularAtNormal(math::loadVector(0.02f, 0.02f, 0.02f));
-	SimpleBSDFMaterial *blockMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *blockMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	blockMaterial->setName("Block");
 	blockMaterial->setBSDF(&blockBSDF);
+    blockMaterial->setEmission(math::constants::Zero);
 	//blockMaterial->setReflectance(math::loadVector(0.01f, 0.01f, 0.01f));
 
 	SimpleBSDFMaterial outdoorTopLightMaterial;
 	outdoorTopLightMaterial.setEmission(math::loadVector(1.f, 1.f, 1.f));
 	outdoorTopLightMaterial.setReflectance(math::constants::Zero);
 
-	SimpleBSDFMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *groundMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	groundMaterial->setName("Ground");
+    groundMaterial->setEmission(math::constants::Zero);
 	//groundMaterial->setReflectance(math::loadVector(0.01f, 0.01f, 0.01f));
 	groundMaterial->setBSDF(&lambert);
 
-	SimpleBSDFMaterial *sunMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *sunMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	sunMaterial->setName("Sun");
 	sunMaterial->setReflectance(math::loadVector(0.0f, 0.0f, 0.0f));
 	sunMaterial->setEmission(math::loadVector(100.0f, 100.0f, 100.0f));
@@ -65,7 +67,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
 	// Create all scene geometry
 	Mesh boxCity;
-	boxCity.loadObjFileData(&boxCityObj, rayTracer.getMaterialManager());
+	boxCity.loadObjFileData(&boxCityObj, rayTracer.getMaterialLibrary());
 	boxCity.setFastIntersectEnabled(false);
 	//boxCity.findQuads();
 
@@ -75,15 +77,17 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
 	// Create scene objects
 	KDTree kdtree;
-	kdtree.initialize(1000.0f, math::constants::Zero);
-	kdtree.analyzeWithProgress(&boxCity, 2);
 
 	if (WRITE_KDTREE_TO_FILE) {
 		kdtree.writeToObjFile("../../workspace/test_results/box_city_kdtree.obj");
 	}
 
 	SceneObject *boxCityObject = scene.createSceneObject();
-	if (USE_ACCELERATION_STRUCTURE) boxCityObject->setGeometry(&kdtree);
+    if (USE_ACCELERATION_STRUCTURE) {
+        kdtree.configure(1000.0f, math::constants::Zero);
+        kdtree.analyzeWithProgress(&boxCity, 2);
+        boxCityObject->setGeometry(&kdtree);
+    }
 	else boxCityObject->setGeometry(&boxCity);
 	boxCityObject->setDefaultMaterial(blockMaterial);
 
@@ -168,7 +172,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 	ImagePlane sceneBuffer;
 
 	// Initialize and run the ray tracer
-	rayTracer.initialize(200 * MB, 50 * MB, 12, 100, true);
+	rayTracer.configure(200 * MB, 50 * MB, 12, 100, true);
 	rayTracer.setBackgroundColor(math::loadScalar(1.1f));
 	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);

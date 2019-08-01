@@ -1,3 +1,0 @@
-import "sample_lib/example_dependency.mr"
-
-FileImage image ()

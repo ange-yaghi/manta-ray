@@ -1,6 +1,16 @@
-#include <vector_map_2d_node_output.h>
+#include "../include/vector_map_2d_node_output.h"
 
-#include <intersection_point.h>
+#include "../include/intersection_point.h"
+
+const piranha::ChannelType manta::VectorMap2DNodeOutput::VectorMap2dType("VectorMap2dType", &VectorNodeOutput::VectorType);
+
+manta::VectorMap2DNodeOutput::VectorMap2DNodeOutput() : VectorNodeOutput(&VectorMap2dType) {
+    m_map = nullptr;
+}
+
+manta::VectorMap2DNodeOutput::~VectorMap2DNodeOutput() {
+    /* void */
+}
 
 void manta::VectorMap2DNodeOutput::sample(const IntersectionPoint *surfaceInteraction, void *_target) const {
 	math::Vector *target = reinterpret_cast<math::Vector *>(_target);

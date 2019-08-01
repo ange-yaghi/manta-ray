@@ -1,57 +1,67 @@
 #include <step_node_output.h>
 
 void manta::StepNodeOutput::sample(const IntersectionPoint *surfaceInteraction, void *_target) const {
+	VectorNodeOutput *input = static_cast<VectorNodeOutput *>(m_input);
+	VectorNodeOutput *dc = static_cast<VectorNodeOutput *>(m_dc);
+	VectorNodeOutput *foot = static_cast<VectorNodeOutput *>(m_foot);
+	VectorNodeOutput *step = static_cast<VectorNodeOutput *>(m_step);
+	
 	math::Vector *target = reinterpret_cast<math::Vector *>(_target);
 	math::Vector
-		input = math::constants::Zero,
-		dc = m_defaultDc,
-		foot = m_defaultFoot,
-		step = m_defaultStep;
+		v_input = math::constants::Zero,
+		v_dc = m_defaultDc,
+		v_foot = m_defaultFoot,
+		v_step = m_defaultStep;
 
-	if (m_input != nullptr) {
-		m_input->sample(surfaceInteraction, (void *)&input);
+	if (input != nullptr) {
+		input->sample(surfaceInteraction, (void *)&v_input);
 	}
 
-	if (m_dc != nullptr) {
-		m_dc->sample(surfaceInteraction, (void *)&dc);
+	if (dc != nullptr) {
+		dc->sample(surfaceInteraction, (void *)&v_dc);
 	}
 
-	if (m_foot != nullptr) {
-		m_foot->sample(surfaceInteraction, (void *)&foot);
+	if (foot != nullptr) {
+		foot->sample(surfaceInteraction, (void *)&v_foot);
 	}
 
-	if (m_step != nullptr) {
-		m_step->sample(surfaceInteraction, (void *)&step);
+	if (step != nullptr) {
+		step->sample(surfaceInteraction, (void *)&v_step);
 	}
 
-	*target = stepFunction(input, dc, foot, step);
+	*target = stepFunction(v_input, v_dc, v_foot, v_step);
 }
 
 void manta::StepNodeOutput::discreteSample2D(int x, int y, void *_target) const {
+	VectorNodeOutput *input = static_cast<VectorNodeOutput *>(m_input);
+	VectorNodeOutput *dc = static_cast<VectorNodeOutput *>(m_dc);
+	VectorNodeOutput *foot = static_cast<VectorNodeOutput *>(m_foot);
+	VectorNodeOutput *step = static_cast<VectorNodeOutput *>(m_step);
+
 	math::Vector *target = reinterpret_cast<math::Vector *>(_target);
 	math::Vector
-		input = math::constants::Zero,
-		dc = m_defaultDc,
-		foot = m_defaultFoot,
-		step = m_defaultStep;
+		v_input = math::constants::Zero,
+		v_dc = m_defaultDc,
+		v_foot = m_defaultFoot,
+		v_step = m_defaultStep;
 
-	if (m_input != nullptr) {
-		m_input->discreteSample2D(x, y, (void *)&input);
+	if (input != nullptr) {
+		input->discreteSample2d(x, y, (void *)&v_input);
 	}
 
-	if (m_dc != nullptr) {
-		m_input->discreteSample2D(x, y, (void *)&dc);
+	if (dc != nullptr) {
+		input->discreteSample2d(x, y, (void *)&v_dc);
 	}
 
-	if (m_foot != nullptr) {
-		m_input->discreteSample2D(x, y, (void *)&foot);
+	if (foot != nullptr) {
+		input->discreteSample2d(x, y, (void *)&v_foot);
 	}
 
-	if (m_step != nullptr) {
-		m_step->discreteSample2D(x, y, (void *)&step);
+	if (step != nullptr) {
+		step->discreteSample2d(x, y, (void *)&v_step);
 	}
 
-	*target = stepFunction(input, dc, foot, step);
+	*target = stepFunction(v_input, v_dc, v_foot, v_step);
 }
 
 manta::math::Vector manta::StepNodeOutput::stepFunction(const math::Vector &input, const math::Vector &dc, const math::Vector &foot, const math::Vector &step) {

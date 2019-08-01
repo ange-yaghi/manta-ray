@@ -14,7 +14,7 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 
 	Scene scene;
 	RayTracer rayTracer;
-	rayTracer.setMaterialManager(new MaterialManager);
+	rayTracer.setMaterialLibrary(new MaterialLibrary);
 
 	// Load all object files
 	ObjFileLoader smallHouseObj;
@@ -35,7 +35,7 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 	// Create all materials
 	LambertianBSDF lambert;
 	
-	SimpleBSDFMaterial *wallMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *wallMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	wallMaterial->setName("WallMaterial");
 	wallMaterial->setBSDF(&lambert);
 	wallMaterial->setReflectance(getColor(200, 200, 200));
@@ -48,19 +48,19 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 	outdoorTopLightMaterial.setEmission(math::loadVector(20.f, 20.f, 22.f));
 	outdoorTopLightMaterial.setReflectance(math::constants::Zero);
 
-	SimpleBSDFMaterial *tableMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *tableMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	tableMaterial->setName("TableMaterial");
 	tableMaterial->setReflectance(getColor(78, 46, 40));
 	tableMaterial->setBSDF(&lambert);
 
-	SimpleBSDFMaterial *groundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *groundMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	groundMaterial->setName("GroundMaterial");
 	groundMaterial->setReflectance(math::mul(math::loadVector(78, 46, 40), math::loadScalar(0.001f)));
 	groundMaterial->setBSDF(&lambert);
 
 	// Create all scene geometry
 	Mesh smallHouse;
-	smallHouse.loadObjFileData(&smallHouseObj, rayTracer.getMaterialManager(), -1, 0);
+	smallHouse.loadObjFileData(&smallHouseObj, rayTracer.getMaterialLibrary(), -1, 0);
 	smallHouse.setFastIntersectEnabled(false);
 
 	Mesh shutters;
@@ -72,7 +72,7 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 	}
 
 	KDTree kdtree;
-	kdtree.initialize(100.f, math::loadVector(0, 0, 0));
+	kdtree.configure(100.f, math::loadVector(0, 0, 0));
 	kdtree.analyzeWithProgress(&smallHouse, 4);
 
 	if (WRITE_KDTREE_TO_FILE) {
@@ -120,7 +120,7 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 	ImagePlane sceneBuffer;
 
 	// Create the raytracer
-	rayTracer.initialize(200 * MB, 100 * MB, 12, 100, true);
+	rayTracer.configure(200 * MB, 100 * MB, 12, 100, true);
 	rayTracer.setBackgroundColor(getColor(135, 206, 235));
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 

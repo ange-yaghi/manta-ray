@@ -1,0 +1,24 @@
+module {
+    @name:          "MantaRay Microfacet Distributions"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "Defines all builtin microfacet distributions"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
+private import "../types/atomic_types.mr" as types
+private import "../types/conversions.mr"
+
+public node microfacet_distribution => __mantaray__microfacet_distribution { /* void */ }
+
+public node phong_distribution => __mantaray__phong_distribution {
+    input power         [types::scalar] : 8.0;
+    alias output __out  [::microfacet_distribution];
+}
+
+public node ggx_distribution => __mantaray__ggx_distribution {
+    input width         [types::scalar] : 0.5;
+    alias output __out  [::microfacet_distribution];
+}

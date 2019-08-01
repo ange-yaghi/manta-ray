@@ -8,11 +8,14 @@ void manta::MultiplyNodeOutput::sample(const IntersectionPoint *surfaceInteracti
 	a = m_defaultA;
 	b = m_defaultB;
 
-	if (m_inputA != nullptr) {
-		m_inputA->sample(surfaceInteraction, (void *)&a);
+	VectorNodeOutput *inputA = static_cast<VectorNodeOutput *>(m_inputA);
+	VectorNodeOutput *inputB = static_cast<VectorNodeOutput *>(m_inputB);
+
+	if (inputA != nullptr) {
+		inputA->sample(surfaceInteraction, (void *)&a);
 	}
-	if (m_inputB != nullptr) {
-		m_inputB->sample(surfaceInteraction, (void *)&b);
+	if (inputB != nullptr) {
+		inputB->sample(surfaceInteraction, (void *)&b);
 	}
 
 	*target = math::mul(a, b);
@@ -24,11 +27,14 @@ void manta::MultiplyNodeOutput::discreteSample2D(int x, int y, void *_target) co
 	a = m_defaultA;
 	b = m_defaultB;
 
-	if (m_inputA != nullptr) {
-		m_inputA->discreteSample2D(x, y, (void *)&a);
+	VectorNodeOutput *inputA = static_cast<VectorNodeOutput *>(m_inputA);
+	VectorNodeOutput *inputB = static_cast<VectorNodeOutput *>(m_inputB);
+
+	if (inputA != nullptr) {
+		inputA->discreteSample2d(x, y, (void *)&a);
 	}
-	if (m_inputB != nullptr) {
-		m_inputB->discreteSample2D(x, y, (void *)&b);
+	if (inputB != nullptr) {
+		inputB->discreteSample2d(x, y, (void *)&b);
 	}
 
 	*target = math::mul(a, b);
@@ -45,19 +51,22 @@ void manta::MultiplyNodeOutput::_evaluateDimensions() {
 		return;
 	}
 
-	if (m_inputA != nullptr) assert(m_inputA->areDimensionsEvaluated());
-	if (m_inputB != nullptr) assert(m_inputB->areDimensionsEvaluated());
+	VectorNodeOutput *inputA = static_cast<VectorNodeOutput *>(m_inputA);
+	VectorNodeOutput *inputB = static_cast<VectorNodeOutput *>(m_inputB);
+
+	if (m_inputA != nullptr) assert(inputA->areDimensionsEvaluated());
+	if (m_inputB != nullptr) assert(inputB->areDimensionsEvaluated());
 
 	int dimensions = 0;
-	if (m_inputA != nullptr && m_inputA->getDimensions() > dimensions) dimensions = m_inputA->getDimensions();
-	if (m_inputB != nullptr && m_inputB->getDimensions() > dimensions) dimensions = m_inputB->getDimensions();
+	if (m_inputA != nullptr && inputA->getDimensions() > dimensions) dimensions = inputA->getDimensions();
+	if (m_inputB != nullptr && inputB->getDimensions() > dimensions) dimensions = inputB->getDimensions();
 
 	setDimensions(dimensions);
 
 	for (int i = 0; i < dimensions; i++) {
 		int size = 0;
-		if (m_inputA != nullptr && m_inputA->getSize(i) > size) size = m_inputA->getSize(i);
-		if (m_inputB != nullptr && m_inputB->getSize(i) > size) size = m_inputB->getSize(i);
+		if (m_inputA != nullptr && inputA->getSize(i) > size) size = inputA->getSize(i);
+		if (m_inputB != nullptr && inputB->getSize(i) > size) size = inputB->getSize(i);
 
 		setDimensionSize(i, size);
 	}

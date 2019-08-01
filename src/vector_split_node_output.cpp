@@ -18,7 +18,8 @@ void manta::VectorSplitNodeOutput::sample(const IntersectionPoint *surfaceIntera
 	math::Vector *target = reinterpret_cast<math::Vector *>(_target);
 	math::Vector value;
 
-	m_input->sample(surfaceInteraction, (void *)&value);
+    VectorNodeOutput *input = static_cast<VectorNodeOutput *>(m_input);
+	input->sample(surfaceInteraction, (void *)&value);
 
 	*target = math::loadScalar(math::get(value, m_valueIndex));
 }

@@ -1,5 +1,5 @@
-#ifndef LENS_CAMERA_RAY_EMITTER_H
-#define LENS_CAMERA_RAY_EMITTER_H
+#ifndef MANTARAY_LENS_CAMERA_RAY_EMITTER_H
+#define MANTARAY_LENS_CAMERA_RAY_EMITTER_H
 
 #include <camera_ray_emitter.h>
 
@@ -25,4 +25,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* LENS_CAMERA_RAY_EMITTER_H */
+#endif /* MANTARAY_LENS_CAMERA_RAY_EMITTER_H */

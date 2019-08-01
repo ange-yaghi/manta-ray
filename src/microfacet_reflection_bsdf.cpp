@@ -6,7 +6,7 @@ manta::MicrofacetReflectionBSDF::MicrofacetReflectionBSDF() {
 	m_distribution = nullptr;
 	m_distributionInput = nullptr;
 
-	m_output.setBsdf(this);
+	m_output.setReference(this);
 }
 
 manta::MicrofacetReflectionBSDF::~MicrofacetReflectionBSDF() {
@@ -81,8 +81,9 @@ manta::math::real manta::MicrofacetReflectionBSDF::calculatePDF(
 }
 
 void manta::MicrofacetReflectionBSDF::_evaluate() {
-	MicrofacetDistributionNodeOutput *distInput = static_cast<MicrofacetDistributionNodeOutput *>(m_distributionInput);
-	m_distribution = distInput->getDistribution();
+	ObjectReferenceNodeOutput<MicrofacetDistribution> *distInput = 
+        static_cast<ObjectReferenceNodeOutput<MicrofacetDistribution> *>(m_distributionInput);
+	m_distribution = distInput->getReference();
 }
 
 void manta::MicrofacetReflectionBSDF::registerInputs() {

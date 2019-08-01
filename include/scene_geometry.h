@@ -1,8 +1,10 @@
-#ifndef SCENE_GEOMETRY_H
-#define SCENE_GEOMETRY_H
+#ifndef MANTARAY_SCENE_GEOMETRY_H
+#define MANTARAY_SCENE_GEOMETRY_H
 
-#include <manta_math.h>
-#include <runtime_statistics.h>
+#include "object_reference_node.h"
+
+#include "manta_math.h"
+#include "runtime_statistics.h"
 
 namespace manta {
 
@@ -14,7 +16,7 @@ namespace manta {
 	class SceneObject;
 	class StackAllocator;
 
-	class SceneGeometry {
+	class SceneGeometry : public ObjectReferenceNode<SceneGeometry> {
 	public:
 		SceneGeometry();
 		~SceneGeometry();
@@ -40,4 +42,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* SCENE_GEOMETRY_H */
+#endif /* MANTARAY_SCENE_GEOMETRY_H */

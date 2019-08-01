@@ -1,12 +1,13 @@
-#ifndef SIMPLE_BSDF_MATERIAL_H
-#define SIMPLE_BSDF_MATERIAL_H
+#ifndef MANTARAY_SIMPLE_BSDF_MATERIAL_H
+#define MANTARAY_SIMPLE_BSDF_MATERIAL_H
 
-#include <material.h>
+#include "material.h"
+
+#include "vector_node_output.h"
 
 namespace manta {
 
 	// Forward declarations
-	class VectorNodeOutput;
 	class BSDF;
 
 	class SimpleBSDFMaterial : public Material {
@@ -23,11 +24,11 @@ namespace manta {
 		virtual void integrateRay(LightRay *ray, const RayContainer &rays, 
 			const IntersectionPoint &intersectionPoint) const;
 
-		void setReflectanceNode(const VectorNodeOutput *node) { m_reflectanceNode = node; }
-		const VectorNodeOutput *getReflectanceNode() const { return m_reflectanceNode; }
+		void setReflectanceNode(VectorNodeOutput *node) { m_reflectanceNode = node; }
+		const VectorNodeOutput *getReflectanceNode() const;
 
-		void setEmissionNode(const VectorNodeOutput *node) { m_emissionNode = node; }
-		const VectorNodeOutput *getEmissionNode() const { return m_emissionNode; }
+		void setEmissionNode(VectorNodeOutput *node) { m_emissionNode = node; }
+		const VectorNodeOutput *getEmissionNode() const;
 
 		void setEmission(const math::Vector &emission) { m_emission = emission; }
 		math::Vector getEmission() { return m_emission; }
@@ -35,23 +36,29 @@ namespace manta {
 		void setReflectance(const math::Vector &reflectance) { m_reflectance = reflectance; }
 		math::Vector getReflectance() { return m_reflectance; }
 
-		void setBSDF(const BSDF *bsdf) { m_bsdf = bsdf; }
-		const BSDF *getBSDF() const { return m_bsdf; }
+		void setBSDF(const BSDF *bsdf) { m_defaultBsdf = bsdf; }
+		const BSDF *getDefaultBSDF() const { return m_defaultBsdf; }
 
 	protected:
+        virtual void _evaluate();
+		virtual void _initialize();
+		virtual void registerInputs();
+
 		int m_maxDegree;
 
-		const VectorNodeOutput *m_reflectanceNode;
-		const VectorNodeOutput *m_emissionNode;
-
-		// Fixed parameters
-		math::Vector m_emission;
-		math::Vector m_reflectance;
+		piranha::pNodeInput m_reflectanceNode;
+		piranha::pNodeInput m_emissionNode;
 
 		// Single BSDF
-		const BSDF *m_bsdf;
+		piranha::pNodeInput m_bsdfInput;
+
+		// Fixed parameters
+        const BSDF *m_bsdf;
+		math::Vector m_emission;
+		math::Vector m_reflectance;
+        const BSDF *m_defaultBsdf;
 	};
 
 } /* namespace manta */
 
-#endif /* SIMPLE_BSDF_MATERIAL_H */
+#endif /* MANTARAY_SIMPLE_BSDF_MATERIAL_H */

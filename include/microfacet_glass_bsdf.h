@@ -1,5 +1,5 @@
-#ifndef MICROFACET_GLASS_BSDF_H
-#define MICROFACET_GLASS_BSDF_H
+#ifndef MANTARAY_MICROFACET_GLASS_BSDF_H
+#define MANTARAY_MICROFACET_GLASS_BSDF_H
 
 #include <bsdf.h>
 
@@ -37,5 +37,5 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* MICROFACET_GLASS_BSDF_H */
+#endif /* MANTARAY_MICROFACET_GLASS_BSDF_H */
 

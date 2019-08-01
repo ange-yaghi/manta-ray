@@ -1,24 +1,42 @@
 module {
-    @name           = "MantaRay Standard Library"
-    @author         = "Ange Yaghi"
-    @maintainer     = "Ange Yaghi"
-    @copyright      = "Copyright 2019, Ange Yaghi"
-    @doc            = "Imports all MantaRay standard library modules"
-    @version        = "0.0.1a"
-    @github         = "github.com/ange-yaghi/manta-ray"
+    @name:          "MantaRay Standard Library"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "Imports all MantaRay standard library modules"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
 }
 
+public import "ray-tracer/ray_tracer.mr"
+
+public import "image/image_output.mr"
+
 public import "types/atomic_types.mr"
+public import "types/conversions.mr"
 
-public import "microfacet-models/ggx_bsdf.mr"
-public import "microfacet-models/lambertian_bsdf.mr"
-public import "microfacet-models/microfacet_refl_bsdf.mr"
-public import "microfacet-models/phong_bsdf.mr"
+public import "microfacet-models/microfacet_distributions.mr"
 
+public import "bsdf/bsdf.mr"
+public import "bsdf/bilayer_bsdf.mr"
+public import "bsdf/lambertian_bsdf.mr"
+
+public import "mesh/mesh.mr"
 public import "mesh/obj_file.mr"
+
+public import "scene/scene_geometry.mr"
+public import "scene/scene_object.mr"
+public import "scene/scene.mr"
 
 public import "acceleration/kd_tree.mr"
 
+public import "materials/material_library.mr"
+public import "materials/material.mr"
 public import "materials/simple_bsdf_material.mr"
 
-public import "color/color.mr"
+public import "camera/cameras.mr"
+public import "camera/utilities.mr"
+
+public import "sampler/samplers.mr"
+
+public import "types/operations.mr"

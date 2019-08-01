@@ -1,18 +1,18 @@
-#ifndef MICROFACET_DISTRIBUTION_H
-#define MICROFACET_DISTRIBUTION_H
+#ifndef MANTARAY_MICROFACET_DISTRIBUTION_H
+#define MANTARAY_MICROFACET_DISTRIBUTION_H
 
-#include <node.h>
+#include "node.h"
 
-#include <manta_math.h>
-#include <intersection_point.h>
-#include <microfacet_distribution_node_output.h>
+#include "manta_math.h"
+#include "intersection_point.h"
+#include "object_reference_node.h"
 
 namespace manta {
 
 	// Forward declarations
 	class StackAllocator;
 
-	class MicrofacetDistribution : public Node {
+	class MicrofacetDistribution : public ObjectReferenceNode<MicrofacetDistribution> {
 	public:
 		MicrofacetDistribution();
 		virtual ~MicrofacetDistribution();
@@ -29,14 +29,9 @@ namespace manta {
 		math::real smithBidirectionalShadowMasking(const math::Vector &i, const math::Vector &o, 
 			const math::Vector &m, NodeSessionMemory *mem) const;
 
-		MicrofacetDistributionNodeOutput *getMainOutput() { return &m_output; }
-
-	protected:
-		MicrofacetDistributionNodeOutput m_output;
-
-		virtual void registerOutputs();
+		ObjectReferenceNodeOutput<MicrofacetDistribution> *getMainOutput() { return &m_output; }
 	};
 
 } /* namespace manta */
 
-#endif /* MICROFACET_DISTRIBUTION_H */
+#endif /* MANTARAY_MICROFACET_DISTRIBUTION_H */

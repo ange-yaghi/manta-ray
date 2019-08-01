@@ -13,10 +13,10 @@ void manta::MultiplyNode::_initialize() {
 }
 
 void manta::MultiplyNode::registerInputs() {
-	registerInput(m_output.getInputAConnection(), "A");
-	registerInput(m_output.getInputBConnection(), "B");
+	registerInput(m_output.getInputAConnection(), "__left");
+	registerInput(m_output.getInputBConnection(), "__right");
 }
 
 void manta::MultiplyNode::registerOutputs() {
-	registerOutput(&m_output, "Output");
+	registerOutput(&m_output, "__out");
 }

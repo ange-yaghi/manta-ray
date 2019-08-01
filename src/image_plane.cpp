@@ -1,6 +1,6 @@
-#include <image_plane.h>
+#include "../include/image_plane.h"
 
-#include <convolution.h>
+#include "../include/convolution.h"
 
 #include <assert.h>
 #include <iostream>

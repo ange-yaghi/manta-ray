@@ -1,15 +1,15 @@
-#ifndef BILAYER_BSDF_H
-#define BILAYER_BSDF_H
+#ifndef MANTARAY_BILAYER_BSDF_H
+#define MANTARAY_BILAYER_BSDF_H
 
-#include <bsdf.h>
+#include "bsdf.h"
 
-#include <vector_node_output.h>
+#include "lambertian_bsdf.h"
+#include "vector_node_output.h"
 
 namespace manta {
 	
 	class MediaInterface;
-	class LambertianBSDF;
-	class MicrofacetDistributionNodeOutput;
+    class MicrofacetDistribution;
 
 	class BilayerBSDF : public BSDF {
 	public:
@@ -20,14 +20,12 @@ namespace manta {
 			const math::Vector &i, math::Vector *o, math::real *pdf, 
 			StackAllocator *stackAllocator) const;
 
-		void setCoatingDistribution(MicrofacetDistributionNodeOutput *coatingMaterial) 
+		void setCoatingDistribution(ObjectReferenceNodeOutput<MicrofacetDistribution> *coatingMaterial) 
 			{ m_coatingDistribution = coatingMaterial; }
-		const MicrofacetDistributionNodeOutput *getCoatingDistribution() 
-			{ return m_coatingDistribution; }
+		const piranha::pNodeInput getCoatingDistribution() { return m_coatingDistribution; }
 
-		void setDiffuseMaterial(LambertianBSDF *diffuseMaterial) 
-			{ m_diffuseMaterial = diffuseMaterial; }
-		LambertianBSDF *getDiffuseMaterial() { return m_diffuseMaterial; }
+		void setDiffuseMaterial(LambertianBSDF *diffuseMaterial) {}
+		//LambertianBSDF *getDiffuseMaterial() { return m_diffuseMaterial; }
 
 		void setSpecularAtNormal(const math::Vector &specular) { m_specular = specular; }
 		math::Vector getSpecularAtNormal() const { return m_specular; }
@@ -35,21 +33,21 @@ namespace manta {
 		void setDiffuse(const math::Vector &diffuse) { m_diffuse = diffuse; }
 		math::Vector getDiffuse() const { return m_diffuse; }
 
-		void setDiffuseNode(pNodeInput diffuseNode) { m_diffuseNode = diffuseNode; }
-		pNodeInput getDiffuseNode() const { return m_diffuseNode; }
+		void setDiffuseNode(piranha::pNodeInput diffuseNode) { m_diffuseNode = diffuseNode; }
+        piranha::pNodeInput getDiffuseNode() const { return m_diffuseNode; }
 
-		void setSpecularNode(pNodeInput specularNode) { m_specularNode = specularNode; }
-		pNodeInput getSpecularNode() const { return m_specularNode; }
+		void setSpecularNode(piranha::pNodeInput specularNode) { m_specularNode = specularNode; }
+        piranha::pNodeInput getSpecularNode() const { return m_specularNode; }
 
 	protected:
 		virtual void registerInputs();
 
 	protected:
-		MicrofacetDistributionNodeOutput *m_coatingDistribution;
-		LambertianBSDF *m_diffuseMaterial;
+        piranha::pNodeInput m_coatingDistribution;
+		LambertianBSDF m_diffuseMaterial;
 
-		pNodeInput m_diffuseNode;
-		pNodeInput m_specularNode;
+        piranha::pNodeInput m_diffuseNode;
+        piranha::pNodeInput m_specularNode;
 
 		math::Vector m_specular;
 		math::Vector m_diffuse;
@@ -57,4 +55,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* BILAYER_BSDF_H */
+#endif /* MANTARAY_BILAYER_BSDF_H */

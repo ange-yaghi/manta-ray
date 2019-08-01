@@ -1,7 +1,6 @@
-#include <kd_tree_node.h>
+#include "../include/kd_tree_node.h"
 
-#include <mesh_node_output.h>
-#include <mesh.h>
+#include "../include/mesh.h"
 
 manta::KdTreeNode::KdTreeNode() {
 	/* void */
@@ -16,14 +15,14 @@ void manta::KdTreeNode::_initialize() {
 }
 
 void manta::KdTreeNode::_evaluate() {
-	m_kdTree.initialize((math::real)1000.0, math::constants::Zero);
+	m_kdTree.configure((math::real)1000.0, math::constants::Zero);
 
 	Mesh *mesh = nullptr;
-	mesh = ((MeshNodeOutput *)m_meshInput)->getMesh();
+	mesh = ((ObjectReferenceNodeOutput<Mesh> *)m_meshInput)->getReference();
 
 	m_kdTree.analyzeWithProgress(mesh, 2);
 	
-	m_output.setSceneGeometry(&m_kdTree);
+	m_output.setReference(&m_kdTree);
 }
 
 void manta::KdTreeNode::_destroy() {
@@ -31,7 +30,7 @@ void manta::KdTreeNode::_destroy() {
 }
 
 void manta::KdTreeNode::registerOutputs() {
-	registerOutput(&m_output, "$primary");
+	registerOutput(&m_output, "__out");
 	setPrimaryOutput(&m_output);
 }
 

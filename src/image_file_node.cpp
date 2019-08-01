@@ -1,8 +1,8 @@
-#include <image_file_node.h>
+#include "../include/image_file_node.h"
 
-#include <rgb_space.h>
-#include <standard_allocator.h>
-#include <vector_map_2d.h>
+#include "../include/rgb_space.h"
+#include "../include/standard_allocator.h"
+#include "../include/vector_map_2d.h"
 
 #include <SDL_image.h>
 #include <assert.h>

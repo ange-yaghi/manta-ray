@@ -1,7 +1,9 @@
-#ifndef VECTOR_SPLIT_NODE_OUTPUT_H
-#define VECTOR_SPLIT_NODE_OUTPUT_H
+#ifndef MANTARAY_VECTOR_SPLIT_NODE_OUTPUT_H
+#define MANTARAY_VECTOR_SPLIT_NODE_OUTPUT_H
 
-#include <vector_node_output.h>
+#include "vector_node_output.h"
+
+#include "intersection_point.h"
 
 namespace manta {
 
@@ -17,15 +19,15 @@ namespace manta {
 		virtual void discreteSample2D(int x, int y, void *target) const;
 		virtual void fullOutput(const void **target) const;
 
-		pNodeInput *getInputConnection() { return &m_input; }
+		piranha::pNodeInput *getInputConnection() { return &m_input; }
 
 		virtual void registerInputs();
 
 	protected:
-		pNodeInput m_input;
+		piranha::pNodeInput m_input;
 		int m_valueIndex;
 	};
 
 } /* namespace manta */
 
-#endif /* CONSTRUCTED_VECTOR_NODE_OUTPUT_H */
+#endif /* MANTARAY_CONSTRUCTED_VECTOR_NODE_OUTPUT_H */

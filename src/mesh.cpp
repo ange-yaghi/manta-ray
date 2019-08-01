@@ -6,12 +6,14 @@
 #include <coarse_intersection.h>
 #include <standard_allocator.h>
 #include <material.h>
-#include <material_manager.h>
+#include "../include/material_library.h"
 #include <primitives.h>
 #include <runtime_statistics.h>
 
 manta::Mesh::Mesh() {
 	CHECK_ALIGNMENT(this, 16);
+
+    overrideType<Mesh>();
 
 	m_faces = nullptr;
 	m_auxFaceData = nullptr;
@@ -497,7 +499,7 @@ bool manta::Mesh::fastIntersection(const LightRay *ray) const {
 	else return true;
 }
 
-void manta::Mesh::loadObjFileData(ObjFileLoader *data, MaterialManager *materialLibrary, int defaultMaterialIndex, unsigned int globalId) {
+void manta::Mesh::loadObjFileData(ObjFileLoader *data, MaterialLibrary *materialLibrary, int defaultMaterialIndex, unsigned int globalId) {
 	initialize(data->getFaceCount(), data->getVertexCount(), data->getNormalCount(), data->getTexCoordCount());
 
 	for (unsigned int i = 0; i < data->getFaceCount(); i++) {

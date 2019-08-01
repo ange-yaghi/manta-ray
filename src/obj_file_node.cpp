@@ -1,14 +1,15 @@
-#include <obj_file_node.h>
+#include "../include/obj_file_node.h"
 
-#include <string_node_output.h>
-#include <obj_file_loader.h>
-#include <mesh.h>
-#include <node_program.h>
+#include "../include/obj_file_loader.h"
+#include "../include/mesh.h"
+#include "../include/material_library.h"
+#include "../include/path.h"
 
+#include <piranha.h>
 #include <string>
 
-manta::ObjFileNode::ObjFileNode() {
-	/* void */
+manta::ObjFileNode::ObjFileNode() : ObjectReferenceNode<Mesh>() {
+	m_mesh = nullptr;
 }
 
 manta::ObjFileNode::~ObjFileNode() {
@@ -23,13 +24,19 @@ void manta::ObjFileNode::_evaluate() {
 	std::string filename;
 	m_filename->fullCompute((void *)&filename);
 
+    Path resolvedPath;
+    resolvePath(&Path(filename.c_str()), &resolvedPath);
+
+    MaterialLibrary *library =
+        static_cast<ObjectReferenceNodeOutput<MaterialLibrary> *>(m_materialLibrary)->getReference();
+
 	ObjFileLoader loader;
-	loader.loadObjFile(filename.c_str());
+	loader.loadObjFile(resolvedPath.toString().c_str());
 
 	Mesh *mesh = new Mesh;
-	mesh->loadObjFileData(&loader, getProgram()->getMaterialManager());
+	mesh->loadObjFileData(&loader, library);
 
-	m_output.setMesh(mesh);
+	m_output.setReference(mesh);
 	m_mesh = mesh;
 }
 
@@ -37,12 +44,7 @@ void manta::ObjFileNode::_destroy() {
 	/* void */
 }
 
-void manta::ObjFileNode::registerOutputs() {
-	setPrimaryOutput(&m_output);
-
-	registerOutput(&m_output, "mesh");
-}
-
 void manta::ObjFileNode::registerInputs() {
 	registerInput(&m_filename, "filename");
+    registerInput(&m_materialLibrary, "materials");
 }

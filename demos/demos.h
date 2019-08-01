@@ -34,7 +34,6 @@
 #include <media_interface.h>
 #include <dielectric_media_interface.h>
 #include <simple_bsdf_material.h>
-#include <single_color_node.h>
 #include <bilayer_bsdf.h>
 #include <phong_distribution.h>
 #include <lambertian_bsdf.h>
@@ -62,9 +61,10 @@
 #include <multiply_node.h>
 #include <ramp_node.h>
 #include <step_node.h>
-#include <material_manager.h>
+#include <material_library.h>
 #include <obj_file_node.h>
 #include <kd_tree_node.h>
+#include <cached_vector_node.h>
 
 namespace manta_demo {
 

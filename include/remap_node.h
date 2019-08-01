@@ -1,22 +1,22 @@
-#ifndef REMAP_NODE_H
-#define REMAP_NODE_H
+#ifndef MANTARAY_REMAP_NODE_H
+#define MANTARAY_REMAP_NODE_H
 
-#include <node.h>
+#include <piranha.h>
 
-#include <remap_node_output.h>
-#include <manta_math.h>
+#include "remap_node_output.h"
+#include "manta_math.h"
 
 namespace manta {
 
 	class NodeOutput;
 
-	class RemapNode : public Node {
+	class RemapNode : public piranha::Node {
 	public:
 		RemapNode();
-		RemapNode(const math::Vector &start, const math::Vector &end, pNodeInput inputNode);
+		RemapNode(const math::Vector &start, const math::Vector &end, piranha::pNodeInput inputNode);
 		virtual ~RemapNode();
 
-		NodeOutput *getMainOutput() { return &m_output; }
+		piranha::NodeOutput *getMainOutput() { return &m_output; }
 
 	protected:
 		virtual void _evaluate();
@@ -29,4 +29,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* REMAP_NODE_H */
+#endif /* MANTARAY_REMAP_NODE_H */

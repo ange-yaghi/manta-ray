@@ -1,7 +1,7 @@
-#ifndef OBJ_FILE_LOADER_H
-#define OBJ_FILE_LOADER_H
+#ifndef MANTARAY_OBJ_FILE_LOADER_H
+#define MANTARAY_OBJ_FILE_LOADER_H
 
-#include <manta_math.h>
+#include "manta_math.h"
 
 #include <istream>
 #include <vector>
@@ -70,4 +70,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* OBJ_FILE_LOADER_H */
+#endif /* MANTARAY_OBJ_FILE_LOADER_H */

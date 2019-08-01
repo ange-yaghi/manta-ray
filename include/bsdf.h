@@ -1,11 +1,11 @@
-#ifndef BSDF_H
-#define BSDF_H
+#ifndef MANTARAY_BSDF_H
+#define MANTARAY_BSDF_H
 
-#include <node.h>
+#include "node.h"
 
-#include <manta_math.h>
-#include <media_interface.h>
-#include <bsdf_node_output.h>
+#include "manta_math.h"
+#include "media_interface.h"
+#include "object_reference_node.h"
 
 #include <algorithm>
 #include <math.h>
@@ -15,7 +15,7 @@ namespace manta {
 	struct IntersectionPoint;
 	class StackAllocator;
 
-	class BSDF : public Node {
+	class BSDF : public ObjectReferenceNode<BSDF> {
 	public:
 		BSDF();
 		virtual ~BSDF();
@@ -26,11 +26,6 @@ namespace manta {
 
 		static inline bool refract(const math::Vector &i, const math::Vector &n,
 			math::real ior, math::Vector *t);
-
-	protected:
-		BSDFNodeOutput m_output;
-
-		virtual void registerOutputs();
 	};
 
 	inline bool BSDF::refract(const math::Vector &i, const math::Vector &n,
@@ -55,4 +50,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* BSDF_H */
+#endif /* MANTARAY_BSDF_H */

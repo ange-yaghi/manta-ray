@@ -11,7 +11,7 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 
 	Scene scene;
 	RayTracer rayTracer;
-	rayTracer.setMaterialManager(new MaterialManager);
+	rayTracer.setMaterialLibrary(new MaterialLibrary);
 
 	ObjFileLoader blocksObj;
 	bool result = blocksObj.loadObjFile(MODEL_PATH "blocks_floor.obj");
@@ -62,20 +62,20 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 	floorBSDF.setSpecularAtNormal(math::loadVector(0.75f, 0.75f, 0.75f));
 
 	// Create all materials
-	SingleColorNode whiteNode(getColor(255, 255, 255));
-	SimpleBSDFMaterial *simpleBlockMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	CachedVectorNode whiteNode(getColor(255, 255, 255));
+	SimpleBSDFMaterial *simpleBlockMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	simpleBlockMaterial->setName("Block");
 	simpleBlockMaterial->setEmission(math::constants::Zero);
 	simpleBlockMaterial->setReflectanceNode(whiteNode.getMainOutput());
 	simpleBlockMaterial->setBSDF(&blockBSDF);
 
-	SimpleBSDFMaterial *simpleLetterMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *simpleLetterMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	simpleLetterMaterial->setName("Letters");
 	simpleLetterMaterial->setEmission(math::constants::Zero);
 	simpleLetterMaterial->setReflectanceNode(whiteNode.getMainOutput());
 	simpleLetterMaterial->setBSDF(&blockBSDF);
 
-	SimpleBSDFMaterial *simpleGroundMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *simpleGroundMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	simpleGroundMaterial->setName("Ground");
 	simpleGroundMaterial->setEmission(math::constants::Zero);
 	simpleGroundMaterial->setReflectanceNode(whiteNode.getMainOutput());
@@ -87,7 +87,7 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 
 	// Create all scene geometry
 	Mesh blocks;
-	blocks.loadObjFileData(&blocksObj, rayTracer.getMaterialManager());
+	blocks.loadObjFileData(&blocksObj, rayTracer.getMaterialLibrary());
 	blocks.setFastIntersectEnabled(false);
 	blocksObj.destroy();
 
@@ -97,7 +97,7 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 
 	// Create scene objects
 	KDTree kdtree;
-	kdtree.initialize((math::real)500.0, math::constants::Zero);
+	kdtree.configure((math::real)500.0, math::constants::Zero);
 	kdtree.analyzeWithProgress(&blocks, 4);
 
 	SceneObject *boxCityObject = scene.createSceneObject();
@@ -172,7 +172,7 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 	ImagePlane sceneBuffer;
 
 	// Run the ray tracer
-	rayTracer.initialize(200 * MB, 50 * MB, 12, 100, true);
+	rayTracer.configure(200 * MB, 50 * MB, 12, 100, true);
 	rayTracer.setBackgroundColor(getColor(0, 0, 0));
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 

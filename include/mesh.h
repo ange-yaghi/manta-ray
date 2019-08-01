@@ -1,16 +1,16 @@
-#ifndef MESH_H
-#define MESH_H
+#ifndef MANTARAY_MESH_H
+#define MANTARAY_MESH_H
 
-#include <scene_geometry.h>
+#include "scene_geometry.h"
 
-#include <geometry.h>
-#include <manta_math.h>
-#include <primitives.h>
+#include "geometry.h"
+#include "manta_math.h"
+#include "primitives.h"
 
 namespace manta {
 
 	class ObjFileLoader;
-	class MaterialManager;
+	class MaterialLibrary;
 
 	struct CoarseCollisionOutput {
 		math::real depth;
@@ -69,7 +69,7 @@ namespace manta {
 		void setFastIntersectRadius(math::real radius) { m_fastIntersectRadius = radius; }
 		void setFastIntersectPosition(math::Vector pos) { m_fastIntersectPosition = pos; }
 
-		void loadObjFileData(ObjFileLoader *data, MaterialManager *materialLibrary = nullptr, 
+		void loadObjFileData(ObjFileLoader *data, MaterialLibrary *materialLibrary = nullptr, 
 			int defaultMaterialIndex = -1, unsigned int globalId = 0);
 
 		void merge(const Mesh *mesh);
@@ -117,4 +117,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* MESH_H */
+#endif /* MANTARAY_MESH_H */

@@ -54,7 +54,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	}
 
 	RayTracer rayTracer;
-	rayTracer.setMaterialManager(new MaterialManager);
+	rayTracer.setMaterialLibrary(new MaterialLibrary);
 
 	// Create all materials
 	LambertianBSDF lambert;
@@ -68,10 +68,10 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	floorBSDF.setDiffuseMaterial(&lambert);
 	floorBSDF.setSpecularAtNormal(math::loadVector(0.0, 0.0, 0.0));
 
-	SimpleBSDFMaterial *floorMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *floorMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	floorMaterial->setBSDF(&floorBSDF);
 
-	SimpleBSDFMaterial *lampLightMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *lampLightMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	lampLightMaterial->setEmission(math::mul(getColor(255, 197, 143), math::loadScalar(50.0)));
 	lampLightMaterial->setReflectance(math::constants::Zero);
 
@@ -84,7 +84,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	teapotBSDF.setDiffuseMaterial(&lambert);
 	teapotBSDF.setSpecularAtNormal(math::loadVector(0.5, 0.5, 0.5));
 
-	SimpleBSDFMaterial *teapotMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *teapotMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	teapotMaterial->setBSDF(&teapotBSDF);
 
 	// Glass
@@ -99,14 +99,14 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	simpleGlassBSDF.setDistribution(&phongGlass);
 	simpleGlassBSDF.setMediaInterface(&fresnel);
 
-	SimpleBSDFMaterial *glassMaterial = rayTracer.getMaterialManager()->newMaterial<SimpleBSDFMaterial>();
+	SimpleBSDFMaterial *glassMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
 	glassMaterial->setName("Glass");
 	glassMaterial->setReflectance(getColor(255, 255, 255));
 	glassMaterial->setBSDF(&simpleGlassBSDF);
 
 	// Create all scene geometry
 	Mesh lamp;
-	lamp.loadObjFileData(&lampObj, rayTracer.getMaterialManager(), floorMaterial->getIndex());
+	lamp.loadObjFileData(&lampObj, rayTracer.getMaterialLibrary(), floorMaterial->getIndex());
 	lamp.setFastIntersectEnabled(true);
 	lamp.setFastIntersectRadius((math::real)2.123);
 	lamp.setFastIntersectPosition(math::loadVector(-0.06430f, 1.86833f, -2.96564f));
@@ -121,7 +121,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	else if (MATERIAL == ENAMEL) mainObjectMaterial = teapotMaterial;
 
 	Mesh objectMesh;
-	objectMesh.loadObjFileData(&teapotObj, rayTracer.getMaterialManager(), mainObjectMaterial->getIndex());
+	objectMesh.loadObjFileData(&teapotObj, rayTracer.getMaterialLibrary(), mainObjectMaterial->getIndex());
 	objectMesh.setFastIntersectEnabled(true);
 	objectMesh.setFastIntersectRadius((math::real)2.0);
 	objectMesh.setFastIntersectPosition(math::loadVector(-0.5724f, 1.02483f, -0.04969f));
@@ -130,7 +130,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	objectMesh.findQuads();
 
 	KDTree kdtree;
-	kdtree.initialize(4.0f, math::constants::Zero);
+	kdtree.configure(4.0f, math::constants::Zero);
 	kdtree.analyzeWithProgress(&objectMesh, 4);
 
 	SpherePrimitive bulb;
@@ -179,7 +179,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 	camera.setSampler(&randomSampler);
 
 	// Create the raytracer
-	rayTracer.initialize(200 * MB, 100 * MB, 12, 100, true);
+	rayTracer.configure(200 * MB, 100 * MB, 12, 100, true);
 	rayTracer.setBackgroundColor(getColor(0, 0, 0));
 	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");

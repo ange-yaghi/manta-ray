@@ -1,0 +1,72 @@
+private import "../../sdl/manta-lib/mantaray.mr"
+
+material_library library()
+
+simple_bsdf_material(
+    name: "Backdrop",
+    library: library,
+    bsdf: lambertian_bsdf()
+)
+
+simple_bsdf_material(
+    name: "PenBody",
+    library: library,
+    bsdf: bilayer_bsdf(
+        coating: phong_distribution(16.0),
+        diffuse: vector(0.5, 0.0, 0.0),
+        specular: vector(0.01, 0.01, 0.01)
+    )
+)
+
+obj_file obj(
+    filename: "../../demos/models/cube.obj",
+    materials: library
+)
+
+kd_tree tree(
+    mesh: obj
+)
+
+scene main_scene()
+
+scene_object main_object(
+    name: "Main",
+    scene: main_scene,
+    geometry: tree,
+    default_material: 
+        simple_bsdf_material(
+            name: "Lambert",
+            library: library,
+            bsdf: lambertian_bsdf()
+        )
+)
+
+camera_target camera_target(
+    position:   vector(11.24, 3.33763, -5.722),
+    target:     vector(),
+    up:         vector(0.0, 1.0, 0.0)
+)
+
+standard_camera camera(
+    up: camera_target.up,
+    position: camera_target.position,
+    direction: camera_target.direction,
+    resolution_x: 1920,
+    resolution_y: 1080,
+    plane_height: 0.3,
+    plane_distance: 1.0,
+    samples: 1,
+    sampler: random_sampler()
+)
+
+ray_tracer mr(
+    scene: main_scene,
+    camera: camera,
+    materials: library,
+    background: vector(1.0, 1.0, 1.0)
+)
+
+image_output(
+    map: mr.image,
+    filename: "test.jpg"
+)
