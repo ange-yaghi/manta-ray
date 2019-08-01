@@ -5,71 +5,71 @@
 
 namespace manta {
 
-	enum UNARY_OPERATION {
-		NORMALIZE,
-		NEGATE,
-		MAGNITUDE
-	};
+    enum UNARY_OPERATION {
+        NORMALIZE,
+        NEGATE,
+        MAGNITUDE
+    };
 
-	template <UNARY_OPERATION op>
-	class UnaryNodeOutput : public VectorNodeOutput {
-	public:
+    template <UNARY_OPERATION op>
+    class UnaryNodeOutput : public VectorNodeOutput {
+    public:
 
-	public:
-		UnaryNodeOutput() {
-			m_input = nullptr;
-		}
+    public:
+        UnaryNodeOutput() {
+            m_input = nullptr;
+        }
 
-		virtual ~UnaryNodeOutput() {
-			/* void */
-		}
+        virtual ~UnaryNodeOutput() {
+            /* void */
+        }
 
-		static inline math::Vector doOp(const math::Vector &input) {
-			switch (op) {
-			case NORMALIZE:
-				return math::normalize(input);
-			case MAGNITUDE:
-				return math::magnitude(input);
-			case NEGATE:
-				return math::negate(input);
-			default:
-				return math::constants::Zero;
-			}
-		}
+        static inline math::Vector doOp(const math::Vector &input) {
+            switch (op) {
+            case NORMALIZE:
+                return math::normalize(input);
+            case MAGNITUDE:
+                return math::magnitude(input);
+            case NEGATE:
+                return math::negate(input);
+            default:
+                return math::constants::Zero;
+            }
+        }
 
-		virtual void sample(const IntersectionPoint *surfaceInteraction, void *_target) const {
-			math::Vector *target = reinterpret_cast<math::Vector *>(_target);
+        virtual void sample(const IntersectionPoint *surfaceInteraction, void *_target) const {
+            math::Vector *target = reinterpret_cast<math::Vector *>(_target);
 
-			math::Vector input;
-			static_cast<VectorNodeOutput *>(m_input)->sample(surfaceInteraction, (void *)&input);
+            math::Vector input;
+            static_cast<VectorNodeOutput *>(m_input)->sample(surfaceInteraction, (void *)&input);
 
-			*target = doOp(input);
-		}
+            *target = doOp(input);
+        }
 
-		virtual void discreteSample2D(int x, int y, void *_target) const {
-			math::Vector *target = reinterpret_cast<math::Vector *>(_target);
+        virtual void discreteSample2D(int x, int y, void *_target) const {
+            math::Vector *target = reinterpret_cast<math::Vector *>(_target);
 
-			math::Vector input;
-			static_cast<VectorNodeOutput *>(m_input)
-				->discreteSample2d(x, y, (void *)&input);
+            math::Vector input;
+            static_cast<VectorNodeOutput *>(m_input)
+                ->discreteSample2d(x, y, (void *)&input);
 
-			*target = doOp(input);
-		}
+            *target = doOp(input);
+        }
 
-		virtual void getDataReference(const void **target) const {
-			*target = nullptr;
-		}
+        virtual void getDataReference(const void **target) const {
+            *target = nullptr;
+        }
 
-		piranha::pNodeInput *getConnection() { return &m_input; }
+        piranha::pNodeInput *getConnection() { return &m_input; }
 
-	protected:
-		virtual void registerInputs() {
-			registerInput(&m_input);
-		}
+    protected:
+        virtual void registerInputs() {
+            registerInput(&m_input);
+        }
 
-	protected:
-		piranha::pNodeInput m_input;
-	};
+    protected:
+        piranha::pNodeInput m_input;
+    };
 
 } /* namespace manta */
 

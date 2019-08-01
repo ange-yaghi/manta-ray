@@ -7,33 +7,33 @@
 
 namespace manta {
 
-	// Forward declarations
-	class Material;
+    // Forward declarations
+    class Material;
 
-	class MaterialLibrary : public ObjectReferenceNode<MaterialLibrary> {
-	public:
-		MaterialLibrary();
-		~MaterialLibrary();
+    class MaterialLibrary : public ObjectReferenceNode<MaterialLibrary> {
+    public:
+        MaterialLibrary();
+        ~MaterialLibrary();
 
-		template <typename T>
-		T *newMaterial() {
-			T *newMaterial = new T;
-			newMaterial->setIndex(m_currentIndex);
-			m_materials.push_back(newMaterial);
-			m_currentIndex++;
+        template <typename T>
+        T *newMaterial() {
+            T *newMaterial = new T;
+            newMaterial->setIndex(m_currentIndex);
+            m_materials.push_back(newMaterial);
+            m_currentIndex++;
 
-			return newMaterial;
-		}
+            return newMaterial;
+        }
 
-		void addMaterial(Material *material);
+        void addMaterial(Material *material);
 
-		Material *getMaterial(int index) const { return m_materials[index]; }
-		Material *searchByName(const std::string &name) const;
+        Material *getMaterial(int index) const { return m_materials[index]; }
+        Material *searchByName(const std::string &name) const;
 
-	protected:
-		std::vector<Material *> m_materials;
-		int m_currentIndex;
-	};
+    protected:
+        std::vector<Material *> m_materials;
+        int m_currentIndex;
+    };
 
 } /* namespace manta */
 

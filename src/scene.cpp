@@ -11,10 +11,10 @@ manta::Scene::~Scene() {
 }
 
 manta::SceneObject *manta::Scene::createSceneObject() {
-	SceneObject *newObject = new SceneObject;
-	m_sceneObjects.push_back(newObject);
+    SceneObject *newObject = new SceneObject;
+    m_sceneObjects.push_back(newObject);
 
-	return newObject;
+    return newObject;
 }
 
 void manta::Scene::addSceneObject(SceneObject *object) {

@@ -10,13 +10,13 @@ namespace manta {
     template <typename Type>
     class ObjectReferenceNodeOutput : public piranha::NodeOutput {
     public:
-		ObjectReferenceNodeOutput() : NodeOutput(LookupChannelType<Type>()) {
-			/* void */
-		}
+        ObjectReferenceNodeOutput() : NodeOutput(LookupChannelType<Type>()) {
+            /* void */
+        }
 
-		virtual ~ObjectReferenceNodeOutput() {
-			/* void */
-		}
+        virtual ~ObjectReferenceNodeOutput() {
+            /* void */
+        }
 
         Type *getReference() const { return m_data; }
         void setReference(Type *data) { m_data = data; }

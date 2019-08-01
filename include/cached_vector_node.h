@@ -7,27 +7,27 @@
 
 namespace manta {
 
-	class CachedVectorNode : public piranha::Node {
-	public:
-		CachedVectorNode();
-		CachedVectorNode(const math::Vector &v);
-		virtual ~CachedVectorNode();
+    class CachedVectorNode : public piranha::Node {
+    public:
+        CachedVectorNode();
+        CachedVectorNode(const math::Vector &v);
+        virtual ~CachedVectorNode();
 
-		CachedVectorOutput *getMainOutput() { return &m_output; }
+        CachedVectorOutput *getMainOutput() { return &m_output; }
 
-	protected:
-		virtual void _initialize();
-		virtual void _evaluate();
-		virtual void _destroy();
+    protected:
+        virtual void _initialize();
+        virtual void _evaluate();
+        virtual void _destroy();
 
-		virtual void registerOutputs();
+        virtual void registerOutputs();
 
-		void setValue(const math::Vector &v) { m_output.setValue(v); }
-		math::Vector getValue() const { return m_output.getValue(); }
+        void setValue(const math::Vector &v) { m_output.setValue(v); }
+        math::Vector getValue() const { return m_output.getValue(); }
 
-	protected:
-		CachedVectorOutput m_output;
-	};
+    protected:
+        CachedVectorOutput m_output;
+    };
 
 } /* namespace manta */
 

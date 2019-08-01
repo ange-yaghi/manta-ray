@@ -5,21 +5,21 @@
 
 namespace manta {
 
-	class VectorMaterialNode;
+    class VectorMaterialNode;
 
-	struct LambertMemory {
-		math::Vector reflectance;
-	};
+    struct LambertMemory {
+        math::Vector reflectance;
+    };
 
-	class LambertianBSDF : public BSDF {
-	public:
-		LambertianBSDF();
-		virtual ~LambertianBSDF();
+    class LambertianBSDF : public BSDF {
+    public:
+        LambertianBSDF();
+        virtual ~LambertianBSDF();
 
-		virtual math::Vector sampleF(const IntersectionPoint *surfaceInteraction, 
-			const math::Vector &i, math::Vector *o, math::real *pdf, 
-			StackAllocator *stackAllocator) const;
-	};
+        virtual math::Vector sampleF(const IntersectionPoint *surfaceInteraction, 
+            const math::Vector &i, math::Vector *o, math::real *pdf, 
+            StackAllocator *stackAllocator) const;
+    };
 
 } /* namespace manta */
 

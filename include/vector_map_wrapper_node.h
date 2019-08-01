@@ -7,30 +7,30 @@
 
 namespace manta {
 
-	class VectorMapWrapperNode : public Node {
-	public:
-		VectorMapWrapperNode(const VectorMap2D *map) {
-			m_output.setMap(map);
-		}
+    class VectorMapWrapperNode : public Node {
+    public:
+        VectorMapWrapperNode(const VectorMap2D *map) {
+            m_output.setMap(map);
+        }
 
-		virtual ~VectorMapWrapperNode() {
-			/* void */
-		}
+        virtual ~VectorMapWrapperNode() {
+            /* void */
+        }
 
-		VectorMap2DNodeOutput *getMainOutput() { return &m_output; }
+        VectorMap2DNodeOutput *getMainOutput() { return &m_output; }
 
-	protected:
-		virtual void _evaluate() {
-			/* void */
-		}
+    protected:
+        virtual void _evaluate() {
+            /* void */
+        }
 
-	protected:
-		virtual void registerOutputs() {
-			registerOutput(&m_output, "Output");
-		}
+    protected:
+        virtual void registerOutputs() {
+            registerOutput(&m_output, "Output");
+        }
 
-		VectorMap2DNodeOutput m_output;
-	};
+        VectorMap2DNodeOutput m_output;
+    };
 
 } /* namespace manta */
 

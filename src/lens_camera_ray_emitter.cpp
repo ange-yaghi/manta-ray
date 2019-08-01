@@ -7,36 +7,36 @@
 #include "../include/ray_container.h"
 
 manta::LensCameraRayEmitter::LensCameraRayEmitter() {
-	m_lens = nullptr;
+    m_lens = nullptr;
 }
 
 manta::LensCameraRayEmitter::~LensCameraRayEmitter() {
-	/* void */
+    /* void */
 }
 
 void manta::LensCameraRayEmitter::generateRays(RayContainer *rayContainer) const {
-	int totalRayCount = m_sampler->getTotalSampleCount(m_sampleCount);
-	
-	// Create all rays
-	rayContainer->initializeRays(totalRayCount);
-	rayContainer->setDegree(0);
-	LightRay *rays = rayContainer->getRays();
+    int totalRayCount = m_sampler->getTotalSampleCount(m_sampleCount);
+    
+    // Create all rays
+    rayContainer->initializeRays(totalRayCount);
+    rayContainer->setDegree(0);
+    LightRay *rays = rayContainer->getRays();
 
-	math::Vector *sampleOrigins = 
-		(math::Vector *)m_stackAllocator->allocate(sizeof(math::Vector) * totalRayCount, 16);
-	m_sampler->generateSamples(totalRayCount, sampleOrigins);
+    math::Vector *sampleOrigins = 
+        (math::Vector *)m_stackAllocator->allocate(sizeof(math::Vector) * totalRayCount, 16);
+    m_sampler->generateSamples(totalRayCount, sampleOrigins);
 
-	Lens::LensScanHint hint;
-	m_lens->lensScan(m_position, 4, m_sampler->getBoundaryWidth(), &hint);
+    Lens::LensScanHint hint;
+    m_lens->lensScan(m_position, 4, m_sampler->getBoundaryWidth(), &hint);
 
-	for (int i = 0; i < totalRayCount; i++) {
-		math::Vector position = math::add(m_position, sampleOrigins[i]);
+    for (int i = 0; i < totalRayCount; i++) {
+        math::Vector position = math::add(m_position, sampleOrigins[i]);
 
-		rays[i].setIntensity(math::constants::Zero);
-		rays[i].setWeight(math::constants::One);
+        rays[i].setIntensity(math::constants::Zero);
+        rays[i].setWeight(math::constants::One);
 
-		bool result = m_lens->generateOutgoingRay(position, &hint, &rays[i]);
-	}
+        bool result = m_lens->generateOutgoingRay(position, &hint, &rays[i]);
+    }
 
-	m_stackAllocator->free((void *)sampleOrigins);
+    m_stackAllocator->free((void *)sampleOrigins);
 }

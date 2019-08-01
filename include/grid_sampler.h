@@ -5,16 +5,16 @@
 
 namespace manta {
 
-	class GridSampler : public Sampler2D {
-	public:
-		GridSampler();
-		virtual ~GridSampler();
+    class GridSampler : public Sampler2D {
+    public:
+        GridSampler();
+        virtual ~GridSampler();
 
-		virtual void generateSamples(int sampleCount, math::Vector *target) const;
-		virtual int getTotalSampleCount(int sampleCount) const;
+        virtual void generateSamples(int sampleCount, math::Vector *target) const;
+        virtual int getTotalSampleCount(int sampleCount) const;
 
-		void setGridWidth(int gridWidth) { m_gridWidth = gridWidth; }
-		int getGridWidth() const { return m_gridWidth; }
+        void setGridWidth(int gridWidth) { m_gridWidth = gridWidth; }
+        int getGridWidth() const { return m_gridWidth; }
 
     protected:
         virtual void _initialize();
@@ -23,9 +23,9 @@ namespace manta {
 
         piranha::pNodeInput m_gridWidthInput;
 
-	protected:
-		int m_gridWidth;
-	};
+    protected:
+        int m_gridWidth;
+    };
 
 } /* namespace manta */
 

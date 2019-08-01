@@ -9,21 +9,21 @@
 
 namespace manta {
 
-	class MultiplyNode : public piranha::Node {
-	public:
-		MultiplyNode();
-		virtual ~MultiplyNode();
+    class MultiplyNode : public piranha::Node {
+    public:
+        MultiplyNode();
+        virtual ~MultiplyNode();
 
-		MultiplyNodeOutput *getMainOutput() { return &m_output; }
+        MultiplyNodeOutput *getMainOutput() { return &m_output; }
 
-	protected:
-		MultiplyNodeOutput m_output;
+    protected:
+        MultiplyNodeOutput m_output;
 
-		virtual void _initialize();
+        virtual void _initialize();
 
-		virtual void registerInputs();
-		virtual void registerOutputs();
-	};
+        virtual void registerInputs();
+        virtual void registerOutputs();
+    };
 
 } /* namespace manta */
 

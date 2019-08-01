@@ -11,7 +11,7 @@
 #endif
 
 manta::JpegWriter::JpegWriter() {
-	m_quality = DEFAULT_QUALITY;
+    m_quality = DEFAULT_QUALITY;
 }
 
 manta::JpegWriter::~JpegWriter() {
@@ -19,42 +19,42 @@ manta::JpegWriter::~JpegWriter() {
 }
 
 bool manta::JpegWriter::write(ImageByteBuffer *buffer, const char *fileName) {
-	tjhandle tjInstance = nullptr;
+    tjhandle tjInstance = nullptr;
 
-	// Parameters
-	int outSubsamp, outQual;
-	int pixelFormat;
-	int flags;
+    // Parameters
+    int outSubsamp, outQual;
+    int pixelFormat;
+    int flags;
 
-	tjInstance = tjInitCompress();
+    tjInstance = tjInitCompress();
 
-	if (tjInstance == nullptr) return false;
+    if (tjInstance == nullptr) return false;
 
-	outSubsamp = TJSAMP_444;
-	outQual = m_quality;
-	pixelFormat = TJPF_RGBX;
-	flags = 0;
+    outSubsamp = TJSAMP_444;
+    outQual = m_quality;
+    pixelFormat = TJPF_RGBX;
+    flags = 0;
 
-	unsigned char *jpegBuffer = nullptr;
-	unsigned long jpegSize;
-	int result = tjCompress2(tjInstance, buffer->getBuffer(), buffer->getWidth(), 0, buffer->getHeight(), 
-		pixelFormat, &jpegBuffer, &jpegSize, outSubsamp, outQual, flags);
+    unsigned char *jpegBuffer = nullptr;
+    unsigned long jpegSize;
+    int result = tjCompress2(tjInstance, buffer->getBuffer(), buffer->getWidth(), 0, buffer->getHeight(), 
+        pixelFormat, &jpegBuffer, &jpegSize, outSubsamp, outQual, flags);
 
-	if (result < 0) return false;
+    if (result < 0) return false;
 
-	// Write to disk
-	FILE *jpegFile = nullptr;
-	result = fopen_s(&jpegFile, fileName, "wb");
-	if (jpegFile == nullptr || result != 0) {
-		return false;
-	}
+    // Write to disk
+    FILE *jpegFile = nullptr;
+    result = fopen_s(&jpegFile, fileName, "wb");
+    if (jpegFile == nullptr || result != 0) {
+        return false;
+    }
 
-	result = (int)fwrite((const void *)jpegBuffer, jpegSize, 1, jpegFile);
-	if (result < 0) return false;
+    result = (int)fwrite((const void *)jpegBuffer, jpegSize, 1, jpegFile);
+    if (result < 0) return false;
 
-	tjDestroy(tjInstance);
-	fclose(jpegFile);
-	tjFree(jpegBuffer);
+    tjDestroy(tjInstance);
+    fclose(jpegFile);
+    tjFree(jpegBuffer);
 
-	return true;
+    return true;
 }

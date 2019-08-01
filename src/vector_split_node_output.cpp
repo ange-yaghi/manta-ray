@@ -3,39 +3,39 @@
 #include <assert.h>
 
 manta::VectorSplitNodeOutput::VectorSplitNodeOutput() : VectorNodeOutput(true) {
-	m_valueIndex = -1;
+    m_valueIndex = -1;
 }
 
 manta::VectorSplitNodeOutput::~VectorSplitNodeOutput() {
-	/* void */
+    /* void */
 }
 
 void manta::VectorSplitNodeOutput::sample(const IntersectionPoint *surfaceInteraction, void *_target) const {
-	(void)surfaceInteraction;
+    (void)surfaceInteraction;
 
-	assert(m_valueIndex != -1);
+    assert(m_valueIndex != -1);
 
-	math::Vector *target = reinterpret_cast<math::Vector *>(_target);
-	math::Vector value;
+    math::Vector *target = reinterpret_cast<math::Vector *>(_target);
+    math::Vector value;
 
     VectorNodeOutput *input = static_cast<VectorNodeOutput *>(m_input);
-	input->sample(surfaceInteraction, (void *)&value);
+    input->sample(surfaceInteraction, (void *)&value);
 
-	*target = math::loadScalar(math::get(value, m_valueIndex));
+    *target = math::loadScalar(math::get(value, m_valueIndex));
 }
 
 void manta::VectorSplitNodeOutput::discreteSample2D(int x, int y, void *target) const {
-	(void)x;
-	(void)y;
+    (void)x;
+    (void)y;
 
-	sample(nullptr, target);
+    sample(nullptr, target);
 }
 
 void manta::VectorSplitNodeOutput::fullOutput(const void **_target) const {
-	// TODO
-	*_target = nullptr;
+    // TODO
+    *_target = nullptr;
 }
 
 void manta::VectorSplitNodeOutput::registerInputs() {
-	registerInput(&m_input);
+    registerInput(&m_input);
 }

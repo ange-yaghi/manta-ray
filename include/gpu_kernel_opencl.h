@@ -10,29 +10,29 @@
 
 namespace manta {
 
-	// Forward declarations
-	class GPUManagerOpenCL;
+    // Forward declarations
+    class GPUManagerOpenCL;
 
-	class GPUKernelOpenCL : public GPUKernel {
-	public:
-		GPUKernelOpenCL();
-		~GPUKernelOpenCL();
+    class GPUKernelOpenCL : public GPUKernel {
+    public:
+        GPUKernelOpenCL();
+        ~GPUKernelOpenCL();
 
-		virtual void setArgument(int argument, GPUMemory *memory);
-		virtual void run(unsigned int elements);
-		virtual void free();
+        virtual void setArgument(int argument, GPUMemory *memory);
+        virtual void run(unsigned int elements);
+        virtual void free();
 
-		// OpenCL functions
-		void setKernel(cl_kernel kernel) { m_kernel = kernel; }
-		cl_kernel getKernel() const { return m_kernel; }
+        // OpenCL functions
+        void setKernel(cl_kernel kernel) { m_kernel = kernel; }
+        cl_kernel getKernel() const { return m_kernel; }
 
-		void setManager(GPUManagerOpenCL *manager) { m_manager = manager; }
-		GPUManagerOpenCL *getManager() { return m_manager; }
+        void setManager(GPUManagerOpenCL *manager) { m_manager = manager; }
+        GPUManagerOpenCL *getManager() { return m_manager; }
 
-	protected:
-		cl_kernel m_kernel;
-		GPUManagerOpenCL *m_manager;
-	};
+    protected:
+        cl_kernel m_kernel;
+        GPUManagerOpenCL *m_manager;
+    };
 
 } /* namespace manta */
 

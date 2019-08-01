@@ -5,298 +5,298 @@
 using namespace manta;
 
 void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) {
-	// Top-level parameters
-	constexpr bool LENS_SIMULATION = true;
-	constexpr bool USE_ACCELERATION_STRUCTURE = true;
-	constexpr bool DETERMINISTIC_SEED_MODE = false;
-	constexpr bool TRACE_SINGLE_PIXEL = false;
-	constexpr bool ENABLE_FRAUNHOFER_DIFFRACTION = true;
+    // Top-level parameters
+    constexpr bool LENS_SIMULATION = true;
+    constexpr bool USE_ACCELERATION_STRUCTURE = true;
+    constexpr bool DETERMINISTIC_SEED_MODE = false;
+    constexpr bool TRACE_SINGLE_PIXEL = false;
+    constexpr bool ENABLE_FRAUNHOFER_DIFFRACTION = true;
 
-	RayTracer rayTracer;
-	rayTracer.setMaterialLibrary(new MaterialLibrary);
+    RayTracer rayTracer;
+    rayTracer.setMaterialLibrary(new MaterialLibrary);
 
-	Scene scene;
+    Scene scene;
 
-	// Load all textures
-	TextureNode texture;
-	texture.loadFile(TEXTURE_PATH "/dark_wood.jpg", true);
-	texture.initialize();
-	texture.evaluate();
+    // Load all textures
+    TextureNode texture;
+    texture.loadFile(TEXTURE_PATH "/dark_wood.jpg", true);
+    texture.initialize();
+    texture.evaluate();
 
-	TextureNode woodRoughness;
-	woodRoughness.loadFile(TEXTURE_PATH "/wood_roughness.jpg", false);
-	woodRoughness.initialize();
-	woodRoughness.evaluate();
+    TextureNode woodRoughness;
+    woodRoughness.loadFile(TEXTURE_PATH "/wood_roughness.jpg", false);
+    woodRoughness.initialize();
+    woodRoughness.evaluate();
 
-	TextureNode chromeRoughness;
-	chromeRoughness.loadFile(TEXTURE_PATH "/chrome_roughness.jpg", false);
-	chromeRoughness.initialize();
-	chromeRoughness.evaluate();
+    TextureNode chromeRoughness;
+    chromeRoughness.loadFile(TEXTURE_PATH "/chrome_roughness.jpg", false);
+    chromeRoughness.initialize();
+    chromeRoughness.evaluate();
 
-	TextureNode floorWood;
-	floorWood.loadFile(TEXTURE_PATH "/light_wood.jpg", true);
-	floorWood.initialize();
-	floorWood.evaluate();
+    TextureNode floorWood;
+    floorWood.loadFile(TEXTURE_PATH "/light_wood.jpg", true);
+    floorWood.initialize();
+    floorWood.evaluate();
 
-	// Load all object files
-	ObjFileLoader penObj;
-	bool result = penObj.loadObjFile(MODEL_PATH "pen.obj");
+    // Load all object files
+    ObjFileLoader penObj;
+    bool result = penObj.loadObjFile(MODEL_PATH "pen.obj");
 
-	if (!result) {
-		std::cout << "Could not open geometry file(s)" << std::endl;
-		penObj.destroy();
-		return;
-	}
-	
-	// Create all materials
-	LambertianBSDF lambert;
+    if (!result) {
+        std::cout << "Could not open geometry file(s)" << std::endl;
+        penObj.destroy();
+        return;
+    }
+    
+    // Create all materials
+    LambertianBSDF lambert;
 
-	PhongDistribution chromeCoating;
-	chromeCoating.setPower(10000.f);
-	chromeCoating.setPowerNode(chromeRoughness.getMainOutput());
-	chromeCoating.setMinMapPower((math::real)400.0);
+    PhongDistribution chromeCoating;
+    chromeCoating.setPower(10000.f);
+    chromeCoating.setPowerNode(chromeRoughness.getMainOutput());
+    chromeCoating.setMinMapPower((math::real)400.0);
 
-	PhongDistribution woodCoating;
-	woodCoating.setPower(1000.f);
-	woodCoating.setPowerNode(woodRoughness.getMainOutput());
-	woodCoating.setMinMapPower(2.f);
+    PhongDistribution woodCoating;
+    woodCoating.setPower(1000.f);
+    woodCoating.setPowerNode(woodRoughness.getMainOutput());
+    woodCoating.setMinMapPower(2.f);
 
-	PhongDistribution floorDistribution;
-	floorDistribution.setPower(128.f);
+    PhongDistribution floorDistribution;
+    floorDistribution.setPower(128.f);
 
-	BilayerBSDF paintBsdf;
-	paintBsdf.setDiffuseMaterial(&lambert);
-	paintBsdf.setCoatingDistribution(woodCoating.getMainOutput());
-	paintBsdf.setDiffuseNode(texture.getMainOutput());
-	paintBsdf.setSpecularAtNormal(math::loadVector(0.1f, 0.1f, 0.1f));
+    BilayerBSDF paintBsdf;
+    paintBsdf.setDiffuseMaterial(&lambert);
+    paintBsdf.setCoatingDistribution(woodCoating.getMainOutput());
+    paintBsdf.setDiffuseNode(texture.getMainOutput());
+    paintBsdf.setSpecularAtNormal(math::loadVector(0.1f, 0.1f, 0.1f));
 
-	BilayerBSDF chromeBSDF;
-	chromeBSDF.setDiffuseMaterial(&lambert);
-	chromeBSDF.setCoatingDistribution(chromeCoating.getMainOutput());
-	chromeBSDF.setDiffuse(getColor(0, 0, 0));
-	chromeBSDF.setSpecularAtNormal(math::loadVector(0.95f, 0.95f, 0.95f));
+    BilayerBSDF chromeBSDF;
+    chromeBSDF.setDiffuseMaterial(&lambert);
+    chromeBSDF.setCoatingDistribution(chromeCoating.getMainOutput());
+    chromeBSDF.setDiffuse(getColor(0, 0, 0));
+    chromeBSDF.setSpecularAtNormal(math::loadVector(0.95f, 0.95f, 0.95f));
 
-	MicrofacetReflectionBSDF floorBSDF;
-	floorBSDF.setDistribution(&floorDistribution);
+    MicrofacetReflectionBSDF floorBSDF;
+    floorBSDF.setDistribution(&floorDistribution);
 
-	SimpleBSDFMaterial *paintMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
-	paintMaterial->setBSDF(&paintBsdf);
-	paintMaterial->setName("PenBody");
+    SimpleBSDFMaterial *paintMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
+    paintMaterial->setBSDF(&paintBsdf);
+    paintMaterial->setName("PenBody");
 
-	SimpleBSDFMaterial *chromeMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
-	chromeMaterial->setBSDF(&chromeBSDF);
-	chromeMaterial->setName("Chrome");
+    SimpleBSDFMaterial *chromeMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
+    chromeMaterial->setBSDF(&chromeBSDF);
+    chromeMaterial->setName("Chrome");
 
-	SimpleBSDFMaterial *floorMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
-	floorMaterial->setBSDF(&floorBSDF);
-	floorMaterial->setReflectanceNode(floorWood.getMainOutput());
-	floorMaterial->setName("Backdrop");
+    SimpleBSDFMaterial *floorMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
+    floorMaterial->setBSDF(&floorBSDF);
+    floorMaterial->setReflectanceNode(floorWood.getMainOutput());
+    floorMaterial->setName("Backdrop");
 
-	SimpleBSDFMaterial *strongLight = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
-	strongLight->setEmission(math::loadVector(2.0f, 2.0f, 2.0f));
-	strongLight->setReflectance(math::constants::Zero);
-	strongLight->setName("StrongLight");
+    SimpleBSDFMaterial *strongLight = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
+    strongLight->setEmission(math::loadVector(2.0f, 2.0f, 2.0f));
+    strongLight->setReflectance(math::constants::Zero);
+    strongLight->setName("StrongLight");
 
-	SimpleBSDFMaterial *weakLight = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
-	weakLight->setEmission(math::loadVector(1.0f, 1.0f, 1.0f));
-	weakLight->setReflectance(math::constants::Zero);
-	weakLight->setName("WeakLight");
+    SimpleBSDFMaterial *weakLight = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
+    weakLight->setEmission(math::loadVector(1.0f, 1.0f, 1.0f));
+    weakLight->setReflectance(math::constants::Zero);
+    weakLight->setName("WeakLight");
 
-	// Create all scene geometry
-	Mesh pen;
-	pen.loadObjFileData(&penObj, rayTracer.getMaterialLibrary(), chromeMaterial->getIndex(), 0);
+    // Create all scene geometry
+    Mesh pen;
+    pen.loadObjFileData(&penObj, rayTracer.getMaterialLibrary(), chromeMaterial->getIndex(), 0);
 
-	// Destroy file loaders
-	penObj.destroy();
+    // Destroy file loaders
+    penObj.destroy();
 
-	KDTree kdtree;
-	kdtree.configure(150.f, math::constants::Zero);
-	kdtree.analyzeWithProgress(&pen, 4);
+    KDTree kdtree;
+    kdtree.configure(150.f, math::constants::Zero);
+    kdtree.analyzeWithProgress(&pen, 4);
 
-	// Create scene objects
-	SceneObject *penObject = scene.createSceneObject();
-	if (USE_ACCELERATION_STRUCTURE) {
-		penObject->setGeometry(&kdtree);
-	}
-	else {
-		penObject->setGeometry(&pen);
-	}
-	penObject->setDefaultMaterial(chromeMaterial);
-	penObject->setName("Pen");
+    // Create scene objects
+    SceneObject *penObject = scene.createSceneObject();
+    if (USE_ACCELERATION_STRUCTURE) {
+        penObject->setGeometry(&kdtree);
+    }
+    else {
+        penObject->setGeometry(&pen);
+    }
+    penObject->setDefaultMaterial(chromeMaterial);
+    penObject->setName("Pen");
 
-	// Create the camera
-	math::Vector cameraPos = math::loadVector(9.436f, 1.2f, 4.5370f);
-	math::Vector target = math::loadVector(1.3f, 0.35547f, 0.0f);
+    // Create the camera
+    math::Vector cameraPos = math::loadVector(9.436f, 1.2f, 4.5370f);
+    math::Vector target = math::loadVector(1.3f, 0.35547f, 0.0f);
 
-	math::Vector up = math::loadVector(0.0f, 1.0f, 0.0f);
-	math::Vector dir = math::normalize(math::sub(target, cameraPos));
-	up = math::cross(math::cross(dir, up), dir);
-	up = math::normalize(up);
+    math::Vector up = math::loadVector(0.0f, 1.0f, 0.0f);
+    math::Vector dir = math::normalize(math::sub(target, cameraPos));
+    up = math::cross(math::cross(dir, up), dir);
+    up = math::normalize(up);
 
-	cameraPos = math::sub(cameraPos, math::mul(dir, math::loadScalar(3.9f)));
+    cameraPos = math::sub(cameraPos, math::mul(dir, math::loadScalar(3.9f)));
 
-	CameraRayEmitterGroup *group;
-	manta::SimpleLens lens;
-	manta::PolygonalAperture polygonalAperture;
-	polygonalAperture.initialize(6);
+    CameraRayEmitterGroup *group;
+    manta::SimpleLens lens;
+    manta::PolygonalAperture polygonalAperture;
+    polygonalAperture.initialize(6);
 
-	lens.setAperture(&polygonalAperture);
-	lens.initialize();
-	lens.setPosition(cameraPos);
-	lens.setDirection(dir);
-	lens.setUp(up);
-	lens.setRadius(1.0f);
-	lens.setSensorResolutionX(resolutionX);
-	lens.setSensorResolutionY(resolutionY);
-	lens.setSensorHeight(22.0f);
-	lens.setSensorWidth(22.0f * (resolutionX / (math::real)resolutionY));
-	lens.update();
+    lens.setAperture(&polygonalAperture);
+    lens.initialize();
+    lens.setPosition(cameraPos);
+    lens.setDirection(dir);
+    lens.setUp(up);
+    lens.setRadius(1.0f);
+    lens.setSensorResolutionX(resolutionX);
+    lens.setSensorResolutionY(resolutionY);
+    lens.setSensorHeight(22.0f);
+    lens.setSensorWidth(22.0f * (resolutionX / (math::real)resolutionY));
+    lens.update();
 
-	RandomSampler sampler;
-	SimpleSampler simpleSampler;
+    RandomSampler sampler;
+    SimpleSampler simpleSampler;
 
-	if (!LENS_SIMULATION) {
-		StandardCameraRayEmitterGroup *camera = new StandardCameraRayEmitterGroup;
-		camera->setSampler(&sampler);
-		camera->setDirection(dir);
-		camera->setPosition(cameraPos);
-		camera->setUp(up);
-		camera->setPlaneDistance(1.0f);
-		camera->setPlaneHeight(0.25f);
-		camera->setResolutionX(resolutionX);
-		camera->setResolutionY(resolutionY);
-		camera->setSampleCount(samplesPerPixel);
-		group = camera;
-	}
-	else {
-		math::real lensHeight = 1.0f;
-		math::real focusDistance = 11.0f;
+    if (!LENS_SIMULATION) {
+        StandardCameraRayEmitterGroup *camera = new StandardCameraRayEmitterGroup;
+        camera->setSampler(&sampler);
+        camera->setDirection(dir);
+        camera->setPosition(cameraPos);
+        camera->setUp(up);
+        camera->setPlaneDistance(1.0f);
+        camera->setPlaneHeight(0.25f);
+        camera->setResolutionX(resolutionX);
+        camera->setResolutionY(resolutionY);
+        camera->setSampleCount(samplesPerPixel);
+        group = camera;
+    }
+    else {
+        math::real lensHeight = 1.0f;
+        math::real focusDistance = 11.0f;
 
-		Aperture *aperture = lens.getAperture();
-		aperture->setRadius((math::real)0.007); // 0.007
-		lens.setFocus(focusDistance);
+        Aperture *aperture = lens.getAperture();
+        aperture->setRadius((math::real)0.007); // 0.007
+        lens.setFocus(focusDistance);
 
-		LensCameraRayEmitterGroup *camera = new LensCameraRayEmitterGroup;
-		camera->setDirection(math::normalize(math::sub(target, cameraPos)));
-		camera->setPosition(cameraPos);
-		camera->setLens(&lens);
-		camera->setResolutionX(resolutionX);
-		camera->setResolutionY(resolutionY);
-		camera->setSampleCount(samplesPerPixel);
-		camera->setSampler(&sampler);
+        LensCameraRayEmitterGroup *camera = new LensCameraRayEmitterGroup;
+        camera->setDirection(math::normalize(math::sub(target, cameraPos)));
+        camera->setPosition(cameraPos);
+        camera->setLens(&lens);
+        camera->setResolutionX(resolutionX);
+        camera->setResolutionY(resolutionY);
+        camera->setSampleCount(samplesPerPixel);
+        camera->setSampler(&sampler);
 
-		group = camera;
-	}
+        group = camera;
+    }
 
-	// Create the raytracer
-	rayTracer.configure(200 * MB, 5 * MB, 12, 100, true);
-	rayTracer.setBackgroundColor(getColor(0, 0, 0));
-	rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
-	rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");
+    // Create the raytracer
+    rayTracer.configure(200 * MB, 5 * MB, 12, 100, true);
+    rayTracer.setBackgroundColor(getColor(0, 0, 0));
+    rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
+    rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");
 
-	// Output the results to a scene buffer
-	ImagePlane sceneBuffer;
+    // Output the results to a scene buffer
+    ImagePlane sceneBuffer;
 
-	if (TRACE_SINGLE_PIXEL) {
-		rayTracer.tracePixel(179, 1423, &scene, group, &sceneBuffer);
-	}
-	else {
-		rayTracer.traceAll(&scene, group, &sceneBuffer);
-	}
+    if (TRACE_SINGLE_PIXEL) {
+        rayTracer.tracePixel(179, 1423, &scene, group, &sceneBuffer);
+    }
+    else {
+        rayTracer.traceAll(&scene, group, &sceneBuffer);
+    }
 
-	// Clean up the camera
-	delete group;
+    // Clean up the camera
+    delete group;
 
-	std::string fname = createUniqueRenderFilename("pen_demo", samplesPerPixel);
-	std::string imageFname = std::string(RENDER_OUTPUT) + "bitmap/" + fname + ".jpg";
-	std::string fraunFname = std::string(RENDER_OUTPUT) + "bitmap/" + fname + "_fraun" + ".jpg";
-	std::string convFname = std::string(RENDER_OUTPUT) + "bitmap/" + fname + "_conv" + ".jpg";
-	std::string rawFname = std::string(RENDER_OUTPUT) + "raw/" + fname + ".fpm";
+    std::string fname = createUniqueRenderFilename("pen_demo", samplesPerPixel);
+    std::string imageFname = std::string(RENDER_OUTPUT) + "bitmap/" + fname + ".jpg";
+    std::string fraunFname = std::string(RENDER_OUTPUT) + "bitmap/" + fname + "_fraun" + ".jpg";
+    std::string convFname = std::string(RENDER_OUTPUT) + "bitmap/" + fname + "_conv" + ".jpg";
+    std::string rawFname = std::string(RENDER_OUTPUT) + "raw/" + fname + ".fpm";
 
-	if (ENABLE_FRAUNHOFER_DIFFRACTION) {
-		VectorMap2D base;
-		base.copy(&sceneBuffer);
+    if (ENABLE_FRAUNHOFER_DIFFRACTION) {
+        VectorMap2D base;
+        base.copy(&sceneBuffer);
 
-		int safeWidth = base.getSafeWidth();
+        int safeWidth = base.getSafeWidth();
 
-		FraunhoferDiffraction testFraun;
-		FraunhoferDiffraction::Settings settings;
-		FraunhoferDiffraction::setDefaultSettings(&settings);
-		settings.frequencyMultiplier = 1.0;
-		settings.maxSamples = 4096;
-		settings.textureSamples = 10;
+        FraunhoferDiffraction testFraun;
+        FraunhoferDiffraction::Settings settings;
+        FraunhoferDiffraction::setDefaultSettings(&settings);
+        settings.frequencyMultiplier = 1.0;
+        settings.maxSamples = 4096;
+        settings.textureSamples = 10;
 
-		TextureNode dirtTexture;
-		dirtTexture.loadFile(TEXTURE_PATH "dirt_very_soft.png", true);
-		dirtTexture.initialize();
-		dirtTexture.evaluate();
-		const VectorMap2D *dirtTextureMap = dirtTexture.getMainOutput()->getMap();
+        TextureNode dirtTexture;
+        dirtTexture.loadFile(TEXTURE_PATH "dirt_very_soft.png", true);
+        dirtTexture.initialize();
+        dirtTexture.evaluate();
+        const VectorMap2D *dirtTextureMap = dirtTexture.getMainOutput()->getMap();
 
-		CmfTable colorTable;
-		Spectrum sourceSpectrum;
-		colorTable.loadCsv(CMF_PATH "xyz_cmf_31.csv");
-		sourceSpectrum.loadCsv(CMF_PATH "d65_lighting.csv");
+        CmfTable colorTable;
+        Spectrum sourceSpectrum;
+        colorTable.loadCsv(CMF_PATH "xyz_cmf_31.csv");
+        sourceSpectrum.loadCsv(CMF_PATH "d65_lighting.csv");
 
-		lens.getAperture()->setRadius((math::real)0.18);
-		testFraun.generate(lens.getAperture(), dirtTextureMap, safeWidth, 8.0f, &colorTable, &sourceSpectrum, &settings);
+        lens.getAperture()->setRadius((math::real)0.18);
+        testFraun.generate(lens.getAperture(), dirtTextureMap, safeWidth, 8.0f, &colorTable, &sourceSpectrum, &settings);
 
-		VectorMapWrapperNode fraunNode(testFraun.getDiffractionPattern());
-		fraunNode.initialize();
-		fraunNode.evaluate();
+        VectorMapWrapperNode fraunNode(testFraun.getDiffractionPattern());
+        fraunNode.initialize();
+        fraunNode.evaluate();
 
-		ImageOutputNode fraunOutputNode;
-		fraunOutputNode.setJpegQuality(95);
-		fraunOutputNode.setGammaCorrection(true);
-		fraunOutputNode.setOutputFilename(fraunFname);
-		fraunOutputNode.setInput(fraunNode.getMainOutput());
-		fraunOutputNode.initialize();
-		fraunOutputNode.evaluate();
-		fraunOutputNode.destroy();
+        ImageOutputNode fraunOutputNode;
+        fraunOutputNode.setJpegQuality(95);
+        fraunOutputNode.setGammaCorrection(true);
+        fraunOutputNode.setOutputFilename(fraunFname);
+        fraunOutputNode.setInput(fraunNode.getMainOutput());
+        fraunOutputNode.initialize();
+        fraunOutputNode.evaluate();
+        fraunOutputNode.destroy();
 
-		VectorMapWrapperNode baseNode(&base);
-		baseNode.initialize();
-		baseNode.evaluate();
-		baseNode.destroy();
+        VectorMapWrapperNode baseNode(&base);
+        baseNode.initialize();
+        baseNode.evaluate();
+        baseNode.destroy();
 
-		ConvolutionNode convNode;
-		convNode.setInputs(baseNode.getMainOutput(), fraunNode.getMainOutput());
-		convNode.setResize(true);
-		convNode.setClip(true);
-		convNode.initialize();
-		convNode.evaluate();
+        ConvolutionNode convNode;
+        convNode.setInputs(baseNode.getMainOutput(), fraunNode.getMainOutput());
+        convNode.setResize(true);
+        convNode.setClip(true);
+        convNode.initialize();
+        convNode.evaluate();
 
-		testFraun.destroy();
-		base.destroy();
+        testFraun.destroy();
+        base.destroy();
 
-		ImageOutputNode outputNode;
-		outputNode.setJpegQuality(95);
-		outputNode.setGammaCorrection(true);
-		outputNode.setOutputFilename(convFname);
-		outputNode.setInput(convNode.getMainOutput());
-		outputNode.initialize();
-		outputNode.evaluate();
-		outputNode.destroy();
+        ImageOutputNode outputNode;
+        outputNode.setJpegQuality(95);
+        outputNode.setGammaCorrection(true);
+        outputNode.setOutputFilename(convFname);
+        outputNode.setInput(convNode.getMainOutput());
+        outputNode.initialize();
+        outputNode.evaluate();
+        outputNode.destroy();
 
-		colorTable.destroy();
-		sourceSpectrum.destroy();
-		convNode.destroy();
-		dirtTexture.destroy();
-	}
+        colorTable.destroy();
+        sourceSpectrum.destroy();
+        convNode.destroy();
+        dirtTexture.destroy();
+    }
 
-	RawFile rawFile;
-	rawFile.writeRawFile(rawFname.c_str(), &sceneBuffer);
+    RawFile rawFile;
+    rawFile.writeRawFile(rawFname.c_str(), &sceneBuffer);
 
-	writeJpeg(imageFname.c_str(), &sceneBuffer, 95);
+    writeJpeg(imageFname.c_str(), &sceneBuffer, 95);
 
-	sceneBuffer.destroy();
-	polygonalAperture.destroy();
-	texture.destroy();
-	woodRoughness.destroy();
-	chromeRoughness.destroy();
-	floorWood.destroy();
-	rayTracer.destroy();
-	pen.destroy();
-	kdtree.destroy();
+    sceneBuffer.destroy();
+    polygonalAperture.destroy();
+    texture.destroy();
+    woodRoughness.destroy();
+    chromeRoughness.destroy();
+    floorWood.destroy();
+    rayTracer.destroy();
+    pen.destroy();
+    kdtree.destroy();
 
-	std::cout << "Standard allocator memory leaks:     " << StandardAllocator::Global()->getLedger() << ", " << StandardAllocator::Global()->getCurrentUsage() << std::endl;
+    std::cout << "Standard allocator memory leaks:     " << StandardAllocator::Global()->getLedger() << ", " << StandardAllocator::Global()->getCurrentUsage() << std::endl;
 }

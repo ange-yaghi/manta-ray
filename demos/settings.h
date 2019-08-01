@@ -1,10 +1,10 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
-#define VISUAL_STUDIO	0x01
-#define STANDALONE		0x02
+#define VISUAL_STUDIO    0x01
+#define STANDALONE        0x02
 
-#define EXECUTION_ENV	VISUAL_STUDIO
+#define EXECUTION_ENV    VISUAL_STUDIO
 
 // Paths
 
