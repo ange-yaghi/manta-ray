@@ -280,41 +280,17 @@
     <Filter Include="Source Files\nodes\output-ports\atomic-types">
       <UniqueIdentifier>{70ed637c-565b-4cc0-9fa5-2fcc9967b349}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\nodes\output-ports\atomic-types\constants">
-      <UniqueIdentifier>{1041a88a-0686-46c2-8d09-257323c50717}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\nodes\output-ports\atomic-types\types">
-      <UniqueIdentifier>{5fe97ed4-a886-4d18-b211-747e45a9e8f9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\nodes\output-ports\atomic-types\constants">
-      <UniqueIdentifier>{b0a1fc03-4820-45ca-b5c6-5a7e17b5f6b3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\nodes\output-ports\atomic-types\types">
-      <UniqueIdentifier>{a3bc281e-b843-4d97-9b03-13c598b9b5bc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\nodes\library\sdl">
       <UniqueIdentifier>{88079674-3fb7-4218-97c5-48446c951cf1}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\nodes\library\sdl">
       <UniqueIdentifier>{ac11a43d-1357-48f9-8a81-90827ac5ff94}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\nodes\output-ports\atomic-types\compound">
-      <UniqueIdentifier>{9db394f3-d5bd-4d49-a8a4-868d6d64e3df}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\nodes\output-ports\atomic-types\compound">
-      <UniqueIdentifier>{1df9a960-6b72-4b33-9277-d476c399d8f6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\nodes\output-ports\color">
       <UniqueIdentifier>{161ba087-c11c-4db6-b31d-934f8958501e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\nodes\output-ports\color">
       <UniqueIdentifier>{7053271c-7fb1-4fa2-b174-ef342aa6e764}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\nodes\output-ports\atomic-types\single">
-      <UniqueIdentifier>{d2c2dda7-047f-447c-b9d6-fcf2ec43ffa4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\nodes\output-ports\atomic-types\single">
-      <UniqueIdentifier>{5ecb1959-24fc-4269-ad04-5568d8687ddc}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\sdl">
       <UniqueIdentifier>{e0595eae-68e2-4a7b-b837-e487fe128d26}</UniqueIdentifier>
@@ -366,9 +342,6 @@
     </Filter>
     <Filter Include="Source Files\nodes\output-ports\operations\binary">
       <UniqueIdentifier>{e6161bde-c428-46bc-9101-9e05975ed498}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\nodes\library\binary">
-      <UniqueIdentifier>{43363fec-3ae4-40e0-9ed9-0db1a9ef656f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\nodes\library\binary">
       <UniqueIdentifier>{33da4a78-bc38-4d35-a482-f147d082fd19}</UniqueIdentifier>
@@ -654,17 +627,11 @@
     <ClCompile Include="..\..\src\path.cpp">
       <Filter>Source Files\os</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\constructed_vector_node_output.cpp">
-      <Filter>Source Files\nodes\output-ports\atomic-types\compound</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\srgb_node_output.cpp">
       <Filter>Source Files\nodes\output-ports\color</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\constructed_vector_node.cpp">
       <Filter>Source Files\nodes\library\sdl</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\vector_split_node_output.cpp">
-      <Filter>Source Files\nodes\output-ports\atomic-types\compound</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\vector_split_node.cpp">
       <Filter>Source Files\nodes\library\sdl</Filter>
@@ -693,9 +660,6 @@
     <ClCompile Include="..\..\src\cached_vector_node.cpp">
       <Filter>Source Files\nodes\library\cache</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\include\cached_vector_output.cpp">
-      <Filter>Source Files\nodes\output-ports\cache</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\object_channel_types.cpp">
       <Filter>Source Files\nodes\output-ports\objects</Filter>
     </ClCompile>
@@ -707,6 +671,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\subtract_node_output.cpp">
       <Filter>Source Files\nodes\output-ports\operations\binary</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\constructed_vector_node_output.cpp">
+      <Filter>Source Files\nodes\output-ports\atomic-types</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\vector_split_node_output.cpp">
+      <Filter>Source Files\nodes\output-ports\atomic-types</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\cached_vector_output.cpp">
+      <Filter>Source Files\nodes\output-ports\cache</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1040,9 +1013,6 @@
     <ClInclude Include="..\..\include\path.h">
       <Filter>Header Files\os</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\constructed_vector_node_output.h">
-      <Filter>Header Files\nodes\output-ports\atomic-types\compound</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\srgb_node.h">
       <Filter>Header Files\nodes\library\sdl</Filter>
     </ClInclude>
@@ -1051,9 +1021,6 @@
     </ClInclude>
     <ClInclude Include="..\..\include\constructed_vector_node.h">
       <Filter>Header Files\nodes\library\sdl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\vector_split_node_output.h">
-      <Filter>Header Files\nodes\output-ports\atomic-types\compound</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\vector_split_node.h">
       <Filter>Header Files\nodes\library\sdl</Filter>
@@ -1066,9 +1033,6 @@
     </ClInclude>
     <ClInclude Include="..\..\include\language_rules.h">
       <Filter>Header Files\sdl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\vector_node_output.h">
-      <Filter>Header Files\nodes\output-ports\atomic-types\types</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\vector_conversions.h">
       <Filter>Header Files\nodes\output-ports\conversions</Filter>
@@ -1114,6 +1078,12 @@
     </ClInclude>
     <ClInclude Include="..\..\include\unary_node.h">
       <Filter>Header Files\nodes\library\unary</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\constructed_vector_node_output.h">
+      <Filter>Header Files\nodes\output-ports\atomic-types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\vector_split_node_output.h">
+      <Filter>Header Files\nodes\output-ports\atomic-types</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,7 +1,7 @@
-#ifndef LIGHT_RAY_H
-#define LIGHT_RAY_H
+#ifndef MANTARAY_LIGHT_RAY_H
+#define MANTARAY_LIGHT_RAY_H
 
-#include <manta_math.h>
+#include "manta_math.h"
 
 namespace manta {
 
@@ -63,4 +63,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* LIGHT_RAY_H */
+#endif /* MANTARAY_LIGHT_RAY_H */

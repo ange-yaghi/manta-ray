@@ -1,4 +1,4 @@
-#include <bsdf.h>
+#include "../include/bsdf.h"
 
 manta::BSDF::BSDF() : ObjectReferenceNode<BSDF>() {
     m_output.setReference(this);

@@ -1,4 +1,4 @@
-#include <dielectric_media_interface.h>
+#include "../include/dielectric_media_interface.h"
 
 #include <algorithm>
 

@@ -19,9 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\include\cached_vector_output.cpp" />
     <ClCompile Include="..\..\src\aperture.cpp" />
     <ClCompile Include="..\..\src\cached_vector_node.cpp" />
+    <ClCompile Include="..\..\src\cached_vector_output.cpp" />
     <ClCompile Include="..\..\src\constructed_vector_node_output.cpp" />
     <ClCompile Include="..\..\src\kd_tree_node.cpp" />
     <ClCompile Include="..\..\src\language_rules.cpp" />
@@ -260,7 +260,6 @@
     <ClInclude Include="..\..\include\texture_node.h" />
     <ClInclude Include="..\..\include\vector_map_2d_node_output.h" />
     <ClInclude Include="..\..\include\constructed_vector_node.h" />
-    <ClInclude Include="..\..\include\vector_node_output.h" />
     <ClInclude Include="..\..\include\vector_split_node.h" />
     <ClInclude Include="..\..\include\vector_split_node_output.h" />
     <ClInclude Include="..\..\include\worker.h" />
@@ -325,14 +324,14 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)\..\..\dependencies\libraries\SDL\include;$(ProjectDir)\..\..\dependencies\libraries\piranha\include\;$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\..\Common\SDL2-2.0.9\include;$(SolutionDir)\..\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)\..\..\dependencies\libraries\SDL\include;$(ProjectDir)\..\..\dependencies\libraries\piranha\include\;$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\x86;$(SolutionDir)\..\..\Common\SDL2-2.0.9\lib\x86;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)\..\..\dependencies\libraries\SDL\include;$(ProjectDir)\..\..\dependencies\libraries\piranha\include\;$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\SDL\include;$(SolutionDir)\..\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)\..\..\dependencies\libraries\SDL\include;$(ProjectDir)\..\..\dependencies\libraries\piranha\include\;$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\x64;$(SolutionDir)\..\dependencies\libraries\SDL\lib\x64;$(LibraryPath)</LibraryPath>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
     <OutDir>$(SolutionDir)$(PlatformTarget)\$(Configuration)\</OutDir>
@@ -341,13 +340,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\x86;$(SolutionDir)\..\..\Common\SDL2-2.0.9\lib\x86;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)\..\..\dependencies\libraries\SDL\include;$(ProjectDir)\..\..\dependencies\libraries\piranha\include\;$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\..\Common\SDL2-2.0.9\include;$(SolutionDir)\..\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)\..\..\dependencies\libraries\SDL\include;$(ProjectDir)\..\..\dependencies\libraries\piranha\include\;$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)\..\..\dependencies\libraries\SDL\include;$(ProjectDir)\..\..\dependencies\libraries\piranha\include\;$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(SolutionDir)\..\dependencies\libraries\SDL\include;$(SolutionDir)\..\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)\..\..\dependencies\libraries\SDL\include;$(ProjectDir)\..\..\dependencies\libraries\piranha\include\;$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\include;$(SolutionDir)\..\dependencies\libraries\boost-filesystem\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\x64;$(SolutionDir)\..\dependencies\libraries\SDL\lib\x64;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>

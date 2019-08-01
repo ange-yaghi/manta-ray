@@ -1,4 +1,4 @@
-#include <light_ray.h>
+#include "../include/light_ray.h"
 
 manta::LightRay::LightRay() {
 	m_intensity = math::constants::Zero;
@@ -6,20 +6,13 @@ manta::LightRay::LightRay() {
 }
 
 manta::LightRay::~LightRay() {
-
+    /* void */
 }
 
 void manta::LightRay::calculateTransformations() {
 	m_kz = math::maxDimension3(math::abs(m_direction));
 	m_kx = (m_kz + 1) % 3;
 	m_ky = (m_kx + 1) % 3;
-	//m_kx = 2;
-	//m_kz = 1;
-	//m_ky = 0;
-
-	if (m_kx < 0 || m_ky < 0 || m_kz < 0) {
-		int a = 0;
-	}
 
 	m_permutedDirection = math::permute(m_direction, m_kx, m_ky, m_kz);
 

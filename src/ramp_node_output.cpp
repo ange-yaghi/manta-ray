@@ -1,4 +1,4 @@
-#include <ramp_node_output.h>
+#include "../include/ramp_node_output.h"
 
 void manta::RampNodeOutput::sample(const IntersectionPoint *surfaceInteraction, void *_target) const {
 	VectorNodeOutput *input = static_cast<VectorNodeOutput *>(m_input);

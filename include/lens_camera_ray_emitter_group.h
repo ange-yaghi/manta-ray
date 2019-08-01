@@ -1,7 +1,7 @@
 #ifndef MANTARAY_LENS_CAMERA_RAY_EMITTER_GROUP_H
 #define MANTARAY_LENS_CAMERA_RAY_EMITTER_GROUP_H
 
-#include <camera_ray_emitter_group.h>
+#include "../include/camera_ray_emitter_group.h"
 
 namespace manta {
 

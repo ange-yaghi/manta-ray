@@ -1,10 +1,10 @@
-#include <lens_camera_ray_emitter.h>
+#include "../include/lens_camera_ray_emitter.h"
 
-#include <light_ray.h>
-#include <lens.h>
-#include <sampler_2d.h>
-#include <stack_allocator.h>
-#include <ray_container.h>
+#include "../include/light_ray.h"
+#include "../include/lens.h"
+#include "../include/sampler_2d.h"
+#include "../include/stack_allocator.h"
+#include "../include/ray_container.h"
 
 manta::LensCameraRayEmitter::LensCameraRayEmitter() {
 	m_lens = nullptr;

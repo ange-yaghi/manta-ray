@@ -1,13 +1,13 @@
-#ifndef TEST_UTILITIES_H
-#define TEST_UTILITIES_H
+#ifndef MANTARAY_TEST_UTILITIES_H
+#define MANTARAY_TEST_UTILITIES_H
 
 #include <pch.h>
 
-#include <scalar_map_2d.h>
-#include <complex_map_2d.h>
-#include <image_plane.h>
-#include <complex_map_2d.h>
-#include <vector_map_2d.h>
+#include "../include/scalar_map_2d.h"
+#include "../include/complex_map_2d.h"
+#include "../include/image_plane.h"
+#include "../include/complex_map_2d.h"
+#include "../include/vector_map_2d.h"
 
 #include <piranha.h>
 #include <string>
@@ -105,4 +105,4 @@ void writeToJpeg(const ComplexMap2D *plane, const std::string &fname, Margins *m
 
 piranha::IrCompilationUnit *compileFile(const std::string &filename, const piranha::ErrorList **errList);
 
-#endif /* TEST_UTILITIES_H */
+#endif /* MANTARAY_TEST_UTILITIES_H */

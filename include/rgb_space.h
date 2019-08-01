@@ -1,8 +1,8 @@
-#ifndef RGB_SPACE_H
-#define RGB_SPACE_H
+#ifndef MANTARAY_RGB_SPACE_H
+#define MANTARAY_RGB_SPACE_H
 
-#include <color.h>
-#include <manta_math.h>
+#include "color.h"
+#include "manta_math.h"
 
 namespace manta {
 
@@ -40,4 +40,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* RGB_SPACE_H */
+#endif /* MANTARAY_RGB_SPACE_H */

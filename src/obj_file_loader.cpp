@@ -1,6 +1,6 @@
-#include <obj_file_loader.h>
+#include "../include/obj_file_loader.h"
 
-#include <standard_allocator.h>
+#include "../include/standard_allocator.h"
 
 #include <fstream>
 #include <sstream>

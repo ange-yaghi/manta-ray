@@ -1,4 +1,4 @@
-#include <vector_split_node_output.h>
+#include "../include/vector_split_node_output.h"
 
 #include <assert.h>
 

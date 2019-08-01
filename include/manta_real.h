@@ -1,7 +1,7 @@
-#ifndef MANTA_REAL_H
-#define MANTA_REAL_H
+#ifndef MANTARAY_MANTA_REAL_H
+#define MANTARAY_MANTA_REAL_H
 
-#include <manta_math_conf.h>
+#include "manta_math_conf.h"
 
 #include <float.h>
 
@@ -41,4 +41,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* MANTA_REAL_H */
+#endif /* MANTARAY_MANTA_REAL_H */

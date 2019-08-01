@@ -1,9 +1,9 @@
-#include <manta_build_conf.h>
+#include "../include/manta_build_conf.h"
 #if INCLUDE_OPENCL_IMPL
 
-#include <gpu_memory_opencl.h>
+#include "../include/gpu_memory_opencl.h"
 
-#include <gpu_manager_opencl.h>
+#include "../include/gpu_manager_opencl.h"
 
 manta::GPUMemoryOpenCL::GPUMemoryOpenCL() {
 	m_memoryObject = NULL;

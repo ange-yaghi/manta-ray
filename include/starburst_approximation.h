@@ -1,9 +1,9 @@
-#ifndef STARBURST_APPROXIMATION_H
-#define STARBURST_APPROXIMATION_H
+#ifndef MANTARAY_STARBURST_APPROXIMATION_H
+#define MANTARAY_STARBURST_APPROXIMATION_H
 
-#include <convolution.h>
+#include "convolution.h"
 
-#include <manta_math.h>
+#include "manta_math.h"
 
 namespace manta {
 
@@ -32,4 +32,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* STARBURST_APPROXIMATION_H */
+#endif /* MANTARAY_STARBURST_APPROXIMATION_H */

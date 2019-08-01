@@ -1,8 +1,8 @@
-#include <cmf_table.h>
+#include "../include/cmf_table.h"
 
-#include <standard_allocator.h>
-#include <rgb_space.h>
-#include <spectrum.h>
+#include "../include/standard_allocator.h"
+#include "../include/rgb_space.h"
+#include "../include/spectrum.h"
 
 #include <assert.h>
 #include <fstream>

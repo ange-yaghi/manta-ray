@@ -1,4 +1,4 @@
-#include <multiply_node_output.h>
+#include "../include/multiply_node_output.h"
 
 #include <assert.h>
 

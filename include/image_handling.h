@@ -1,7 +1,7 @@
-#ifndef IMAGE_LOAD_H
-#define IMAGE_LOAD_H
+#ifndef MANTARAY_IMAGE_LOAD_H
+#define MANTARAY_IMAGE_LOAD_H
 
-#include <manta_math.h>
+#include "manta_math.h"
 
 namespace manta {
 
@@ -9,4 +9,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* IMAGE_LOAD_H */
+#endif /* MANTARAY_IMAGE_LOAD_H */

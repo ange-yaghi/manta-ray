@@ -1,9 +1,9 @@
-#ifndef VECTOR_MAP_WRAPPER_NODE_H
-#define VECTOR_MAP_WRAPPER_NODE_H
+#ifndef MANTARAY_VECTOR_MAP_WRAPPER_NODE_H
+#define MANTARAY_VECTOR_MAP_WRAPPER_NODE_H
 
-#include <node.h>
+#include "node.h"
 
-#include <vector_map_2d_node_output.h>
+#include "vector_map_2d_node_output.h"
 
 namespace manta {
 
@@ -34,4 +34,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* VECTOR_MAP_WRAPPER_NODE_H */
+#endif /* MANTARAY_VECTOR_MAP_WRAPPER_NODE_H */

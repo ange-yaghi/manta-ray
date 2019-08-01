@@ -1,7 +1,7 @@
-#ifndef CIRCULAR_APERTURE_H
-#define CIRCULAR_APERTURE_H
+#ifndef MANTARAY_CIRCULAR_APERTURE_H
+#define MANTARAY_CIRCULAR_APERTURE_H
 
-#include <aperture.h>
+#include "aperture.h"
 
 namespace manta {
 
@@ -15,4 +15,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* CIRCULAR_APERTURE_H */
+#endif /* MANTARAY_CIRCULAR_APERTURE_H */

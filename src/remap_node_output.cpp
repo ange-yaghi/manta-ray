@@ -1,4 +1,4 @@
-#include <remap_node_output.h>
+#include "../include/remap_node_output.h"
 
 void manta::RemapNodeOutput::sample(const IntersectionPoint *surfaceInteraction, void *_target) const {
 	math::Vector *target = reinterpret_cast<math::Vector *>(_target);

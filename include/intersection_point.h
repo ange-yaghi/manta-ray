@@ -1,8 +1,8 @@
 #ifndef MANTARAY_INTERSECTION_POINT_H
 #define MANTARAY_INTERSECTION_POINT_H
 
-#include <manta_math.h>
-#include <media_interface.h>
+#include "manta_math.h"
+#include "media_interface.h"
 
 namespace manta {
 

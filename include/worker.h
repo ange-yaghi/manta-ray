@@ -1,10 +1,10 @@
-#ifndef WORKER_H
-#define WORKER_H
+#ifndef MANTARAY_WORKER_H
+#define MANTARAY_WORKER_H
 
-#include <stack_allocator.h>
-#include <path_recorder.h>
-#include <manta_build_conf.h>
-#include <runtime_statistics.h>
+#include "stack_allocator.h"
+#include "path_recorder.h"
+#include "manta_build_conf.h"
+#include "runtime_statistics.h"
 
 #include <thread>
 #include <atomic>
@@ -74,4 +74,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* WORKER_H */
+#endif /* MANTARAY_WORKER_H */

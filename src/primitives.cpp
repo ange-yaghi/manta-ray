@@ -1,4 +1,4 @@
-#include <primitives.h>
+#include "../include/primitives.h"
 
 manta::math::real manta::AABB::surfaceArea() {
 	math::Vector d = math::sub(maxPoint, minPoint);

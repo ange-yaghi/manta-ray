@@ -1,7 +1,7 @@
-#ifndef DIELECTRIC_MEDIA_INTERFACE_H
-#define DIELECTRIC_MEDIA_INTERFACE_H
+#ifndef MANTARAY_DIELECTRIC_MEDIA_INTERFACE_H
+#define MANTARAY_DIELECTRIC_MEDIA_INTERFACE_H
 
-#include <media_interface.h>
+#include "media_interface.h"
 
 namespace manta {
 
@@ -31,4 +31,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* DIELECTRIC_MEDIA_INTERFACE */
+#endif /* MANTARAY_DIELECTRIC_MEDIA_INTERFACE */

@@ -1,7 +1,7 @@
-#include <srgb_node_output.h>
+#include "../include/srgb_node_output.h"
 
-#include <rgb_space.h>
-#include <color.h>
+#include "../include/rgb_space.h"
+#include "../include/color.h"
 
 
 manta::SrgbNodeOutput::SrgbNodeOutput() {

@@ -1,7 +1,7 @@
-#ifndef STACK_LIST_H
-#define STACK_LIST_H
+#ifndef MANTARAY_STACK_LIST_H
+#define MANTARAY_STACK_LIST_H
 
-#include <stack_allocator.h>
+#include "stack_allocator.h"
 
 #include <vector>
 #include <assert.h>
@@ -122,4 +122,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* STACK_LIST_H */
+#endif /* MANTARAY_STACK_LIST_H */

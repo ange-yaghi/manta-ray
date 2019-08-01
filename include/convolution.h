@@ -1,7 +1,7 @@
-#ifndef CONVOLUTION_H
-#define CONVOLUTION_H
+#ifndef MANTARAY_CONVOLUTION_H
+#define MANTARAY_CONVOLUTION_H
 
-#include <manta_math.h>
+#include "manta_math.h"
 
 namespace manta {
 
@@ -18,4 +18,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* CONVOLUTION_H */
+#endif /* MANTARAY_CONVOLUTION_H */

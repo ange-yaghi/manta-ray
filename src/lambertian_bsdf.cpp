@@ -1,4 +1,4 @@
-#include <lambertian_bsdf.h>
+#include "../include/lambertian_bsdf.h"
 
 manta::LambertianBSDF::LambertianBSDF() {
 	m_output.setReference(this);

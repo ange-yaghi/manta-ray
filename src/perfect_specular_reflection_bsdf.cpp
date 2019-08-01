@@ -1,4 +1,4 @@
-#include <perfect_specular_reflection_bsdf.h>
+#include "../include/perfect_specular_reflection_bsdf.h"
 
 manta::PerfectSpecularReflectionBSDF::PerfectSpecularReflectionBSDF() {
 	/* void */

@@ -1,8 +1,8 @@
-#ifndef SIGNAL_PROCESSING_H
-#define SIGNAL_PROCESSING_H
+#ifndef MANTARAY_SIGNAL_PROCESSING_H
+#define MANTARAY_SIGNAL_PROCESSING_H
 
-#include <manta_math.h>
-#include <complex_math.h>
+#include "manta_math.h"
+#include "complex_math.h"
 
 namespace manta {
 
@@ -17,4 +17,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* SIGNAL_PROCESSING_H */
+#endif /* MANTARAY_SIGNAL_PROCESSING_H */

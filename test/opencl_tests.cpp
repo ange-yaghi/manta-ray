@@ -1,16 +1,16 @@
 #include <pch.h>
 
-#include <manta_build_conf.h>
+#include "../include/manta_build_conf.h"
 #if INCLUDE_OPENCL_IMPL
 
-#include <gpu_manager_opencl.h>
-#include <gpu_kernel_opencl.h>
-#include <gpu_memory_opencl.h>
-#include <obj_file_loader.h>
-#include <mesh.h>
-#include <light_ray.h>
-#include <intersection_point.h>
-#include <coarse_intersection.h>
+#include "../include/gpu_manager_opencl.h"
+#include "../include/gpu_kernel_opencl.h"
+#include "../include/gpu_memory_opencl.h"
+#include "../include/obj_file_loader.h"
+#include "../include/mesh.h"
+#include "../include/light_ray.h"
+#include "../include/intersection_point.h"
+#include "../include/coarse_intersection.h"
 
 #include <chrono>
 #include <fstream>
