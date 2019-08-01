@@ -41,38 +41,21 @@ scene_object main_object(
         )
 )
 
-node target {
-    input in_pos;
-    input target;
-    input rough_up;
-
-    output up:
-        cross(
-            cross(
-                normalize(target - in_pos), 
-                rough_up
-            ),
-            normalize(target - in_pos)
-        );
-    output position: in_pos;
-    output direction: normalize(target - in_pos);
-}
-
-target camera_target(
-    in_pos: vector(11.24, 3.33763, -5.722),
-    target: vector(),
-    rought_up: vector(0.0, 1.0, 0.0)
+camera_target camera_target(
+    position:   vector(11.24, 3.33763, -5.722),
+    target:     vector(),
+    up:         vector(0.0, 1.0, 0.0)
 )
 
 standard_camera camera(
     up: camera_target.up,
     position: camera_target.position,
-    direction: camera_target.direction, //vector(-0.861515, -0.25582, 0.438575),
+    direction: camera_target.direction,
     resolution_x: 1920,
     resolution_y: 1080,
     plane_height: 0.3,
     plane_distance: 1.0,
-    samples: 100,
+    samples: 1,
     sampler: random_sampler()
 )
 

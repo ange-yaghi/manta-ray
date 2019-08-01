@@ -35,6 +35,7 @@ public import "materials/material.mr"
 public import "materials/simple_bsdf_material.mr"
 
 public import "camera/cameras.mr"
+public import "camera/utilities.mr"
 
 public import "sampler/samplers.mr"
 
