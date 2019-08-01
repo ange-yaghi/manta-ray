@@ -167,19 +167,19 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
 	// ====================================================
 	registerOperator(
 		{ piranha::IrBinaryOperator::MUL, &VectorNodeOutput::VectorType, &VectorNodeOutput::VectorType },
-		"__piranha__vector_multiply"
+		"__mantaray__vector_multiply"
 	);
 	registerOperator(
 		{ piranha::IrBinaryOperator::DIV, &VectorNodeOutput::VectorType, &VectorNodeOutput::VectorType },
-		"__piranha__vector_divide"
+		"__mantaray__vector_divide"
 	);
 	registerOperator(
 		{ piranha::IrBinaryOperator::ADD, &VectorNodeOutput::VectorType, &VectorNodeOutput::VectorType },
-		"__piranha__vector_add"
+		"__mantaray__vector_add"
 	);
 	registerOperator(
 		{ piranha::IrBinaryOperator::SUB, &VectorNodeOutput::VectorType, &VectorNodeOutput::VectorType },
-		"__piranha__vector_sub"
+		"__mantaray__vector_sub"
 	);
 
 	// ====================================================
