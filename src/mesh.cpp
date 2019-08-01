@@ -1,14 +1,14 @@
-#include <mesh.h>
+#include "../include/mesh.h"
 
-#include <light_ray.h>
-#include <intersection_point.h>
-#include <obj_file_loader.h>
-#include <coarse_intersection.h>
-#include <standard_allocator.h>
-#include <material.h>
+#include "../include/light_ray.h"
+#include "../include/intersection_point.h"
+#include "../include/obj_file_loader.h"
+#include "../include/coarse_intersection.h"
+#include "../include/standard_allocator.h"
+#include "../include/material.h"
 #include "../include/material_library.h"
-#include <primitives.h>
-#include <runtime_statistics.h>
+#include "../include/primitives.h"
+#include "../include/runtime_statistics.h"
 
 manta::Mesh::Mesh() {
 	CHECK_ALIGNMENT(this, 16);

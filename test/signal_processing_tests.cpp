@@ -1,15 +1,15 @@
 #include <pch.h>
 
-#include <manta_math.h>
-#include <standard_allocator.h>
-#include <signal_processing.h>
-#include <complex_map_2d.h>
-#include <fraunhofer_diffraction.h>
-#include <cft_estimator_2d.h>
-#include <circular_aperture.h>
-#include <polygonal_aperture.h>
+#include "../include/manta_math.h"
+#include "../include/standard_allocator.h"
+#include "../include/signal_processing.h"
+#include "../include/complex_map_2d.h"
+#include "../include/fraunhofer_diffraction.h"
+#include "../include/cft_estimator_2d.h"
+#include "../include/circular_aperture.h"
+#include "../include/polygonal_aperture.h"
 
-#include <utilities.h>
+#include "utilities.h"
 
 #include <random>
 

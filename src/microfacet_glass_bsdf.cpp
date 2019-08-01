@@ -1,7 +1,7 @@
-#include <microfacet_glass_bsdf.h>
+#include "../include/microfacet_glass_bsdf.h"
 
-#include <intersection_point.h>
-#include <microfacet_distribution.h>
+#include "../include/intersection_point.h"
+#include "../include/microfacet_distribution.h"
 
 manta::MicrofacetGlassBSDF::MicrofacetGlassBSDF() {
 	/* void */

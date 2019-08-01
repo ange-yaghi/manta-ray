@@ -1,8 +1,8 @@
-#ifndef COMPLEX_MATH_H
-#define COMPLEX_MATH_H
+#ifndef MANTARAY_COMPLEX_MATH_H
+#define MANTARAY_COMPLEX_MATH_H
 
-#include <manta_math.h>
-#include <manta_real.h>
+#include "manta_math.h"
+#include "manta_real.h"
 
 namespace manta {
 	namespace math {
@@ -48,4 +48,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* COMPLEX_MATH_H */
+#endif /* MANTARAY_COMPLEX_MATH_H */

@@ -1,13 +1,13 @@
-#include <worker.h>
+#include "../include/worker.h"
 
-#include <job_queue.h>
-#include <ray_tracer.h>
-#include <path_recorder.h>
-#include <light_ray.h>
-#include <camera_ray_emitter_group.h>
-#include <camera_ray_emitter.h>
-#include <ray_container.h>
-#include <image_plane.h>
+#include "../include/job_queue.h"
+#include "../include/ray_tracer.h"
+#include "../include/path_recorder.h"
+#include "../include/light_ray.h"
+#include "../include/camera_ray_emitter_group.h"
+#include "../include/camera_ray_emitter.h"
+#include "../include/ray_container.h"
+#include "../include/image_plane.h"
 
 #include <sstream>
 #include <time.h>

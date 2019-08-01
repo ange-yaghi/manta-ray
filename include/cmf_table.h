@@ -1,8 +1,8 @@
-#ifndef CMF_TABLE_H
-#define CMF_TABLE_H
+#ifndef MANTARAY_CMF_TABLE_H
+#define MANTARAY_CMF_TABLE_H
 
-#include <manta_math.h>
-#include <color.h>
+#include "manta_math.h"
+#include "color.h"
 
 namespace manta {
 
@@ -38,4 +38,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* CMF_TABLE_H */
+#endif /* MANTARAY_CMF_TABLE_H */

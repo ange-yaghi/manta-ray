@@ -1,4 +1,4 @@
-#include <lens_element.h>
+#include "../include/lens_element.h"
 
 const manta::math::real manta::LensElement::IOR_CROWN_GLASS = (math::real)1.52;
 

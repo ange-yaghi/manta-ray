@@ -1,6 +1,6 @@
-#include <signal_processing.h>
+#include "../include/signal_processing.h"
 
-#include <standard_allocator.h>
+#include "../include/standard_allocator.h"
 
 void manta::NaiveFFT::fft(const math::Complex *input, math::Complex *target, int n) {
 	fft_child(input, target, n, 1);

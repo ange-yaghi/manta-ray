@@ -1,12 +1,12 @@
 #include <pch.h>
 
-#include <utilities.h>
+#include "utilities.h"
 
-#include <color.h>
-#include <rgb_space.h>
-#include <cmf_table.h>
-#include <manta_math.h>
-#include <spectrum.h>
+#include "../include/color.h"
+#include "../include/rgb_space.h"
+#include "../include/cmf_table.h"
+#include "../include/manta_math.h"
+#include "../include/spectrum.h"
 
 using namespace manta;
 

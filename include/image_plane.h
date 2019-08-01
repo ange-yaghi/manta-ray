@@ -1,7 +1,7 @@
 #ifndef MANTARAY_IMAGE_PLANE_H
 #define MANTARAY_IMAGE_PLANE_H
 
-#include <manta_math.h>
+#include "manta_math.h"
 
 namespace manta {
 

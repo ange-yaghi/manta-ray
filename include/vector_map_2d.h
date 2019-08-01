@@ -1,9 +1,9 @@
-#ifndef VECTOR_MAP_2D_H
-#define VECTOR_MAP_2D_H
+#ifndef MANTARAY_VECTOR_MAP_2D_H
+#define MANTARAY_VECTOR_MAP_2D_H
 
-#include <manta_math.h>
+#include "manta_math.h"
 
-#include <margins.h>
+#include "margins.h"
 
 namespace manta {
 
@@ -53,4 +53,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* VECTOR_MAP_2D_H */
+#endif /* MANTARAY_VECTOR_MAP_2D_H */

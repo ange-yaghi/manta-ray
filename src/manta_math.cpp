@@ -1,4 +1,4 @@
-#include <manta_math.h>
+#include "../include/manta_math.h"
 
 manta::math::Vector manta::math::reflect(const Vector &v, const Vector &n) {
 	// r = 2 * n * (v . n) - v

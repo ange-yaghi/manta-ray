@@ -1,7 +1,7 @@
-#ifndef MATERIAL_POINTER_H
-#define MATERIAL_POINTER_H
+#ifndef MANTARAY_MATERIAL_POINTER_H
+#define MANTARAY_MATERIAL_POINTER_H
 
-#include <material.h>
+#include "material.h"
 
 namespace manta {
 
@@ -25,4 +25,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* MATERIAL_POINTER_H */
+#endif /* MANTARAY_MATERIAL_POINTER_H */

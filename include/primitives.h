@@ -1,9 +1,9 @@
-#ifndef PRIMITIVES_H
-#define PRIMITIVES_H
+#ifndef MANTARAY_PRIMITIVES_H
+#define MANTARAY_PRIMITIVES_H
 
-#include <manta_math.h>
+#include "manta_math.h"
 
-#include <light_ray.h>
+#include "light_ray.h"
 
 namespace manta {
 
@@ -72,4 +72,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* PRIMITIVES_H */
+#endif /* MANTARAY_PRIMITIVES_H */

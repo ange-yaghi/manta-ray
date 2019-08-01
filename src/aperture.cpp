@@ -1,4 +1,4 @@
-#include <aperture.h>
+#include "../include/aperture.h"
 
 manta::Aperture::Aperture() {
 	m_radius = (math::real)m_radius;

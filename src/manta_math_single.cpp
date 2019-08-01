@@ -1,4 +1,4 @@
-#include <manta_math_conf.h>
+#include "../include/manta_math_conf.h"
 
 #if MANTA_USE_SIMD == false
 

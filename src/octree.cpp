@@ -1,12 +1,12 @@
-#include <octree.h>
+#include "../include/octree.h"
 
-#include <scene_object.h>
-#include <mesh.h>
-#include <light_ray.h>
-#include <coarse_intersection.h>
-#include <stack_list.h>
-#include <standard_allocator.h>
-#include <runtime_statistics.h>
+#include "../include/scene_object.h"
+#include "../include/mesh.h"
+#include "../include/light_ray.h"
+#include "../include/coarse_intersection.h"
+#include "../include/stack_list.h"
+#include "../include/standard_allocator.h"
+#include "../include/runtime_statistics.h"
 
 #include <assert.h>
 #include <math.h>

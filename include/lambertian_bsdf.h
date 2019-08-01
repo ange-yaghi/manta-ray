@@ -1,7 +1,7 @@
-#ifndef LAMBERTIAN_BSDF_H
-#define LAMBERTIAN_BSDF_H
+#ifndef MANTARAY_LAMBERTIAN_BSDF_H
+#define MANTARAY_LAMBERTIAN_BSDF_H
 
-#include <bsdf.h>
+#include "bsdf.h"
 
 namespace manta {
 
@@ -23,4 +23,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* LAMBERTIAN_BSDF_H */
+#endif /* MANTARAY_LAMBERTIAN_BSDF_H */

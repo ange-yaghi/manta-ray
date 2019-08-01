@@ -1,6 +1,6 @@
-#include <microfacet_distribution.h>
+#include "../include/microfacet_distribution.h"
 
-#include <stack_allocator.h>
+#include "../include/stack_allocator.h"
 
 manta::MicrofacetDistribution::MicrofacetDistribution() {
     m_output.setReference(this);

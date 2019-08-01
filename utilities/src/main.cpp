@@ -2,10 +2,10 @@
 #include <string>
 #include <sstream>
 
-#include <manta.h>
-#include <raw_file.h>
-#include <image_plane.h>
-#include <image_handling.h>
+#include "../../include/manta.h"
+#include "../../include/raw_file.h"
+#include "../../include/image_plane.h"
+#include "../../include/image_handling.h"
 
 int main() {
 	std::string fname;

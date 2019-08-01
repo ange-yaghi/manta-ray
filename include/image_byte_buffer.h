@@ -1,7 +1,7 @@
-#ifndef IMAGE_BYTE_BUFFER_H
-#define IMAGE_BYTE_BUFFER_H
+#ifndef MANTARAY_IMAGE_BYTE_BUFFER_H
+#define MANTARAY_IMAGE_BYTE_BUFFER_H
 
-#include <manta_math.h>
+#include "manta_math.h"
 
 namespace manta {
 
@@ -44,4 +44,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* IMAGE_BYTE_BUFFER_H */
+#endif /* MANTARAY_IMAGE_BYTE_BUFFER_H */

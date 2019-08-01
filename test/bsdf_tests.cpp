@@ -2,17 +2,17 @@
 
 #include "utilities.h"
 
-#include <perfect_specular_reflection_bsdf.h>
-#include <lambertian_bsdf.h>
-#include <bilayer_bsdf.h>
-#include <stack_allocator.h>
-#include <dielectric_media_interface.h>
-#include <phong_distribution.h>
-#include <microfacet_reflection_bsdf.h>
-#include <microfacet_transmission_bsdf.h>
-#include <microfacet_glass_bsdf.h>
+#include "../include/perfect_specular_reflection_bsdf.h"
+#include "../include/lambertian_bsdf.h"
+#include "../include/bilayer_bsdf.h"
+#include "../include/stack_allocator.h"
+#include "../include/dielectric_media_interface.h"
+#include "../include/phong_distribution.h"
+#include "../include/microfacet_reflection_bsdf.h"
+#include "../include/microfacet_transmission_bsdf.h"
+#include "../include/microfacet_glass_bsdf.h"
 
-#include <manta_math.h>
+#include "../include/manta_math.h"
 
 using namespace manta;
 

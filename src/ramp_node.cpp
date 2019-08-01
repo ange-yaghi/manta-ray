@@ -1,4 +1,4 @@
-#include <ramp_node.h>
+#include "../include/ramp_node.h"
 
 manta::RampNode::RampNode() {
 	/* void */

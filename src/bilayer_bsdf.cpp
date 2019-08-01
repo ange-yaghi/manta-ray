@@ -1,9 +1,9 @@
-#include <bilayer_bsdf.h>
+#include "../include/bilayer_bsdf.h"
 
-#include <microfacet_reflection_bsdf.h>
-#include <lambertian_bsdf.h>
-#include <microfacet_distribution.h>
-#include <phong_distribution.h>
+#include "../include/microfacet_reflection_bsdf.h"
+#include "../include/lambertian_bsdf.h"
+#include "../include/microfacet_distribution.h"
+#include "../include/phong_distribution.h"
 
 #include <iostream>
 #include <algorithm>

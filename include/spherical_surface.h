@@ -1,9 +1,9 @@
-#ifndef SPHERICAL_SURFACE_H
-#define SPHERICAL_SURFACE_H
+#ifndef MANTARAY_SPHERICAL_SURFACE_H
+#define MANTARAY_SPHERICAL_SURFACE_H
 
-#include <manta_math.h>
+#include "manta_math.h"
 
-#include <sphere_primitive.h>
+#include "sphere_primitive.h"
 
 namespace manta {
 
@@ -32,4 +32,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* SPHERICAL_SURFACE_H */
+#endif /* MANTARAY_SPHERICAL_SURFACE_H */

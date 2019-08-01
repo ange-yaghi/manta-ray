@@ -1,4 +1,4 @@
-#include <multiply_node.h>
+#include "../include/multiply_node.h"
 
 manta::MultiplyNode::MultiplyNode() {
 	/* void */

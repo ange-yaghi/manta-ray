@@ -1,8 +1,8 @@
-#include <sphere_primitive.h>
+#include "../include/sphere_primitive.h"
 
-#include <light_ray.h>
-#include <intersection_point.h>
-#include <coarse_intersection.h>
+#include "../include/light_ray.h"
+#include "../include/intersection_point.h"
+#include "../include/coarse_intersection.h"
 
 manta::SpherePrimitive::SpherePrimitive() {
 	m_radius = (math::real)0.0;

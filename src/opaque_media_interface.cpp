@@ -1,4 +1,4 @@
-#include <opaque_media_interface.h>
+#include "../include/opaque_media_interface.h"
 
 manta::OpaqueMediaInterface::OpaqueMediaInterface() {
 	/* void */

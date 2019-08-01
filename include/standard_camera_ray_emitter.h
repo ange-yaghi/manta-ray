@@ -1,7 +1,7 @@
-#ifndef STANDARD_CAMERA_RAY_EMITTER_H
-#define STANDARD_CAMERA_RAY_EMITTER_H
+#ifndef MANTARAY_STANDARD_CAMERA_RAY_EMITTER_H
+#define MANTARAY_STANDARD_CAMERA_RAY_EMITTER_H
 
-#include <camera_ray_emitter.h>
+#include "../include/camera_ray_emitter.h"
 
 namespace manta {
 
@@ -23,4 +23,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* STANDARD_CAMERA_RAY_EMITTER_H */
+#endif /* MANTARAY_STANDARD_CAMERA_RAY_EMITTER_H */

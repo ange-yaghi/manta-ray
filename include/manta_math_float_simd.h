@@ -1,10 +1,10 @@
-#ifndef MANTA_MATH_FLOAT_SIMD_H
-#define MANTA_MATH_FLOAT_SIMD_H
+#ifndef MANTARAY_MANTA_MATH_FLOAT_SIMD_H
+#define MANTARAY_MANTA_MATH_FLOAT_SIMD_H
 
 #include <xmmintrin.h>
 #include <stdlib.h>
 
-#include <manta_real.h>
+#include "manta_real.h"
 
 // Extra Definitions
 
@@ -34,4 +34,4 @@ namespace manta {
 	} /* namespace math */
 } /* namespace manta */
 
-#endif /* MANTA_MATH_FLOAT_SIMD_H */
+#endif /* MANTARAY_MANTA_MATH_FLOAT_SIMD_H */

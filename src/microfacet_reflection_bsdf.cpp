@@ -1,6 +1,6 @@
-#include <microfacet_reflection_bsdf.h>
+#include "../include/microfacet_reflection_bsdf.h"
 
-#include <microfacet_distribution.h>
+#include "../include/microfacet_distribution.h"
 
 manta::MicrofacetReflectionBSDF::MicrofacetReflectionBSDF() {
 	m_distribution = nullptr;

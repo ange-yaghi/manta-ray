@@ -1,4 +1,4 @@
-#include <step_node.h>
+#include "../include/step_node.h"
 
 manta::StepNode::StepNode() {
 	/* void */

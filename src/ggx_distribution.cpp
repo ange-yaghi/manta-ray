@@ -1,6 +1,6 @@
-#include <ggx_distribution.h>
+#include "../include/ggx_distribution.h"
 
-#include <vector_node_output.h>
+#include "../include/vector_node_output.h"
 
 #include <assert.h>
 

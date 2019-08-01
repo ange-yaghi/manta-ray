@@ -1,4 +1,4 @@
-#include <lens.h>
+#include "../include/lens.h"
 
 manta::Lens::Lens() {
 	m_aperture = nullptr;

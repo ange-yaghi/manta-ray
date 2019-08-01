@@ -1,7 +1,7 @@
-#ifndef LENS_H
-#define LENS_H
+#ifndef MANTARAY_LENS_H
+#define MANTARAY_LENS_H
 
-#include <manta_math.h>
+#include "manta_math.h"
 
 namespace manta {
 
@@ -83,4 +83,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* LENS_H */
+#endif /* MANTARAY_LENS_H */

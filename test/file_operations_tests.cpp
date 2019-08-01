@@ -2,7 +2,7 @@
 
 #include "utilities.h"
 
-#include <path.h>
+#include "../include/path.h"
 
 using namespace manta;
 

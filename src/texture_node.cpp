@@ -1,6 +1,6 @@
-#include <texture_node.h>
+#include "../include/texture_node.h"
 
-#include <intersection_point.h>
+#include "../include/intersection_point.h"
 
 #include <SDL.h>
 #include <SDL_image.h>

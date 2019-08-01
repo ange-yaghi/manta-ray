@@ -1,7 +1,7 @@
-#ifndef SQUARE_APERTURE_H
-#define SQUARE_APERTURE_H
+#ifndef MANTARAY_SQUARE_APERTURE_H
+#define MANTARAY_SQUARE_APERTURE_H
 
-#include <aperture.h>
+#include "aperture.h"
 
 namespace manta {
 
@@ -15,4 +15,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* SQUARE_APERTURE_H */
+#endif /* MANTARAY_SQUARE_APERTURE_H */

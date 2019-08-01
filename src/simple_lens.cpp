@@ -1,7 +1,7 @@
-#include <simple_lens.h>
+#include "../include/simple_lens.h"
 
-#include <light_ray.h>
-#include <manta_math.h>
+#include "../include/light_ray.h"
+#include "../include/manta_math.h"
 
 manta::SimpleLens::SimpleLens() {
 	/* void */

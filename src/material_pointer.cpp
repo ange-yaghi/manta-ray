@@ -1,4 +1,4 @@
-#include <material_pointer.h>
+#include "../include/material_pointer.h"
 
 manta::MaterialPointer::MaterialPointer() {
 	m_material = nullptr;

@@ -1,8 +1,8 @@
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef MANTARAY_DEMOS_UTILS_H
+#define MANTARAY_DEMOS_UTILS_H
 
-#include <image_plane.h>
-#include <manta_math.h>
+#include "../include/image_plane.h"
+#include "../include/manta_math.h"
 
 #include <string>
 
@@ -16,4 +16,4 @@ namespace manta_demo {
 
 } /* namespace manta_demo */
 
-#endif /* UTILS_H */
+#endif /* MANTARAY_DEMOS_UTILS_H */

@@ -1,4 +1,4 @@
-#include <starburst_approximation.h>
+#include "../include/starburst_approximation.h"
 
 manta::StarburstApproximation::StarburstApproximation() {
 	m_radius = (math::real)0.0;
