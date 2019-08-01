@@ -51,13 +51,13 @@
     <ClCompile Include="..\..\demos\material_visualizer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\stock_scene_demo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\demos\aperture_demo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\demos\sdl_demo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\demos\stock_scene_demo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

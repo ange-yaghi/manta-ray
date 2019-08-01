@@ -1,4 +1,4 @@
-#include <power_node_output.h>
+#include "../include/power_node_output.h"
 
 void manta::PowerNodeOutput::sample(const IntersectionPoint *surfaceInteraction, void *_target) const {
 	VectorNodeOutput *input = static_cast<VectorNodeOutput *>(m_input);

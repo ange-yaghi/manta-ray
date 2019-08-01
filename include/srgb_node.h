@@ -3,7 +3,7 @@
 
 #include <piranha.h>
 
-#include <srgb_node_output.h>
+#include "srgb_node_output.h"
 
 namespace manta {
 

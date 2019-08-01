@@ -1,4 +1,4 @@
-#include <circle_convolution.h>
+#include "../include/circle_convolution.h"
 
 manta::CircleConvolution::CircleConvolution() {
 	m_radius = (math::real)0.0;

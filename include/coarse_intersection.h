@@ -1,7 +1,7 @@
-#ifndef COARSE_INTERSECTION_H
-#define COARSE_INTERSECTION_H
+#ifndef MANTARAY_COARSE_INTERSECTION_H
+#define MANTARAY_COARSE_INTERSECTION_H
 
-#include <manta_math.h>
+#include "manta_math.h"
 
 namespace manta {
 
@@ -23,4 +23,4 @@ namespace manta {
 
 }
 
-#endif /* COARSE_INTERSECTION_H */
+#endif /* MANTARAY_COARSE_INTERSECTION_H */

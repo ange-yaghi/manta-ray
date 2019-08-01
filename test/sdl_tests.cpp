@@ -84,6 +84,4 @@ TEST(SdlTests, SdlObjectNodeTest) {
     unit->build(&program);
 
     program.execute();
-
-    int a = 0;
 }

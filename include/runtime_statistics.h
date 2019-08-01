@@ -1,7 +1,7 @@
-#ifndef RUNTIME_STATISTICS_H
-#define RUNTIME_STATISTICS_H
+#ifndef MANTARAY_RUNTIME_STATISTICS_H
+#define MANTARAY_RUNTIME_STATISTICS_H
 
-#include <manta_build_conf.h>
+#include "manta_build_conf.h"
 
 // Definitions for detailed statistics gathering
 #if ENABLE_DETAILED_STATISTICS
@@ -76,4 +76,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* RUNTIME_STATISTICS_H */
+#endif /* MANTARAY_RUNTIME_STATISTICS_H */

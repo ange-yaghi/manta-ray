@@ -1,8 +1,8 @@
-#include <spherical_surface.h>
+#include "../include/spherical_surface.h"
 
-#include <intersection_point.h>
-#include <light_ray.h>
-#include <lens_element.h>
+#include "../include/intersection_point.h"
+#include "../include/light_ray.h"
+#include "../include/lens_element.h"
 
 manta::SphericalSurface::SphericalSurface() {
 	m_ior = (math::real)0.0;

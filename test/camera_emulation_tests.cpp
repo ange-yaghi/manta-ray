@@ -1,10 +1,10 @@
 #include <pch.h>
 #include "utilities.h"
 
-#include <biconvex_lens.h>
-#include <light_ray.h>
-#include <simple_lens.h>
-#include <polygonal_aperture.h>
+#include "../include/biconvex_lens.h"
+#include "../include/light_ray.h"
+#include "../include/simple_lens.h"
+#include "../include/polygonal_aperture.h"
 
 using namespace manta;
 

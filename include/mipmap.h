@@ -1,13 +1,13 @@
-#ifndef MIPMAP_H
-#define MIPMAP_H
+#ifndef MANTARAY_MIPMAP_H
+#define MANTARAY_MIPMAP_H
 
-#include <standard_allocator.h>
+#include "standard_allocator.h"
 
 #include <vector>
 #include <assert.h>
 
 // For Intellisense only
-#include <scalar_map_2d.h>
+#include "scalar_map_2d.h"
 
 namespace manta {
 
@@ -112,4 +112,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* MIPMAP_H */
+#endif /* MANTARAY_MIPMAP_H */

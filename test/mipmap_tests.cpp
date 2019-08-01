@@ -2,10 +2,10 @@
 
 #include "utilities.h"
 
-#include <mipmap.h>
-#include <scalar_map_2d.h>
+#include "../include/mipmap.h"
+#include "../include/scalar_map_2d.h"
 
-#include <manta_math.h>
+#include "../include/manta_math.h"
 
 using namespace manta;
 

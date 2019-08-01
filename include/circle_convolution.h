@@ -1,9 +1,9 @@
-#ifndef CIRCLE_CONVOLUTION_H
-#define CIRCLE_CONVOLUTION_H
+#ifndef MANTARAY_CIRCLE_CONVOLUTION_H
+#define MANTARAY_CIRCLE_CONVOLUTION_H
 
-#include <convolution.h>
+#include "convolution.h"
 
-#include <manta_math.h>
+#include "manta_math.h"
 
 namespace manta {
 

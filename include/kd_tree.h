@@ -1,12 +1,12 @@
-#ifndef KD_TREE_H
-#define KD_TREE_H
+#ifndef MANTARAY_KD_TREE_H
+#define MANTARAY_KD_TREE_H
 
-#include <manta_math.h>
-#include <geometry.h>
-#include <scene_geometry.h>
-#include <stack_list.h>
-#include <primitives.h>
-#include <runtime_statistics.h>
+#include "manta_math.h"
+#include "geometry.h"
+#include "scene_geometry.h"
+#include "stack_list.h"
+#include "primitives.h"
+#include "runtime_statistics.h"
 
 #include <vector>
 #include <fstream>
@@ -198,4 +198,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* KD_TREE_H */
+#endif /* MANTARAY_KD_TREE_H */

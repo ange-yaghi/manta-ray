@@ -1,17 +1,17 @@
-#include <fraunhofer_diffraction.h>
+#include "../include/fraunhofer_diffraction.h"
 
-#include <image_byte_buffer.h>
-#include <aperture.h>
-#include <complex_map_2d.h>
-#include <cft_estimator_2d.h>
-#include <spectrum.h>
-#include <color.h>
-#include <cmf_table.h>
-#include <mipmap.h>
+#include "../include/image_byte_buffer.h"
+#include "../include/aperture.h"
+#include "../include/complex_map_2d.h"
+#include "../include/cft_estimator_2d.h"
+#include "../include/spectrum.h"
+#include "../include/color.h"
+#include "../include/cmf_table.h"
+#include "../include/mipmap.h"
 
 // Temp
-#include <texture_node.h>
-#include <intersection_point.h>
+#include "../include/texture_node.h"
+#include "../include/intersection_point.h"
 
 #include <thread>
 

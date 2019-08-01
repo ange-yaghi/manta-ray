@@ -1,10 +1,10 @@
-#ifndef SIMPLE_LENS_H
-#define SIMPLE_LENS_H
+#ifndef MANTARAY_SIMPLE_LENS_H
+#define MANTARAY_SIMPLE_LENS_H
 
-#include <lens.h>
+#include "lens.h"
 
-#include <circular_aperture.h>
-#include <biconvex_lens.h>
+#include "circular_aperture.h"
+#include "biconvex_lens.h"
 
 namespace manta {
 
@@ -46,4 +46,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* SIMPLE_LENS_H */
+#endif /* MANTARAY_SIMPLE_LENS_H */

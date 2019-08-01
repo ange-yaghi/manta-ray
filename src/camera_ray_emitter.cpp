@@ -1,6 +1,6 @@
-#include <camera_ray_emitter.h>
+#include "../include/camera_ray_emitter.h"
 
-#include <light_ray.h>
+#include "../include/light_ray.h"
 
 manta::CameraRayEmitter::CameraRayEmitter() {
 	m_sampler = nullptr;

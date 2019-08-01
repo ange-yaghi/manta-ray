@@ -1,4 +1,4 @@
-#include <simple_sampler.h>
+#include "../include/simple_sampler.h"
 
 manta::SimpleSampler::SimpleSampler() {
 	/* void */

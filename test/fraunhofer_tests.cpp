@@ -1,16 +1,16 @@
 #include <pch.h>
 #include "utilities.h"
 
-#include <fraunhofer_diffraction.h>
-#include <image_plane.h>
-#include <circular_aperture.h>
-#include <square_aperture.h>
-#include <polygonal_aperture.h>
-#include <image_byte_buffer.h>
-#include <jpeg_writer.h>
-#include <color.h>
-#include <cmf_table.h>
-#include <spectrum.h>
+#include "../include/fraunhofer_diffraction.h"
+#include "../include/image_plane.h"
+#include "../include/circular_aperture.h"
+#include "../include/square_aperture.h"
+#include "../include/polygonal_aperture.h"
+#include "../include/image_byte_buffer.h"
+#include "../include/jpeg_writer.h"
+#include "../include/color.h"
+#include "../include/cmf_table.h"
+#include "../include/spectrum.h"
 
 using namespace manta;
 

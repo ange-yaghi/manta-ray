@@ -1,7 +1,7 @@
 #ifndef MANTARAY_RANDOM_SAMPLER_H
 #define MANTARAY_RANDOM_SAMPLER_H
 
-#include <sampler_2d.h>
+#include "sampler_2d.h"
 
 namespace manta {
 

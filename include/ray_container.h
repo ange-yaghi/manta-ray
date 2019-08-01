@@ -1,7 +1,7 @@
-#ifndef RAY_CONTAINER_H
-#define RAY_CONTAINER_H
+#ifndef MANTARAY_RAY_CONTAINER_H
+#define MANTARAY_RAY_CONTAINER_H
 
-#include <manta_math.h>
+#include "../include/manta_math.h"
 
 namespace manta {
 
@@ -50,4 +50,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* RAY_CONTAINER_H */
+#endif /* MANTARAY_RAY_CONTAINER_H */

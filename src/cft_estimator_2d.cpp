@@ -1,5 +1,5 @@
-#include <cft_estimator_2d.h>
-#include <complex_map_2d.h>
+#include "../include/cft_estimator_2d.h"
+#include "../include/complex_map_2d.h"
 
 #include <assert.h>
 

@@ -1,7 +1,7 @@
 #ifndef MANTARAY_MICROFACET_REFLECTION_BSDF_H
 #define MANTARAY_MICROFACET_REFLECTION_BSDF_H
 
-#include <bsdf.h>
+#include "bsdf.h"
 
 namespace manta {
 

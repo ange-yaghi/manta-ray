@@ -2,12 +2,12 @@
 
 #include "utilities.h"
 
-#include <light_ray.h>
-#include <sphere_primitive.h>
-#include <intersection_point.h>
-#include <primitives.h>
+#include "../include/light_ray.h"
+#include "../include/sphere_primitive.h"
+#include "../include/intersection_point.h"
+#include "../include/primitives.h"
 
-#include <manta_math.h>
+#include "../include/manta_math.h"
 
 using namespace manta;
 

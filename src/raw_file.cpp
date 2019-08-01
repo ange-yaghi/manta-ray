@@ -1,7 +1,7 @@
-#include <raw_file.h>
+#include "../include/raw_file.h"
 
-#include <image_plane.h>
-#include <manta_math.h>
+#include "../include/image_plane.h"
+#include "../include/manta_math.h"
 
 #include <fstream>
 

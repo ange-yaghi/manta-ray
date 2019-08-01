@@ -2,11 +2,11 @@
 
 #include "utilities.h"
 
-#include <multiply_node.h>
-#include <vector_map_wrapper_node.h>
-#include <step_node.h>
+#include "../include/multiply_node.h"
+#include "../include/vector_map_wrapper_node.h"
+#include "../include/step_node.h"
 
-#include <manta_math.h>
+#include "../include/manta_math.h"
 
 using namespace manta;
 

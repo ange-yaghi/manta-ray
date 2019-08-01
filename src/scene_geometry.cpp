@@ -1,4 +1,4 @@
-#include <scene_geometry.h>
+#include "../include/scene_geometry.h"
 
 manta::SceneGeometry::SceneGeometry() {
 	m_id = -1;

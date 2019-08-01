@@ -1,6 +1,6 @@
-#include <image_handling.h>
+#include "../include/image_handling.h"
 
-#include <manta_math.h>
+#include "../include/manta_math.h"
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -52,7 +52,6 @@ void PlacePixel24(SDL_Surface * surface, int x, int y, const manta::math::Vector
 	pixel[1] = (color32 >> 8) & 0xFF;
 	pixel[2] = (color32 >> 16) & 0xFF;
 #endif
-	int a = 0;
 }
 
 void manta::SaveImageData(const math::Vector *target, int width, int height, const char *fname) {

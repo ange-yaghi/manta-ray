@@ -1,4 +1,4 @@
-#include <constructed_vector_node_output.h>
+#include "../include/constructed_vector_node_output.h"
 
 manta::ConstructedVectorNodeOutput::ConstructedVectorNodeOutput() {
 	/* void */

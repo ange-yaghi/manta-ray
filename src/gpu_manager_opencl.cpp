@@ -1,10 +1,10 @@
-#include <manta_build_conf.h>
+#include "../include/manta_build_conf.h"
 #if INCLUDE_OPENCL_IMPL
 
-#include <gpu_manager_opencl.h>
+#include "../include/gpu_manager_opencl.h"
 
-#include <gpu_memory_opencl.h>
-#include <gpu_kernel_opencl.h>
+#include "../include/gpu_memory_opencl.h"
+#include "../include/gpu_kernel_opencl.h"
 
 #define MAX_SOURCE_SIZE (0x100000)
 
@@ -55,7 +55,6 @@ void manta::GPUManagerOpenCL::initialize(const char *programLocation) {
 
 		char *outputBuffer = new char[size + 1];
 		ret = clGetProgramBuildInfo(m_program, m_deviceId, CL_PROGRAM_BUILD_LOG, size, (void *)outputBuffer, NULL);
-		int a = 0;
 	}
 }
 

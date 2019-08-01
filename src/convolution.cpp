@@ -1,4 +1,4 @@
-#include <convolution.h>
+#include "../include/convolution.h"
 
 manta::Convolution::Convolution() {
 	/* void */

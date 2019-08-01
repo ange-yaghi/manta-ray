@@ -1,9 +1,9 @@
-#include <manta_math_conf.h>
+#include "../include/manta_math_conf.h"
 
 #if MANTA_USE_SIMD
 #if MANTA_PRECISION == MANTA_PRECISION_FLOAT
 
-#include <manta_math.h>
+#include "../include/manta_math.h"
 
 #include <math.h>
 #include <random>

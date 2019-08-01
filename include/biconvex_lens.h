@@ -1,9 +1,9 @@
-#ifndef BICONVEX_LENS_H
-#define BICONVEX_LENS_H
+#ifndef MANTARAY_BICONVEX_LENS_H
+#define MANTARAY_BICONVEX_LENS_H
 
-#include <lens_element.h>
+#include "lens_element.h"
 
-#include <spherical_surface.h>
+#include "spherical_surface.h"
 
 namespace manta {
 
@@ -28,4 +28,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* BICONVEX_LENS_H */
+#endif /* MANTARAY_BICONVEX_LENS_H */

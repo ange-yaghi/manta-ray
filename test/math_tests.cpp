@@ -1,7 +1,7 @@
 #include <pch.h>
 #include "utilities.h"
 
-#include <manta_math.h>
+#include "../include/manta_math.h"
 
 namespace math = manta::math;
 
