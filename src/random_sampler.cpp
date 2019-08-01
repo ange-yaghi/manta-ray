@@ -1,4 +1,4 @@
-#include <random_sampler.h>
+#include "../include/random_sampler.h"
 
 manta::RandomSampler::RandomSampler() {
 	/* void */

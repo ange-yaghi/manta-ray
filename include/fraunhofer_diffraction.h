@@ -1,11 +1,11 @@
-#ifndef FRAUNHOFER_DIFFRACTION_H
-#define FRAUNHOFER_DIFFRACTION_H
+#ifndef MANTARAY_FRAUNHOFER_DIFFRACTION_H
+#define MANTARAY_FRAUNHOFER_DIFFRACTION_H
 
-#include <convolution.h>
+#include "convolution.h"
 
-#include <vector_map_2d.h>
-#include <scalar_map_2d.h>
-#include <complex_map_2d.h>
+#include "vector_map_2d.h"
+#include "scalar_map_2d.h"
+#include "complex_map_2d.h"
 
 namespace manta {
 
@@ -71,4 +71,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* FRAUNHOFER_DIFFRACTION_H */
+#endif /* MANTARAY_FRAUNHOFER_DIFFRACTION_H */

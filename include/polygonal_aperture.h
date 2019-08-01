@@ -1,7 +1,7 @@
-#ifndef POLYGONAL_APERTURE_H
-#define POLYGONAL_APERTURE_H
+#ifndef MANTARAY_POLYGONAL_APERTURE_H
+#define MANTARAY_POLYGONAL_APERTURE_H
 
-#include <aperture.h>
+#include "aperture.h"
 
 namespace manta {
 
@@ -34,4 +34,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* POLYGONAL_APERTURE_H */
+#endif /* MANTARAY_POLYGONAL_APERTURE_H */

@@ -1,4 +1,4 @@
-#include "media_interface.h"
+#include "../include/media_interface.h"
 
 manta::MediaInterface::MediaInterface() {
 	/* void */

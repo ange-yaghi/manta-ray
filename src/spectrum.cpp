@@ -1,6 +1,6 @@
-#include <spectrum.h>
+#include "../include/spectrum.h"
 
-#include <standard_allocator.h>
+#include "../include/standard_allocator.h"
 
 #include <assert.h>
 #include <vector>

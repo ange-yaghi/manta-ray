@@ -1,10 +1,10 @@
-#ifndef OCTREE_H
-#define OCTREE_H
+#ifndef MANTARAY_OCTREE_H
+#define MANTARAY_OCTREE_H
 
-#include <manta_math.h>
-#include <geometry.h>
-#include <scene_geometry.h>
-#include <stack_list.h>
+#include "manta_math.h"
+#include "geometry.h"
+#include "scene_geometry.h"
+#include "stack_list.h"
 
 #include <vector>
 #include <fstream>
@@ -103,4 +103,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* OCTREE_H */
+#endif /* MANTARAY_OCTREE_H */

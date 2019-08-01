@@ -1,9 +1,9 @@
-#ifndef SPHERE_PRIMITIVE_H
-#define SPHERE_PRIMITIVE_H
+#ifndef MANTARAY_SPHERE_PRIMITIVE_H
+#define MANTARAY_SPHERE_PRIMITIVE_H
 
-#include <scene_geometry.h>
+#include "scene_geometry.h"
 
-#include <runtime_statistics.h>
+#include "runtime_statistics.h"
 
 namespace manta {
 
@@ -41,4 +41,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* SPHERE_PRIMITIVE_H */
+#endif /* MANTARAY_SPHERE_PRIMITIVE_H */

@@ -1,7 +1,7 @@
-#ifndef SPECTRUM_H
-#define SPECTRUM_H
+#ifndef MANTARAY_SPECTRUM_H
+#define MANTARAY_SPECTRUM_H
 
-#include <manta_math.h>
+#include "manta_math.h"
 
 namespace manta {
 
@@ -44,4 +44,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* SPECTRUM_H */
+#endif /* MANTARAY_SPECTRUM_H */

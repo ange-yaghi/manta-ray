@@ -1,10 +1,10 @@
-#include <simple_bsdf_material.h>
+#include "../include/simple_bsdf_material.h"
 
-#include <ray_container.h>
-#include <intersection_point.h>
-#include <light_ray.h>
-#include <vector_node_output.h>
-#include <bsdf.h>
+#include "../include/ray_container.h"
+#include "../include/intersection_point.h"
+#include "../include/light_ray.h"
+#include "../include/vector_node_output.h"
+#include "../include/bsdf.h"
 
 manta::SimpleBSDFMaterial::SimpleBSDFMaterial() {
 	m_maxDegree = 4;

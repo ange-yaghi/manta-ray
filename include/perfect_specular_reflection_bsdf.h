@@ -1,7 +1,7 @@
-#ifndef PERFECT_SPECULAR_REFLECTION_BSDF_H
-#define PERFECT_SPECULAR_REFLECTION_BSDF_H
+#ifndef MANTARAY_PERFECT_SPECULAR_REFLECTION_BSDF_H
+#define MANTARAY_PERFECT_SPECULAR_REFLECTION_BSDF_H
 
-#include <bsdf.h>
+#include "bsdf.h"
 
 namespace manta {
 
@@ -19,4 +19,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* PERFECT_SPECULAR_REFLECTION_BSDF_H */
+#endif /* MANTARAY_PERFECT_SPECULAR_REFLECTION_BSDF_H */

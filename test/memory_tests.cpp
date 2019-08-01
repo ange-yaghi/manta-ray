@@ -1,7 +1,7 @@
 #include <pch.h>
 #include "utilities.h"
 
-#include <stack_allocator.h>
+#include "../include/stack_allocator.h"
 
 TEST(MemoryTests, StackSanityCheck) {
 	manta::StackAllocator s;

@@ -1,4 +1,4 @@
-#include "cached_vector_output.h"
+#include "../include/cached_vector_output.h"
 
 manta::CachedVectorOutput::CachedVectorOutput() {
 	m_value = math::constants::Zero;

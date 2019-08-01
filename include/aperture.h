@@ -1,7 +1,7 @@
-#ifndef APERTURE_H
-#define APERTURE_H
+#ifndef MANTARAY_APERTURE_H
+#define MANTARAY_APERTURE_H
 
-#include <manta_math.h>
+#include "manta_math.h"
 
 namespace manta {
 
@@ -22,4 +22,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* APERTURE_H */
+#endif /* MANTARAY_APERTURE_H */

@@ -1,6 +1,6 @@
-#include <biconvex_lens.h>
+#include "../include/biconvex_lens.h"
 
-#include <light_ray.h>
+#include "../include/light_ray.h"
 
 manta::BiconvexLens::BiconvexLens() {
 	/* void */

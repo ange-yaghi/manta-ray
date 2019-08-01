@@ -1,11 +1,11 @@
-#ifndef COMPLEX_MAP_2D_H
-#define COMPLEX_MAP_2D_H
+#ifndef MANTARAY_COMPLEX_MAP_2D_H
+#define MANTARAY_COMPLEX_MAP_2D_H
 
-#include <manta_math.h>
-#include <scalar_map_2d.h>
+#include "manta_math.h"
+#include "scalar_map_2d.h"
 
-#include <complex_math.h>
-#include <margins.h>
+#include "complex_math.h"
+#include "margins.h"
 
 namespace manta {
 
@@ -95,4 +95,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* COMPLEX_MAP_2D_H */
+#endif /* MANTARAY_COMPLEX_MAP_2D_H */

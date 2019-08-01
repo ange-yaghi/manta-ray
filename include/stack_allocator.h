@@ -1,7 +1,7 @@
-#ifndef STACK_ALLOCATOR_H
-#define STACK_ALLOCATOR_H
+#ifndef MANTARAY_STACK_ALLOCATOR_H
+#define MANTARAY_STACK_ALLOCATOR_H
 
-#include <memory_management.h>
+#include "memory_management.h"
 
 #include <assert.h>
 #include <new>
@@ -82,4 +82,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* STACK_ALLOCATOR_H */
+#endif /* MANTARAY_STACK_ALLOCATOR_H */

@@ -1,4 +1,4 @@
-#include <circular_aperture.h>
+#include "../include/circular_aperture.h"
 
 manta::CircularAperture::CircularAperture() {
 	m_radius = (math::real)0.0;

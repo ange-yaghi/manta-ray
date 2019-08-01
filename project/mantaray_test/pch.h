@@ -9,4 +9,4 @@
 #define _SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING
 #include "gtest/gtest.h"
 
-#include <manta.h>
+#include "../../include/manta.h"

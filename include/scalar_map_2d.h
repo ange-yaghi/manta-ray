@@ -1,10 +1,10 @@
-#ifndef SCALAR_MAP_2D_H
-#define SCALAR_MAP_2D_H
+#ifndef MANTARAY_SCALAR_MAP_2D_H
+#define MANTARAY_SCALAR_MAP_2D_H
 
-#include <manta_math.h>
-#include <standard_allocator.h>
-#include <image_byte_buffer.h>
-#include <vector_map_2d.h>
+#include "manta_math.h"
+#include "standard_allocator.h"
+#include "image_byte_buffer.h"
+#include "vector_map_2d.h"
 
 #include <assert.h>
 
@@ -135,4 +135,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* SCALAR_MAP_2D_H */
+#endif /* MANTARAY_SCALAR_MAP_2D_H */

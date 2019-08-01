@@ -1,7 +1,7 @@
-#ifndef COLOR_H
-#define COLOR_H
+#ifndef MANTARAY_COLOR_H
+#define MANTARAY_COLOR_H
 
-#include <manta_math.h>
+#include "manta_math.h"
 
 namespace manta {
 
@@ -11,4 +11,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* COLOR_H */
+#endif /* MANTARAY_COLOR_H */

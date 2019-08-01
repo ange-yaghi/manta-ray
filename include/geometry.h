@@ -1,5 +1,5 @@
-#ifndef GEOMETRY_H
-#define GEOMETRY_H
+#ifndef MANTARAY_GEOMETRY_H
+#define MANTARAY_GEOMETRY_H
 
 namespace manta {
 
@@ -92,4 +92,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* GEOMETRY_H */
+#endif /* MANTARAY_GEOMETRY_H */

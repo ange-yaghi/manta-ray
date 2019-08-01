@@ -1,7 +1,7 @@
 #ifndef MANTARAY_PHONG_DISTRIBUTION_H
 #define MANTARAY_PHONG_DISTRIBUTION_H
 
-#include <microfacet_distribution.h>
+#include "microfacet_distribution.h"
 
 namespace manta {
 

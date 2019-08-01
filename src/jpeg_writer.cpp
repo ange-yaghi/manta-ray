@@ -1,6 +1,6 @@
-#include <jpeg_writer.h>
+#include "../include/jpeg_writer.h"
 
-#include <image_byte_buffer.h>
+#include "../include/image_byte_buffer.h"
 
 #include <stdio.h>
 #include <turbojpeg.h>

@@ -1,9 +1,9 @@
-#include <standard_camera_ray_emitter.h>
+#include "../include/standard_camera_ray_emitter.h"
 
-#include <sampler_2d.h>
-#include <light_ray.h>
-#include <stack_allocator.h>
-#include <ray_container.h>
+#include "../include/sampler_2d.h"
+#include "../include/light_ray.h"
+#include "../include/stack_allocator.h"
+#include "../include/ray_container.h"
 
 manta::StandardCameraRayEmitter::StandardCameraRayEmitter() {
 	/* void */

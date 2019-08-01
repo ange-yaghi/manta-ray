@@ -1,9 +1,9 @@
 #include <pch.h>
 
-#include <obj_file_loader.h>
-#include <mesh.h>
-#include <light_ray.h>
-#include <coarse_intersection.h>
+#include "../include/obj_file_loader.h"
+#include "../include/mesh.h"
+#include "../include/light_ray.h"
+#include "../include/coarse_intersection.h"
 
 #include <chrono>
 #include <fstream>

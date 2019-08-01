@@ -1,7 +1,7 @@
-#include <ray_container.h>
+#include "../include/ray_container.h"
 
-#include <light_ray.h>
-#include <stack_allocator.h>
+#include "../include/light_ray.h"
+#include "../include/stack_allocator.h"
 
 #include <assert.h>
 

@@ -1,7 +1,7 @@
-#ifndef PATH_RECORDER_H
-#define PATH_RECORDER_H
+#ifndef MANTARAY_PATH_RECORDER_H
+#define MANTARAY_PATH_RECORDER_H
 
-#include <manta_math.h>
+#include "manta_math.h"
 
 #include <vector>
 #include <string>
@@ -53,4 +53,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* PATH_RECORDER_H */
+#endif /* MANTARAY_PATH_RECORDER_H */

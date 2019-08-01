@@ -1,4 +1,4 @@
-#include <square_aperture.h>
+#include "../include/square_aperture.h"
 
 manta::SquareAperture::SquareAperture() {
 	m_radius = (math::real)0.0;

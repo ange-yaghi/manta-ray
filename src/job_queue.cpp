@@ -1,11 +1,11 @@
-#include <job_queue.h>
+#include "../include/job_queue.h"
 
 manta::JobQueue::JobQueue() {
-
+    /* void */
 }
 
 manta::JobQueue::~JobQueue() {
-
+    /* void */
 }
 
 void manta::JobQueue::push(const Job &job) {

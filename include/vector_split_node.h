@@ -3,7 +3,7 @@
 
 #include <piranha.h>
 
-#include <vector_split_node_output.h>
+#include "vector_split_node_output.h"
 
 namespace manta {
 

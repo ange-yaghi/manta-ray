@@ -1,8 +1,8 @@
-#include <image_byte_buffer.h>
+#include "../include/image_byte_buffer.h"
 
-#include <standard_allocator.h>
-#include <image_plane.h>
-#include <rgb_space.h>
+#include "../include/standard_allocator.h"
+#include "../include/image_plane.h"
+#include "../include/rgb_space.h"
 
 #include <assert.h>
 #include <cmath>

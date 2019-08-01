@@ -1,10 +1,10 @@
-#ifndef CFT_ESTIMATOR_H
-#define CFT_ESTIMATOR_H
+#ifndef MANTARAY_CFT_ESTIMATOR_H
+#define MANTARAY_CFT_ESTIMATOR_H
 
-#include <complex_math.h>
-#include <manta_math.h>
-#include <complex_map_2d.h>
-#include <mipmap.h>
+#include "complex_math.h"
+#include "manta_math.h"
+#include "complex_map_2d.h"
+#include "mipmap.h"
 
 namespace manta {
 
@@ -52,4 +52,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* CFT_ESTIMATOR_H */
+#endif /* MANTARAY_CFT_ESTIMATOR_H */

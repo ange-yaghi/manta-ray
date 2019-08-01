@@ -1,10 +1,10 @@
-#include <utils.h>
+#include "utils.h"
 
-#include <image_handling.h>
-#include <os_utilities.h>
-#include <settings.h>
-#include <image_byte_buffer.h>
-#include <jpeg_writer.h>
+#include "../include/image_handling.h"
+#include "../include/os_utilities.h"
+#include "settings.h"
+#include "../include/image_byte_buffer.h"
+#include "../include/jpeg_writer.h"
 
 #include <sstream>
 #include <time.h>
