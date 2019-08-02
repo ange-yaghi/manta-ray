@@ -10,7 +10,14 @@ module {
 
 private import "atomic_types.mr"
 
+// Vector conversions
 public node float_to_vector => __mantaray__float_to_vector {
     input __in [float];
     alias output __out [scalar];
+}
+
+// Float conversions
+public node int_to_float => __mantaray__int_to_float {
+    input __in [int];
+    alias output __out [float];
 }

@@ -1,0 +1,12 @@
+private import "../types/atomic_types.mr"
+private import "../types/conversions.mr"
+private import "../scene/scene_geometry.mr"
+private import "../materials/material_library.mr"
+
+public node sphere => __mantaray__sphere {
+    input position          [vector]: vector();
+    input radius            [float]: 1.0;
+    input materials         [material_library]: material_library();
+    input default_material  [string]: "";
+    alias output __out      [scene_geometry];
+}

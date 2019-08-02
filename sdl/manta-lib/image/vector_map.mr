@@ -1,0 +1,5 @@
+private import "../types/atomic_types.mr"
+
+public node vector_map => __mantaray__vector_map { 
+    alias output __out [vector];
+}

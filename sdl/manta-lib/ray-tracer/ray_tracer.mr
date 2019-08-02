@@ -3,7 +3,7 @@ private import "../camera/cameras.mr"
 private import "../materials/material_library.mr"
 private import "../scene/scene.mr"
 private import "../types/conversions.mr"
-private import "../image/image_output.mr"
+private import "../image/vector_map.mr"
 
 public node ray_tracer => __mantaray__ray_tracer {
     input scene [scene];

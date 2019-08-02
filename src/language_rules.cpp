@@ -24,6 +24,10 @@
 #include "../include/image_output_node.h"
 #include "../include/binary_node.h"
 #include "../include/unary_node.h"
+#include "../include/mesh_merge_node.h"
+#include "../include/sphere_primitive.h"
+#include "../include/srgb_node.h"
+#include "../include/image_file_node.h"
 
 manta::LanguageRules::LanguageRules() {
     /* void */
@@ -107,6 +111,12 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__standard_camera");
     registerBuiltinType <ImageOutputNode>(
         "__mantaray__image_output");
+    registerBuiltinType <SpherePrimitive>(
+        "__mantaray__sphere");
+    registerBuiltinType <SrgbNode>(
+        "__mantaray__srgb");
+    registerBuiltinType <ImageFileNode>(
+        "__mantaray__image_file");
 
     // Literals
     registerBuiltinType<piranha::DefaultLiteralFloatNode>(
@@ -121,6 +131,8 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
     // Conversions
     registerBuiltinType<FloatToVectorConversionNode>(
         "__mantaray__float_to_vector");
+    registerBuiltinType<piranha::IntToFloatConversionNode>(
+        "__mantaray__int_to_float");
 
     // Unary operations
     registerBuiltinType<piranha::NumNegateOperationNode<piranha::native_float>>(
@@ -145,6 +157,10 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__vector_dot");
     registerBuiltinType<CrossNode>(
         "__mantaray__vector_cross");
+    registerBuiltinType<MeshMergeNode>(
+        "__mantaray__mesh_merge");
+    registerBuiltinType<piranha::OperationNodeSpecialized<
+        piranha::native_float, piranha::DivideOperationNodeOutput>>("__mantaray__float_divide");
 
     // ====================================================
     // Literal types
@@ -161,17 +177,27 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         { &piranha::FundamentalType::FloatType, &VectorNodeOutput::VectorType },
         "__mantaray__float_to_vector"
     );
+    registerConversion(
+        { &piranha::FundamentalType::IntType, &piranha::FundamentalType::FloatType },
+        "__mantaray__int_to_float"
+    );
 
     // ====================================================
     // Binary operators
     // ====================================================
+
+    // Vector operators
     registerOperator(
         { piranha::IrBinaryOperator::MUL, &VectorNodeOutput::VectorType, &VectorNodeOutput::VectorType },
-        "__mantaray__vector_multiply"
+        "__mantaray__vector_mul"
+    );
+    registerOperator(
+        { piranha::IrBinaryOperator::MUL, &VectorNodeOutput::VectorType, &piranha::FundamentalType::FloatType },
+        "__mantaray__vector_mul"
     );
     registerOperator(
         { piranha::IrBinaryOperator::DIV, &VectorNodeOutput::VectorType, &VectorNodeOutput::VectorType },
-        "__mantaray__vector_divide"
+        "__mantaray__vector_div"
     );
     registerOperator(
         { piranha::IrBinaryOperator::ADD, &VectorNodeOutput::VectorType, &VectorNodeOutput::VectorType },
@@ -180,6 +206,16 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
     registerOperator(
         { piranha::IrBinaryOperator::SUB, &VectorNodeOutput::VectorType, &VectorNodeOutput::VectorType },
         "__mantaray__vector_sub"
+    );
+
+    // Float operators
+    registerOperator(
+        { piranha::IrBinaryOperator::DIV, &piranha::FundamentalType::FloatType, &piranha::FundamentalType::FloatType },
+        "__mantaray__float_divide"
+    );
+    registerOperator(
+        { piranha::IrBinaryOperator::DIV, &piranha::FundamentalType::FloatType, &piranha::FundamentalType::IntType },
+        "__mantaray__float_divide"
     );
 
     // ====================================================

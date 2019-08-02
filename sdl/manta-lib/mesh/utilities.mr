@@ -1,0 +1,7 @@
+private import "mesh.mr"
+
+public node merge_meshes => __mantaray__mesh_merge {
+    modify __left [mesh];
+    input __right [mesh];
+    alias output __out [mesh];
+}

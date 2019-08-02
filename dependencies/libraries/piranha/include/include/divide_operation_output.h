@@ -26,7 +26,7 @@ namespace piranha {
 
             m_left->fullCompute(&left);
             m_right->fullCompute(&right);
-            *target = left + right;
+            *target = left / right;
         }
 
         pNodeInput *getLeftConnection() { return &m_left; }

@@ -25,6 +25,7 @@
     <ClCompile Include="..\..\src\constructed_vector_node_output.cpp" />
     <ClCompile Include="..\..\src\kd_tree_node.cpp" />
     <ClCompile Include="..\..\src\language_rules.cpp" />
+    <ClCompile Include="..\..\src\mesh_merge_node.cpp" />
     <ClCompile Include="..\..\src\node.cpp" />
     <ClCompile Include="..\..\src\object_channel_types.cpp" />
     <ClCompile Include="..\..\src\obj_file_node.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="..\..\include\grid_sampler.h" />
     <ClInclude Include="..\..\include\kd_tree_node.h" />
     <ClInclude Include="..\..\include\language_rules.h" />
+    <ClInclude Include="..\..\include\mesh_merge_node.h" />
     <ClInclude Include="..\..\include\node.h" />
     <ClInclude Include="..\..\include\object_channel_types.h" />
     <ClInclude Include="..\..\include\object_reference_node.h" />

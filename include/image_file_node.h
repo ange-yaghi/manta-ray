@@ -1,15 +1,16 @@
 #ifndef MANTARAY_IMAGE_FILE_NODE_H
 #define MANTARAY_IMAGE_FILE_NODE_H
 
-#include <piranha.h>
+#include "node.h"
 
 #include "vector_map_2d.h"
+#include "vector_map_2d_node_output.h"
 
 struct SDL_Surface;
 
 namespace manta {
 
-    class ImageFileNode : public piranha::Node {
+    class ImageFileNode : public Node {
     public:
         struct Pixel {
             unsigned char r;
@@ -30,10 +31,6 @@ namespace manta {
         const VectorMap2D *getMap() const { return &m_imageMap; }
 
     protected:
-        virtual void _evaluate();
-        virtual void _destroy();
-
-    protected:
         static void getPixel(const SDL_Surface *surface, int x, int y, Pixel *pixel);
 
     protected:
@@ -41,6 +38,18 @@ namespace manta {
 
         std::string m_filename;
         bool m_correctGamma;
+
+    protected:
+        virtual void _initialize();
+        virtual void _evaluate();
+        virtual void _destroy();
+        virtual void registerInputs();
+        virtual void registerOutputs();
+
+        VectorMap2DNodeOutput m_output;
+
+        piranha::pNodeInput m_filenameInput;
+        piranha::pNodeInput m_correctGammaInput;
     };
 
 } /* namespace manta */

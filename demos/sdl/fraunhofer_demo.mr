@@ -1,0 +1,7 @@
+private import "mantaray.mr"
+
+image_file image1("resources/spiders.jpg")
+image_output(
+    map: scalar(image1.g),
+    filename: "test.jpg"
+)

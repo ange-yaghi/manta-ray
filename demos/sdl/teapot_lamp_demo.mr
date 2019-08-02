@@ -1,0 +1,120 @@
+private import "mantaray.mr"
+
+material_library library()
+scene scene()
+
+node teapot_material {
+    input library;
+    alias output material: 
+        simple_bsdf_material(
+            name: "TeapotMaterial",
+            library: library,
+            bsdf: bsdf
+        );
+
+    bilayer_bsdf bsdf(
+        coating: phong_distribution(1024.0),
+        diffuse: srgb_i(0x89, 0xCF, 0xF0),
+        specular: vector(0.5, 0.5, 0.5)
+    )
+} teapot_material(library)
+
+node floor_material {
+    input library;
+    alias output material: 
+        simple_bsdf_material(
+            name: "FloorMaterial",
+            library: library,
+            bsdf: bsdf
+        );
+
+    bilayer_bsdf bsdf(
+        coating: phong_distribution(128.0),
+        diffuse: srgb_i(0xFF, 0xFF, 0xFF),
+        specular: vector(0.0, 0.0, 0.0)
+    )
+} floor_material(library)
+
+node bulb_material {
+    input library;
+    alias output material:
+        simple_bsdf_material(
+            name: "BulbMaterial",
+            library: library,
+            reflectance: vector(),
+            emission: srgb_i(255, 197, 143) * 50.0,
+            bsdf: lambertian_bsdf()
+        );
+} bulb_material(library)
+
+obj_file lamp_mesh(
+    filename: "../../demos/models/lamp2.obj",
+    materials: library,
+    default_material: "FloorMaterial"
+)
+
+obj_file teapot_mesh(
+    filename: "../../demos/models/lamp_teapot.obj",
+    materials: library,
+    default_material: "TeapotMaterial"
+)
+
+scene_object teapot(
+    name: "Teapot",
+    scene: scene,
+    geometry: kd_tree(merge_meshes(teapot_mesh, lamp_mesh))
+)
+
+scene_object bulb(
+    name: "Bulb",
+    scene: scene,
+    geometry: sphere(
+        radius: 0.25,
+        materials: library,
+        default_material: "BulbMaterial",
+        position: vector(0.10669, 3.42135, -2.47464)
+    )
+)
+
+scene_object ground(
+    name: "Ground",
+    scene: scene,
+    geometry: sphere(
+        radius: 5000.0,
+        materials: library,
+        default_material: "FloorMaterial",
+
+        // TODO: investigate issue when this is set to zero
+        position: vector(0.0, -5000.001, 0.0)
+    )
+)
+
+camera_target camera_target(
+    position:   vector(7.0, 2.0, 0.0),
+    target:     vector(0.0, 2.0, 0.0),
+    up:         vector(0.0, 1.0, 0.0)
+)
+
+standard_camera camera(
+    up: camera_target.up,
+    position: camera_target.position,
+    direction: camera_target.direction,
+    resolution_x: 1920,
+    resolution_y: 1080,
+    plane_height: 1.0,
+    plane_distance: 1.0,
+    samples: 1000,
+    sampler: random_sampler()
+)
+
+ray_tracer mr(
+    scene: scene,
+    camera: camera,
+    materials: library,
+    background: vector(0.0, 0.0, 0.0)
+)
+
+image_output(
+    map: mr.image,
+    filename: "teapot_lamp_demo.jpg"
+)

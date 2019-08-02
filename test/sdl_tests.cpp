@@ -78,7 +78,7 @@ TEST(SdlTests, SdlSimpleMaterialTest) {
 
 TEST(SdlTests, SdlObjectNodeTest) {
     const piranha::ErrorList *errList;
-    piranha::IrCompilationUnit *unit = compileFile("basic_object_file_test.mr", &errList);
+    piranha::IrCompilationUnit *unit = compileFile("teapot_lamp_demo.mr", &errList);
 
     piranha::NodeProgram program;
     unit->build(&program);

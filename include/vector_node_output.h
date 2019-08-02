@@ -17,7 +17,7 @@ namespace manta {
         VectorNodeOutput(const piranha::ChannelType *channelType);
 		virtual ~VectorNodeOutput();
 
-		virtual void fullCompute(void *target) const;
+		void calculateAllDimensions(VectorMap2D *target);
 
 	protected:
 		virtual piranha::Node *generateInterface();

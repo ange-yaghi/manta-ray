@@ -11,9 +11,12 @@ module {
 public import "ray-tracer/ray_tracer.mr"
 
 public import "image/image_output.mr"
+public import "image/vector_map.mr"
+public import "image/image_file.mr"
 
 public import "types/atomic_types.mr"
 public import "types/conversions.mr"
+public import "types/operations.mr"
 
 public import "microfacet-models/microfacet_distributions.mr"
 
@@ -23,6 +26,7 @@ public import "bsdf/lambertian_bsdf.mr"
 
 public import "mesh/mesh.mr"
 public import "mesh/obj_file.mr"
+public import "mesh/utilities.mr"
 
 public import "scene/scene_geometry.mr"
 public import "scene/scene_object.mr"
@@ -39,4 +43,6 @@ public import "camera/utilities.mr"
 
 public import "sampler/samplers.mr"
 
-public import "types/operations.mr"
+public import "primitives/primitives.mr"
+
+public import "color/color.mr"
