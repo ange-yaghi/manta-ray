@@ -57,3 +57,11 @@ public node magnitude => __mantaray__vector_magnitude {
     input __in [vector];
     alias output __out [vector];
 }
+
+// Float operations
+
+public node float_divide => __mantaray__float_divide {
+    input __in0 [float];
+    input __in1 [float];
+    alias output __out [float];
+}

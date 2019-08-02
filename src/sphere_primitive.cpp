@@ -18,7 +18,8 @@ bool manta::SpherePrimitive::fastIntersection(const LightRay *ray) const {
 
 bool manta::SpherePrimitive::findClosestIntersection(const LightRay *ray, 
         CoarseIntersection *intersection, math::real minDepth, 
-        math::real maxDepth, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const {    
+        math::real maxDepth, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const 
+{    
     math::Vector d_pos = math::sub(ray->getSource(), m_position);
     math::Vector d_dot_dir = math::dot(d_pos, ray->getDirection());
     math::Vector mag2 = math::magnitudeSquared3(d_pos);
@@ -65,7 +66,9 @@ bool manta::SpherePrimitive::findClosestIntersection(const LightRay *ray,
     }
 }
 
-manta::math::Vector manta::SpherePrimitive::getClosestPoint(const CoarseIntersection *hint, const math::Vector &p) const {
+manta::math::Vector manta::SpherePrimitive::getClosestPoint(
+    const CoarseIntersection *hint, const math::Vector &p) const 
+{
     math::Vector p_p0 = math::sub(p, m_position);
     math::Vector closestPoint = 
         math::add(math::mul(math::normalize(p_p0), math::loadScalar(m_radius)), m_position);
@@ -77,7 +80,9 @@ void manta::SpherePrimitive::getVicinity(const math::Vector &p, math::real radiu
     /* Deprecated */
 }
 
-void manta::SpherePrimitive::fineIntersection(const math::Vector &r, IntersectionPoint *p, const CoarseIntersection *hint) const {
+void manta::SpherePrimitive::fineIntersection(
+    const math::Vector &r, IntersectionPoint *p, const CoarseIntersection *hint) const 
+{
     math::Vector position = getClosestPoint(hint, r);
 
     p->m_position = r;
@@ -90,7 +95,7 @@ void manta::SpherePrimitive::fineIntersection(const math::Vector &r, Intersectio
     p->m_vertexNormal = normal;
     p->m_faceNormal = normal;
     p->m_textureCoodinates = math::constants::Zero;
-    p->m_material = -1;
+    p->m_material = m_defaultMaterialIndex;
     p->m_valid = true;
     p->m_intersection = true;
 }
@@ -178,4 +183,23 @@ void manta::SpherePrimitive::detectIntersection(const LightRay *ray, Intersectio
             }
         }
     }
+}
+
+void manta::SpherePrimitive::_initialize() {
+    SceneGeometry::_initialize();
+}
+
+void manta::SpherePrimitive::_evaluate() {
+    SceneGeometry::_evaluate();
+
+    piranha::native_float radius;
+    m_radiusInput->fullCompute((void *)&radius);
+
+    m_radius = (math::real)radius;
+}
+
+void manta::SpherePrimitive::registerInputs() {
+    SceneGeometry::registerInputs();
+
+    registerInput(&m_radiusInput, "radius");
 }

@@ -1,9 +1,7 @@
 private import "../types/atomic_types.mr"
 
-public node vector_map => __mantaray__vector_map { /* void */ }
-
 public node image_output => __mantaray__image_output {
-    input map [vector_map];
+    input map [vector];
     input filename [string];
     input jpeg_quality [int]: 95;
     input correct_gamma [bool]: true;

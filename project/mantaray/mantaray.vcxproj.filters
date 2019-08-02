@@ -352,6 +352,12 @@
     <Filter Include="Header Files\nodes\library\unary">
       <UniqueIdentifier>{26cae926-50c6-4fa1-8fb4-b5d79137afe8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\nodes\library\mesh">
+      <UniqueIdentifier>{f658b1d1-57c6-48a8-8ece-865e091138fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\nodes\library\mesh">
+      <UniqueIdentifier>{b20b176c-3e59-41cf-96c1-920772a9ee6d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -680,6 +686,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\cached_vector_output.cpp">
       <Filter>Source Files\nodes\output-ports\cache</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mesh_merge_node.cpp">
+      <Filter>Source Files\nodes\library\mesh</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1084,6 +1093,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\vector_split_node_output.h">
       <Filter>Header Files\nodes\output-ports\atomic-types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\mesh_merge_node.h">
+      <Filter>Header Files\nodes\library\mesh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

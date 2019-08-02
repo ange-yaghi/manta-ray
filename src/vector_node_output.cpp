@@ -20,8 +20,8 @@ manta::VectorNodeOutput::~VectorNodeOutput() {
     /* void */
 }
 
-void manta::VectorNodeOutput::fullCompute(void *_target) const {
-    VectorMap2D *target = reinterpret_cast<VectorMap2D *>(_target);
+void manta::VectorNodeOutput::calculateAllDimensions(VectorMap2D *target) {
+    evaluateDimensions();
 
     int width, height;
     int dimensions = getDimensions();

@@ -36,7 +36,7 @@ namespace manta {
         void setReflectance(const math::Vector &reflectance) { m_reflectance = reflectance; }
         math::Vector getReflectance() { return m_reflectance; }
 
-        void setBSDF(const BSDF *bsdf) { m_defaultBsdf = bsdf; }
+        void setBSDF(const BSDF *bsdf) { m_bsdf = bsdf; }
         const BSDF *getDefaultBSDF() const { return m_defaultBsdf; }
 
     protected:

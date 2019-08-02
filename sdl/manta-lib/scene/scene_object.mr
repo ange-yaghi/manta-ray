@@ -9,7 +9,6 @@ public node scene_object => __mantaray__scene_object {
     input name                  [string]: "";
     input geometry              [scene_geometry];
     modify scene                [scene];
-    input default_material      [material];
 
     alias output __out          [scene_object_channel];
 }

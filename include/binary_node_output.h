@@ -57,7 +57,7 @@ namespace manta {
             *target = doOp(left, right);
         }
 
-        virtual void discreteSample2D(int x, int y, void *_target) const {
+        virtual void discreteSample2d(int x, int y, void *_target) const {
             math::Vector *target = reinterpret_cast<math::Vector *>(_target);
 
             math::Vector left, right;
@@ -71,6 +71,28 @@ namespace manta {
 
         virtual void getDataReference(const void **target) const {
             *target = nullptr;
+        }
+
+        virtual void _evaluateDimensions() {
+            VectorNodeOutput *left = static_cast<VectorNodeOutput *>(m_left);
+            VectorNodeOutput *right = static_cast<VectorNodeOutput *>(m_right);
+
+            left->evaluateDimensions();
+            right->evaluateDimensions();
+
+            int dimensions = 0;
+            if (left->getDimensions() > dimensions) dimensions = left->getDimensions();
+            if (right->getDimensions() > dimensions) dimensions = right->getDimensions();
+
+            setDimensions(dimensions);
+
+            for (int i = 0; i < dimensions; i++) {
+                int size = 0;
+                if (left->getSize(i) > size) size = left->getSize(i);
+                if (right->getSize(i) > size) size = right->getSize(i);
+
+                setDimensionSize(i, size);
+            }
         }
 
         piranha::pNodeInput *getLeftConnection() { return &m_left; }

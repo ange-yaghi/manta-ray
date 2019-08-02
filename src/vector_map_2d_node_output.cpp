@@ -31,7 +31,7 @@ void manta::VectorMap2DNodeOutput::sample(const IntersectionPoint *surfaceIntera
     *target = m_map->get(i_u, i_v);
 }
 
-void manta::VectorMap2DNodeOutput::discreteSample2D(int x, int y, void *_target) const {
+void manta::VectorMap2DNodeOutput::discreteSample2d(int x, int y, void *_target) const {
     math::Vector *target = reinterpret_cast<math::Vector *>(_target);
 
     *target = m_map->get(x, y);

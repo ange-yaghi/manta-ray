@@ -1,8 +1,9 @@
 #ifndef MANTARAY_FRAUNHOFER_DIFFRACTION_H
 #define MANTARAY_FRAUNHOFER_DIFFRACTION_H
 
-#include "convolution.h"
+#include "node.h"
 
+#include "vector_map_2d_node_output.h"
 #include "vector_map_2d.h"
 #include "scalar_map_2d.h"
 #include "complex_map_2d.h"
@@ -17,7 +18,7 @@ namespace manta {
     class Spectrum;
     class TextureNode;
 
-    class FraunhoferDiffraction {
+    class FraunhoferDiffraction : public Node {
     public:
         struct Settings {
             int maxSamples;
@@ -67,6 +68,20 @@ namespace manta {
 
         math::real m_physicalSensorWidth;
         math::real m_sensorElementWidth;
+
+    protected:
+        VectorMap2DNodeOutput m_diffractionPatternOutput;
+        VectorMap2DNodeOutput m_aperturePatternOutput;
+
+        piranha::pNodeInput m_maxSamplesInput;
+        piranha::pNodeInput m_textureSamplesInput;
+        piranha::pNodeInput m_minWavelengthInput;
+        piranha::pNodeInput m_maxWavelengthInput;
+        piranha::pNodeInput m_wavelengthStepInput;
+        piranha::pNodeInput m_safetyFactorInput;
+        piranha::pNodeInput m_frequencyMultiplierInput;
+        piranha::pNodeInput m_dirtMapInput;
+        piranha::pNodeInput m_apertureInput;
     };
 
 } /* namespace manta */
