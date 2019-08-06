@@ -1,13 +1,14 @@
 private import "mantaray.mr"
+private import "utilities.mr"
 
-private node settings {
-    input samples:              1000;
-    input resolution_x:         2048;
-    input resolution_y:         1536;
-    input enable_fraunhofer:    false;
-    input save_diffraction_patterns: true;
-    input output_dir:           "../../workspace/render/bitmap/";
-    input output_name:          "blocks_demo";
+node settings {
+    output samples: 1;
+    output resolution_x: 1920;
+    output resolution_y: 1080;
+    output enable_fraunhofer: false;
+    output save_diffraction_patterns: false;
+    output output_dir: "../../workspace/render/bitmap/";
+    output output_name: "box_city_demo";
 }
 
 private node camera_settings {
@@ -17,93 +18,81 @@ private node camera_settings {
 
 settings settings()
 camera_settings camera_settings(
-    list_cameras(settings)
+    camera_list: list_cameras(settings)
 )
 material_library library()
 scene scene()
 
 node block_material {
     input library;
+    alias output material: 
+        simple_bsdf_material(
+            name: "Block",
+            library: library,
+            bsdf: bsdf
+        );
 
-    simple_bsdf_material(
-        name: "Block",
-        library: library,
-        bsdf: bsdf
-    )
-
-    simple_bsdf_material(
-        name: "Letters",
-        library: library,
-        bsdf: bsdf
-    )
-
-    image_file diffuse_map(
-        filename: "../../demos/textures/blocks.png"
+    image_file wood(
+        filename: "../../demos/textures/dark_wood.jpg"
     )
 
     bilayer_bsdf bsdf(
-        coating: phong_distribution(4096.0),
-        diffuse: diffuse_map,
-        specular: 0.1
+        coating: phong_distribution(300.0),
+        diffuse: wood,
+        specular: 0.02
     )
 }
 
 node ground_material {
     input library;
-
-    simple_bsdf_material(
-        name: "Ground",
-        library: library,
-        bsdf: bsdf
-    )
-
-    bilayer_bsdf bsdf(
-        coating: phong_distribution(16.0),
-        diffuse: srgb_i(255, 255, 255),
-        specular: 0.75
-    )
+    alias output material: 
+        simple_bsdf_material(
+            name: "Ground",
+            library: library,
+            bsdf: lambertian_bsdf()
+        );
 }
 
-node light_material {
+node sun_material {
     input library;
-
-    simple_bsdf_material(
-        name: "Light",
-        library: library,
-        reflectance: 0.0,
-        emission: 5.0,
-        bsdf: lambertian_bsdf()
-    )
-} 
+    alias output material:
+        simple_bsdf_material(
+            name: "Sun",
+            library: library,
+            reflectance: 0.0,
+            emission: 100.0,
+            bsdf: lambertian_bsdf()
+        );
+}
 
 block_material(library)
 ground_material(library)
-light_material(library)
+sun_material(library)
 
-obj_file blocks_mesh(
-    filename: "../../demos/models/blocks_floor.obj",
+obj_file scene_mesh(
+    filename: "../../demos/models/box_city.obj",
     materials: library,
     default_material: "Ground"
 )
 
-scene_object blocks(
-    name: "Blocks",
-    scene: scene,
-    geometry: kd_tree(blocks_mesh)
-)
-
-scene_object light(
-    name: "Bulb",
+scene_object sun(
+    name: "Sun",
     scene: scene,
     geometry: sphere(
         radius: 10.0,
         materials: library,
-        default_material: "Light",
-        position: vector(10.0, 20.0, 5.5)
+        default_material: "Sun",
+        position: vector(20.0, 30.0, -13.5)
     )
 )
 
-private node blocks_standard_camera {
+scene_object main_object(
+    name: "Main",
+    scene: scene,
+    geometry: kd_tree(scene_mesh)
+)
+
+private node scene_standard_camera {
     input camera_target;
     input settings;
 
@@ -120,7 +109,7 @@ private node blocks_standard_camera {
     );
 }
 
-private node blocks_lens_camera {
+private node scene_lens_camera {
     input camera_target;
     input settings;
 
@@ -136,7 +125,7 @@ private node blocks_lens_camera {
         up: camera_target.up,
         resolution_x: settings.resolution_x,
         resolution_y: settings.resolution_y,
-        aperture: polygonal_aperture(0.18, curvature: 0.3),
+        aperture: polygonal_aperture(0.18, curvature: 0.25),
         radius: 1.0,
         sensor_height: 10.0,
         focus: 22.0
@@ -145,8 +134,8 @@ private node blocks_lens_camera {
 
 private node list_cameras {
     input settings;
-    output lens_camera: blocks_lens_camera(camera_target, settings);
-    output standard_camera: blocks_standard_camera(camera_target, settings);
+    output lens_camera: scene_lens_camera(camera_target, settings);
+    output standard_camera: scene_standard_camera(camera_target, settings);
 
     camera_target camera_target(
         position:   vector(15.4473, 4.59977, 13.2961),
