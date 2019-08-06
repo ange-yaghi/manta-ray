@@ -244,83 +244,11 @@
     <Filter Include="Source Files\math\maps">
       <UniqueIdentifier>{d84a2f0b-44d7-4eba-bf6a-20c10a9135a5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\nodes">
-      <UniqueIdentifier>{b5a6d8d5-3d50-43fe-ad17-d4ed3e2a3377}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\nodes\library">
-      <UniqueIdentifier>{6bbda7a1-4ed0-4ec7-be11-fac60817253a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\nodes">
-      <UniqueIdentifier>{d495052b-39d0-4eba-952d-84694afada18}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\nodes\library">
-      <UniqueIdentifier>{587db5d8-d63a-407c-84d6-8d9ea918eafd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\nodes\output-ports">
-      <UniqueIdentifier>{0e8cb533-eb43-461e-96a6-abebbdc54fc6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\nodes\output-ports">
-      <UniqueIdentifier>{b90e59bd-f9d0-4512-9e59-faf14721699d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\nodes\output-ports\operations">
-      <UniqueIdentifier>{0f797a0f-03af-4393-a684-988a578907a6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\nodes\output-ports\objects">
-      <UniqueIdentifier>{5b859a31-5064-4dc2-b15b-fa6f49f7bc94}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\nodes\output-ports\objects">
-      <UniqueIdentifier>{3a91b852-5ade-482a-83b0-344a5f0b6556}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\nodes\output-ports\operations">
-      <UniqueIdentifier>{f142cbcd-03f8-4292-b817-5637529626ab}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\nodes\output-ports\atomic-types">
-      <UniqueIdentifier>{d7d23cea-e59b-4918-8332-a460b3b4344b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\nodes\output-ports\atomic-types">
-      <UniqueIdentifier>{70ed637c-565b-4cc0-9fa5-2fcc9967b349}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\nodes\library\sdl">
-      <UniqueIdentifier>{88079674-3fb7-4218-97c5-48446c951cf1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\nodes\library\sdl">
-      <UniqueIdentifier>{ac11a43d-1357-48f9-8a81-90827ac5ff94}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\nodes\output-ports\color">
-      <UniqueIdentifier>{161ba087-c11c-4db6-b31d-934f8958501e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\nodes\output-ports\color">
-      <UniqueIdentifier>{7053271c-7fb1-4fa2-b174-ef342aa6e764}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\sdl">
       <UniqueIdentifier>{e0595eae-68e2-4a7b-b837-e487fe128d26}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\sdl">
       <UniqueIdentifier>{0a61cecd-e92f-42c3-8a01-ba734bf4809e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\nodes\output-ports\conversions">
-      <UniqueIdentifier>{ace77230-fce2-4e34-9adf-372ead6aa5c5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\nodes\output-ports\conversions">
-      <UniqueIdentifier>{6e62ff47-6e07-4e60-8e0e-bf808f223b3f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\nodes\library\objects">
-      <UniqueIdentifier>{e35939ed-a0de-4b9e-8292-4d8245159dd7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\nodes\library\objects">
-      <UniqueIdentifier>{9684dc52-4251-448c-b4fa-55328a36ddb4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\nodes\output-ports\cache">
-      <UniqueIdentifier>{4833ee8c-dfd2-4184-afa5-ba1332942fcb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\nodes\output-ports\cache">
-      <UniqueIdentifier>{56937feb-354c-421e-b62b-32b60d2884a9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\nodes\library\cache">
-      <UniqueIdentifier>{252b24b0-e37a-480a-9656-94a1ed3e5616}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\nodes\library\cache">
-      <UniqueIdentifier>{605343ba-250d-4fe3-a51a-88428f790e0b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\material\interface\surface-modeling">
       <UniqueIdentifier>{b6f488fd-35a7-4ab8-94ba-143b4f1491e0}</UniqueIdentifier>
@@ -337,38 +265,110 @@
     <Filter Include="Source Files\material\interface\surface-modeling\microfacet-model">
       <UniqueIdentifier>{eda51e41-f495-457e-a594-0cb7c2378661}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\nodes\output-ports\operations\binary">
-      <UniqueIdentifier>{c061edc4-bb76-4d2b-abf5-380a426dc9b0}</UniqueIdentifier>
+    <Filter Include="Source Files\sdl\nodes">
+      <UniqueIdentifier>{d495052b-39d0-4eba-952d-84694afada18}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\nodes\output-ports\operations\binary">
-      <UniqueIdentifier>{e6161bde-c428-46bc-9101-9e05975ed498}</UniqueIdentifier>
+    <Filter Include="Source Files\sdl\nodes\library">
+      <UniqueIdentifier>{587db5d8-d63a-407c-84d6-8d9ea918eafd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\nodes\library\binary">
-      <UniqueIdentifier>{33da4a78-bc38-4d35-a482-f147d082fd19}</UniqueIdentifier>
+    <Filter Include="Source Files\sdl\nodes\library\sdl">
+      <UniqueIdentifier>{ac11a43d-1357-48f9-8a81-90827ac5ff94}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\nodes\output-ports\operations\unary">
-      <UniqueIdentifier>{82f112ca-c4b6-4103-9bc3-5e6b99e2bb81}</UniqueIdentifier>
+    <Filter Include="Source Files\sdl\nodes\library\objects">
+      <UniqueIdentifier>{9684dc52-4251-448c-b4fa-55328a36ddb4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\nodes\library\unary">
-      <UniqueIdentifier>{26cae926-50c6-4fa1-8fb4-b5d79137afe8}</UniqueIdentifier>
+    <Filter Include="Source Files\sdl\nodes\library\cache">
+      <UniqueIdentifier>{605343ba-250d-4fe3-a51a-88428f790e0b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\nodes\library\mesh">
-      <UniqueIdentifier>{f658b1d1-57c6-48a8-8ece-865e091138fe}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\nodes\library\mesh">
+    <Filter Include="Source Files\sdl\nodes\library\mesh">
       <UniqueIdentifier>{b20b176c-3e59-41cf-96c1-920772a9ee6d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\nodes\library\date">
-      <UniqueIdentifier>{ee91749a-2a0b-4026-b660-d0c32d777628}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\nodes\library\date">
+    <Filter Include="Source Files\sdl\nodes\library\date">
       <UniqueIdentifier>{2ca0628c-5de7-43f7-be9c-1de4ce2f9dd7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\nodes\output-ports\date">
-      <UniqueIdentifier>{a0b54910-8a08-4b8b-a2de-926b138eeba8}</UniqueIdentifier>
+    <Filter Include="Source Files\sdl\nodes\output-ports">
+      <UniqueIdentifier>{0e8cb533-eb43-461e-96a6-abebbdc54fc6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\nodes\output-ports\date">
+    <Filter Include="Source Files\sdl\nodes\output-ports\objects">
+      <UniqueIdentifier>{3a91b852-5ade-482a-83b0-344a5f0b6556}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sdl\nodes\output-ports\operations">
+      <UniqueIdentifier>{f142cbcd-03f8-4292-b817-5637529626ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sdl\nodes\output-ports\operations\binary">
+      <UniqueIdentifier>{e6161bde-c428-46bc-9101-9e05975ed498}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sdl\nodes\output-ports\atomic-types">
+      <UniqueIdentifier>{70ed637c-565b-4cc0-9fa5-2fcc9967b349}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sdl\nodes\output-ports\color">
+      <UniqueIdentifier>{7053271c-7fb1-4fa2-b174-ef342aa6e764}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sdl\nodes\output-ports\conversions">
+      <UniqueIdentifier>{6e62ff47-6e07-4e60-8e0e-bf808f223b3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sdl\nodes\output-ports\cache">
+      <UniqueIdentifier>{56937feb-354c-421e-b62b-32b60d2884a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sdl\nodes\output-ports\date">
       <UniqueIdentifier>{b9fc9588-10ce-4567-b49c-921a4f8af7b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl\nodes">
+      <UniqueIdentifier>{b5a6d8d5-3d50-43fe-ad17-d4ed3e2a3377}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl\nodes\library">
+      <UniqueIdentifier>{6bbda7a1-4ed0-4ec7-be11-fac60817253a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl\nodes\library\sdl">
+      <UniqueIdentifier>{88079674-3fb7-4218-97c5-48446c951cf1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl\nodes\library\objects">
+      <UniqueIdentifier>{e35939ed-a0de-4b9e-8292-4d8245159dd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl\nodes\library\cache">
+      <UniqueIdentifier>{252b24b0-e37a-480a-9656-94a1ed3e5616}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl\nodes\library\binary">
+      <UniqueIdentifier>{33da4a78-bc38-4d35-a482-f147d082fd19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl\nodes\library\unary">
+      <UniqueIdentifier>{26cae926-50c6-4fa1-8fb4-b5d79137afe8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl\nodes\library\mesh">
+      <UniqueIdentifier>{f658b1d1-57c6-48a8-8ece-865e091138fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl\nodes\library\date">
+      <UniqueIdentifier>{ee91749a-2a0b-4026-b660-d0c32d777628}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl\nodes\output-ports">
+      <UniqueIdentifier>{b90e59bd-f9d0-4512-9e59-faf14721699d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl\nodes\output-ports\operations">
+      <UniqueIdentifier>{0f797a0f-03af-4393-a684-988a578907a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl\nodes\output-ports\operations\binary">
+      <UniqueIdentifier>{c061edc4-bb76-4d2b-abf5-380a426dc9b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl\nodes\output-ports\operations\unary">
+      <UniqueIdentifier>{82f112ca-c4b6-4103-9bc3-5e6b99e2bb81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl\nodes\output-ports\objects">
+      <UniqueIdentifier>{5b859a31-5064-4dc2-b15b-fa6f49f7bc94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl\nodes\output-ports\atomic-types">
+      <UniqueIdentifier>{d7d23cea-e59b-4918-8332-a460b3b4344b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl\nodes\output-ports\color">
+      <UniqueIdentifier>{161ba087-c11c-4db6-b31d-934f8958501e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl\nodes\output-ports\conversions">
+      <UniqueIdentifier>{ace77230-fce2-4e34-9adf-372ead6aa5c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl\nodes\output-ports\cache">
+      <UniqueIdentifier>{4833ee8c-dfd2-4184-afa5-ba1332942fcb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl\nodes\output-ports\date">
+      <UniqueIdentifier>{a0b54910-8a08-4b8b-a2de-926b138eeba8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -505,7 +505,7 @@
       <Filter>Source Files\os</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\texture_node.cpp">
-      <Filter>Source Files\nodes\library</Filter>
+      <Filter>Source Files\sdl\nodes\library</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\perfect_specular_reflection_bsdf.cpp">
       <Filter>Source Files\material\interface\surface-modeling\bsdf\library</Filter>
@@ -592,43 +592,43 @@
       <Filter>Source Files\math\maps</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\image_file_node.cpp">
-      <Filter>Source Files\nodes</Filter>
+      <Filter>Source Files\sdl\nodes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\image_output_node.cpp">
-      <Filter>Source Files\nodes</Filter>
+      <Filter>Source Files\sdl\nodes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\convolution_node.cpp">
-      <Filter>Source Files\nodes</Filter>
+      <Filter>Source Files\sdl\nodes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\vector_map_2d_node_output.cpp">
-      <Filter>Source Files\nodes\output-ports</Filter>
+      <Filter>Source Files\sdl\nodes\output-ports</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\power_node_output.cpp">
-      <Filter>Source Files\nodes\output-ports\operations</Filter>
+      <Filter>Source Files\sdl\nodes\output-ports\operations</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\remap_node_output.cpp">
-      <Filter>Source Files\nodes\output-ports\operations</Filter>
+      <Filter>Source Files\sdl\nodes\output-ports\operations</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\vector_node_output.cpp">
-      <Filter>Source Files\nodes\output-ports</Filter>
+      <Filter>Source Files\sdl\nodes\output-ports</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\ramp_node_output.cpp">
-      <Filter>Source Files\nodes\output-ports\operations</Filter>
+      <Filter>Source Files\sdl\nodes\output-ports\operations</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\ramp_node.cpp">
-      <Filter>Source Files\nodes\library</Filter>
+      <Filter>Source Files\sdl\nodes\library</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\remap_node.cpp">
-      <Filter>Source Files\nodes</Filter>
+      <Filter>Source Files\sdl\nodes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\multiply_node.cpp">
-      <Filter>Source Files\nodes\library</Filter>
+      <Filter>Source Files\sdl\nodes\library</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\step_node_output.cpp">
-      <Filter>Source Files\nodes\output-ports\operations</Filter>
+      <Filter>Source Files\sdl\nodes\output-ports\operations</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\step_node.cpp">
-      <Filter>Source Files\nodes\library</Filter>
+      <Filter>Source Files\sdl\nodes\library</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\aperture.cpp">
       <Filter>Source Files\camera-emulation</Filter>
@@ -646,70 +646,70 @@
       <Filter>Source Files\os</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\srgb_node_output.cpp">
-      <Filter>Source Files\nodes\output-ports\color</Filter>
+      <Filter>Source Files\sdl\nodes\output-ports\color</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\constructed_vector_node.cpp">
-      <Filter>Source Files\nodes\library\sdl</Filter>
+      <Filter>Source Files\sdl\nodes\library\sdl</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\vector_split_node.cpp">
-      <Filter>Source Files\nodes\library\sdl</Filter>
+      <Filter>Source Files\sdl\nodes\library\sdl</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\streaming_node_output.cpp">
-      <Filter>Source Files\nodes\output-ports</Filter>
+      <Filter>Source Files\sdl\nodes\output-ports</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\node.cpp">
-      <Filter>Source Files\nodes</Filter>
+      <Filter>Source Files\sdl\nodes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\language_rules.cpp">
       <Filter>Source Files\sdl</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\vector_conversions.cpp">
-      <Filter>Source Files\nodes\output-ports\conversions</Filter>
+      <Filter>Source Files\sdl\nodes\output-ports\conversions</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\kd_tree_node.cpp">
-      <Filter>Source Files\nodes\library\objects</Filter>
+      <Filter>Source Files\sdl\nodes\library\objects</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\obj_file_node.cpp">
-      <Filter>Source Files\nodes\library\objects</Filter>
+      <Filter>Source Files\sdl\nodes\library\objects</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\srgb_node.cpp">
-      <Filter>Source Files\nodes\library\objects</Filter>
+      <Filter>Source Files\sdl\nodes\library\objects</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\cached_vector_node.cpp">
-      <Filter>Source Files\nodes\library\cache</Filter>
+      <Filter>Source Files\sdl\nodes\library\cache</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\object_channel_types.cpp">
-      <Filter>Source Files\nodes\output-ports\objects</Filter>
+      <Filter>Source Files\sdl\nodes\output-ports\objects</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\material_library.cpp">
       <Filter>Source Files\material\interface</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\multiply_node_output.cpp">
-      <Filter>Source Files\nodes\output-ports\operations\binary</Filter>
+      <Filter>Source Files\sdl\nodes\output-ports\operations\binary</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\subtract_node_output.cpp">
-      <Filter>Source Files\nodes\output-ports\operations\binary</Filter>
+      <Filter>Source Files\sdl\nodes\output-ports\operations\binary</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\constructed_vector_node_output.cpp">
-      <Filter>Source Files\nodes\output-ports\atomic-types</Filter>
+      <Filter>Source Files\sdl\nodes\output-ports\atomic-types</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\vector_split_node_output.cpp">
-      <Filter>Source Files\nodes\output-ports\atomic-types</Filter>
+      <Filter>Source Files\sdl\nodes\output-ports\atomic-types</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\cached_vector_output.cpp">
-      <Filter>Source Files\nodes\output-ports\cache</Filter>
+      <Filter>Source Files\sdl\nodes\output-ports\cache</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\mesh_merge_node.cpp">
-      <Filter>Source Files\nodes\library\mesh</Filter>
+      <Filter>Source Files\sdl\nodes\library\mesh</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\date_node_output.cpp">
-      <Filter>Source Files\nodes\output-ports\date</Filter>
+      <Filter>Source Files\sdl\nodes\output-ports\date</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\date_interface_node.cpp">
-      <Filter>Source Files\nodes\library\date</Filter>
+      <Filter>Source Files\sdl\nodes\library\date</Filter>
     </ClCompile>
     <ClCompile Include="..\..\include\current_date_node.cpp">
-      <Filter>Source Files\nodes\library\date</Filter>
+      <Filter>Source Files\sdl\nodes\library\date</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -897,7 +897,7 @@
       <Filter>Header Files\os</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\texture_node.h">
-      <Filter>Header Files\nodes\library</Filter>
+      <Filter>Header Files\sdl\nodes\library</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\perfect_specular_reflection_bsdf.h">
       <Filter>Header Files\material\surface-modeling\bsdf\library</Filter>
@@ -930,10 +930,10 @@
       <Filter>Header Files\debugging\statistics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\remap_node.h">
-      <Filter>Header Files\nodes\library</Filter>
+      <Filter>Header Files\sdl\nodes\library</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\power_node.h">
-      <Filter>Header Files\nodes\library</Filter>
+      <Filter>Header Files\sdl\nodes\library</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\jpeg_writer.h">
       <Filter>Header Files\output\jpeg</Filter>
@@ -1005,130 +1005,130 @@
       <Filter>Header Files\math\maps</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\image_output_node.h">
-      <Filter>Header Files\nodes</Filter>
+      <Filter>Header Files\sdl\nodes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\convolution_node.h">
-      <Filter>Header Files\nodes</Filter>
+      <Filter>Header Files\sdl\nodes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\vector_map_wrapper_node.h">
-      <Filter>Header Files\nodes</Filter>
+      <Filter>Header Files\sdl\nodes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\image_file_node.h">
-      <Filter>Header Files\nodes</Filter>
+      <Filter>Header Files\sdl\nodes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\vector_map_2d_node_output.h">
-      <Filter>Header Files\nodes\output-ports</Filter>
+      <Filter>Header Files\sdl\nodes\output-ports</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\power_node_output.h">
-      <Filter>Header Files\nodes\output-ports\operations</Filter>
+      <Filter>Header Files\sdl\nodes\output-ports\operations</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\remap_node_output.h">
-      <Filter>Header Files\nodes\output-ports\operations</Filter>
+      <Filter>Header Files\sdl\nodes\output-ports\operations</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\ramp_node_output.h">
-      <Filter>Header Files\nodes\output-ports\operations</Filter>
+      <Filter>Header Files\sdl\nodes\output-ports\operations</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\ramp_node.h">
-      <Filter>Header Files\nodes\library</Filter>
+      <Filter>Header Files\sdl\nodes\library</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\multiply_node.h">
-      <Filter>Header Files\nodes\library</Filter>
+      <Filter>Header Files\sdl\nodes\library</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\step_node_output.h">
-      <Filter>Header Files\nodes\output-ports\operations</Filter>
+      <Filter>Header Files\sdl\nodes\output-ports\operations</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\step_node.h">
-      <Filter>Header Files\nodes\library</Filter>
+      <Filter>Header Files\sdl\nodes\library</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\path.h">
       <Filter>Header Files\os</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\srgb_node.h">
-      <Filter>Header Files\nodes\library\sdl</Filter>
+      <Filter>Header Files\sdl\nodes\library\sdl</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\srgb_node_output.h">
-      <Filter>Header Files\nodes\output-ports\color</Filter>
+      <Filter>Header Files\sdl\nodes\output-ports\color</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\constructed_vector_node.h">
-      <Filter>Header Files\nodes\library\sdl</Filter>
+      <Filter>Header Files\sdl\nodes\library\sdl</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\vector_split_node.h">
-      <Filter>Header Files\nodes\library\sdl</Filter>
+      <Filter>Header Files\sdl\nodes\library\sdl</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\node.h">
-      <Filter>Header Files\nodes</Filter>
+      <Filter>Header Files\sdl\nodes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\streaming_node_output.h">
-      <Filter>Header Files\nodes\output-ports</Filter>
+      <Filter>Header Files\sdl\nodes\output-ports</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\language_rules.h">
       <Filter>Header Files\sdl</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\vector_conversions.h">
-      <Filter>Header Files\nodes\output-ports\conversions</Filter>
+      <Filter>Header Files\sdl\nodes\output-ports\conversions</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\object_reference_node.h">
-      <Filter>Header Files\nodes\library\objects</Filter>
+      <Filter>Header Files\sdl\nodes\library\objects</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\cached_vector_output.h">
-      <Filter>Header Files\nodes\output-ports\cache</Filter>
+      <Filter>Header Files\sdl\nodes\output-ports\cache</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\cached_vector_node.h">
-      <Filter>Header Files\nodes\library\cache</Filter>
+      <Filter>Header Files\sdl\nodes\library\cache</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\obj_file_node.h">
-      <Filter>Header Files\nodes\library\objects</Filter>
+      <Filter>Header Files\sdl\nodes\library\objects</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\kd_tree_node.h">
-      <Filter>Header Files\nodes\library\objects</Filter>
+      <Filter>Header Files\sdl\nodes\library\objects</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\object_channel_types.h">
-      <Filter>Header Files\nodes\output-ports\objects</Filter>
+      <Filter>Header Files\sdl\nodes\output-ports\objects</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\object_reference_node_output.h">
-      <Filter>Header Files\nodes\output-ports\objects</Filter>
+      <Filter>Header Files\sdl\nodes\output-ports\objects</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\material_library.h">
       <Filter>Header Files\material\interface</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\multiply_node_output.h">
-      <Filter>Header Files\nodes\output-ports\operations\binary</Filter>
+      <Filter>Header Files\sdl\nodes\output-ports\operations\binary</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\subtract_node_output.h">
-      <Filter>Header Files\nodes\output-ports\operations\binary</Filter>
+      <Filter>Header Files\sdl\nodes\output-ports\operations\binary</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\binary_node_output.h">
-      <Filter>Header Files\nodes\output-ports\operations\binary</Filter>
+      <Filter>Header Files\sdl\nodes\output-ports\operations\binary</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\binary_node.h">
-      <Filter>Header Files\nodes\library\binary</Filter>
+      <Filter>Header Files\sdl\nodes\library\binary</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\unary_node_output.h">
-      <Filter>Header Files\nodes\output-ports\operations\unary</Filter>
+      <Filter>Header Files\sdl\nodes\output-ports\operations\unary</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\unary_node.h">
-      <Filter>Header Files\nodes\library\unary</Filter>
+      <Filter>Header Files\sdl\nodes\library\unary</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\constructed_vector_node_output.h">
-      <Filter>Header Files\nodes\output-ports\atomic-types</Filter>
+      <Filter>Header Files\sdl\nodes\output-ports\atomic-types</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\vector_split_node_output.h">
-      <Filter>Header Files\nodes\output-ports\atomic-types</Filter>
+      <Filter>Header Files\sdl\nodes\output-ports\atomic-types</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\mesh_merge_node.h">
-      <Filter>Header Files\nodes\library\mesh</Filter>
+      <Filter>Header Files\sdl\nodes\library\mesh</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\padded_frame_output.h">
-      <Filter>Header Files\nodes\output-ports\operations</Filter>
+      <Filter>Header Files\sdl\nodes\output-ports\operations</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\date_interface_node.h">
-      <Filter>Header Files\nodes\library\date</Filter>
+      <Filter>Header Files\sdl\nodes\library\date</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\date_node_output.h">
-      <Filter>Header Files\nodes\output-ports\date</Filter>
+      <Filter>Header Files\sdl\nodes\output-ports\date</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\current_date_node.h">
-      <Filter>Header Files\nodes\library\date</Filter>
+      <Filter>Header Files\sdl\nodes\library\date</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

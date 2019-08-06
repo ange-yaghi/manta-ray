@@ -18,6 +18,7 @@ namespace manta {
         static const piranha::ChannelType SamplerChannel;
         static const piranha::ChannelType CameraChannel;
         static const piranha::ChannelType ApertureChannel;
+        static const piranha::ChannelType LensChannel;
     };
 
     template <typename Type> 
@@ -40,6 +41,7 @@ namespace manta {
     class CameraRayEmitterGroup;
     class Sampler2D;
     class Aperture;
+    class Lens;
 
     // Helper macro
 #define ASSIGN_CHANNEL_TYPE(type, channel) template <> extern inline const piranha::ChannelType *LookupChannelType<type>() { return &ObjectChannel::channel; }
@@ -57,6 +59,7 @@ namespace manta {
     ASSIGN_CHANNEL_TYPE(CameraRayEmitterGroup, CameraChannel);
     ASSIGN_CHANNEL_TYPE(Sampler2D, SamplerChannel);
     ASSIGN_CHANNEL_TYPE(Aperture, ApertureChannel);
+    ASSIGN_CHANNEL_TYPE(Lens, LensChannel);
 
 } /* namespace manta */
 

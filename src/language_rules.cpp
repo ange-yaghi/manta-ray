@@ -37,6 +37,8 @@
 #include "../include/padded_frame_output.h"
 #include "../include/current_date_node.h"
 #include "../include/date_interface_node.h"
+#include "../include/lens.h"
+#include "../include/simple_lens.h"
 
 manta::LanguageRules::LanguageRules() {
     /* void */
@@ -89,6 +91,8 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__aperture", &ObjectChannel::ApertureChannel);
     registerBuiltinType <DateInterfaceNode>(
         "__mantaray__date", &DateNodeOutput::DateType);
+    registerBuiltinType <piranha::NoOpNode>(
+        "__mantaray__lens", &ObjectChannel::LensChannel);
 
     // Constructors
     registerBuiltinType<RayTracer>(
@@ -147,6 +151,8 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__padded_frame");
     registerBuiltinType <CurrentDateNode>(
         "__mantaray__current_date");
+    registerBuiltinType <SimpleLens>(
+        "__mantaray__simple_lens");
 
     // Literals
     registerBuiltinType<piranha::DefaultLiteralFloatNode>(
