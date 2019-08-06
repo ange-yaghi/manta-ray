@@ -1,0 +1,70 @@
+private import "mantaray.mr"
+
+private node aperture_function_export {
+    input aperture_function;
+    input diffraction_pattern;
+    input current_date;
+    input output_name;
+    input output_dir;
+    toggle enable: true;
+
+    image_output(
+        map: aperture_function,
+        filename: 
+            output_dir + current_date.as_string + "_" + output_name + 
+            "_aperture" + ".jpg"
+    )
+
+    image_output(
+        map: diffraction_pattern,
+        filename:
+            output_dir + current_date.as_string + "_" + output_name + 
+            "_diffraction" + ".jpg"
+    )
+}
+
+public node diffraction_simulation {
+    input image;
+    input current_date;
+    input output_dir;
+    input output_name;
+    input samples;
+    input save_patterns: true;
+    toggle enable: true;
+    
+    alias output __out: convolution;
+
+    fraunhofer_diffraction diffraction(
+        aperture: polygonal_aperture(0.18, curvature: 0.3),
+        sensor_width: 16.0,
+        resolution: padded_frame(image),
+        dirt_map: 1.0,
+        settings: fraunhofer_settings()
+    )
+
+    aperture_function_export(
+        aperture_function: diffraction.aperture_function,
+        diffraction_pattern: diffraction.diffraction,
+        current_date: current_date,
+        output_name: output_name,
+        output_dir: output_dir,
+        enable: save_patterns
+    )
+
+    convolve_2d convolution(
+        base: image * step(
+            s: image,
+            foot: 1.0,
+            step: 100.0,
+            dc: 1.0
+        ),
+        filter: diffraction.diffraction
+    )
+
+    image_output(
+        map: convolution,
+        filename:
+            output_dir + current_date.as_string + "_" + output_name + 
+            "_S" + string(samples) + "_fraun" + ".jpg"
+    )
+}

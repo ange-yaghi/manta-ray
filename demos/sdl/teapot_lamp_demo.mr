@@ -1,14 +1,17 @@
 private import "mantaray.mr"
+private import "utilities.mr"
 
 node settings {
-    output samples: 1000;
+    output samples: 1;
     output resolution_x: 1920;
     output resolution_y: 1080;
-    output enable_fraunhofer: false;
+    output enable_fraunhofer: true;
+    output save_diffraction_patterns: true;
     output output_dir: "../../workspace/render/bitmap/";
     output output_name: "teapot_lamp_demo";
-} settings settings()
+} 
 
+settings settings()
 material_library library()
 scene scene()
 
@@ -132,52 +135,12 @@ image_output(
         "_S" + string(settings.samples) + ".jpg"
 )
 
-diffraction_simulation(mr.image, current_date, settings, settings.enable_fraunhofer)
-
-node diffraction_simulation {
-    input image;
-    input current_date;
-    input settings;
-    toggle enable: true;
-    
-    alias output __out: convolution;
-
-    fraunhofer_diffraction diffraction(
-        aperture: polygonal_aperture(0.18, curvature: 0.3),
-        sensor_width: 16.0,
-        resolution: padded_frame(image),
-        dirt_map: 1.0,
-        settings: fraunhofer_settings()
-    )
-
-    image_output(
-        map: diffraction.aperture_function,
-        filename: 
-            settings.output_dir + current_date.as_string + "_" + settings.output_name + 
-            "_aperture" + ".jpg"
-    )
-
-    image_output(
-        map: diffraction.diffraction,
-        filename:
-            settings.output_dir + current_date.as_string + "_" + settings.output_name + 
-            "_diffraction" + ".jpg"
-    )
-
-    convolve_2d convolution(
-        base: image * step(
-            s: image,
-            foot: 1.0,
-            step: 100.0,
-            dc: 1.0
-        ),
-        filter: diffraction.diffraction
-    )
-
-    image_output(
-        map: convolution,
-        filename:
-            settings.output_dir + current_date.as_string + "_" + settings.output_name + 
-            "_S" + string(settings.samples) + "_fraun" + ".jpg"
-    )
-}
+diffraction_simulation(
+    image: mr.image, 
+    current_date: current_date, 
+    output_dir: settings.output_dir,
+    output_name: settings.output_name,
+    save_patterns: settings.save_diffraction_patterns,
+    samples: settings.samples,
+    enable: settings.enable_fraunhofer
+)

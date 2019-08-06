@@ -44,6 +44,7 @@ public import "camera/cameras.mr"
 public import "camera/utilities.mr"
 public import "camera/diffraction.mr"
 public import "camera/apertures.mr"
+public import "camera/lenses.mr"
 
 public import "sampler/samplers.mr"
 
