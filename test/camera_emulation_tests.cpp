@@ -132,7 +132,7 @@ TEST(CameraEmulationTests, SimpleLensCacheTest) {
 TEST(CameraEmulationTests, PolygonalApertureTest) {
     PolygonalAperture aperture;
     aperture.setRadius(1.0f);
-    aperture.initialize(3, -math::constants::PI / 2); // Triangle
+    aperture.configure(3, -math::constants::PI / 2); // Triangle
     bool filtered = aperture.filter(0.0f, 0.0f);
     EXPECT_TRUE(filtered);
 

@@ -38,6 +38,10 @@ namespace piranha {
         OPERATOR m_operator;
         IrValue *m_leftOperand;
         IrValue *m_rightOperand;
+
+    protected:
+        virtual Node *_generateNode(IrContextTree *context, NodeProgram *program, NodeContainer *container);
+        virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program, NodeContainer *container);
     };
 
 } /* namespace piranha */

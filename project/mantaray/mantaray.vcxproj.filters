@@ -358,6 +358,18 @@
     <Filter Include="Source Files\nodes\library\mesh">
       <UniqueIdentifier>{b20b176c-3e59-41cf-96c1-920772a9ee6d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\nodes\library\date">
+      <UniqueIdentifier>{ee91749a-2a0b-4026-b660-d0c32d777628}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\nodes\library\date">
+      <UniqueIdentifier>{2ca0628c-5de7-43f7-be9c-1de4ce2f9dd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\nodes\output-ports\date">
+      <UniqueIdentifier>{a0b54910-8a08-4b8b-a2de-926b138eeba8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\nodes\output-ports\date">
+      <UniqueIdentifier>{b9fc9588-10ce-4567-b49c-921a4f8af7b9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -689,6 +701,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\mesh_merge_node.cpp">
       <Filter>Source Files\nodes\library\mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\date_node_output.cpp">
+      <Filter>Source Files\nodes\output-ports\date</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\date_interface_node.cpp">
+      <Filter>Source Files\nodes\library\date</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\include\current_date_node.cpp">
+      <Filter>Source Files\nodes\library\date</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1096,6 +1117,18 @@
     </ClInclude>
     <ClInclude Include="..\..\include\mesh_merge_node.h">
       <Filter>Header Files\nodes\library\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\padded_frame_output.h">
+      <Filter>Header Files\nodes\output-ports\operations</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\date_interface_node.h">
+      <Filter>Header Files\nodes\library\date</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\date_node_output.h">
+      <Filter>Header Files\nodes\output-ports\date</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\current_date_node.h">
+      <Filter>Header Files\nodes\library\date</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

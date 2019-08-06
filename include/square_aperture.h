@@ -11,6 +11,8 @@ namespace manta {
         virtual ~SquareAperture();
 
         virtual bool filter(math::real x, math::real y) const;
+
+        virtual void registerInputs();
     };
 
 } /* namespace manta */

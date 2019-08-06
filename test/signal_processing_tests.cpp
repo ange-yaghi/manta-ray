@@ -196,7 +196,7 @@ TEST(SignalProcessingTests, CftApproximationBasicTest) {
     ComplexMap2D apertureFunction;
     PolygonalAperture aperture;
     aperture.setRadius(::sqrt((boxWidth / 2) * (boxWidth / 2) + (boxHeight / 2) * (boxHeight / 2)));
-    aperture.initialize(4, math::constants::PI / 4);
+    aperture.configure(4, math::constants::PI / 4);
 
     math::real_d fs_x = SIZE / sampleWindow;
     math::real_d fs_y = SIZE / sampleWindow;

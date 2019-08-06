@@ -28,7 +28,7 @@ namespace piranha {
         }
 
         virtual void registerOutputs() {
-            Node::setPrimaryOutput(&m_output);
+            Node::setPrimaryOutput("__out");
             Node::registerOutput(&m_output, "__out");
         }
 

@@ -1,7 +1,21 @@
 private import "mantaray.mr"
 
-image_file image1("resources/spiders.jpg")
+fraunhofer_diffraction diffraction(
+    aperture: polygonal_aperture(0.2, curvature: 0.5),
+    sensor_width: 10.0,
+    resolution: 256,
+    dirt_map: 1.0,
+    settings: fraunhofer_settings()
+)
+
+current_date current_date() 
+
 image_output(
-    map: scalar(image1.g),
-    filename: "test.jpg"
+    map: diffraction.aperture_function,
+    filename: "aperture_function" + current_date.as_string + ".jpg"
+)
+
+image_output(
+    map: diffraction.diffraction * 1.0,
+    filename: "diffraction" + current_date.as_string + ".jpg"
 )

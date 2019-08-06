@@ -31,17 +31,17 @@ namespace manta {
         }
 
         virtual void registerOutputs() {
-            setPrimaryOutput(&m_output);
+            setPrimaryOutput("__out");
             registerOutput(&m_output, "__out");
         }
     };
 
-    typedef BinaryNode<SUB>        SubtractNode;
-    typedef BinaryNode<ADD>        AddNode;
-    typedef BinaryNode<MUL>        MultiplyNode;
-    typedef BinaryNode<DIV>        DivideNode;
-    typedef BinaryNode<CROSS>    CrossNode;
-    typedef BinaryNode<DOT>        DotNode;
+    typedef BinaryNode<SUB>         SubtractNode;
+    typedef BinaryNode<ADD>         AddNode;
+    typedef BinaryNode<MUL>         MultiplyNode;
+    typedef BinaryNode<DIV>         DivideNode;
+    typedef BinaryNode<CROSS>       CrossNode;
+    typedef BinaryNode<DOT>         DotNode;
 
 } /* namespace manta */
 

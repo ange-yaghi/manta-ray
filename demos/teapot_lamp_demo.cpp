@@ -227,7 +227,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
         sourceSpectrum.loadCsv(CMF_PATH "d65_lighting.csv");
 
         PolygonalAperture aperture;
-        aperture.initialize(6);
+        aperture.configure(6);
         aperture.setRadius(0.18f);
         aperture.setBladeCurvature(0.3f);
         testFraun.generate(&aperture, dirtTextureMap, safeWidth, 16.0f, &colorTable, &sourceSpectrum, &settings);

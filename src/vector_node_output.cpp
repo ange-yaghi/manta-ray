@@ -20,9 +20,7 @@ manta::VectorNodeOutput::~VectorNodeOutput() {
     /* void */
 }
 
-void manta::VectorNodeOutput::calculateAllDimensions(VectorMap2D *target) {
-    evaluateDimensions();
-
+void manta::VectorNodeOutput::calculateAllDimensions(VectorMap2D *target) const {
     int width, height;
     int dimensions = getDimensions();
     if (dimensions == 0) {
@@ -57,7 +55,7 @@ piranha::Node *manta::VectorNodeOutput::generateInterface() {
         VectorSplitNode *vectorInterface = 
             StandardAllocator::Global()->allocate<VectorSplitNode>(16);
         vectorInterface->initialize();
-        vectorInterface->connectInput(this, "__in");
+        vectorInterface->connectInput(this, "__in", nullptr);
 
         return vectorInterface;
     }

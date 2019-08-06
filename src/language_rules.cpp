@@ -28,6 +28,15 @@
 #include "../include/sphere_primitive.h"
 #include "../include/srgb_node.h"
 #include "../include/image_file_node.h"
+#include "../include/circular_aperture.h"
+#include "../include/polygonal_aperture.h"
+#include "../include/square_aperture.h"
+#include "../include/fraunhofer_diffraction.h"
+#include "../include/convolution_node.h"
+#include "../include/step_node.h"
+#include "../include/padded_frame_output.h"
+#include "../include/current_date_node.h"
+#include "../include/date_interface_node.h"
 
 manta::LanguageRules::LanguageRules() {
     /* void */
@@ -43,7 +52,8 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
     // ====================================================
 
     // Channels
-    registerBuiltinType<piranha::NoOpNode>(
+    registerBuiltinType
+        <piranha::NoOpNode>(
         "__mantaray__float", &piranha::FundamentalType::FloatType);
     registerBuiltinType<piranha::NoOpNode>(
         "__mantaray__int", &piranha::FundamentalType::IntType);
@@ -75,6 +85,10 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__sampler", &ObjectChannel::SamplerChannel);
     registerBuiltinType <piranha::NoOpNode>(
         "__mantaray__vector_map", &VectorMap2DNodeOutput::VectorMap2dType);
+    registerBuiltinType <piranha::NoOpNode>(
+        "__mantaray__aperture", &ObjectChannel::ApertureChannel);
+    registerBuiltinType <DateInterfaceNode>(
+        "__mantaray__date", &DateNodeOutput::DateType);
 
     // Constructors
     registerBuiltinType<RayTracer>(
@@ -117,6 +131,22 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__srgb");
     registerBuiltinType <ImageFileNode>(
         "__mantaray__image_file");
+    registerBuiltinType <CircularAperture>(
+        "__mantaray__circular_aperture");
+    registerBuiltinType <SquareAperture>(
+        "__mantaray__square_aperture");
+    registerBuiltinType <PolygonalAperture>(
+        "__mantaray__polygonal_aperture");
+    registerBuiltinType <FraunhoferDiffraction>(
+        "__mantaray__fraunhofer_diffraction");
+    registerBuiltinType <ConvolutionNode>(
+        "__mantaray__convolve_2d");
+    registerBuiltinType <StepNode>(
+        "__mantaray__step");
+    registerBuiltinType <PaddedFrameNode>(
+        "__mantaray__padded_frame");
+    registerBuiltinType <CurrentDateNode>(
+        "__mantaray__current_date");
 
     // Literals
     registerBuiltinType<piranha::DefaultLiteralFloatNode>(
@@ -133,6 +163,8 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__float_to_vector");
     registerBuiltinType<piranha::IntToFloatConversionNode>(
         "__mantaray__int_to_float");
+    registerBuiltinType<piranha::IntToStringConversionNode>(
+        "__mantaray__int_to_string");
 
     // Unary operations
     registerBuiltinType<piranha::NumNegateOperationNode<piranha::native_float>>(
@@ -161,6 +193,8 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__mesh_merge");
     registerBuiltinType<piranha::OperationNodeSpecialized<
         piranha::native_float, piranha::DivideOperationNodeOutput>>("__mantaray__float_divide");
+    registerBuiltinType<piranha::OperationNodeSpecialized<
+        piranha::native_string, piranha::AddOperationNodeOutput>>("__mantaray__string_add");
 
     // ====================================================
     // Literal types
@@ -180,6 +214,10 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
     registerConversion(
         { &piranha::FundamentalType::IntType, &piranha::FundamentalType::FloatType },
         "__mantaray__int_to_float"
+    );
+    registerConversion(
+        { &piranha::FundamentalType::IntType, &piranha::FundamentalType::StringType },
+        "__mantaray__int_to_string"
     );
 
     // ====================================================
@@ -216,6 +254,12 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
     registerOperator(
         { piranha::IrBinaryOperator::DIV, &piranha::FundamentalType::FloatType, &piranha::FundamentalType::IntType },
         "__mantaray__float_divide"
+    );
+
+    // String operators
+    registerOperator(
+        { piranha::IrBinaryOperator::ADD, &piranha::FundamentalType::StringType, &piranha::FundamentalType::StringType },
+        "__mantaray__string_add"
     );
 
     // ====================================================

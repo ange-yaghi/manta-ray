@@ -1,4 +1,5 @@
 private import "atomic_types.mr"
+private import "conversions.mr"
 
 public node float_negate => __mantaray__float_negate {
     input __in [float];
@@ -58,10 +59,26 @@ public node magnitude => __mantaray__vector_magnitude {
     alias output __out [vector];
 }
 
+public node step => __mantaray__step {
+    input s [vector];
+    input foot [vector];
+    input step [vector];
+    input dc [vector]: 0.0;
+    alias output __out [vector];
+}
+
 // Float operations
 
 public node float_divide => __mantaray__float_divide {
     input __in0 [float];
     input __in1 [float];
     alias output __out [float];
+}
+
+// String operations
+
+public node string_add => __mantaray__string_add {
+    input __in0 [string];
+    input __in1 [string];
+    alias output __out [string];
 }

@@ -112,7 +112,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
     manta::SimpleLens lens;
     manta::PolygonalAperture polygonalAperture;
     polygonalAperture.setBladeCurvature(0.25f);
-    polygonalAperture.initialize(8);
+    polygonalAperture.configure(8);
 
     if (POLYGON_APERTURE) lens.setAperture(&polygonalAperture);
     lens.initialize();

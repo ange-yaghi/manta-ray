@@ -9,16 +9,17 @@ manta::StepNode::~StepNode() {
 }
 
 void manta::StepNode::_initialize() {
-    /* void */
+    m_output.initialize();
 }
 
 void manta::StepNode::registerInputs() {
-    registerInput(m_output.getDcConnection(), "DC");
-    registerInput(m_output.getInputConnection(), "Input");
-    registerInput(m_output.getFootConnection(), "Foot");
-    registerInput(m_output.getStepConnection(), "Step");
+    registerInput(m_output.getDcConnection(), "dc");
+    registerInput(m_output.getInputConnection(), "s");
+    registerInput(m_output.getFootConnection(), "foot");
+    registerInput(m_output.getStepConnection(), "step");
 }
 
 void manta::StepNode::registerOutputs() {
-    registerOutput(&m_output, "Output");
+    setPrimaryOutput("__out");
+    registerOutput(&m_output, "__out");
 }

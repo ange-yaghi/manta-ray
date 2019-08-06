@@ -41,7 +41,7 @@ namespace piranha {
         }
 
         virtual void registerOutputs() {
-            setPrimaryOutput(&m_output);
+            setPrimaryOutput("raw_input");
             registerOutput(&m_output, "raw_input");
         }
 

@@ -29,6 +29,7 @@ void manta::VectorMap2DNodeOutput::sample(const IntersectionPoint *surfaceIntera
     if (i_v < 0) i_v = m_map->getHeight() + i_v;
 
     *target = m_map->get(i_u, i_v);
+    *target = m_map->triangleSample(u, v);
 }
 
 void manta::VectorMap2DNodeOutput::discreteSample2d(int x, int y, void *_target) const {

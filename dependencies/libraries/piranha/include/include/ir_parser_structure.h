@@ -8,13 +8,13 @@
 #include <vector>
 #include <fstream>
 
-#define IR_RESET(query)                if (output != nullptr) { output->reset(); output->newContext = (query).inputContext; }
-#define IR_INFO_OUT(param, data)    if (output != nullptr) { output->param = (data); }
-#define IR_ERR_OUT(data)            IR_INFO_OUT(err, (data)); 
-#define IR_FAIL()                    IR_INFO_OUT(failed, true);
-#define IR_DEAD_END()                IR_INFO_OUT(reachedDeadEnd, true);
-#define IR_FAILED(output)            (((output) != nullptr) ? (output)->failed : false)
-#define IR_EMPTY_CONTEXT()            (query.inputContext == nullptr || query.inputContext->isEmpty())
+#define IR_RESET(query)                 { if (output != nullptr) { output->reset(); output->newContext = (query).inputContext; } }
+#define IR_INFO_OUT(param, data)        { if (output != nullptr) { output->param = (data); } }
+#define IR_ERR_OUT(data)                IR_INFO_OUT(err, (data)); 
+#define IR_FAIL()                       IR_INFO_OUT(failed, true);
+#define IR_DEAD_END()                   IR_INFO_OUT(reachedDeadEnd, true);
+#define IR_FAILED(output)               (((output) != nullptr) ? (output)->failed : false)
+#define IR_EMPTY_CONTEXT()              (query.inputContext == nullptr || query.inputContext->isEmpty())
 
 namespace piranha {
 
@@ -29,6 +29,7 @@ namespace piranha {
     class NodeProgram;
     class ChannelType;
     class LanguageRules;
+    class NodeContainer;
 
     class IrParserStructure {
     public:
@@ -159,11 +160,11 @@ namespace piranha {
 
         // Building
     public:
-        NodeOutput *generateNodeOutput(IrContextTree *context, NodeProgram *program);
-        Node *generateNode(IrContextTree *context, NodeProgram *program);
+        NodeOutput *generateNodeOutput(IrContextTree *context, NodeProgram *program, NodeContainer *container);
+        Node *generateNode(IrContextTree *context, NodeProgram *program, NodeContainer *container);
 
-        virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program);
-        virtual Node *_generateNode(IrContextTree *context, NodeProgram *program);
+        virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program, NodeContainer *container);
+        virtual Node *_generateNode(IrContextTree *context, NodeProgram *program, NodeContainer *container);
     };
 
 } /* namespace piranha */

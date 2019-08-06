@@ -98,7 +98,7 @@ void manta::ImageFileNode::registerInputs() {
 }
 
 void manta::ImageFileNode::registerOutputs() {
-    setPrimaryOutput(&m_output);
+    setPrimaryOutput("__out");
     registerOutput(&m_output, "__out");
 }
 

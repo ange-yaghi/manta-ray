@@ -54,6 +54,8 @@ namespace piranha {
         extern const ErrorCode_struct UndefinedBuiltinInput;
         extern const ErrorCode_struct UndefinedBuiltinOutput;
         extern const ErrorCode_struct ModifyAttributeMismatch;
+        extern const ErrorCode_struct ToggleAttributeMismatch;
+        extern const ErrorCode_struct AliasAttributeMismatch;
 
         // [T] - Type errors
         extern const ErrorCode_struct IncompatibleType;
