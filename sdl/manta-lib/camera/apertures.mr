@@ -1,0 +1,21 @@
+private import "../types/atomic_types.mr"
+
+public node aperture => __mantaray__aperture { /* void */ }
+
+public node circular_aperture => __mantaray__circular_aperture {
+    input radius [float];
+    alias output __out [::aperture];
+}
+
+public node square_aperture => __mantaray__square_aperture {
+    input half_width [float];
+    alias output __out [::aperture];
+}
+
+public node polygonal_aperture => __mantaray__polygonal_aperture {
+    input radius [float];
+    input blades [int]: 6;
+    input curvature [float]: 0.2;
+    input angle [float]: 0.0;
+    alias output __out [::aperture];
+}

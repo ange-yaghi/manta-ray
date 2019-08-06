@@ -31,7 +31,7 @@ void manta::KdTreeNode::_destroy() {
 
 void manta::KdTreeNode::registerOutputs() {
     registerOutput(&m_output, "__out");
-    setPrimaryOutput(&m_output);
+    setPrimaryOutput("__out");
 }
 
 void manta::KdTreeNode::registerInputs() {

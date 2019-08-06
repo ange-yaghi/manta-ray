@@ -138,7 +138,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
     CameraRayEmitterGroup *group;
     manta::SimpleLens lens;
     manta::PolygonalAperture polygonalAperture;
-    polygonalAperture.initialize(6);
+    polygonalAperture.configure(6);
 
     lens.setAperture(&polygonalAperture);
     lens.initialize();

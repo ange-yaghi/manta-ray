@@ -17,7 +17,8 @@ namespace piranha {
         enum DIRECTION {
             INPUT,
             OUTPUT,
-            MODIFY
+            MODIFY,
+            TOGGLE
         };
 
     public:
@@ -75,8 +76,8 @@ namespace piranha {
         IrNodeDefinition *m_typeDefinition;
 
     protected:
-        virtual Node *_generateNode(IrContextTree *context, NodeProgram *program);
-        virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program);
+        virtual Node *_generateNode(IrContextTree *context, NodeProgram *program, NodeContainer *container);
+        virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program, NodeContainer *container);
     };
 
 } /* namespace piranha */

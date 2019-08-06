@@ -17,7 +17,7 @@ namespace piranha {
         virtual Node *generateInterface() {
             VectorSplitNode *vectorInterface = new VectorSplitNode();
             vectorInterface->initialize();
-            vectorInterface->connectInput(this, "__in");
+            vectorInterface->connectInput(this, "__in", nullptr);
 
             return vectorInterface;
         }

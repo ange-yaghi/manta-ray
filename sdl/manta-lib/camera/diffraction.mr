@@ -1,0 +1,54 @@
+private import "apertures.mr"
+private import "../types/atomic_types.mr"
+private import "../image/vector_map.mr"
+
+public node fraunhofer_settings {
+    input aperture_samples [int]: 4096;
+    input texture_samples [int]: 10;
+    input max_wavelength [int]: 780; // 780
+    input min_wavelength [int]: 380; // 380
+    input wavelength_step [int]: 5;
+    input frequency_multiplier [float]: 2.0;
+    input safety_factor [float]: 1.1;
+}
+
+public node fraunhofer_diffraction {
+    input aperture [aperture];
+    input sensor_width [float];
+    input resolution [int];
+    input dirt_map [vector];
+    input settings [fraunhofer_settings]: fraunhofer_settings();
+
+    alias output __out: __fraunhofer_diffraction(
+        aperture_samples: settings.aperture_samples,
+        texture_samples: settings.texture_samples,
+        min_wavelength: settings.min_wavelength,
+        max_wavelength: settings.max_wavelength,
+        wavelength_step: settings.wavelength_step,
+        safety_factor: settings.safety_factor,
+        frequency_multiplier: settings.frequency_multiplier,
+
+        dirt_map: dirt_map,
+        aperture: aperture,
+        sensor_width: sensor_width,
+        resolution: resolution
+    );
+}
+
+public node __fraunhofer_diffraction => __mantaray__fraunhofer_diffraction {
+    input aperture_samples [int];
+    input texture_samples [int];
+    input min_wavelength [int];
+    input max_wavelength [int];
+    input wavelength_step [int];
+    input safety_factor [float];
+    input frequency_multiplier [float];
+
+    input dirt_map [vector];
+    input aperture [aperture];
+    input sensor_width [float];
+    input resolution [int];
+
+    output diffraction [vector_map];
+    output aperture_function [vector_map];
+}

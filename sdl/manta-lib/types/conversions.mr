@@ -21,3 +21,9 @@ public node int_to_float => __mantaray__int_to_float {
     input __in [int];
     alias output __out [float];
 }
+
+// String conversions
+public node int_to_string => __mantaray__int_to_string {
+    input __in [int];
+    alias output __out [string];
+}

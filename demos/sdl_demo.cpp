@@ -11,12 +11,13 @@ void manta_demo::sdlDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 
     piranha::Compiler *compiler = new piranha::Compiler(rules);
     compiler->addSearchPath(SDL_LIB_PATH);
-    piranha::IrCompilationUnit *unit = compiler->compile(SDL_PATH + std::string("fraunhofer_demo.mr"));
+    piranha::IrCompilationUnit *unit = compiler->compile(SDL_PATH + std::string("teapot_lamp_demo.mr"));
 
     const piranha::ErrorList *errList = compiler->getErrorList();
 
     if (errList->getErrorCount() > 0) {
         std::cout << "Found " << errList->getErrorCount() << " compilation errors\n";
+        return;
     }
 
     piranha::NodeProgram program;

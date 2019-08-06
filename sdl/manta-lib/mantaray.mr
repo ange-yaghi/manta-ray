@@ -18,6 +18,8 @@ public import "types/atomic_types.mr"
 public import "types/conversions.mr"
 public import "types/operations.mr"
 
+public import "dates/dates.mr"
+
 public import "microfacet-models/microfacet_distributions.mr"
 
 public import "bsdf/bsdf.mr"
@@ -40,9 +42,13 @@ public import "materials/simple_bsdf_material.mr"
 
 public import "camera/cameras.mr"
 public import "camera/utilities.mr"
+public import "camera/diffraction.mr"
+public import "camera/apertures.mr"
 
 public import "sampler/samplers.mr"
 
 public import "primitives/primitives.mr"
 
 public import "color/color.mr"
+
+public import "signal-processing/convolution.mr"

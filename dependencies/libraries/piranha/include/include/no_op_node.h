@@ -28,7 +28,7 @@ namespace piranha {
         }
 
         virtual void registerOutputs() {
-            setPrimaryOutputReference(&m_input);
+            setPrimaryOutput("__out");
             registerOutputReference(&m_input, "__out");
         }
 

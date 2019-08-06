@@ -1,0 +1,9 @@
+private import "../types/atomic_types.mr"
+
+public node date => __mantaray__date {
+    output as_string [string];
+}
+
+public node current_date => __mantaray__current_date {
+    alias output __out [date];
+}

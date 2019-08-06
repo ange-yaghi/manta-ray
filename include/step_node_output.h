@@ -1,5 +1,5 @@
-#ifndef PIRANHA_STEP_NODE_OUTPUT_H
-#define PIRANHA_STEP_NODE_OUTPUT_H
+#ifndef MANTARAY_STEP_NODE_OUTPUT_H
+#define MANTARAY_STEP_NODE_OUTPUT_H
 
 #include "vector_node_output.h"
 
@@ -27,7 +27,7 @@ namespace manta {
         }
 
         virtual void sample(const IntersectionPoint *surfaceInteraction, void *target) const;
-        virtual void discreteSample2D(int x, int y, void *target) const;
+        virtual void discreteSample2d(int x, int y, void *target) const;
 
         void setInput(piranha::pNodeInput input) { m_input = input; }
         const NodeOutput *getInput() const { return m_input; }
@@ -58,6 +58,10 @@ namespace manta {
         piranha::pNodeInput *getStepConnection() { return &m_step; }
         piranha::pNodeInput *getDcConnection() { return &m_dc; }
 
+        virtual void registerInputs();
+
+        virtual void _evaluateDimensions();
+
     protected:
         piranha::pNodeInput m_input;
         piranha::pNodeInput m_foot;
@@ -70,4 +74,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* PIRANHA_STEP_NODE_OUTPUT_H */
+#endif /* MANTARAY_STEP_NODE_OUTPUT_H */

@@ -14,6 +14,7 @@ namespace piranha {
     class IrContextTree;
     class IrParserStructure;
     class NodeProgram;
+    class NodeContainer;
 
     class Node {
     public:
@@ -24,8 +25,11 @@ namespace piranha {
 
         struct NodeInputPort {
             pNodeInput *input;
+            Node *nodeInput;
+            Node *dependency;
             std::string name;
             bool modifiesInput;
+            bool enableInput;
         };
 
         struct NodeOutputPort {
@@ -35,16 +39,22 @@ namespace piranha {
 
         struct NodeOutputPortReference {
             NodeOutput *const *output;
+            Node *nodeOutput;
             std::string name;
         };
 
         struct PortInfo {
             bool modifiesInput;
+            bool isToggle;
+            bool isAlias;
         };
 
     public:
         Node();
         virtual ~Node();
+
+        Node *getAliasNode();
+        NodeOutput *getAliasOutput();
 
         void initialize();
         void evaluate();
@@ -59,15 +69,17 @@ namespace piranha {
         void setBuiltinName(const std::string &name) { m_builtinName = name; }
         std::string getBuiltinName() const { return m_builtinName; }
 
-        void connectInput(pNodeInput input, const std::string &name);
-        void connectInput(pNodeInput input, int index);
-        void connectDefaultInput(pNodeInput input);
+        void connectEnableInput(pNodeInput input, Node *dependency);
+        void connectInput(pNodeInput input, const std::string &name, Node *dependency, Node *nodeInput=nullptr);
+        void connectInput(pNodeInput input, int index, Node *dependency, Node *nodeInput=nullptr);
         bool getInputPortInfo(const std::string &name, PortInfo *info) const;
         const NodeInputPort *getInput(int index) const { return &m_inputs[index]; }
         int getInputCount() const { return (int)m_inputs.size(); }
 
         NodeOutput *getPrimaryOutput() const;
+        Node *getPrimaryNode() const;
         NodeOutput *getOutput(const std::string &name) const;
+        Node *getNodeOutput(const std::string &name) const;
         int getOutputCount() const { return (int)m_outputs.size(); }
         const NodeOutputPort *getOutput(int index) const { return &m_outputs[index]; }
         bool getOutputPortInfo(const std::string &name, PortInfo *info) const;
@@ -86,6 +98,17 @@ namespace piranha {
 
         void setProgram(NodeProgram *program) { m_program = program; }
         NodeProgram *getProgram() const { return m_program; }
+
+        void setContainer(NodeContainer *container) { m_container = container; }
+        NodeContainer *getContainer() const { return m_container; }
+
+        void checkEnabled();
+        bool isEnabled() const { return m_enabled; }
+
+        void addDependency(Node *node) { m_dependencyChain.push_back(node); }
+
+        NodeOutput *getInterfaceInput() const;
+        void setInterfaceInput(pNodeInput *output) { m_interfaceInput = output; }
 
     protected:
         virtual void _initialize();
@@ -106,20 +129,22 @@ namespace piranha {
     protected:
         std::vector<NodeInputPort> m_inputs;
         void registerInput(
-            pNodeInput *node, const std::string &name, bool modifiesInput=false);
+            pNodeInput *node, const std::string &name, bool modifiesInput=false, bool enableInput=false);
 
         std::vector<NodeOutputPort> m_outputs;
         void registerOutput(NodeOutput *node, const std::string &name);
 
         std::vector<NodeOutputPortReference> m_outputReferences;
-        void registerOutputReference(NodeOutput *const *node, const std::string &name);
+        void registerOutputReference(NodeOutput *const *output, const std::string &name, Node *node = nullptr);
 
-        void setPrimaryOutput(NodeOutput *node);
-        void setPrimaryOutputReference(NodeOutput **node);
+        void setPrimaryOutput(const std::string &name);
 
     protected:
-        NodeOutput *m_primaryOutput;
-        NodeOutput **m_primaryReference;
+        pNodeInput *m_interfaceInput;
+        std::string m_primaryOutput;
+
+        pNodeInput *m_enableInput;
+        Node *m_enableInputDependency;
 
     private:
         // State variables
@@ -127,10 +152,16 @@ namespace piranha {
         // Initialization status
         bool m_initialized;
         bool m_evaluated;
+        bool m_checkedEnabled;
+
+        bool m_enabled;
 
     protected:
         // Context
         NodeProgram *m_program;
+        NodeContainer *m_container;
+
+        std::vector<Node *> m_dependencyChain;
     };
 
 } /* namespace piranha */

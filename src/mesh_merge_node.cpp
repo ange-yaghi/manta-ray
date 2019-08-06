@@ -28,5 +28,6 @@ void manta::MeshMergeNode::registerInputs() {
 }
 
 void manta::MeshMergeNode::registerOutputs() {
+    setPrimaryOutput("__out");
     registerOutput(&m_output, "__out");
 }

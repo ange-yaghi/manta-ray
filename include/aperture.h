@@ -1,11 +1,13 @@
 #ifndef MANTARAY_APERTURE_H
 #define MANTARAY_APERTURE_H
 
+#include "object_reference_node.h"
+
 #include "manta_math.h"
 
 namespace manta {
 
-    class Aperture {
+    class Aperture : public ObjectReferenceNode<Aperture> {
     public:
         Aperture();
         virtual ~Aperture();
@@ -18,6 +20,16 @@ namespace manta {
 
     protected:
         math::real m_radius;
+
+    protected:
+        virtual void _initialize();
+        virtual void _evaluate();
+        virtual void _destroy();
+
+        virtual void registerInputs();
+        virtual void registerOutputs();
+
+        piranha::pNodeInput m_radiusInput;
     };
 
 } /* namespace manta */

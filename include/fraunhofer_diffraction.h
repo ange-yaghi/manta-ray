@@ -46,7 +46,7 @@ namespace manta {
         math::Vector samplePattern(math::real dx, math::real dy) const;
 
         const VectorMap2D *getDiffractionPattern() const { return &m_diffractionPattern; }
-        const ComplexMap2D *getApertureFunction() const { return &m_apertureFunction; }
+        const VectorMap2D *getApertureFunction() const { return &m_apertureFunction; }
         math::real getPhysicalSensorWidth() const { return m_physicalSensorWidth; }
         math::real getSensorElementWidth() const { return m_sensorElementWidth; }
 
@@ -62,7 +62,7 @@ namespace manta {
 
     protected:
         VectorMap2D m_diffractionPattern;
-        ComplexMap2D m_apertureFunction;
+        VectorMap2D m_apertureFunction;
         CmfTable *m_colorTable;
         Spectrum *m_sourceSpectrum;
 
@@ -70,10 +70,17 @@ namespace manta {
         math::real m_sensorElementWidth;
 
     protected:
+        virtual void _initialize();
+        virtual void _evaluate();
+        virtual void _destroy();
+
+        virtual void registerInputs();
+        virtual void registerOutputs();
+
         VectorMap2DNodeOutput m_diffractionPatternOutput;
         VectorMap2DNodeOutput m_aperturePatternOutput;
 
-        piranha::pNodeInput m_maxSamplesInput;
+        piranha::pNodeInput m_apertureSamplesInput;
         piranha::pNodeInput m_textureSamplesInput;
         piranha::pNodeInput m_minWavelengthInput;
         piranha::pNodeInput m_maxWavelengthInput;
@@ -82,6 +89,8 @@ namespace manta {
         piranha::pNodeInput m_frequencyMultiplierInput;
         piranha::pNodeInput m_dirtMapInput;
         piranha::pNodeInput m_apertureInput;
+        piranha::pNodeInput m_resolutionInput;
+        piranha::pNodeInput m_sensorWidthInput;
     };
 
 } /* namespace manta */

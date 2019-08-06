@@ -1,4 +1,4 @@
-// Auto-generated on: 2019-08-01 23:08:03.747908
+// Auto-generated on: 2019-08-06 02:39:37.222351
 
 #ifndef PIRANHA_PIRANHA_H
 #define PIRANHA_PIRANHA_H
@@ -44,6 +44,7 @@
 #include "include/memory_management.h"
 #include "include/multiply_operation_output.h"
 #include "include/node.h"
+#include "include/node_container.h"
 #include "include/node_output.h"
 #include "include/node_program.h"
 #include "include/no_op_node.h"
