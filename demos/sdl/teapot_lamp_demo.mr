@@ -4,7 +4,7 @@ node settings {
     output samples: 1000;
     output resolution_x: 1920;
     output resolution_y: 1080;
-    output enable_fraunhofer: true;
+    output enable_fraunhofer: false;
     output output_dir: "../../workspace/render/bitmap/";
     output output_name: "teapot_lamp_demo";
 } settings settings()

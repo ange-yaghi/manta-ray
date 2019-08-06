@@ -1,0 +1,179 @@
+private import "mantaray.mr"
+
+node settings {
+    output samples: 29000;
+    output resolution_x: 1920;
+    output resolution_y: 1080;
+    output enable_fraunhofer: true;
+    output output_dir: "../../workspace/render/bitmap/";
+    output output_name: "blocks_demo";
+} 
+
+settings settings()
+material_library library()
+scene scene()
+
+node block_material {
+    input library;
+
+    simple_bsdf_material(
+        name: "Block",
+        library: library,
+        bsdf: bsdf
+    )
+
+    simple_bsdf_material(
+        name: "Letters",
+        library: library,
+        bsdf: bsdf
+    )
+
+    image_file diffuse_map(
+        filename: "../../demos/textures/blocks.png"
+    )
+
+    bilayer_bsdf bsdf(
+        coating: phong_distribution(4096.0),
+        diffuse: diffuse_map,
+        specular: 0.1
+    )
+}
+
+node ground_material {
+    input library;
+
+    simple_bsdf_material(
+        name: "Ground",
+        library: library,
+        bsdf: bsdf
+    )
+
+    bilayer_bsdf bsdf(
+        coating: phong_distribution(16.0),
+        diffuse: srgb_i(255, 255, 255),
+        specular: 0.75
+    )
+}
+
+node light_material {
+    input library;
+
+    simple_bsdf_material(
+        name: "Light",
+        library: library,
+        reflectance: 0.0,
+        emission: 5.0,
+        bsdf: lambertian_bsdf()
+    )
+} 
+
+block_material(library)
+ground_material(library)
+light_material(library)
+
+obj_file blocks_mesh(
+    filename: "../../demos/models/blocks_floor.obj",
+    materials: library,
+    default_material: "Ground"
+)
+
+scene_object blocks(
+    name: "Blocks",
+    scene: scene,
+    geometry: kd_tree(blocks_mesh)
+)
+
+scene_object light(
+    name: "Bulb",
+    scene: scene,
+    geometry: sphere(
+        radius: 10.0,
+        materials: library,
+        default_material: "Light",
+        position: vector(10.0, 20.0, 5.5)
+    )
+)
+
+camera_target camera_target(
+    position:   vector(15.4473, 4.59977, 13.2961),
+    target:     vector(2.63987, 3.55547, 2.42282),
+    up:         vector(0.0, 1.0, 0.0)
+)
+
+standard_camera camera(
+    up: camera_target.up,
+    position: camera_target.position,
+    direction: camera_target.direction,
+    resolution_x: settings.resolution_x,
+    resolution_y: settings.resolution_y,
+    plane_height: 0.5,
+    plane_distance: 1.0,
+    samples: settings.samples,
+    sampler: random_sampler()
+)
+
+ray_tracer mr(
+    scene: scene,
+    camera: camera,
+    materials: library,
+    background: vector(0.0, 0.0, 0.0)
+)
+
+current_date current_date()
+
+image_output(
+    map: mr.image,
+    filename: 
+        settings.output_dir + current_date.as_string + "_" + settings.output_name + 
+        "_S" + string(settings.samples) + ".jpg"
+)
+
+diffraction_simulation(mr.image, current_date, settings, settings.enable_fraunhofer)
+
+node diffraction_simulation {
+    input image;
+    input current_date;
+    input settings;
+    toggle enable: true;
+    
+    alias output __out: convolution;
+
+    fraunhofer_diffraction diffraction(
+        aperture: polygonal_aperture(0.18, curvature: 0.3),
+        sensor_width: 16.0,
+        resolution: padded_frame(image),
+        dirt_map: 1.0,
+        settings: fraunhofer_settings()
+    )
+
+    image_output(
+        map: diffraction.aperture_function,
+        filename: 
+            settings.output_dir + current_date.as_string + "_" + settings.output_name + 
+            "_aperture" + ".jpg"
+    )
+
+    image_output(
+        map: diffraction.diffraction,
+        filename:
+            settings.output_dir + current_date.as_string + "_" + settings.output_name + 
+            "_diffraction" + ".jpg"
+    )
+
+    convolve_2d convolution(
+        base: image * step(
+            s: image,
+            foot: 1.0,
+            step: 100.0,
+            dc: 1.0
+        ),
+        filter: diffraction.diffraction
+    )
+
+    image_output(
+        map: convolution,
+        filename:
+            settings.output_dir + current_date.as_string + "_" + settings.output_name + 
+            "_S" + string(settings.samples) + "_fraun" + ".jpg"
+    )
+}

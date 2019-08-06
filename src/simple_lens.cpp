@@ -41,9 +41,7 @@ void manta::SimpleLens::setFocalLength(math::real focalLength) {
 }
 
 bool manta::SimpleLens::transformRay(const LightRay *inputRay, LightRay *outputRay) const {
-    bool flag;
-
-    flag = m_lens.transformLightRay(inputRay, outputRay);
+    bool flag = m_lens.transformLightRay(inputRay, outputRay);
     if (!flag) return false;
 
     math::Vector d = math::sub(outputRay->getSource(), m_apertureLocation);
@@ -63,8 +61,6 @@ bool manta::SimpleLens::transformRay(const LightRay *inputRay, LightRay *outputR
 }
 
 bool manta::SimpleLens::diffractionRay(const math::Vector2 &aperturePoint, math::Vector direction, math::Vector2 *sensorLocation) const {
-    bool flag;
-
     math::Vector dx = math::mul(math::loadScalar(aperturePoint.x), m_right);
     math::Vector dy = math::mul(math::loadScalar(aperturePoint.y), m_up);
 
@@ -76,7 +72,7 @@ bool manta::SimpleLens::diffractionRay(const math::Vector2 &aperturePoint, math:
     outgoingRay.setSource(origin);
 
     LightRay finalRay;
-    flag = m_lens.transformLightRayReverse(&outgoingRay, &finalRay);
+    bool flag = m_lens.transformLightRayReverse(&outgoingRay, &finalRay);
     if (!flag) return false;
 
     math::Vector dsensor = math::sub(m_sensorLocation, finalRay.getSource());
@@ -96,7 +92,7 @@ bool manta::SimpleLens::diffractionRay(const math::Vector2 &aperturePoint, math:
     return true;
 }
 
-void manta::SimpleLens::initialize() {
+void manta::SimpleLens::configure() {
     if (m_aperture == nullptr) {
         m_aperture = &m_defaultAperture;
     }
@@ -214,8 +210,24 @@ void manta::SimpleLens::lensScan(const math::Vector &sensorElement,
     }
 }
 
-bool manta::SimpleLens::generateOutgoingRay(const math::Vector &sensorElement, 
-        const LensScanHint *hint, LightRay *targetRay) const {
+void manta::SimpleLens::_evaluate() {
+    Lens::_evaluate();
+
+    piranha::native_float focusDistance;
+    m_focusDistanceInput->fullCompute((void *)&focusDistance);
+
+    setFocus((math::real)focusDistance);
+}
+
+void manta::SimpleLens::registerInputs() {
+    Lens::registerInputs();
+
+    registerInput(&m_focusDistanceInput, "focus");
+}
+
+bool manta::SimpleLens::generateOutgoingRay(
+    const math::Vector &sensorElement, const LensScanHint *hint, LightRay *targetRay) const 
+{
     constexpr int MAX_ATTEMPTS = 100000;
     
     math::real maxR = hint->radius;

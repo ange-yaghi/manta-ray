@@ -19,7 +19,7 @@ namespace manta {
         virtual bool diffractionRay(const math::Vector2 &aperturePoint, 
             math::Vector direction, math::Vector2 *sensorLocation) const;
         
-        virtual void initialize();
+        virtual void configure();
         virtual void update();
 
         virtual math::Vector getSensorElement(int x, int y) const;
@@ -42,6 +42,12 @@ namespace manta {
         math::Vector m_right;
 
         math::Vector m_apertureLocation;
+
+    protected:
+        virtual void _evaluate();
+        virtual void registerInputs();
+
+        piranha::pNodeInput m_focusDistanceInput;
     };
 
 } /* namespace manta */

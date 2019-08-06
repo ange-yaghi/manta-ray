@@ -1,6 +1,8 @@
 #ifndef MANTARAY_LENS_H
 #define MANTARAY_LENS_H
 
+#include "object_reference_node.h"
+
 #include "manta_math.h"
 
 namespace manta {
@@ -9,7 +11,7 @@ namespace manta {
     class Aperture;
     class LightRay;
 
-    class Lens {
+    class Lens : public ObjectReferenceNode<Lens> {
     public:
         struct LensScanHint {
             math::real centerX;
@@ -41,7 +43,7 @@ namespace manta {
         math::Vector getSensorUp() const { return m_up; }
         math::Vector getSensorRight() const;
 
-        virtual void initialize() = 0;
+        virtual void configure() = 0;
         virtual void update() = 0;
 
         void setAperture(Aperture *aperture) { m_aperture = aperture; }
@@ -79,6 +81,24 @@ namespace manta {
         int m_sensorResolutionY;
 
         Aperture *m_aperture;
+
+    protected:
+        virtual void _initialize();
+        virtual void _evaluate();
+        virtual void _destroy();
+
+        virtual void registerInputs();
+        virtual void registerOutputs();
+
+        piranha::pNodeInput m_positionInput;
+        piranha::pNodeInput m_directionInput;
+        piranha::pNodeInput m_upInput;
+        piranha::pNodeInput m_radiusInput;
+        piranha::pNodeInput m_sensorWidthInput;
+        piranha::pNodeInput m_sensorHeightInput;
+        piranha::pNodeInput m_resolutionXInput;
+        piranha::pNodeInput m_resolutionYInput;
+        piranha::pNodeInput m_apertureInput;
     };
 
 } /* namespace manta */
