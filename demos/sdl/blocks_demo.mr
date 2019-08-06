@@ -1,15 +1,23 @@
 private import "mantaray.mr"
 
-node settings {
-    output samples: 29000;
-    output resolution_x: 1920;
-    output resolution_y: 1080;
-    output enable_fraunhofer: true;
-    output output_dir: "../../workspace/render/bitmap/";
-    output output_name: "blocks_demo";
-} 
+private node settings {
+    input samples:              1000;
+    input resolution_x:         2048;
+    input resolution_y:         1536;
+    input enable_fraunhofer:    false;
+    input output_dir:           "../../workspace/render/bitmap/";
+    input output_name:          "blocks_demo";
+}
+
+private node camera_settings {
+    output camera:              camera_list.lens_camera;
+    input camera_list;
+}
 
 settings settings()
+camera_settings camera_settings(
+    list_cameras(settings)
+)
 material_library library()
 scene scene()
 
@@ -94,27 +102,61 @@ scene_object light(
     )
 )
 
-camera_target camera_target(
-    position:   vector(15.4473, 4.59977, 13.2961),
-    target:     vector(2.63987, 3.55547, 2.42282),
-    up:         vector(0.0, 1.0, 0.0)
-)
+private node blocks_standard_camera {
+    input camera_target;
+    input settings;
 
-standard_camera camera(
-    up: camera_target.up,
-    position: camera_target.position,
-    direction: camera_target.direction,
-    resolution_x: settings.resolution_x,
-    resolution_y: settings.resolution_y,
-    plane_height: 0.5,
-    plane_distance: 1.0,
-    samples: settings.samples,
-    sampler: random_sampler()
-)
+    alias output __out: standard_camera(
+        up: camera_target.up,
+        position: camera_target.position,
+        direction: camera_target.direction,
+        resolution_x: settings.resolution_x,
+        resolution_y: settings.resolution_y,
+        plane_height: 0.5,
+        plane_distance: 1.0,
+        samples: settings.samples,
+        sampler: random_sampler()
+    );
+}
+
+private node blocks_lens_camera {
+    input camera_target;
+    input settings;
+
+    alias output __out :lens_camera(
+        lens: lens,
+        samples: settings.samples,
+        sampler: random_sampler()
+    );
+
+    simple_lens lens(
+        position: camera_target.position,
+        direction: camera_target.direction,
+        up: camera_target.up,
+        resolution_x: settings.resolution_x,
+        resolution_y: settings.resolution_y,
+        aperture: polygonal_aperture(0.18, curvature: 0.3),
+        radius: 1.0,
+        sensor_height: 10.0,
+        focus: 22.0
+    )
+}
+
+private node list_cameras {
+    input settings;
+    output lens_camera: blocks_lens_camera(camera_target, settings);
+    output standard_camera: blocks_standard_camera(camera_target, settings);
+
+    camera_target camera_target(
+        position:   vector(15.4473, 4.59977, 13.2961),
+        target:     vector(2.63987, 3.55547, 2.42282),
+        up:         vector(0.0, 1.0, 0.0)
+    )
+}
 
 ray_tracer mr(
     scene: scene,
-    camera: camera,
+    camera: camera_settings.camera,
     materials: library,
     background: vector(0.0, 0.0, 0.0)
 )
@@ -164,7 +206,7 @@ node diffraction_simulation {
         base: image * step(
             s: image,
             foot: 1.0,
-            step: 100.0,
+            step: 50.0,
             dc: 1.0
         ),
         filter: diffraction.diffraction

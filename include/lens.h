@@ -94,7 +94,6 @@ namespace manta {
         piranha::pNodeInput m_directionInput;
         piranha::pNodeInput m_upInput;
         piranha::pNodeInput m_radiusInput;
-        piranha::pNodeInput m_sensorWidthInput;
         piranha::pNodeInput m_sensorHeightInput;
         piranha::pNodeInput m_resolutionXInput;
         piranha::pNodeInput m_resolutionYInput;

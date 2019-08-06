@@ -1,0 +1,18 @@
+import "apertures.mr"
+import "../types/atomic_types.mr"
+
+public node lens => __mantaray__lens { /* void */ }
+
+public node simple_lens => __mantaray__simple_lens {
+    input position [vector];
+    input direction [vector];
+    input up [vector];
+    input radius [float];
+    input sensor_height [float];
+    input resolution_x [int];
+    input resolution_y [int];
+    input aperture [aperture];
+    input focus [float];
+
+    alias output __out [lens];
+}

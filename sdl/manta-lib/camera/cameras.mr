@@ -1,3 +1,4 @@
+private import "lenses.mr"
 private import "../types/atomic_types.mr"
 private import "../sampler/samplers.mr"
 
@@ -11,6 +12,14 @@ public node standard_camera => __mantaray__standard_camera {
     input resolution_y [int];
     input plane_height [float];
     input plane_distance [float];
+    input samples [int];
+    input sampler [sampler_2d]: simple_sampler();
+
+    alias output __out [::camera];
+}
+
+public node lens_camera => __mantaray__lens_camera {
+    input lens [lens];
     input samples [int];
     input sampler [sampler_2d]: simple_sampler();
 

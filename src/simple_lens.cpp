@@ -217,6 +217,8 @@ void manta::SimpleLens::_evaluate() {
     m_focusDistanceInput->fullCompute((void *)&focusDistance);
 
     setFocus((math::real)focusDistance);
+
+    update();
 }
 
 void manta::SimpleLens::registerInputs() {

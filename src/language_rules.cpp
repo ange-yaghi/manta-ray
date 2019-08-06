@@ -39,6 +39,7 @@
 #include "../include/date_interface_node.h"
 #include "../include/lens.h"
 #include "../include/simple_lens.h"
+#include "../include/lens_camera_ray_emitter_group.h"
 
 manta::LanguageRules::LanguageRules() {
     /* void */
@@ -153,6 +154,8 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__current_date");
     registerBuiltinType <SimpleLens>(
         "__mantaray__simple_lens");
+    registerBuiltinType <LensCameraRayEmitterGroup>(
+        "__mantaray__lens_camera");
 
     // Literals
     registerBuiltinType<piranha::DefaultLiteralFloatNode>(

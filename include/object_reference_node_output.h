@@ -25,6 +25,11 @@ namespace manta {
         Type *m_data;
     };
 
+    template <typename Type>
+    Type *getObject(piranha::pNodeInput input) {
+        return static_cast<ObjectReferenceNodeOutput<Type> *>(input)->getReference();
+    }
+
 } /* namespace manta */
 
 #endif /* MANTARAY_OBJECT_REFERENCE_NODE_OUTPUT_H */
