@@ -74,6 +74,7 @@
     <ClCompile Include="..\..\src\step_node_output.cpp" />
     <ClCompile Include="..\..\src\streaming_node_output.cpp" />
     <ClCompile Include="..\..\src\subtract_node_output.cpp" />
+    <ClCompile Include="..\..\src\surface_interaction_node.cpp" />
     <ClCompile Include="..\..\src\vector_conversions.cpp" />
     <ClCompile Include="..\..\src\vector_map_2d.cpp" />
     <ClCompile Include="..\..\src\material_library.cpp" />
@@ -196,6 +197,8 @@
     <ClInclude Include="..\..\include\step_node.h" />
     <ClInclude Include="..\..\include\step_node_output.h" />
     <ClInclude Include="..\..\include\subtract_node_output.h" />
+    <ClInclude Include="..\..\include\surface_interaction_node.h" />
+    <ClInclude Include="..\..\include\surface_interaction_node_output.h" />
     <ClInclude Include="..\..\include\unary_node.h" />
     <ClInclude Include="..\..\include\unary_node_output.h" />
     <ClInclude Include="..\..\include\vector_conversions.h" />

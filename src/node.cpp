@@ -27,7 +27,10 @@ void manta::Node::destroySessionMemory(NodeSessionMemory *memory,
 }
 
 void manta::Node::resolvePath(const Path *relative, Path *target) const {
-    if (relative->isAbsolute()) *target = *relative;
+    if (relative->isAbsolute()) {
+        *target = *relative;
+        return;
+    }
 
     piranha::Path unitFile = getIrStructure()->getParentUnit()->getPath();
     piranha::Path home;

@@ -42,9 +42,11 @@ namespace manta {
     template <UNARY_OPERATION op>
     using UnaryNode = SingleOutputNode<UnaryNodeOutput<op>>;
 
-    typedef UnaryNode<NEGATE>       NegateNode;
-    typedef UnaryNode<NORMALIZE>    NormalizeNode;
-    typedef UnaryNode<MAGNITUDE>    MagnitudeNode;
+    typedef UnaryNode<NEGATE>           VectorNegateNode;
+    typedef UnaryNode<NORMALIZE>        VectorNormalizeNode;
+    typedef UnaryNode<MAGNITUDE>        VectorMagnitudeNode;
+    typedef UnaryNode<MAX_COMPONENT>    VectorMaxComponentNode;
+    typedef UnaryNode<ABSOLUTE>         VectorAbsoluteNode;
 
 } /* namespace manta */
 

@@ -40,6 +40,11 @@
 #include "../include/lens.h"
 #include "../include/simple_lens.h"
 #include "../include/lens_camera_ray_emitter_group.h"
+#include "../include/surface_interaction_node.h"
+#include "../include/media_interface.h"
+#include "../include/opaque_media_interface.h"
+#include "../include/dielectric_media_interface.h"
+#include "../include/microfacet_glass_bsdf.h"
 
 manta::LanguageRules::LanguageRules() {
     /* void */
@@ -94,6 +99,8 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__date", &DateNodeOutput::DateType);
     registerBuiltinType <piranha::NoOpNode>(
         "__mantaray__lens", &ObjectChannel::LensChannel);
+    registerBuiltinType <piranha::NoOpNode>(
+        "__mantaray__media_interface", &ObjectChannel::MediaInterfaceChannel);
 
     // Constructors
     registerBuiltinType<RayTracer>(
@@ -156,6 +163,18 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__simple_lens");
     registerBuiltinType <LensCameraRayEmitterGroup>(
         "__mantaray__lens_camera");
+    registerBuiltinType <OpaqueMediaInterface>(
+        "__mantaray__opaque_media_interface");
+    registerBuiltinType <DielectricMediaInterface>(
+        "__mantaray__dielectric_media_interface");
+    registerBuiltinType <MicrofacetGlassBSDF>(
+        "__mantaray__glass_bsdf");
+
+    // Actions
+    registerBuiltinType <piranha::ConsoleInputNode>(
+        "__mantaray__console_in");
+    registerBuiltinType <piranha::ConsoleOutputNode>(
+        "__mantaray__console_out");
 
     // Literals
     registerBuiltinType<piranha::DefaultLiteralFloatNode>(
@@ -170,20 +189,28 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
     // Conversions
     registerBuiltinType<FloatToVectorConversionNode>(
         "__mantaray__float_to_vector");
+    registerBuiltinType<IntToVectorConversionNode>(
+        "__mantaray__int_to_vector");
     registerBuiltinType<piranha::IntToFloatConversionNode>(
         "__mantaray__int_to_float");
     registerBuiltinType<piranha::IntToStringConversionNode>(
         "__mantaray__int_to_string");
+    registerBuiltinType<piranha::StringToIntConversionNode>(
+        "__mantaray__string_to_int");
 
     // Unary operations
     registerBuiltinType<piranha::NumNegateOperationNode<piranha::native_float>>(
         "__mantaray__float_negate");
-    registerBuiltinType<NegateNode>(
+    registerBuiltinType<VectorNegateNode>(
         "__mantaray__vector_negate");
-    registerBuiltinType<MagnitudeNode>(
+    registerBuiltinType<VectorMagnitudeNode>(
         "__mantaray__vector_magnitude");
-    registerBuiltinType<NormalizeNode>(
+    registerBuiltinType<VectorNormalizeNode>(
         "__mantaray__vector_normalize");
+    registerBuiltinType<VectorMaxComponentNode>(
+        "__mantaray__vector_max_component");
+    registerBuiltinType<VectorAbsoluteNode>(
+        "__mantaray__vector_absolute");
 
     // Binary operations
     registerBuiltinType<AddNode>(
@@ -198,12 +225,22 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__vector_dot");
     registerBuiltinType<CrossNode>(
         "__mantaray__vector_cross");
+    registerBuiltinType<PowerNode>(
+        "__mantaray__vector_pow");
+    registerBuiltinType<MaxNode>(
+        "__mantaray__vector_max");
+    registerBuiltinType<MinNode>(
+        "__mantaray__vector_min");
     registerBuiltinType<MeshMergeNode>(
         "__mantaray__mesh_merge");
     registerBuiltinType<piranha::OperationNodeSpecialized<
         piranha::native_float, piranha::DivideOperationNodeOutput>>("__mantaray__float_divide");
     registerBuiltinType<piranha::OperationNodeSpecialized<
         piranha::native_string, piranha::AddOperationNodeOutput>>("__mantaray__string_add");
+
+    // Surface interaction
+    registerBuiltinType<SurfaceInteractionNode>(
+        "__mantaray__surface_interaction");
 
     // ====================================================
     // Literal types
@@ -221,12 +258,20 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__float_to_vector"
     );
     registerConversion(
+        { &piranha::FundamentalType::IntType, &VectorNodeOutput::VectorType },
+        "__mantaray__int_to_vector"
+    );
+    registerConversion(
         { &piranha::FundamentalType::IntType, &piranha::FundamentalType::FloatType },
         "__mantaray__int_to_float"
     );
     registerConversion(
         { &piranha::FundamentalType::IntType, &piranha::FundamentalType::StringType },
         "__mantaray__int_to_string"
+    );
+    registerConversion(
+        { &piranha::FundamentalType::StringType, &piranha::FundamentalType::IntType },
+        "__mantaray__string_to_int"
     );
 
     // ====================================================
@@ -243,7 +288,19 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__vector_mul"
     );
     registerOperator(
+        { piranha::IrBinaryOperator::MUL, &VectorNodeOutput::VectorType, &piranha::FundamentalType::IntType },
+        "__mantaray__vector_mul"
+    );
+    registerOperator(
         { piranha::IrBinaryOperator::DIV, &VectorNodeOutput::VectorType, &VectorNodeOutput::VectorType },
+        "__mantaray__vector_div"
+    );
+    registerOperator(
+        { piranha::IrBinaryOperator::DIV, &VectorNodeOutput::VectorType, &piranha::FundamentalType::FloatType },
+        "__mantaray__vector_div"
+    );
+    registerOperator(
+        { piranha::IrBinaryOperator::DIV, &VectorNodeOutput::VectorType, &piranha::FundamentalType::IntType },
         "__mantaray__vector_div"
     );
     registerOperator(
@@ -251,7 +308,23 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__vector_add"
     );
     registerOperator(
+        { piranha::IrBinaryOperator::ADD, &VectorNodeOutput::VectorType, &piranha::FundamentalType::FloatType },
+        "__mantaray__vector_add"
+    );
+    registerOperator(
+        { piranha::IrBinaryOperator::ADD, &VectorNodeOutput::VectorType, &piranha::FundamentalType::IntType },
+        "__mantaray__vector_add"
+    );
+    registerOperator(
         { piranha::IrBinaryOperator::SUB, &VectorNodeOutput::VectorType, &VectorNodeOutput::VectorType },
+        "__mantaray__vector_sub"
+    );
+    registerOperator(
+        { piranha::IrBinaryOperator::SUB, &VectorNodeOutput::VectorType, &piranha::FundamentalType::FloatType },
+        "__mantaray__vector_sub"
+    );
+    registerOperator(
+        { piranha::IrBinaryOperator::SUB, &VectorNodeOutput::VectorType, &piranha::FundamentalType::IntType },
         "__mantaray__vector_sub"
     );
 

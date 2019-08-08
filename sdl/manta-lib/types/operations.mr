@@ -44,6 +44,24 @@ public node cross => __mantaray__vector_cross {
     alias output __out [vector];
 }
 
+public node pow => __mantaray__vector_pow {
+    input __left [vector];
+    input __right [vector];
+    alias output __out [vector];
+}
+
+public node min => __mantaray__vector_min {
+    input __left [vector];
+    input __right [vector];
+    alias output __out [vector];
+}
+
+public node max => __mantaray__vector_max {
+    input __left [vector];
+    input __right [vector];
+    alias output __out [vector];
+}
+
 public node vector_negate => __mantaray__vector_negate {
     input __in [vector];
     alias output __out [vector];
@@ -59,10 +77,20 @@ public node magnitude => __mantaray__vector_magnitude {
     alias output __out [vector];
 }
 
+public node max_component => __mantaray__vector_max_component {
+    input __in [vector];
+    alias output __out [vector];
+}
+
+public node abs => __mantaray__vector_absolute {
+    input __in [vector];
+    alias output __out [vector];
+}
+
 public node step => __mantaray__step {
     input s [vector];
     input foot [vector];
-    input step [vector];
+    input step [vector]: 1.0;
     input dc [vector]: 0.0;
     alias output __out [vector];
 }

@@ -1,24 +1,20 @@
 private import "mantaray.mr"
+private import "utilities.mr"
 
 private node settings {
-    input samples:              1000;
+    input this;
+    input samples:              1;
     input resolution_x:         2048;
     input resolution_y:         1536;
     input enable_fraunhofer:    false;
     input save_diffraction_patterns: true;
     input output_dir:           "../../workspace/render/bitmap/";
     input output_name:          "blocks_demo";
-}
+    input camera:               camera_list.standard_camera;
 
-private node camera_settings {
-    output camera:              camera_list.lens_camera;
-    input camera_list;
-}
+    list_cameras camera_list(this)
+}   (settings) -> settings
 
-settings settings()
-camera_settings camera_settings(
-    list_cameras(settings)
-)
 material_library library()
 scene scene()
 
@@ -157,7 +153,7 @@ private node list_cameras {
 
 ray_tracer mr(
     scene: scene,
-    camera: camera_settings.camera,
+    camera: settings.camera,
     materials: library,
     background: vector(0.0, 0.0, 0.0)
 )

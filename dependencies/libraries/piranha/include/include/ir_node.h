@@ -26,6 +26,7 @@ namespace piranha {
             const IrTokenInfo_string &library);
         IrNode(const IrTokenInfo_string &type, IrAttributeList *attributes, 
             const IrTokenInfo_string &library);
+        IrNode(const IrTokenInfo_string &name, IrNodeDefinition *nodeDefinition, IrAttributeList *attributes);
         ~IrNode();
 
         IrTokenInfo getTypeToken() const { return m_type; }

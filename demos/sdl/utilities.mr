@@ -8,6 +8,7 @@ private node aperture_function_export {
     input output_dir;
     toggle enable: true;
 
+    log(" Exporting aperture function and diffraction pattern\n")
     image_output(
         map: aperture_function,
         filename: 
@@ -30,12 +31,17 @@ public node diffraction_simulation {
     input output_name;
     input samples;
     input save_patterns: true;
+    input aperture: polygonal_aperture(0.18, curvature: 0.3);
+    input step: 100.0;
+    input threshold: 1.0;
     toggle enable: true;
     
     alias output __out: convolution;
 
+    log("=== FRAUNHOFER DIFFRACTION SIMULATION\n")
+    log(" Generating Fraunhofer diffraction pattern\n")
     fraunhofer_diffraction diffraction(
-        aperture: polygonal_aperture(0.18, curvature: 0.3),
+        aperture: aperture,
         sensor_width: 16.0,
         resolution: padded_frame(image),
         dirt_map: 1.0,
@@ -51,16 +57,18 @@ public node diffraction_simulation {
         enable: save_patterns
     )
 
+    log(" Performing 2D convolution\n")
     convolve_2d convolution(
         base: image * step(
-            s: image,
-            foot: 1.0,
-            step: 100.0,
+            s: max_component(image),
+            foot: threshold,
+            step: step,
             dc: 1.0
         ),
         filter: diffraction.diffraction
     )
 
+    log(" Exporting results\n")
     image_output(
         map: convolution,
         filename:

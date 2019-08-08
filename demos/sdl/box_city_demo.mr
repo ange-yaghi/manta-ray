@@ -2,11 +2,11 @@ private import "mantaray.mr"
 private import "utilities.mr"
 
 node settings {
-    output samples: 1;
+    output samples: 100;
     output resolution_x: 1920;
     output resolution_y: 1080;
-    output enable_fraunhofer: false;
-    output save_diffraction_patterns: false;
+    output enable_fraunhofer: true;
+    output save_diffraction_patterns: true;
     output output_dir: "../../workspace/render/bitmap/";
     output output_name: "box_city_demo";
 }
@@ -65,9 +65,22 @@ node sun_material {
         );
 }
 
+node light_material {
+    input library;
+    alias output material:
+        simple_bsdf_material(
+            name: "Light",
+            library: library,
+            reflectance: 0.0,
+            emission: 1.0,
+            bsdf: lambertian_bsdf()
+        );
+}
+
 block_material(library)
 ground_material(library)
 sun_material(library)
+light_material(library)
 
 obj_file scene_mesh(
     filename: "../../demos/models/box_city.obj",
@@ -76,12 +89,12 @@ obj_file scene_mesh(
 )
 
 scene_object sun(
-    name: "Sun",
+    name: "FillLight",
     scene: scene,
     geometry: sphere(
         radius: 10.0,
         materials: library,
-        default_material: "Sun",
+        default_material: "Light",
         position: vector(20.0, 30.0, -13.5)
     )
 )
@@ -148,7 +161,7 @@ ray_tracer mr(
     scene: scene,
     camera: camera_settings.camera,
     materials: library,
-    background: vector(0.0, 0.0, 0.0)
+    background: 1.1
 )
 
 current_date current_date()
