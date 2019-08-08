@@ -22,7 +22,7 @@ namespace manta {
         BinaryNodeOutput<op> m_output;
 
         virtual void _initialize() {
-            /* void */
+            m_output.initialize();
         }
 
         virtual void registerInputs() {
@@ -42,6 +42,9 @@ namespace manta {
     typedef BinaryNode<DIV>         DivideNode;
     typedef BinaryNode<CROSS>       CrossNode;
     typedef BinaryNode<DOT>         DotNode;
+    typedef BinaryNode<POW>         PowerNode;
+    typedef BinaryNode<MAX>         MaxNode;
+    typedef BinaryNode<MIN>         MinNode;
 
 } /* namespace manta */
 

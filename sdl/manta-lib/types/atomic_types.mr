@@ -22,6 +22,9 @@ private node scalar_channel => __mantaray__vector { /* void */ }
 
 @doc: "Vector channel type"
 private node vector_channel => __mantaray__vector {
+    output u [::scalar_channel];
+    output v [::scalar_channel];
+
     output x [::scalar_channel];
     output y [::scalar_channel];
     output z [::scalar_channel];
@@ -110,4 +113,10 @@ public node vector => __mantaray__vector_constructor {
 public node string {
     input s [::string_channel]: "";
     alias output __out [::string_channel]: s;
+}
+
+@doc: "Vector variable type"
+public node vector_var {
+    input var [::vector];
+    alias output __out [::vector]: var;
 }

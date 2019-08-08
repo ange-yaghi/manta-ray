@@ -16,6 +16,11 @@ public node float_to_vector => __mantaray__float_to_vector {
     alias output __out [scalar];
 }
 
+public node int_to_vector => __mantaray__int_to_vector {
+    input __in [int];
+    alias output __out [scalar];
+}
+
 // Float conversions
 public node int_to_float => __mantaray__int_to_float {
     input __in [int];
@@ -26,4 +31,10 @@ public node int_to_float => __mantaray__int_to_float {
 public node int_to_string => __mantaray__int_to_string {
     input __in [int];
     alias output __out [string];
+}
+
+// Integer conversions
+public node string_to_int => __mantaray__string_to_int {
+    input __in [string];
+    alias output __out [int];
 }

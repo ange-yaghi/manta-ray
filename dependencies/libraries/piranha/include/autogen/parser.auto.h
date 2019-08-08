@@ -32,7 +32,7 @@
 
 
 /**
- ** \file D:\Projects\Software\manta-ray\dependencies\submodules\piranha\scripts\/../autogen/parser.auto.h
+ ** \file E:\Software\manta-ray_refactor\manta-ray\dependencies\submodules\piranha\scripts\/../autogen/parser.auto.h
  ** Define the piranha::parser class.
  */
 
@@ -41,10 +41,10 @@
 // Undocumented macros, especially those whose name start with YY_,
 // are private implementation details.  Do not rely on them.
 
-#ifndef YY_YY_D_PROJECTS_SOFTWARE_MANTA_RAY_DEPENDENCIES_SUBMODULES_PIRANHA_SCRIPTS_AUTOGEN_PARSER_AUTO_H_INCLUDED
-# define YY_YY_D_PROJECTS_SOFTWARE_MANTA_RAY_DEPENDENCIES_SUBMODULES_PIRANHA_SCRIPTS_AUTOGEN_PARSER_AUTO_H_INCLUDED
+#ifndef YY_YY_E_SOFTWARE_MANTA_RAY_REFACTOR_MANTA_RAY_DEPENDENCIES_SUBMODULES_PIRANHA_SCRIPTS_AUTOGEN_PARSER_AUTO_H_INCLUDED
+# define YY_YY_E_SOFTWARE_MANTA_RAY_REFACTOR_MANTA_RAY_DEPENDENCIES_SUBMODULES_PIRANHA_SCRIPTS_AUTOGEN_PARSER_AUTO_H_INCLUDED
 // //                    "%code requires" blocks.
-#line 8 "D:\\Projects\\Software\\manta-ray\\dependencies\\submodules\\piranha\\scripts\\/../flex-bison/specification.y" // lalr1.cc:401
+#line 8 "E:\\Software\\manta-ray_refactor\\manta-ray\\dependencies\\submodules\\piranha\\scripts\\/../flex-bison/specification.y" // lalr1.cc:401
 
     namespace piranha {
         class IrCompilationUnit;
@@ -95,7 +95,7 @@
     #pragma warning (disable: 4065)
     #endif
 
-#line 99 "D:\\Projects\\Software\\manta-ray\\dependencies\\submodules\\piranha\\scripts\\/../autogen/parser.auto.h" // lalr1.cc:401
+#line 99 "E:\\Software\\manta-ray_refactor\\manta-ray\\dependencies\\submodules\\piranha\\scripts\\/../autogen/parser.auto.h" // lalr1.cc:401
 
 # include <cassert>
 # include <cstdlib> // std::abort
@@ -209,9 +209,9 @@
 # define YYDEBUG 1
 #endif
 
-#line 5 "D:\\Projects\\Software\\manta-ray\\dependencies\\submodules\\piranha\\scripts\\/../flex-bison/specification.y" // lalr1.cc:401
+#line 5 "E:\\Software\\manta-ray_refactor\\manta-ray\\dependencies\\submodules\\piranha\\scripts\\/../flex-bison/specification.y" // lalr1.cc:401
 namespace piranha {
-#line 215 "D:\\Projects\\Software\\manta-ray\\dependencies\\submodules\\piranha\\scripts\\/../autogen/parser.auto.h" // lalr1.cc:401
+#line 215 "E:\\Software\\manta-ray_refactor\\manta-ray\\dependencies\\submodules\\piranha\\scripts\\/../autogen/parser.auto.h" // lalr1.cc:401
 
 
 
@@ -440,10 +440,10 @@ namespace piranha {
       // inline_node
       char dummy6[sizeof (piranha::IrNode *)];
 
+      // immediate_node_definition
       // node_name
       // node_inline
       // node_shadow
-      // node_port_definitions
       // node_definition
       // specific_node_definition
       // node_decorator
@@ -481,9 +481,11 @@ namespace piranha {
       // PRIVATE
       // BUILTIN_POINTER
       // NAMESPACE_POINTER
+      // INSTANCE_POINTER
       // UNRECOGNIZED
       // OPERATOR
       // MODULE
+      // AUTO
       // '='
       // '+'
       // '-'
@@ -583,9 +585,11 @@ namespace piranha {
         PRIVATE = 275,
         BUILTIN_POINTER = 276,
         NAMESPACE_POINTER = 277,
-        UNRECOGNIZED = 278,
-        OPERATOR = 279,
-        MODULE = 280
+        INSTANCE_POINTER = 278,
+        UNRECOGNIZED = 279,
+        OPERATOR = 280,
+        MODULE = 281,
+        AUTO = 282
       };
     };
 
@@ -844,53 +848,53 @@ namespace piranha {
         // Type destructor.
 switch (yytype)
     {
-      case 73: // attribute
+      case 75: // attribute
         value.template destroy< piranha::IrAttribute * > ();
         break;
 
-      case 65: // port_declaration
-      case 66: // port_status
-      case 67: // port_value
-      case 68: // port_connection
-      case 69: // documented_port_definition
+      case 67: // port_declaration
+      case 68: // port_status
+      case 69: // port_value
+      case 70: // port_connection
+      case 71: // documented_port_definition
         value.template destroy< piranha::IrAttributeDefinition * > ();
         break;
 
-      case 64: // port_definitions
+      case 66: // port_definitions
         value.template destroy< piranha::IrAttributeDefinitionList * > ();
         break;
 
-      case 71: // connection_block
-      case 72: // attribute_list
+      case 73: // connection_block
+      case 74: // attribute_list
         value.template destroy< piranha::IrAttributeList * > ();
         break;
 
-      case 49: // import_statement
-      case 50: // import_statement_visibility
-      case 51: // import_statement_short_name
+      case 51: // import_statement
+      case 52: // import_statement_visibility
+      case 53: // import_statement_short_name
         value.template destroy< piranha::IrImportStatement * > ();
         break;
 
-      case 54: // node
-      case 70: // inline_node
+      case 56: // node
+      case 72: // inline_node
         value.template destroy< piranha::IrNode * > ();
         break;
 
-      case 57: // node_name
-      case 58: // node_inline
-      case 59: // node_shadow
-      case 60: // node_port_definitions
-      case 61: // node_definition
-      case 62: // specific_node_definition
-      case 63: // node_decorator
+      case 57: // immediate_node_definition
+      case 60: // node_name
+      case 61: // node_inline
+      case 62: // node_shadow
+      case 63: // node_definition
+      case 64: // specific_node_definition
+      case 65: // node_decorator
         value.template destroy< piranha::IrNodeDefinition * > ();
         break;
 
-      case 55: // node_list
+      case 58: // node_list
         value.template destroy< piranha::IrNodeList * > ();
         break;
 
-      case 53: // type_name_namespace
+      case 55: // type_name_namespace
         value.template destroy< piranha::IrTokenInfoSet<std::string, 2> > ();
         break;
 
@@ -923,40 +927,42 @@ switch (yytype)
       case 20: // PRIVATE
       case 21: // BUILTIN_POINTER
       case 22: // NAMESPACE_POINTER
-      case 23: // UNRECOGNIZED
-      case 24: // OPERATOR
-      case 25: // MODULE
-      case 26: // '='
-      case 27: // '+'
-      case 28: // '-'
-      case 29: // '/'
-      case 30: // '*'
-      case 31: // '('
-      case 32: // ')'
-      case 33: // '{'
-      case 34: // '}'
-      case 35: // '['
-      case 36: // ']'
-      case 37: // ':'
-      case 38: // ';'
-      case 39: // ','
-      case 40: // '.'
-      case 41: // '^'
-      case 52: // type_name
-      case 56: // standard_operator
-      case 76: // string
+      case 23: // INSTANCE_POINTER
+      case 24: // UNRECOGNIZED
+      case 25: // OPERATOR
+      case 26: // MODULE
+      case 27: // AUTO
+      case 28: // '='
+      case 29: // '+'
+      case 30: // '-'
+      case 31: // '/'
+      case 32: // '*'
+      case 33: // '('
+      case 34: // ')'
+      case 35: // '{'
+      case 36: // '}'
+      case 37: // '['
+      case 38: // ']'
+      case 39: // ':'
+      case 40: // ';'
+      case 41: // ','
+      case 42: // '.'
+      case 43: // '^'
+      case 54: // type_name
+      case 59: // standard_operator
+      case 78: // string
         value.template destroy< piranha::IrTokenInfo_string > ();
         break;
 
-      case 74: // label_value
-      case 75: // value
-      case 77: // constant
-      case 78: // atomic_value
-      case 79: // primary_exp
-      case 80: // data_access
-      case 81: // unary_exp
-      case 82: // mul_exp
-      case 83: // add_exp
+      case 76: // label_value
+      case 77: // value
+      case 79: // constant
+      case 80: // atomic_value
+      case 81: // primary_exp
+      case 82: // data_access
+      case 83: // unary_exp
+      case 84: // mul_exp
+      case 85: // add_exp
         value.template destroy< piranha::IrValue * > ();
         break;
 
@@ -1091,13 +1097,13 @@ switch (yytype)
       symbol_type (int tok, piranha::IrTokenInfo_string v, location_type l)
         : super_type(token_type (tok), std::move (v), std::move (l))
       {
-        YYASSERT (tok == token::CHAR || tok == token::IMPORT || tok == token::AS || tok == token::NODE || tok == token::INLINE || tok == token::ALIAS || tok == token::INPUT || tok == token::OUTPUT || tok == token::MODIFY || tok == token::TOGGLE || tok == token::LABEL || tok == token::STRING || tok == token::DECORATOR || tok == token::PUBLIC || tok == token::PRIVATE || tok == token::BUILTIN_POINTER || tok == token::NAMESPACE_POINTER || tok == token::UNRECOGNIZED || tok == token::OPERATOR || tok == token::MODULE || tok == 61 || tok == 43 || tok == 45 || tok == 47 || tok == 42 || tok == 40 || tok == 41 || tok == 123 || tok == 125 || tok == 91 || tok == 93 || tok == 58 || tok == 59 || tok == 44 || tok == 46 || tok == 94);
+        YYASSERT (tok == token::CHAR || tok == token::IMPORT || tok == token::AS || tok == token::NODE || tok == token::INLINE || tok == token::ALIAS || tok == token::INPUT || tok == token::OUTPUT || tok == token::MODIFY || tok == token::TOGGLE || tok == token::LABEL || tok == token::STRING || tok == token::DECORATOR || tok == token::PUBLIC || tok == token::PRIVATE || tok == token::BUILTIN_POINTER || tok == token::NAMESPACE_POINTER || tok == token::INSTANCE_POINTER || tok == token::UNRECOGNIZED || tok == token::OPERATOR || tok == token::MODULE || tok == token::AUTO || tok == 61 || tok == 43 || tok == 45 || tok == 47 || tok == 42 || tok == 40 || tok == 41 || tok == 123 || tok == 125 || tok == 91 || tok == 93 || tok == 58 || tok == 59 || tok == 44 || tok == 46 || tok == 94);
       }
 #else
       symbol_type (int tok, const piranha::IrTokenInfo_string& v, const location_type& l)
         : super_type(token_type (tok), v, l)
       {
-        YYASSERT (tok == token::CHAR || tok == token::IMPORT || tok == token::AS || tok == token::NODE || tok == token::INLINE || tok == token::ALIAS || tok == token::INPUT || tok == token::OUTPUT || tok == token::MODIFY || tok == token::TOGGLE || tok == token::LABEL || tok == token::STRING || tok == token::DECORATOR || tok == token::PUBLIC || tok == token::PRIVATE || tok == token::BUILTIN_POINTER || tok == token::NAMESPACE_POINTER || tok == token::UNRECOGNIZED || tok == token::OPERATOR || tok == token::MODULE || tok == 61 || tok == 43 || tok == 45 || tok == 47 || tok == 42 || tok == 40 || tok == 41 || tok == 123 || tok == 125 || tok == 91 || tok == 93 || tok == 58 || tok == 59 || tok == 44 || tok == 46 || tok == 94);
+        YYASSERT (tok == token::CHAR || tok == token::IMPORT || tok == token::AS || tok == token::NODE || tok == token::INLINE || tok == token::ALIAS || tok == token::INPUT || tok == token::OUTPUT || tok == token::MODIFY || tok == token::TOGGLE || tok == token::LABEL || tok == token::STRING || tok == token::DECORATOR || tok == token::PUBLIC || tok == token::PRIVATE || tok == token::BUILTIN_POINTER || tok == token::NAMESPACE_POINTER || tok == token::INSTANCE_POINTER || tok == token::UNRECOGNIZED || tok == token::OPERATOR || tok == token::MODULE || tok == token::AUTO || tok == 61 || tok == 43 || tok == 45 || tok == 47 || tok == 42 || tok == 40 || tok == 41 || tok == 123 || tok == 125 || tok == 91 || tok == 93 || tok == 58 || tok == 59 || tok == 44 || tok == 46 || tok == 94);
       }
 #endif
     };
@@ -1455,6 +1461,21 @@ switch (yytype)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
+      make_INSTANCE_POINTER (piranha::IrTokenInfo_string v, location_type l)
+      {
+        return symbol_type (token::INSTANCE_POINTER, std::move (v), std::move (l));
+      }
+#else
+      static
+      symbol_type
+      make_INSTANCE_POINTER (const piranha::IrTokenInfo_string& v, const location_type& l)
+      {
+        return symbol_type (token::INSTANCE_POINTER, v, l);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
       make_UNRECOGNIZED (piranha::IrTokenInfo_string v, location_type l)
       {
         return symbol_type (token::UNRECOGNIZED, std::move (v), std::move (l));
@@ -1495,6 +1516,21 @@ switch (yytype)
       make_MODULE (const piranha::IrTokenInfo_string& v, const location_type& l)
       {
         return symbol_type (token::MODULE, v, l);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_AUTO (piranha::IrTokenInfo_string v, location_type l)
+      {
+        return symbol_type (token::AUTO, std::move (v), std::move (l));
+      }
+#else
+      static
+      symbol_type
+      make_AUTO (const piranha::IrTokenInfo_string& v, const location_type& l)
+      {
+        return symbol_type (token::AUTO, v, l);
       }
 #endif
 
@@ -1800,12 +1836,12 @@ switch (yytype)
     enum
     {
       yyeof_ = 0,
-      yylast_ = 282,     ///< Last index in yytable_.
+      yylast_ = 293,     ///< Last index in yytable_.
       yynnts_ = 41,  ///< Number of nonterminal symbols.
-      yyfinal_ = 52, ///< Termination state number.
+      yyfinal_ = 53, ///< Termination state number.
       yyterror_ = 1,
       yyerrcode_ = 256,
-      yyntokens_ = 43  ///< Number of tokens.
+      yyntokens_ = 45  ///< Number of tokens.
     };
 
 
@@ -1815,11 +1851,11 @@ switch (yytype)
   };
 
 
-#line 5 "D:\\Projects\\Software\\manta-ray\\dependencies\\submodules\\piranha\\scripts\\/../flex-bison/specification.y" // lalr1.cc:401
+#line 5 "E:\\Software\\manta-ray_refactor\\manta-ray\\dependencies\\submodules\\piranha\\scripts\\/../flex-bison/specification.y" // lalr1.cc:401
 } // piranha
-#line 1821 "D:\\Projects\\Software\\manta-ray\\dependencies\\submodules\\piranha\\scripts\\/../autogen/parser.auto.h" // lalr1.cc:401
+#line 1857 "E:\\Software\\manta-ray_refactor\\manta-ray\\dependencies\\submodules\\piranha\\scripts\\/../autogen/parser.auto.h" // lalr1.cc:401
 
 
 
 
-#endif // !YY_YY_D_PROJECTS_SOFTWARE_MANTA_RAY_DEPENDENCIES_SUBMODULES_PIRANHA_SCRIPTS_AUTOGEN_PARSER_AUTO_H_INCLUDED
+#endif // !YY_YY_E_SOFTWARE_MANTA_RAY_REFACTOR_MANTA_RAY_DEPENDENCIES_SUBMODULES_PIRANHA_SCRIPTS_AUTOGEN_PARSER_AUTO_H_INCLUDED

@@ -15,6 +15,7 @@ namespace piranha {
         void addNode(Node *node);
         Node *getNode(int index) const { return m_nodes[index]; }
         bool findNode(Node *node) const;
+        bool findContainer(Node *node) const;
         int getNodeCount() const { return (int)m_nodes.size(); }
 
         void addChild(NodeContainer *container);

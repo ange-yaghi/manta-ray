@@ -1,4 +1,4 @@
-// Auto-generated on: 2019-08-06 18:06:51.851374
+// Auto-generated on: 2019-08-08 09:15:10.416450
 
 #ifndef PIRANHA_PIRANHA_H
 #define PIRANHA_PIRANHA_H
@@ -20,6 +20,7 @@
 #include "include/float_conversions.h"
 #include "include/fundamental_output.h"
 #include "include/fundamental_types.h"
+#include "include/int_conversions.h"
 #include "include/ir_attribute.h"
 #include "include/ir_attribute_definition.h"
 #include "include/ir_attribute_definition_list.h"

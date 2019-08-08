@@ -28,7 +28,7 @@ namespace piranha {
         void setIsInline(bool isInline) { m_isInline = isInline; }
         bool isInline() const { return m_isInline; }
 
-        const IrTokenInfo *getNameToken() const { return &m_name; }
+        const IrTokenInfo_string *getNameToken() const { return &m_name; }
         std::string getName() const { return m_name.data; }
 
         void setAttributeDefinitionList(IrAttributeDefinitionList *definitions);

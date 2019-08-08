@@ -6,11 +6,14 @@
 
 namespace manta {
 
+    class LightRay;
+
     struct IntersectionPoint {
         math::Vector m_position;
         math::Vector m_vertexNormal;
         math::Vector m_faceNormal;
         math::Vector m_textureCoodinates;
+        LightRay *m_lightRay = nullptr;
         math::real m_depth;
 
         int m_material;

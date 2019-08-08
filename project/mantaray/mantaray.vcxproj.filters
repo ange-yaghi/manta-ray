@@ -370,6 +370,15 @@
     <Filter Include="Header Files\sdl\nodes\output-ports\date">
       <UniqueIdentifier>{a0b54910-8a08-4b8b-a2de-926b138eeba8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\sdl\nodes\library\surface-interaction">
+      <UniqueIdentifier>{8fb8f553-92ad-4aee-83e8-5e2a83b82c57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl\nodes\output-ports\surface-interaction">
+      <UniqueIdentifier>{2ecd2c47-532b-47a9-a206-3be5edbcbb35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sdl\nodes\library\surface-interaction">
+      <UniqueIdentifier>{bc3c2bf2-cc92-4569-b7a0-0327bf8ee7c1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -710,6 +719,9 @@
     </ClCompile>
     <ClCompile Include="..\..\include\current_date_node.cpp">
       <Filter>Source Files\sdl\nodes\library\date</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\surface_interaction_node.cpp">
+      <Filter>Source Files\sdl\nodes\library\surface-interaction</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1129,6 +1141,12 @@
     </ClInclude>
     <ClInclude Include="..\..\include\current_date_node.h">
       <Filter>Header Files\sdl\nodes\library\date</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\surface_interaction_node.h">
+      <Filter>Header Files\sdl\nodes\library\surface-interaction</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\surface_interaction_node_output.h">
+      <Filter>Header Files\sdl\nodes\output-ports\surface-interaction</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

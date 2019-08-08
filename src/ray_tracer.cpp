@@ -380,6 +380,7 @@ void manta::RayTracer::refineContact(const LightRay *ray, math::real depth, Inte
 void manta::RayTracer::traceRay(const Scene *scene, LightRay *ray, int degree, StackAllocator *s /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const {
     SceneObject *sceneObject = nullptr;
     IntersectionPoint point;
+    point.m_lightRay = ray;
 
     depthCull(scene, ray, &sceneObject, &point, s /**/ STATISTICS_PARAM_INPUT);
 

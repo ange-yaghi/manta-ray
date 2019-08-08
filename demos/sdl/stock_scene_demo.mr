@@ -1,0 +1,295 @@
+private import "mantaray.mr"
+private import "utilities.mr"
+
+node settings {
+    output samples: 100;
+    output resolution_x: 1900;
+    output resolution_y: 1268;
+    output enable_fraunhofer: true;
+    output save_diffraction_patterns: true;
+    output output_dir: "../../workspace/render/bitmap/";
+    output output_name: "stock_scene_demo";
+
+    output aperture:                polygonal_aperture(0.300, curvature: 0.5);
+    output diffraction_aperture:    polygonal_aperture(0.180, curvature: 0.5);
+}
+
+private node camera_settings {
+    output camera: camera_list.lens_camera;
+    input camera_list;
+}
+
+settings settings()
+camera_settings camera_settings(
+    camera_list: list_cameras(settings)
+)
+material_library library()
+scene scene()
+
+node steel_materials {
+    input library;
+    input fingerprint;
+
+    simple_bsdf_material(
+        name: "Steel",
+        library: library,
+        bsdf: bsdf
+    )
+
+    simple_bsdf_material(
+        name: "BlackSteel",
+        library: library,
+        bsdf: bsdf,
+        reflectance: srgb_i(0xC0, 0xC0, 0xC0)
+    )
+
+    image_file metal(
+        filename: "../../demos/textures/stock-scene/metal.jpg"
+    )
+
+    pow curved_fingerprint(
+        fingerprint,
+        4.0
+    )
+
+    bilayer_bsdf bsdf(
+        coating: 
+            phong_distribution(
+                power: curved_fingerprint * 10000.0 + 16.0
+            ),
+        diffuse: metal,
+        specular: 1.0 - 0.5 * curved_fingerprint
+    )
+}
+
+node shiny_steel_material {
+    input library;
+    alias output material: 
+        simple_bsdf_material(
+            name: "ShinySteel",
+            library: library,
+            bsdf: bsdf
+        );
+
+    microfacet_reflection_bsdf bsdf(
+        distribution: phong_distribution(power: 5000.0)
+    )
+}
+
+node graphite_material {
+    input library;
+    alias output material: 
+        simple_bsdf_material(
+            name: "Graphite",
+            library: library,
+            bsdf: bsdf,
+            reflectance: srgb_i(0x29, 0x29, 0x29)
+        );
+
+    microfacet_reflection_bsdf bsdf(
+        distribution: phong_distribution(power: 512.0)
+    )
+}
+
+node paint_material {
+    input library;
+    input fingerprint;
+
+    simple_bsdf_material(
+        name: "PencilPaint",
+        library: library,
+        bsdf: bsdf
+    )
+
+    bilayer_bsdf bsdf(
+        coating: 
+            phong_distribution(
+                power: 1024.0 * fingerprint + 256.0
+            ),
+        diffuse: srgb_i(0x0F, 0x10, 0x40),
+        specular: 0.1
+    )
+}
+
+node eraser_material {
+    input library;
+
+    image_file eraser(
+        filename: "../../demos/textures/stock-scene/eraser.jpg"
+    )
+
+    simple_bsdf_material(
+        name: "Eraser",
+        library: library,
+        bsdf: lambertian_bsdf(),
+        reflectance: eraser
+    )
+}
+
+node wood_material {
+    input library;
+
+    image_file wood(
+        filename: "../../demos/textures/light_wood.jpg"
+    )
+
+    simple_bsdf_material(
+        name: "Wood",
+        library: library,
+        bsdf: lambertian_bsdf(),
+        reflectance: wood
+    )
+}
+
+node floor_material {
+    input library;
+
+    image_file floor(
+        filename: "../../demos/textures/stock-scene/floor.png"
+    )
+
+    simple_bsdf_material(
+        name: "Floor",
+        library: library,
+        bsdf: lambertian_bsdf(),
+        reflectance: floor
+    )
+}
+
+node light_material {
+    input library;
+
+    simple_bsdf_material(
+        name: "Light",
+        library: library,
+        bsdf: lambertian_bsdf(),
+        reflectance: 0.0,
+        emission: 4.0
+    )
+}
+
+node default_material {
+    input library;
+
+    simple_bsdf_material(
+        name: "Default",
+        library: library,
+        bsdf: lambertian_bsdf()
+    )
+}
+
+image_file fingerprint(
+    filename: "../../demos/textures/samsung_a8/fingerprints_roughness_map.png",
+    correct_gamma: false
+)
+
+steel_materials(library, fingerprint)
+shiny_steel_material(library)
+graphite_material(library)
+paint_material(library, fingerprint)
+eraser_material(library)
+wood_material(library)
+floor_material(library)
+light_material(library)
+default_material(library)
+
+obj_file scene_mesh(
+    filename: "../../demos/models/stock_scene_alt.obj",
+    materials: library,
+    default_material: "Default"
+)
+
+scene_object main_object(
+    name: "Main",
+    scene: scene,
+    geometry: kd_tree(scene_mesh)
+)
+
+private node scene_standard_camera {
+    input camera_target;
+    input settings;
+
+    alias output __out: standard_camera(
+        up: camera_target.up,
+        position: camera_target.position,
+        direction: camera_target.direction,
+        resolution_x: settings.resolution_x,
+        resolution_y: settings.resolution_y,
+        plane_height: 0.25,
+        plane_distance: 1.0,
+        samples: settings.samples,
+        sampler: random_sampler()
+    );
+}
+
+private node scene_lens_camera {
+    input camera_target;
+    input settings;
+
+    alias output __out: lens_camera(
+        lens: lens,
+        samples: settings.samples,
+        sampler: random_sampler()
+    );
+
+    simple_lens lens(
+        position: camera_target.position,
+        direction: camera_target.direction,
+        up: camera_target.up,
+        resolution_x: settings.resolution_x,
+        resolution_y: settings.resolution_y,
+        aperture: settings.aperture,
+        radius: 1.0,
+        sensor_height: 8.0,
+        focus: 22.0
+    )
+}
+
+private node camera_reposition {
+    input camera_target;
+    input offset;
+    output position: camera_target.position - offset * camera_target.direction;
+    output up: camera_target.up;
+    output direction: camera_target.direction;
+}
+
+private node list_cameras {
+    input settings;
+    output lens_camera: scene_lens_camera(camera_target, settings);
+    output standard_camera: scene_standard_camera(camera_target, settings);
+
+    camera_target camera_target(
+        position:   vector(16.5140, 7.95910, 18.1270),
+        target:     vector(1.04120, -1.0326, 0.33937),
+        up:         vector(0.00000, 1.00000, 0.00000)
+    )
+}
+
+ray_tracer mr(
+    scene: scene,
+    camera: camera_settings.camera,
+    materials: library,
+    background: 0.0
+)
+
+current_date current_date()
+
+image_output(
+    map: mr.image,
+    filename: 
+        settings.output_dir + current_date.as_string + "_" + settings.output_name + 
+        "_S" + string(settings.samples) + ".jpg"
+)
+
+diffraction_simulation(
+    image: mr.image, 
+    current_date: current_date, 
+    output_dir: settings.output_dir,
+    output_name: settings.output_name,
+    save_patterns: settings.save_diffraction_patterns,
+    samples: settings.samples,
+    enable: settings.enable_fraunhofer,
+    aperture: settings.diffraction_aperture,
+    step: 50.0,
+    threshold: 2.0
+)

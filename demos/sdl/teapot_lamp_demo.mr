@@ -1,17 +1,23 @@
 private import "mantaray.mr"
 private import "utilities.mr"
 
+log("===== TEAPOT AND LAMP DEMO\n")
+log(" Samples: " + string(settings.samples) + "\n")
+log(" Resolution: " + 
+    string(settings.resolution_x) + "x" + string(settings.resolution_y) + "\n")
+log()
+log()
+
 node settings {
     output samples: 1;
     output resolution_x: 1920;
     output resolution_y: 1080;
-    output enable_fraunhofer: true;
+    output enable_fraunhofer: false;
     output save_diffraction_patterns: true;
     output output_dir: "../../workspace/render/bitmap/";
     output output_name: "teapot_lamp_demo";
-} 
+}   -> auto
 
-settings settings()
 material_library library()
 scene scene()
 
@@ -25,11 +31,37 @@ node teapot_material {
         );
 
     bilayer_bsdf bsdf(
-        coating: phong_distribution(1024.0),
+        coating: phong_distribution(1024),
         diffuse: srgb_i(0x89, 0xCF, 0xF0),
         specular: vector(0.5, 0.5, 0.5)
     )
-} teapot_material(library)
+} //(library) -> auto
+
+node test_material {
+    input library;
+    alias output material: 
+        simple_bsdf_material(
+            name: "TeapotMaterial",
+            library: library,
+            bsdf: lambertian_bsdf(),
+            reflectance: 1.0,
+            emission:
+                separator * glow_color + 
+                (1.0 - separator) * vector(glow_color.g, glow_color.b, glow_color.r)
+        );
+
+    vector_var glow_color(
+        (normalize(
+            surface_interaction().position - vector(0, 1, 0)) + 1
+        ) / 8
+    )
+
+    step separator(
+        s: surface_interaction().position.y,
+        foot: 0.75
+    )
+
+}   (library) -> auto
 
 node floor_material {
     input library;
@@ -43,9 +75,9 @@ node floor_material {
     bilayer_bsdf bsdf(
         coating: phong_distribution(128.0),
         diffuse: srgb_i(0xFF, 0xFF, 0xFF),
-        specular: vector(0.0, 0.0, 0.0)
+        specular: 0
     )
-} floor_material(library)
+}   (library) -> auto
 
 node bulb_material {
     input library;
@@ -54,10 +86,10 @@ node bulb_material {
             name: "BulbMaterial",
             library: library,
             reflectance: vector(),
-            emission: srgb_i(255, 197, 143) * 50.0,
+            emission: srgb_i(255, 197, 143) * 50,
             bsdf: lambertian_bsdf()
         );
-} bulb_material(library)
+}   (library) -> auto
 
 obj_file lamp_mesh(
     filename: "../../demos/models/lamp2.obj",
@@ -97,7 +129,7 @@ scene_object ground(
         default_material: "FloorMaterial",
 
         // TODO: investigate issue when this is set to zero
-        position: vector(0.0, -5000.001, 0.0)
+        position: vector(0, -5000.001, 0)
     )
 )
 
@@ -123,7 +155,7 @@ ray_tracer mr(
     scene: scene,
     camera: camera,
     materials: library,
-    background: vector(0.0, 0.0, 0.0)
+    background: 0
 )
 
 current_date current_date()

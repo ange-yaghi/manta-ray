@@ -8,7 +8,9 @@ namespace manta {
     enum UNARY_OPERATION {
         NORMALIZE,
         NEGATE,
-        MAGNITUDE
+        MAGNITUDE,
+        MAX_COMPONENT,
+        ABSOLUTE
     };
 
     template <UNARY_OPERATION op>
@@ -32,6 +34,10 @@ namespace manta {
                 return math::magnitude(input);
             case NEGATE:
                 return math::negate(input);
+            case MAX_COMPONENT:
+                return math::maxComponent(input);
+            case ABSOLUTE:
+                return math::abs(input);
             default:
                 return math::constants::Zero;
             }
@@ -46,7 +52,7 @@ namespace manta {
             *target = doOp(input);
         }
 
-        virtual void discreteSample2D(int x, int y, void *_target) const {
+        virtual void discreteSample2d(int x, int y, void *_target) const {
             math::Vector *target = reinterpret_cast<math::Vector *>(_target);
 
             math::Vector input;
@@ -58,6 +64,18 @@ namespace manta {
 
         virtual void getDataReference(const void **target) const {
             *target = nullptr;
+        }
+
+        virtual void _evaluateDimensions() {
+            VectorNodeOutput *input = static_cast<VectorNodeOutput *>(m_input);
+            input->evaluateDimensions();
+
+            int dimensions = input->getDimensions();
+            setDimensions(dimensions);
+
+            for (int i = 0; i < dimensions; i++) {
+                setDimensionSize(i, input->getSize(i));
+            }
         }
 
         piranha::pNodeInput *getConnection() { return &m_input; }

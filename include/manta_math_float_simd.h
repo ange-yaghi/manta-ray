@@ -2,6 +2,7 @@
 #define MANTARAY_MANTA_MATH_FLOAT_SIMD_H
 
 #include <xmmintrin.h>
+#include <immintrin.h>
 #include <stdlib.h>
 
 #include "manta_real.h"

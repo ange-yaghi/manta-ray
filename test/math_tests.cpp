@@ -116,3 +116,21 @@ TEST(MathTests, ReflectionTest) {
 
     CHECK_VEC_EQ(hs, n, 1E-4);
 }
+
+TEST(MathTests, MaxComponentTest) {
+    math::Vector n = math::loadVector(0, 0, 0, 1);
+    n = math::maxComponent(n);
+    CHECK_VEC_EQ(n, math::loadScalar(1), 0.0);
+
+    n = math::loadVector(0, 0, 1, 0);
+    n = math::maxComponent(n);
+    CHECK_VEC_EQ(n, math::loadScalar(1), 0.0);
+
+    n = math::loadVector(0, 1, 0, 0);
+    n = math::maxComponent(n);
+    CHECK_VEC_EQ(n, math::loadScalar(1), 0.0);
+
+    n = math::loadVector(1, 0, 0, 0);
+    n = math::maxComponent(n);
+    CHECK_VEC_EQ(n, math::loadScalar(1), 0.0);
+}

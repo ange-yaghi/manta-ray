@@ -1,0 +1,10 @@
+private import "../types/atomic_types.mr"
+
+public node user_in => __mantaray__console_in {
+    input prompt [string]: "";
+    alias output raw_input [string];
+}
+
+public node log => __mantaray__console_out {
+    input data [string]: "\n";
+}

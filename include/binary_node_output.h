@@ -11,7 +11,10 @@ namespace manta {
         DIV,
         MUL,
         DOT,
-        CROSS
+        CROSS,
+        POW,
+        MAX,
+        MIN
     };
 
     template <BINARY_OPERATION op>
@@ -42,6 +45,12 @@ namespace manta {
                 return math::dot(left, right);
             case CROSS:
                 return math::cross(left, right);
+            case POW:
+                return math::pow(left, right);
+            case MAX:
+                return math::componentMax(left, right);
+            case MIN:
+                return math::componentMin(left, right);
             default:
                 return math::constants::Zero;
             }

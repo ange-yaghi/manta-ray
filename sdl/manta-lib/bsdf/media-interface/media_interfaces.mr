@@ -1,0 +1,14 @@
+private import "../../types/atomic_types.mr"
+
+public node media_interface => __mantaray__media_interface { /* void */ }
+
+public node dielectric_interface => __mantaray__dielectric_media_interface {
+    input ior_interior [float]: 1.52;
+    input ior_exterior [float]: 1.00;
+
+    alias output __out [media_interface];
+}
+
+public node opaque_interface => __mantaray__opaque_media_interface {
+    alias output __out [media_interface];
+}
