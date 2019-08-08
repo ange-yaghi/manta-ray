@@ -1,5 +1,17 @@
+module {
+    @name:          "Lambertian BSDF"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "Lambertian BSDF implementation"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
 private import "bsdf.mr"
 
+@doc: "Lambertian BSDF"
 public node lambertian_bsdf => __mantaray__lambertian_bsdf {
     alias output __out [bsdf];
 }

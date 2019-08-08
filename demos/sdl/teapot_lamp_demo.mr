@@ -24,7 +24,7 @@ scene scene()
 node teapot_material {
     input library;
     alias output material: 
-        simple_bsdf_material(
+        bsdf_material(
             name: "TeapotMaterial",
             library: library,
             bsdf: bsdf
@@ -40,7 +40,7 @@ node teapot_material {
 node test_material {
     input library;
     alias output material: 
-        simple_bsdf_material(
+        bsdf_material(
             name: "TeapotMaterial",
             library: library,
             bsdf: lambertian_bsdf(),
@@ -66,7 +66,7 @@ node test_material {
 node floor_material {
     input library;
     alias output material: 
-        simple_bsdf_material(
+        bsdf_material(
             name: "FloorMaterial",
             library: library,
             bsdf: bsdf
@@ -82,7 +82,7 @@ node floor_material {
 node bulb_material {
     input library;
     alias output material:
-        simple_bsdf_material(
+        bsdf_material(
             name: "BulbMaterial",
             library: library,
             reflectance: vector(),

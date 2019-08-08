@@ -1,3 +1,16 @@
+module {
+    @name:          "Binary and Unary Operations"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "Defines all binary and unary operations between "
+                    "fundamental types."
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
+
 private import "atomic_types.mr"
 private import "conversions.mr"
 

@@ -1,10 +1,23 @@
+module {
+    @name:          "Scene Objects"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "Defines the base scene object types"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
 private import "scene.mr"
 private import "scene_geometry.mr"
 private import "../materials/material.mr"
 private import "../types/atomic_types.mr"
 
+@doc: "Scene object channel type"
 public node scene_object_channel => __mantaray__scene_object_channel { /* void */ }
 
+@doc: "Scene object constructor"
 public node scene_object => __mantaray__scene_object {
     input name                  [string]: "";
     input geometry              [scene_geometry];

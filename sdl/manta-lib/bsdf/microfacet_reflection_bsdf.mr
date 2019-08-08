@@ -1,8 +1,20 @@
+module {
+    @name:          "Microfacet Reflection BSDF"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "BSDF model using a single microfacet distribution"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
 private import "bsdf.mr"
 private import "../microfacet-models/microfacet_distributions.mr"
-private import "../types/atomic_types.mr" as types
+private import "../types/atomic_types.mr"
 private import "../types/conversions.mr"
 
+@doc: "Single layer reflection BSDF"
 public node microfacet_reflection_bsdf => __mantaray__microfacet_reflection_bsdf {
     input distribution      [microfacet_distribution]: ggx_distribution(0.5);
     alias output __out      [bsdf];

@@ -22,8 +22,8 @@ public import "dates/dates.mr"
 
 public import "microfacet-models/microfacet_distributions.mr"
 
-public import "bsdf/media-interface/media_interfaces.mr"
 public import "bsdf/bsdf.mr"
+public import "bsdf/media-interface/media_interfaces.mr"
 public import "bsdf/bilayer_bsdf.mr"
 public import "bsdf/lambertian_bsdf.mr"
 public import "bsdf/microfacet_reflection_bsdf.mr"
@@ -41,7 +41,7 @@ public import "acceleration/kd_tree.mr"
 
 public import "materials/material_library.mr"
 public import "materials/material.mr"
-public import "materials/simple_bsdf_material.mr"
+public import "materials/bsdf_material.mr"
 public import "materials/surface_interaction.mr"
 
 public import "camera/cameras.mr"

@@ -30,13 +30,13 @@ node steel_materials {
     input library;
     input fingerprint;
 
-    simple_bsdf_material(
+    bsdf_material(
         name: "Steel",
         library: library,
         bsdf: bsdf
     )
 
-    simple_bsdf_material(
+    bsdf_material(
         name: "BlackSteel",
         library: library,
         bsdf: bsdf,
@@ -65,7 +65,7 @@ node steel_materials {
 node shiny_steel_material {
     input library;
     alias output material: 
-        simple_bsdf_material(
+        bsdf_material(
             name: "ShinySteel",
             library: library,
             bsdf: bsdf
@@ -79,7 +79,7 @@ node shiny_steel_material {
 node graphite_material {
     input library;
     alias output material: 
-        simple_bsdf_material(
+        bsdf_material(
             name: "Graphite",
             library: library,
             bsdf: bsdf,
@@ -95,7 +95,7 @@ node paint_material {
     input library;
     input fingerprint;
 
-    simple_bsdf_material(
+    bsdf_material(
         name: "PencilPaint",
         library: library,
         bsdf: bsdf
@@ -118,7 +118,7 @@ node eraser_material {
         filename: "../../demos/textures/stock-scene/eraser.jpg"
     )
 
-    simple_bsdf_material(
+    bsdf_material(
         name: "Eraser",
         library: library,
         bsdf: lambertian_bsdf(),
@@ -133,7 +133,7 @@ node wood_material {
         filename: "../../demos/textures/light_wood.jpg"
     )
 
-    simple_bsdf_material(
+    bsdf_material(
         name: "Wood",
         library: library,
         bsdf: lambertian_bsdf(),
@@ -148,7 +148,7 @@ node floor_material {
         filename: "../../demos/textures/stock-scene/floor.png"
     )
 
-    simple_bsdf_material(
+    bsdf_material(
         name: "Floor",
         library: library,
         bsdf: lambertian_bsdf(),
@@ -159,7 +159,7 @@ node floor_material {
 node light_material {
     input library;
 
-    simple_bsdf_material(
+    bsdf_material(
         name: "Light",
         library: library,
         bsdf: lambertian_bsdf(),
@@ -171,7 +171,7 @@ node light_material {
 node default_material {
     input library;
 
-    simple_bsdf_material(
+    bsdf_material(
         name: "Default",
         library: library,
         bsdf: lambertian_bsdf()

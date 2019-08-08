@@ -29,7 +29,7 @@ scene scene()
 node pen_body_material {
     input library;
     alias output material: 
-        simple_bsdf_material(
+        bsdf_material(
             name: "PenBody",
             library: library,
             bsdf: bsdf
@@ -51,12 +51,12 @@ node pen_body_material {
         diffuse: wood_diffuse,
         specular: 0.1
     )
-}
+}   (library) -> auto
 
 node pen_chrome_material {
     input library;
     alias output material: 
-        simple_bsdf_material(
+        bsdf_material(
             name: "Chrome",
             library: library,
             bsdf: bsdf
@@ -74,12 +74,12 @@ node pen_chrome_material {
         diffuse: 0.0,
         specular: 0.95
     )
-}
+}   (library) -> auto
 
 node backdrop_material {
     input library;
     alias output material: 
-        simple_bsdf_material(
+        bsdf_material(
             name: "Backdrop",
             library: library,
             bsdf: bsdf,
@@ -93,49 +93,42 @@ node backdrop_material {
     microfacet_reflection_bsdf bsdf(
         distribution: phong_distribution(128.0)
     )
-}
+}   (library) -> auto
 
 node strong_light_material {
     input library;
     alias output material: 
-        simple_bsdf_material(
+        bsdf_material(
             name: "StrongLight",
             library: library,
             bsdf: lambertian_bsdf(),
             emission: 2.0,
             reflectance: 0.0
         );
-}
+}   (library) -> auto
 
 node weak_light_material {
     input library;
     alias output material: 
-        simple_bsdf_material(
+        bsdf_material(
             name: "WeakLight",
             library: library,
             bsdf: lambertian_bsdf(),
             emission: 1.0,
             reflectance: 0.0
         );
-}
+}   (library) -> auto
 
 node default_material {
     input library;
     alias output material: 
-        simple_bsdf_material(
+        bsdf_material(
             name: "Default",
             library: library,
             bsdf: lambertian_bsdf(),
             reflectance: vector(0.0, 1.0, 0.0)
         );
-}
-
-pen_body_material(library)
-pen_chrome_material(library)
-backdrop_material(library)
-strong_light_material(library)
-weak_light_material(library)
-default_material(library)
+}   (library) -> auto
 
 obj_file scene_mesh(
     filename: "../../demos/models/pen.obj",

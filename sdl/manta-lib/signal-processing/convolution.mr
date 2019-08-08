@@ -1,3 +1,14 @@
+module {
+    @name:          "Convolution Utilities"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "Defines all console utilities"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
 private import "../image/vector_map.mr"
 private import "../types/atomic_types.mr"
 

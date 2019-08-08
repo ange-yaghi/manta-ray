@@ -1,20 +1,35 @@
-private import "../types/atomic_types.mr"
+module {
+    @name:          "Ray Tracer"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "Defines the simplest ray tracer implementation"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
+private import "../scene/scene.mr"
 private import "../camera/cameras.mr"
 private import "../materials/material_library.mr"
-private import "../scene/scene.mr"
+private import "../types/atomic_types.mr"
 private import "../types/conversions.mr"
 private import "../image/vector_map.mr"
 
+@doc: "Unidirectional MantaRay ray-tracer"
 public node ray_tracer => __mantaray__ray_tracer {
-    input scene [scene];
-    input camera [camera];
-    input materials [material_library];
+    // Main inputs
+    input scene         [scene];
+    input camera        [camera];
+    input materials     [material_library];
 
+    // Optional inputs
     input multithreaded [bool]: true;
-    input threads [int]: 12;
-    input block_size [int]: 100;
-    input background [vector]: vector();
+    input threads       [int]: 12;
+    input block_size    [int]: 100;
+    input background    [vector]: 0.0;
     input deterministic_seed [bool]: false;
 
-    output image [vector_map];
+    @doc: "Rendered image"
+    output image        [vector_map];
 }
