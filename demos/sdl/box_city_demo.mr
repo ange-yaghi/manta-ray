@@ -26,7 +26,7 @@ scene scene()
 node block_material {
     input library;
     alias output material: 
-        simple_bsdf_material(
+        bsdf_material(
             name: "Block",
             library: library,
             bsdf: bsdf
@@ -41,46 +41,41 @@ node block_material {
         diffuse: wood,
         specular: 0.02
     )
-}
+}   (library) -> auto
 
 node ground_material {
     input library;
     alias output material: 
-        simple_bsdf_material(
+        bsdf_material(
             name: "Ground",
             library: library,
             bsdf: lambertian_bsdf()
         );
-}
+}   (library) -> auto
 
 node sun_material {
     input library;
     alias output material:
-        simple_bsdf_material(
+        bsdf_material(
             name: "Sun",
             library: library,
             reflectance: 0.0,
             emission: 100.0,
             bsdf: lambertian_bsdf()
         );
-}
+}   (library) -> auto
 
 node light_material {
     input library;
     alias output material:
-        simple_bsdf_material(
+        bsdf_material(
             name: "Light",
             library: library,
             reflectance: 0.0,
             emission: 1.0,
             bsdf: lambertian_bsdf()
         );
-}
-
-block_material(library)
-ground_material(library)
-sun_material(library)
-light_material(library)
+}   (library) -> auto
 
 obj_file scene_mesh(
     filename: "../../demos/models/box_city.obj",

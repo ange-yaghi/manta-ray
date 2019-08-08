@@ -1,14 +1,28 @@
+module {
+    @name:          "Media Interface Library"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "Library of media interfaces"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
 private import "../../types/atomic_types.mr"
 
+@doc: "Media interface channel type"
 public node media_interface => __mantaray__media_interface { /* void */ }
 
+@doc: "Dielectric interface (ex. glass/air interface)"
 public node dielectric_interface => __mantaray__dielectric_media_interface {
-    input ior_interior [float]: 1.52;
+    input ior_interior [float]: 1.52; // Crown glass
     input ior_exterior [float]: 1.00;
 
     alias output __out [media_interface];
 }
 
+@doc: "Opaque interface"
 public node opaque_interface => __mantaray__opaque_media_interface {
     alias output __out [media_interface];
 }

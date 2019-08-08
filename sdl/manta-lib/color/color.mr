@@ -1,7 +1,19 @@
+module {
+    @name:          "Color Utilities"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "Utilities for handling colors"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
 private import "../types/atomic_types.mr"
 private import "../types/conversions.mr"
 private import "../types/operations.mr"
 
+@doc: "Convert gamma curved sRGB space colors to linear vectors"
 public node srgb => __mantaray__srgb {
     input r [scalar]: 0.0;
     input g [scalar]: 0.0;
@@ -11,6 +23,7 @@ public node srgb => __mantaray__srgb {
     alias output color [vector];
 }
 
+@doc: "Convert gamma curved 8 bit sRGB colors to linear vectors"
 public node srgb_i {
     input r [int]: 0x00;
     input g [int]: 0x00;

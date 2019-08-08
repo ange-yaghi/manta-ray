@@ -1,7 +1,19 @@
+module {
+    @name:          "Camera Utilities"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "Utilities for positioning cameras"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
 private import "../types/atomic_types.mr"
 private import "../types/operations.mr"
 private import "../types/conversions.mr"
 
+@doc: "Assistant node to generate direction and up vectors"
 public node camera_target {
     input position;
     input target;
@@ -15,6 +27,7 @@ public node camera_target {
         );
 }
 
+@doc: "Hidden node to perform camera positioning calculations"
 private node __camera_target {
     input __position;
     input __target;

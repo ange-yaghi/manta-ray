@@ -1,1 +1,13 @@
+module {
+    @name:          "Scene Geometry"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "Defines the scene geometry base type"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
+@doc: "Channel type for scene geometry objects"
 public node scene_geometry => __mantaray__scene_geometry { /* void */ }

@@ -1,5 +1,6 @@
 module {
-    @name:          "MantaRay Atomic Types"
+    @name:          "Atomic Types"
+    @project:       "MantaRay"
     @author:        "Ange Yaghi"
     @maintainer:    "Ange Yaghi"
     @copyright:     "Copyright 2019, Ange Yaghi"
@@ -14,7 +15,7 @@ private import "conversions.mr"
 //  Channels
 // ========================================================
 
-@doc: "Float channel type"
+@doc: "Floating-point channel type"
 private node float_channel => __mantaray__float { /* void */}
 
 @doc: "Scalar channel with vector internal representation"
@@ -119,4 +120,12 @@ public node string {
 public node vector_var {
     input var [::vector];
     alias output __out [::vector]: var;
+}
+
+// ========================================================
+//  Constants
+// ========================================================
+
+public inline node origin {
+    alias output __out: 0;
 }

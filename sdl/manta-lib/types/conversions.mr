@@ -1,5 +1,6 @@
 module {
-    @name:          "MantaRay Conversions"
+    @name:          "Conversions"
+    @project:       "MantaRay"
     @author:        "Ange Yaghi"
     @maintainer:    "Ange Yaghi"
     @copyright:     "Copyright 2019, Ange Yaghi"

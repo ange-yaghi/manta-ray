@@ -1,1 +1,13 @@
+module {
+    @name:          "BSDF"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "BSDF base channel type"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
+@doc: "BSDF channel type"
 public node bsdf => __mantaray__bsdf { /* void */ }
