@@ -2,24 +2,17 @@ private import "mantaray.mr"
 private import "utilities.mr"
 
 node settings {
+    input this;
     output samples: 100;
     output resolution_x: 1920;
     output resolution_y: 1080;
-    output enable_fraunhofer: true;
+    output enable_fraunhofer: false;
     output save_diffraction_patterns: true;
     output output_dir: "../../workspace/render/bitmap/";
     output output_name: "box_city_demo";
-}
+    output camera: list_cameras(this).lens_camera;
+} (settings) -> settings
 
-private node camera_settings {
-    output camera:              camera_list.lens_camera;
-    input camera_list;
-}
-
-settings settings()
-camera_settings camera_settings(
-    camera_list: list_cameras(settings)
-)
 material_library library()
 scene scene()
 
@@ -41,7 +34,7 @@ node block_material {
         diffuse: wood,
         specular: 0.02
     )
-}   (library) -> auto
+} (library) -> auto
 
 node ground_material {
     input library;
@@ -51,7 +44,7 @@ node ground_material {
             library: library,
             bsdf: lambertian_bsdf()
         );
-}   (library) -> auto
+} (library) -> auto
 
 node sun_material {
     input library;
@@ -63,7 +56,7 @@ node sun_material {
             emission: 100.0,
             bsdf: lambertian_bsdf()
         );
-}   (library) -> auto
+} (library) -> auto
 
 node light_material {
     input library;
@@ -75,7 +68,7 @@ node light_material {
             emission: 1.0,
             bsdf: lambertian_bsdf()
         );
-}   (library) -> auto
+} (library) -> auto
 
 obj_file scene_mesh(
     filename: "../../demos/models/box_city.obj",
@@ -154,7 +147,7 @@ private node list_cameras {
 
 ray_tracer mr(
     scene: scene,
-    camera: camera_settings.camera,
+    camera: settings.camera,
     materials: library,
     background: 1.1
 )
