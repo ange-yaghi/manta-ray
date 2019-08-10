@@ -16,7 +16,7 @@ node settings {
     output save_diffraction_patterns: true;
     output output_dir: "../../workspace/render/bitmap/";
     output output_name: "teapot_lamp_demo";
-}   -> auto
+} -> auto
 
 material_library library()
 scene scene()
@@ -61,7 +61,7 @@ node test_material {
         foot: 0.75
     )
 
-}   (library) -> auto
+} (library) -> auto
 
 node floor_material {
     input library;
@@ -77,7 +77,7 @@ node floor_material {
         diffuse: srgb_i(0xFF, 0xFF, 0xFF),
         specular: 0
     )
-}   (library) -> auto
+} (library) -> auto
 
 node bulb_material {
     input library;
@@ -89,7 +89,7 @@ node bulb_material {
             emission: srgb_i(255, 197, 143) * 50,
             bsdf: lambertian_bsdf()
         );
-}   (library) -> auto
+} (library) -> auto
 
 obj_file lamp_mesh(
     filename: "../../demos/models/lamp2.obj",
