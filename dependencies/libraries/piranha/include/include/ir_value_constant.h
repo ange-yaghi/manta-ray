@@ -61,7 +61,9 @@ namespace piranha {
         virtual void setValue(const T &value) { m_value = value; }
         T getValue() const { return m_value; }
 
-        virtual const ChannelType *getImmediateChannelType() { 
+        virtual const ChannelType *getImmediateChannelType() {
+            if (m_rules == nullptr) return nullptr;
+
             return m_rules->resolveChannelType(
                 m_rules->getLiteralBuiltinName<T>()
             );
@@ -140,6 +142,15 @@ namespace piranha {
             IR_RESET(query);
 
             IrParserStructure *reference = resolveName(m_value);
+
+            if (reference == nullptr) {
+                // Try searching for a global variable
+                // TODO: if nested node definitions are ever introduced, then some more sophisticated
+                // logic would be needed here to resolve the actual context. For now we can assume
+                // that all global variables are defined at global (root) scope
+                reference = getParentUnit()->resolveLocalName(m_value);
+                IR_INFO_OUT(newContext, query.inputContext->getRoot());
+            }
 
             // Do error checking
             if (reference == nullptr) {

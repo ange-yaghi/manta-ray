@@ -25,7 +25,7 @@ namespace piranha {
         IrContextTree *newChild(IrNode *context, bool mainContext = false);
 
         IrNode *getContext() const { return m_context; }
-        IrContextTree *findContext(IrParserStructure *context);
+        IrContextTree *findContext(IrNode *context);
 
         IrParserStructure *resolveDefinition(IrAttributeDefinition *definition);
 

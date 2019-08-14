@@ -62,6 +62,8 @@ namespace piranha {
 
         // Resolution stage
     public:
+        virtual void checkCircularDefinitions();
+
         int countSymbolIncidence(const std::string &name) const;
         IrParserStructure *resolveLocalName(const std::string &name) const;
 

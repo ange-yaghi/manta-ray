@@ -58,6 +58,9 @@ namespace piranha {
         int countSymbolIncidence(const std::string &name) const;
 
         void addCompilationError(CompilationError *err);
+        void addCircularReferenceError(
+            CompilationError *err, IrParserStructure *structure, IrContextTree *context);
+        bool findCircularReferenceError(IrParserStructure *structure, IrContextTree *context);
 
         std::ostream& print(std::ostream &stream);
 

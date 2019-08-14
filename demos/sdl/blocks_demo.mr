@@ -1,8 +1,7 @@
 private import "mantaray.mr"
 private import "utilities.mr"
 
-private node settings {
-    input this;
+auto private node settings {
     input samples:              1;
     input resolution_x:         6000;
     input resolution_y:         4000;
@@ -10,17 +9,14 @@ private node settings {
     input save_diffraction_patterns: true;
     input output_dir:           "../../workspace/render/bitmap/";
     input output_name:          "blocks_demo";
-    input camera:               camera_list.standard_camera;
-
-    list_cameras camera_list(this)
-}   (settings) -> settings
+    input camera:               blocks_standard_camera;
+    input current_date:         current_date();
+}
 
 material_library library()
 scene scene()
 
-node block_material {
-    input library;
-
+auto node block_material {
     bsdf_material(
         name: "Block",
         library: library,
@@ -42,11 +38,9 @@ node block_material {
         diffuse: diffuse_map,
         specular: 0.1
     )
-}   (library) -> auto
+}
 
-node ground_material {
-    input library;
-
+auto node ground_material {
     bsdf_material(
         name: "Ground",
         library: library,
@@ -58,11 +52,9 @@ node ground_material {
         diffuse: srgb_i(255, 255, 255),
         specular: 0.75
     )
-}   (library) -> auto
+}
 
-node light_material {
-    input library;
-
+auto node light_material {
     bsdf_material(
         name: "Light",
         library: library,
@@ -70,7 +62,7 @@ node light_material {
         emission: 5.0,
         bsdf: lambertian_bsdf()
     )
-}   (library) -> auto
+}
 
 obj_file blocks_mesh(
     filename: "../../demos/models/blocks_floor.obj",
@@ -95,10 +87,13 @@ scene_object light(
     )
 )
 
-private node blocks_standard_camera {
-    input camera_target;
-    input settings;
+camera_target camera_target(
+    position:   vector(15.4473, 4.59977, 13.2961),
+    target:     vector(2.63987, 3.55547, 2.42282),
+    up:         vector(0.0, 1.0, 0.0)
+)
 
+auto private node blocks_standard_camera {
     alias output __out: standard_camera(
         up: camera_target.up,
         position: camera_target.position,
@@ -112,10 +107,7 @@ private node blocks_standard_camera {
     );
 }
 
-private node blocks_lens_camera {
-    input camera_target;
-    input settings;
-
+auto private node blocks_lens_camera {
     alias output __out :lens_camera(
         lens: lens,
         samples: settings.samples,
@@ -135,18 +127,6 @@ private node blocks_lens_camera {
     )
 }
 
-private node list_cameras {
-    input settings;
-    output lens_camera: blocks_lens_camera(camera_target, settings);
-    output standard_camera: blocks_standard_camera(camera_target, settings);
-
-    camera_target camera_target(
-        position:   vector(15.4473, 4.59977, 13.2961),
-        target:     vector(2.63987, 3.55547, 2.42282),
-        up:         vector(0.0, 1.0, 0.0)
-    )
-}
-
 ray_tracer mr(
     scene: scene,
     camera: settings.camera,
@@ -154,18 +134,16 @@ ray_tracer mr(
     background: vector(0.0, 0.0, 0.0)
 )
 
-current_date current_date()
-
 image_output(
     map: mr.image,
     filename: 
-        settings.output_dir + current_date.as_string + "_" + settings.output_name + 
+        settings.output_dir + settings.current_date.as_string + "_" + settings.output_name + 
         "_S" + string(settings.samples) + ".jpg"
 )
 
 diffraction_simulation(
     image: mr.image, 
-    current_date: current_date, 
+    current_date: settings.current_date, 
     output_dir: settings.output_dir,
     output_name: settings.output_name,
     save_patterns: settings.save_diffraction_patterns,

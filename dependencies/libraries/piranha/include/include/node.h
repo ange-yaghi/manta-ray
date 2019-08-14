@@ -15,6 +15,7 @@ namespace piranha {
     class IrParserStructure;
     class NodeProgram;
     class NodeContainer;
+    class Assembly;
 
     class Node {
     public:
@@ -109,6 +110,8 @@ namespace piranha {
 
         NodeOutput *getInterfaceInput() const;
         void setInterfaceInput(pNodeInput *output) { m_interfaceInput = output; }
+
+        virtual void writeAssembly(std::fstream &file, Assembly *assembly) const;
 
     protected:
         virtual void _initialize();
