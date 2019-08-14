@@ -4,6 +4,7 @@
 #include "node.h"
 
 #include <vector>
+#include <fstream>
 
 namespace piranha {
 
@@ -25,6 +26,8 @@ namespace piranha {
 
         void addContainerInput(const std::string &name, bool modifiesInput, bool enableInput);
         void addContainerOutput(pNodeInput output, Node *node, const std::string &name, bool primary);
+
+        virtual void writeAssembly(std::fstream &file, Assembly *assembly) const;
 
     protected:
         virtual void _initialize();

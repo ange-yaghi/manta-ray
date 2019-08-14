@@ -1,4 +1,4 @@
-// Auto-generated on: 2019-08-09 13:00:27.366492
+// Auto-generated on: 2019-08-14 01:32:32.124820
 
 #ifndef PIRANHA_PIRANHA_H
 #define PIRANHA_PIRANHA_H
@@ -6,6 +6,7 @@
 #define PIRANHA_DIST
 
 #include "include/add_operation_output.h"
+#include "include/assembly.h"
 #include "include/bool_negate_operation.h"
 #include "include/channel_type.h"
 #include "include/compilation_error.h"

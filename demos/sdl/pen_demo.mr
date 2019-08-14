@@ -1,33 +1,25 @@
 private import "mantaray.mr"
 private import "utilities.mr"
 
-node settings {
-    output samples: 100;
+auto private node settings {
+    output samples: 10;
     output resolution_x: 2048;
     output resolution_y: 1536;
-    output enable_fraunhofer: true;
+    output enable_fraunhofer: false;
     output save_diffraction_patterns: true;
     output output_dir: "../../workspace/render/bitmap/";
     output output_name: "box_city_demo";
+    output camera: pen_lens_camera;
+    output current_date: current_date();
 
     output aperture:                polygonal_aperture(0.007, curvature: 0.1);
     output diffraction_aperture:    polygonal_aperture(0.180, curvature: 0.1);
 }
 
-private node camera_settings {
-    output camera:              camera_list.lens_camera;
-    input camera_list;
-}
-
-settings settings()
-camera_settings camera_settings(
-    camera_list: list_cameras(settings)
-)
 material_library library()
 scene scene()
 
 node pen_body_material {
-    input library;
     alias output material: 
         bsdf_material(
             name: "PenBody",
@@ -51,10 +43,9 @@ node pen_body_material {
         diffuse: wood_diffuse,
         specular: 0.1
     )
-}   (library) -> auto
+}
 
-node pen_chrome_material {
-    input library;
+auto node pen_chrome_material {
     alias output material: 
         bsdf_material(
             name: "Chrome",
@@ -74,10 +65,9 @@ node pen_chrome_material {
         diffuse: 0.0,
         specular: 0.95
     )
-}   (library) -> auto
+}
 
-node backdrop_material {
-    input library;
+auto node backdrop_material {
     alias output material: 
         bsdf_material(
             name: "Backdrop",
@@ -93,10 +83,9 @@ node backdrop_material {
     microfacet_reflection_bsdf bsdf(
         distribution: phong_distribution(128.0)
     )
-}   (library) -> auto
+}
 
-node strong_light_material {
-    input library;
+auto node strong_light_material {
     alias output material: 
         bsdf_material(
             name: "StrongLight",
@@ -105,10 +94,9 @@ node strong_light_material {
             emission: 2.0,
             reflectance: 0.0
         );
-}   (library) -> auto
+}
 
-node weak_light_material {
-    input library;
+auto node weak_light_material {
     alias output material: 
         bsdf_material(
             name: "WeakLight",
@@ -117,10 +105,9 @@ node weak_light_material {
             emission: 1.0,
             reflectance: 0.0
         );
-}   (library) -> auto
+}
 
-node default_material {
-    input library;
+auto node default_material {
     alias output material: 
         bsdf_material(
             name: "Default",
@@ -128,7 +115,7 @@ node default_material {
             bsdf: lambertian_bsdf(),
             reflectance: vector(0.0, 1.0, 0.0)
         );
-}   (library) -> auto
+}
 
 obj_file scene_mesh(
     filename: "../../demos/models/pen.obj",
@@ -142,10 +129,19 @@ scene_object main_object(
     geometry: kd_tree(scene_mesh)
 )
 
-private node scene_standard_camera {
-    input camera_target;
-    input settings;
+camera_target camera_target_raw(
+    position:   vector(9.43600, 1.20000, 4.53700),
+    target:     vector(1.30000, 0.35547, 0.00000),
+    up:         vector(0.00000, 1.00000, 0.00000)
+)
 
+// Reposition the camera by moving it along its direction
+camera_reposition camera_target(
+    camera_target: camera_target_raw, 
+    offset: 3.9
+)
+
+auto private node pen_standard_camera {
     alias output __out: standard_camera(
         up: camera_target.up,
         position: camera_target.position,
@@ -159,10 +155,7 @@ private node scene_standard_camera {
     );
 }
 
-private node scene_lens_camera {
-    input camera_target;
-    input settings;
-
+auto private node pen_lens_camera {
     alias output __out: lens_camera(
         lens: lens,
         samples: settings.samples,
@@ -190,43 +183,23 @@ private node camera_reposition {
     output direction: camera_target.direction;
 }
 
-private node list_cameras {
-    input settings;
-    output lens_camera: scene_lens_camera(camera_target, settings);
-    output standard_camera: scene_standard_camera(camera_target, settings);
-
-    camera_target camera_target_raw(
-        position:   vector(9.43600, 1.20000, 4.53700),
-        target:     vector(1.30000, 0.35547, 0.00000),
-        up:         vector(0.00000, 1.00000, 0.00000)
-    )
-
-    // Reposition the camera by moving it along its direction
-    camera_reposition camera_target(
-        camera_target: camera_target_raw, 
-        offset: 3.9
-    )
-}
-
 ray_tracer mr(
     scene: scene,
-    camera: camera_settings.camera,
+    camera: settings.camera,
     materials: library,
     background: 0.0
 )
 
-current_date current_date()
-
 image_output(
     map: mr.image,
     filename: 
-        settings.output_dir + current_date.as_string + "_" + settings.output_name + 
+        settings.output_dir + settings.current_date.as_string + "_" + settings.output_name + 
         "_S" + string(settings.samples) + ".jpg"
 )
 
 diffraction_simulation(
     image: mr.image, 
-    current_date: current_date, 
+    current_date: settings.current_date, 
     output_dir: settings.output_dir,
     output_name: settings.output_name,
     save_patterns: settings.save_diffraction_patterns,

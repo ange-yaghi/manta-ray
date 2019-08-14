@@ -73,6 +73,7 @@ namespace piranha {
         void setDefinition(IrNodeDefinition *definition) { m_definition = definition; }
 
         virtual IrParserStructure *resolveLocalName(const std::string &name) const;
+        virtual void _checkCircularDefinitions(IrContextTree *context, IrNodeDefinition *root);
 
     protected:
         virtual void _resolveDefinitions();
