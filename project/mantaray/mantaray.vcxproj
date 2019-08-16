@@ -19,12 +19,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\include\current_date_node.cpp" />
     <ClCompile Include="..\..\src\aperture.cpp" />
     <ClCompile Include="..\..\src\cached_vector_node.cpp" />
     <ClCompile Include="..\..\src\cached_vector_output.cpp" />
     <ClCompile Include="..\..\src\constructed_vector_node_output.cpp" />
+    <ClCompile Include="..\..\src\date_interface_node.cpp" />
+    <ClCompile Include="..\..\src\date_node_output.cpp" />
     <ClCompile Include="..\..\src\kd_tree_node.cpp" />
     <ClCompile Include="..\..\src\language_rules.cpp" />
+    <ClCompile Include="..\..\src\mesh_merge_node.cpp" />
     <ClCompile Include="..\..\src\node.cpp" />
     <ClCompile Include="..\..\src\object_channel_types.cpp" />
     <ClCompile Include="..\..\src\obj_file_node.cpp" />
@@ -70,6 +74,7 @@
     <ClCompile Include="..\..\src\step_node_output.cpp" />
     <ClCompile Include="..\..\src\streaming_node_output.cpp" />
     <ClCompile Include="..\..\src\subtract_node_output.cpp" />
+    <ClCompile Include="..\..\src\surface_interaction_node.cpp" />
     <ClCompile Include="..\..\src\vector_conversions.cpp" />
     <ClCompile Include="..\..\src\vector_map_2d.cpp" />
     <ClCompile Include="..\..\src\material_library.cpp" />
@@ -149,6 +154,9 @@
     <ClInclude Include="..\..\include\complex_math.h" />
     <ClInclude Include="..\..\include\constructed_vector_node_output.h" />
     <ClInclude Include="..\..\include\convolution.h" />
+    <ClInclude Include="..\..\include\current_date_node.h" />
+    <ClInclude Include="..\..\include\date_interface_node.h" />
+    <ClInclude Include="..\..\include\date_node_output.h" />
     <ClInclude Include="..\..\include\dielectric_media_interface.h" />
     <ClInclude Include="..\..\include\fraunhofer_diffraction.h" />
     <ClInclude Include="..\..\include\geometry.h" />
@@ -156,10 +164,12 @@
     <ClInclude Include="..\..\include\grid_sampler.h" />
     <ClInclude Include="..\..\include\kd_tree_node.h" />
     <ClInclude Include="..\..\include\language_rules.h" />
+    <ClInclude Include="..\..\include\mesh_merge_node.h" />
     <ClInclude Include="..\..\include\node.h" />
     <ClInclude Include="..\..\include\object_channel_types.h" />
     <ClInclude Include="..\..\include\object_reference_node.h" />
     <ClInclude Include="..\..\include\object_reference_node_output.h" />
+    <ClInclude Include="..\..\include\padded_frame_output.h" />
     <ClInclude Include="..\..\include\streaming_node_output.h" />
     <ClInclude Include="..\..\include\obj_file_node.h" />
     <ClInclude Include="..\..\include\image_byte_buffer.h" />
@@ -187,6 +197,8 @@
     <ClInclude Include="..\..\include\step_node.h" />
     <ClInclude Include="..\..\include\step_node_output.h" />
     <ClInclude Include="..\..\include\subtract_node_output.h" />
+    <ClInclude Include="..\..\include\surface_interaction_node.h" />
+    <ClInclude Include="..\..\include\surface_interaction_node_output.h" />
     <ClInclude Include="..\..\include\unary_node.h" />
     <ClInclude Include="..\..\include\unary_node_output.h" />
     <ClInclude Include="..\..\include\vector_conversions.h" />
@@ -275,7 +287,6 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>mantaray</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
-    <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

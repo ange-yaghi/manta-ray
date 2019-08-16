@@ -6,11 +6,11 @@ using namespace manta;
 
 void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) {
     // Top-level parameters
-    constexpr bool LENS_SIMULATION = true;
+    constexpr bool LENS_SIMULATION = false;
     constexpr bool USE_ACCELERATION_STRUCTURE = true;
     constexpr bool DETERMINISTIC_SEED_MODE = false;
     constexpr bool TRACE_SINGLE_PIXEL = false;
-    constexpr bool ENABLE_FRAUNHOFER_DIFFRACTION = true;
+    constexpr bool ENABLE_FRAUNHOFER_DIFFRACTION = false;
 
     RayTracer rayTracer;
     rayTracer.setMaterialLibrary(new MaterialLibrary);
@@ -138,7 +138,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
     CameraRayEmitterGroup *group;
     manta::SimpleLens lens;
     manta::PolygonalAperture polygonalAperture;
-    polygonalAperture.initialize(6);
+    polygonalAperture.configure(6);
 
     lens.setAperture(&polygonalAperture);
     lens.initialize();

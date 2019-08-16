@@ -1,0 +1,17 @@
+module {
+    @name:          "Vector Map"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "Vector map base class"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
+private import "../types/atomic_types.mr"
+
+@doc: "2D vector map"
+public node vector_map => __mantaray__vector_map { 
+    alias output __out [vector];
+}

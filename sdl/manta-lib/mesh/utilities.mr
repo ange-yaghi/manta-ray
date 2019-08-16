@@ -1,0 +1,21 @@
+module {
+    @name:          "Mesh Utilities"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "Utilities for processing meshes"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
+private import "mesh.mr"
+
+@doc: "Merge two meshes into a single mesh"
+public node merge_meshes => __mantaray__mesh_merge {
+    @doc: "The left mesh is modified by this node"
+    modify __left       [mesh];
+    input __right       [mesh];
+
+    alias output __out  [mesh];
+}

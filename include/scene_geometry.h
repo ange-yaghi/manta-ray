@@ -35,9 +35,21 @@ namespace manta {
         math::Vector getPosition() const { return m_position; }
 
     protected:
+        virtual void _initialize();
+        virtual void _evaluate();
+        virtual void registerInputs();
+
+        piranha::pNodeInput m_positionInput;
+        piranha::pNodeInput m_materialsInput;
+        piranha::pNodeInput m_defaultMaterial;
+
+    protected:
         math::Vector m_position;
 
         int m_id;
+
+        MaterialLibrary *m_library;
+        int m_defaultMaterialIndex;
     };
 
 } /* namespace manta */

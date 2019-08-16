@@ -1,10 +1,20 @@
+module {
+    @name:          "Image Output"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "Write an image to a file"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
 private import "../types/atomic_types.mr"
 
-public node vector_map => __mantaray__vector_map { /* void */ }
-
+@doc: "Write an image to a file"
 public node image_output => __mantaray__image_output {
-    input map [vector_map];
-    input filename [string];
-    input jpeg_quality [int]: 95;
+    input map           [vector];
+    input filename      [string];
+    input jpeg_quality  [int]: 95;
     input correct_gamma [bool]: true;
 }

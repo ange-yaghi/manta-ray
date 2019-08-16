@@ -22,7 +22,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
     constexpr bool TRACE_SINGLE_PIXEL = false;
     constexpr OBJECT OBJECT = TEAPOT;
     constexpr MATERIAL MATERIAL = ENAMEL;
-    constexpr bool ENABLE_FRAUNHOFER_DIFFRACTION = true;
+    constexpr bool ENABLE_FRAUNHOFER_DIFFRACTION = false;
 
     Scene scene;
 
@@ -70,6 +70,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 
     SimpleBSDFMaterial *floorMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     floorMaterial->setBSDF(&floorBSDF);
+    floorMaterial->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial *lampLightMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     lampLightMaterial->setEmission(math::mul(getColor(255, 197, 143), math::loadScalar(50.0)));
@@ -86,6 +87,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 
     SimpleBSDFMaterial *teapotMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     teapotMaterial->setBSDF(&teapotBSDF);
+    teapotMaterial->setEmission(math::constants::Zero);
 
     // Glass
     PhongDistribution phongGlass;
@@ -225,7 +227,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
         sourceSpectrum.loadCsv(CMF_PATH "d65_lighting.csv");
 
         PolygonalAperture aperture;
-        aperture.initialize(6);
+        aperture.configure(6);
         aperture.setRadius(0.18f);
         aperture.setBladeCurvature(0.3f);
         testFraun.generate(&aperture, dirtTextureMap, safeWidth, 16.0f, &colorTable, &sourceSpectrum, &settings);

@@ -2,6 +2,7 @@
 
 #include "../include/intersection_point.h"
 #include "../include/microfacet_distribution.h"
+#include "../include/object_reference_node_output.h"
 
 manta::MicrofacetGlassBSDF::MicrofacetGlassBSDF() {
     /* void */
@@ -141,4 +142,14 @@ manta::math::Vector manta::MicrofacetGlassBSDF::sampleF(
 
 manta::math::real manta::MicrofacetGlassBSDF::calculatePDF(const IntersectionPoint *surfaceInteraction, const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) const {
     return math::real();
+}
+
+void manta::MicrofacetGlassBSDF::_evaluate() {
+    m_distribution = getObject<MicrofacetDistribution>(m_distributionInput);
+    m_mediaInterface = getObject<MediaInterface>(m_mediaInterfaceInput);
+}
+
+void manta::MicrofacetGlassBSDF::registerInputs() {
+    registerInput(&m_distributionInput, "distribution");
+    registerInput(&m_mediaInterfaceInput, "media_interface");
 }

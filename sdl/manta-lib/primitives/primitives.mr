@@ -1,0 +1,25 @@
+module {
+    @name:          "Primitive Geometry Types"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "Defines simple geometrical primitives"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
+private import "../scene/scene_geometry.mr"
+private import "../types/atomic_types.mr"
+private import "../types/conversions.mr"
+private import "../materials/material_library.mr"
+
+@doc: "Simple sphere primitive"
+public node sphere => __mantaray__sphere {
+    input position          [vector]: origin();
+    input radius            [float]: 1.0;
+    input materials         [material_library]: material_library();
+    input default_material  [string]: "";
+
+    alias output __out      [scene_geometry];
+}

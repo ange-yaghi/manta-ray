@@ -1,4 +1,18 @@
+module {
+    @name:          "Binary and Unary Operations"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "Defines all binary and unary operations between "
+                    "fundamental types."
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
+
 private import "atomic_types.mr"
+private import "conversions.mr"
 
 public node float_negate => __mantaray__float_negate {
     input __in [float];
@@ -43,6 +57,24 @@ public node cross => __mantaray__vector_cross {
     alias output __out [vector];
 }
 
+public node pow => __mantaray__vector_pow {
+    input __left [vector];
+    input __right [vector];
+    alias output __out [vector];
+}
+
+public node min => __mantaray__vector_min {
+    input __left [vector];
+    input __right [vector];
+    alias output __out [vector];
+}
+
+public node max => __mantaray__vector_max {
+    input __left [vector];
+    input __right [vector];
+    alias output __out [vector];
+}
+
 public node vector_negate => __mantaray__vector_negate {
     input __in [vector];
     alias output __out [vector];
@@ -56,4 +88,38 @@ public node normalize => __mantaray__vector_normalize {
 public node magnitude => __mantaray__vector_magnitude {
     input __in [vector];
     alias output __out [vector];
+}
+
+public node max_component => __mantaray__vector_max_component {
+    input __in [vector];
+    alias output __out [vector];
+}
+
+public node abs => __mantaray__vector_absolute {
+    input __in [vector];
+    alias output __out [vector];
+}
+
+public node step => __mantaray__step {
+    input s [vector];
+    input foot [vector];
+    input step [vector]: 1.0;
+    input dc [vector]: 0.0;
+    alias output __out [vector];
+}
+
+// Float operations
+
+public node float_divide => __mantaray__float_divide {
+    input __in0 [float];
+    input __in1 [float];
+    alias output __out [float];
+}
+
+// String operations
+
+public node string_add => __mantaray__string_add {
+    input __in0 [string];
+    input __in1 [string];
+    alias output __out [string];
 }

@@ -40,7 +40,7 @@ TEST(NodeTests, MultiplyMapNodeTest) {
     MultiplyNode node;
     node.initialize();
 
-    node.connectInput(wrapper.getOutput("Output"), "A");
+    node.connectInput(wrapper.getOutput("Output"), "A", nullptr);
     node.getMainOutput()->setDefaultB(math::constants::Double);
 
     node.evaluate();
@@ -77,7 +77,7 @@ TEST(NodeTests, StepNode) {
     node.getMainOutput()->setDefaultDc(math::constants::One);
     node.getMainOutput()->setDefaultFoot(math::constants::One);
     node.getMainOutput()->setDefaultStep(math::constants::Double);
-    node.connectInput(wrapper.getMainOutput(), "Input");
+    node.connectInput(wrapper.getMainOutput(), "Input", nullptr);
 
     node.evaluate();
 

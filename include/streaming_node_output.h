@@ -22,6 +22,7 @@ namespace manta {
 
         int getSize(int dim) const { return m_dimensions[dim]; }
         int getDimensions() const { return m_dimensionCount; }
+        int getLargestDimensionSize() const;
 
         void evaluateDimensions();
         bool areDimensionsEvaluated() const { return m_dimensionsEvaluated; }
@@ -30,6 +31,7 @@ namespace manta {
         void setDimensionSize(int dim, int size) { m_dimensions[dim] = size; }
         void setDimensions(int dimensionCount) { m_dimensionCount = dimensionCount; }
 
+        virtual void _evaluate();
         virtual void _evaluateDimensions();
 
     protected:

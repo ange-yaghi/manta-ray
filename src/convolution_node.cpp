@@ -21,8 +21,8 @@ void manta::ConvolutionNode::_initialize() {
 
 void manta::ConvolutionNode::_evaluate() {
     // Cast inputs
-    const VectorNodeOutput *a = static_cast<VectorNodeOutput *>(m_base);
-    const VectorNodeOutput *b = static_cast<VectorNodeOutput *>(m_filter);
+    VectorNodeOutput *a = static_cast<VectorNodeOutput *>(m_base);
+    VectorNodeOutput *b = static_cast<VectorNodeOutput *>(m_filter);
 
     Margins margins;
     VectorMap2D a_mapSafe;
@@ -35,12 +35,12 @@ void manta::ConvolutionNode::_evaluate() {
     bool computedA = false, computedB = false;
 
     if (a_map == nullptr) {
-        a->fullCompute((void *)&a_computed);
+        a->calculateAllDimensions(&a_computed);
         a_map = &a_computed;
         computedA = true;
     }
     if (b_map == nullptr) {
-        b->fullCompute((void *)&b_computed);
+        b->calculateAllDimensions(&b_computed);
         b_map = &b_computed;
         computedB = true;
     }
@@ -118,10 +118,11 @@ void manta::ConvolutionNode::_destroy() {
 }
 
 void manta::ConvolutionNode::registerInputs() {
-    registerInput(&m_base, "Base");
-    registerInput(&m_filter, "Filter");
+    registerInput(&m_base, "base");
+    registerInput(&m_filter, "filter");
 }
 
 void manta::ConvolutionNode::registerOutputs() {
-    registerOutput(&m_output, "Output");
+    setPrimaryOutput("__out");
+    registerOutput(&m_output, "__out");
 }

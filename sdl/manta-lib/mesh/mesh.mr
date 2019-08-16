@@ -1,1 +1,13 @@
+module {
+    @name:          "Mesh"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "Defines mesh channel type"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
+@doc: "Mesh channel type"
 public node mesh => __mantaray__mesh { /* void */ }

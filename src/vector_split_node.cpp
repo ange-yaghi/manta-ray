@@ -24,7 +24,10 @@ void manta::VectorSplitNode::_destroy() {
 }
 
 void manta::VectorSplitNode::registerOutputs() {
-    setPrimaryOutputReference(&m_input);
+    setInterfaceInput(&m_input);
+
+    registerOutput(&m_x, "u");
+    registerOutput(&m_y, "v");
 
     registerOutput(&m_x, "x");
     registerOutput(&m_y, "y");

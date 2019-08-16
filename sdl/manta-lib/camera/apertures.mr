@@ -1,0 +1,39 @@
+module {
+    @name:          "Apertures"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "Library of builtin apertures"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
+private import "../types/atomic_types.mr"
+
+@doc: "Aperture channel type"
+public node aperture => __mantaray__aperture { /* void */ }
+
+@doc: "Circular aperture"
+public node circular_aperture => __mantaray__circular_aperture {
+    input radius        [float];
+
+    alias output __out  [::aperture];
+}
+
+@doc: "Square aperture"
+public node square_aperture => __mantaray__square_aperture {
+    input half_width    [float];
+
+    alias output __out  [::aperture];
+}
+
+@doc: "Polygonal aperture"
+public node polygonal_aperture => __mantaray__polygonal_aperture {
+    input radius        [float];
+    input blades        [int]: 6;
+    input curvature     [float]: 0.2;
+    input angle         [float]: 0.0;
+
+    alias output __out  [::aperture];
+}

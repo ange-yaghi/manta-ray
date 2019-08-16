@@ -12,7 +12,7 @@ TEST(SdlTests, SdlSanityCheck) {
 
     program.execute();
 
-    piranha::Node *node = program.getNode(0);
+    piranha::Node *node = program.getTopLevelContainer()->getNode(0);
     piranha::native_float data;
     node->getPrimaryOutput()->fullCompute((void *)&data);
 
@@ -28,13 +28,13 @@ TEST(SdlTests, SdlVectorTest) {
 
     program.execute();
 
-    piranha::Node *node = program.getNode(12);
+    piranha::Node *node = program.getTopLevelContainer()->getNode(12);
     math::Vector data;
     static_cast<VectorNodeOutput *>(node->getPrimaryOutput())->sample(nullptr, (void *)&data);
 
     CHECK_VEC(data, 1.0, 2.0, 3.0, 4.0);
 
-    piranha::Node *scalar = program.getNode(15);
+    piranha::Node *scalar = program.getTopLevelContainer()->getNode(13);
     static_cast<VectorNodeOutput *>(scalar->getPrimaryOutput())->sample(nullptr, (void *)&data);
 
     CHECK_VEC(data, 666.0, 666.0, 666.0, 666.0);
@@ -49,7 +49,7 @@ TEST(SdlTests, SdlStringTest) {
 
     program.execute();
 
-    piranha::Node *node = program.getNode(0);
+    piranha::Node *node = program.getTopLevelContainer()->getNode(0);
     std::string data;
     node->getPrimaryOutput()->fullCompute((void *)&data);
 
@@ -78,7 +78,7 @@ TEST(SdlTests, SdlSimpleMaterialTest) {
 
 TEST(SdlTests, SdlObjectNodeTest) {
     const piranha::ErrorList *errList;
-    piranha::IrCompilationUnit *unit = compileFile("basic_object_file_test.mr", &errList);
+    piranha::IrCompilationUnit *unit = compileFile("teapot_lamp_demo.mr", &errList);
 
     piranha::NodeProgram program;
     unit->build(&program);

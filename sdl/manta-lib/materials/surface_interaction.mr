@@ -1,0 +1,24 @@
+module {
+    @name:          "Surface Interaction"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "Defines probe node for accessing surface interaction "
+                    "information."
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
+private import "../types/atomic_types.mr"
+
+@doc: "Surface interaction probe node"
+public node surface_interaction => __mantaray__surface_interaction {
+    output normal           [vector];
+    output face_normal      [vector];
+    output position         [vector];
+    output tex_coords       [vector];
+    output depth            [vector];
+    output light_direction  [vector];
+    output light_source     [vector];
+}

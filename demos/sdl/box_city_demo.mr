@@ -1,0 +1,150 @@
+private import "mantaray.mr"
+private import "utilities.mr"
+
+auto node settings {
+    output samples: 100;
+    output resolution_x: 1920;
+    output resolution_y: 1080;
+    output enable_fraunhofer: false;
+    output save_diffraction_patterns: true;
+    output output_dir: "../../workspace/render/bitmap/";
+    output output_name: "box_city_demo";
+    output camera: scene_lens_camera;
+    output current_date: current_date();
+}
+
+material_library library()
+scene scene()
+
+auto node block_material {
+    bsdf_material(
+        name: "Block",
+        library: library,
+        bsdf: bsdf
+    )
+
+    image_file wood(
+        filename: "../../demos/textures/dark_wood.jpg"
+    )
+
+    bilayer_bsdf bsdf(
+        coating: phong_distribution(300.0),
+        diffuse: wood,
+        specular: 0.02
+    )
+}
+
+auto node ground_material {
+    bsdf_material(
+        name: "Ground",
+        library: library,
+        bsdf: lambertian_bsdf()
+    )
+}
+
+auto node sun_material {
+    bsdf_material(
+        name: "Sun",
+        library: library,
+        reflectance: 0.0,
+        emission: 100.0,
+        bsdf: lambertian_bsdf()
+    )
+}
+
+auto node light_material {
+    bsdf_material(
+        name: "Light",
+        library: library,
+        reflectance: 0.0,
+        emission: 1.0,
+        bsdf: lambertian_bsdf()
+    )
+}
+
+obj_file scene_mesh(
+    filename: "../../demos/models/box_city.obj",
+    materials: library,
+    default_material: "Ground"
+)
+
+scene_object sun(
+    name: "FillLight",
+    scene: scene,
+    geometry: sphere(
+        radius: 10.0,
+        materials: library,
+        default_material: "Light",
+        position: vector(20.0, 30.0, -13.5)
+    )
+)
+
+scene_object main_object(
+    name: "Main",
+    scene: scene,
+    geometry: kd_tree(scene_mesh)
+)
+
+camera_target camera_target(
+    position:   vector(15.4473, 4.59977, 13.2961),
+    target:     vector(2.63987, 3.55547, 2.42282),
+    up:         vector(0.0, 1.0, 0.0)
+)
+
+auto private node scene_standard_camera {
+    alias output __out: standard_camera(
+        up: camera_target.up,
+        position: camera_target.position,
+        direction: camera_target.direction,
+        resolution_x: settings.resolution_x,
+        resolution_y: settings.resolution_y,
+        plane_height: 0.5,
+        plane_distance: 1.0,
+        samples: settings.samples,
+        sampler: random_sampler()
+    );
+}
+
+auto private node scene_lens_camera {
+    alias output __out :lens_camera(
+        lens: lens,
+        samples: settings.samples,
+        sampler: random_sampler()
+    );
+
+    simple_lens lens(
+        position: camera_target.position,
+        direction: camera_target.direction,
+        up: camera_target.up,
+        resolution_x: settings.resolution_x,
+        resolution_y: settings.resolution_y,
+        aperture: polygonal_aperture(0.18, curvature: 0.25),
+        radius: 1.0,
+        sensor_height: 10.0,
+        focus: 22.0
+    )
+}
+
+ray_tracer mr(
+    scene: scene,
+    camera: settings.camera,
+    materials: library,
+    background: 1.1
+)
+
+image_output(
+    map: mr.image,
+    filename: 
+        settings.output_dir + settings.current_date.as_string + "_" + settings.output_name + 
+        "_S" + string(settings.samples) + ".jpg"
+)
+
+diffraction_simulation(
+    image: mr.image, 
+    current_date: settings.current_date, 
+    output_dir: settings.output_dir,
+    output_name: settings.output_name,
+    save_patterns: settings.save_diffraction_patterns,
+    samples: settings.samples,
+    enable: settings.enable_fraunhofer
+)

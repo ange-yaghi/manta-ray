@@ -7,37 +7,46 @@
 
 namespace manta {
 
-    template <UNARY_OPERATION op>
-    class UnaryNode : public Node {
+    template <typename OutputType>
+    class SingleOutputNode : public Node {
     public:
-        UnaryNode() {
-            /* void */
+        SingleOutputNode(const char *inputName = "__in", const char *outputName = "__out") {
+            m_inputName = inputName;
+            m_outputName = outputName;
         }
 
-        virtual ~UnaryNode() {
+        virtual ~SingleOutputNode() {
             /* void */
         }
 
     protected:
-        UnaryNodeOutput<op> m_output;
+        const char *m_inputName;
+        const char *m_outputName;
+
+        OutputType m_output;
 
         virtual void _initialize() {
-            /* void */
+            m_output.initialize();
         }
 
         virtual void registerInputs() {
-            registerInput(m_output.getConnection(), "__in");
+            registerInput(m_output.getConnection(), m_inputName);
         }
 
         virtual void registerOutputs() {
-            setPrimaryOutput(&m_output);
-            registerOutput(&m_output, "__out");
+            setPrimaryOutput(m_outputName);
+            registerOutput(&m_output, m_outputName);
         }
     };
 
-    typedef UnaryNode<NEGATE>        NegateNode;
-    typedef UnaryNode<NORMALIZE>    NormalizeNode;
-    typedef UnaryNode<MAGNITUDE>    MagnitudeNode;
+    template <UNARY_OPERATION op>
+    using UnaryNode = SingleOutputNode<UnaryNodeOutput<op>>;
+
+    typedef UnaryNode<NEGATE>           VectorNegateNode;
+    typedef UnaryNode<NORMALIZE>        VectorNormalizeNode;
+    typedef UnaryNode<MAGNITUDE>        VectorMagnitudeNode;
+    typedef UnaryNode<MAX_COMPONENT>    VectorMaxComponentNode;
+    typedef UnaryNode<ABSOLUTE>         VectorAbsoluteNode;
 
 } /* namespace manta */
 

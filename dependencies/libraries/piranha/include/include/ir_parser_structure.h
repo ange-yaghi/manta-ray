@@ -8,13 +8,13 @@
 #include <vector>
 #include <fstream>
 
-#define IR_RESET(query)                if (output != nullptr) { output->reset(); output->newContext = (query).inputContext; }
-#define IR_INFO_OUT(param, data)    if (output != nullptr) { output->param = (data); }
-#define IR_ERR_OUT(data)            IR_INFO_OUT(err, (data)); 
-#define IR_FAIL()                    IR_INFO_OUT(failed, true);
-#define IR_DEAD_END()                IR_INFO_OUT(reachedDeadEnd, true);
-#define IR_FAILED(output)            (((output) != nullptr) ? (output)->failed : false)
-#define IR_EMPTY_CONTEXT()            (query.inputContext == nullptr || query.inputContext->isEmpty())
+#define IR_RESET(query)                 { if (output != nullptr) { output->reset(); output->newContext = (query).inputContext; } }
+#define IR_INFO_OUT(param, data)        { if (output != nullptr) { output->param = (data); } }
+#define IR_ERR_OUT(data)                IR_INFO_OUT(err, (data)); 
+#define IR_FAIL()                       IR_INFO_OUT(failed, true);
+#define IR_DEAD_END()                   IR_INFO_OUT(reachedDeadEnd, true);
+#define IR_FAILED(output)               (((output) != nullptr) ? (output)->failed : false)
+#define IR_EMPTY_CONTEXT()              (query.inputContext == nullptr || query.inputContext->isEmpty())
 
 namespace piranha {
 
@@ -29,6 +29,7 @@ namespace piranha {
     class NodeProgram;
     class ChannelType;
     class LanguageRules;
+    class NodeContainer;
 
     class IrParserStructure {
     public:
@@ -39,6 +40,19 @@ namespace piranha {
             // Inputs
             IrContextTree *inputContext;
             bool recordErrors;
+            bool recordInfiniteLoops;
+        };
+
+        struct IrReferenceChain {
+            struct Link {
+                IrParserStructure *structure;
+                IrContextTree *context;
+            };
+
+            void addLink(IrParserStructure *structure, IrContextTree *context);
+            int searchLink(IrParserStructure *structure, IrContextTree *context);
+
+            std::vector<Link> list;
         };
 
         struct IrReferenceInfo {
@@ -54,6 +68,7 @@ namespace piranha {
             bool failed;
             bool reachedDeadEnd;
             bool touchedMainContext;
+            int infiniteLoop;
             IrNodeDefinition *fixedType;
 
             bool isFixedType() const { return fixedType != nullptr; }
@@ -84,8 +99,10 @@ namespace piranha {
         bool getDefinitionsResolved() const { return m_definitionsResolved; }
         bool isValidated() const { return m_validated; }
         virtual const ChannelType *getImmediateChannelType() { return nullptr; }
-        virtual IrParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output = nullptr);
+        virtual IrParserStructure *getImmediateReference(
+            const IrReferenceQuery &query, IrReferenceInfo *output = nullptr);
         IrParserStructure *getReference(const IrReferenceQuery &query, IrReferenceInfo *output = nullptr);
+        IrParserStructure *getReference(const IrReferenceQuery &query, IrReferenceInfo *output, IrReferenceChain *chain);
 
         bool allowsExternalAccess() const;
 
@@ -103,9 +120,14 @@ namespace piranha {
 
         virtual IrNode *getAsNode() { return nullptr; }
 
+        bool isInfiniteLoop(IrContextTree *context);
+        void setInfiniteLoop(IrContextTree *context);
+
     public:
         // Compilation stages
         void resolveDefinitions();
+        virtual void checkCircularDefinitions();
+        void checkCircularDefinitions(IrContextTree *context, IrNodeDefinition *root);
         void expand();
         void checkInstantiation();
         void checkTypes();
@@ -113,10 +135,12 @@ namespace piranha {
 
         void expand(IrContextTree *context);
         void expandChain(IrContextTree *context);
+        void expandChain(IrContextTree *context, IrReferenceChain *chain);
         virtual void checkReferences(IrContextTree *inputContext = nullptr);
         void checkTypes(IrContextTree *inputContext);
 
     protected:
+        virtual void _checkCircularDefinitions(IrContextTree *context, IrNodeDefinition *root);
         virtual void _resolveDefinitions();
         virtual void _expand();
         virtual void _checkInstantiation();
@@ -134,6 +158,7 @@ namespace piranha {
         IrTokenInfo m_summaryToken;
 
         PKeyValueLookup<IrContextTree, IrNode *> m_expansions;
+        std::vector<IrContextTree *> m_infiniteLoops;
 
         std::vector<IrParserStructure *> m_components;
 
@@ -159,11 +184,11 @@ namespace piranha {
 
         // Building
     public:
-        NodeOutput *generateNodeOutput(IrContextTree *context, NodeProgram *program);
-        Node *generateNode(IrContextTree *context, NodeProgram *program);
+        NodeOutput *generateNodeOutput(IrContextTree *context, NodeProgram *program, NodeContainer *container);
+        Node *generateNode(IrContextTree *context, NodeProgram *program, NodeContainer *container);
 
-        virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program);
-        virtual Node *_generateNode(IrContextTree *context, NodeProgram *program);
+        virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program, NodeContainer *container);
+        virtual Node *_generateNode(IrContextTree *context, NodeProgram *program, NodeContainer *container);
     };
 
 } /* namespace piranha */

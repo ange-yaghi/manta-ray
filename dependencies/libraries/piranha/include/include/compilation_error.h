@@ -30,6 +30,7 @@ namespace piranha {
 
         // [E] - Expansion errors
         extern const ErrorCode_struct InvalidOperandTypes;
+        extern const ErrorCode_struct CircularDefinition;
 
         // [R] - Resolution Errors
         extern const ErrorCode_struct UndefinedNodeType;
@@ -40,6 +41,7 @@ namespace piranha {
         extern const ErrorCode_struct UndefinedMember;
         extern const ErrorCode_struct AccessingInternalMember;
         extern const ErrorCode_struct CannotFindDefaultValue;
+        extern const ErrorCode_struct CircularReference;
 
         // [V] - Validation errors
         extern const ErrorCode_struct InputSpecifiedMultipleTimes;
@@ -54,6 +56,8 @@ namespace piranha {
         extern const ErrorCode_struct UndefinedBuiltinInput;
         extern const ErrorCode_struct UndefinedBuiltinOutput;
         extern const ErrorCode_struct ModifyAttributeMismatch;
+        extern const ErrorCode_struct ToggleAttributeMismatch;
+        extern const ErrorCode_struct AliasAttributeMismatch;
 
         // [T] - Type errors
         extern const ErrorCode_struct IncompatibleType;

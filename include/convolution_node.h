@@ -1,14 +1,14 @@
 #ifndef MANTARAY_CONVOLUTION_NODE_H
 #define MANTARAY_CONVOLUTION_NODE_H
 
-#include <piranha.h>
+#include "node.h"
 
 #include "vector_map_2d.h"
 #include "vector_map_2d_node_output.h"
 
 namespace manta {
 
-    class ConvolutionNode : public piranha::Node{
+    class ConvolutionNode : public Node {
     public:
         ConvolutionNode();
         ~ConvolutionNode();
@@ -31,10 +31,11 @@ namespace manta {
         virtual void registerInputs();
         virtual void registerOutputs();
 
-    protected:
-        piranha::NodeOutput *m_base;
-        piranha::NodeOutput *m_filter;
+        piranha::pNodeInput m_base;
+        piranha::pNodeInput m_filter;
         VectorMap2DNodeOutput m_output;
+
+    protected:
         bool m_resize;
         bool m_clip;
 

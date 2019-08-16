@@ -17,7 +17,7 @@ namespace manta {
         PolygonalAperture();
         virtual ~PolygonalAperture();
 
-        void initialize(int edges, math::real angle = (math::real)0.0, bool halfOffset=false);
+        void configure(int edges, math::real angle = (math::real)0.0, bool halfOffset=false);
         void destroy();
 
         virtual bool filter(math::real x, math::real y) const;
@@ -30,6 +30,17 @@ namespace manta {
         int m_edgeCount;
 
         math::real m_bladeCurvature;
+
+    protected:
+        virtual void _initialize();
+        virtual void _evaluate();
+        virtual void _destroy();
+
+        virtual void registerInputs();
+
+        piranha::pNodeInput m_edgeCountInput;
+        piranha::pNodeInput m_bladeCurvatureInput;
+        piranha::pNodeInput m_angleInput;
     };
 
 } /* namespace manta */
