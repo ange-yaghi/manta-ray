@@ -4,6 +4,7 @@
 #include "../include/mesh.h"
 #include "../include/material_library.h"
 #include "../include/path.h"
+#include "../include/material.h"
 
 #include <piranha.h>
 #include <string>
@@ -24,6 +25,9 @@ void manta::ObjFileNode::_evaluate() {
     std::string filename;
     m_filename->fullCompute((void *)&filename);
 
+    std::string defaultMaterial;
+    m_defaultMaterial->fullCompute((void *)&defaultMaterial);
+
     Path resolvedPath;
     resolvePath(&Path(filename.c_str()), &resolvedPath);
 
@@ -33,8 +37,16 @@ void manta::ObjFileNode::_evaluate() {
     ObjFileLoader loader;
     loader.loadObjFile(resolvedPath.toString().c_str());
 
+    int defaultMaterialIndex = -1;
+    if (!defaultMaterial.empty()) {
+        Material *defaultMaterialRef = library->searchByName(defaultMaterial);
+        if (defaultMaterialRef != nullptr) {
+            defaultMaterialIndex = defaultMaterialRef->getIndex();
+        }
+    }
+
     Mesh *mesh = new Mesh;
-    mesh->loadObjFileData(&loader, library);
+    mesh->loadObjFileData(&loader, library, defaultMaterialIndex);
 
     m_output.setReference(mesh);
     m_mesh = mesh;
@@ -47,4 +59,5 @@ void manta::ObjFileNode::_destroy() {
 void manta::ObjFileNode::registerInputs() {
     registerInput(&m_filename, "filename");
     registerInput(&m_materialLibrary, "materials");
+    registerInput(&m_defaultMaterial, "default_material");
 }

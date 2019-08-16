@@ -1,0 +1,22 @@
+module {
+    @name:          "Date Utilities"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "Utilities for handling dates"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
+private import "../types/atomic_types.mr"
+
+@doc: "Date type node"
+public node date => __mantaray__date {
+    output as_string [string];
+}
+
+@doc: "Get the current date and time"
+public node current_date => __mantaray__current_date {
+    alias output __out [date];
+}

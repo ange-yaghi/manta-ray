@@ -16,7 +16,7 @@ manta::PolygonalAperture::~PolygonalAperture() {
     assert(m_edges == nullptr);
 }
 
-void manta::PolygonalAperture::initialize(int edges, math::real angle, bool halfOffset) {
+void manta::PolygonalAperture::configure(int edges, math::real angle, bool halfOffset) {
     static const math::real DEFAULT_ANGLE = math::constants::PI / 2;
 
     m_edgeCount = edges;
@@ -135,4 +135,35 @@ bool manta::PolygonalAperture::filter(math::real x, math::real y) const {
     if (mag_2 > radius_mid * radius_mid) return false;
 
     return true;
+}
+
+void manta::PolygonalAperture::_initialize() {
+    /* void */
+}
+
+void manta::PolygonalAperture::_evaluate() {
+    Aperture::_evaluate();
+
+    piranha::native_float angle, curvature;
+    piranha::native_int blades;
+
+    m_angleInput->fullCompute((void *)&angle);
+    m_bladeCurvatureInput->fullCompute((void *)&curvature);
+    m_edgeCountInput->fullCompute((void *)&blades);
+
+    m_bladeCurvature = (math::real)curvature;
+    
+    configure(blades, (math::real)angle);
+}
+
+void manta::PolygonalAperture::_destroy() {
+    /* void */
+}
+
+void manta::PolygonalAperture::registerInputs() {
+    Aperture::registerInputs();
+
+    registerInput(&m_angleInput, "angle");
+    registerInput(&m_bladeCurvatureInput, "curvature");
+    registerInput(&m_edgeCountInput, "blades");
 }

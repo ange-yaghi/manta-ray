@@ -25,7 +25,10 @@ namespace piranha {
         void setDefinesBuiltin(bool defines) { m_definesBuiltin = defines; }
         bool isBuiltin() const { return m_definesBuiltin; }
 
-        const IrTokenInfo *getNameToken() const { return &m_name; }
+        void setIsInline(bool isInline) { m_isInline = isInline; }
+        bool isInline() const { return m_isInline; }
+
+        const IrTokenInfo_string *getNameToken() const { return &m_name; }
         std::string getName() const { return m_name.data; }
 
         void setAttributeDefinitionList(IrAttributeDefinitionList *definitions);
@@ -50,6 +53,8 @@ namespace piranha {
         bool m_definesBuiltin;
         IrTokenInfo_string m_builtinName;
 
+        bool m_isInline;
+
         IrAttributeDefinitionList *m_attributes;
         IrNodeList *m_body;
 
@@ -57,11 +62,14 @@ namespace piranha {
 
         // Resolution stage
     public:
+        virtual void checkCircularDefinitions();
+
         int countSymbolIncidence(const std::string &name) const;
         IrParserStructure *resolveLocalName(const std::string &name) const;
 
     protected:
         virtual void _validate();
+        void validateBuiltinMappings();
     };
 
 } /* namespace piranha */

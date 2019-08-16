@@ -80,7 +80,7 @@ int main() {
     PolygonalAperture aperture;
     aperture.setRadius(apertureRadius);
     aperture.setBladeCurvature(1.0f);
-    aperture.initialize(6, math::constants::PI / 2);
+    aperture.configure(6, math::constants::PI / 2);
 
     int maxResolution = (int)((CftEstimator2D::getFreqRange(estimatorSamples, sampleWindow) * maxWavelength + sensorWidth / 2) / sensorElementWidth);
 

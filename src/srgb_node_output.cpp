@@ -33,10 +33,10 @@ void manta::SrgbNodeOutput::sample(const IntersectionPoint *surfaceInteraction, 
     math::real_d b_d = math::getScalar(v_b);
     math::real_d a_d = math::getScalar(v_a);
 
-    r_d = RgbSpace::srgb.applyGammaSrgb(r_d);
-    g_d = RgbSpace::srgb.applyGammaSrgb(g_d);
-    b_d = RgbSpace::srgb.applyGammaSrgb(b_d);
-    a_d = RgbSpace::srgb.applyGammaSrgb(a_d);
+    r_d = RgbSpace::srgb.inverseGammaSrgb(r_d);
+    g_d = RgbSpace::srgb.inverseGammaSrgb(g_d);
+    b_d = RgbSpace::srgb.inverseGammaSrgb(b_d);
+    a_d = RgbSpace::srgb.inverseGammaSrgb(a_d);
 
     *target = math::loadVector(
         (math::real)r_d,
@@ -59,8 +59,8 @@ void manta::SrgbNodeOutput::fullOutput(const void **_target) const {
 }
 
 void manta::SrgbNodeOutput::registerInputs() {
-    registerInput(&m_a);
-    registerInput(&m_a);
-    registerInput(&m_a);
+    registerInput(&m_r);
+    registerInput(&m_g);
+    registerInput(&m_b);
     registerInput(&m_a);
 }

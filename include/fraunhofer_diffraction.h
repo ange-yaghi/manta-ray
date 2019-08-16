@@ -1,8 +1,9 @@
 #ifndef MANTARAY_FRAUNHOFER_DIFFRACTION_H
 #define MANTARAY_FRAUNHOFER_DIFFRACTION_H
 
-#include "convolution.h"
+#include "node.h"
 
+#include "vector_map_2d_node_output.h"
 #include "vector_map_2d.h"
 #include "scalar_map_2d.h"
 #include "complex_map_2d.h"
@@ -17,7 +18,7 @@ namespace manta {
     class Spectrum;
     class TextureNode;
 
-    class FraunhoferDiffraction {
+    class FraunhoferDiffraction : public Node {
     public:
         struct Settings {
             int maxSamples;
@@ -45,7 +46,7 @@ namespace manta {
         math::Vector samplePattern(math::real dx, math::real dy) const;
 
         const VectorMap2D *getDiffractionPattern() const { return &m_diffractionPattern; }
-        const ComplexMap2D *getApertureFunction() const { return &m_apertureFunction; }
+        const VectorMap2D *getApertureFunction() const { return &m_apertureFunction; }
         math::real getPhysicalSensorWidth() const { return m_physicalSensorWidth; }
         math::real getSensorElementWidth() const { return m_sensorElementWidth; }
 
@@ -61,12 +62,35 @@ namespace manta {
 
     protected:
         VectorMap2D m_diffractionPattern;
-        ComplexMap2D m_apertureFunction;
+        VectorMap2D m_apertureFunction;
         CmfTable *m_colorTable;
         Spectrum *m_sourceSpectrum;
 
         math::real m_physicalSensorWidth;
         math::real m_sensorElementWidth;
+
+    protected:
+        virtual void _initialize();
+        virtual void _evaluate();
+        virtual void _destroy();
+
+        virtual void registerInputs();
+        virtual void registerOutputs();
+
+        VectorMap2DNodeOutput m_diffractionPatternOutput;
+        VectorMap2DNodeOutput m_aperturePatternOutput;
+
+        piranha::pNodeInput m_apertureSamplesInput;
+        piranha::pNodeInput m_textureSamplesInput;
+        piranha::pNodeInput m_minWavelengthInput;
+        piranha::pNodeInput m_maxWavelengthInput;
+        piranha::pNodeInput m_wavelengthStepInput;
+        piranha::pNodeInput m_safetyFactorInput;
+        piranha::pNodeInput m_frequencyMultiplierInput;
+        piranha::pNodeInput m_dirtMapInput;
+        piranha::pNodeInput m_apertureInput;
+        piranha::pNodeInput m_resolutionInput;
+        piranha::pNodeInput m_sensorWidthInput;
     };
 
 } /* namespace manta */

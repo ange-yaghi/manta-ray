@@ -25,7 +25,7 @@ namespace manta {
 
     protected:
         virtual void registerOutputs() {
-            setPrimaryOutput(&m_output);
+            setPrimaryOutput("__out");
             registerOutput(&m_output, "__out");
         }
 

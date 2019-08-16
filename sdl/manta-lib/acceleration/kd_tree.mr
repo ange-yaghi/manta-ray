@@ -1,8 +1,18 @@
-private import "../types/atomic_types.mr"
-private import "../types/conversions.mr"
+module {
+    @name:          "KD Tree"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "KD tree acceleration structure"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
 private import "../mesh/mesh.mr"
 private import "../scene/scene_geometry.mr"
 
+@doc: "KD tree acceleration interface"
 public node kd_tree => __mantaray__kd_tree {
     input mesh          [mesh];
     alias output __out  [scene_geometry];

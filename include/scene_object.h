@@ -31,7 +31,6 @@ namespace manta {
     protected:
         piranha::pNodeInput m_geometryInput;
         piranha::pNodeInput m_sceneInput;
-        piranha::pNodeInput m_defaultMaterialInput;
         piranha::pNodeInput m_nameInput;
 
     protected:

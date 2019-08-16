@@ -1,13 +1,13 @@
 #ifndef MANTARAY_MEDIA_INTERFACE_H
 #define MANTARAY_MEDIA_INTERFACE_H
 
-#include <piranha.h>
+#include "object_reference_node.h"
 
 #include "manta_math.h"
 
 namespace manta {
 
-    class MediaInterface {
+    class MediaInterface : public ObjectReferenceNode<MediaInterface> {
     public:
         enum DIRECTION {
             DIRECTION_IN,

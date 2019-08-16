@@ -26,6 +26,18 @@ namespace manta {
         void destroySessionMemory(NodeSessionMemory *memory, StackAllocator *stackAllocator) const;
 
         void resolvePath(const Path *relative, Path *target) const;
+
+    protected:
+        bool m_enabled;
+
+    protected:
+        virtual void _initialize();
+        virtual void _evaluate();
+        virtual void _destroy();
+
+        virtual void registerInputs();
+
+        piranha::pNodeInput m_enabledInput;
     };
 
 } /* namespace manta */

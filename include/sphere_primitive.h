@@ -36,6 +36,14 @@ namespace manta {
         void setRadius(math::real radius) { m_radius = radius; }
 
     protected:
+        virtual void _initialize();
+        virtual void _evaluate();
+
+        virtual void registerInputs();
+
+        piranha::pNodeInput m_radiusInput;
+
+    protected:
         math::real m_radius;
     };
 

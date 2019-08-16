@@ -1,4 +1,4 @@
-// Auto-generated on: 2019-07-31 23:24:57.015222
+// Auto-generated on: 2019-08-14 20:40:10.095101
 
 #ifndef PIRANHA_PIRANHA_H
 #define PIRANHA_PIRANHA_H
@@ -6,6 +6,7 @@
 #define PIRANHA_DIST
 
 #include "include/add_operation_output.h"
+#include "include/assembly.h"
 #include "include/bool_negate_operation.h"
 #include "include/channel_type.h"
 #include "include/compilation_error.h"
@@ -20,6 +21,7 @@
 #include "include/float_conversions.h"
 #include "include/fundamental_output.h"
 #include "include/fundamental_types.h"
+#include "include/int_conversions.h"
 #include "include/ir_attribute.h"
 #include "include/ir_attribute_definition.h"
 #include "include/ir_attribute_definition_list.h"
@@ -44,6 +46,7 @@
 #include "include/memory_management.h"
 #include "include/multiply_operation_output.h"
 #include "include/node.h"
+#include "include/node_container.h"
 #include "include/node_output.h"
 #include "include/node_program.h"
 #include "include/no_op_node.h"

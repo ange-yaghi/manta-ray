@@ -33,6 +33,14 @@ namespace manta {
     protected:
         MicrofacetDistribution *m_distribution;
         MediaInterface *m_mediaInterface;
+
+    protected:
+        virtual void _evaluate();
+
+        virtual void registerInputs();
+
+        piranha::pNodeInput m_distributionInput;
+        piranha::pNodeInput m_mediaInterfaceInput;
     };
 
 } /* namespace manta */

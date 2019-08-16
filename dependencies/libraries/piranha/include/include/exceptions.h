@@ -11,6 +11,12 @@ namespace piranha {
         }
     };
 
+    struct EmptyPort : public std::exception {
+        virtual const char *what() const throw() {
+            return "Could not find a node or output to populate a port";
+        }
+    };
+
 } /* namespace piranha */
 
 #endif /* PIRANHA_EXCEPTIONS_H */

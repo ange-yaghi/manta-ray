@@ -31,6 +31,7 @@ namespace piranha {
         }
 
         virtual void registerInputs() {
+            setInterfaceInput(&m_primaryInput);
             registerInput(&m_primaryInput, "__in");
             registerInput(m_outputX.getInputConnection(), "__in");
             registerInput(m_outputY.getInputConnection(), "__in");
@@ -39,9 +40,6 @@ namespace piranha {
         }
 
         virtual void registerOutputs() {
-            setPrimaryOutputReference(&m_primaryInput);
-
-            registerOutputReference(&m_primaryInput, "$primary");
             registerOutput(&m_outputX, "x");
             registerOutput(&m_outputY, "y");
             registerOutput(&m_outputZ, "z");

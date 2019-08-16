@@ -24,6 +24,27 @@
 #include "../include/image_output_node.h"
 #include "../include/binary_node.h"
 #include "../include/unary_node.h"
+#include "../include/mesh_merge_node.h"
+#include "../include/sphere_primitive.h"
+#include "../include/srgb_node.h"
+#include "../include/image_file_node.h"
+#include "../include/circular_aperture.h"
+#include "../include/polygonal_aperture.h"
+#include "../include/square_aperture.h"
+#include "../include/fraunhofer_diffraction.h"
+#include "../include/convolution_node.h"
+#include "../include/step_node.h"
+#include "../include/padded_frame_output.h"
+#include "../include/current_date_node.h"
+#include "../include/date_interface_node.h"
+#include "../include/lens.h"
+#include "../include/simple_lens.h"
+#include "../include/lens_camera_ray_emitter_group.h"
+#include "../include/surface_interaction_node.h"
+#include "../include/media_interface.h"
+#include "../include/opaque_media_interface.h"
+#include "../include/dielectric_media_interface.h"
+#include "../include/microfacet_glass_bsdf.h"
 
 manta::LanguageRules::LanguageRules() {
     /* void */
@@ -39,7 +60,8 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
     // ====================================================
 
     // Channels
-    registerBuiltinType<piranha::NoOpNode>(
+    registerBuiltinType
+        <piranha::NoOpNode>(
         "__mantaray__float", &piranha::FundamentalType::FloatType);
     registerBuiltinType<piranha::NoOpNode>(
         "__mantaray__int", &piranha::FundamentalType::IntType);
@@ -71,6 +93,14 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__sampler", &ObjectChannel::SamplerChannel);
     registerBuiltinType <piranha::NoOpNode>(
         "__mantaray__vector_map", &VectorMap2DNodeOutput::VectorMap2dType);
+    registerBuiltinType <piranha::NoOpNode>(
+        "__mantaray__aperture", &ObjectChannel::ApertureChannel);
+    registerBuiltinType <DateInterfaceNode>(
+        "__mantaray__date", &DateNodeOutput::DateType);
+    registerBuiltinType <piranha::NoOpNode>(
+        "__mantaray__lens", &ObjectChannel::LensChannel);
+    registerBuiltinType <piranha::NoOpNode>(
+        "__mantaray__media_interface", &ObjectChannel::MediaInterfaceChannel);
 
     // Constructors
     registerBuiltinType<RayTracer>(
@@ -107,6 +137,44 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__standard_camera");
     registerBuiltinType <ImageOutputNode>(
         "__mantaray__image_output");
+    registerBuiltinType <SpherePrimitive>(
+        "__mantaray__sphere");
+    registerBuiltinType <SrgbNode>(
+        "__mantaray__srgb");
+    registerBuiltinType <ImageFileNode>(
+        "__mantaray__image_file");
+    registerBuiltinType <CircularAperture>(
+        "__mantaray__circular_aperture");
+    registerBuiltinType <SquareAperture>(
+        "__mantaray__square_aperture");
+    registerBuiltinType <PolygonalAperture>(
+        "__mantaray__polygonal_aperture");
+    registerBuiltinType <FraunhoferDiffraction>(
+        "__mantaray__fraunhofer_diffraction");
+    registerBuiltinType <ConvolutionNode>(
+        "__mantaray__convolve_2d");
+    registerBuiltinType <StepNode>(
+        "__mantaray__step");
+    registerBuiltinType <PaddedFrameNode>(
+        "__mantaray__padded_frame");
+    registerBuiltinType <CurrentDateNode>(
+        "__mantaray__current_date");
+    registerBuiltinType <SimpleLens>(
+        "__mantaray__simple_lens");
+    registerBuiltinType <LensCameraRayEmitterGroup>(
+        "__mantaray__lens_camera");
+    registerBuiltinType <OpaqueMediaInterface>(
+        "__mantaray__opaque_media_interface");
+    registerBuiltinType <DielectricMediaInterface>(
+        "__mantaray__dielectric_media_interface");
+    registerBuiltinType <MicrofacetGlassBSDF>(
+        "__mantaray__glass_bsdf");
+
+    // Actions
+    registerBuiltinType <piranha::ConsoleInputNode>(
+        "__mantaray__console_in");
+    registerBuiltinType <piranha::ConsoleOutputNode>(
+        "__mantaray__console_out");
 
     // Literals
     registerBuiltinType<piranha::DefaultLiteralFloatNode>(
@@ -121,16 +189,28 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
     // Conversions
     registerBuiltinType<FloatToVectorConversionNode>(
         "__mantaray__float_to_vector");
+    registerBuiltinType<IntToVectorConversionNode>(
+        "__mantaray__int_to_vector");
+    registerBuiltinType<piranha::IntToFloatConversionNode>(
+        "__mantaray__int_to_float");
+    registerBuiltinType<piranha::IntToStringConversionNode>(
+        "__mantaray__int_to_string");
+    registerBuiltinType<piranha::StringToIntConversionNode>(
+        "__mantaray__string_to_int");
 
     // Unary operations
     registerBuiltinType<piranha::NumNegateOperationNode<piranha::native_float>>(
         "__mantaray__float_negate");
-    registerBuiltinType<NegateNode>(
+    registerBuiltinType<VectorNegateNode>(
         "__mantaray__vector_negate");
-    registerBuiltinType<MagnitudeNode>(
+    registerBuiltinType<VectorMagnitudeNode>(
         "__mantaray__vector_magnitude");
-    registerBuiltinType<NormalizeNode>(
+    registerBuiltinType<VectorNormalizeNode>(
         "__mantaray__vector_normalize");
+    registerBuiltinType<VectorMaxComponentNode>(
+        "__mantaray__vector_max_component");
+    registerBuiltinType<VectorAbsoluteNode>(
+        "__mantaray__vector_absolute");
 
     // Binary operations
     registerBuiltinType<AddNode>(
@@ -145,6 +225,22 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__vector_dot");
     registerBuiltinType<CrossNode>(
         "__mantaray__vector_cross");
+    registerBuiltinType<PowerNode>(
+        "__mantaray__vector_pow");
+    registerBuiltinType<MaxNode>(
+        "__mantaray__vector_max");
+    registerBuiltinType<MinNode>(
+        "__mantaray__vector_min");
+    registerBuiltinType<MeshMergeNode>(
+        "__mantaray__mesh_merge");
+    registerBuiltinType<piranha::OperationNodeSpecialized<
+        piranha::native_float, piranha::DivideOperationNodeOutput>>("__mantaray__float_divide");
+    registerBuiltinType<piranha::OperationNodeSpecialized<
+        piranha::native_string, piranha::AddOperationNodeOutput>>("__mantaray__string_add");
+
+    // Surface interaction
+    registerBuiltinType<SurfaceInteractionNode>(
+        "__mantaray__surface_interaction");
 
     // ====================================================
     // Literal types
@@ -161,25 +257,91 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         { &piranha::FundamentalType::FloatType, &VectorNodeOutput::VectorType },
         "__mantaray__float_to_vector"
     );
+    registerConversion(
+        { &piranha::FundamentalType::IntType, &VectorNodeOutput::VectorType },
+        "__mantaray__int_to_vector"
+    );
+    registerConversion(
+        { &piranha::FundamentalType::IntType, &piranha::FundamentalType::FloatType },
+        "__mantaray__int_to_float"
+    );
+    registerConversion(
+        { &piranha::FundamentalType::IntType, &piranha::FundamentalType::StringType },
+        "__mantaray__int_to_string"
+    );
+    registerConversion(
+        { &piranha::FundamentalType::StringType, &piranha::FundamentalType::IntType },
+        "__mantaray__string_to_int"
+    );
 
     // ====================================================
     // Binary operators
     // ====================================================
+
+    // Vector operators
     registerOperator(
         { piranha::IrBinaryOperator::MUL, &VectorNodeOutput::VectorType, &VectorNodeOutput::VectorType },
-        "__mantaray__vector_multiply"
+        "__mantaray__vector_mul"
+    );
+    registerOperator(
+        { piranha::IrBinaryOperator::MUL, &VectorNodeOutput::VectorType, &piranha::FundamentalType::FloatType },
+        "__mantaray__vector_mul"
+    );
+    registerOperator(
+        { piranha::IrBinaryOperator::MUL, &VectorNodeOutput::VectorType, &piranha::FundamentalType::IntType },
+        "__mantaray__vector_mul"
     );
     registerOperator(
         { piranha::IrBinaryOperator::DIV, &VectorNodeOutput::VectorType, &VectorNodeOutput::VectorType },
-        "__mantaray__vector_divide"
+        "__mantaray__vector_div"
+    );
+    registerOperator(
+        { piranha::IrBinaryOperator::DIV, &VectorNodeOutput::VectorType, &piranha::FundamentalType::FloatType },
+        "__mantaray__vector_div"
+    );
+    registerOperator(
+        { piranha::IrBinaryOperator::DIV, &VectorNodeOutput::VectorType, &piranha::FundamentalType::IntType },
+        "__mantaray__vector_div"
     );
     registerOperator(
         { piranha::IrBinaryOperator::ADD, &VectorNodeOutput::VectorType, &VectorNodeOutput::VectorType },
         "__mantaray__vector_add"
     );
     registerOperator(
+        { piranha::IrBinaryOperator::ADD, &VectorNodeOutput::VectorType, &piranha::FundamentalType::FloatType },
+        "__mantaray__vector_add"
+    );
+    registerOperator(
+        { piranha::IrBinaryOperator::ADD, &VectorNodeOutput::VectorType, &piranha::FundamentalType::IntType },
+        "__mantaray__vector_add"
+    );
+    registerOperator(
         { piranha::IrBinaryOperator::SUB, &VectorNodeOutput::VectorType, &VectorNodeOutput::VectorType },
         "__mantaray__vector_sub"
+    );
+    registerOperator(
+        { piranha::IrBinaryOperator::SUB, &VectorNodeOutput::VectorType, &piranha::FundamentalType::FloatType },
+        "__mantaray__vector_sub"
+    );
+    registerOperator(
+        { piranha::IrBinaryOperator::SUB, &VectorNodeOutput::VectorType, &piranha::FundamentalType::IntType },
+        "__mantaray__vector_sub"
+    );
+
+    // Float operators
+    registerOperator(
+        { piranha::IrBinaryOperator::DIV, &piranha::FundamentalType::FloatType, &piranha::FundamentalType::FloatType },
+        "__mantaray__float_divide"
+    );
+    registerOperator(
+        { piranha::IrBinaryOperator::DIV, &piranha::FundamentalType::FloatType, &piranha::FundamentalType::IntType },
+        "__mantaray__float_divide"
+    );
+
+    // String operators
+    registerOperator(
+        { piranha::IrBinaryOperator::ADD, &piranha::FundamentalType::StringType, &piranha::FundamentalType::StringType },
+        "__mantaray__string_add"
     );
 
     // ====================================================

@@ -76,12 +76,16 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
     PhongDistribution phongPhoneCase;
     phongPhoneCase.setPower(1024);
     phongPhoneCase.setMinMapPower(8);
-    if (ENABLE_SMUDGE && (SCENE == UPRIGHT_SCENE || SCENE == BANNER_SCENE)) phongPhoneCase.setPowerNode(smudgeMap.getMainOutput());
+    if (ENABLE_SMUDGE && (SCENE == UPRIGHT_SCENE || SCENE == BANNER_SCENE)) {
+        phongPhoneCase.setPowerNode(smudgeMap.getMainOutput());
+    }
 
     PhongDistribution phongGlass;
     phongGlass.setPower(5000);
     phongGlass.setMinMapPower(200);
-    if (ENABLE_SMUDGE && (SCENE == UPRIGHT_SCENE || SCENE == BANNER_SCENE)) phongGlass.setPowerNode(smudgeMap.getMainOutput());
+    if (ENABLE_SMUDGE && (SCENE == UPRIGHT_SCENE || SCENE == BANNER_SCENE)) {
+        phongGlass.setPowerNode(smudgeMap.getMainOutput());
+    }
 
     PhongDistribution phongBlackPlastic;
     phongBlackPlastic.setPower(5000);
@@ -98,7 +102,9 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
     PhongDistribution phongFloor;
     phongFloor.setPower(256);
     phongFloor.setMinMapPower(240);
-    if (ENABLE_SMUDGE && (SCENE == UPRIGHT_SCENE || SCENE == BANNER_SCENE)) phongFloor.setPowerNode(groundRoughness.getMainOutput());
+    if (ENABLE_SMUDGE && (SCENE == UPRIGHT_SCENE || SCENE == BANNER_SCENE)) {
+        phongFloor.setPowerNode(groundRoughness.getMainOutput());
+    }
 
     PhongDistribution mattePlasticPhong;
     mattePlasticPhong.setPower(64);

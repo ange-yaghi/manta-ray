@@ -21,7 +21,7 @@ void manta::ConstructedVectorNode::_destroy() {
 }
 
 void manta::ConstructedVectorNode::registerOutputs() {
-    setPrimaryOutput(&m_output);
+    setPrimaryOutput("__out");
 
     registerOutput(&m_output, "__out");
 }

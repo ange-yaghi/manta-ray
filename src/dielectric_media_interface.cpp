@@ -5,6 +5,9 @@
 manta::DielectricMediaInterface::DielectricMediaInterface() {
     m_iorIncident = (math::real)1.0;
     m_iorTransmitted = (math::real)1.0;
+
+    m_iorIncidentInput = nullptr;
+    m_iorTransmittedInput = nullptr;
 }
 
 manta::DielectricMediaInterface::~DielectricMediaInterface() {
@@ -115,4 +118,19 @@ manta::math::real manta::DielectricMediaInterface::ni(DIRECTION d) const {
 
     // Shouldn't happen
     return m_iorIncident;
+}
+
+void manta::DielectricMediaInterface::_evaluate() {
+    piranha::native_float iorTransmitted, iorIncident;
+
+    m_iorIncidentInput->fullCompute((void *)&iorIncident);
+    m_iorTransmittedInput->fullCompute((void *)&iorTransmitted);
+
+    m_iorIncident = (math::real)iorIncident;
+    m_iorTransmitted = (math::real)iorTransmitted;
+}
+
+void manta::DielectricMediaInterface::registerInputs() {
+    registerInput(&m_iorIncidentInput, "ior_exterior");
+    registerInput(&m_iorTransmittedInput, "ior_interior");
 }

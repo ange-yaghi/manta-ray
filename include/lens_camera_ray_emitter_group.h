@@ -23,6 +23,15 @@ namespace manta {
 
     protected:
         const Lens *m_lens;
+
+    protected:
+        virtual void _initialize();
+        virtual void _evaluate();
+        virtual void _destroy();
+
+        virtual void registerInputs();
+
+        piranha::pNodeInput m_lensInput;
     };
 
 } /* namespace manta */

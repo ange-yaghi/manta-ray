@@ -204,7 +204,6 @@ math::Vector math::dot3(const Vector &v1, const Vector &v2) {
 }
 
 math::Vector math::cross(const Vector &v1, const Vector &v2) {
-
     // STOLEN FROM XNA MATH
 
     // y1, z1, x1, w1
@@ -231,6 +230,16 @@ math::Vector math::cross(const Vector &v1, const Vector &v2) {
     return _mm_and_ps(vResult, constants::MaskOffW);
 }
 
+math::Vector math::pow(const Vector &v1, const Vector &v2) {
+    // Temporary non-simd implementation
+    return math::loadVector(
+        ::pow(getX(v1), getX(v2)),
+        ::pow(getY(v1), getY(v2)),
+        ::pow(getZ(v1), getZ(v2)),
+        ::pow(getW(v1), getW(v2))
+    );
+}
+
 math::Vector math::sqrt(const Vector & v) {
     return _mm_sqrt_ps(v);
 }
@@ -254,6 +263,18 @@ math::Vector math::negate(const Vector &v) {
 
 math::Vector math::negate3(const Vector &v) {
     return math::mul(v, constants::Negate3);
+}
+
+math::Vector math::maxComponent(const Vector &v) {
+    // y, x, w, z
+    Vector r1 = _mm_shuffle_ps(v, v, _MM_SHUFFLE(2, 3, 0, 1));
+    r1 = _mm_max_ps(r1, v);
+
+    // z, z, x, x
+    Vector r2 = _mm_shuffle_ps(r1, r1, _MM_SHUFFLE(0, 0, 2, 2));
+    r1 = _mm_max_ps(r1, r2);
+
+    return r1;
 }
 
 math::Generic math::permute(const Generic &v, int kx, int ky, int kz, int kw) {

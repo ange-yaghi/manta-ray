@@ -13,7 +13,7 @@ namespace manta {
         virtual ~ConstructedVectorNodeOutput();
 
         virtual void sample(const IntersectionPoint *surfaceInteraction, void *target) const;
-        virtual void discreteSample2D(int x, int y, void *target) const;
+        virtual void discreteSample2d(int x, int y, void *target) const;
         virtual void fullOutput(const void **target) const;
 
         piranha::pNodeInput *getXConnection() { return &m_x; }
@@ -24,6 +24,8 @@ namespace manta {
         const NodeOutput *getXOutput() { return m_x; }
 
         void registerInputs();
+
+        virtual void _evaluateDimensions();
 
     protected:
         piranha::pNodeInput m_x;

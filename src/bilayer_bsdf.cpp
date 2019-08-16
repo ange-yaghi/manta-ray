@@ -14,7 +14,7 @@ manta::BilayerBSDF::BilayerBSDF() {
     m_specularNode = nullptr;
 
     m_diffuse = math::constants::One;
-    m_specular = math::constants::Zero;
+    m_specular = math::constants::One;
 }
 
 manta::BilayerBSDF::~BilayerBSDF() {

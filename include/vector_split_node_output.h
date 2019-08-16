@@ -16,12 +16,14 @@ namespace manta {
         int getValueIndex() const { return m_valueIndex; }
 
         virtual void sample(const IntersectionPoint *surfaceInteraction, void *target) const;
-        virtual void discreteSample2D(int x, int y, void *target) const;
+        virtual void discreteSample2d(int x, int y, void *target) const;
         virtual void fullOutput(const void **target) const;
 
         piranha::pNodeInput *getInputConnection() { return &m_input; }
 
         virtual void registerInputs();
+
+        virtual void _evaluateDimensions();
 
     protected:
         piranha::pNodeInput m_input;

@@ -1,0 +1,27 @@
+module {
+    @name:          "Glass BSDF"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "BSDF for glass simulation"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
+private import "bsdf.mr"
+private import "media-interface/media_interfaces.mr"
+private import "../microfacet-models/microfacet_distributions.mr"
+private import "../types/atomic_types.mr"
+private import "../types/conversions.mr"
+
+@doc: "Glass BSDF for glass transmission and reflection"
+public node glass_bsdf => __mantaray__glass_bsdf {
+    input distribution [microfacet_distribution]: 
+        phong_distribution(32000.0);
+        
+    input media_interface [media_interface]: 
+        dielectric_interface(); // Defaults to crown glass
+
+    alias output __out [bsdf];
+}

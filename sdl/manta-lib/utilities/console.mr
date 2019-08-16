@@ -1,0 +1,23 @@
+module {
+    @name:          "Console Utilities"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "Defines all console utilities"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
+private import "../types/atomic_types.mr"
+
+@doc: "Get user console input"
+public node user_in => __mantaray__console_in {
+    input prompt [string]: "";
+    alias output raw_input [string];
+}
+
+@doc: "Log a string to the console"
+public node log => __mantaray__console_out {
+    input data [string]: "\n";
+}

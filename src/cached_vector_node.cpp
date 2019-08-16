@@ -25,6 +25,6 @@ void manta::CachedVectorNode::_destroy() {
 }
 
 void manta::CachedVectorNode::registerOutputs() {
-    setPrimaryOutput(&m_output);
+    setPrimaryOutput("__out");
     registerOutput(&m_output, "__out");
 }

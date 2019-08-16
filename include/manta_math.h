@@ -247,12 +247,14 @@ namespace manta {
         Vector dot(const Vector &v1, const Vector &v2);
         Vector dot3(const Vector &v1, const Vector &v2);
         Vector cross(const Vector &v1, const Vector &v2);
+        Vector pow(const Vector &v1, const Vector &v2);
         Vector sqrt(const Vector &v);
         Vector magnitudeSquared3(const Vector &v);
         Vector magnitude(const Vector &v);
         Vector normalize(const Vector &v);
         Vector negate(const Vector &v);
         Vector negate3(const Vector &v);
+        Vector maxComponent(const Vector &v);
 
         Generic permute(const Generic &v, int kx, int ky, int kz, int kw = 3);
         int maxDimension(const Generic &v);

@@ -61,15 +61,34 @@ namespace piranha {
         virtual void setValue(const T &value) { m_value = value; }
         T getValue() const { return m_value; }
 
-        virtual const ChannelType *getImmediateChannelType() { 
+        virtual const ChannelType *getImmediateChannelType() {
+            if (m_rules == nullptr) return nullptr;
+
             return m_rules->resolveChannelType(
                 m_rules->getLiteralBuiltinName<T>()
             );
         }
 
-        virtual Node *_generateNode(IrContextTree *context, NodeProgram *program) {
+        virtual Node *_generateNode(IrContextTree *context, NodeProgram *program, NodeContainer *container) {
+            Node *cachedNode = program->getCachedInstance(this, context);
+            if (cachedNode != nullptr) return cachedNode;
+
             Node *newNode = generateNode(m_value, context);
             newNode->initialize();
+            newNode->setIrStructure(this);
+            newNode->setIrContext(context);
+
+            // Find a context
+            IrContextTree *c = context;
+            NodeContainer *parentContainer = nullptr;
+            while (c != nullptr && parentContainer == nullptr) {
+                parentContainer = program->getContainer(c);
+                c = c->getParent();
+            }
+
+            if (!parentContainer->findNode(newNode)) {
+                parentContainer->addNode(newNode);
+            }
 
             return newNode;
         }
@@ -124,6 +143,15 @@ namespace piranha {
 
             IrParserStructure *reference = resolveName(m_value);
 
+            if (reference == nullptr) {
+                // Try searching for a global variable
+                // TODO: if nested node definitions are ever introduced, then some more sophisticated
+                // logic would be needed here to resolve the actual context. For now we can assume
+                // that all global variables are defined at global (root) scope
+                reference = getParentUnit()->resolveLocalName(m_value);
+                IR_INFO_OUT(newContext, query.inputContext->getRoot());
+            }
+
             // Do error checking
             if (reference == nullptr) {
                 IR_FAIL();
@@ -137,6 +165,14 @@ namespace piranha {
             }    
 
             return reference;
+        }
+
+        virtual Node *_generateNode(IrContextTree *context, NodeProgram *program, NodeContainer *container) {
+            return IrParserStructure::_generateNode(context, program, container);
+        }
+
+        virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program, NodeContainer *container) {
+            return IrParserStructure::_generateNodeOutput(context, program, container);
         }
     };
 
@@ -165,12 +201,12 @@ namespace piranha {
             return m_value;
         }
 
-        virtual Node *_generateNode(IrContextTree *context, NodeProgram *program) {
-            return m_value->generateNode(context, program);
+        virtual Node *_generateNode(IrContextTree *context, NodeProgram *program, NodeContainer *container) {
+            return IrParserStructure::_generateNode(context, program, container);
         }
 
-        virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program) {
-            return nullptr;
+        virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program, NodeContainer *container) {
+            return IrParserStructure::_generateNodeOutput(context, program, container);
         }
     };
 
@@ -201,6 +237,14 @@ namespace piranha {
 
             IR_INFO_OUT(newContext, m_newContext);
             return m_value;
+        }
+
+        virtual Node *_generateNode(IrContextTree *context, NodeProgram *program, NodeContainer *container) {
+            return IrParserStructure::_generateNode(context, program, container);
+        }
+
+        virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program, NodeContainer *container) {
+            return IrParserStructure::_generateNodeOutput(context, program, container);
         }
 
     protected:

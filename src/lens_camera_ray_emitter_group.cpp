@@ -39,3 +39,37 @@ manta::CameraRayEmitter *manta::LensCameraRayEmitterGroup::createEmitter(int ix,
 
     return (CameraRayEmitter *)newEmitter;
 }
+
+void manta::LensCameraRayEmitterGroup::_initialize() {
+    CameraRayEmitterGroup::_initialize();
+}
+
+void manta::LensCameraRayEmitterGroup::_evaluate() {
+    Lens *lens = getObject<Lens>(m_lensInput);
+    m_sampler = getObject<Sampler2D>(m_samplerInput);
+
+    piranha::native_int samples;
+    m_sampleInput->fullCompute((void *)&samples);
+
+    setUp(lens->getUp());
+    setDirection(lens->getDirection());
+    setPosition(lens->getPosition());
+    setResolutionX(lens->getSensorResolutionX());
+    setResolutionY(lens->getSensorResolutionY());
+    setLens(lens);
+    setSampleCount((int)samples);
+
+    m_output.setReference(this);
+
+    configure();
+}
+
+void manta::LensCameraRayEmitterGroup::_destroy() {
+    /* void */
+}
+
+void manta::LensCameraRayEmitterGroup::registerInputs() {
+    registerInput(&m_lensInput, "lens");
+    registerInput(&m_sampleInput, "samples");
+    registerInput(&m_samplerInput, "sampler");
+}

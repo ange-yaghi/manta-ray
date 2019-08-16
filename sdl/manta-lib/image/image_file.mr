@@ -1,0 +1,21 @@
+module {
+    @name:          "Image File Loader"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "Utilities for writing images to files"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
+private import "vector_map.mr"
+private import "../types/atomic_types.mr"
+
+@doc: "Image file loader"
+public node image_file => __mantaray__image_file {
+    input filename      [string];
+    input correct_gamma [bool]: true;
+
+    alias output __out  [vector];
+}

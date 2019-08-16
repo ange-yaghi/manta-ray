@@ -18,7 +18,7 @@ namespace manta {
         virtual ~VectorMap2DNodeOutput();
 
         virtual void sample(const IntersectionPoint *surfaceInteraction, void *target) const;
-        virtual void discreteSample2D(int x, int y, void *target) const;
+        virtual void discreteSample2d(int x, int y, void *target) const;
         virtual void fullOutput(const void **target) const;
 
         const VectorMap2D *getMap() const { return m_map; }

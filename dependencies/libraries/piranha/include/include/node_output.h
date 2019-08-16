@@ -31,6 +31,9 @@ namespace piranha {
 
         void initialize();
         void evaluate();
+        void checkEnabled();
+
+        bool isEnabled() const { return m_enabled; }
 
         void setName(const std::string &name) { m_name = name; }
         const std::string &getName() const { return m_name; }
@@ -41,6 +44,8 @@ namespace piranha {
         Node *getInterface() const { return m_interface; }
 
         void overrideType(const ChannelType *type) { m_singleType = type; }
+
+        void addDependency(Node *node) { m_dependencyChain.push_back(node); }
 
     protected:
         virtual Node *generateInterface() { return nullptr; }
@@ -54,12 +59,17 @@ namespace piranha {
         Node *m_interface;
 
         bool m_evaluated;
+        bool m_checkedEnabled;
+
+        bool m_enabled;
 
     protected:
+        virtual void _evaluate();
         virtual void registerInput(NodeOutput **nodeInput) { m_inputs.push_back(nodeInput); }
 
         std::vector<NodeOutput **> m_inputs;
         std::vector<Node *> m_modifyConnections;
+        std::vector<Node *> m_dependencyChain;
     };
 
     // Type to reduce confusion

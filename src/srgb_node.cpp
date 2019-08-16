@@ -21,7 +21,7 @@ void manta::SrgbNode::_destroy() {
 }
 
 void manta::SrgbNode::registerOutputs() {
-    setPrimaryOutput(&m_output);
+    setPrimaryOutput("color");
 
     registerOutput(&m_output, "color");
 }

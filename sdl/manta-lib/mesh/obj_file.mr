@@ -1,9 +1,23 @@
+module {
+    @name:          "Object File Loader"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "Defines utilities to load .obj files"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
 private import "mesh.mr"
 private import "../materials/material_library.mr"
 private import "../types/atomic_types.mr"
 
+@doc: "Object file loader"
 public node obj_file => __mantaray__obj_file {
-    input filename      [string];
-    input materials     [material_library];
-    alias output __out  [mesh];
+    input filename          [string];
+    input materials         [material_library]: material_library();
+    input default_material  [string]: "";
+
+    alias output __out      [mesh];
 }

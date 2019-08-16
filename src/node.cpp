@@ -11,12 +11,14 @@ manta::Node::~Node() {
 }
 
 void manta::Node::initializeSessionMemory(
-    const IntersectionPoint *surfaceInteraction, NodeSessionMemory *memory, StackAllocator *stackAllocator) const
+    const IntersectionPoint *surfaceInteraction, NodeSessionMemory *memory, 
+    StackAllocator *stackAllocator) const
 {
     memset(memory, 0, sizeof(NodeSessionMemory));
 }
 
-void manta::Node::destroySessionMemory(NodeSessionMemory *memory, StackAllocator *stackAllocator) const
+void manta::Node::destroySessionMemory(NodeSessionMemory *memory, 
+    StackAllocator *stackAllocator) const 
 {
     if (memory->extraMemory != nullptr) {
         stackAllocator->free(memory->extraMemory);
@@ -25,7 +27,10 @@ void manta::Node::destroySessionMemory(NodeSessionMemory *memory, StackAllocator
 }
 
 void manta::Node::resolvePath(const Path *relative, Path *target) const {
-    if (relative->isAbsolute()) *target = *relative;
+    if (relative->isAbsolute()) {
+        *target = *relative;
+        return;
+    }
 
     piranha::Path unitFile = getIrStructure()->getParentUnit()->getPath();
     piranha::Path home;
@@ -33,4 +38,20 @@ void manta::Node::resolvePath(const Path *relative, Path *target) const {
     unitFile.getParentPath(&home);
 
     *target = Path(home.toString()).append(*relative);
+}
+
+void manta::Node::_initialize() {
+    /* void */
+}
+
+void manta::Node::_evaluate() {
+
+}
+
+void manta::Node::_destroy() {
+
+}
+
+void manta::Node::registerInputs() {
+    registerInput(&m_enabledInput, "enable");
 }

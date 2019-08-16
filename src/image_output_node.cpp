@@ -46,25 +46,18 @@ void manta::ImageOutputNode::_evaluate() {
     }
 
     // Resolve the input data
-    const VectorMap2D *map = nullptr;
-    VectorMap2DNodeOutput *input = static_cast<VectorMap2DNodeOutput *>(m_input);
-    map = input->getMap();
-    if (map != nullptr) {
-        map->fillByteBuffer(&byteBuffer, gammaCorrection);
-    }
-    else {
-        // Map needs to be generated
-        VectorMap2D generatedMap;
-        m_input->fullCompute((void *)&generatedMap);
-        generatedMap.fillByteBuffer(&byteBuffer, gammaCorrection);
-        generatedMap.destroy();
-    }
+    VectorMap2D map;
+    VectorNodeOutput *input = static_cast<VectorNodeOutput *>(m_input);
+    input->calculateAllDimensions(&map);
+
+    map.fillByteBuffer(&byteBuffer, gammaCorrection);
 
     JpegWriter jpegWriter;
     jpegWriter.setQuality(jpegQuality);
     jpegWriter.write(&byteBuffer, filename.c_str());
 
     byteBuffer.free();
+    map.destroy();
 }
 
 void manta::ImageOutputNode::_destroy() {

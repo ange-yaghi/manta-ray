@@ -66,7 +66,7 @@ void manta_demo::apertureDemo(int samplesPerPixel, int resolutionX, int resoluti
     manta::SimpleLens lens;
     manta::PolygonalAperture aperture;
     aperture.setRadius((math::real)0.25);
-    aperture.initialize(3, 0.f, false);
+    aperture.configure(3, 0.f, false);
 
     lens.setAperture(&aperture);
     lens.initialize();

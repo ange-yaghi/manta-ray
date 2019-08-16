@@ -24,11 +24,14 @@ void manta::VectorSplitNodeOutput::sample(const IntersectionPoint *surfaceIntera
     *target = math::loadScalar(math::get(value, m_valueIndex));
 }
 
-void manta::VectorSplitNodeOutput::discreteSample2D(int x, int y, void *target) const {
-    (void)x;
-    (void)y;
+void manta::VectorSplitNodeOutput::discreteSample2d(int x, int y, void *_target) const {
+    math::Vector *target = reinterpret_cast<math::Vector *>(_target);
+    math::Vector value;
 
-    sample(nullptr, target);
+    VectorNodeOutput *input = static_cast<VectorNodeOutput *>(m_input);
+    input->discreteSample2d(x, y, (void *)&value);
+
+    *target = math::loadScalar(math::get(value, m_valueIndex));
 }
 
 void manta::VectorSplitNodeOutput::fullOutput(const void **_target) const {
@@ -38,4 +41,22 @@ void manta::VectorSplitNodeOutput::fullOutput(const void **_target) const {
 
 void manta::VectorSplitNodeOutput::registerInputs() {
     registerInput(&m_input);
+}
+
+void manta::VectorSplitNodeOutput::_evaluateDimensions() {
+    VectorNodeOutput *input = static_cast<VectorNodeOutput *>(m_input);
+
+    input->evaluateDimensions();
+
+    int dimensions = 0;
+    if (input->getDimensions() > dimensions) dimensions = input->getDimensions();
+
+    setDimensions(dimensions);
+
+    for (int i = 0; i < dimensions; i++) {
+        int size = 0;
+        if (input->getSize(i) > size) size = input->getSize(i);
+
+        setDimensionSize(i, size);
+    }
 }

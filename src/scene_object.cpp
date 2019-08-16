@@ -16,7 +16,6 @@ manta::SceneObject::~SceneObject() {
 
 void manta::SceneObject::_evaluate() {
     m_scene = static_cast<ObjectReferenceNodeOutput<Scene> *>(m_sceneInput)->getReference();
-    m_defaultMaterial = static_cast<ObjectReferenceNodeOutput<Material> *>(m_defaultMaterialInput)->getReference();
     m_geometry = static_cast<ObjectReferenceNodeOutput<SceneGeometry> *>(m_geometryInput)->getReference();
     static_cast<piranha::NodeOutput *>(m_nameInput)->fullCompute((void *)&m_name);
 
@@ -26,6 +25,5 @@ void manta::SceneObject::_evaluate() {
 void manta::SceneObject::registerInputs() {
     registerInput(&m_geometryInput, "geometry");
     registerInput(&m_nameInput, "name");
-    registerInput(&m_defaultMaterialInput, "default_material");
     registerInput(&m_sceneInput, "scene", true);
 }

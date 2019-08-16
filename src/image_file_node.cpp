@@ -3,6 +3,7 @@
 #include "../include/rgb_space.h"
 #include "../include/standard_allocator.h"
 #include "../include/vector_map_2d.h"
+#include "../include/path.h"
 
 #include <SDL_image.h>
 #include <assert.h>
@@ -10,13 +11,34 @@
 manta::ImageFileNode::ImageFileNode() {
     m_filename = "";
     m_correctGamma = true;
+
+    m_correctGammaInput = nullptr;
+    m_filenameInput = nullptr;
 }
 
 manta::ImageFileNode::~ImageFileNode() {
     /* void */
 }
 
+void manta::ImageFileNode::_initialize() {
+    m_output.initialize();
+}
+
 void manta::ImageFileNode::_evaluate() {
+    if (m_correctGammaInput != nullptr) {
+        m_correctGammaInput->fullCompute((void *)&m_correctGamma);
+    }
+
+    if (m_filenameInput != nullptr) {
+        std::string rawFilename;
+        static_cast<piranha::NodeOutput *>(m_filenameInput)->fullCompute((void *)&rawFilename);
+
+        Path finalPath;
+        resolvePath(&Path(rawFilename), &finalPath);
+
+        m_filename = finalPath.toString();
+    }
+
     SDL_Surface *image;
     image = IMG_Load(m_filename.c_str());
 
@@ -38,9 +60,9 @@ void manta::ImageFileNode::_evaluate() {
         for (int j = 0; j < image->h; j++) {
             Pixel &pixel = pixelData[j][i];
 
-            math::real r = pixel.r / (math::real)255;
-            math::real g = pixel.g / (math::real)255;
-            math::real b = pixel.b / (math::real)255;
+            math::real r = pixel.r / (math::real)255.0;
+            math::real g = pixel.g / (math::real)255.0;
+            math::real b = pixel.b / (math::real)255.0;
 
             if (m_correctGamma) {
                 // Default to SRGB
@@ -63,11 +85,21 @@ void manta::ImageFileNode::_evaluate() {
     // Free the SDL image
     SDL_free((void *)image);
 
-    //setMap(&m_imageMap);
+    m_output.setMap(&m_imageMap);
 }
 
 void manta::ImageFileNode::_destroy() {
     m_imageMap.destroy();
+}
+
+void manta::ImageFileNode::registerInputs() {
+    registerInput(&m_correctGammaInput, "correct_gamma");
+    registerInput(&m_filenameInput, "filename");
+}
+
+void manta::ImageFileNode::registerOutputs() {
+    setPrimaryOutput("__out");
+    registerOutput(&m_output, "__out");
 }
 
 void manta::ImageFileNode::getPixel(const SDL_Surface *surface, int x, int y, Pixel *pixelOut) {

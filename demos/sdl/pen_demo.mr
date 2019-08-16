@@ -1,0 +1,210 @@
+private import "mantaray.mr"
+private import "utilities.mr"
+
+auto private node settings {
+    output samples: 10;
+    output resolution_x: 2048;
+    output resolution_y: 1536;
+    output enable_fraunhofer: false;
+    output save_diffraction_patterns: true;
+    output output_dir: "../../workspace/render/bitmap/";
+    output output_name: "box_city_demo";
+    output camera: pen_standard_camera;
+    output current_date: current_date();
+
+    output aperture:                polygonal_aperture(0.007, curvature: 0.1);
+    output diffraction_aperture:    polygonal_aperture(0.180, curvature: 0.1);
+}
+
+material_library library()
+scene scene()
+
+auto node pen_body_material {
+    alias output material: 
+        bsdf_material(
+            name: "PenBody",
+            library: library,
+            bsdf: bsdf
+        );
+
+    image_file wood_diffuse(
+        filename: "../../demos/textures/dark_wood.jpg"
+    )
+
+    image_file wood_roughness(
+        filename: "../../demos/textures/wood_roughness.jpg"
+    )
+
+    bilayer_bsdf bsdf(
+        coating: 
+            phong_distribution(
+                power: 1000.0 * wood_roughness + 2.0
+            ),
+        diffuse: wood_diffuse,
+        specular: 0.1
+    )
+}
+
+auto node pen_chrome_material {
+    alias output material: 
+        bsdf_material(
+            name: "Chrome",
+            library: library,
+            bsdf: bsdf
+        );
+
+    image_file chrome_roughness(
+        filename: "../../demos/textures/chrome_roughness.jpg"
+    )
+
+    bilayer_bsdf bsdf(
+        coating: 
+            phong_distribution(
+                power: 10000.0 * chrome_roughness + 400.0
+            ),
+        diffuse: 0.0,
+        specular: 0.95
+    )
+}
+
+auto node backdrop_material {
+    alias output material: 
+        bsdf_material(
+            name: "Backdrop",
+            library: library,
+            bsdf: bsdf,
+            reflectance: light_wood
+        );
+
+    image_file light_wood(
+        filename: "../../demos/textures/light_wood.jpg"
+    )
+
+    microfacet_reflection_bsdf bsdf(
+        distribution: phong_distribution(128.0)
+    )
+}
+
+auto node strong_light_material {
+    alias output material: 
+        bsdf_material(
+            name: "StrongLight",
+            library: library,
+            bsdf: lambertian_bsdf(),
+            emission: 2.0,
+            reflectance: 0.0
+        );
+}
+
+auto node weak_light_material {
+    alias output material: 
+        bsdf_material(
+            name: "WeakLight",
+            library: library,
+            bsdf: lambertian_bsdf(),
+            emission: 1.0,
+            reflectance: 0.0
+        );
+}
+
+auto node default_material {
+    alias output material: 
+        bsdf_material(
+            name: "Default",
+            library: library,
+            bsdf: lambertian_bsdf(),
+            reflectance: vector(0.0, 1.0, 0.0)
+        );
+}
+
+obj_file scene_mesh(
+    filename: "../../demos/models/pen.obj",
+    materials: library,
+    default_material: "Default"
+)
+
+scene_object main_object(
+    name: "Main",
+    scene: scene,
+    geometry: kd_tree(scene_mesh)
+)
+
+camera_target camera_target_raw(
+    position:   vector(9.43600, 1.20000, 4.53700),
+    target:     vector(1.30000, 0.35547, 0.00000),
+    up:         vector(0.00000, 1.00000, 0.00000)
+)
+
+// Reposition the camera by moving it along its direction
+camera_reposition camera_target(
+    camera_target: camera_target_raw, 
+    offset: 3.9
+)
+
+auto private node pen_standard_camera {
+    alias output __out: standard_camera(
+        up: camera_target.up,
+        position: camera_target.position,
+        direction: camera_target.direction,
+        resolution_x: settings.resolution_x,
+        resolution_y: settings.resolution_y,
+        plane_height: 0.25,
+        plane_distance: 1.0,
+        samples: settings.samples,
+        sampler: random_sampler()
+    );
+}
+
+auto private node pen_lens_camera {
+    alias output __out: lens_camera(
+        lens: lens,
+        samples: settings.samples,
+        sampler: random_sampler()
+    );
+
+    simple_lens lens(
+        position: camera_target.position,
+        direction: camera_target.direction,
+        up: camera_target.up,
+        resolution_x: settings.resolution_x,
+        resolution_y: settings.resolution_y,
+        aperture: settings.aperture,
+        radius: 1.0,
+        sensor_height: 22.0,
+        focus: 11.0
+    )
+}
+
+private node camera_reposition {
+    input camera_target;
+    input offset;
+    output position: camera_target.position - offset * camera_target.direction;
+    output up: camera_target.up;
+    output direction: camera_target.direction;
+}
+
+ray_tracer mr(
+    scene: scene,
+    camera: settings.camera,
+    materials: library,
+    background: 0.0
+)
+
+image_output(
+    map: mr.image,
+    filename: 
+        settings.output_dir + settings.current_date.as_string + "_" + settings.output_name + 
+        "_S" + string(settings.samples) + ".jpg"
+)
+
+diffraction_simulation(
+    image: mr.image, 
+    current_date: settings.current_date, 
+    output_dir: settings.output_dir,
+    output_name: settings.output_name,
+    save_patterns: settings.save_diffraction_patterns,
+    samples: settings.samples,
+    enable: settings.enable_fraunhofer,
+    aperture: settings.diffraction_aperture,
+    step: 20.0
+)

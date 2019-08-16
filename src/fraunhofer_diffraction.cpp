@@ -21,6 +21,18 @@ manta::FraunhoferDiffraction::FraunhoferDiffraction() {
 
     m_physicalSensorWidth = (math::real)0.0;
     m_sensorElementWidth = (math::real)0.0;
+    
+    m_apertureSamplesInput = nullptr;
+    m_textureSamplesInput = nullptr;
+    m_minWavelengthInput = nullptr;
+    m_maxWavelengthInput = nullptr;
+    m_wavelengthStepInput = nullptr;
+    m_safetyFactorInput = nullptr;
+    m_frequencyMultiplierInput = nullptr;
+    m_dirtMapInput = nullptr;
+    m_apertureInput = nullptr;
+    m_resolutionInput = nullptr;
+    m_sensorWidthInput = nullptr;
 }
 
 manta::FraunhoferDiffraction::~FraunhoferDiffraction() {
@@ -29,12 +41,12 @@ manta::FraunhoferDiffraction::~FraunhoferDiffraction() {
 
 void manta::FraunhoferDiffraction::generate(const Aperture *aperture, 
         const VectorMap2D *dirtMap, int outputResolution, math::real physicalSensorWidth, 
-        CmfTable *colorTable, Spectrum *sourceSpectrum, const Settings *settingsIn) {
+        CmfTable *colorTable, Spectrum *sourceSpectrum, const Settings *settingsIn) 
+{
     Settings settings;
     if (settingsIn == nullptr) setDefaultSettings(&settings);
     else settings = *settingsIn;
     
-    int MAX_SAMPLES = settings.maxSamples;
     int minWavelength = settings.minWavelength;
     int maxWavelength = settings.maxWavelength;
     int wavelengthStep = settings.wavelengthStep;
@@ -57,9 +69,7 @@ void manta::FraunhoferDiffraction::generate(const Aperture *aperture,
     math::real_d maxFreq = (sensorWidth / 2) / (minWavelength * 1e-6);
 
     sampleWindow = CftEstimator2D::getMinPhysicalDim(minFrequencyStep / settings.frequencyMultiplier, apertureRadius * 2 * settings.safetyFactor);
-    sampleWindow = 0.5;
-    estimatorSamples = CftEstimator2D::getMinSamples(maxFreq, sampleWindow, MAX_SAMPLES);
-    estimatorSamples = 4096 * 1;
+    estimatorSamples = settings.maxSamples;
 
     math::real dx = (math::real)(sampleWindow / estimatorSamples);
     math::real dy = (math::real)(sampleWindow / estimatorSamples);
@@ -67,7 +77,11 @@ void manta::FraunhoferDiffraction::generate(const Aperture *aperture,
     math::real cy = (math::real)(sampleWindow / 2);
 
     // Generate aperture function
-    m_apertureFunction.initialize(estimatorSamples, estimatorSamples);
+    ComplexMap2D apertureFunction;
+    apertureFunction.initialize(estimatorSamples, estimatorSamples);
+    if (settings.saveApertureFunction) {
+        m_apertureFunction.initialize(estimatorSamples, estimatorSamples);
+    }
 
     IntersectionPoint a;
     for (int i = 0; i < estimatorSamples; i++) {
@@ -86,6 +100,11 @@ void manta::FraunhoferDiffraction::generate(const Aperture *aperture,
                 dirtV = dirtMap->triangleSample(u, v);
                 dirt = math::getScalar(dirtV);
             }
+            else if (m_dirtMapInput != nullptr) {
+                math::Vector dirtV;
+                static_cast<VectorNodeOutput *>(m_dirtMapInput)->sample(&a, (void *)&dirtV);
+                dirt = math::getScalar(dirtV);
+            }
 
             // Super-sampling
             int samplesInFilter = 0;
@@ -100,13 +119,14 @@ void manta::FraunhoferDiffraction::generate(const Aperture *aperture,
             }
 
             math::real_d apF = (math::real_d)samplesInFilter / totalSamples;
-            m_apertureFunction.set(math::Complex(apF * dirt, (math::real_d)0.0), i, j);
+            apertureFunction.set(math::Complex(apF * dirt, (math::real_d)0.0), i, j);
+            m_apertureFunction.set(math::loadScalar((math::real)(apF * dirt)), i, j);
         }
     }
 
     CftEstimator2D estimator;
-    estimator.initialize(&m_apertureFunction, sampleWindow, sampleWindow);
-    if (!settings.saveApertureFunction) m_apertureFunction.destroy();
+    estimator.initialize(&apertureFunction, sampleWindow, sampleWindow);
+    apertureFunction.destroy();
 
     m_diffractionPattern.initialize(outputResolution, outputResolution);
     generateMap(&estimator, &settings, 12, &m_diffractionPattern);
@@ -276,8 +296,9 @@ void manta::FraunhoferDiffraction::_generateMap(const CftEstimator2D *estimator,
                     math::Complex v = estimator->sample(freq_x, freq_y, (sdx / wavelength) * 1E6);
                     v = v * v.conjugate();
 
-                    math::real src = m_sourceSpectrum->getValueContinuous((math::real)wavelength);
-                    src = 1.0;
+                    math::real src = (m_sourceSpectrum != nullptr)
+                        ? m_sourceSpectrum->getValueContinuous((math::real)wavelength)
+                        : (math::real)1.0;
                     int wave_i = (int)((wavelength - startWavelength) / (math::real_d)wavelengthStep + 0.5);
                     math::real prev = spectrum.getValueDiscrete(wave_i);
                     spectrum.set(wave_i, prev + src * (math::real)v.r);
@@ -294,4 +315,60 @@ void manta::FraunhoferDiffraction::_generateMap(const CftEstimator2D *estimator,
     }
 
     spectrum.destroy();
+}
+
+void manta::FraunhoferDiffraction::_initialize() {
+    m_diffractionPatternOutput.initialize();
+    m_aperturePatternOutput.initialize();
+}
+
+void manta::FraunhoferDiffraction::_evaluate() {
+    // Populate settings
+    Settings settings;
+    m_apertureSamplesInput->fullCompute((void *)&settings.maxSamples);
+    m_textureSamplesInput->fullCompute((void *)&settings.textureSamples);
+    m_minWavelengthInput->fullCompute((void *)&settings.minWavelength);
+    m_maxWavelengthInput->fullCompute((void *)&settings.maxWavelength);
+    m_wavelengthStepInput->fullCompute((void *)&settings.wavelengthStep);
+    m_frequencyMultiplierInput->fullCompute((void *)&settings.frequencyMultiplier);
+    m_safetyFactorInput->fullCompute((void *)&settings.safetyFactor);
+    settings.saveApertureFunction = true;
+
+    int resolution;
+    m_resolutionInput->fullCompute((void *)&resolution);
+    Aperture *aperture = static_cast<ObjectReferenceNodeOutput<Aperture> *>(m_apertureInput)->getReference();
+
+    piranha::native_float sensorWidth;
+    m_sensorWidthInput->fullCompute((void *)&sensorWidth);
+
+    CmfTable table;
+    table.loadCsv("../../demos/cmfs/" "xyz_cmf_31.csv");
+    generate(aperture, nullptr, resolution, (math::real)sensorWidth, &table, nullptr, &settings);
+    table.destroy();
+
+    m_aperturePatternOutput.setMap(&m_apertureFunction);
+    m_diffractionPatternOutput.setMap(&m_diffractionPattern);
+}
+
+void manta::FraunhoferDiffraction::_destroy() {
+    /* void */
+}
+
+void manta::FraunhoferDiffraction::registerInputs() {
+    registerInput(&m_apertureSamplesInput, "aperture_samples");
+    registerInput(&m_textureSamplesInput, "texture_samples");
+    registerInput(&m_minWavelengthInput, "min_wavelength");
+    registerInput(&m_maxWavelengthInput, "max_wavelength");
+    registerInput(&m_wavelengthStepInput, "wavelength_step");
+    registerInput(&m_safetyFactorInput, "safety_factor");
+    registerInput(&m_frequencyMultiplierInput, "frequency_multiplier");
+    registerInput(&m_dirtMapInput, "dirt_map");
+    registerInput(&m_apertureInput, "aperture");
+    registerInput(&m_sensorWidthInput, "sensor_width");
+    registerInput(&m_resolutionInput, "resolution");
+}
+
+void manta::FraunhoferDiffraction::registerOutputs() {
+    registerOutput(&m_diffractionPatternOutput, "diffraction");
+    registerOutput(&m_aperturePatternOutput, "aperture_function");
 }
