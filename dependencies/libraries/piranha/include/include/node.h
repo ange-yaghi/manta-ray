@@ -13,6 +13,7 @@ namespace piranha {
     class StackAllocator;
     class IrContextTree;
     class IrParserStructure;
+    class IrAttributeDefinition;
     class NodeProgram;
     class NodeContainer;
     class Assembly;
@@ -42,6 +43,16 @@ namespace piranha {
             NodeOutput *const *output;
             Node *nodeOutput;
             std::string name;
+        };
+
+        struct PortSkeleton {
+            NodeOutput *output;
+            Node *nodeOutput;
+            std::string name;
+
+            IrAttributeDefinition *definition;
+            IrContextTree *context;
+            NodeContainer *container;
         };
 
         struct PortInfo {
@@ -76,6 +87,13 @@ namespace piranha {
         bool getInputPortInfo(const std::string &name, PortInfo *info) const;
         const NodeInputPort *getInput(int index) const { return &m_inputs[index]; }
         int getInputCount() const { return (int)m_inputs.size(); }
+
+        void addPortSkeleton(const PortSkeleton &skeleton);
+        Node *generateNodeOutput(const std::string &name);
+        NodeOutput *generateOutput(const std::string &name);
+
+        Node *generateAliasNode();
+        NodeOutput *generateAliasOutput();
 
         NodeOutput *getPrimaryOutput() const;
         Node *getPrimaryNode() const;
@@ -113,6 +131,8 @@ namespace piranha {
 
         virtual void writeAssembly(std::fstream &file, Assembly *assembly) const;
 
+        void setPrimaryOutput(const std::string &name);
+
     protected:
         virtual void _initialize();
         virtual void _evaluate();
@@ -140,7 +160,8 @@ namespace piranha {
         std::vector<NodeOutputPortReference> m_outputReferences;
         void registerOutputReference(NodeOutput *const *output, const std::string &name, Node *node = nullptr);
 
-        void setPrimaryOutput(const std::string &name);
+        PortSkeleton *getSkeleton(const std::string &name);
+        std::vector<PortSkeleton> m_portSkeletons;
 
     protected:
         pNodeInput *m_interfaceInput;

@@ -22,7 +22,7 @@ namespace piranha {
 
     protected:
         virtual void _initialize() {
-            /* void */
+            m_dataOut = nullptr;
         }
 
         virtual void _evaluate() {

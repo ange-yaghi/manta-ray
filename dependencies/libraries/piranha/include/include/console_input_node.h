@@ -23,7 +23,7 @@ namespace piranha {
 
     protected:
         virtual void _initialize() {
-            /* void */
+            m_promptInput = nullptr;
         }
 
         virtual void _evaluate() {
