@@ -9,7 +9,7 @@ auto private node settings {
     output save_diffraction_patterns: true;
     output output_dir: "../../workspace/render/bitmap/";
     output output_name: "box_city_demo";
-    output camera: pen_lens_camera;
+    output camera: pen_standard_camera;
     output current_date: current_date();
 
     output aperture:                polygonal_aperture(0.007, curvature: 0.1);
@@ -19,7 +19,7 @@ auto private node settings {
 material_library library()
 scene scene()
 
-node pen_body_material {
+auto node pen_body_material {
     alias output material: 
         bsdf_material(
             name: "PenBody",

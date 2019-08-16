@@ -1,28 +1,25 @@
 private import "mantaray.mr"
 private import "utilities.mr"
 
-node settings {
-    input this;
-    output samples: 200;
+auto node settings {
+    output samples: 10;
     output resolution_x: 1900;
     output resolution_y: 1268;
-    output enable_fraunhofer: true;
+    output enable_fraunhofer: false;
     output save_diffraction_patterns: true;
     output output_dir: "../../workspace/render/bitmap/";
     output output_name: "stock_scene_demo";
+    output current_date:            current_date();
 
     output aperture:                polygonal_aperture(0.300, curvature: 0.5);
     output diffraction_aperture:    polygonal_aperture(0.180, curvature: 0.5);
-    output camera: list_cameras(this).lens_camera;
-} (settings) -> auto
+    output camera:                  scene_lens_camera;
+}
 
 material_library library()
 scene scene()
 
-node steel_materials {
-    input library;
-    input fingerprint;
-
+auto node steel_materials {
     bsdf_material(
         name: "Steel",
         library: library,
@@ -53,10 +50,9 @@ node steel_materials {
         diffuse: metal,
         specular: 1.0 - 0.5 * curved_fingerprint
     )
-} (library, fingerprint) -> auto
+}
 
-node shiny_steel_material {
-    input library;
+auto node shiny_steel_material {
     alias output material: 
         bsdf_material(
             name: "ShinySteel",
@@ -67,10 +63,9 @@ node shiny_steel_material {
     microfacet_reflection_bsdf bsdf(
         distribution: phong_distribution(power: 5000.0)
     )
-} (library) -> auto
+}
 
-node graphite_material {
-    input library;
+auto node graphite_material {
     alias output material: 
         bsdf_material(
             name: "Graphite",
@@ -82,12 +77,9 @@ node graphite_material {
     microfacet_reflection_bsdf bsdf(
         distribution: phong_distribution(power: 512.0)
     )
-} (library) -> auto
+}
 
-node paint_material {
-    input library;
-    input fingerprint;
-
+auto node paint_material {
     bsdf_material(
         name: "PencilPaint",
         library: library,
@@ -102,11 +94,9 @@ node paint_material {
         diffuse: srgb_i(0x0F, 0x10, 0x40),
         specular: 0.1
     )
-} (library, fingerprint) -> auto
+}
 
-node eraser_material {
-    input library;
-
+auto node eraser_material {
     image_file eraser(
         filename: "../../demos/textures/stock-scene/eraser.jpg"
     )
@@ -117,11 +107,9 @@ node eraser_material {
         bsdf: lambertian_bsdf(),
         reflectance: eraser
     )
-} (library) -> auto
+}
 
-node wood_material {
-    input library;
-
+auto node wood_material {
     image_file wood(
         filename: "../../demos/textures/light_wood.jpg"
     )
@@ -132,11 +120,9 @@ node wood_material {
         bsdf: lambertian_bsdf(),
         reflectance: wood
     )
-} (library) -> auto
+}
 
-node floor_material {
-    input library;
-
+auto node floor_material {
     image_file floor(
         filename: "../../demos/textures/stock-scene/floor.png"
     )
@@ -147,11 +133,9 @@ node floor_material {
         bsdf: lambertian_bsdf(),
         reflectance: floor
     )
-} (library) -> auto
+}
 
-node light_material {
-    input library;
-
+auto node light_material {
     bsdf_material(
         name: "Light",
         library: library,
@@ -159,17 +143,15 @@ node light_material {
         reflectance: 0.0,
         emission: 4.0
     )
-} (library) -> auto
+}
 
-node default_material {
-    input library;
-
+auto node default_material {
     bsdf_material(
         name: "Default",
         library: library,
         bsdf: lambertian_bsdf()
     )
-} (library) -> auto
+}
 
 image_file fingerprint(
     filename: "../../demos/textures/samsung_a8/fingerprints_roughness_map.png",
@@ -188,10 +170,13 @@ scene_object main_object(
     geometry: kd_tree(scene_mesh)
 )
 
-private node scene_standard_camera {
-    input camera_target;
-    input settings;
+camera_target camera_target(
+    position:   vector(16.5140, 7.95910, 18.1270),
+    target:     vector(1.04120, -1.0326, 0.33937),
+    up:         vector(0.00000, 1.00000, 0.00000)
+)
 
+auto private node scene_standard_camera {
     alias output __out: standard_camera(
         up: camera_target.up,
         position: camera_target.position,
@@ -205,10 +190,7 @@ private node scene_standard_camera {
     );
 }
 
-private node scene_lens_camera {
-    input camera_target;
-    input settings;
-
+auto private node scene_lens_camera {
     alias output __out: lens_camera(
         lens: lens,
         samples: settings.samples,
@@ -228,26 +210,6 @@ private node scene_lens_camera {
     )
 }
 
-private node camera_reposition {
-    input camera_target;
-    input offset;
-    output position: camera_target.position - offset * camera_target.direction;
-    output up: camera_target.up;
-    output direction: camera_target.direction;
-}
-
-private node list_cameras {
-    input settings;
-    output lens_camera: scene_lens_camera(camera_target, settings);
-    output standard_camera: scene_standard_camera(camera_target, settings);
-
-    camera_target camera_target(
-        position:   vector(16.5140, 7.95910, 18.1270),
-        target:     vector(1.04120, -1.0326, 0.33937),
-        up:         vector(0.00000, 1.00000, 0.00000)
-    )
-}
-
 ray_tracer mr(
     scene: scene,
     camera: settings.camera,
@@ -255,18 +217,16 @@ ray_tracer mr(
     background: 0.0
 )
 
-current_date current_date()
-
 image_output(
     map: mr.image,
     filename: 
-        settings.output_dir + current_date.as_string + "_" + settings.output_name + 
+        settings.output_dir + settings.current_date.as_string + "_" + settings.output_name + 
         "_S" + string(settings.samples) + ".jpg"
 )
 
 diffraction_simulation(
     image: mr.image, 
-    current_date: current_date, 
+    current_date: settings.current_date, 
     output_dir: settings.output_dir,
     output_name: settings.output_name,
     save_patterns: settings.save_diffraction_patterns,

@@ -8,7 +8,7 @@ log(" Resolution: " +
 log()
 log()
 
-node settings {
+auto node settings {
     output samples: 1;
     output resolution_x: 1920;
     output resolution_y: 1080;
@@ -16,13 +16,13 @@ node settings {
     output save_diffraction_patterns: true;
     output output_dir: "../../workspace/render/bitmap/";
     output output_name: "teapot_lamp_demo";
-} -> auto
+    output current_date: current_date();
+}
 
 material_library library()
 scene scene()
 
 node teapot_material {
-    input library;
     alias output material: 
         bsdf_material(
             name: "TeapotMaterial",
@@ -35,10 +35,9 @@ node teapot_material {
         diffuse: srgb_i(0x89, 0xCF, 0xF0),
         specular: vector(0.5, 0.5, 0.5)
     )
-} //(library) -> auto
+}
 
-node test_material {
-    input library;
+auto node test_material {
     alias output material: 
         bsdf_material(
             name: "TeapotMaterial",
@@ -61,10 +60,9 @@ node test_material {
         foot: 0.75
     )
 
-} (library) -> auto
+}
 
-node floor_material {
-    input library;
+auto node floor_material {
     alias output material: 
         bsdf_material(
             name: "FloorMaterial",
@@ -77,10 +75,9 @@ node floor_material {
         diffuse: srgb_i(0xFF, 0xFF, 0xFF),
         specular: 0
     )
-} (library) -> auto
+}
 
-node bulb_material {
-    input library;
+auto node bulb_material {
     alias output material:
         bsdf_material(
             name: "BulbMaterial",
@@ -89,7 +86,7 @@ node bulb_material {
             emission: srgb_i(255, 197, 143) * 50,
             bsdf: lambertian_bsdf()
         );
-} (library) -> auto
+}
 
 obj_file lamp_mesh(
     filename: "../../demos/models/lamp2.obj",
@@ -158,18 +155,16 @@ ray_tracer mr(
     background: 0
 )
 
-current_date current_date()
-
 image_output(
     map: mr.image,
     filename: 
-        settings.output_dir + current_date.as_string + "_" + settings.output_name + 
+        settings.output_dir + settings.current_date.as_string + "_" + settings.output_name + 
         "_S" + string(settings.samples) + ".jpg"
 )
 
 diffraction_simulation(
     image: mr.image, 
-    current_date: current_date, 
+    current_date: settings.current_date, 
     output_dir: settings.output_dir,
     output_name: settings.output_name,
     save_patterns: settings.save_diffraction_patterns,
