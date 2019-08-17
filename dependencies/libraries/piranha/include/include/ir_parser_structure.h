@@ -4,6 +4,7 @@
 #include "ir_token_info.h"
 #include "ir_visibility.h"
 #include "pkey_value_lookup.h"
+#include "ir_context_tree.h"
 
 #include <vector>
 #include <fstream>
@@ -23,7 +24,6 @@ namespace piranha {
     class CompilationError;
     class IrNode;
     class IrNodeDefinition;
-    class IrContextTree;
     class Node;
     class NodeOutput;
     class NodeProgram;
@@ -70,8 +70,14 @@ namespace piranha {
             bool touchedMainContext;
             int infiniteLoop;
             IrNodeDefinition *fixedType;
+            IrContextTree *fixedTypeContext;
+            bool staticType;
 
             bool isFixedType() const { return fixedType != nullptr; }
+            bool isFixedTypeOutside(const IrContextTree *context) const { 
+                return isFixedType() && fixedTypeContext->isOutside(context); 
+            }
+            bool isStaticType() const { return isFixedType() && staticType; }
         };
 
     public:

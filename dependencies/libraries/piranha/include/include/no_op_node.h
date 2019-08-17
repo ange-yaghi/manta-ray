@@ -7,34 +7,15 @@ namespace piranha {
 
     class NoOpNode : public Node {
     public:
-        NoOpNode() {
-            /* void */
-        }
+        NoOpNode();
+        ~NoOpNode();
 
-        ~NoOpNode() {
-            /* void */
-        }
+        virtual void _initialize();
+        virtual void _evaluate();
+        virtual void _destroy();
 
-        virtual void _initialize() {
-            /* void */
-        }
-
-        virtual void _evaluate() {
-            /* void */
-        }
-
-        virtual void _destroy() {
-            /* void */
-        }
-
-        virtual void registerOutputs() {
-            setPrimaryOutput("__out");
-            registerOutputReference(&m_input, "__out");
-        }
-
-        virtual void registerInputs() {
-            registerInput(&m_input, "__in");
-        }
+        virtual void registerInputs();
+        virtual void registerOutputs();
 
     protected:
         pNodeInput m_input;

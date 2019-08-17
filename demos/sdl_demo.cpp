@@ -43,7 +43,7 @@ void printErrorTrace(const piranha::ErrorList *errList) {
 
 void manta_demo::sdlDemo(int samplesPerPixel, int resolutionX, int resolutionY) {
     LanguageRules *rules = new LanguageRules();
-    rules->registerBuiltinNodeTypes();
+    rules->initialize();
 
     piranha::Compiler *compiler = new piranha::Compiler(rules);
     compiler->addSearchPath(SDL_LIB_PATH);

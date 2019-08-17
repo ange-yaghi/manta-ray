@@ -7,13 +7,14 @@
 
 namespace piranha {
 
-    template <typename LiteralType>
+    template <typename NativeType>
     class LiteralNode : public Node {
     public:
         LiteralNode() {}
         ~LiteralNode() {}
 
-        virtual void setData(LiteralType data) = 0;
+        virtual void setData(NativeType data) = 0;
+        virtual bool isLiteral() const { return true; }
     };
 
     typedef LiteralNode<piranha::native_string> StringLiteralNode;
