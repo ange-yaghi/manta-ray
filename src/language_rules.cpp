@@ -60,46 +60,45 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
     // ====================================================
 
     // Channels
-    registerBuiltinType
-        <piranha::NoOpNode>(
+    registerBuiltinType < piranha::ChannelNode> (
         "__mantaray__float", &piranha::FundamentalType::FloatType);
-    registerBuiltinType<piranha::NoOpNode>(
+    registerBuiltinType<piranha::ChannelNode>(
         "__mantaray__int", &piranha::FundamentalType::IntType);
-    registerBuiltinType<piranha::NoOpNode>(
+    registerBuiltinType<piranha::ChannelNode>(
         "__mantaray__bool", &piranha::FundamentalType::BoolType);
     registerBuiltinType<VectorSplitNode>(
         "__mantaray__vector", &VectorNodeOutput::VectorType);
-    registerBuiltinType <piranha::NoOpNode> (
+    registerBuiltinType <piranha::ChannelNode> (
         "__mantaray__string", &piranha::FundamentalType::StringType);
-    registerBuiltinType <piranha::NoOpNode>(
+    registerBuiltinType <piranha::ChannelNode>(
         "__mantaray__microfacet_distribution", &ObjectChannel::MicrofacetDistributionChannel);
-    registerBuiltinType <piranha::NoOpNode>(
+    registerBuiltinType <piranha::ChannelNode>(
         "__mantaray__material", &ObjectChannel::MaterialChannel);
     registerBuiltinType <MaterialLibrary>(
         "__mantaray__material_library", &ObjectChannel::MaterialLibraryChannel);
-    registerBuiltinType <piranha::NoOpNode>(
+    registerBuiltinType <piranha::ChannelNode>(
         "__mantaray__bsdf", &ObjectChannel::BsdfChannel);
-    registerBuiltinType <piranha::NoOpNode>(
+    registerBuiltinType <piranha::ChannelNode>(
         "__mantaray__mesh", &ObjectChannel::MeshChannel);
-    registerBuiltinType <piranha::NoOpNode>(
+    registerBuiltinType <piranha::ChannelNode>(
         "__mantaray__scene_geometry", &ObjectChannel::SceneGeometryChannel);
-    registerBuiltinType <piranha::NoOpNode>(
+    registerBuiltinType <piranha::ChannelNode>(
         "__mantaray__scene_object_channel", &ObjectChannel::SceneGeometryChannel);
     registerBuiltinType <Scene>(
         "__mantaray__scene", &ObjectChannel::SceneChannel);
-    registerBuiltinType <piranha::NoOpNode>(
+    registerBuiltinType <piranha::ChannelNode>(
         "__mantaray__camera", &ObjectChannel::CameraChannel);
-    registerBuiltinType <piranha::NoOpNode>(
+    registerBuiltinType <piranha::ChannelNode>(
         "__mantaray__sampler", &ObjectChannel::SamplerChannel);
-    registerBuiltinType <piranha::NoOpNode>(
+    registerBuiltinType <piranha::ChannelNode>(
         "__mantaray__vector_map", &VectorMap2DNodeOutput::VectorMap2dType);
-    registerBuiltinType <piranha::NoOpNode>(
+    registerBuiltinType <piranha::ChannelNode>(
         "__mantaray__aperture", &ObjectChannel::ApertureChannel);
     registerBuiltinType <DateInterfaceNode>(
         "__mantaray__date", &DateNodeOutput::DateType);
-    registerBuiltinType <piranha::NoOpNode>(
+    registerBuiltinType <piranha::ChannelNode>(
         "__mantaray__lens", &ObjectChannel::LensChannel);
-    registerBuiltinType <piranha::NoOpNode>(
+    registerBuiltinType <piranha::ChannelNode>(
         "__mantaray__media_interface", &ObjectChannel::MediaInterfaceChannel);
 
     // Constructors

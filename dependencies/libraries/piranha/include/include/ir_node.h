@@ -32,6 +32,8 @@ namespace piranha {
         IrTokenInfo getTypeToken() const { return m_type; }
         IrTokenInfo getNameToken() const { return m_name; }
 
+        void setName(const std::string &name) { m_name.data = name; }
+
         const std::string &getType() const { return m_type.data; }
         const std::string &getName() const { return m_name.data; }
 
