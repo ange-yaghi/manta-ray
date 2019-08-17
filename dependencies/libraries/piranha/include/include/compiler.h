@@ -26,6 +26,9 @@ namespace piranha {
 
         const ErrorList *getErrorList() const { return &m_errorList; }
 
+        void setFileExtension(const std::string &extension) { m_extension = extension; }
+        std::string getFileExtension() const { return m_extension; }
+
         void addSearchPath(const IrPath &path);
         int getSearchPathCount() const { return (int)m_searchPaths.size(); }
 
@@ -49,6 +52,7 @@ namespace piranha {
         std::vector<IrCompilationUnit *> m_units;
 
         std::vector<IrPath> m_searchPaths;
+        std::string m_extension;
     };
 
 } /* namespace piranha */

@@ -52,7 +52,7 @@ void writeToJpeg(const ComplexMap2D *plane, const std::string &fname, Margins *m
 
 piranha::IrCompilationUnit *compileFile(const std::string &filename, const piranha::ErrorList **errList) {
     LanguageRules *rules = new LanguageRules();
-    rules->registerBuiltinNodeTypes();
+    rules->initialize();
 
     piranha::Compiler *compiler = new piranha::Compiler(rules);
     piranha::IrCompilationUnit *unit = compiler->compile(SDL_TEST_FILES + filename);

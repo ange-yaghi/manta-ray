@@ -20,11 +20,6 @@ namespace piranha {
 
     class Node {
     public:
-        struct NodeSessionMemory {
-            unsigned char memory[64];
-            void *extraMemory;
-        };
-
         struct NodeInputPort {
             pNodeInput *input;
             Node *nodeInput;
@@ -129,9 +124,14 @@ namespace piranha {
         NodeOutput *getInterfaceInput() const;
         void setInterfaceInput(pNodeInput *output) { m_interfaceInput = output; }
 
-        virtual void writeAssembly(std::fstream &file, Assembly *assembly) const;
+        virtual void writeAssembly(std::fstream &file, Assembly *assembly, int indent) const;
 
         void setPrimaryOutput(const std::string &name);
+
+        void setVirtual(bool isVirtual) { m_isVirtual = isVirtual; }
+        bool isVirtual() const { return m_isVirtual; }
+
+        virtual bool isLiteral() const { return false; }
 
     protected:
         virtual void _initialize();
@@ -148,6 +148,8 @@ namespace piranha {
 
         IrContextTree *m_context;
         IrParserStructure *m_irStructure;
+
+        bool m_isVirtual;
 
     protected:
         std::vector<NodeInputPort> m_inputs;

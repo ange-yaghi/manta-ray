@@ -108,21 +108,13 @@ namespace piranha {
         LanguageRules();
         ~LanguageRules();
 
-        virtual void registerBuiltinNodeTypes() = 0;
+        void initialize();
 
-        template <typename NativeType>
-        LiteralNode<NativeType> *generateLiteral(const NativeType &data) const {
-            typedef LiteralNode<NativeType> ResolvedLiteralNode;
-
-            LiteralType literalType = LiteralTypeLookup<NativeType>();
-
-            std::string *builtinType = m_literalRules.lookup(literalType);
-            if (builtinType == nullptr) return nullptr;
-
-            ResolvedLiteralNode *node = static_cast<ResolvedLiteralNode *>(generateBuiltinType(*builtinType));
-            node->setData(data);
-            
-            return node;
+        std::string resolveLiteralBuiltinType(LiteralType typeCode) const {
+            std::string *builtinType = m_literalRules.lookup(typeCode);
+            return (builtinType == nullptr)
+                ? ""
+                : *builtinType;
         }
 
         Node *generateNode(const std::string &builtinName) const;
@@ -148,6 +140,8 @@ namespace piranha {
         const Node *getReferenceNode(const std::string &builtinType) const;
 
     protected:
+        virtual void registerBuiltinNodeTypes() = 0;
+
         Node *generateOperator(IrBinaryOperator::OPERATOR op, const ChannelType *left, const ChannelType *right);
         Node *generateUnaryOperator(IrUnaryOperator::OPERATOR op, const ChannelType *type);
 

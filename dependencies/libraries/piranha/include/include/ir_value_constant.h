@@ -6,8 +6,9 @@
 #include "ir_token_info.h"
 #include "compilation_error.h"
 #include "ir_compilation_unit.h"
-#include "ir_node.h"
+#include "ir_literal_node.h"
 #include "ir_context_tree.h"
+#include "ir_attribute_list.h"
 #include "standard_allocator.h"
 #include "node_program.h"
 #include "language_rules.h"
@@ -24,30 +25,6 @@ namespace piranha {
     protected:
         typedef T_IrTokenInfo<T> _TokenInfo;
 
-        Node *generateNode(
-            const piranha::native_float &value, IrContextTree *context) 
-        {
-            return m_rules->generateLiteral<piranha::native_float>(value);
-        }
-
-        Node *generateNode(
-            const piranha::native_string &value, IrContextTree *context) 
-        {
-            return m_rules->generateLiteral<piranha::native_string>(value);
-        }
-
-        Node *generateNode(
-            const piranha::native_bool &value, IrContextTree *context) 
-        {
-            return m_rules->generateLiteral<piranha::native_bool>(value);
-        }
-
-        Node *generateNode(
-            const piranha::native_int &value, IrContextTree *context) 
-        {
-            return m_rules->generateLiteral<piranha::native_int>(value);
-        }
-
     public:
         IrValueConstant(const _TokenInfo &value) : IrValue(TypeCode) { 
             m_value = value.data; useToken(value); 
@@ -60,38 +37,6 @@ namespace piranha {
 
         virtual void setValue(const T &value) { m_value = value; }
         T getValue() const { return m_value; }
-
-        virtual const ChannelType *getImmediateChannelType() {
-            if (m_rules == nullptr) return nullptr;
-
-            return m_rules->resolveChannelType(
-                m_rules->getLiteralBuiltinName<T>()
-            );
-        }
-
-        virtual Node *_generateNode(IrContextTree *context, NodeProgram *program, NodeContainer *container) {
-            Node *cachedNode = program->getCachedInstance(this, context);
-            if (cachedNode != nullptr) return cachedNode;
-
-            Node *newNode = generateNode(m_value, context);
-            newNode->initialize();
-            newNode->setIrStructure(this);
-            newNode->setIrContext(context);
-
-            // Find a context
-            IrContextTree *c = context;
-            NodeContainer *parentContainer = nullptr;
-            while (c != nullptr && parentContainer == nullptr) {
-                parentContainer = program->getContainer(c);
-                c = c->getParent();
-            }
-
-            if (!parentContainer->findNode(newNode)) {
-                parentContainer->addNode(newNode);
-            }
-
-            return newNode;
-        }
 
     protected:
         virtual void _validate() {
@@ -125,9 +70,86 @@ namespace piranha {
             return res;
         }
 
+        std::string valueToString() const {
+            std::stringstream ss;
+            ss << m_value;
+
+            return ss.str();
+        }
+
     protected:
         T m_value;
         _TokenInfo m_token;
+    };
+
+    template <typename T, IrValue::VALUE_TYPE TypeCode>
+    class IrValueLiteral : public IrValueConstant<T, TypeCode> {
+    protected:
+        typedef IrValueConstant<T, TypeCode> Base;
+
+    public:
+        IrValueLiteral(const Base::_TokenInfo &value) : Base(value) {}
+        ~IrValueLiteral() {}
+
+        virtual void _expand(IrContextTree *context) {
+            if (Base::m_rules == nullptr) return;
+
+            std::string builtinType =
+                Base::m_rules->resolveLiteralBuiltinType(LiteralTypeLookup<T>());
+
+            if (builtinType.empty()) {
+                // TODO: raise error, literal not supported
+                int a = 0;
+            }
+
+            int count = 0;
+            IrCompilationUnit *parentUnit = Base::getParentUnit();
+            IrNodeDefinition *nodeDefinition = parentUnit->resolveBuiltinNodeDefinition(builtinType, &count);
+
+            if (nodeDefinition == nullptr) {
+                // TODO: raise error, literal type not defined or not available
+                int a = 0;
+            }
+
+            // Generate the expansion
+            IrAttributeList *attributeList = new IrAttributeList();
+
+            IrLiteralNode<T> *expansion = new IrLiteralNode<T>();
+            expansion->setName("\"" + Base::valueToString() + "\"");
+            expansion->setLiteralData(Base::m_value);
+            expansion->setAttributes(attributeList);
+            expansion->setLogicalParent(this);
+            expansion->setScopeParent(this);
+            expansion->setDefinition(nodeDefinition);
+            expansion->setRules(Base::m_rules);
+            expansion->resolveDefinitions();
+            expansion->expand(context);
+
+            if (nodeDefinition == nullptr) {
+                // TODO: raise error here
+            }
+
+            *Base::m_expansions.newValue(context) = expansion;
+        }
+
+        virtual IrParserStructure *getImmediateReference(
+            const Base::IrReferenceQuery &query, Base::IrReferenceInfo *output) 
+        {
+            IR_RESET(query);
+            if (Base::m_rules == nullptr) return nullptr;
+
+            IrNode **pNode = Base::m_expansions.lookup(query.inputContext);
+
+            if (pNode == nullptr) {
+                IR_DEAD_END();
+                return nullptr;
+            }
+            else if (*pNode == nullptr) {
+                IR_FAIL();
+                return nullptr;
+            }
+            else return *pNode;
+        }
     };
 
     // Specialized type for labels
@@ -174,6 +196,10 @@ namespace piranha {
         virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program, NodeContainer *container) {
             return IrParserStructure::_generateNodeOutput(context, program, container);
         }
+
+        virtual void _expand(IrContextTree *context) {
+            IrParserStructure::_expand(context);
+        }
     };
 
     // Specialized type for node references
@@ -207,6 +233,10 @@ namespace piranha {
 
         virtual NodeOutput *_generateNodeOutput(IrContextTree *context, NodeProgram *program, NodeContainer *container) {
             return IrParserStructure::_generateNodeOutput(context, program, container);
+        }
+
+        virtual void _expand(IrContextTree *context) {
+            IrParserStructure::_expand(context);
         }
     };
 
@@ -247,14 +277,18 @@ namespace piranha {
             return IrParserStructure::_generateNodeOutput(context, program, container);
         }
 
+        virtual void _expand(IrContextTree *context) {
+            IrParserStructure::_expand(context);
+        }
+
     protected:
         IrContextTree *m_newContext;
     };
 
-    typedef IrValueConstant<int, IrValue::CONSTANT_INT> IrValueInt;
-    typedef IrValueConstant<std::string, IrValue::CONSTANT_STRING> IrValueString;
-    typedef IrValueConstant<double, IrValue::CONSTANT_FLOAT> IrValueFloat;
-    typedef IrValueConstant<bool, IrValue::CONSTANT_BOOL> IrValueBool;
+    typedef IrValueLiteral<piranha::native_int, IrValue::CONSTANT_INT> IrValueInt;
+    typedef IrValueLiteral<piranha::native_string, IrValue::CONSTANT_STRING> IrValueString;
+    typedef IrValueLiteral<piranha::native_float, IrValue::CONSTANT_FLOAT> IrValueFloat;
+    typedef IrValueLiteral<piranha::native_bool, IrValue::CONSTANT_BOOL> IrValueBool;
 
 } /* namespace piranha */
 

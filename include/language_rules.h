@@ -10,6 +10,7 @@ namespace manta {
         LanguageRules();
         ~LanguageRules();
 
+    protected:
         virtual void registerBuiltinNodeTypes();
     };
 
