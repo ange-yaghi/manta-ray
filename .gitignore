@@ -18,7 +18,7 @@
 !dependencies/**/[Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
-!dependencies/**/[Rr]release/
+!dependencies/**/[Rr]elease/
 [Rr]eleases/
 bld/
 [Bb]in/

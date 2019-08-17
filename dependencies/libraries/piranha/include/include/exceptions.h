@@ -17,6 +17,13 @@ namespace piranha {
         }
     };
 
+    struct InvalidLiteralType : public std::exception {
+        virtual const char *what() const throw() {
+            return "Invalid type used for a literal. All node types used for literals must derive from "
+                "LiteralNode<>";
+        }
+    };
+
 } /* namespace piranha */
 
 #endif /* PIRANHA_EXCEPTIONS_H */

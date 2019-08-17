@@ -25,6 +25,7 @@ namespace piranha {
         IrContextTree *newChild(IrNode *context, bool mainContext = false);
 
         IrNode *getContext() const { return m_context; }
+        bool hasParent(const IrContextTree *context) const;
         IrContextTree *findContext(IrNode *context);
 
         IrParserStructure *resolveDefinition(IrAttributeDefinition *definition);
@@ -33,6 +34,7 @@ namespace piranha {
 
         bool operator==(const IrContextTree &ref) const { return isEqual(&ref); }
         bool isEqual(const IrContextTree *ref) const;
+        bool isOutside(const IrContextTree *ref) const;
 
         int getChildCount() const { return (int)m_children.size(); }
 
