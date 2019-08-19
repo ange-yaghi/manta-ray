@@ -5,6 +5,7 @@
 #include "../include/coarse_intersection.h"
 #include "../include/runtime_statistics.h"
 #include "../include/os_utilities.h"
+#include "../include/vector_node_output.h"
 
 #include <algorithm>
 #include <thread>
@@ -33,16 +34,27 @@ manta::KDTree::~KDTree() {
 }
 
 void manta::KDTree::_evaluate() {
-    configure((math::real)1000.0, math::constants::Zero);
-
     Mesh *mesh = nullptr;
     mesh = ((ObjectReferenceNodeOutput<Mesh> *)m_meshInput)->getReference();
 
-    analyzeWithProgress(mesh, 4);
+    piranha::native_float width;
+    piranha::native_int granularity;
+    math::Vector center;
+
+    m_widthInput->fullCompute((void *)&width);
+    m_granularityInput->fullCompute((void *)&granularity);
+    static_cast<VectorNodeOutput *>(m_centerInput)->sample(nullptr, (void *)&center);
+
+    configure((math::real)width, center);
+
+    analyzeWithProgress(mesh, granularity);
 }
 
 void manta::KDTree::registerInputs() {
+    registerInput(&m_centerInput, "center");
     registerInput(&m_meshInput, "mesh");
+    registerInput(&m_widthInput, "width");
+    registerInput(&m_granularityInput, "granularity");
 }
 
 void manta::KDTree::configure(math::real width, const math::Vector &position) {
