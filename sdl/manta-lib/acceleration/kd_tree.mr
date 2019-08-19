@@ -9,11 +9,16 @@ module {
     @github:        "github.com/ange-yaghi/manta-ray"
 }
 
+private import "../types/atomic_types.mr"
+private import "../types/conversions.mr"
 private import "../mesh/mesh.mr"
 private import "../scene/scene_geometry.mr"
 
 @doc: "KD tree acceleration interface"
 public node kd_tree => __mantaray__kd_tree {
     input mesh          [mesh];
+    input width         [float]: 256.0;
+    input granularity   [int]: 4;
+    input center        [vector]: 0;
     alias output __out  [scene_geometry];
 }
