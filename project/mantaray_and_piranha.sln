@@ -29,6 +29,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "piranha", "..\dependencies\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "piranha_test", "..\dependencies\submodules\piranha\project\piranha_test\piranha_test.vcxproj", "{AFBAA618-2097-4D34-866F-29FA69793869}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mantaray_cli", "mantaray_cli\mantaray_cli.vcxproj", "{ECCF7134-AFAD-4C15-B116-575B23FC5803}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -93,6 +95,14 @@ Global
 		{AFBAA618-2097-4D34-866F-29FA69793869}.Release|x64.Build.0 = Release|x64
 		{AFBAA618-2097-4D34-866F-29FA69793869}.Release|x86.ActiveCfg = Release|Win32
 		{AFBAA618-2097-4D34-866F-29FA69793869}.Release|x86.Build.0 = Release|Win32
+		{ECCF7134-AFAD-4C15-B116-575B23FC5803}.Debug|x64.ActiveCfg = Debug|x64
+		{ECCF7134-AFAD-4C15-B116-575B23FC5803}.Debug|x64.Build.0 = Debug|x64
+		{ECCF7134-AFAD-4C15-B116-575B23FC5803}.Debug|x86.ActiveCfg = Debug|Win32
+		{ECCF7134-AFAD-4C15-B116-575B23FC5803}.Debug|x86.Build.0 = Debug|Win32
+		{ECCF7134-AFAD-4C15-B116-575B23FC5803}.Release|x64.ActiveCfg = Release|x64
+		{ECCF7134-AFAD-4C15-B116-575B23FC5803}.Release|x64.Build.0 = Release|x64
+		{ECCF7134-AFAD-4C15-B116-575B23FC5803}.Release|x86.ActiveCfg = Release|Win32
+		{ECCF7134-AFAD-4C15-B116-575B23FC5803}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

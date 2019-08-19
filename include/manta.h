@@ -7,5 +7,6 @@
 #pragma comment(lib,"SDL2.lib")
 #pragma comment(lib,"SDL2_image.lib")
 #pragma comment(lib,"piranha.lib")
+#pragma comment(lib,"mantaray.lib")
 
 #endif /* MANTARAY_MANTA_H */

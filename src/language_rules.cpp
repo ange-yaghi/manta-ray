@@ -90,7 +90,7 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__camera", &ObjectChannel::CameraChannel);
     registerBuiltinType <piranha::ChannelNode>(
         "__mantaray__sampler", &ObjectChannel::SamplerChannel);
-    registerBuiltinType <piranha::ChannelNode>(
+    registerBuiltinType <piranha::NoOpNode>(
         "__mantaray__vector_map", &VectorMap2DNodeOutput::VectorMap2dType);
     registerBuiltinType <piranha::ChannelNode>(
         "__mantaray__aperture", &ObjectChannel::ApertureChannel);

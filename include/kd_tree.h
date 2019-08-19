@@ -136,6 +136,9 @@ namespace manta {
 
     protected:
         piranha::pNodeInput m_meshInput;
+        piranha::pNodeInput m_granularityInput;
+        piranha::pNodeInput m_widthInput;
+        piranha::pNodeInput m_centerInput;
 
     public:
         void configure(math::real width, const math::Vector &position);
