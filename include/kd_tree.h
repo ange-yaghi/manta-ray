@@ -96,7 +96,7 @@ namespace manta {
         };
 
         KDBoundEdge() {
-
+            /* void */
         }
 
         KDBoundEdge(math::real t, int primitiveIndex, bool start) : t(t), primitiveIndex(primitiveIndex) {
