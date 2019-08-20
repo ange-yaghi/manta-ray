@@ -72,7 +72,7 @@ void manta::KDTree::destroy() {
     }
 
     if (m_nodes != nullptr) {
-        StandardAllocator::Global()->aligned_free(m_nodes, m_nodeCapacity);
+        StandardAllocator::Global()->free(m_nodes, m_nodeCapacity);
         m_nodes = nullptr;
         m_nodeCapacity = 0;
         m_nodeCount = 0;
@@ -288,7 +288,7 @@ void manta::KDTree::_analyze(int currentNode, AABB *nodeBounds, const std::vecto
     createNode();
 
     // Debug only
-    m_nodeBounds.push_back(*nodeBounds);
+    //m_nodeBounds.push_back(*nodeBounds);
 
     int primitiveCount = (int)faces.size();
     if (primitiveCount <= workspace->maxPrimitives || depth == 0) {
@@ -400,14 +400,14 @@ int manta::KDTree::createNode() {
         int newSize = 1;
         if (m_nodeCapacity > 0) newSize = m_nodeCapacity * 2;
 
-        KDTreeNode *newNodes = StandardAllocator::Global()->allocate<KDTreeNode>(newSize, 16);
+        KDTreeNode *newNodes = StandardAllocator::Global()->allocate<KDTreeNode>(newSize);
         if (m_nodeCount > 0) {
             // Copy old nodes
             memcpy((void *)newNodes, (void *)m_nodes, sizeof(KDTreeNode) * m_nodeCount);
         }
 
         if (m_nodeCapacity > 0) {
-            StandardAllocator::Global()->aligned_free(m_nodes, m_nodeCapacity);
+            StandardAllocator::Global()->free(m_nodes, m_nodeCapacity);
         }
 
         m_nodes = newNodes;
@@ -433,6 +433,8 @@ int manta::KDTree::createNodeVolume() {
             StandardAllocator::Global()->aligned_free(m_nodeVolumes, m_volumeCapacity);
         }
 
+        std::cout << "Growing volumes from " << m_volumeCapacity << " to " << newSize << " (total size: " << sizeof(KDBoundingVolume) * newSize << ")" << std::endl;
+
         m_nodeVolumes = newVolumes;
         m_volumeCapacity = newSize;
     }
@@ -446,16 +448,19 @@ void manta::KDTree::initLeaf(int node, const std::vector<int> &faces, const AABB
     int newNodeVolume = createNodeVolume();
 
     constexpr bool ENABLE_FILTERING = true;
-    std::vector<bool> filtered;
+
+    bool *filtered = (primitiveCount > 0)
+        ? new bool[primitiveCount]
+        : nullptr;
 
     // Filter faces
     if (primitiveCount > 0) {
         for (int i = 0; i < primitiveCount; i++) {
             if (ENABLE_FILTERING && !m_mesh->checkFaceAABB(faces[i], bounds)) {
-                filtered.push_back(true);
+                filtered[i] = true;
             }
             else {
-                filtered.push_back(false);
+                filtered[i] = false;
                 filteredPrimitiveCount++;
             }
         }
@@ -483,6 +488,8 @@ void manta::KDTree::initLeaf(int node, const std::vector<int> &faces, const AABB
             }
         }
     }
+
+    if (filtered != nullptr) delete[] filtered;
 }
 
 void manta::KDTree::writeToObjFile(const char *fname) const {
