@@ -40,14 +40,14 @@ namespace piranha {
 
     protected:
         virtual void _validate() {
-            m_value = validateData(m_value);
+            m_value = validateData(m_value, true);
         }
 
         template <typename _T>
-        const _T validateData(const _T &data) { return data; }
+        const _T validateData(const _T &data, bool recordErrors = false) { return data; }
 
         template <>
-        const piranha::native_string validateData<piranha::native_string>(const piranha::native_string &data) {
+        const piranha::native_string validateData<piranha::native_string>(const piranha::native_string &data, bool recordErrors) {
             piranha::native_string res;
             piranha::native_string::const_iterator it = data.begin();
             while (it != data.end()) {
@@ -99,7 +99,6 @@ namespace piranha {
 
             if (builtinType.empty()) {
                 // TODO: raise error, literal not supported
-                int a = 0;
             }
 
             int count = 0;
@@ -108,7 +107,6 @@ namespace piranha {
 
             if (nodeDefinition == nullptr) {
                 // TODO: raise error, literal type not defined or not available
-                int a = 0;
             }
 
             // Generate the expansion
@@ -116,7 +114,7 @@ namespace piranha {
 
             IrLiteralNode<T> *expansion = new IrLiteralNode<T>();
             expansion->setName("\"" + Base::valueToString() + "\"");
-            expansion->setLiteralData(Base::m_value);
+            expansion->setLiteralData(Base::template validateData<T>(Base::m_value));
             expansion->setAttributes(attributeList);
             expansion->setLogicalParent(this);
             expansion->setScopeParent(this);

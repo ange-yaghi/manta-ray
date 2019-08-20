@@ -17,7 +17,8 @@ namespace piranha {
     public:
         NodeProgram();
         ~NodeProgram();
-        void execute();
+
+        bool execute();
 
         void writeAssembly(const std::string &fname) const;
 
@@ -31,11 +32,18 @@ namespace piranha {
         void addContainer(IrContextTree *context, NodeContainer *container);
         NodeContainer *getContainer(IrContextTree *context);
 
+        std::string getRuntimeError() const { return m_errorMessage; }
+        void throwRuntimeError(const std::string &msg, Node *node);
+
     protected:
         NodeContainer m_topLevelContainer;
         PKeyValueLookup<IrContextTree, NodeContainer *> m_containers;
 
         std::vector<Node *> m_nodeCache;
+
+        bool m_runtimeError;
+        std::string m_errorMessage;
+        Node *m_errorNode;
     };
 
 } /* namespace piranha */
