@@ -433,8 +433,6 @@ int manta::KDTree::createNodeVolume() {
             StandardAllocator::Global()->aligned_free(m_nodeVolumes, m_volumeCapacity);
         }
 
-        std::cout << "Growing volumes from " << m_volumeCapacity << " to " << newSize << " (total size: " << sizeof(KDBoundingVolume) * newSize << ")" << std::endl;
-
         m_nodeVolumes = newVolumes;
         m_volumeCapacity = newSize;
     }

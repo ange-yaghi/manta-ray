@@ -30,9 +30,9 @@ def generate_source_directory(architecture, configuration):
     return RUNTIME_DLL_DIRECTORY + "/{}/".format(architecture)
 
 
-def copy_dlls(architecture, configuration):
-    target_directory = generate_target_directory(architecture, configuration)
-    source_directory = generate_source_directory(architecture, configuration)
+def copy_dlls(source, target):
+    target_directory = target
+    source_directory = source
 
     log("INFO", "Copying required runtime DLLs")
     for root, sub_dirs, files in os.walk(source_directory):
@@ -49,5 +49,7 @@ if __name__ == "__main__":
     configuration = sys.argv[2]
 
     print_full_header('Copy Runtime DLLs')
-    copy_dlls(architecture, configuration)
+    source_directory = generate_source_directory(architecture, configuration)
+    target_directory = generate_target_directory(architecture, configuration)
+    copy_dlls(source_directory, target_directory)
     print_footer()

@@ -14,7 +14,16 @@ mantaray_cli::Compiler::~Compiler() {
 
 void mantaray_cli::Compiler::initialize() {
     m_compiler->setFileExtension(".mr");
-    m_compiler->addSearchPath(MANTARAY_STANDARD_LIB_DIR);
+
+    std::ifstream configurationFile("mantaray_cli.conf");
+    if (!configurationFile.is_open()) {
+        m_compiler->addSearchPath(MANTARAY_STANDARD_LIB_DIR);
+    }
+    else {
+        std::string path;
+        std::getline(configurationFile, path);
+        m_compiler->addSearchPath(path);
+    }
 
     m_rules.initialize();
 }
@@ -54,8 +63,12 @@ void mantaray_cli::Compiler::printTrace() {
 
 void mantaray_cli::Compiler::execute() {
     if (getState() == COMPILATION_SUCCESS) {
-        m_program.execute();
+        bool result = m_program.execute();
         setState(COMPLETE);
+
+        if (!result) {
+            std::cout << "Runtime error: " << m_program.getRuntimeError() << std::endl;
+        }
     }
 }
 
