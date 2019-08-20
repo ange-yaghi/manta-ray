@@ -30,8 +30,8 @@ namespace piranha {
         const ChannelType *getType() const { return m_singleType; }
 
         void initialize();
-        void evaluate();
-        void checkEnabled();
+        bool evaluate();
+        bool checkEnabled();
 
         bool isEnabled() const { return m_enabled; }
 

@@ -1,4 +1,4 @@
-// Auto-generated on: 2019-08-17 19:35:13.827752
+// Auto-generated on: 2019-08-20 02:56:37.429521
 
 #ifndef PIRANHA_PIRANHA_H
 #define PIRANHA_PIRANHA_H
@@ -12,7 +12,6 @@
 #include "include/channel_type.h"
 #include "include/compilation_error.h"
 #include "include/compiler.h"
-#include "include/conf.h"
 #include "include/console_input_node.h"
 #include "include/console_output_node.h"
 #include "include/default_literal_node.h"
@@ -62,9 +61,11 @@
 #include "include/standard_allocator.h"
 #include "include/string_conversions.h"
 #include "include/subtract_operation_output.h"
+#include "include/throw_runtime_error_node.h"
 #include "include/vector_constructor.h"
 #include "include/vector_output.h"
 #include "include/vector_split.h"
 #include "include/vector_split_node.h"
+#include "include/version.h"
 
 #endif /* PIRANHA_PIRANHA_H */

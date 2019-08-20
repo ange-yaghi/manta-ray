@@ -64,8 +64,10 @@ namespace piranha {
         NodeOutput *getAliasOutput();
 
         void initialize();
-        void evaluate();
+        bool evaluate();
         void destroy();
+
+        void throwError(const std::string errorMessage);
 
         void setId(int id) { m_id = id; }
         int getId() const { return m_id; }
@@ -116,7 +118,7 @@ namespace piranha {
         void setContainer(NodeContainer *container) { m_container = container; }
         NodeContainer *getContainer() const { return m_container; }
 
-        void checkEnabled();
+        bool checkEnabled();
         bool isEnabled() const { return m_enabled; }
 
         void addDependency(Node *node) { m_dependencyChain.push_back(node); }
@@ -188,6 +190,10 @@ namespace piranha {
         NodeContainer *m_container;
 
         std::vector<Node *> m_dependencyChain;
+
+    protected:
+        // Run-time
+        bool m_runtimeError;
     };
 
 } /* namespace piranha */
