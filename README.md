@@ -7,7 +7,7 @@
 
 To get started, consider reading this tutorial: [Getting Started](docs/public/tutorials/1_getting_started/1_getting_started.md).
 
-Tutorials are continuously added: [Tutorials](docs/public/tutorials/all_tutorials.md)
+Tutorials are continuously added here: [Tutorials](docs/public/tutorials/all_tutorials.md)
  
 ## Setup Instructions For Developers
 
