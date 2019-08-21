@@ -73,6 +73,6 @@ Congratulations, you've rendered your first scene with MantaRay! In upcoming tut
 
 ## Useful Links
 
-* [MantaRay Tutorials](https://github.com/ange-yaghi/manta-ray/blob/master/docs/public/tutorials/all_tutorials.md)
+* [MantaRay Tutorials](../all_tutorials.md)
 * [Piranha Handbook](https://github.com/ange-yaghi/piranha/blob/master/docs/handbook/handbook.md)
 * [VS Code Piranha Plugin](https://github.com/ange-yaghi/mantaray-sdl-extension)
