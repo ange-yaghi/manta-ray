@@ -32,7 +32,7 @@ void manta::Node::resolvePath(const Path *relative, Path *target) const {
         return;
     }
 
-    piranha::Path unitFile = getIrStructure()->getParentUnit()->getPath();
+    piranha::Path unitFile = getProgram()->getRootUnit()->getPath();
     piranha::Path home;
     
     unitFile.getParentPath(&home);

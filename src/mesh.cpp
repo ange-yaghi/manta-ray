@@ -499,7 +499,9 @@ bool manta::Mesh::fastIntersection(const LightRay *ray) const {
     else return true;
 }
 
-void manta::Mesh::loadObjFileData(ObjFileLoader *data, MaterialLibrary *materialLibrary, int defaultMaterialIndex, unsigned int globalId) {
+void manta::Mesh::loadObjFileData(ObjFileLoader *data, MaterialLibrary *materialLibrary, 
+    int defaultMaterialIndex, unsigned int globalId) 
+{
     initialize(data->getFaceCount(), data->getVertexCount(), data->getNormalCount(), data->getTexCoordCount());
 
     for (unsigned int i = 0; i < data->getFaceCount(); i++) {
