@@ -29,7 +29,7 @@ import "mantaray.mr"
 
 ## Step 4 - Getting Our Geometry Ready
 
-The easiest way of getting geometry into MantaRay is through a `.obj` file. In this tutorial we'll use [Blender](www.blender.org) which can export `.obj` files natively. 
+The easiest way of getting geometry into MantaRay is through a `.obj` file. In this tutorial we'll use [Blender](https://www.blender.org) which can export `.obj` files natively. 
 
 The Blender file shown below is available in the `assets` directory of this tutorial.
 
