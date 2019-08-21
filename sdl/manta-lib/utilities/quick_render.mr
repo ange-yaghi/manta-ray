@@ -1,0 +1,119 @@
+module {
+    @name:          "Quick Render"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "Defines some utilities for making quick renders"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
+private import "console.mr"
+
+private import "../types/atomic_types.mr"
+private import "../types/conversions.mr"
+private import "../types/operations.mr"
+private import "../materials/material_library.mr"
+private import "../materials/bsdf_material.mr"
+private import "../bsdf/lambertian_bsdf.mr"
+private import "../camera/utilities.mr"
+private import "../camera/cameras.mr"
+private import "../scene/scene_object.mr"
+private import "../scene/scene_geometry.mr"
+private import "../scene/scene.mr"
+private import "../acceleration/kd_tree.mr"
+private import "../dates/dates.mr"
+private import "../ray-tracer/ray_tracer.mr"
+private import "../sampler/samplers.mr"
+private import "../image/image_output.mr"
+private import "../mesh/obj_file.mr"
+
+public node quick_render {
+    input object_file;
+    input materials:        default_library;
+    input default_material: "Default";
+    input camera_position:  vector(5, 5, 5);
+    input camera_target:    vector(0, 0, 0);
+    input camera_up:        vector(0, 1, 0);
+    input background:       1.0;
+    input samples:          128;
+    input resolution_x:     1920;
+    input resolution_y:     1080;
+    input plane_height:     1.0;
+    input plane_distance:   1.0;
+    input output_name:      "quick_render";
+    input output_dir:       "";
+
+    // Save the current date/time
+    current_date current_date()
+
+    log("\n")
+    log("////////////////////////////////////////////////\n")
+    log("\n")
+    log("  Mantaray Quick Render\n")
+    log("\n")
+    log("////////////////////////////////////////////////\n")
+    log("Initializing...\n")
+
+    // Set up the camera
+    camera_target camera_controller(
+        position:   camera_position,
+        target:     camera_target,
+        up:         camera_up
+    )
+
+    standard_camera camera(
+        up:             camera_controller.up,
+        position:       camera_controller.position,
+        direction:      camera_controller.direction,
+        resolution_x:   resolution_x,
+        resolution_y:   resolution_y,
+        plane_height:   plane_height,
+        plane_distance: plane_distance,
+        samples:        samples,
+        sampler:        random_sampler()
+    )
+
+    // Default material, matte white
+    material_library default_library()
+    bsdf_material(
+        name: "Default",
+        library: default_library,
+        bsdf: lambertian_bsdf(),
+        reflectance: 0.5
+    )
+
+    // Load the scene
+    log("Loading the scene...\n")
+    obj_file scene_mesh(
+        filename: object_file,
+        materials: materials,
+        default_material: default_material
+    )
+
+    scene scene()
+    scene_object main_object(
+        name: "Main",
+        scene: scene,
+        geometry: kd_tree(scene_mesh)
+    )
+
+    // Render the scene
+    ray_tracer mantaray(
+        scene: scene,
+        camera: camera,
+        materials: materials,
+        background: background
+    )
+
+    log("Render complete\n")
+    log("Writing render to file\n")
+
+    image_output(
+        map: mantaray.image,
+        filename: 
+            output_dir + current_date.as_string + "_" + output_name + 
+            "_S" + string(samples) + ".jpg"
+    )
+}
