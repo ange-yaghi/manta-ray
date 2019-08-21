@@ -59,3 +59,4 @@ public import "color/color.mr"
 public import "signal-processing/convolution.mr"
 
 public import "utilities/console.mr"
+public import "utilities/quick_render.mr"

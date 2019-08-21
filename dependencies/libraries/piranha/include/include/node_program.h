@@ -3,6 +3,7 @@
 
 #include "node_container.h"
 #include "pkey_value_lookup.h"
+#include "ir_compilation_unit.h"
 
 #include <vector>
 
@@ -35,7 +36,12 @@ namespace piranha {
         std::string getRuntimeError() const { return m_errorMessage; }
         void throwRuntimeError(const std::string &msg, Node *node);
 
+        void setRootUnit(IrCompilationUnit *unit) { m_rootUnit = unit; }
+        IrCompilationUnit *getRootUnit() const { return m_rootUnit; }
+
     protected:
+        IrCompilationUnit *m_rootUnit;
+
         NodeContainer m_topLevelContainer;
         PKeyValueLookup<IrContextTree, NodeContainer *> m_containers;
 

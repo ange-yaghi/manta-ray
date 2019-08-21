@@ -1,0 +1,5 @@
+private import "mantaray.mr"
+
+quick_render(
+    object_file: "../../demos/models/lamp_teapot.obj"
+)

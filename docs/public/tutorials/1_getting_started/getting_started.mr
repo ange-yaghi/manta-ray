@@ -1,0 +1,5 @@
+import "mantaray.mr"
+
+quick_render(
+    object_file: "simple_scene.obj"
+)
