@@ -1,9 +1,15 @@
-![Alt text](docs/public/mantaray_banner_v3.png?raw=true)
+![Alt text](docs/public/banners/mantaray_banner_v3.png?raw=true)
 
 
-**MantaRay** is an open-source renderer currently under development. It uses modern rendering techniques to generate photorealistic images of complex scenes. 
+**MantaRay** is an open-source renderer currently under development. It uses modern rendering techniques to generate photorealistic images of complex scenes.
+
+## Getting Started
+
+To get started, consider reading this tutorial: [Getting Started](https://github.com/ange-yaghi/manta-ray/blob/master/docs/public/tutorials/1_getting_started/1_getting_started.md).
+
+Tutorials are continuously added: [Tutorials](https://github.com/ange-yaghi/manta-ray/blob/master/docs/public/tutorials/all_tutorials.md)
  
-### Setup Instructions For Developers
+## Setup Instructions For Developers
 
 Only a few steps are required to begin developing on MantaRay:
 1. Install Python 3
