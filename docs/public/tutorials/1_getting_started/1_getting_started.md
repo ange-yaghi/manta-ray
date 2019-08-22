@@ -35,7 +35,7 @@ The Blender file shown below is available in the `assets` directory of this tuto
 
 ![Alt text](assets/screenshots/screenshot_3.PNG)
 
-We are now ready to export mesh file to a `.obj` file. Some precautions must be taken at this step to ensure maximum compatibility with MantaRay.
+We are now ready to export the mesh to a `.obj` file. Some precautions must be taken at this step to ensure maximum compatibility with MantaRay.
 
 ![Alt text](assets/screenshots/screenshot_4.PNG)
 
