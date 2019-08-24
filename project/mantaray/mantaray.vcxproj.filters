@@ -382,6 +382,12 @@
     <Filter Include="Source Files\emitter\sampling">
       <UniqueIdentifier>{82c2a266-f2f2-451f-99da-140c1234b0fd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\image-plane\filters">
+      <UniqueIdentifier>{3bfcff02-9cde-43f7-8f05-6368b2f952d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\image-plane\filters">
+      <UniqueIdentifier>{8615616b-68db-4c78-9a05-e55e54f81a72}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -713,6 +719,18 @@
     </ClCompile>
     <ClCompile Include="..\..\src\sample_container.cpp">
       <Filter>Source Files\emitter\sampling</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\filter.cpp">
+      <Filter>Source Files\image-plane\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\triangle_filter.cpp">
+      <Filter>Source Files\image-plane\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\gaussian_filter.cpp">
+      <Filter>Source Files\image-plane\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\box_filter.cpp">
+      <Filter>Source Files\image-plane\filters</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1129,6 +1147,18 @@
     </ClInclude>
     <ClInclude Include="..\..\include\image_sample.h">
       <Filter>Header Files\emitter\sampling</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\filter.h">
+      <Filter>Header Files\image-plane\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\box_filter.h">
+      <Filter>Header Files\image-plane\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\triangle_filter.h">
+      <Filter>Header Files\image-plane\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\gaussian_filter.h">
+      <Filter>Header Files\image-plane\filters</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
