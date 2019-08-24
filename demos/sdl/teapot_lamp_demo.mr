@@ -9,7 +9,7 @@ log()
 log()
 
 auto node settings {
-    output samples: 1;
+    output samples: 100;
     output resolution_x: 1920;
     output resolution_y: 1080;
     output enable_fraunhofer: false;

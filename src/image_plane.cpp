@@ -149,8 +149,8 @@ bool manta::ImagePlane::processAllSamples() {
 
         // Box filter implementation for now
         const ImageSample &sample = m_sampleQueue[index];
-        int x = lround(sample.imagePlaneLocation.x);
-        int y = lround(sample.imagePlaneLocation.y);
+        int x = (int)(sample.imagePlaneLocation.x + (math::real)0.5);
+        int y = (int)(sample.imagePlaneLocation.y + (math::real)0.5);
 
         bool inBounds = checkPixel(x, y);
         if (!inBounds) continue;
@@ -161,6 +161,7 @@ bool manta::ImagePlane::processAllSamples() {
         math::real weight = (math::real)1.0;
 
         value = math::add(value, math::mul(sample.intensity, math::loadScalar(weight)));
+        value = math::add(value, sample.intensity);
         weightSum += weight;
     }
 

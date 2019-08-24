@@ -92,6 +92,11 @@ void manta::Worker::work() {
 }
 
 void manta::Worker::doJob(const Job *job) {
+    constexpr int SAMPLE_BUFFER_CAPACITY = 1024;
+
+    int sampleCount = 0;
+    ImageSample *samples = (ImageSample *)m_stack->allocate(sizeof(ImageSample) * SAMPLE_BUFFER_CAPACITY, 16);
+
     for (int x = job->startX; x <= job->endX; x++) {
         for (int y = job->startY; y <= job->endY; y++) {
             CameraRayEmitter *emitter = job->group->createEmitter(x, y, m_stack);
@@ -120,8 +125,6 @@ void manta::Worker::doJob(const Job *job) {
                 LightRay *rays = container.getRays();
                 int rayCount = container.getRayCount();
 
-                ImageSample *samples = (ImageSample *)m_stack->allocate(sizeof(ImageSample) * rayCount, 16);
-
                 for (int samp = 0; samp < rayCount; samp++) {
                     NEW_TREE(getTreeName(pixelIndex, samp), emitter->getPosition());
                     LightRay *ray = &rays[samp];
@@ -129,19 +132,26 @@ void manta::Worker::doJob(const Job *job) {
 
                     m_rayTracer->traceRay(job->scene, ray, 0, m_stack /**/ PATH_RECORDER_ARG /**/ STATISTICS_ROOT(&m_statistics));
 
-                    samples[samp].imagePlaneLocation = ray->getImagePlaneLocation();
-                    samples[samp].intensity = ray->getWeightedIntensity();
+                    ImageSample &sample = samples[sampleCount++];
+                    sample.imagePlaneLocation = ray->getImagePlaneLocation();
+                    sample.intensity = ray->getWeightedIntensity();
+
+                    if (sampleCount >= SAMPLE_BUFFER_CAPACITY) {
+                        job->target->addSamples(samples, sampleCount);
+                        sampleCount = 0;
+                    }
+
                     END_TREE();
                 }
 
+                
+
                 //container.calculateIntensity();
                 //result = container.getIntensity();
-                job->target->addSamples(samples, rayCount);
+
                 //job->target->processAllSamples();
                 //job->target->terminate();
                 //job->target->reset();
-
-                m_stack->free((void *)samples);
                 container.destroyRays();
             }
             m_rayTracer->incrementRayCompletion(job);
@@ -166,6 +176,12 @@ void manta::Worker::doJob(const Job *job) {
             //job->target->set(result, x, y);
         }
     }
+
+    if (sampleCount > 0) {
+        job->target->addSamples(samples, sampleCount);
+    }
+
+    m_stack->free((void *)samples);
 }
 
 std::string manta::Worker::getObjFname() {
