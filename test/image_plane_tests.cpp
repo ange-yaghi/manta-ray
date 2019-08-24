@@ -8,7 +8,7 @@ using namespace manta;
 
 TEST(ImagePlaneTests, ImagePlaneSanityCheck) {
     ImagePlane imagePlane;
-    imagePlane.initialize(2, 2, 4);
+    imagePlane.initialize(2, 2);
 
     ImageSample samples[4];
     samples[0].imagePlaneLocation = math::Vector2(0.0f, 0.0f);
@@ -20,8 +20,7 @@ TEST(ImagePlaneTests, ImagePlaneSanityCheck) {
     samples[3].imagePlaneLocation = math::Vector2(1.0f, 1.0f);
     samples[3].intensity = math::loadScalar(0.5f);
 
-    imagePlane.addSamples(samples, 4);
-    imagePlane.processAllSamples();
+    imagePlane.processSamples(samples, 4);
     imagePlane.normalize();
 
     imagePlane.destroy();

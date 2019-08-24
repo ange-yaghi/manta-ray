@@ -11,14 +11,11 @@
 namespace manta {
 
     class ImagePlane {
-    protected:
-        static constexpr int DEFAULT_QUEUE_CAPACITY = 2 << 16;
-
     public:
         ImagePlane();
         ~ImagePlane();
 
-        void initialize(int width, int height, int queueCapacity = DEFAULT_QUEUE_CAPACITY);
+        void initialize(int width, int height);
         void destroy();
 
         bool checkPixel(int x, int y) const;
@@ -36,12 +33,7 @@ namespace manta {
 
         const math::Vector *getBuffer() const { return m_buffer; }
 
-        void reset();
-        void addSamples(ImageSample *samples, int sampleCount);
         void processSamples(ImageSample *samples, int sampleCount);
-        static void processLoop(ImagePlane *target);
-        bool processAllSamples();
-        void terminate();
 
         void normalize();
 
@@ -52,18 +44,7 @@ namespace manta {
         math::real *m_sampleWeightSums;
 
     protected:
-        ImageSample *m_sampleQueue;
-        int m_queueLength;
-        int m_queueOffset;
-        int m_queueCapacity;
-        bool m_done;
-
-        std::mutex m_queueLock;
-        std::mutex m_dataConditionLock;
-        std::condition_variable m_dataCondition;
-
-        std::mutex m_emptyConditionLock;
-        std::condition_variable m_emptyCondition;
+        std::mutex m_lock;
     };
 
 } /* namespace manta */
