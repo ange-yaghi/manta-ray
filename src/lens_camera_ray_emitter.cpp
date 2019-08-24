@@ -22,15 +22,16 @@ void manta::LensCameraRayEmitter::generateRays(RayContainer *rayContainer) const
     rayContainer->setDegree(0);
     LightRay *rays = rayContainer->getRays();
 
-    math::Vector *sampleOrigins = 
-        (math::Vector *)m_stackAllocator->allocate(sizeof(math::Vector) * totalRayCount, 16);
+    math::Vector2 *sampleOrigins = 
+        (math::Vector2 *)m_stackAllocator->allocate(sizeof(math::Vector2) * totalRayCount, 1);
     m_sampler->generateSamples(totalRayCount, sampleOrigins);
 
     Lens::LensScanHint hint;
-    m_lens->lensScan(m_position, 4, m_sampler->getBoundaryWidth(), &hint);
+    m_lens->lensScan(m_position, 4, 0.0 /* TODO: m_sampler->getBoundaryWidth() */, &hint);
 
     for (int i = 0; i < totalRayCount; i++) {
-        math::Vector position = math::add(m_position, sampleOrigins[i]);
+        const math::Vector2 samplePoint = sampleOrigins[i];
+        math::Vector position = transformToImagePlane(samplePoint);
 
         rays[i].setIntensity(math::constants::Zero);
         rays[i].setWeight(math::constants::One);

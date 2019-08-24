@@ -147,7 +147,7 @@ void *manta::RawFile::generateEmptyPixelArray(void *dataHeader, int version, int
 bool manta::RawFile::readPixelArray(void *dataHeader, void *pixelData, ImagePlane *buffer, int version) const {
     if (version == 0x1) {
         DataHeader_v1 *header = (DataHeader_v1 *)dataHeader;
-        buffer->initialize(header->width, header->height, (math::real)0.0, (math::real)0.0);
+        buffer->initialize(header->width, header->height);
 
         if (header->precision == 4) {
             FloatPixel_v1 *v = (FloatPixel_v1 *)pixelData;

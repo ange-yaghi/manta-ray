@@ -63,16 +63,20 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
 
     LambertianBSDF lambert;
 
-    PowerNode texturePower(4.0f, fingerprintTexture.getMainOutput());
+    CachedVectorNode constS;
+    constS.setValue(math::loadScalar(4.0f));
+    PowerNode texturePower;
+    texturePower.connectInput(constS.getPrimaryOutput(), "left", nullptr);
+    texturePower.connectInput(fingerprintTexture.getMainOutput(), "right", nullptr);
     RemapNode specularPowerFingerprint(
         math::loadScalar(0.0f),
         math::loadScalar(1.0f),
-        texturePower.getMainOutput());
+        texturePower.getPrimaryOutput());
 
     RemapNode invFingerprint(
         math::loadScalar(1.0f),
         math::loadScalar(0.5f),
-        texturePower.getMainOutput());
+        texturePower.getPrimaryOutput());
 
     // Steel
     PhongDistribution phongSteel;

@@ -43,7 +43,7 @@ auto node test_material {
             name: "TeapotMaterial",
             library: library,
             bsdf: lambertian_bsdf(),
-            reflectance: 1.0,
+            reflectance: 0.0,
             emission:
                 separator * glow_color + 
                 (1.0 - separator) * vector(glow_color.g, glow_color.b, glow_color.r)
@@ -83,7 +83,8 @@ auto node bulb_material {
             name: "BulbMaterial",
             library: library,
             reflectance: vector(),
-            emission: srgb_i(255, 197, 143) * 50,
+            //emission: srgb_i(255, 197, 143) * 50,
+            emission: 0,
             bsdf: lambertian_bsdf()
         );
 }
@@ -152,7 +153,8 @@ ray_tracer mr(
     scene: scene,
     camera: camera,
     materials: library,
-    background: 0
+    background: 0,
+    threads: 12
 )
 
 image_output(

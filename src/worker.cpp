@@ -120,39 +120,50 @@ void manta::Worker::doJob(const Job *job) {
                 LightRay *rays = container.getRays();
                 int rayCount = container.getRayCount();
 
+                ImageSample *samples = (ImageSample *)m_stack->allocate(sizeof(ImageSample) * rayCount, 16);
+
                 for (int samp = 0; samp < rayCount; samp++) {
                     NEW_TREE(getTreeName(pixelIndex, samp), emitter->getPosition());
                     LightRay *ray = &rays[samp];
                     ray->calculateTransformations();
 
                     m_rayTracer->traceRay(job->scene, ray, 0, m_stack /**/ PATH_RECORDER_ARG /**/ STATISTICS_ROOT(&m_statistics));
+
+                    samples[samp].imagePlaneLocation = ray->getImagePlaneLocation();
+                    samples[samp].intensity = ray->getWeightedIntensity();
                     END_TREE();
                 }
 
-                container.calculateIntensity();
-                result = container.getIntensity();
-                container.destroyRays();                
+                //container.calculateIntensity();
+                //result = container.getIntensity();
+                job->target->addSamples(samples, rayCount);
+                //job->target->processAllSamples();
+                //job->target->terminate();
+                //job->target->reset();
+
+                m_stack->free((void *)samples);
+                container.destroyRays();
             }
             m_rayTracer->incrementRayCompletion(job);
 
             job->group->freeEmitter(emitter, m_stack);
 
             // Add the results to the scene buffer target
-            constexpr math::Vector DEBUG_RED = { (math::real)1.0, (math::real)0.0, (math::real)0.0 };
-            constexpr math::Vector DEBUG_BLUE = { (math::real)0.0, (math::real)0.0, (math::real)1.0 };
-            constexpr math::Vector DEBUG_GREEN = { (math::real)0.0, (math::real)1.0, (math::real)0.0 };
+            //constexpr math::Vector DEBUG_RED = { (math::real)1.0, (math::real)0.0, (math::real)0.0 };
+            //constexpr math::Vector DEBUG_BLUE = { (math::real)0.0, (math::real)0.0, (math::real)1.0 };
+            //constexpr math::Vector DEBUG_GREEN = { (math::real)0.0, (math::real)1.0, (math::real)0.0 };
 
-            if (std::isnan(math::getX(result)) || std::isnan(math::getY(result)) || std::isnan(math::getZ(result))) {
-                result = DEBUG_RED;
-            }
-            else if (std::isinf(math::getX(result)) || std::isinf(math::getY(result)) || std::isinf(math::getZ(result))) {
-                result = DEBUG_GREEN;
-            }
-            else if (math::getX(result) < 0 || math::getY(result) < 0 || math::getZ(result) < 0) {
-                result = DEBUG_BLUE;
-            }
+            //if (std::isnan(math::getX(result)) || std::isnan(math::getY(result)) || std::isnan(math::getZ(result))) {
+            //    result = DEBUG_RED;
+            //}
+            //else if (std::isinf(math::getX(result)) || std::isinf(math::getY(result)) || std::isinf(math::getZ(result))) {
+            //    result = DEBUG_GREEN;
+            //}
+            //else if (math::getX(result) < 0 || math::getY(result) < 0 || math::getZ(result) < 0) {
+            //    result = DEBUG_BLUE;
+            //}
 
-            job->target->set(result, x, y);
+            //job->target->set(result, x, y);
         }
     }
 }

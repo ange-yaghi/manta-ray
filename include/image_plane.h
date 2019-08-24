@@ -1,20 +1,24 @@
 #ifndef MANTARAY_IMAGE_PLANE_H
 #define MANTARAY_IMAGE_PLANE_H
 
+#include "image_sample.h"
+#include "job_queue.h"
 #include "manta_math.h"
+
+#include <condition_variable>
+#include <mutex>
 
 namespace manta {
 
-    // Forward declarations
-    class Convolution;
-
     class ImagePlane {
+    protected:
+        static constexpr int DEFAULT_QUEUE_CAPACITY = 2 << 16;
+
     public:
         ImagePlane();
         ~ImagePlane();
 
-        void initialize(int width, int height, math::real physicalWidth, 
-            math::real physicalHeight);
+        void initialize(int width, int height, int queueCapacity = DEFAULT_QUEUE_CAPACITY);
         void destroy();
 
         bool checkPixel(int x, int y) const;
@@ -32,32 +36,33 @@ namespace manta {
 
         const math::Vector *getBuffer() const { return m_buffer; }
 
-        // ----- Analysis and Manipulation -----
+        void reset();
+        void addSamples(ImageSample *samples, int sampleCount);
+        static void processLoop(ImagePlane *target);
+        bool processAllSamples();
+        void terminate();
 
-        // Get max intensity in the scene buffer
-        math::real getMax() const;
-
-        // Get min intensity in the scene buffer
-        math::real getMin() const;
-
-        // Get the average value in the scene buffer
-        math::Vector getAverage() const;
-
-        // Apply gamma
-        void applyGammaCurve(math::real gamma);
-
-        void add(const ImagePlane *b);
-        
-        // Scale all values in the scene buffer
-        void scale(math::real scale);
+        void normalize();
 
     protected:
-        math::real m_physicalWidth;
-        math::real m_physicalHeight;
-
         int m_width;
         int m_height;
         math::Vector *m_buffer;
+        math::real *m_sampleWeightSums;
+
+    protected:
+        ImageSample *m_sampleQueue;
+        int m_queueLength;
+        int m_queueOffset;
+        int m_queueCapacity;
+        bool m_done;
+
+        std::mutex m_queueLock;
+        std::mutex m_dataConditionLock;
+        std::condition_variable m_dataCondition;
+
+        std::mutex m_emptyConditionLock;
+        std::condition_variable m_emptyCondition;
     };
 
 } /* namespace manta */

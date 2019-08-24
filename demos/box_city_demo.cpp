@@ -242,15 +242,15 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
         step.getMainOutput()->setInput(mantaOutput.getMainOutput());
         step.evaluate();
 
-        MultiplyNode mulNode;
+        BinaryNode<MUL> mulNode;
         mulNode.initialize();
-        mulNode.getMainOutput()->setInputA(step.getMainOutput());
-        mulNode.getMainOutput()->setInputB(mantaOutput.getMainOutput());
+        mulNode.connectInput(step.getMainOutput(), "left", nullptr);
+        mulNode.connectInput(mantaOutput.getMainOutput(), "right", nullptr);
         mulNode.evaluate();
 
         ConvolutionNode convNode;
         convNode.initialize();
-        convNode.setInputs(mulNode.getMainOutput(), fraunNode.getMainOutput());
+        convNode.setInputs(mulNode.getPrimaryOutput(), fraunNode.getMainOutput());
         convNode.setResize(true);
         convNode.setClip(true);
         convNode.evaluate();
