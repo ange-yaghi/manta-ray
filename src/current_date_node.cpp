@@ -1,4 +1,4 @@
-#include "current_date_node.h"
+#include "../include/current_date_node.h"
 
 manta::CurrentDateNode::CurrentDateNode() {
     /* void */

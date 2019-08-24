@@ -114,11 +114,14 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
     metalTexture.initialize();
     metalTexture.evaluate();
 
-    PowerNode fingerprintPower(4.0f, fingerprintTexture.getMainOutput());
+    CachedVectorNode constS;
+    constS.setValue(math::loadScalar(4.0f));
+    PowerNode fingerprintPower;
+    fingerprintPower.connectInput(constS.getPrimaryOutput(), "left", nullptr);
     RemapNode specularPowerFingerprint(
         math::loadScalar(0.0f),
         math::loadScalar(1.0f),
-        fingerprintPower.getMainOutput());
+        fingerprintPower.getPrimaryOutput());
 
     RemapNode invFingerprint(
         math::loadScalar(1.0f),

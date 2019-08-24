@@ -261,13 +261,13 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 
         MultiplyNode mulNode;
         mulNode.initialize();
-        mulNode.getMainOutput()->setInputA(step.getMainOutput());
-        mulNode.getMainOutput()->setInputB(mantaOutput.getMainOutput());
+        mulNode.connectInput(step.getMainOutput(), "left", nullptr);
+        mulNode.connectInput(mantaOutput.getMainOutput(), "right", nullptr);
         mulNode.evaluate();
 
         ConvolutionNode convNode;
         convNode.initialize();
-        convNode.setInputs(mulNode.getMainOutput(), fraunNode.getMainOutput());
+        convNode.setInputs(mulNode.getPrimaryOutput(), fraunNode.getMainOutput());
         convNode.setResize(true);
         convNode.setClip(true);
         convNode.evaluate();

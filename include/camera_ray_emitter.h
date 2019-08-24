@@ -1,11 +1,11 @@
 #ifndef MANTARAY_CAMERA_RAY_EMITTER_H
 #define MANTARAY_CAMERA_RAY_EMITTER_H
 
-#include "../include/manta_math.h"
+#include "manta_math.h"
 
 namespace manta {
 
-    class Sampler2D;
+    class Sampler2d;
     class RayContainer;
     class StackAllocator;
 
@@ -15,8 +15,8 @@ namespace manta {
         virtual ~CameraRayEmitter();
 
         virtual void generateRays(RayContainer *rayContainer) const = 0;
-        void setSampler(Sampler2D *sampler) { m_sampler = sampler; }
-        Sampler2D *getSampler() const { return m_sampler; }
+        void setSampler(Sampler2d *sampler) { m_sampler = sampler; }
+        Sampler2d *getSampler() const { return m_sampler; }
 
         void setSampleCount(int samples) { m_sampleCount = samples; }
         int getSampleCount() const { return m_sampleCount; }
@@ -27,14 +27,39 @@ namespace manta {
         math::Vector getDirection() const { return m_direction; }
         void setDirection(const math::Vector &v) { m_direction = v; }
 
+        math::Vector getUp() const { return m_up; }
+        void setUp(const math::Vector &up) { m_up = up; }
+
+        math::Vector getRight() const { return m_right; }
+        void setRight(const math::Vector &right) { m_right = right; }
+
+        math::Vector getImagePlaneOrigin() const { return m_imagePlaneOrigin; }
+        void setImagePlaneOrigin(const math::Vector &imagePlaneOrigin) { m_imagePlaneOrigin = imagePlaneOrigin; }
+
+        math::Vector2 getPixelIncrement() const { return m_pixelIncrement; }
+        void setPixelIncrement(const math::Vector2 &increment) { m_pixelIncrement = increment; }
+
+        void setImagePlaneCoordinates(int x, int y) { m_pixelX = x; m_pixelY = y; }
+        int getPixelX() const { return m_pixelX; }
+        int getPixelY() const { return m_pixelY; }
+
         void setStackAllocator(StackAllocator *s) { m_stackAllocator = s; }
         StackAllocator *getStackAllocator() { return m_stackAllocator; }
 
+        math::Vector transformToImagePlane(const math::Vector2 coordinates) const;
+
     protected:
-        Sampler2D *m_sampler;
+        Sampler2d *m_sampler;
 
         math::Vector m_position;
         math::Vector m_direction;
+        math::Vector m_up;
+        math::Vector m_right;
+        math::Vector m_imagePlaneOrigin;
+        math::Vector2 m_pixelIncrement;
+
+        int m_pixelX;
+        int m_pixelY;
 
         int m_sampleCount;
 

@@ -20,14 +20,15 @@ void manta::StandardCameraRayEmitterGroup::configure() {
     m_right = math::cross(m_direction, m_up);
     m_planeCenter = math::add(m_position, math::mul(m_direction, math::loadScalar((math::real)m_planeDistance)));
 
-    m_sampler->setAxis1(m_right);
-    m_sampler->setAxis2(m_up);
-    m_sampler->setBoundaryHeight(m_yIncrement);
-    m_sampler->setBoundaryWidth(m_xIncrement);
+    //m_sampler->setAxis1(m_right);
+    //m_sampler->setAxis2(m_up);
+    //m_sampler->setBoundaryHeight(m_yIncrement);
+    //m_sampler->setBoundaryWidth(m_xIncrement);
 }
 
-manta::CameraRayEmitter *manta::StandardCameraRayEmitterGroup::createEmitter(int ix, int iy, 
-        StackAllocator *stackAllocator) const {
+manta::CameraRayEmitter *manta::StandardCameraRayEmitterGroup::
+    createEmitter(int ix, int iy, StackAllocator *stackAllocator) const 
+{
     StandardCameraRayEmitter *newEmitter = allocateEmitter<StandardCameraRayEmitter>(stackAllocator);
 
     math::real x = ix * m_xIncrement;
@@ -38,9 +39,13 @@ manta::CameraRayEmitter *manta::StandardCameraRayEmitterGroup::createEmitter(int
     loc = math::add(loc, m_planeCenter);
 
     newEmitter->setPosition(m_position);
-    newEmitter->setTargetOrigin(loc);
+    newEmitter->setImagePlaneOrigin(loc);
     newEmitter->setSampler(m_sampler);
     newEmitter->setSampleCount(m_samples);
+    newEmitter->setRight(m_right);
+    newEmitter->setUp(m_up);
+    newEmitter->setPixelIncrement(math::Vector2(m_xIncrement, m_yIncrement));
+    newEmitter->setImagePlaneCoordinates(ix, iy);
 
     return newEmitter;
 }

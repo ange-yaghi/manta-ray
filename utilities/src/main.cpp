@@ -24,8 +24,6 @@ int main() {
 
     std::cout << "Width: " << sceneBuffer.getWidth() << std::endl;
     std::cout << "Height: " << sceneBuffer.getHeight() << std::endl;
-    std::cout << "Max: " << sceneBuffer.getMax() << std::endl;
-    std::cout << "Min: " << sceneBuffer.getMin() << std::endl;
 
     // Remove the file extension
     for (int i = (int)fname.length(); i >= 0; i--) {
@@ -55,7 +53,8 @@ int main() {
             std::cout << "Scale factor: ";
             std::cin >> scale;
 
-            temp.scale(scale);
+            // Deprecated
+            //temp.scale(scale);
 
             write = true;
         }
@@ -77,7 +76,8 @@ int main() {
             std::cout << "  Div: ";
             std::cin >> gamma_div;
 
-            temp.applyGammaCurve(gamma_num / gamma_div);
+            // Deprecated
+            //temp.applyGammaCurve(gamma_num / gamma_div);
 
             write = true;
         }

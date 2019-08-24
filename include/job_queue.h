@@ -1,5 +1,5 @@
-#ifndef JOB_QUEUE_H
-#define JOB_QUEUE_H
+#ifndef MANTARAY_JOB_QUEUE_H
+#define MANTARAY_JOB_QUEUE_H
 
 #include <mutex>
 #include <queue>
@@ -35,4 +35,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* JOB_QUEUE_H */
+#endif /* MANTARAY_JOB_QUEUE_H */

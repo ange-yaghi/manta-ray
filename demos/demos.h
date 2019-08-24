@@ -42,7 +42,6 @@
 #include "../include/microfacet_transmission_bsdf.h"
 #include "../include/microfacet_glass_bsdf.h"
 #include "../include/material_pointer.h"
-#include "../include/power_node.h"
 #include "../include/remap_node.h"
 #include "../include/square_aperture.h"
 #include "../include/polygonal_aperture.h"
@@ -58,13 +57,13 @@
 #include "../include/vector_map_wrapper_node.h"
 #include "../include/convolution_node.h"
 #include "../include/image_output_node.h"
-#include "../include/multiply_node.h"
 #include "../include/ramp_node.h"
 #include "../include/step_node.h"
 #include "../include/material_library.h"
 #include "../include/obj_file_node.h"
 #include "../include/kd_tree_node.h"
 #include "../include/cached_vector_node.h"
+#include "../include/binary_node.h"
 
 namespace manta_demo {
 

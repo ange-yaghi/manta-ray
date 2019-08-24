@@ -40,7 +40,7 @@ namespace manta {
     class Scene;
     class SceneObject;
     class CameraRayEmitterGroup;
-    class Sampler2D;
+    class Sampler2d;
     class Aperture;
     class Lens;
     class MediaInterface;
@@ -59,7 +59,7 @@ namespace manta {
     ASSIGN_CHANNEL_TYPE(Scene, SceneChannel);
     ASSIGN_CHANNEL_TYPE(SceneObject, SceneObjectChannel);
     ASSIGN_CHANNEL_TYPE(CameraRayEmitterGroup, CameraChannel);
-    ASSIGN_CHANNEL_TYPE(Sampler2D, SamplerChannel);
+    ASSIGN_CHANNEL_TYPE(Sampler2d, SamplerChannel);
     ASSIGN_CHANNEL_TYPE(Aperture, ApertureChannel);
     ASSIGN_CHANNEL_TYPE(Lens, LensChannel);
     ASSIGN_CHANNEL_TYPE(MediaInterface, MediaInterfaceChannel);

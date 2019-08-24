@@ -56,7 +56,7 @@ void manta::RayTracer::traceAll(const Scene *scene, CameraRayEmitterGroup *group
     math::real py = (math::real)1.0;
     math::real px = ((math::real)(resX) / resY);
 
-    target->initialize(resX, resY, px, py);
+    target->initialize(resX, resY);
 
     // Create jobs
     int emitterCount = group->getResolutionX() * group->getResolutionY();
@@ -90,10 +90,16 @@ void manta::RayTracer::traceAll(const Scene *scene, CameraRayEmitterGroup *group
     // Hide the cursor to avoid annoying blinking artifact
     showConsoleCursor(false);
 
+    std::thread planeWorker(&ImagePlane::processLoop, target);
+
     // Create and start all threads
     createWorkers();
     startWorkers();
     waitForWorkers();
+
+    target->terminate();
+    planeWorker.join();
+    target->normalize();
 
     // Print a single new line to terminate progress display
     // See RayTracer::incrementRayCompletion
@@ -162,7 +168,7 @@ void manta::RayTracer::tracePixel(int px, int py, const Scene *scene, CameraRayE
     int resX = group->getResolutionX();
     int resY = group->getResolutionY();
 
-    target->initialize(resX, resY, (math::real)0.0, (math::real)0.0);
+    target->initialize(resX, resY);
 
     // Create the singular job for the pixel
     Job job;

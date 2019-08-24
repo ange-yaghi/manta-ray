@@ -34,7 +34,7 @@ void manta::CameraRayEmitterGroup::_evaluate() {
     static_cast<piranha::FloatValueOutput *>(m_planeDistanceInput)->fullCompute((void *)&m_planeDistance);
 
     static_cast<piranha::IntValueOutput *>(m_sampleInput)->fullCompute((void *)&m_samples);
-    m_sampler = static_cast<ObjectReferenceNodeOutput<Sampler2D> *>(m_samplerInput)->getReference();
+    m_sampler = static_cast<ObjectReferenceNodeOutput<Sampler2d> *>(m_samplerInput)->getReference();
 
     m_output.setReference(this);
 }
