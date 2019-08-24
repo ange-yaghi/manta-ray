@@ -1,6 +1,9 @@
 #include "../include/image_plane.h"
 
 #include "../include/standard_allocator.h"
+#include "../include/gaussian_filter.h"
+#include "../include/triangle_filter.h"
+#include "../include/box_filter.h"
 
 #include <assert.h>
 #include <iostream>
@@ -14,7 +17,6 @@ manta::ImagePlane::ImagePlane() {
 
 manta::ImagePlane::~ImagePlane() {
     assert(m_buffer == nullptr);
-    assert(m_sampleQueue == nullptr);
     assert(m_sampleWeightSums == nullptr);
 }
 
@@ -93,22 +95,40 @@ void manta::ImagePlane::clear(const math::Vector &v) {
 void manta::ImagePlane::processSamples(ImageSample *samples, int sampleCount) {
     std::unique_lock<std::mutex> lock(m_lock);
 
+    GaussianFilter filter;
+    filter.setExtents(math::Vector2((math::real)2.0, (math::real)2.0));
+    filter.configure((math::real)2.0);
+
     for (int i = 0; i < sampleCount; i++) {
         // Box filter implementation for now
         const ImageSample &sample = samples[i];
-        int x = (int)(sample.imagePlaneLocation.x + (math::real)0.5);
-        int y = (int)(sample.imagePlaneLocation.y + (math::real)0.5);
+        math::Vector2 extents = filter.getExtents();
+        int left = (int)ceil(sample.imagePlaneLocation.x - extents.x);
+        int right = (int)ceil(sample.imagePlaneLocation.x + extents.x);
+        int top = (int)ceil(sample.imagePlaneLocation.y - extents.y);
+        int bottom = (int)ceil(sample.imagePlaneLocation.y + extents.y);
 
-        bool inBounds = checkPixel(x, y);
-        if (!inBounds) continue;
+        for (int x = left; x <= right; x++) {
+            for (int y = top; y <= bottom; y++) {
+                bool inBounds = checkPixel(x, y);
+                if (!inBounds) continue;
 
-        math::Vector &value = m_buffer[y * m_width + x];
-        math::real &weightSum = m_sampleWeightSums[y * m_width + x];
+                math::Vector2 p(
+                    sample.imagePlaneLocation.x - (math::real)x, 
+                    sample.imagePlaneLocation.y - (math::real)y
+                );
 
-        math::real weight = (math::real)1.0;
+                if (std::abs(p.x) > extents.x || std::abs(p.y) > extents.y) continue;
 
-        value = math::add(value, math::mul(sample.intensity, math::loadScalar(weight)));
-        weightSum += weight;
+                math::Vector &value = m_buffer[y * m_width + x];
+                math::real &weightSum = m_sampleWeightSums[y * m_width + x];
+
+                math::Vector weight = filter.evaluate(p);
+
+                value = math::add(value, math::mul(sample.intensity, weight));
+                weightSum += math::getScalar(weight);
+            }
+        }
     }
 }
 

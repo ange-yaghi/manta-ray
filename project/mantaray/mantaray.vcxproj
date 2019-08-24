@@ -20,12 +20,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\aperture.cpp" />
+    <ClCompile Include="..\..\src\box_filter.cpp" />
     <ClCompile Include="..\..\src\cached_vector_node.cpp" />
     <ClCompile Include="..\..\src\cached_vector_output.cpp" />
     <ClCompile Include="..\..\src\constructed_vector_node_output.cpp" />
     <ClCompile Include="..\..\src\current_date_node.cpp" />
     <ClCompile Include="..\..\src\date_interface_node.cpp" />
     <ClCompile Include="..\..\src\date_node_output.cpp" />
+    <ClCompile Include="..\..\src\filter.cpp" />
+    <ClCompile Include="..\..\src\gaussian_filter.cpp" />
     <ClCompile Include="..\..\src\kd_tree_node.cpp" />
     <ClCompile Include="..\..\src\language_rules.cpp" />
     <ClCompile Include="..\..\src\mesh_merge_node.cpp" />
@@ -72,6 +75,7 @@
     <ClCompile Include="..\..\src\step_node_output.cpp" />
     <ClCompile Include="..\..\src\streaming_node_output.cpp" />
     <ClCompile Include="..\..\src\surface_interaction_node.cpp" />
+    <ClCompile Include="..\..\src\triangle_filter.cpp" />
     <ClCompile Include="..\..\src\vector_conversions.cpp" />
     <ClCompile Include="..\..\src\vector_map_2d.cpp" />
     <ClCompile Include="..\..\src\material_library.cpp" />
@@ -136,6 +140,7 @@
     <ClInclude Include="..\..\include\bilayer_bsdf.h" />
     <ClInclude Include="..\..\include\binary_node.h" />
     <ClInclude Include="..\..\include\binary_node_output.h" />
+    <ClInclude Include="..\..\include\box_filter.h" />
     <ClInclude Include="..\..\include\bsdf.h" />
     <ClInclude Include="..\..\include\cached_vector_node.h" />
     <ClInclude Include="..\..\include\cached_vector_output.h" />
@@ -154,7 +159,9 @@
     <ClInclude Include="..\..\include\date_interface_node.h" />
     <ClInclude Include="..\..\include\date_node_output.h" />
     <ClInclude Include="..\..\include\dielectric_media_interface.h" />
+    <ClInclude Include="..\..\include\filter.h" />
     <ClInclude Include="..\..\include\fraunhofer_diffraction.h" />
+    <ClInclude Include="..\..\include\gaussian_filter.h" />
     <ClInclude Include="..\..\include\geometry.h" />
     <ClInclude Include="..\..\include\ggx_distribution.h" />
     <ClInclude Include="..\..\include\grid_sampler.h" />
@@ -193,6 +200,7 @@
     <ClInclude Include="..\..\include\step_node_output.h" />
     <ClInclude Include="..\..\include\surface_interaction_node.h" />
     <ClInclude Include="..\..\include\surface_interaction_node_output.h" />
+    <ClInclude Include="..\..\include\triangle_filter.h" />
     <ClInclude Include="..\..\include\unary_node.h" />
     <ClInclude Include="..\..\include\unary_node_output.h" />
     <ClInclude Include="..\..\include\vector_conversions.h" />
