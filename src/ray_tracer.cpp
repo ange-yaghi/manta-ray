@@ -90,15 +90,11 @@ void manta::RayTracer::traceAll(const Scene *scene, CameraRayEmitterGroup *group
     // Hide the cursor to avoid annoying blinking artifact
     showConsoleCursor(false);
 
-    //std::thread planeWorker(&ImagePlane::processLoop, target);
-
     // Create and start all threads
     createWorkers();
     startWorkers();
     waitForWorkers();
 
-    //target->terminate();
-    //planeWorker.join();
     target->normalize();
 
     // Print a single new line to terminate progress display
