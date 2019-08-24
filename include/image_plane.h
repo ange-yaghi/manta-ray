@@ -38,6 +38,7 @@ namespace manta {
 
         void reset();
         void addSamples(ImageSample *samples, int sampleCount);
+        void processSamples(ImageSample *samples, int sampleCount);
         static void processLoop(ImagePlane *target);
         bool processAllSamples();
         void terminate();

@@ -124,6 +124,29 @@ void manta::ImagePlane::addSamples(ImageSample *samples, int sampleCount) {
     m_dataCondition.notify_one();
 }
 
+void manta::ImagePlane::processSamples(ImageSample *samples, int sampleCount) {
+    //std::unique_lock<std::mutex> lock(m_queueLock);
+
+    for (int i = 0; i < sampleCount; i++) {
+        // Box filter implementation for now
+        const ImageSample &sample = samples[i];
+        int x = (int)(sample.imagePlaneLocation.x + (math::real)0.5);
+        int y = (int)(sample.imagePlaneLocation.y + (math::real)0.5);
+
+        bool inBounds = checkPixel(x, y);
+        if (!inBounds) continue;
+
+        math::Vector &value = m_buffer[y * m_width + x];
+        //math::real &weightSum = m_sampleWeightSums[y * m_width + x];
+
+       // math::real weight = (math::real)1.0;
+
+        //value = math::add(value, math::mul(sample.intensity, math::loadScalar(weight)));
+        value = math::add(value, sample.intensity);
+        //weightSum += weight;
+    }
+}
+
 void manta::ImagePlane::processLoop(ImagePlane *target) {
     while (target->processAllSamples());
 }
