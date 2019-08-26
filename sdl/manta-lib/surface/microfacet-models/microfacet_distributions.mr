@@ -9,8 +9,8 @@ module {
     @github:        "github.com/ange-yaghi/manta-ray"
 }
 
-private import "../types/atomic_types.mr" as types
-private import "../types/conversions.mr"
+private import "../../types/atomic_types.mr" as types
+private import "../../types/conversions.mr"
 
 @doc: "Microfacet distribution channel type"
 public node microfacet_distribution => __mantaray__microfacet_distribution { /* void */ }

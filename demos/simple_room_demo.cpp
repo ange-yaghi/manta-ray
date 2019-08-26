@@ -39,6 +39,7 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
     wallMaterial->setName("WallMaterial");
     wallMaterial->setBSDF(&lambert);
     wallMaterial->setReflectance(getColor(200, 200, 200));
+    wallMaterial->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial outdoorLight;
     outdoorLight.setEmission(math::loadVector(18.f, 16.f, 16.f));
@@ -52,11 +53,13 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
     tableMaterial->setName("TableMaterial");
     tableMaterial->setReflectance(getColor(78, 46, 40));
     tableMaterial->setBSDF(&lambert);
+    tableMaterial->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial *groundMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     groundMaterial->setName("GroundMaterial");
     groundMaterial->setReflectance(math::mul(math::loadVector(78, 46, 40), math::loadScalar(0.001f)));
     groundMaterial->setBSDF(&lambert);
+    groundMaterial->setEmission(math::constants::Zero);
 
     // Create all scene geometry
     Mesh smallHouse;
@@ -118,6 +121,10 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 
     // Output the results to a scene buffer
     ImagePlane sceneBuffer;
+    GaussianFilter filter;
+    filter.setExtents(math::Vector2(1.5, 1.5));
+    filter.configure((math::real)4.0);
+    sceneBuffer.setFilter(&filter);
 
     // Create the raytracer
     rayTracer.configure(200 * MB, 100 * MB, 12, 100, true);

@@ -105,6 +105,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
     glassMaterial->setName("Glass");
     glassMaterial->setReflectance(getColor(255, 255, 255));
     glassMaterial->setBSDF(&simpleGlassBSDF);
+    glassMaterial->setEmission(math::constants::Zero);
 
     // Create all scene geometry
     Mesh lamp;
@@ -188,6 +189,10 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 
     // Output the results to a scene buffer
     ImagePlane sceneBuffer;
+    GaussianFilter filter;
+    filter.setExtents(math::Vector2(1.5, 1.5));
+    filter.configure((math::real)4.0);
+    sceneBuffer.setFilter(&filter);
 
     if (TRACE_SINGLE_PIXEL) {
         rayTracer.tracePixel(1025, 921, &scene, &camera, &sceneBuffer);

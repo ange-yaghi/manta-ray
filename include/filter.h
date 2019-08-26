@@ -1,11 +1,13 @@
 #ifndef MANTARAY_FILTER_H
 #define MANTARAY_FILTER_H
 
+#include "object_reference_node.h"
+
 #include "manta_math.h"
 
 namespace manta{
 
-    class Filter {
+    class Filter : public ObjectReferenceNode<Filter> {
     public:
         Filter();
         ~Filter();
@@ -17,6 +19,13 @@ namespace manta{
 
     protected:
         math::Vector2 m_extents;
+
+    protected:
+        virtual void _initialize();
+        virtual void _evaluate();
+        virtual void registerInputs();
+
+        piranha::pNodeInput m_radiusInput;
     };
 
 } /* namespace manta */

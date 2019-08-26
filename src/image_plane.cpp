@@ -13,6 +13,7 @@ manta::ImagePlane::ImagePlane() {
     m_height = 0;
     m_buffer = nullptr;
     m_sampleWeightSums = nullptr;
+    m_filter = nullptr;
 }
 
 manta::ImagePlane::~ImagePlane() {
@@ -42,6 +43,7 @@ void manta::ImagePlane::initialize(int width, int height) {
 
 void manta::ImagePlane::destroy() {
     assert(m_buffer != nullptr);
+    assert(m_sampleWeightSums != nullptr);
 
     _aligned_free(m_buffer);
     StandardAllocator::Global()->free(m_sampleWeightSums);
@@ -92,21 +94,26 @@ void manta::ImagePlane::clear(const math::Vector &v) {
     }
 }
 
-void manta::ImagePlane::processSamples(ImageSample *samples, int sampleCount) {
-    std::unique_lock<std::mutex> lock(m_lock);
+#define FAST_ABS(x) (((x) > 0) ? (x) : -(x))
 
-    GaussianFilter filter;
-    filter.setExtents(math::Vector2((math::real)2.0, (math::real)2.0));
-    filter.configure((math::real)2.0);
+void manta::ImagePlane::processSamples(ImageSample *samples, int sampleCount, StackAllocator *stack) {
+    struct Block {
+        math::Vector value;
+        math::real weight;
+        int x, y;
+    };
+
+    Block *blocks = (Block *)stack->allocate(sizeof(Block), 16);
+    Block *currentBlock = blocks;
+    int blockCount = 0;
 
     for (int i = 0; i < sampleCount; i++) {
-        // Box filter implementation for now
         const ImageSample &sample = samples[i];
-        math::Vector2 extents = filter.getExtents();
-        int left = (int)ceil(sample.imagePlaneLocation.x - extents.x);
-        int right = (int)ceil(sample.imagePlaneLocation.x + extents.x);
-        int top = (int)ceil(sample.imagePlaneLocation.y - extents.y);
-        int bottom = (int)ceil(sample.imagePlaneLocation.y + extents.y);
+        math::Vector2 extents = m_filter->getExtents();
+        int left = (int)(floor(sample.imagePlaneLocation.x - extents.x));
+        int right = (int)(ceil(sample.imagePlaneLocation.x + extents.x) + (math::real)0.5);
+        int top = (int)(floor(sample.imagePlaneLocation.y - extents.y));
+        int bottom = (int)(ceil(sample.imagePlaneLocation.y + extents.y) + (math::real)0.5); 
 
         for (int x = left; x <= right; x++) {
             for (int y = top; y <= bottom; y++) {
@@ -118,18 +125,31 @@ void manta::ImagePlane::processSamples(ImageSample *samples, int sampleCount) {
                     sample.imagePlaneLocation.y - (math::real)y
                 );
 
-                if (std::abs(p.x) > extents.x || std::abs(p.y) > extents.y) continue;
+                if (FAST_ABS(p.x) > extents.x || FAST_ABS(p.y) > extents.y) continue;
 
-                math::Vector &value = m_buffer[y * m_width + x];
-                math::real &weightSum = m_sampleWeightSums[y * m_width + x];
-
-                math::Vector weight = filter.evaluate(p);
-
-                value = math::add(value, math::mul(sample.intensity, weight));
-                weightSum += math::getScalar(weight);
+                math::Vector weight = m_filter->evaluate(p);
+                currentBlock->value = math::mul(weight, sample.intensity);
+                currentBlock->weight = math::getScalar(weight);
+                currentBlock->x = x;
+                currentBlock->y = y;
+                currentBlock++;
+                blockCount++;
             }
         }
     }
+
+    std::unique_lock<std::mutex> lock(m_lock);
+    for (int i = 0; i < blockCount; i++) {
+        const Block &block = blocks[i];
+        
+        math::Vector &value = m_buffer[block.y * m_width + block.x];
+        math::real &weightSum = m_sampleWeightSums[block.y * m_width + block.x];
+
+        value = math::add(value, block.value);
+        weightSum += block.weight;
+    }
+
+    stack->free(blocks);
 }
 
 void manta::ImagePlane::normalize() {

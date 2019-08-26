@@ -31,11 +31,11 @@ manta::CameraRayEmitter *manta::StandardCameraRayEmitterGroup::
 {
     StandardCameraRayEmitter *newEmitter = allocateEmitter<StandardCameraRayEmitter>(stackAllocator);
 
-    math::real x = ix * m_xIncrement;
-    math::real y = iy * m_yIncrement;
+    math::real x = (ix + (math::real)0.5) * m_xIncrement;
+    math::real y = (iy + (math::real)0.5) * m_yIncrement;
 
     math::Vector loc = math::mul(m_right, math::loadScalar(x - m_planeWidth / (math::real)2.0));
-    loc = math::sub(loc, math::mul(m_up, math::loadScalar(y - (math::real)m_planeHeight / (math::real)2.0)));
+    loc = math::add(loc, math::mul(m_up, math::loadScalar(-y + (math::real)m_planeHeight / (math::real)2.0)));
     loc = math::add(loc, m_planeCenter);
 
     newEmitter->setPosition(m_position);

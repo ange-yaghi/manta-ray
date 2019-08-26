@@ -240,6 +240,7 @@ void manta::RayTracer::_evaluate() {
     bool deterministicSeed;
     CameraRayEmitterGroup *camera;
     Scene *scene;
+    Filter *filter;
 
     static_cast<piranha::NodeOutput *>(m_multithreadedInput)->fullCompute((void *)&multithreaded);
     static_cast<piranha::NodeOutput *>(m_threadCountInput)->fullCompute((void *)&threadCount);
@@ -247,17 +248,16 @@ void manta::RayTracer::_evaluate() {
     static_cast<piranha::NodeOutput *>(m_deterministicSeedInput)->fullCompute((void *)&deterministicSeed);
     static_cast<VectorNodeOutput *>(m_backgroundColorInput)->sample(nullptr, (void *)&m_backgroundColor);
 
-    m_materialManager = 
-        static_cast<ObjectReferenceNodeOutput<MaterialLibrary> *>(m_materialLibraryInput)->getReference();
-    camera =
-        static_cast<ObjectReferenceNodeOutput<CameraRayEmitterGroup> *>(m_cameraInput)->getReference();
-    scene =
-        static_cast<ObjectReferenceNodeOutput<Scene> *>(m_sceneInput)->getReference();
+    m_materialManager = getObject<MaterialLibrary>(m_materialLibraryInput);
+    camera = getObject<CameraRayEmitterGroup>(m_cameraInput);
+    scene = getObject<Scene>(m_sceneInput);
+    filter = getObject<Filter>(m_filterInput);
 
     configure(200 * MB, 50 * MB, threadCount, renderBlockSize, multithreaded);
     setDeterministicSeedMode(deterministicSeed);
 
     ImagePlane imagePlane;
+    imagePlane.setFilter(filter);
     traceAll(scene, camera, &imagePlane);
 
     VectorMap2D *vectorMap = new VectorMap2D();
@@ -280,6 +280,7 @@ void manta::RayTracer::registerInputs() {
     registerInput(&m_materialLibraryInput, "materials");
     registerInput(&m_sceneInput, "scene");
     registerInput(&m_cameraInput, "camera");
+    registerInput(&m_filterInput, "filter");
 }
 
 void manta::RayTracer::registerOutputs() {

@@ -130,6 +130,7 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
     lens.setSensorResolutionY(resolutionY);
     lens.setSensorHeight(10.0f);
     lens.setSensorWidth(10.0f * (resolutionX / (math::real)resolutionY));
+    lens.configure();
     lens.update();
 
     RandomSampler sampler;
@@ -170,6 +171,10 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 
     // Output the results to a scene buffer
     ImagePlane sceneBuffer;
+    GaussianFilter filter;
+    filter.setExtents(math::Vector2(1.0, 1.0));
+    filter.configure((math::real)4.0);
+    sceneBuffer.setFilter(&filter);
 
     // Run the ray tracer
     rayTracer.configure(200 * MB, 50 * MB, 12, 100, true);

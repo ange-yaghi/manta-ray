@@ -64,6 +64,8 @@
 #include "../include/kd_tree_node.h"
 #include "../include/cached_vector_node.h"
 #include "../include/binary_node.h"
+#include "../include/gaussian_filter.h"
+#include "../include/box_filter.h"
 
 namespace manta_demo {
 

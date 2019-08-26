@@ -2,7 +2,7 @@ private import "mantaray.mr"
 private import "utilities.mr"
 
 auto node settings {
-    output samples: 45000;
+    output samples: 100;
     output resolution_x: 1900;
     output resolution_y: 1268;
     output output_dir: "../../workspace/render/bitmap/";

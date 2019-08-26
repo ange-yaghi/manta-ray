@@ -11,7 +11,7 @@ module {
 
 private import "scene.mr"
 private import "scene_geometry.mr"
-private import "../materials/material.mr"
+private import "../surface/materials/material.mr"
 private import "../types/atomic_types.mr"
 
 @doc: "Scene object channel type"

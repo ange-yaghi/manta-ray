@@ -20,7 +20,7 @@ TEST(ImagePlaneTests, ImagePlaneSanityCheck) {
     samples[3].imagePlaneLocation = math::Vector2(1.0f, 1.0f);
     samples[3].intensity = math::loadScalar(0.5f);
 
-    imagePlane.processSamples(samples, 4);
+    imagePlane.processSamples(samples, 4, nullptr);
     imagePlane.normalize();
 
     imagePlane.destroy();
