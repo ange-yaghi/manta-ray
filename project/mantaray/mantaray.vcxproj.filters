@@ -388,6 +388,9 @@
     <Filter Include="Header Files\image-plane\filters">
       <UniqueIdentifier>{8615616b-68db-4c78-9a05-e55e54f81a72}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\sdl\nodes\output-ports\uv">
+      <UniqueIdentifier>{3f6cc6d2-bc47-4428-96df-ec52cdedae07}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -1159,6 +1162,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\gaussian_filter.h">
       <Filter>Header Files\image-plane\filters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\uv_operation_output.h">
+      <Filter>Header Files\sdl\nodes\output-ports\uv</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

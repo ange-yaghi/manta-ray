@@ -1,4 +1,4 @@
-![Alt text](docs/public/banners/mantaray_banner_v3.png?raw=true)
+![Alt text](docs/public/banners/mantaray_banner_v4.png?raw=true)
 
 
 **MantaRay** is an open-source renderer currently under development. It uses modern rendering techniques to generate photorealistic images of complex scenes.

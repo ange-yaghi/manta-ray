@@ -18,14 +18,7 @@ void manta::VectorMap2DNodeOutput::sample(const IntersectionPoint *surfaceIntera
     math::real u = math::getX(surfaceInteraction->m_textureCoodinates);
     math::real v = 1 - math::getY(surfaceInteraction->m_textureCoodinates);
 
-    // Wrap coordinates
-    math::real fu = fmodf(u, (math::real)1.0);
-    math::real fv = fmodf(v, (math::real)1.0);
-
-    if (fu < (math::real)0.0) fu += (math::real)1.0;
-    if (fv < (math::real)0.0) fv += (math::real)1.0;
-
-    *target = m_map->triangleSample(fu, fv);
+    *target = m_map->triangleSample(u, v);
 }
 
 void manta::VectorMap2DNodeOutput::discreteSample2d(int x, int y, void *_target) const {
