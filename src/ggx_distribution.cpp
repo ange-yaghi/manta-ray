@@ -14,7 +14,9 @@ manta::GgxDistribution::~GgxDistribution() {
     /* void */
 }
 
-void manta::GgxDistribution::initializeSessionMemory(const IntersectionPoint *surfaceInteraction, NodeSessionMemory *memory, StackAllocator *stackAllocator) const {
+void manta::GgxDistribution::initializeSessionMemory(const IntersectionPoint *surfaceInteraction, 
+    NodeSessionMemory *memory, StackAllocator *stackAllocator) const 
+{
     MicrofacetDistribution::initializeSessionMemory(surfaceInteraction, memory, stackAllocator);
 
     GgxMemory *phongMemory = reinterpret_cast<GgxMemory *>((void *)memory->memory);

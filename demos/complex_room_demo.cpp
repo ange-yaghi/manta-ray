@@ -32,10 +32,6 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 
     RayTracer rayTracer;
     rayTracer.setMaterialLibrary(new MaterialLibrary);
-    
-    DielectricMediaInterface glassFresnel;
-    glassFresnel.setIorIncident(1.0f);
-    glassFresnel.setIorTransmitted(1.6f);
 
     // Create all materials
     LambertianBSDF lambert;
@@ -51,6 +47,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
     SimpleBSDFMaterial *wallMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     wallMaterial->setName("WallMaterial");
     wallMaterial->setBSDF(&wallBSDF);
+    wallMaterial->setEmission(math::constants::Zero);
 
     // Floor material
     PhongDistribution floorCoating;
@@ -63,6 +60,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
     SimpleBSDFMaterial *floorMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     floorMaterial->setName("FloorMaterial");
     floorMaterial->setBSDF(&floorBSDF);
+    floorMaterial->setEmission(math::constants::Zero);
 
     // Floor material
     PhongDistribution carpetCoating;
@@ -75,6 +73,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
     SimpleBSDFMaterial *carpetMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     carpetMaterial->setName("CarpetMaterial");
     carpetMaterial->setBSDF(&carpetBSDF);
+    carpetMaterial->setEmission(math::constants::Zero);
 
     // Steel material
     PhongDistribution tableSteelCoating;
@@ -87,6 +86,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
     SimpleBSDFMaterial *tableSteel = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     tableSteel->setName("TableSteel");
     tableSteel->setBSDF(&tableSteelBSDF);
+    tableSteel->setEmission(math::constants::Zero);
 
     // Table top material
     PhongDistribution tableTopCoating;
@@ -99,6 +99,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
     SimpleBSDFMaterial *tableTop = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     tableTop->setName("TableTop");
     tableTop->setBSDF(&tableTopBSDF);
+    tableTop->setEmission(math::constants::Zero);
 
     // Book material
     PhongDistribution bookCoating;
@@ -111,6 +112,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
     SimpleBSDFMaterial *book = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     book->setName("Book");
     book->setBSDF(&bookBSDF);
+    book->setEmission(math::constants::Zero);
 
     // Create all scene geometry
     Mesh roomGeometry;
@@ -140,12 +142,8 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 
     math::Vector dir = math::normalize(math::sub(target, cameraPos));
 
-    LightRay sampleRay;
-    sampleRay.setDirection(dir);
-    sampleRay.setSource(cameraPos);
-
     KDTree kdtree;
-    kdtree.configure(100.0f, math::constants::Zero);
+    kdtree.configure(1000.0f, math::constants::Zero);
     kdtree.analyzeWithProgress(&roomGeometry, 4);
 
     SpherePrimitive outdoorTopLightGeometry;
@@ -222,6 +220,10 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 
     // Output the results to a scene buffer
     ImagePlane sceneBuffer;
+    GaussianFilter filter;
+    filter.setExtents(math::Vector2(1.5, 1.5));
+    filter.configure((math::real)4.0);
+    sceneBuffer.setFilter(&filter);
 
     if (TRACE_SINGLE_PIXEL) {
         rayTracer.tracePixel(616, 1459, &scene, group, &sceneBuffer);

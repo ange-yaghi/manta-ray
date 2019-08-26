@@ -11,8 +11,8 @@ module {
 
 private import "bsdf.mr"
 private import "../microfacet-models/microfacet_distributions.mr"
-private import "../types/atomic_types.mr" as types
-private import "../types/conversions.mr"
+private import "../../types/atomic_types.mr" as types
+private import "../../types/conversions.mr"
 
 @doc: "Bilayer BSDF for realistic surface simulation"
 public node bilayer_bsdf => __mantaray__bilayer_bsdf {

@@ -20,15 +20,6 @@ public import "types/operations.mr"
 
 public import "dates/dates.mr"
 
-public import "microfacet-models/microfacet_distributions.mr"
-
-public import "bsdf/bsdf.mr"
-public import "bsdf/media-interface/media_interfaces.mr"
-public import "bsdf/bilayer_bsdf.mr"
-public import "bsdf/lambertian_bsdf.mr"
-public import "bsdf/microfacet_reflection_bsdf.mr"
-public import "bsdf/glass_bsdf.mr"
-
 public import "mesh/mesh.mr"
 public import "mesh/obj_file.mr"
 public import "mesh/utilities.mr"
@@ -39,24 +30,40 @@ public import "scene/scene.mr"
 
 public import "acceleration/kd_tree.mr"
 
-public import "materials/material_library.mr"
-public import "materials/material.mr"
-public import "materials/bsdf_material.mr"
-public import "materials/surface_interaction.mr"
-
 public import "camera/cameras.mr"
 public import "camera/utilities.mr"
 public import "camera/diffraction.mr"
 public import "camera/apertures.mr"
 public import "camera/lenses.mr"
 
-public import "sampler/samplers.mr"
-
 public import "primitives/primitives.mr"
-
-public import "color/color.mr"
-
-public import "signal-processing/convolution.mr"
 
 public import "utilities/console.mr"
 public import "utilities/quick_render.mr"
+
+// ========================================================
+// Surface/Material Models
+// ========================================================
+public import "surface/microfacet-models/microfacet_distributions.mr"
+
+public import "surface/bsdf/media-interface/media_interfaces.mr"
+
+public import "surface/bsdf/bsdf.mr"
+public import "surface/bsdf/bilayer_bsdf.mr"
+public import "surface/bsdf/lambertian_bsdf.mr"
+public import "surface/bsdf/microfacet_reflection_bsdf.mr"
+public import "surface/bsdf/glass_bsdf.mr"
+
+public import "surface/materials/material_library.mr"
+public import "surface/materials/material.mr"
+public import "surface/materials/bsdf_material.mr"
+public import "surface/materials/surface_interaction.mr"
+
+public import "surface/color/color.mr"
+
+// ========================================================
+// Signal Processing
+// ========================================================
+public import "signal-processing/convolution/convolution.mr"
+public import "signal-processing/filters/filters.mr"
+public import "signal-processing/samplers/samplers.mr"

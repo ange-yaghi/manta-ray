@@ -9,7 +9,7 @@ module {
     @github:        "github.com/ange-yaghi/manta-ray"
 }
 
-private import "../../types/atomic_types.mr"
+private import "../../../types/atomic_types.mr"
 
 @doc: "Media interface channel type"
 public node media_interface => __mantaray__media_interface { /* void */ }

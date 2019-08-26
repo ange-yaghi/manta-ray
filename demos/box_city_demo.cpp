@@ -170,6 +170,10 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
     // Output the results to a scene buffer
     ImagePlane sceneBuffer;
+    GaussianFilter filter;
+    filter.setExtents(math::Vector2(1.0, 1.0));
+    filter.configure((math::real)4.0);
+    sceneBuffer.setFilter(&filter);
 
     // Initialize and run the ray tracer
     rayTracer.configure(200 * MB, 50 * MB, 12, 100, true);
@@ -242,15 +246,15 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
         step.getMainOutput()->setInput(mantaOutput.getMainOutput());
         step.evaluate();
 
-        MultiplyNode mulNode;
+        BinaryNode<MUL> mulNode;
         mulNode.initialize();
-        mulNode.getMainOutput()->setInputA(step.getMainOutput());
-        mulNode.getMainOutput()->setInputB(mantaOutput.getMainOutput());
+        mulNode.connectInput(step.getMainOutput(), "left", nullptr);
+        mulNode.connectInput(mantaOutput.getMainOutput(), "right", nullptr);
         mulNode.evaluate();
 
         ConvolutionNode convNode;
         convNode.initialize();
-        convNode.setInputs(mulNode.getMainOutput(), fraunNode.getMainOutput());
+        convNode.setInputs(mulNode.getPrimaryOutput(), fraunNode.getMainOutput());
         convNode.setResize(true);
         convNode.setClip(true);
         convNode.evaluate();

@@ -5,12 +5,12 @@
 
 namespace manta {
 
-    class GridSampler : public Sampler2D {
+    class GridSampler : public Sampler2d {
     public:
         GridSampler();
         virtual ~GridSampler();
 
-        virtual void generateSamples(int sampleCount, math::Vector *target) const;
+        virtual void generateSamples(int sampleCount, math::Vector2 *target) const;
         virtual int getTotalSampleCount(int sampleCount) const;
 
         void setGridWidth(int gridWidth) { m_gridWidth = gridWidth; }

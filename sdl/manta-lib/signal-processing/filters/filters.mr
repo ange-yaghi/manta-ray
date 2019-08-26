@@ -1,0 +1,34 @@
+module {
+    @name:          "Filters"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "Defines all ImagePlane filters"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
+private import "../../types/atomic_types.mr"
+
+@doc: "Filter type"
+public node filter => __mantaray__filter { /* void */ }
+
+@doc: "Box filter"
+public node box_filter => __mantaray__box_filter {
+    input radius        [float]: 0.5;
+    alias output __out  [filter];
+}
+
+@doc: "Triangle filter"
+public node triangle_filter => __mantaray__triangle_filter {
+    input radius        [float]: 0.5;
+    alias output __out  [filter];
+}
+
+@doc: "Gaussian filter"
+public node gaussian_filter => __mantaray__gaussian_filter {
+    input radius        [float]: 1.0;
+    input alpha         [float]: 4.0;
+    alias output __out  [filter];
+}

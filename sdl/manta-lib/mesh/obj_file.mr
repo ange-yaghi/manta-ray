@@ -10,7 +10,7 @@ module {
 }
 
 private import "mesh.mr"
-private import "../materials/material_library.mr"
+private import "../surface/materials/material_library.mr"
 private import "../types/atomic_types.mr"
 
 @doc: "Object file loader"

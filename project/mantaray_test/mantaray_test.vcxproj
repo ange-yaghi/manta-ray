@@ -72,6 +72,7 @@
     <ClCompile Include="..\..\test\color_tests.cpp" />
     <ClCompile Include="..\..\test\file_operations_tests.cpp" />
     <ClCompile Include="..\..\test\fraunhofer_tests.cpp" />
+    <ClCompile Include="..\..\test\image_plane_tests.cpp" />
     <ClCompile Include="..\..\test\integration_testing.cpp" />
     <ClCompile Include="..\..\test\jpeg_tests.cpp" />
     <ClCompile Include="..\..\test\kdtree_tests.cpp" />

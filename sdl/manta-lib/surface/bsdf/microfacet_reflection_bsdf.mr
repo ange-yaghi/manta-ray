@@ -11,8 +11,8 @@ module {
 
 private import "bsdf.mr"
 private import "../microfacet-models/microfacet_distributions.mr"
-private import "../types/atomic_types.mr"
-private import "../types/conversions.mr"
+private import "../../types/atomic_types.mr"
+private import "../../types/conversions.mr"
 
 @doc: "Single layer reflection BSDF"
 public node microfacet_reflection_bsdf => __mantaray__microfacet_reflection_bsdf {

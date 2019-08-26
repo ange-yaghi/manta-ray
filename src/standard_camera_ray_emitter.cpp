@@ -21,13 +21,16 @@ void manta::StandardCameraRayEmitter::generateRays(RayContainer *rayContainer) c
     rayContainer->setDegree(0);
     LightRay *rays = rayContainer->getRays();
     
-    math::Vector *samplePoints = 
-        (math::Vector *)m_stackAllocator->allocate(nRays * sizeof(math::Vector), 16);
+    math::Vector2 *samplePoints = 
+        (math::Vector2 *)m_stackAllocator->allocate(nRays * sizeof(math::Vector2));
     m_sampler->generateSamples(nRays, samplePoints);
 
     for (int i = 0; i < nRays; i++) {
         LightRay *ray = &rays[i];
-        math::Vector target = math::add(m_targetOrigin, samplePoints[i]);
+        const math::Vector2 &samplePoint = samplePoints[i];
+
+        math::Vector target = transformToImagePlane(
+            math::Vector2(samplePoint.x - (math::real)0.5, samplePoint.y - (math::real)0.5));
         math::Vector dir = math::sub(target, m_position);
         dir = math::normalize(dir);
 
@@ -35,6 +38,10 @@ void manta::StandardCameraRayEmitter::generateRays(RayContainer *rayContainer) c
         ray->setSource(m_position);
         ray->setIntensity(math::constants::Zero);
         ray->setWeight(math::constants::One);
+        ray->setImagePlaneLocation(
+            math::Vector2(
+                samplePoint.x - (math::real)0.5 + (math::real)m_pixelX,
+                -(samplePoint.y - (math::real)0.5) + (math::real)m_pixelY));
     }
 
     m_stackAllocator->free((void *)samplePoints);

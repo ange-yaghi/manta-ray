@@ -196,6 +196,10 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 
     // Output the results to a scene buffer
     ImagePlane sceneBuffer;
+    GaussianFilter filter;
+    filter.setExtents(math::Vector2(1.0, 1.0));
+    filter.configure((math::real)4.0);
+    sceneBuffer.setFilter(&filter);
 
     if (TRACE_SINGLE_PIXEL) {
         rayTracer.tracePixel(179, 1423, &scene, group, &sceneBuffer);
