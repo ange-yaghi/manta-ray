@@ -1,24 +1,25 @@
 module {
-    @name:          "BSDF Material"
+    @name:          "Single BSDF Material"
     @project:       "MantaRay"
     @author:        "Ange Yaghi"
     @maintainer:    "Ange Yaghi"
     @copyright:     "Copyright 2019, Ange Yaghi"
-    @doc:           "Defines builtin microfacet distributions"
-    @version:       "0.0.1a"
+    @doc:           "Defines single BSDF material"
+    @version:       "0.1.0a"
     @github:        "github.com/ange-yaghi/manta-ray"
 }
 
 private import "material_library.mr"
 private import "material.mr"
 private import "../bsdf/bsdf.mr"
+private import "../bsdf/lambertian_bsdf.mr"
 private import "../../types/atomic_types.mr" as types
 private import "../../types/conversions.mr"
 
 public node bsdf_material => __mantaray__simple_bsdf_material {
     input name          [types::string]: "";
     modify library      [material_library];
-    input bsdf          [bsdf];
+    input bsdf          [bsdf]: lambertian_bsdf(); // Defaults to Lambert
     input reflectance   [types::vector]: 1.0;
     input emission      [types::vector]: 0.0;
 
