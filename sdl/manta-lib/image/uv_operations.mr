@@ -1,0 +1,18 @@
+module {
+    @name:          "UV Operations"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "Operations to transform UV coordinates"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
+private import "../types/atomic_types.mr"
+
+@doc: "UV wrap node"
+public node uv_wrap => __mantaray__uv_wrap {
+    input __in          [vector];
+    alias output __out  [vector];
+}
