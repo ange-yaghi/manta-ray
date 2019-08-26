@@ -8,7 +8,7 @@ int main() {
 
     // Run a demo
     constexpr DEMO demo = DEMO::SAMSUNG_A8;
-    constexpr int samples = 23000;
+    constexpr int samples = 100;
     constexpr int resolutionX = 1920;
     constexpr int resolutionY = 1080;
 

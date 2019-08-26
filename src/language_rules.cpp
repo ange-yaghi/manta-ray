@@ -222,6 +222,9 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
     registerBuiltinType<VectorAbsoluteNode>(
         "__mantaray__vector_absolute");
 
+    registerBuiltinType<UvWrapNode>(
+        "__mantaray__uv_wrap");
+
     // Binary operations
     registerBuiltinType<AddNode>(
         "__mantaray__vector_add");

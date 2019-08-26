@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-#define VERSION "v1.0.1a"
+#define VERSION "v1.1.0a"
 
 void printHeader() {
     std::cout << "////////////////////////////////////////////////" << std::endl;
