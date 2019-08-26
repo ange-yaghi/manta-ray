@@ -9,8 +9,8 @@ module {
     @github:        "github.com/ange-yaghi/manta-ray"
 }
 
-private import "../image/vector_map.mr"
-private import "../types/atomic_types.mr"
+private import "../../image/vector_map.mr"
+private import "../../types/atomic_types.mr"
 
 public node convolve_2d => __mantaray__convolve_2d {
     input base [vector_map];

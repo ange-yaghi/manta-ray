@@ -11,10 +11,11 @@ module {
 
 private import "../scene/scene.mr"
 private import "../camera/cameras.mr"
-private import "../materials/material_library.mr"
+private import "../surface/materials/material_library.mr"
 private import "../types/atomic_types.mr"
 private import "../types/conversions.mr"
 private import "../image/vector_map.mr"
+private import "../signal-processing/filters/filters.mr"
 
 @doc: "Unidirectional MantaRay ray-tracer"
 public node ray_tracer => __mantaray__ray_tracer {
@@ -22,6 +23,7 @@ public node ray_tracer => __mantaray__ray_tracer {
     input scene         [scene];
     input camera        [camera];
     input materials     [material_library];
+    input filter        [filter]: gaussian_filter();
 
     // Optional inputs
     input multithreaded [bool]: true;

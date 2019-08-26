@@ -137,7 +137,7 @@ void manta::Worker::doJob(const Job *job) {
                     sample.intensity = ray->getWeightedIntensity();
 
                     if (sampleCount >= SAMPLE_BUFFER_CAPACITY) {
-                        job->target->processSamples(samples, sampleCount);
+                        job->target->processSamples(samples, sampleCount, m_stack);
                         sampleCount = 0;
                     }
 
@@ -153,7 +153,7 @@ void manta::Worker::doJob(const Job *job) {
     }
 
     if (sampleCount > 0) {
-        job->target->processSamples(samples, sampleCount);
+        job->target->processSamples(samples, sampleCount, m_stack);
         sampleCount = 0;
     }
 

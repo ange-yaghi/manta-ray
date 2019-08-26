@@ -9,7 +9,7 @@ module {
     @github:        "github.com/ange-yaghi/manta-ray"
 }
 
-private import "../types/atomic_types.mr"
+private import "../../types/atomic_types.mr"
 
 @doc: "2D sampler channel type"
 public node sampler_2d => __mantaray__sampler { /* void */ }

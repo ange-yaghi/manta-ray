@@ -40,8 +40,8 @@ void manta::StandardCameraRayEmitter::generateRays(RayContainer *rayContainer) c
         ray->setWeight(math::constants::One);
         ray->setImagePlaneLocation(
             math::Vector2(
-                samplePoint.x + (math::real)m_pixelX - (math::real)0.5,
-                samplePoint.y + (math::real)m_pixelY - (math::real)0.5));
+                samplePoint.x - (math::real)0.5 + (math::real)m_pixelX,
+                -(samplePoint.y - (math::real)0.5) + (math::real)m_pixelY));
     }
 
     m_stackAllocator->free((void *)samplePoints);

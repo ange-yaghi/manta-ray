@@ -65,9 +65,11 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
 
     CachedVectorNode constS;
     constS.setValue(math::loadScalar(4.0f));
+    constS.initialize();
     PowerNode texturePower;
-    texturePower.connectInput(constS.getPrimaryOutput(), "left", nullptr);
-    texturePower.connectInput(fingerprintTexture.getMainOutput(), "right", nullptr);
+    texturePower.initialize();
+    texturePower.connectInput(fingerprintTexture.getMainOutput(), "__left", nullptr);
+    texturePower.connectInput(constS.getPrimaryOutput(), "__right", nullptr);
     RemapNode specularPowerFingerprint(
         math::loadScalar(0.0f),
         math::loadScalar(1.0f),
@@ -100,15 +102,18 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
     SimpleBSDFMaterial *steelMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     steelMaterial->setName("Steel");
     steelMaterial->setBSDF(&steelBSDF);
+    steelMaterial->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial *shinySteelMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     shinySteelMaterial->setName("ShinySteel");
     shinySteelMaterial->setBSDF(&shinySteelBSDF);
+    shinySteelMaterial->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial *blackSteelMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     blackSteelMaterial->setName("BlackSteel");
     blackSteelMaterial->setReflectance(getColor(0xC0, 0xC0, 0xC0));
     blackSteelMaterial->setBSDF(&steelBSDF);
+    blackSteelMaterial->setEmission(math::constants::Zero);
 
     // Graphite
     PhongDistribution phongGraphite;
@@ -121,6 +126,7 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
     graphiteMaterial->setName("Graphite");
     graphiteMaterial->setReflectance(getColor(0x29, 0x29, 0x29));
     graphiteMaterial->setBSDF(&graphiteBSDF);
+    graphiteMaterial->setEmission(math::constants::Zero);
 
     // Pencil paint
     PhongDistribution phongGloss;
@@ -138,27 +144,32 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
     SimpleBSDFMaterial *paintMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     paintMaterial->setName("PencilPaint");
     paintMaterial->setBSDF(&paintBSDF);
+    paintMaterial->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial *defaultLambert = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     defaultLambert->setBSDF(&lambert);
     defaultLambert->setName("Default");
+    defaultLambert->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial *rubber = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     rubber->setBSDF(&lambert);
     rubber->setName("Eraser");
     rubber->setReflectance(getColor(0xFF, 0xFF, 0xFF));
     rubber->setReflectanceNode(eraserTexture.getMainOutput());
+    rubber->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial *wood = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     wood->setBSDF(&lambert);
     wood->setName("Wood");
     wood->setReflectance(getColor(0xFF, 0xFF, 0xFF));
     wood->setReflectanceNode(woodTexture.getMainOutput());
+    wood->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial *floorMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     floorMaterial->setBSDF(&lambert);
     floorMaterial->setName("Floor");
     floorMaterial->setReflectanceNode(floorTexture.getMainOutput());
+    floorMaterial->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial *mainLight = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     mainLight->setBSDF(nullptr);
@@ -222,6 +233,7 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
     lens.setSensorResolutionY(resolutionY);
     lens.setSensorHeight(8.0f);
     lens.setSensorWidth(8.0f * (resolutionX / (math::real)resolutionY));
+    lens.configure();
     lens.update();
 
     if (!LENS_SIMULATION) {
@@ -265,6 +277,10 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
 
     // Output the results to a scene buffer
     ImagePlane sceneBuffer;
+    GaussianFilter filter;
+    filter.setExtents(math::Vector2(1.5, 1.5));
+    filter.configure((math::real)4.0);
+    sceneBuffer.setFilter(&filter);
 
     if (TRACE_SINGLE_PIXEL) {
         rayTracer.tracePixel(1522, 674, &scene, group, &sceneBuffer);

@@ -91,6 +91,7 @@ namespace manta {
         piranha::pNodeInput m_materialLibraryInput;
         piranha::pNodeInput m_sceneInput;
         piranha::pNodeInput m_cameraInput;
+        piranha::pNodeInput m_filterInput;
 
         VectorMap2DNodeOutput m_output;
 

@@ -170,6 +170,10 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
     // Output the results to a scene buffer
     ImagePlane sceneBuffer;
+    GaussianFilter filter;
+    filter.setExtents(math::Vector2(1.0, 1.0));
+    filter.configure((math::real)4.0);
+    sceneBuffer.setFilter(&filter);
 
     // Initialize and run the ray tracer
     rayTracer.configure(200 * MB, 50 * MB, 12, 100, true);

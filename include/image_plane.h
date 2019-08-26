@@ -4,11 +4,15 @@
 #include "image_sample.h"
 #include "job_queue.h"
 #include "manta_math.h"
+#include "stack_allocator.h"
 
 #include <condition_variable>
 #include <mutex>
+#include <fstream>
 
 namespace manta {
+
+    class Filter;
 
     class ImagePlane {
     public:
@@ -22,6 +26,9 @@ namespace manta {
         inline void set(const math::Vector &v, int x, int y);
         inline math::Vector sample(int x, int y) const;
 
+        void setFilter(Filter *filter) { m_filter = filter; }
+        Filter *getFilter() const { return m_filter; }
+
         int getWidth() const { return m_width; }
         int getHeight() const { return m_height; }
 
@@ -33,7 +40,7 @@ namespace manta {
 
         const math::Vector *getBuffer() const { return m_buffer; }
 
-        void processSamples(ImageSample *samples, int sampleCount);
+        void processSamples(ImageSample *samples, int sampleCount, StackAllocator *stack);
 
         void normalize();
 
@@ -42,6 +49,7 @@ namespace manta {
         int m_height;
         math::Vector *m_buffer;
         math::real *m_sampleWeightSums;
+        Filter *m_filter;
 
     protected:
         std::mutex m_lock;

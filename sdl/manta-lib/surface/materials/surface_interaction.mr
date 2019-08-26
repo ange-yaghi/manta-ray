@@ -10,7 +10,7 @@ module {
     @github:        "github.com/ange-yaghi/manta-ray"
 }
 
-private import "../types/atomic_types.mr"
+private import "../../types/atomic_types.mr"
 
 @doc: "Surface interaction probe node"
 public node surface_interaction => __mantaray__surface_interaction {

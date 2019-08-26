@@ -9,11 +9,11 @@ module {
     @github:        "github.com/ange-yaghi/manta-ray"
 }
 
-private import "../materials/material.mr"
+private import "material_library.mr"
+private import "material.mr"
 private import "../bsdf/bsdf.mr"
-private import "../materials/material_library.mr"
-private import "../types/atomic_types.mr" as types
-private import "../types/conversions.mr"
+private import "../../types/atomic_types.mr" as types
+private import "../../types/conversions.mr"
 
 public node bsdf_material => __mantaray__simple_bsdf_material {
     input name          [types::string]: "";

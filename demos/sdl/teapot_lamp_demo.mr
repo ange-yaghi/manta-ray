@@ -9,7 +9,7 @@ log()
 log()
 
 auto node settings {
-    output samples: 100;
+    output samples: 128;
     output resolution_x: 1920;
     output resolution_y: 1080;
     output enable_fraunhofer: false;
@@ -44,9 +44,10 @@ auto node test_material {
             library: library,
             bsdf: lambertian_bsdf(),
             reflectance: 0.0,
-            emission:
-                separator * glow_color + 
-                (1.0 - separator) * vector(glow_color.g, glow_color.b, glow_color.r)
+            emission: 1.0
+            //emission:
+            //    separator * glow_color + 
+            //    (1.0 - separator) * vector(glow_color.g, glow_color.b, glow_color.r)
         );
 
     vector_var glow_color(
@@ -59,7 +60,6 @@ auto node test_material {
         s: surface_interaction().position.y,
         foot: 0.75
     )
-
 }
 
 auto node floor_material {
@@ -153,15 +153,15 @@ ray_tracer mr(
     scene: scene,
     camera: camera,
     materials: library,
-    background: 0,
-    threads: 12
+    background: 0
 )
 
 image_output(
     map: mr.image,
     filename: 
         settings.output_dir + settings.current_date.as_string + "_" + settings.output_name + 
-        "_S" + string(settings.samples) + ".jpg"
+        "_S" + string(settings.samples) + ".jpg",
+    jpeg_quality: 100
 )
 
 diffraction_simulation(
