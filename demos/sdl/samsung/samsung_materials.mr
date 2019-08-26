@@ -1,0 +1,223 @@
+import "mantaray.mr"
+
+public node samsung_materials {
+    input library: material_library();
+    alias output this: library;
+
+    // Base path for all textures
+    string texture_path("../../textures/")
+
+    image_file speaker_grill(
+        filename: texture_path + "samsung_a8/speaker_grill.jpg"
+    )
+
+    image_file back_plate_texture(
+        filename: texture_path + "samsung_a8/back_plate.png"
+    )
+
+    image_file phone_screen_texture(
+        filename: texture_path + "samsung_a8/phone_screen_v2.jpg"
+    )
+
+    image_file ground_roughness(
+        filename: texture_path + "chrome_roughness.jpg",
+        correct_gamma: false
+    )
+
+    image_file smudge_map(
+        filename: texture_path + "samsung_a8/fingerprints_roughness_map.png",
+        correct_gamma: false
+    )
+
+    // Common distributions
+    phong_distribution dist_phone_case(
+        power: 1024 * smudge_map + 8
+    )
+
+    phong_distribution dist_glass(
+        power: 5000 * smudge_map + 200
+    )
+
+    phong_distribution dist_back_plastic(5000)
+    phong_distribution dist_bay_door(256)
+    phong_distribution dist_bronze(256)
+    phong_distribution dist_steel(1024)
+    phong_distribution dist_floor(
+        power: 256 * ground_roughness + 240 
+    )
+    phong_distribution dist_matte_plastic(64)
+    phong_distribution mirror_dist(20000)
+
+    lambertian_bsdf lambert()
+
+    // Materials
+    bsdf_material default_material(
+        library: library,
+        name: "Default",
+        bsdf: lambert
+    )
+
+    bsdf_material phone_case(
+        library: library,
+        name: "PhoneCase",
+        bsdf: bilayer_bsdf(
+            coating: dist_phone_case,
+            diffuse: 0,
+            specular: 0.01
+        )
+    )
+
+    bsdf_material bay_door(
+        library: library,
+        name: "BayDoorMaterial",
+        bsdf: bilayer_bsdf(
+            coating: dist_bay_door,
+            diffuse: 0,
+            specular: 0
+        )
+    )
+
+    bsdf_material bronze(
+        library: library,
+        name: "Bronze",
+        bsdf: microfacet_reflection_bsdf(dist_bronze),
+        reflectance: srgb_i(0xC0, 0xA5, 0x70)
+    )
+
+    bsdf_material steel(
+        library: library,
+        name: "Steel",
+        bsdf: microfacet_reflection_bsdf(dist_steel)
+    )
+
+    bsdf_material back_plastic(
+        library: library,
+        name: "BlackPlastic",
+        bsdf: bilayer_bsdf(
+            coating: dist_back_plastic,
+            diffuse: 0,
+            specular: 0.05
+        )
+    )
+
+    bsdf_material black(
+        library: library,
+        name: "Black",
+        reflectance: 0,
+        bsdf: lambert
+    )
+
+    bsdf_material floor(
+        library: library,
+        name: "Floor",
+        bsdf: bilayer_bsdf(
+            coating: dist_floor,
+            diffuse: 0,
+            specular: 0.05
+        )
+    )
+
+    bsdf_material glass(
+        library: library,
+        name: "Glass",
+        bsdf: glass_bsdf(
+            distribution: dist_glass,
+            media_interface: dielectric_interface(1.4)
+        )
+    )
+
+    bsdf_material lens_glass(
+        library: library,
+        name: "LensGlass",
+        bsdf: glass_bsdf(
+            distribution: dist_glass,
+            media_interface: dielectric_interface(1.5)
+        )
+    )
+
+    bsdf_material speaker_grill_material(
+        library: library,
+        name: "SpeakerGrill",
+        bsdf: bilayer_bsdf(
+            coating: dist_bay_door,
+            diffuse: 0.1 * speaker_grill,
+            specular: 0
+        )
+    )
+
+    bsdf_material screen_mask(
+        library: library,
+        name: "ScreenMask",
+        reflectance: srgb_i(5, 5, 5),
+        bsdf: lambert
+    )
+
+    bsdf_material matte_plastic(
+        library: library,
+        name: "MattePlastic",
+        reflectance: srgb_i(0x52, 0x4F, 0x51),
+        bsdf: lambert
+    )
+
+    bsdf_material image_sensor(
+        library: library,
+        name: "ImageSensor",
+        reflectance: srgb_i(0x34, 0x2E, 0x38),
+        bsdf: lambert
+    )
+
+    bsdf_material mirror(
+        library: library,
+        name: "Mirror",
+        bsdf: microfacet_reflection_bsdf(mirror_dist)
+    )
+
+    bsdf_material flash_color(
+        library: library,
+        name: "FlashColor",
+        reflectance: srgb_i(0xE7, 0xE0, 0x7F),
+        bsdf: lambert
+    )
+
+    bsdf_material back_plate(
+        library: library,
+        name: "BackPlate",
+        bsdf: bilayer_bsdf(
+            coating: dist_back_plastic,
+            diffuse: back_plate_texture,
+            specular: 0
+        )
+    )
+
+    bsdf_material screen(
+        library: library,
+        name: "Screen",
+        emission: 1.6 * phone_screen_texture,
+        reflectance: srgb_i(3, 3, 3),
+        bsdf: lambert
+    )
+
+    bsdf_material strong_light(
+        library: library,
+        name: "StrongLight",
+        emission: 8.0,
+        reflectance: 0,
+        bsdf: lambert
+    )
+
+    bsdf_material weak_light(
+        library: library,
+        name: "WeakLight",
+        emission: 1.9,
+        reflectance: 0,
+        bsdf: lambert
+    )
+
+    bsdf_material fill_light(
+        library: library,
+        name: "FillLight",
+        emission: 11.4,
+        reflectance: 0,
+        bsdf: lambert
+    )
+}

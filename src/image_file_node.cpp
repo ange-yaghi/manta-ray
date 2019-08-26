@@ -42,6 +42,11 @@ void manta::ImageFileNode::_evaluate() {
     SDL_Surface *image;
     image = IMG_Load(m_filename.c_str());
 
+    if (image == nullptr) {
+        throwError("Image: " + m_filename + " could not be opened or was not found");
+        return;
+    }
+
     // Create a temporary pixel buffer
     Pixel **pixelData = StandardAllocator::Global()->allocate<Pixel *>(image->h);
     for (int i = 0; i < image->h; i++) {
