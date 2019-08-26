@@ -1,7 +1,7 @@
 #ifndef MANTARAY_RAY_CONTAINER_H
 #define MANTARAY_RAY_CONTAINER_H
 
-#include "../include/manta_math.h"
+#include "manta_math.h"
 
 namespace manta {
 

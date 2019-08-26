@@ -32,6 +32,10 @@ namespace manta {
         virtual void registerInputs();
 
         piranha::pNodeInput m_lensInput;
+
+    protected:
+        math::real m_xIncrement;
+        math::real m_yIncrement;
     };
 
 } /* namespace manta */

@@ -30,6 +30,9 @@ namespace manta {
         void setAperturePoint(const math::Vector2 &aperturePoint) { m_aperturePoint = aperturePoint; }
         math::Vector2 getAperturePoint() const { return m_aperturePoint; }
 
+        void setImagePlaneLocation(const math::Vector2 &imagePlaneLocation) { m_imagePlaneLocation = imagePlaneLocation; }
+        math::Vector2 getImagePlaneLocation() const { return m_imagePlaneLocation; }
+
         void calculateTransformations();
 
         int getKX() const { return m_kx; }
@@ -45,6 +48,7 @@ namespace manta {
     protected:
         int m_meta;
 
+        math::Vector2 m_imagePlaneLocation;
         math::Vector2 m_aperturePoint;
 
         math::Vector m_direction;

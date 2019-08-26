@@ -19,13 +19,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\include\current_date_node.cpp" />
     <ClCompile Include="..\..\src\aperture.cpp" />
+    <ClCompile Include="..\..\src\box_filter.cpp" />
     <ClCompile Include="..\..\src\cached_vector_node.cpp" />
     <ClCompile Include="..\..\src\cached_vector_output.cpp" />
     <ClCompile Include="..\..\src\constructed_vector_node_output.cpp" />
+    <ClCompile Include="..\..\src\current_date_node.cpp" />
     <ClCompile Include="..\..\src\date_interface_node.cpp" />
     <ClCompile Include="..\..\src\date_node_output.cpp" />
+    <ClCompile Include="..\..\src\filter.cpp" />
+    <ClCompile Include="..\..\src\gaussian_filter.cpp" />
     <ClCompile Include="..\..\src\kd_tree_node.cpp" />
     <ClCompile Include="..\..\src\language_rules.cpp" />
     <ClCompile Include="..\..\src\mesh_merge_node.cpp" />
@@ -57,14 +60,12 @@
     <ClCompile Include="..\..\src\kd_tree.cpp" />
     <ClCompile Include="..\..\src\lambertian_bsdf.cpp" />
     <ClCompile Include="..\..\src\manta_math.cpp" />
-    <ClCompile Include="..\..\src\multiply_node.cpp" />
-    <ClCompile Include="..\..\src\multiply_node_output.cpp" />
     <ClCompile Include="..\..\src\opaque_media_interface.cpp" />
-    <ClCompile Include="..\..\src\power_node_output.cpp" />
     <ClCompile Include="..\..\src\ramp_node.cpp" />
     <ClCompile Include="..\..\src\ramp_node_output.cpp" />
     <ClCompile Include="..\..\src\remap_node_output.cpp" />
     <ClCompile Include="..\..\src\rgb_space.cpp" />
+    <ClCompile Include="..\..\src\sample_container.cpp" />
     <ClCompile Include="..\..\src\signal_processing.cpp" />
     <ClCompile Include="..\..\src\spectrum.cpp" />
     <ClCompile Include="..\..\src\srgb_node.cpp" />
@@ -73,8 +74,8 @@
     <ClCompile Include="..\..\src\step_node.cpp" />
     <ClCompile Include="..\..\src\step_node_output.cpp" />
     <ClCompile Include="..\..\src\streaming_node_output.cpp" />
-    <ClCompile Include="..\..\src\subtract_node_output.cpp" />
     <ClCompile Include="..\..\src\surface_interaction_node.cpp" />
+    <ClCompile Include="..\..\src\triangle_filter.cpp" />
     <ClCompile Include="..\..\src\vector_conversions.cpp" />
     <ClCompile Include="..\..\src\vector_map_2d.cpp" />
     <ClCompile Include="..\..\src\material_library.cpp" />
@@ -87,7 +88,6 @@
     <ClCompile Include="..\..\src\os_utilities.cpp" />
     <ClCompile Include="..\..\src\phong_distribution.cpp" />
     <ClCompile Include="..\..\src\polygonal_aperture.cpp" />
-    <ClCompile Include="..\..\src\power_node.cpp" />
     <ClCompile Include="..\..\src\primitives.cpp" />
     <ClCompile Include="..\..\src\random_sampler.cpp" />
     <ClCompile Include="..\..\src\ray_container.cpp" />
@@ -140,6 +140,7 @@
     <ClInclude Include="..\..\include\bilayer_bsdf.h" />
     <ClInclude Include="..\..\include\binary_node.h" />
     <ClInclude Include="..\..\include\binary_node_output.h" />
+    <ClInclude Include="..\..\include\box_filter.h" />
     <ClInclude Include="..\..\include\bsdf.h" />
     <ClInclude Include="..\..\include\cached_vector_node.h" />
     <ClInclude Include="..\..\include\cached_vector_output.h" />
@@ -158,10 +159,13 @@
     <ClInclude Include="..\..\include\date_interface_node.h" />
     <ClInclude Include="..\..\include\date_node_output.h" />
     <ClInclude Include="..\..\include\dielectric_media_interface.h" />
+    <ClInclude Include="..\..\include\filter.h" />
     <ClInclude Include="..\..\include\fraunhofer_diffraction.h" />
+    <ClInclude Include="..\..\include\gaussian_filter.h" />
     <ClInclude Include="..\..\include\geometry.h" />
     <ClInclude Include="..\..\include\ggx_distribution.h" />
     <ClInclude Include="..\..\include\grid_sampler.h" />
+    <ClInclude Include="..\..\include\image_sample.h" />
     <ClInclude Include="..\..\include\kd_tree_node.h" />
     <ClInclude Include="..\..\include\language_rules.h" />
     <ClInclude Include="..\..\include\mesh_merge_node.h" />
@@ -170,6 +174,7 @@
     <ClInclude Include="..\..\include\object_reference_node.h" />
     <ClInclude Include="..\..\include\object_reference_node_output.h" />
     <ClInclude Include="..\..\include\padded_frame_output.h" />
+    <ClInclude Include="..\..\include\sample_container.h" />
     <ClInclude Include="..\..\include\streaming_node_output.h" />
     <ClInclude Include="..\..\include\obj_file_node.h" />
     <ClInclude Include="..\..\include\image_byte_buffer.h" />
@@ -183,9 +188,6 @@
     <ClInclude Include="..\..\include\margins.h" />
     <ClInclude Include="..\..\include\convolution_node.h" />
     <ClInclude Include="..\..\include\mipmap.h" />
-    <ClInclude Include="..\..\include\multiply_node.h" />
-    <ClInclude Include="..\..\include\multiply_node_output.h" />
-    <ClInclude Include="..\..\include\power_node_output.h" />
     <ClInclude Include="..\..\include\ramp_node.h" />
     <ClInclude Include="..\..\include\ramp_node_output.h" />
     <ClInclude Include="..\..\include\remap_node_output.h" />
@@ -196,9 +198,9 @@
     <ClInclude Include="..\..\include\srgb_node_output.h" />
     <ClInclude Include="..\..\include\step_node.h" />
     <ClInclude Include="..\..\include\step_node_output.h" />
-    <ClInclude Include="..\..\include\subtract_node_output.h" />
     <ClInclude Include="..\..\include\surface_interaction_node.h" />
     <ClInclude Include="..\..\include\surface_interaction_node_output.h" />
+    <ClInclude Include="..\..\include\triangle_filter.h" />
     <ClInclude Include="..\..\include\unary_node.h" />
     <ClInclude Include="..\..\include\unary_node_output.h" />
     <ClInclude Include="..\..\include\vector_conversions.h" />
@@ -217,7 +219,6 @@
     <ClInclude Include="..\..\include\os_utilities.h" />
     <ClInclude Include="..\..\include\phong_distribution.h" />
     <ClInclude Include="..\..\include\polygonal_aperture.h" />
-    <ClInclude Include="..\..\include\power_node.h" />
     <ClInclude Include="..\..\include\primitives.h" />
     <ClInclude Include="..\..\include\random_sampler.h" />
     <ClInclude Include="..\..\include\ray_container.h" />

@@ -2,65 +2,13 @@
 
 #include "utilities.h"
 
-#include "../include/multiply_node.h"
+#include "../include/binary_node.h"
 #include "../include/vector_map_wrapper_node.h"
 #include "../include/step_node.h"
 
 #include "../include/manta_math.h"
 
 using namespace manta;
-
-TEST(NodeTests, MultiplyNodeTest) {
-    MultiplyNode node;
-    node.initialize();
-
-    node.getMainOutput()->setDefaultA(math::constants::One);
-    node.getMainOutput()->setDefaultB(math::constants::Double);
-
-    node.evaluate();
-
-    // Check state
-    const VectorNodeOutput *o = static_cast<VectorNodeOutput *>(node.getOutput("Output"));
-    EXPECT_EQ(o->getDimensions(), 1);
-    EXPECT_EQ(o->getSize(0), 1);
-
-    math::Vector result;
-    o->discreteSample2d(0, 0, (void *)&result);
-    CHECK_VEC_EQ(result, math::constants::Double, 1E-4);
-
-    node.destroy();
-}
-
-TEST(NodeTests, MultiplyMapNodeTest) {
-    VectorMap2D map;
-    map.initialize(16, 16, math::constants::One);
-    VectorMapWrapperNode wrapper(&map);
-    wrapper.initialize();
-
-    MultiplyNode node;
-    node.initialize();
-
-    node.connectInput(wrapper.getOutput("Output"), "A", nullptr);
-    node.getMainOutput()->setDefaultB(math::constants::Double);
-
-    node.evaluate();
-
-    // Check state
-    const VectorNodeOutput *o = static_cast<VectorNodeOutput *>(node.getOutput("Output"));
-    EXPECT_EQ(o->getDimensions(), 2);
-    EXPECT_EQ(o->getSize(0), 16);
-    EXPECT_EQ(o->getSize(1), 16);
-
-    math::Vector result;
-    o->discreteSample2d(0, 0, (void *)&result);
-    CHECK_VEC_EQ(result, math::constants::Double, 1E-4);
-
-    node.destroy();
-    wrapper.destroy();
-
-    map.destroy();
-}
-
 
 TEST(NodeTests, StepNode) {
     VectorMap2D map;

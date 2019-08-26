@@ -9,9 +9,9 @@ module {
     @github:        "github.com/ange-yaghi/manta-ray"
 }
 
-private import "../types/atomic_types.mr"
-private import "../types/conversions.mr"
-private import "../types/operations.mr"
+private import "../../types/atomic_types.mr"
+private import "../../types/conversions.mr"
+private import "../../types/operations.mr"
 
 @doc: "Convert gamma curved sRGB space colors to linear vectors"
 public node srgb => __mantaray__srgb {

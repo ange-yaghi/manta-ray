@@ -5,12 +5,12 @@
 
 namespace manta {
 
-    class SimpleSampler : public Sampler2D {
+    class SimpleSampler : public Sampler2d {
     public:
         SimpleSampler();
         ~SimpleSampler();
 
-        virtual void generateSamples(int sampleCount, math::Vector *target) const;
+        virtual void generateSamples(int sampleCount, math::Vector2 *target) const;
         virtual int getTotalSampleCount(int sampleCount) const;
     };
 

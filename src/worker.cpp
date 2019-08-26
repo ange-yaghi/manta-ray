@@ -92,6 +92,11 @@ void manta::Worker::work() {
 }
 
 void manta::Worker::doJob(const Job *job) {
+    constexpr int SAMPLE_BUFFER_CAPACITY = 0x1 << 7;
+
+    int sampleCount = 0;
+    ImageSample *samples = (ImageSample *)m_stack->allocate(sizeof(ImageSample) * SAMPLE_BUFFER_CAPACITY, 16);
+
     for (int x = job->startX; x <= job->endX; x++) {
         for (int y = job->startY; y <= job->endY; y++) {
             CameraRayEmitter *emitter = job->group->createEmitter(x, y, m_stack);
@@ -126,35 +131,33 @@ void manta::Worker::doJob(const Job *job) {
                     ray->calculateTransformations();
 
                     m_rayTracer->traceRay(job->scene, ray, 0, m_stack /**/ PATH_RECORDER_ARG /**/ STATISTICS_ROOT(&m_statistics));
+
+                    ImageSample &sample = samples[sampleCount++];
+                    sample.imagePlaneLocation = ray->getImagePlaneLocation();
+                    sample.intensity = ray->getWeightedIntensity();
+
+                    if (sampleCount >= SAMPLE_BUFFER_CAPACITY) {
+                        job->target->processSamples(samples, sampleCount, m_stack);
+                        sampleCount = 0;
+                    }
+
                     END_TREE();
                 }
 
-                container.calculateIntensity();
-                result = container.getIntensity();
-                container.destroyRays();                
+                container.destroyRays();
             }
             m_rayTracer->incrementRayCompletion(job);
 
             job->group->freeEmitter(emitter, m_stack);
-
-            // Add the results to the scene buffer target
-            constexpr math::Vector DEBUG_RED = { (math::real)1.0, (math::real)0.0, (math::real)0.0 };
-            constexpr math::Vector DEBUG_BLUE = { (math::real)0.0, (math::real)0.0, (math::real)1.0 };
-            constexpr math::Vector DEBUG_GREEN = { (math::real)0.0, (math::real)1.0, (math::real)0.0 };
-
-            if (std::isnan(math::getX(result)) || std::isnan(math::getY(result)) || std::isnan(math::getZ(result))) {
-                result = DEBUG_RED;
-            }
-            else if (std::isinf(math::getX(result)) || std::isinf(math::getY(result)) || std::isinf(math::getZ(result))) {
-                result = DEBUG_GREEN;
-            }
-            else if (math::getX(result) < 0 || math::getY(result) < 0 || math::getZ(result) < 0) {
-                result = DEBUG_BLUE;
-            }
-
-            job->target->set(result, x, y);
         }
     }
+
+    if (sampleCount > 0) {
+        job->target->processSamples(samples, sampleCount, m_stack);
+        sampleCount = 0;
+    }
+
+    m_stack->free((void *)samples);
 }
 
 std::string manta::Worker::getObjFname() {

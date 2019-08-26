@@ -11,7 +11,7 @@ module {
 
 private import "lenses.mr"
 private import "../types/atomic_types.mr"
-private import "../sampler/samplers.mr"
+private import "../signal-processing/samplers/samplers.mr"
 
 @doc: "Camera channel type"
 public node camera => __mantaray__camera { /* void */ }

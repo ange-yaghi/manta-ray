@@ -12,7 +12,7 @@ module {
 private import "../scene/scene_geometry.mr"
 private import "../types/atomic_types.mr"
 private import "../types/conversions.mr"
-private import "../materials/material_library.mr"
+private import "../surface/materials/material_library.mr"
 
 @doc: "Simple sphere primitive"
 public node sphere => __mantaray__sphere {

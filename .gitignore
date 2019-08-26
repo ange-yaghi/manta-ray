@@ -359,3 +359,6 @@ autogen/
 
 # Ignore temp files added by flex
 project/mantaray/~flex*
+
+# Temporary files added by Intel tools
+My Advisor Results*/

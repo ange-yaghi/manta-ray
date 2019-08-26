@@ -45,6 +45,9 @@
 #include "../include/opaque_media_interface.h"
 #include "../include/dielectric_media_interface.h"
 #include "../include/microfacet_glass_bsdf.h"
+#include "../include/triangle_filter.h"
+#include "../include/box_filter.h"
+#include "../include/gaussian_filter.h"
 
 manta::LanguageRules::LanguageRules() {
     /* void */
@@ -100,6 +103,8 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__lens", &ObjectChannel::LensChannel);
     registerBuiltinType <piranha::ChannelNode>(
         "__mantaray__media_interface", &ObjectChannel::MediaInterfaceChannel);
+    registerBuiltinType <piranha::ChannelNode>(
+        "__mantaray__filter", &ObjectChannel::FilterChannel);
 
     // Constructors
     registerBuiltinType<RayTracer>(
@@ -168,6 +173,12 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__dielectric_media_interface");
     registerBuiltinType <MicrofacetGlassBSDF>(
         "__mantaray__glass_bsdf");
+    registerBuiltinType <TriangleFilter>(
+        "__mantaray__triangle_filter");
+    registerBuiltinType <BoxFilter>(
+        "__mantaray__box_filter");
+    registerBuiltinType <GaussianFilter>(
+        "__mantaray__gaussian_filter");
 
     // Actions
     registerBuiltinType <piranha::ConsoleInputNode>(
