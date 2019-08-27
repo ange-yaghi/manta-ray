@@ -197,10 +197,20 @@ public node samsung_materials {
         bsdf: lambert
     )
 
+    samsung_lights(
+        library: library
+    )
+}
+
+public node samsung_lights {
+    input library;
+
+    lambertian_bsdf lambert()
+
     bsdf_material strong_light(
         library: library,
         name: "StrongLight",
-        emission: 8.0,
+        emission: 12.0,
         reflectance: 0,
         bsdf: lambert
     )
@@ -216,7 +226,7 @@ public node samsung_materials {
     bsdf_material fill_light(
         library: library,
         name: "FillLight",
-        emission: 11.4,
+        emission: 15.0,
         reflectance: 0,
         bsdf: lambert
     )
