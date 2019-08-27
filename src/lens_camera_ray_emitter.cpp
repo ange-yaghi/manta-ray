@@ -15,6 +15,10 @@ manta::LensCameraRayEmitter::~LensCameraRayEmitter() {
 }
 
 void manta::LensCameraRayEmitter::generateRays(RayContainer *rayContainer) const {
+    Lens::LensScanHint hint;
+    m_lens->lensScan(m_imagePlaneOrigin, 4, m_pixelIncrement.x, &hint);
+    if (hint.failed) return;
+
     int totalRayCount = m_sampler->getTotalSampleCount(m_sampleCount);
     
     // Create all rays
@@ -22,20 +26,26 @@ void manta::LensCameraRayEmitter::generateRays(RayContainer *rayContainer) const
     rayContainer->setDegree(0);
     LightRay *rays = rayContainer->getRays();
 
-    math::Vector *sampleOrigins = 
-        (math::Vector *)m_stackAllocator->allocate(sizeof(math::Vector) * totalRayCount, 16);
+    math::Vector2 *sampleOrigins = 
+        (math::Vector2 *)m_stackAllocator->allocate(sizeof(math::Vector2) * totalRayCount, 1);
     m_sampler->generateSamples(totalRayCount, sampleOrigins);
 
-    Lens::LensScanHint hint;
-    m_lens->lensScan(m_position, 4, m_sampler->getBoundaryWidth(), &hint);
-
     for (int i = 0; i < totalRayCount; i++) {
-        math::Vector position = math::add(m_position, sampleOrigins[i]);
+        LightRay &ray = rays[i];
 
-        rays[i].setIntensity(math::constants::Zero);
-        rays[i].setWeight(math::constants::One);
+        const math::Vector2 samplePoint = sampleOrigins[i];
+        math::Vector position = transformToImagePlane(
+            math::Vector2(samplePoint.x - (math::real)0.5, samplePoint.y - (math::real)0.5));
+
+        ray.setIntensity(math::constants::Zero);
+        ray.setWeight(math::constants::One);
 
         bool result = m_lens->generateOutgoingRay(position, &hint, &rays[i]);
+
+        ray.setImagePlaneLocation(
+            math::Vector2(
+                -(samplePoint.x - (math::real)0.5) + (math::real)m_pixelX,
+                (samplePoint.y - (math::real)0.5) + (math::real)m_pixelY));
     }
 
     m_stackAllocator->free((void *)sampleOrigins);

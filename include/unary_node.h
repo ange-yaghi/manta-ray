@@ -4,6 +4,7 @@
 #include "node.h"
 
 #include "unary_node_output.h"
+#include "uv_operation_output.h"
 
 namespace manta {
 
@@ -42,11 +43,16 @@ namespace manta {
     template <UNARY_OPERATION op>
     using UnaryNode = SingleOutputNode<UnaryNodeOutput<op>>;
 
+    template <UV_OPERATION op>
+    using UvNode = SingleOutputNode<UvOperationOutput<op>>;
+
     typedef UnaryNode<NEGATE>           VectorNegateNode;
     typedef UnaryNode<NORMALIZE>        VectorNormalizeNode;
     typedef UnaryNode<MAGNITUDE>        VectorMagnitudeNode;
     typedef UnaryNode<MAX_COMPONENT>    VectorMaxComponentNode;
     typedef UnaryNode<ABSOLUTE>         VectorAbsoluteNode;
+
+    typedef UvNode<WRAP>                UvWrapNode;
 
 } /* namespace manta */
 

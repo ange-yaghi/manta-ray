@@ -1,0 +1,57 @@
+import "mantaray.mr"
+import "samsung_materials.mr"
+
+auto node settings {
+    output samples: 100;
+    output enable_matte_render: false;
+    output enable_full_render: true;
+}
+
+samsung_render full_render(
+    enable:         settings.enable_full_render,
+    samples:        settings.samples,
+    output_name:    "samsung_demo",
+    background:     0,
+    materials:      samsung_materials()
+)
+
+samsung_render matte_render(
+    enable:         settings.enable_matte_render,
+    samples:        settings.samples,
+    output_name:    "samsung_demo_matte",
+    background:     1.3,
+    materials:      matte_library()
+)
+
+node matte_library {
+    alias output this: matte_library;
+    
+    material_library matte_library()
+    bsdf_material(
+        library: matte_library,
+        name: "Default",
+        bsdf: microfacet_reflection_bsdf(ggx_distribution(0.5)),
+        reflectance: 1.0
+    )
+}
+
+node samsung_render {
+    toggle enable: true;
+    input samples: 100;
+    input output_name;
+    input materials;
+    input background: 0;
+
+    quick_render(
+        samples:            samples,
+
+        object_file:        "../../../demos/models/samsung_a8_banner_scene.obj",
+        materials:          materials,
+        camera_position:    vector(8.2166, 8.00816, -31.4485),
+        camera_target:      vector(7.66829, 7.63167, -18.7725),
+        plane_height:       0.4992,
+        output_name:        output_name,
+        output_dir:         "../../../workspace/render/bitmap/",
+        background:         background
+    )
+}

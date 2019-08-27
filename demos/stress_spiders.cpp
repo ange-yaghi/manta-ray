@@ -41,6 +41,7 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
     SimpleBSDFMaterial *spiderMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     spiderMaterial->setName("Equipment");
     spiderMaterial->setBSDF(&spiderBSDF);
+    spiderMaterial->setEmission(math::constants::Zero);
 
     PhongDistribution groundCoating;
     groundCoating.setPower((math::real)64);
@@ -52,6 +53,7 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
     SimpleBSDFMaterial *groundMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     groundMaterial->setName("Ground");
     groundMaterial->setBSDF(&groundBSDF);
+    groundMaterial->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial outdoorTopLightMaterial;
     outdoorTopLightMaterial.setEmission(math::loadVector(5.f, 5.f, 5.f));
@@ -154,6 +156,10 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 
     // Output the results to a scene buffer
     ImagePlane sceneBuffer;
+    GaussianFilter filter;
+    filter.setExtents(math::Vector2(1.5, 1.5));
+    filter.configure((math::real)4.0);
+    sceneBuffer.setFilter(&filter);
 
     if (TRACE_SINGLE_PIXEL) {
         rayTracer.tracePixel(819, 199, &scene, group, &sceneBuffer);

@@ -71,6 +71,8 @@ The final render will look something like this:
 
 Congratulations, you've rendered your first scene with MantaRay! In upcoming tutorials you'll learn how to apply materials and use more advanced features of MantaRay.
 
+Next tutorial: [Basics of Materials](../2_basics_of_materials/2_basics_of_materials.md)
+
 ## Useful Links
 
 * [MantaRay Tutorials](../all_tutorials.md)

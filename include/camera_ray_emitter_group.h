@@ -9,7 +9,7 @@
 namespace manta {
 
     class ImagePlane;
-    class Sampler2D;
+    class Sampler2d;
     class CameraRayEmitter;
     class RayContainer;
 
@@ -42,8 +42,8 @@ namespace manta {
         void setSampleCount(int samples) { m_samples = samples; }
         int getSampleCount() const { return m_samples; }
 
-        void setSampler(Sampler2D *sampler) { m_sampler = sampler; }
-        Sampler2D *getSampler() const { return m_sampler; }
+        void setSampler(Sampler2d *sampler) { m_sampler = sampler; }
+        Sampler2d *getSampler() const { return m_sampler; }
 
         virtual void configure() = 0;
 
@@ -94,7 +94,7 @@ namespace manta {
         math::real_d m_planeDistance;
 
         int m_samples;
-        Sampler2D *m_sampler;
+        Sampler2d *m_sampler;
     };
 
 } /* namespace manta */

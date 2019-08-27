@@ -73,7 +73,7 @@ auto node backdrop_material {
             name: "Backdrop",
             library: library,
             bsdf: bsdf,
-            reflectance: light_wood
+            reflectance: uv_wrap(light_wood)
         );
 
     image_file light_wood(
