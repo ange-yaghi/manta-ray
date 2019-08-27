@@ -8,7 +8,7 @@ The default model used by the `bsdf_material` is the Lambertian model which is n
 
 ## Introduction to Microfacet Models
 
-A microfacet model is an approximation to how light reflects off of a surface. It assumes that all materials are (at a microscopic level) composed of tiny reflectors. If these reflectors all point in the same direction, the material is shiny. If they are completely random and can point in any direction with equal probability, then the material would appear rough. In this tutorial we will examine two models, the *Phong* model and the *GGX* model.
+A microfacet model is an approximation to how light reflects off of a surface. It assumes that all materials are (at a microscopic level) composed of tiny reflectors. If these reflectors all point in the same direction, the material is shiny. If they are completely random and can point in any direction with equal probability, then the material would appear rough. In this tutorial we'll focus on the *GGX* model.
 
 ## Using a Microfacet Model
 
@@ -34,7 +34,7 @@ bsdf_material cube_material(
     )
 ```
 
-The GGX distribution has only one input `width`. Intuitively, `width` can be thought of as controlling the *spread* of microfacets. A smaller spread means a shinier material, whereas a larger spread indicates a rought material. The width can be between 0 and 1.
+The GGX distribution has only one input `width`. Intuitively, `width` can be thought of as controlling the *spread* of microfacets. A smaller spread results in a shiny material, whereas a larger spread results in a rough material. The `width` can be between 0 and 1.
 
 To test this out, make a copy of the script from tutorial 2 and name it `advanced_materials.mr`. Now update the material to use the GGX model as shown above. Three renders are shown below with different width inputs.
 
@@ -154,7 +154,7 @@ We've now explored some of the more sophisticated surface models provided by Man
 
 ## Useful Links
 
-* [Previous Tutorial (Getting Started)](../1_getting_started/1_getting_started.md)
+* [Previous Tutorial (Basics of Materials)](../2_basics_of_materials/2_basics_of_materials.md)
 * [MantaRay Tutorials](../all_tutorials.md)
 * [Piranha Handbook](https://github.com/ange-yaghi/piranha/blob/master/docs/handbook/handbook.md)
 * [VS Code Piranha Plugin](https://github.com/ange-yaghi/mantaray-sdl-extension)
