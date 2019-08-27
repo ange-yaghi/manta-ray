@@ -2,8 +2,8 @@ import "mantaray.mr"
 import "samsung_materials.mr"
 
 auto node settings {
-    output samples: 100;
-    output enable_matte_render: false;
+    output samples: 25000;
+    output enable_matte_render: true;
     output enable_full_render: true;
 }
 
@@ -48,8 +48,10 @@ node samsung_render {
         object_file:        "../../../demos/models/samsung_a8_banner_scene.obj",
         materials:          materials,
         camera_position:    vector(8.2166, 8.00816, -31.4485),
-        camera_target:      vector(7.66829, 7.63167, -18.7725),
-        plane_height:       0.4992,
+        camera_target:      vector(5.1977, 7.63167, -18.7725),
+        resolution_x:       1080,
+        resolution_y:       1350,
+        plane_height:       0.6,
         output_name:        output_name,
         output_dir:         "../../../workspace/render/bitmap/",
         background:         background
