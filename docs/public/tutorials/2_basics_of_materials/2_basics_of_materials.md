@@ -8,7 +8,7 @@ In the first tutorial we rendered the scene below using mostly default parameter
 
 ![Alt text](../1_getting_started/assets/2019-08-20_T19_54_53_quick_render_S128.jpg)
 
-As can be scene, the camera angle isn't particularly flattering for this scene. Fortunately, updating both the camera target and position is easy with the `quick_render` tool. To start this tutorial, let's create a copy of the script from the last tutorial and name it `adding_materials.mr`. The entire script thus far is:
+As can be seen, the camera angle isn't particularly flattering for this scene. Fortunately, updating both the camera target and position is easy with the `quick_render` tool. To start this tutorial, let's create a copy of the script from the last tutorial and name it `adding_materials.mr`. The entire script thus far is:
 
 ```
 import "mantaray.mr"
