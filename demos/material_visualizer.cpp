@@ -90,6 +90,7 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
     SimpleBSDFMaterial *paintMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     paintMaterial->setBSDF(&simpleWoodBSDF);
     paintMaterial->setName("SimpleDarkWood");
+    paintMaterial->setEmission(math::constants::Zero);
     
     // Steel
     PhongDistribution phongSteel;
@@ -102,6 +103,7 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
     steelMaterial->setName("Steel");
     steelMaterial->setReflectance(getColor(255, 255, 255));
     steelMaterial->setBSDF(&steelBSDF);
+    steelMaterial->setEmission(math::constants::Zero);
 
     // Steel 2
     TextureNode fingerprintTexture;
@@ -114,11 +116,17 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
     metalTexture.initialize();
     metalTexture.evaluate();
 
-    PowerNode fingerprintPower(4.0f, fingerprintTexture.getMainOutput());
+    CachedVectorNode constS;
+    constS.initialize();
+    constS.setValue(math::loadScalar(4.0f));
+    PowerNode fingerprintPower;
+    fingerprintPower.initialize();
+    fingerprintPower.connectInput(fingerprintTexture.getMainOutput(), "__right", nullptr);
+    fingerprintPower.connectInput(constS.getPrimaryOutput(), "__left", nullptr);
     RemapNode specularPowerFingerprint(
         math::loadScalar(0.0f),
         math::loadScalar(1.0f),
-        fingerprintPower.getMainOutput());
+        fingerprintPower.getPrimaryOutput());
 
     RemapNode invFingerprint(
         math::loadScalar(1.0f),
@@ -141,6 +149,7 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
     SimpleBSDFMaterial *steel2Material = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     steel2Material->setName("Steel2");
     steel2Material->setBSDF(&steelBSDF2);
+    steel2Material->setEmission(math::constants::Zero);
 
     // GGX Test
     GgxDistribution ggxTest;
@@ -155,6 +164,7 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
     SimpleBSDFMaterial *ggxTestMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     ggxTestMaterial->setName("GGX_Test");
     ggxTestMaterial->setBSDF(&ggxTestBDSF);
+    ggxTestMaterial->setEmission(math::constants::Zero);
     ggxTestMaterial->setReflectance(math::constants::One);
 
     // ========================================================================
@@ -167,6 +177,7 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
     SimpleBSDFMaterial *backdropTexture = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     backdropTexture->setBSDF(&lambert);
     backdropTexture->setReflectanceNode(checkerboardTexture.getMainOutput());
+    backdropTexture->setEmission(math::constants::Zero);
     backdropTexture->setName("Backdrop");
 
     SimpleBSDFMaterial *lightMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
@@ -237,6 +248,10 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
 
     // Output the results to a scene buffer
     ImagePlane sceneBuffer;
+    GaussianFilter filter;
+    filter.setExtents(math::Vector2(1.5, 1.5));
+    filter.configure((math::real)4.0);
+    sceneBuffer.setFilter(&filter);
 
     if (TRACE_SINGLE_PIXEL) {
         rayTracer.tracePixel(369, 462, &scene, group, &sceneBuffer);

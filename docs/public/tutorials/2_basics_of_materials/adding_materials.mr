@@ -1,0 +1,34 @@
+import "mantaray.mr"
+
+material_library library()
+
+bsdf_material cube_material(
+    library: library,
+    name: "Cube",
+    reflectance: srgb_i(0xba, 0xdc, 0x58)
+)
+
+bsdf_material floor_material(
+    library: library,
+    name: "Floor",
+    reflectance: srgb_i(0x30, 0x33, 0x6b)
+)
+
+bsdf_material cone_material(
+    library: library,
+    name: "Cone",
+    reflectance: srgb_i(0xf9, 0xca, 0x24)
+)
+
+bsdf_material sphere_material(
+    library: library,
+    name: "Sphere",
+    reflectance: srgb_i(0xeb, 0x4d, 0x4b)
+)
+
+quick_render(
+    materials: library,
+    object_file: "simple_scene.obj",
+    camera_target: vector(0.0, 1.5, 0.0),
+    camera_position: vector(5.0, 3.5, 5.0)
+)

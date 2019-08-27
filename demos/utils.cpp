@@ -83,7 +83,7 @@ void manta_demo::editImage(manta::ImagePlane *sceneBuffer, const std::string &ou
             std::cout << "Enter scale factor: ";
             std::cin >> scale;
 
-            temp.scale(scale);
+            //temp.scale(scale);
             manta::SaveImageData(temp.getBuffer(), temp.getWidth(), temp.getHeight(), outputFname.c_str());
 
             temp.destroy();

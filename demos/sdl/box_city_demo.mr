@@ -129,7 +129,8 @@ ray_tracer mr(
     scene: scene,
     camera: settings.camera,
     materials: library,
-    background: 1.1
+    background: 1.1,
+    filter: box_filter()
 )
 
 image_output(

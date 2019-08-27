@@ -7,7 +7,7 @@
 #include "../include/bsdf.h"
 
 manta::SimpleBSDFMaterial::SimpleBSDFMaterial() {
-    m_maxDegree = 4;
+    m_maxDegree = 8;
 
     m_emissionNode = nullptr;
     m_reflectanceNode = nullptr;
@@ -52,8 +52,6 @@ void manta::SimpleBSDFMaterial::integrateRay(LightRay *ray, const RayContainer &
     }
 
     ray->setIntensity(totalLight);
-    //ray->setIntensity(math::mul(math::constants::Half, math::add(intersectionPoint.m_vertexNormal, math::constants::One)));
-    //ray->setIntensity(emission);
 }
 
 const manta::VectorNodeOutput *manta::SimpleBSDFMaterial::getReflectanceNode() const {

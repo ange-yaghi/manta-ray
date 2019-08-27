@@ -1,0 +1,24 @@
+module {
+    @name:          "Bilayer BSDF"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "Bilayer BSDF implementation"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
+private import "bsdf.mr"
+private import "../microfacet-models/microfacet_distributions.mr"
+private import "../../types/atomic_types.mr" as types
+private import "../../types/conversions.mr"
+
+@doc: "Bilayer BSDF for realistic surface simulation"
+public node bilayer_bsdf => __mantaray__bilayer_bsdf {
+    input coating   [microfacet_distribution]: phong_distribution(16.0);
+    input diffuse   [types::vector]: 1.0;
+    input specular  [types::vector]: 1.0;
+
+    alias output __out  [bsdf];
+}

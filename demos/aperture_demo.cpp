@@ -38,10 +38,6 @@ void manta_demo::apertureDemo(int samplesPerPixel, int resolutionX, int resoluti
     blocks.setFastIntersectEnabled(false);
     blocksObj.destroy();
 
-    SpherePrimitive outdoorTopLightGeometry;
-    outdoorTopLightGeometry.setRadius((math::real)10.0);
-    outdoorTopLightGeometry.setPosition(math::loadVector(10.f, 20.f, 5.5f));
-
     // Create scene objects
     KDTree kdtree;
     kdtree.configure((math::real)500.0, math::constants::Zero);
@@ -66,10 +62,10 @@ void manta_demo::apertureDemo(int samplesPerPixel, int resolutionX, int resoluti
     manta::SimpleLens lens;
     manta::PolygonalAperture aperture;
     aperture.setRadius((math::real)0.25);
+    aperture.setBladeCurvature(0.25f);
     aperture.configure(3, 0.f, false);
 
     lens.setAperture(&aperture);
-    lens.initialize();
     lens.setPosition(cameraPos);
     lens.setDirection(dir);
     lens.setUp(up);
@@ -78,6 +74,7 @@ void manta_demo::apertureDemo(int samplesPerPixel, int resolutionX, int resoluti
     lens.setSensorResolutionY(resolutionY);
     lens.setSensorHeight(10.0f);
     lens.setSensorWidth(10.0f * (resolutionX / (math::real)resolutionY));
+    lens.configure();
     lens.update();
 
     RandomSampler sampler;
@@ -118,6 +115,10 @@ void manta_demo::apertureDemo(int samplesPerPixel, int resolutionX, int resoluti
 
     // Output the results to a scene buffer
     ImagePlane sceneBuffer;
+    GaussianFilter filter;
+    filter.setExtents(math::Vector2(2.0, 2.0));
+    filter.configure((math::real)4.0);
+    sceneBuffer.setFilter(&filter);
 
     // Run the ray tracer
     rayTracer.configure(200 * MB, 50 * MB, 12, 100, true);
