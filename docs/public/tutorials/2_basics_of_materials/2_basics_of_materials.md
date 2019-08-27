@@ -56,7 +56,7 @@ All default parameters can be seen in `manta-lib/utilities/quick_render.mr` as t
 
 In order for MantaRay to know which material is assigned to which object, we must first set up placeholder materials in Blender. With each object selected, we can proceed to create a new material for each one.
 
-![Alt text](assets/screenshots/screenshot_1.png)
+![Alt text](assets/screenshots/screenshot_1.PNG)
 
 The content of these new materials doesn't matter, but it's important to name them in a convenient way as MantaRay materials are indexed by name. For this scene, I've created 4 materials called `Floor`, `Cube`, `Sphere` and `Cone` and assigned them to their corresponding objects in the scene. Export this file in the same way that was done in the [previous tutorial](../1_getting_started/1_getting_started.md).
 
