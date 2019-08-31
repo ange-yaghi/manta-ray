@@ -125,9 +125,11 @@ Notice how a new parameter `materials` was specified in the `quick_render` node.
 
 Our scene now has color! It probably won't be winning any awards but it at least looks a little less bland now. In the next tutorial we'll look into using more realistic materials.
 
+* [Previous Tutorial (Getting Started)](../1_getting_started/1_getting_started.md)
+* [Next Tutorial (Realistic Materials)](../3_realistic_materials/3_realistic_materials.md)
+
 ## Useful Links
 
-* [Previous Tutorial (Getting Started)](../1_getting_started/1_getting_started.md)
 * [MantaRay Tutorials](../all_tutorials.md)
 * [Piranha Handbook](https://github.com/ange-yaghi/piranha/blob/master/docs/handbook/handbook.md)
 * [VS Code Piranha Plugin](https://github.com/ange-yaghi/mantaray-sdl-extension)
