@@ -132,4 +132,4 @@ Our scene now has color! It probably won't be winning any awards but it at least
 
 * [MantaRay Tutorials](../all_tutorials.md)
 * [Piranha Handbook](https://github.com/ange-yaghi/piranha/blob/master/docs/handbook/handbook.md)
-* [VS Code Piranha Plugin](https://github.com/ange-yaghi/mantaray-sdl-extension)
+* [VS Code Piranha Extension](https://github.com/ange-yaghi/piranha-vscode-extension)
