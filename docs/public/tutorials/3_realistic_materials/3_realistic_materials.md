@@ -152,9 +152,10 @@ If the specular is set to 0 then the coating layer will only be reflective at ve
 
 We've now explored some of the more sophisticated surface models provided by MantaRay. In the next tutorial we'll look at applying textures.
 
+* [Previous Tutorial (Basics of Materials)](../2_basics_of_materials/2_basics_of_materials.md)
+
 ## Useful Links
 
-* [Previous Tutorial (Basics of Materials)](../2_basics_of_materials/2_basics_of_materials.md)
 * [MantaRay Tutorials](../all_tutorials.md)
 * [Piranha Handbook](https://github.com/ange-yaghi/piranha/blob/master/docs/handbook/handbook.md)
-* [VS Code Piranha Plugin](https://github.com/ange-yaghi/mantaray-sdl-extension)
+* [VS Code Piranha Extension](https://github.com/ange-yaghi/piranha-vscode-extension)
