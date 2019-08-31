@@ -77,4 +77,4 @@ Next tutorial: [Basics of Materials](../2_basics_of_materials/2_basics_of_materi
 
 * [MantaRay Tutorials](../all_tutorials.md)
 * [Piranha Handbook](https://github.com/ange-yaghi/piranha/blob/master/docs/handbook/handbook.md)
-* [VS Code Piranha Plugin](https://github.com/ange-yaghi/mantaray-sdl-extension)
+* [VS Code Piranha Plugin](https://github.com/ange-yaghi/piranha-vscode-extension)
