@@ -25,14 +25,13 @@ TEST(NodeTests, StepNode) {
     node.getMainOutput()->setDefaultDc(math::constants::One);
     node.getMainOutput()->setDefaultFoot(math::constants::One);
     node.getMainOutput()->setDefaultStep(math::constants::Double);
-    node.connectInput(wrapper.getMainOutput(), "Input", nullptr);
+    node.connectInput(wrapper.getMainOutput(), "s", nullptr);
 
     node.evaluate();
 
     // Check state
-    const VectorNodeOutput *o = static_cast<VectorNodeOutput *>(node.getOutput("Output"));
-    EXPECT_EQ(o->getDimensions(), 1);
-    EXPECT_EQ(o->getSize(0), 1);
+    const VectorNodeOutput *o = static_cast<VectorNodeOutput *>(node.getOutput("__out"));
+    EXPECT_EQ(o->getDimensions(), 0);
 
     math::Vector result;
     o->discreteSample2d(0, 0, (void *)&result);

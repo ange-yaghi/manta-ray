@@ -120,7 +120,10 @@ void manta::FraunhoferDiffraction::generate(const Aperture *aperture,
 
             math::real_d apF = (math::real_d)samplesInFilter / totalSamples;
             apertureFunction.set(math::Complex(apF * dirt, (math::real_d)0.0), i, j);
-            m_apertureFunction.set(math::loadScalar((math::real)(apF * dirt)), i, j);
+
+            if (settings.saveApertureFunction) {
+                m_apertureFunction.set(math::loadScalar((math::real)(apF * dirt)), i, j);
+            }
         }
     }
 

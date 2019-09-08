@@ -34,10 +34,6 @@ namespace manta {
         virtual void _initialize();
         virtual void _evaluate();
         virtual void _destroy();
-
-        virtual void registerInputs();
-
-        piranha::pNodeInput m_enabledInput;
     };
 
 } /* namespace manta */

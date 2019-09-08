@@ -1,5 +1,5 @@
-#ifndef MEMORY_MANAGEMENT_H
-#define MEMORY_MANAGEMENT_H
+#ifndef MANTARAY_MEMORY_MANAGEMENT_H
+#define MANTARAY_MEMORY_MANAGEMENT_H
 
 #include <assert.h>
 
@@ -15,4 +15,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* MEMORY_MANAGEMENT_H */
+#endif /* MANTARAY_MEMORY_MANAGEMENT_H */

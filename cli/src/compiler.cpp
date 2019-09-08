@@ -6,6 +6,8 @@
 
 mantaray_cli::Compiler::Compiler() {
     m_compiler = new piranha::Compiler(&m_rules);
+
+    m_optimizationEnabled = true;
 }
 
 mantaray_cli::Compiler::~Compiler() {
@@ -38,6 +40,15 @@ void mantaray_cli::Compiler::compile(const piranha::IrPath &path) {
         if (errors->getErrorCount() == 0) {
             unit->build(&m_program);
             setState(COMPILATION_SUCCESS);
+
+            if (isOptimizationEnabled()) {
+                m_program.initialize();
+                m_program.optimize();
+                setState(OPTIMIZATION_SUCCESS);
+            }
+            else {
+                setState(OPTIMIZATION_SUCCESS);
+            }
         }
         else {
             setState(COMPILATION_FAIL);
@@ -62,7 +73,7 @@ void mantaray_cli::Compiler::printTrace() {
 }
 
 void mantaray_cli::Compiler::execute() {
-    if (getState() == COMPILATION_SUCCESS) {
+    if (getState() == OPTIMIZATION_SUCCESS) {
         bool result = m_program.execute();
         setState(COMPLETE);
 

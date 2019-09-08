@@ -52,6 +52,9 @@ void manta::ObjFileNode::_evaluate() {
     Mesh *mesh = new Mesh;
     mesh->loadObjFileData(&loader, library, defaultMaterialIndex);
 
+    // Free memory used by object file
+    loader.destroy();
+
     m_output.setReference(mesh);
     m_mesh = mesh;
 }

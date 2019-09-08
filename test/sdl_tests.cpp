@@ -34,7 +34,7 @@ TEST(SdlTests, SdlVectorTest) {
 
     CHECK_VEC(data, 1.0, 2.0, 3.0, 4.0);
 
-    piranha::Node *scalar = program.getTopLevelContainer()->getNode(13);
+    piranha::Node *scalar = program.getTopLevelContainer()->getNode(15);
     static_cast<VectorNodeOutput *>(scalar->getPrimaryOutput())->sample(nullptr, (void *)&data);
 
     CHECK_VEC(data, 666.0, 666.0, 666.0, 666.0);
@@ -76,12 +76,25 @@ TEST(SdlTests, SdlSimpleMaterialTest) {
     program.execute();
 }
 
-TEST(SdlTests, SdlObjectNodeTest) {
+TEST(SdlTests, SdlVectorOptimizationTest) {
     const piranha::ErrorList *errList;
-    piranha::IrCompilationUnit *unit = compileFile("teapot_lamp_demo.mr", &errList);
+    piranha::IrCompilationUnit *unit = compileFile("basic_vector_test.mr", &errList);
 
     piranha::NodeProgram program;
     unit->build(&program);
 
+    program.initialize();
+    program.optimize();
     program.execute();
+
+    piranha::Node *node = program.getTopLevelContainer()->getNode(0);
+    math::Vector data;
+    static_cast<VectorNodeOutput *>(node->getPrimaryOutput())->sample(nullptr, (void *)&data);
+
+    CHECK_VEC(data, 1.0, 2.0, 3.0, 4.0);
+
+    piranha::Node *scalar = program.getTopLevelContainer()->getNode(1);
+    static_cast<VectorNodeOutput *>(scalar->getPrimaryOutput())->sample(nullptr, (void *)&data);
+
+    CHECK_VEC(data, 666.0, 666.0, 666.0, 666.0);
 }

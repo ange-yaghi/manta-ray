@@ -98,4 +98,3 @@ namespace manta {
 } /* namespace manta */
 
 #endif /* MANTARAY_UNARY_NODE_OUTPUT_H */
-

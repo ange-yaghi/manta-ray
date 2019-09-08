@@ -4,6 +4,8 @@
 #include <piranha.h>
 
 #include "vector_node_output.h"
+#include "node.h"
+#include "cached_vector_node.h"
 
 namespace manta {
 
@@ -22,7 +24,6 @@ namespace manta {
     protected:
         piranha::pNodeInput m_input;
     };
-    typedef piranha::PipeNode<FloatToVectorConversionOutput> FloatToVectorConversionNode;
 
     class IntToVectorConversionOutput : public VectorNodeOutput {
     public:
@@ -38,8 +39,73 @@ namespace manta {
 
     protected:
         piranha::pNodeInput m_input;
+
+    protected:
+        virtual piranha::Node *_optimize();
     };
-    typedef piranha::PipeNode<IntToVectorConversionOutput> IntToVectorConversionNode;
+
+    template <typename T_VectorConversionOutput>
+    class VectorConversion : public Node {
+    public:
+        VectorConversion() {
+            /* void */
+        }
+
+        ~VectorConversion() {
+            /* void */
+        }
+
+        virtual void _initialize() {
+            m_output.initialize();
+        }
+
+        virtual void _evaluate() {
+            /* void */
+        }
+
+        virtual void _destroy() {
+            /* void */
+        }
+
+        virtual void registerOutputs() {
+            setPrimaryOutput("__out");
+            registerOutput(&m_output, "__out");
+        }
+
+        virtual void registerInputs() {
+            registerInput(m_output.getInputConnection(), "__in");
+        }
+
+    protected:
+        virtual piranha::Node *_optimize() {
+            addFlag(piranha::Node::META_ACTIONLESS);
+
+            VectorNodeOutput *input = static_cast<VectorNodeOutput *>(*m_output.getInputConnection());
+
+            bool isConstant = input->getParentNode()->hasFlag(piranha::Node::META_CONSTANT);
+            if (isConstant) {
+                addFlag(piranha::Node::META_CONSTANT);
+
+                bool result = evaluate();
+                if (!result) return nullptr;
+
+                math::Vector constantValue;
+                m_output.sample(nullptr, (void *)&constantValue);
+
+                CachedVectorNode *cached = new CachedVectorNode(constantValue);
+                mapOptimizedPort(cached, "__out", "__out");
+
+                return cached;
+            }
+
+            return this;
+        }
+
+        T_VectorConversionOutput m_output;
+    };
+
+    typedef VectorConversion<FloatToVectorConversionOutput> FloatToVectorConversionNode;
+    typedef VectorConversion<IntToVectorConversionOutput> IntToVectorConversionNode;
 
 } /* namespace manta */
 

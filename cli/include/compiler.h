@@ -13,6 +13,8 @@ namespace mantaray_cli {
             READY,
             COMPILATION_SUCCESS,
             COMPILATION_FAIL,
+            OPTIMIZATION_SUCCESS,
+            OPTIMIZATION_FAIL,
             COULD_NOT_FIND_FILE,
             COMPLETE
         };
@@ -29,10 +31,15 @@ namespace mantaray_cli {
 
         STATE getState() const { return m_state; }
 
+        void setOptimizationEnabled(bool enabled) { m_optimizationEnabled = enabled; }
+        bool isOptimizationEnabled() const { return m_optimizationEnabled; }
+
     protected:
         manta::LanguageRules m_rules;
         piranha::Compiler *m_compiler;
         piranha::NodeProgram m_program;
+
+        bool m_optimizationEnabled;
 
         void setState(STATE state) { m_state = state; }
         STATE m_state;

@@ -59,6 +59,36 @@ namespace piranha {
 
     protected:
         OperationNodeType<FundamentalType> m_output;
+
+    protected:
+        virtual Node *_optimize() {
+            addFlag(Node::META_ACTIONLESS);
+
+            bool leftConstant = (*m_output.getLeftConnection())
+                ->getParentNode()
+                ->hasFlag(Node::META_CONSTANT);
+            bool rightConstant = (*m_output.getRightConnection())
+                ->getParentNode()
+                ->hasFlag(Node::META_CONSTANT);
+
+            if (leftConstant && rightConstant) {
+                addFlag(Node::META_CONSTANT);
+
+                bool result = evaluate();
+                if (!result) return nullptr;
+
+                DefaultLiteralNode<FundamentalType> *newLiteral = 
+                    new DefaultLiteralNode<FundamentalType>();
+
+                FundamentalType computedValue;
+                m_output.fullCompute((void *)&computedValue);
+
+                mapOptimizedPort(newLiteral, "__out", "__out");
+                newLiteral->setData(computedValue);
+                return newLiteral;
+            }
+            else return this;
+        }
     };
 
 } /* namespace piranha */

@@ -20,6 +20,7 @@ namespace piranha {
         int getNodeCount() const { return (int)m_nodes.size(); }
 
         void addChild(NodeContainer *container);
+        NodeContainer *getChild(int index) const { return m_children[index]; }
         int getChildCount() const { return (int)m_children.size(); }
 
         NodeContainer *getTopLevel();
@@ -29,10 +30,14 @@ namespace piranha {
 
         virtual void writeAssembly(std::fstream &file, Assembly *assembly, int indent) const;
 
+        void prune();
+
     protected:
         virtual void _initialize();
         virtual void _evaluate();
         virtual void _destroy();
+
+        virtual Node *_optimize();
 
     protected:
         std::vector<NodeContainer *> m_children;

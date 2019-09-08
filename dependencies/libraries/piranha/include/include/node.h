@@ -56,6 +56,21 @@ namespace piranha {
             bool isAlias;
         };
 
+        struct PortMapping {
+            std::string localPort;
+            std::string originalPort;
+        };
+
+        struct MetaFlag {
+            std::string name;
+            int data;
+        };
+
+    public:
+        // Standard metadata flags
+        static constexpr const char *META_CONSTANT = "!!PIRANHA::CONSTANT";
+        static constexpr const char *META_ACTIONLESS = "!!PIRANHA::ACTIONLESS";
+
     public:
         Node();
         virtual ~Node();
@@ -79,8 +94,8 @@ namespace piranha {
         std::string getBuiltinName() const { return m_builtinName; }
 
         void connectEnableInput(pNodeInput input, Node *dependency);
-        void connectInput(pNodeInput input, const std::string &name, Node *dependency, Node *nodeInput=nullptr);
-        void connectInput(pNodeInput input, int index, Node *dependency, Node *nodeInput=nullptr);
+        void connectInput(pNodeInput input, const std::string &name, Node *dependency, Node *nodeInput = nullptr);
+        void connectInput(pNodeInput input, int index, Node *dependency, Node *nodeInput = nullptr);
         bool getInputPortInfo(const std::string &name, PortInfo *info) const;
         const NodeInputPort *getInput(int index) const { return &m_inputs[index]; }
         int getInputCount() const { return (int)m_inputs.size(); }
@@ -99,6 +114,7 @@ namespace piranha {
         int getOutputCount() const { return (int)m_outputs.size(); }
         const NodeOutputPort *getOutput(int index) const { return &m_outputs[index]; }
         bool getOutputPortInfo(const std::string &name, PortInfo *info) const;
+        std::string getOutputName(NodeOutput *output) const;
 
         int getOutputReferenceCount() const { return (int)m_outputReferences.size(); }
         const NodeOutputPortReference *getOutputReference(int index) const { return &m_outputReferences[index]; }
@@ -134,6 +150,25 @@ namespace piranha {
         bool isVirtual() const { return m_isVirtual; }
 
         virtual bool isLiteral() const { return false; }
+
+        Node *optimize();
+        Node *getUnoptimizedForm() const { return m_unoptimizedNode; }
+        bool isOptimized() const { return m_optimizedNode != nullptr; }
+        bool isOptimizedOut() const { return m_optimizedNode != this; }
+
+        bool isDead() const { return m_dead; }
+        void markDead() { m_dead = true; }
+
+        void mapOptimizedPort(Node *optimizedNode, const std::string &localName, const std::string &mappedName) const;
+        void addPortMapping(const std::string &localName, const std::string &mappedName);
+        int getPortMappingCount() const { return (int)m_portMapping.size(); }
+        std::string getLocalPort(const std::string &mappedPort) const;
+        std::string getMappedPort(const std::string &localName) const;
+
+        void addFlag(const std::string &name, int data = -1);
+        bool hasFlag(const std::string &name) const;
+        bool getFlag(const std::string &name, int *dataTarget = nullptr) const;
+        int getFlagCount() const { return (int)m_flags.size(); }
 
     protected:
         virtual void _initialize();
@@ -194,6 +229,21 @@ namespace piranha {
     protected:
         // Run-time
         bool m_runtimeError;
+
+    protected:
+        // Automatic optimization
+        virtual Node *_optimize();
+
+        Node *m_optimizedNode;
+        Node *m_unoptimizedNode;
+
+        bool m_dead;
+
+        std::vector<PortMapping> m_portMapping;
+
+    protected:
+        // Metadata flags
+        std::vector<MetaFlag> m_flags;
     };
 
 } /* namespace piranha */

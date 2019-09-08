@@ -70,7 +70,7 @@ TEST(CameraEmulationTests, BiconvexLensConvergenceCheck) {
 
 TEST(CameraEmulationTests, SimpleLensSanityCheck) {
     manta::SimpleLens lens;
-    lens.initialize();
+    lens.configure();
     lens.setPosition(math::loadVector(0.0f, 0.0f, 0.0f));
     lens.setDirection(math::loadVector(1.0f, 0.0f, 0.0f));
     lens.setUp(math::loadVector(0.0f, 1.0f, 0.0f));
@@ -104,7 +104,7 @@ TEST(CameraEmulationTests, SimpleLensSanityCheck) {
 
 TEST(CameraEmulationTests, SimpleLensCacheTest) {
     manta::SimpleLens lens;
-    lens.initialize();
+    lens.configure();
     lens.setPosition(math::loadVector(0.0f, 0.0f, 0.0f));
     lens.setDirection(math::loadVector(1.0f, 0.0f, 0.0f));
     lens.setUp(math::loadVector(0.0f, 1.0f, 0.0f));
@@ -150,7 +150,7 @@ TEST(CameraEmulationTests, PolygonalApertureTest) {
 
 TEST(CameraEmulationTests, DiffractionRayTest) {
     manta::SimpleLens lens;
-    lens.initialize();
+    lens.configure();
     lens.setPosition(math::loadVector(0.0f, 0.0f, 0.0f));
     lens.setDirection(math::loadVector(1.0f, 0.0f, 0.0f));
     lens.setUp(math::loadVector(0.0f, 1.0f, 0.0f));

@@ -1,5 +1,6 @@
 import "mantaray.mr"
-
+// 41.48
+// 34.28
 material_library library()
 
 bsdf_material cube_material(

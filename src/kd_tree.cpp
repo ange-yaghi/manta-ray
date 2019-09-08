@@ -491,6 +491,8 @@ void manta::KDTree::initLeaf(int node, const std::vector<int> &faces, const AABB
 }
 
 void manta::KDTree::writeToObjFile(const char *fname) const {
+    if (m_nodeBounds.empty()) return; // Check if debug info is present
+
     std::ofstream f(fname);
 
     int width = 0;
