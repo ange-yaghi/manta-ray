@@ -4,6 +4,7 @@
 #include "fundamental_output.h"
 
 #include "pipe_node.h"
+#include "default_literal_node.h"
 
 namespace piranha {
 
@@ -20,7 +21,7 @@ namespace piranha {
     protected:
         pNodeInput m_input;
     };
-    typedef PipeNode<StringToFloatConversionOutput> StringToFloatConversionNode;
+    
 
     class IntToFloatConversionOutput : public FloatValueOutput {
     public:
@@ -35,7 +36,74 @@ namespace piranha {
     protected:
         pNodeInput m_input;
     };
-    typedef PipeNode<IntToFloatConversionOutput> IntToFloatConversionNode;
+
+    template <typename T_ConversionOutput>
+    class FloatConversion : public Node {
+    public:
+        FloatConversion() {
+            /* void */
+        }
+
+        ~FloatConversion() {
+            /* void */
+        }
+
+        virtual void _initialize() {
+            m_output.initialize();
+        }
+
+        virtual void _evaluate() {
+            /* void */
+        }
+
+        virtual void _destroy() {
+            /* void */
+        }
+
+        virtual void registerInputs() {
+            registerInput(m_output.getInputConnection(), "__in");
+        }
+
+        virtual void registerOutputs() {
+            setPrimaryOutput("__out");
+            registerOutput(&m_output, "__out");
+        }
+
+    protected:
+        virtual Node *_optimize() {
+            addFlag(Node::META_ACTIONLESS);
+
+            bool isConstant = true;
+            pNodeInput input = *m_output.getInputConnection();
+            if (!input->getParentNode()->hasFlag(META_CONSTANT)) {
+                isConstant = false;
+            }
+
+            if (isConstant) {
+                addFlag(Node::META_CONSTANT);
+
+                bool result = evaluate();
+                if (!result) return nullptr;
+
+                DefaultLiteralNode<piranha::native_float> *newLiteral =
+                    new DefaultLiteralNode<piranha::native_float>();
+
+                piranha::native_float computedValue;
+                m_output.fullCompute((void *)&computedValue);
+
+                mapOptimizedPort(newLiteral, "__out", "__out");
+                newLiteral->setData(computedValue);
+                return newLiteral;
+            }
+
+            return this;
+        }
+
+        T_ConversionOutput m_output;
+    };
+
+    typedef FloatConversion<IntToFloatConversionOutput> IntToFloatConversionNode;
+    typedef FloatConversion<StringToFloatConversionOutput> StringToFloatConversionNode;
 
 } /* namespace piranha */
 

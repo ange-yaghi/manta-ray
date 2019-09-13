@@ -8,7 +8,7 @@ bilayer_bsdf bsdf(
 
 material_library lib()
 
-simple_bsdf_material material(
+bsdf_material material(
     name: "Test",
     library: lib,
     bsdf: bsdf

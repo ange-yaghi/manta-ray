@@ -70,6 +70,7 @@ StyleCopReport.xml
 *.obj
 !demos/models/*.obj
 !test/geometry/*.obj
+!docs/**/*.obj
 *.iobj
 *.pch
 *.pdb

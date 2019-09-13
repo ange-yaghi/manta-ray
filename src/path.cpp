@@ -17,6 +17,10 @@ manta::Path::Path(const Path &path) {
     *m_path = path.getBoostPath();
 }
 
+manta::Path::Path(const piranha::Path &path) {
+    setPath(path.toString());
+}
+
 manta::Path::Path() {
     m_path = nullptr;
 }
@@ -68,6 +72,10 @@ std::string manta::Path::getExtension() const {
 
 std::string manta::Path::getStem() const {
     return m_path->stem().string();
+}
+
+manta::Path manta::Path::getAbsolute() const {
+    return boost::filesystem::absolute(*m_path);
 }
 
 bool manta::Path::isAbsolute() const {

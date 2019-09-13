@@ -23,6 +23,13 @@ namespace piranha {
             /* void */
         }
 
+        virtual Node *_optimize() {
+            Node::addFlag(Node::META_CONSTANT);
+            Node::addFlag(Node::META_ACTIONLESS);
+
+            return this;
+        }
+
         virtual void _evaluate() {
             m_output.setData(m_literalData);
         }

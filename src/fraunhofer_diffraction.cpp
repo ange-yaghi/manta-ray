@@ -120,7 +120,10 @@ void manta::FraunhoferDiffraction::generate(const Aperture *aperture,
 
             math::real_d apF = (math::real_d)samplesInFilter / totalSamples;
             apertureFunction.set(math::Complex(apF * dirt, (math::real_d)0.0), i, j);
-            m_apertureFunction.set(math::loadScalar((math::real)(apF * dirt)), i, j);
+
+            if (settings.saveApertureFunction) {
+                m_apertureFunction.set(math::loadScalar((math::real)(apF * dirt)), i, j);
+            }
         }
     }
 
@@ -341,8 +344,11 @@ void manta::FraunhoferDiffraction::_evaluate() {
     piranha::native_float sensorWidth;
     m_sensorWidthInput->fullCompute((void *)&sensorWidth);
 
+    piranha::native_string cmfTablePath;
+    m_cmfTableInput->fullCompute((void *)&cmfTablePath);
+
     CmfTable table;
-    table.loadCsv("../../demos/cmfs/" "xyz_cmf_31.csv");
+    table.loadCsv(cmfTablePath.c_str());
     generate(aperture, nullptr, resolution, (math::real)sensorWidth, &table, nullptr, &settings);
     table.destroy();
 
@@ -366,6 +372,7 @@ void manta::FraunhoferDiffraction::registerInputs() {
     registerInput(&m_apertureInput, "aperture");
     registerInput(&m_sensorWidthInput, "sensor_width");
     registerInput(&m_resolutionInput, "resolution");
+    registerInput(&m_cmfTableInput, "cmf_table_path");
 }
 
 void manta::FraunhoferDiffraction::registerOutputs() {

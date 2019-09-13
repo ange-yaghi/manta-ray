@@ -1,4 +1,6 @@
-#include "..\include\vector_conversions.h"
+#include "../include/vector_conversions.h"
+
+#include "../include/cached_vector_node.h"
 
 manta::FloatToVectorConversionOutput::FloatToVectorConversionOutput() {
     m_input = nullptr;
@@ -62,4 +64,8 @@ void manta::IntToVectorConversionOutput::discreteSample2d(int x, int y, void *ta
 
 void manta::IntToVectorConversionOutput::registerInputs() {
     registerInput(&m_input);
+}
+
+piranha::Node *manta::IntToVectorConversionOutput::_optimize() {
+    return nullptr;
 }

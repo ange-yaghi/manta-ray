@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\aperture.cpp" />
+    <ClCompile Include="..\..\src\append_path_node.cpp" />
     <ClCompile Include="..\..\src\box_filter.cpp" />
     <ClCompile Include="..\..\src\cached_vector_node.cpp" />
     <ClCompile Include="..\..\src\cached_vector_output.cpp" />
@@ -31,6 +32,7 @@
     <ClCompile Include="..\..\src\gaussian_filter.cpp" />
     <ClCompile Include="..\..\src\kd_tree_node.cpp" />
     <ClCompile Include="..\..\src\language_rules.cpp" />
+    <ClCompile Include="..\..\src\main_script_path.cpp" />
     <ClCompile Include="..\..\src\mesh_merge_node.cpp" />
     <ClCompile Include="..\..\src\node.cpp" />
     <ClCompile Include="..\..\src\object_channel_types.cpp" />
@@ -66,6 +68,7 @@
     <ClCompile Include="..\..\src\remap_node_output.cpp" />
     <ClCompile Include="..\..\src\rgb_space.cpp" />
     <ClCompile Include="..\..\src\sample_container.cpp" />
+    <ClCompile Include="..\..\src\script_path_node.cpp" />
     <ClCompile Include="..\..\src\signal_processing.cpp" />
     <ClCompile Include="..\..\src\spectrum.cpp" />
     <ClCompile Include="..\..\src\srgb_node.cpp" />
@@ -136,6 +139,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\aperture.h" />
+    <ClInclude Include="..\..\include\append_path_node.h" />
     <ClInclude Include="..\..\include\biconvex_lens.h" />
     <ClInclude Include="..\..\include\bilayer_bsdf.h" />
     <ClInclude Include="..\..\include\binary_node.h" />
@@ -168,6 +172,7 @@
     <ClInclude Include="..\..\include\image_sample.h" />
     <ClInclude Include="..\..\include\kd_tree_node.h" />
     <ClInclude Include="..\..\include\language_rules.h" />
+    <ClInclude Include="..\..\include\main_script_path.h" />
     <ClInclude Include="..\..\include\mesh_merge_node.h" />
     <ClInclude Include="..\..\include\node.h" />
     <ClInclude Include="..\..\include\object_channel_types.h" />
@@ -175,6 +180,7 @@
     <ClInclude Include="..\..\include\object_reference_node_output.h" />
     <ClInclude Include="..\..\include\padded_frame_output.h" />
     <ClInclude Include="..\..\include\sample_container.h" />
+    <ClInclude Include="..\..\include\script_path_node.h" />
     <ClInclude Include="..\..\include\streaming_node_output.h" />
     <ClInclude Include="..\..\include\obj_file_node.h" />
     <ClInclude Include="..\..\include\image_byte_buffer.h" />

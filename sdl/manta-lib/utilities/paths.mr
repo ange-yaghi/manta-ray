@@ -1,0 +1,30 @@
+module {
+    @name:          "Path Utilities"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "Defines all path utilities"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
+private import "../types/atomic_types.mr"
+private import "../types/conversions.mr"
+
+@doc: "Get the path of the current script file"
+public node script_path => __mantaray__script_path {
+    alias output path [string];
+}
+
+@doc: "Get the path of the main script file"
+public node main_script_path => __mantaray__main_script_path {
+    alias output path [string];
+}
+
+@doc: "Append a relative path to a base path"
+public node append_path => __mantaray__append_path {
+    input base [string]: main_script_path();
+    input path [string]: "";
+    alias output result [string];
+}

@@ -1,5 +1,5 @@
-#ifndef STANDARD_ALLOCATOR_H
-#define STANDARD_ALLOCATOR_H
+#ifndef MANTARAY_STANDARD_ALLOCATOR_H
+#define MANTARAY_STANDARD_ALLOCATOR_H
 
 #include <assert.h>
 #include <new>
@@ -110,4 +110,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* STANDARD_ALLOCATOR_H */
+#endif /* MANTARAY_STANDARD_ALLOCATOR_H */

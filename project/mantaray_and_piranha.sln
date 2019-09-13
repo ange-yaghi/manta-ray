@@ -30,6 +30,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "piranha_test", "..\dependencies\submodules\piranha\project\piranha_test\piranha_test.vcxproj", "{AFBAA618-2097-4D34-866F-29FA69793869}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mantaray_cli", "mantaray_cli\mantaray_cli.vcxproj", "{ECCF7134-AFAD-4C15-B116-575B23FC5803}"
+	ProjectSection(ProjectDependencies) = postProject
+		{97105A24-57B6-4C85-8C7D-0F2FECC8C879} = {97105A24-57B6-4C85-8C7D-0F2FECC8C879}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -23,6 +23,12 @@ void manta::VectorSplitNode::_destroy() {
     /* void */
 }
 
+piranha::Node *manta::VectorSplitNode::_optimize() {
+    addFlag(piranha::Node::META_ACTIONLESS);
+
+    return this;
+}
+
 void manta::VectorSplitNode::registerOutputs() {
     setInterfaceInput(&m_input);
 

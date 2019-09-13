@@ -17,11 +17,12 @@ void manta::CachedVectorOutput::sample(
     *target = m_value;
 }
 
-void manta::CachedVectorOutput::discreteSample2D(int x, int y, void *target) const {
+void manta::CachedVectorOutput::discreteSample2d(int x, int y, void *_target) const {
     (void)x;
     (void)y;
 
-    sample(nullptr, target);
+    math::Vector *target = reinterpret_cast<math::Vector *>(_target);
+    *target = m_value;
 }
 
 void manta::CachedVectorOutput::fullOutput(const void **target) const {

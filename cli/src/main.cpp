@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-#define VERSION "v1.1.0a"
+#define VERSION "v1.2.0a"
 
 void printHeader() {
     std::cout << "////////////////////////////////////////////////" << std::endl;
@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
     }
     else if (argc == 1) {
         std::cout << "  Script: ";
-        std::cin >> scriptName;
+        std::getline(std::cin, scriptName);
         std::cin.ignore(); // Ignore any trailing characters
 
         std::cout << "------------------------------------------------" << std::endl;

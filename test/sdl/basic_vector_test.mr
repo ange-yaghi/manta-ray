@@ -1,4 +1,11 @@
 private import "../../sdl/manta-lib/mantaray.mr"
 
+node container {
+    input a;
+    input b;
+}
+
 vector test(1.0, 2.0, 3.0, 4.0)
 scalar test_scalar(666.0)
+
+container(test, test_scalar)

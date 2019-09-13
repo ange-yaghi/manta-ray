@@ -23,6 +23,9 @@ namespace manta {
         const SrgbNodeOutput *getMainOutput() const { return &m_output; }
 
     protected:
+        virtual Node *_optimize();
+
+    protected:
         SrgbNodeOutput m_output;
     };
 

@@ -4,6 +4,7 @@
 #include "fundamental_output.h"
 
 #include "pipe_node.h"
+#include "default_literal_node.h"
 
 namespace piranha {
 
@@ -24,8 +25,8 @@ namespace piranha {
             Type left;
             Type right;
 
-            m_left->fullCompute(&left);
-            m_right->fullCompute(&right);
+            m_left->fullCompute((void *)&left);
+            m_right->fullCompute((void *)&right);
             *target = left + right;
         }
 

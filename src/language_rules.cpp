@@ -48,6 +48,9 @@
 #include "../include/triangle_filter.h"
 #include "../include/box_filter.h"
 #include "../include/gaussian_filter.h"
+#include "../include/main_script_path.h"
+#include "../include/script_path_node.h"
+#include "../include/append_path_node.h"
 
 manta::LanguageRules::LanguageRules() {
     /* void */
@@ -179,6 +182,12 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__box_filter");
     registerBuiltinType <GaussianFilter>(
         "__mantaray__gaussian_filter");
+    registerBuiltinType <MainScriptPathNode>(
+        "__mantaray__main_script_path");
+    registerBuiltinType <ScriptPathNode>(
+        "__mantaray__script_path");
+    registerBuiltinType <AppendPathNode>(
+        "__mantaray__append_path");
 
     // Actions
     registerBuiltinType <piranha::ConsoleInputNode>(

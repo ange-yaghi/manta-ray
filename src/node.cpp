@@ -45,13 +45,9 @@ void manta::Node::_initialize() {
 }
 
 void manta::Node::_evaluate() {
-
+    /* void */
 }
 
 void manta::Node::_destroy() {
-
-}
-
-void manta::Node::registerInputs() {
-    registerInput(&m_enabledInput, "enable");
+    /* void */
 }

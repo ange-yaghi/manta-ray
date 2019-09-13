@@ -19,6 +19,8 @@ namespace piranha {
         NodeProgram();
         ~NodeProgram();
 
+        void initialize();
+        void optimize();
         bool execute();
 
         void writeAssembly(const std::string &fname) const;
@@ -40,6 +42,8 @@ namespace piranha {
         IrCompilationUnit *getRootUnit() const { return m_rootUnit; }
 
     protected:
+        bool m_initialized;
+
         IrCompilationUnit *m_rootUnit;
 
         NodeContainer m_topLevelContainer;
