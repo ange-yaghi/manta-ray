@@ -28,6 +28,7 @@ bsdf_material sphere_material(
 
 quick_render(
     materials: library,
+    samples: 256,
     object_file: "simple_scene.obj",
     camera_target: vector(0.0, 1.5, 0.0),
     camera_position: vector(5.0, 3.5, 5.0)

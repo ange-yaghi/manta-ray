@@ -10,6 +10,7 @@ module {
 }
 
 private import "console.mr"
+private import "paths.mr"
 
 private import "../types/atomic_types.mr"
 private import "../types/conversions.mr"

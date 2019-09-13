@@ -41,6 +41,7 @@ public import "primitives/primitives.mr"
 
 public import "utilities/console.mr"
 public import "utilities/quick_render.mr"
+public import "utilities/paths.mr"
 
 // ========================================================
 // Surface/Material Models

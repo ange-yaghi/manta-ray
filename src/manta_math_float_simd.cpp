@@ -19,7 +19,7 @@ math::Vector manta::math::uniformRandom4(real range) {
     return loadScalar(range * r);
 }
 
-float manta::math::uniformRandom(real range) {
+math::real manta::math::uniformRandom(real range) {
     real r = (rand() % RAND_MAX) / ((real)(RAND_MAX - 1));
     return range * r;
 }

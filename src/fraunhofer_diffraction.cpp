@@ -344,8 +344,11 @@ void manta::FraunhoferDiffraction::_evaluate() {
     piranha::native_float sensorWidth;
     m_sensorWidthInput->fullCompute((void *)&sensorWidth);
 
+    piranha::native_string cmfTablePath;
+    m_cmfTableInput->fullCompute((void *)&cmfTablePath);
+
     CmfTable table;
-    table.loadCsv("../../demos/cmfs/" "xyz_cmf_31.csv");
+    table.loadCsv(cmfTablePath.c_str());
     generate(aperture, nullptr, resolution, (math::real)sensorWidth, &table, nullptr, &settings);
     table.destroy();
 
@@ -369,6 +372,7 @@ void manta::FraunhoferDiffraction::registerInputs() {
     registerInput(&m_apertureInput, "aperture");
     registerInput(&m_sensorWidthInput, "sensor_width");
     registerInput(&m_resolutionInput, "resolution");
+    registerInput(&m_cmfTableInput, "cmf_table_path");
 }
 
 void manta::FraunhoferDiffraction::registerOutputs() {

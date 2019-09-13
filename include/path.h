@@ -1,5 +1,7 @@
-#ifndef PATH_H
-#define PATH_H
+#ifndef MANTARAY_PATH_H
+#define MANTARAY_PATH_H
+
+#include <piranha.h>
 
 #include <string>
 
@@ -12,12 +14,13 @@ namespace boost {
 
 namespace manta {
 
-    class Path {        
+    class Path {      
     protected: Path(const boost::filesystem::path &path);
     public:
         Path(const std::string &path);
         Path(const char *path);
         Path(const Path &path);
+        Path(const piranha::Path &path);
         Path();
         ~Path();
 
@@ -34,6 +37,8 @@ namespace manta {
         std::string getExtension() const;
         std::string getStem() const;
 
+        Path getAbsolute() const;
+
         bool isAbsolute() const;
         bool exists() const;
 
@@ -46,4 +51,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* PATH_H */
+#endif /* MANTARAY_PATH_H */

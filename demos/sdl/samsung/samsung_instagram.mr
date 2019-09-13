@@ -2,7 +2,7 @@ import "mantaray.mr"
 import "samsung_materials.mr"
 
 auto node settings {
-    output samples: 25000;
+    output samples: 500;
     output enable_matte_render: true;
     output enable_full_render: true;
 }

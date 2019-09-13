@@ -391,6 +391,12 @@
     <Filter Include="Header Files\sdl\nodes\output-ports\uv">
       <UniqueIdentifier>{3f6cc6d2-bc47-4428-96df-ec52cdedae07}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\sdl\nodes\library\paths">
+      <UniqueIdentifier>{5b8f9c4b-0565-41d1-86dd-d25f02aeb505}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sdl\nodes\library\paths">
+      <UniqueIdentifier>{a80a4133-46e8-4a34-947e-a71d277b52da}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -734,6 +740,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\box_filter.cpp">
       <Filter>Source Files\image-plane\filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\script_path_node.cpp">
+      <Filter>Source Files\sdl\nodes\library\paths</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\main_script_path.cpp">
+      <Filter>Source Files\sdl\nodes\library\paths</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\append_path_node.cpp">
+      <Filter>Source Files\sdl\nodes\library\paths</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1165,6 +1180,15 @@
     </ClInclude>
     <ClInclude Include="..\..\include\uv_operation_output.h">
       <Filter>Header Files\sdl\nodes\output-ports\uv</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\script_path_node.h">
+      <Filter>Header Files\sdl\nodes\library\paths</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\main_script_path.h">
+      <Filter>Header Files\sdl\nodes\library\paths</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\append_path_node.h">
+      <Filter>Header Files\sdl\nodes\library\paths</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

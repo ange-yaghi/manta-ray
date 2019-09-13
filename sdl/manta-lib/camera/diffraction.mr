@@ -13,6 +13,7 @@ private import "apertures.mr"
 private import "../types/atomic_types.mr"
 private import "../types/conversions.mr"
 private import "../image/vector_map.mr"
+private import "../utilities/paths.mr"
 
 @doc: "Settings for Fraunhofer diffraction simulation"
 public node fraunhofer_settings {
@@ -37,6 +38,11 @@ public node fraunhofer_diffraction {
     input sensor_width      [float];
     input resolution        [int];
     input dirt_map          [vector]: 1.0;
+    input cmf_table_path    [string]: 
+        append_path(
+            script_path(), 
+            "../resources/cmf/xyz_cmf_31.csv"
+        );
     input settings          [fraunhofer_settings]: fraunhofer_settings();
 
     alias output __out: __fraunhofer_diffraction(
@@ -51,7 +57,8 @@ public node fraunhofer_diffraction {
         dirt_map:           dirt_map,
         aperture:           aperture,
         sensor_width:       sensor_width,
-        resolution:         resolution
+        resolution:         resolution,
+        cmf_table_path:     cmf_table_path
     );
 }
 
@@ -69,6 +76,7 @@ public node __fraunhofer_diffraction => __mantaray__fraunhofer_diffraction {
     input aperture          [aperture];
     input sensor_width      [float];
     input resolution        [int];
+    input cmf_table_path    [string];
 
     output diffraction      [vector_map];
     output aperture_function [vector_map];

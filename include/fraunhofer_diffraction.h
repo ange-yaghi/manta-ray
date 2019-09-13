@@ -91,6 +91,7 @@ namespace manta {
         piranha::pNodeInput m_apertureInput;
         piranha::pNodeInput m_resolutionInput;
         piranha::pNodeInput m_sensorWidthInput;
+        piranha::pNodeInput m_cmfTableInput;
     };
 
 } /* namespace manta */

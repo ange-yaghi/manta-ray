@@ -428,7 +428,7 @@ void manta::Mesh::fineIntersection(const math::Vector &r, IntersectionPoint *p, 
     math::Vector textureCoordinates;
     const AuxFaceData &auxData = m_auxFaceData[faceIndex];
 
-    math::Vector faceNormal = math::normalize(math::cross(math::sub(*vertices[1], *vertices[0]), math::sub(*vertices[2], *vertices[0])));
+    //math::Vector faceNormal = math::normalize(math::cross(math::sub(*vertices[1], *vertices[0]), math::sub(*vertices[2], *vertices[0])));
 
     if (m_perVertexNormals) {
         if (data[0]->n != -1 && data[1]->n != -1 && data[2]->n != -1) {
@@ -441,12 +441,14 @@ void manta::Mesh::fineIntersection(const math::Vector &r, IntersectionPoint *p, 
             vertexNormal = math::normalize(vertexNormal);
         }
         else {
-            vertexNormal = faceNormal;
+            vertexNormal = math::normalize(math::cross(math::sub(*vertices[1], *vertices[0]), math::sub(*vertices[2], *vertices[0])));
         }
     }
     else {
-        vertexNormal = faceNormal;
+        vertexNormal = math::normalize(math::cross(math::sub(*vertices[1], *vertices[0]), math::sub(*vertices[2], *vertices[0])));
     }
+
+    math::Vector faceNormal = vertexNormal;
 
     if (m_useTextureCoords) {
         if (data[0]->t != -1 && data[1]->t != -1 && data[2]->t != -1) {
@@ -662,70 +664,6 @@ void manta::Mesh::merge(const Mesh *mesh) {
     m_vertexCount = newVertexCount;
     m_normalCount = newNormalCount;
     m_texCoordCount = newTexCoordCount;
-}
-
-bool manta::Mesh::detectTriangleIntersection(int faceIndex, math::real minDepth, math::real maxDepth, const LightRay *ray, CoarseCollisionOutput *output) const {
-    Face &face = m_faces[faceIndex];
-
-    math::Vector v0, v1, v2;
-    v0 = m_vertices[face.u];
-    v1 = m_vertices[face.v];
-    v2 = m_vertices[face.w];
-
-    math::Vector rayOrigin = ray->getSource();
-    math::Vector p0t = math::sub(v0, rayOrigin);
-    math::Vector p1t = math::sub(v1, rayOrigin);
-    math::Vector p2t = math::sub(v2, rayOrigin);
-
-    int kz = ray->getKZ();
-    int kx = ray->getKX();
-    int ky = ray->getKY();
-    p0t = math::permute(p0t, kx, ky, kz);
-    p1t = math::permute(p1t, kx, ky, kz);
-    p2t = math::permute(p2t, kx, ky, kz);
-
-    const math::Vector3 &shear = ray->getShear();
-    math::real sx = shear.x;
-    math::real sy = shear.y;
-    math::real sz = shear.z;
-
-    math::Vector s = math::loadVector(sx, sy);
-    math::Vector p0t_z = math::loadScalar(math::getZ(p0t));
-    math::Vector p1t_z = math::loadScalar(math::getZ(p1t));
-    math::Vector p2t_z = math::loadScalar(math::getZ(p2t));
-
-    p0t = math::add(p0t, math::mul(s, p0t_z));
-    p1t = math::add(p1t, math::mul(s, p1t_z));
-    p2t = math::add(p2t, math::mul(s, p2t_z));
-
-    math::real e0 = math::getX(p1t) * math::getY(p2t) - math::getY(p1t) * math::getX(p2t);
-    math::real e1 = math::getX(p2t) * math::getY(p0t) - math::getY(p2t) * math::getX(p0t);
-    math::real e2 = math::getX(p0t) * math::getY(p1t) - math::getY(p0t) * math::getX(p1t);
-
-    if ((e0 < 0 || e1 < 0 || e2 < 0) && (e0 > 0 || e1 > 0 || e2 > 0)) return false;
-
-    math::real det = e0 + e1 + e2;
-    if (det == (math::real)0.0) {
-        return false;
-    }
-
-    // Compute distance
-    math::real p0t_sz = math::getZ(p0t) * sz;
-    math::real p1t_sz = math::getZ(p1t) * sz;
-    math::real p2t_sz = math::getZ(p2t) * sz;
-
-    math::real t_scaled = math::getScalar(math::dot(math::loadVector(e0, e1, e2), math::loadVector(p0t_sz, p1t_sz, p2t_sz)));
-
-    if (det < 0 && (t_scaled >= 0 || t_scaled < maxDepth * det)) return false;
-    else if (det > 0 && (t_scaled <= 0 || t_scaled > maxDepth *det)) return false;
-
-    math::real invDet = 1 / det;
-    output->depth = t_scaled * invDet;
-    output->u = e0 * invDet;
-    output->v = e1 * invDet;
-    output->w = e2 * invDet;
-
-    return true;
 }
 
 bool manta::Mesh::detectQuadIntersection(int faceIndex, math::real minDepth, math::real maxDepth, const LightRay *ray, CoarseCollisionOutput *output) const {

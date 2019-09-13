@@ -10,11 +10,27 @@ module {
 }
 
 private import "../types/atomic_types.mr"
+private import "../utilities/paths.mr"
 
 @doc: "Write an image to a file"
-public node image_output => __mantaray__image_output {
+public node image_output {
     input map           [vector];
     input filename      [string];
     input jpeg_quality  [int]: 95;
     input correct_gamma [bool]: true;
+
+    alias output __out: 
+        __image_output(
+            map: map,
+            filename: append_path(path: filename),
+            jpeg_quality: jpeg_quality,
+            correct_gamma: correct_gamma
+        );
+}
+
+private node __image_output => __mantaray__image_output {
+    input map           [vector];
+    input filename      [string];
+    input jpeg_quality  [int];
+    input correct_gamma [bool];
 }

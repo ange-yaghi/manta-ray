@@ -11,7 +11,7 @@ namespace manta {
         ~CachedVectorOutput();
 
         virtual void sample(const IntersectionPoint *surfaceInteraction, void *target) const;
-        virtual void discreteSample2D(int x, int y, void *target) const;
+        virtual void discreteSample2d(int x, int y, void *target) const;
         virtual void fullOutput(const void **target) const;
 
         void setValue(const math::Vector &v) { m_value = v; }

@@ -11,11 +11,23 @@ module {
 
 private import "vector_map.mr"
 private import "../types/atomic_types.mr"
+private import "../utilities/paths.mr"
 
 @doc: "Image file loader"
-public node image_file => __mantaray__image_file {
+public node image_file {
     input filename      [string];
     input correct_gamma [bool]: true;
+
+    alias output __out:
+        __image_file(
+            filename: append_path(path: filename),
+            correct_gamma: correct_gamma
+        );
+}
+
+private node __image_file => __mantaray__image_file {
+    input filename      [string];
+    input correct_gamma [bool];
 
     alias output __out  [vector];
 }
