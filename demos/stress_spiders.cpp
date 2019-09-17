@@ -29,30 +29,28 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
     }
 
     // Create all materials
-    LambertianBSDF lambert;
+    LambertianBRDF lambert;
 
     PhongDistribution spiderCoating;
     spiderCoating.setPower((math::real)8192);
-    BilayerBSDF spiderBSDF;
+    BilayerBRDF spiderBSDF;
     spiderBSDF.setCoatingDistribution(spiderCoating.getMainOutput());
-    spiderBSDF.setDiffuseMaterial(&lambert);
     spiderBSDF.setDiffuse(getColor(0xf1, 0xc4, 0x0f));
     spiderBSDF.setSpecularAtNormal(math::loadVector(0.05f, 0.05f, 0.05f));
     SimpleBSDFMaterial *spiderMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     spiderMaterial->setName("Equipment");
-    spiderMaterial->setBSDF(&spiderBSDF);
+    spiderMaterial->setBSDF(new BSDF(&spiderBSDF));
     spiderMaterial->setEmission(math::constants::Zero);
 
     PhongDistribution groundCoating;
     groundCoating.setPower((math::real)64);
-    BilayerBSDF groundBSDF;
+    BilayerBRDF groundBSDF;
     groundBSDF.setCoatingDistribution(groundCoating.getMainOutput());
-    groundBSDF.setDiffuseMaterial(&lambert);
     groundBSDF.setDiffuse(getColor(0xFF, 0xFF, 0xFF));
     groundBSDF.setSpecularAtNormal(math::loadVector(0.1f, 0.1f, 0.1f));
     SimpleBSDFMaterial *groundMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     groundMaterial->setName("Ground");
-    groundMaterial->setBSDF(&groundBSDF);
+    groundMaterial->setBSDF(new BSDF(&groundBSDF));
     groundMaterial->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial outdoorTopLightMaterial;

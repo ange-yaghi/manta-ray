@@ -14,18 +14,32 @@ namespace manta {
 
     struct IntersectionPoint;
     class StackAllocator;
+    class BXDF;
 
     class BSDF : public ObjectReferenceNode<BSDF> {
     public:
+        static constexpr int MAX_BXDFS = 8;
+
+    public:
         BSDF();
+        BSDF(BXDF *bxdf);
         virtual ~BSDF();
 
-        virtual math::Vector sampleF(const IntersectionPoint *surfaceInteraction, 
+        math::Vector sampleF(const IntersectionPoint *surfaceInteraction, 
             const math::Vector &i, math::Vector *o, math::real *pdf, 
-            StackAllocator *stackAllocator) const = 0;
+            StackAllocator *stackAllocator) const;
+
+        math::Vector f(const IntersectionPoint *surfaceInteraction, const math::Vector &i, const math::Vector &o) const;
 
         static inline bool refract(const math::Vector &i, const math::Vector &n,
             math::real ior, math::Vector *t);
+
+        int getBxdfCount() const { return m_bxdfCount; }
+        void addBxdf(BXDF *bxdf) { m_bxdfs[m_bxdfCount++] = bxdf; }
+
+    protected:
+        BXDF *m_bxdfs[MAX_BXDFS];
+        int m_bxdfCount;
     };
 
     inline bool BSDF::refract(const math::Vector &i, const math::Vector &n,

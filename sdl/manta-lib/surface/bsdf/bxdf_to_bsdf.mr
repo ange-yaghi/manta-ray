@@ -1,17 +1,19 @@
 module {
-    @name:          "Lambertian BSDF"
+    @name:          "BXDF to BSDF Converter"
     @project:       "MantaRay"
     @author:        "Ange Yaghi"
     @maintainer:    "Ange Yaghi"
     @copyright:     "Copyright 2019, Ange Yaghi"
-    @doc:           "Lambertian BSDF implementation"
+    @doc:           "Node to convert a single BXDF to a BSDF"
     @version:       "0.0.1a"
     @github:        "github.com/ange-yaghi/manta-ray"
 }
 
+private import "bxdf.mr"
 private import "bsdf.mr"
 
-@doc: "Lambertian BSDF"
-public node lambertian_bsdf => __mantaray__lambertian_bsdf {
+@doc: "Simple single BXDF to BSDF converter"
+public node bxdf_to_bsdf => __mantaray__bxdf_to_bsdf {
+    input bxdf [bxdf];
     alias output __out [bsdf];
 }

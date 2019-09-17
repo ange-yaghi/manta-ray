@@ -17,17 +17,17 @@ namespace manta {
         MicrofacetDistribution();
         virtual ~MicrofacetDistribution();
 
-        virtual math::Vector generateMicrosurfaceNormal(NodeSessionMemory *mem) const = 0;
-        virtual math::real calculatePDF(const math::Vector &m, NodeSessionMemory *mem) const;
+        virtual math::Vector generateMicrosurfaceNormal(const IntersectionPoint *surfaceInteraction) = 0;
+        virtual math::real calculatePDF(const math::Vector &m, const IntersectionPoint *surfaceInteraction);
         virtual math::real calculateDistribution(const math::Vector &m, 
-            NodeSessionMemory *mem) const = 0;
+            const IntersectionPoint *surfaceInteraction) = 0;
         virtual math::real calculateG1(const math::Vector &v, const math::Vector &m, 
-            NodeSessionMemory *mem) const = 0;
+            const IntersectionPoint *surfaceInteraction) = 0;
         virtual math::real bidirectionalShadowMasking(const math::Vector &i, 
-            const math::Vector &o, const math::Vector &m, NodeSessionMemory *mem) const;
+            const math::Vector &o, const math::Vector &m, const IntersectionPoint *surfaceInteraction);
 
         math::real smithBidirectionalShadowMasking(const math::Vector &i, const math::Vector &o, 
-            const math::Vector &m, NodeSessionMemory *mem) const;
+            const math::Vector &m, const IntersectionPoint *surfaceInteraction);
 
         ObjectReferenceNodeOutput<MicrofacetDistribution> *getMainOutput() { return &m_output; }
     };

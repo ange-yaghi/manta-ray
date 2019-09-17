@@ -34,84 +34,78 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
     rayTracer.setMaterialLibrary(new MaterialLibrary);
 
     // Create all materials
-    LambertianBSDF lambert;
+    LambertianBRDF lambert;
 
     // Wall material
     PhongDistribution wallCoating;
     wallCoating.setPower((math::real)8.0);
-    BilayerBSDF wallBSDF;
+    BilayerBRDF wallBSDF;
     wallBSDF.setDiffuse(getColor(0xFF, 0xFF, 0xFF));
     wallBSDF.setSpecularAtNormal(getColor(0x00, 0x00, 0x00));
     wallBSDF.setCoatingDistribution(wallCoating.getMainOutput());
-    wallBSDF.setDiffuseMaterial(&lambert);
     SimpleBSDFMaterial *wallMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     wallMaterial->setName("WallMaterial");
-    wallMaterial->setBSDF(&wallBSDF);
+    wallMaterial->setBSDF(new BSDF(&wallBSDF));
     wallMaterial->setEmission(math::constants::Zero);
 
     // Floor material
     PhongDistribution floorCoating;
     floorCoating.setPower((math::real)64.0);
-    BilayerBSDF floorBSDF;
+    BilayerBRDF floorBSDF;
     floorBSDF.setDiffuse(getColor(0xFF, 0xFF, 0xFF));
     floorBSDF.setSpecularAtNormal(math::loadVector(1.0f, 1.0f, 1.0f));
     floorBSDF.setCoatingDistribution(wallCoating.getMainOutput());
-    floorBSDF.setDiffuseMaterial(&lambert);
     SimpleBSDFMaterial *floorMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     floorMaterial->setName("FloorMaterial");
-    floorMaterial->setBSDF(&floorBSDF);
+    floorMaterial->setBSDF(new BSDF(&floorBSDF));
     floorMaterial->setEmission(math::constants::Zero);
 
     // Floor material
     PhongDistribution carpetCoating;
     carpetCoating.setPower((math::real)4.0);
-    BilayerBSDF carpetBSDF;
+    BilayerBRDF carpetBSDF;
     carpetBSDF.setDiffuse(getColor(0xdc, 0xb4, 0x84));
     carpetBSDF.setSpecularAtNormal(math::loadVector(0.0f, 0.0f, 0.0f));
     carpetBSDF.setCoatingDistribution(wallCoating.getMainOutput());
-    carpetBSDF.setDiffuseMaterial(&lambert);
     SimpleBSDFMaterial *carpetMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     carpetMaterial->setName("CarpetMaterial");
-    carpetMaterial->setBSDF(&carpetBSDF);
+    carpetMaterial->setBSDF(new BSDF(&carpetBSDF));
     carpetMaterial->setEmission(math::constants::Zero);
 
     // Steel material
     PhongDistribution tableSteelCoating;
     tableSteelCoating.setPower((math::real)1024.0);
-    BilayerBSDF tableSteelBSDF;
+    BilayerBRDF tableSteelBSDF;
     tableSteelBSDF.setDiffuse(getColor(0x00, 0x00, 0x00));
     tableSteelBSDF.setSpecularAtNormal(math::loadVector(1.0f, 1.0f, 1.0f));
     tableSteelBSDF.setCoatingDistribution(tableSteelCoating.getMainOutput());
-    tableSteelBSDF.setDiffuseMaterial(&lambert);
     SimpleBSDFMaterial *tableSteel = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     tableSteel->setName("TableSteel");
-    tableSteel->setBSDF(&tableSteelBSDF);
+    tableSteel->setBSDF(new BSDF(&tableSteelBSDF));
     tableSteel->setEmission(math::constants::Zero);
 
     // Table top material
     PhongDistribution tableTopCoating;
     tableTopCoating.setPower((math::real)512.0);
-    BilayerBSDF tableTopBSDF;
+    BilayerBRDF tableTopBSDF;
     tableTopBSDF.setDiffuse(getColor(0x30, 0x26, 0x21));
     tableTopBSDF.setSpecularAtNormal(math::loadVector(0.2f, 0.2f, 0.2f));
     tableTopBSDF.setCoatingDistribution(tableTopCoating.getMainOutput());
-    tableTopBSDF.setDiffuseMaterial(&lambert);
     SimpleBSDFMaterial *tableTop = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     tableTop->setName("TableTop");
-    tableTop->setBSDF(&tableTopBSDF);
+    tableTop->setBSDF(new BSDF(&tableTopBSDF));
     tableTop->setEmission(math::constants::Zero);
 
     // Book material
     PhongDistribution bookCoating;
     bookCoating.setPower((math::real)4.0);
-    BilayerBSDF bookBSDF;
+    BilayerBRDF bookBSDF;
     bookBSDF.setDiffuse(getColor(0xFF, 0xFF, 0xFF));
     bookBSDF.setSpecularAtNormal(math::loadVector(0.0f, 0.0f, 0.0f));
     bookBSDF.setCoatingDistribution(tableTopCoating.getMainOutput());
-    bookBSDF.setDiffuseMaterial(&lambert);
     SimpleBSDFMaterial *book = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     book->setName("Book");
-    book->setBSDF(&bookBSDF);
+    book->setBSDF(new BSDF(&bookBSDF));
     book->setEmission(math::constants::Zero);
 
     // Create all scene geometry

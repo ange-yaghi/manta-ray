@@ -27,7 +27,7 @@ auto node block_material {
         filename: "../../demos/textures/dark_wood.jpg"
     )
 
-    bilayer_bsdf bsdf(
+    bilayer_brdf bsdf(
         coating: phong_distribution(300.0),
         diffuse: wood,
         specular: 0.02
@@ -38,7 +38,7 @@ auto node ground_material {
     bsdf_material(
         name: "Ground",
         library: library,
-        bsdf: lambertian_bsdf()
+        bsdf: lambertian_brdf()
     )
 }
 
@@ -48,7 +48,7 @@ auto node sun_material {
         library: library,
         reflectance: 0.0,
         emission: 100.0,
-        bsdf: lambertian_bsdf()
+        bsdf: lambertian_brdf()
     )
 }
 
@@ -58,7 +58,7 @@ auto node light_material {
         library: library,
         reflectance: 0.0,
         emission: 1.0,
-        bsdf: lambertian_bsdf()
+        bsdf: lambertian_brdf()
     )
 }
 

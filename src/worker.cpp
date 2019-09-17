@@ -40,6 +40,9 @@ void manta::Worker::initialize(mem_size stackSize, RayTracer *rayTracer, int wor
 
     // Initialize all statistics
     m_statistics.reset();
+
+    // Attach the worker id to the intersection point manager
+    m_ipManager.setThreadId(workerId);
 }
 
 void manta::Worker::start(bool multithreaded) {
@@ -130,7 +133,8 @@ void manta::Worker::doJob(const Job *job) {
                     LightRay *ray = &rays[samp];
                     ray->calculateTransformations();
 
-                    m_rayTracer->traceRay(job->scene, ray, 0, m_stack /**/ PATH_RECORDER_ARG /**/ STATISTICS_ROOT(&m_statistics));
+                    m_rayTracer->traceRay(job->scene, ray, 0, &m_ipManager,
+                        m_stack /**/ PATH_RECORDER_ARG /**/ STATISTICS_ROOT(&m_statistics));
 
                     ImageSample &sample = samples[sampleCount++];
                     sample.imagePlaneLocation = ray->getImagePlaneLocation();

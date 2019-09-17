@@ -1,28 +1,27 @@
-#ifndef MANTARAY_MICROFACET_REFLECTION_BSDF_H
-#define MANTARAY_MICROFACET_REFLECTION_BSDF_H
+#ifndef MANTARAY_MICROFACET_REFLECTION_BRDF_H
+#define MANTARAY_MICROFACET_REFLECTION_BRDF_H
 
-#include "bsdf.h"
+#include "bxdf.h"
 
 namespace manta {
 
     class MicrofacetDistribution;
     class MediaInterface;
 
-    class MicrofacetReflectionBSDF : public BSDF {
+    class MicrofacetReflectionBSDF : public BXDF {
     public:
         MicrofacetReflectionBSDF();
         virtual ~MicrofacetReflectionBSDF();
 
-        virtual void initializeSessionMemory(const IntersectionPoint *surfaceInteraction, 
-            NodeSessionMemory *memory, StackAllocator *stackAllocator) const;
-
         virtual math::Vector sampleF(const IntersectionPoint *surfaceInteraction, 
             const math::Vector &i, math::Vector *o, math::real *pdf, 
             StackAllocator *stackAllocator) const;
+        virtual math::Vector f(const IntersectionPoint *surfaceInteraction,
+            const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) const;
         virtual math::real calculatePDF(const IntersectionPoint *surfaceInteraction, 
             const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) const;
 
-        void setDistribution(const MicrofacetDistribution *distribution) { m_distribution = distribution; }
+        void setDistribution(MicrofacetDistribution *distribution) { m_distribution = distribution; }
         const MicrofacetDistribution *getDistribution() const { return m_distribution; }
 
     protected:
@@ -30,11 +29,11 @@ namespace manta {
 
     protected:
         piranha::pNodeInput m_distributionInput;
-        const MicrofacetDistribution *m_distribution;
+        MicrofacetDistribution *m_distribution;
         
         virtual void registerInputs();
     };
 
 } /* namespace manta */
 
-#endif /* MANTARAY_MICROFACET_REFLECTION_BSDF_H */
+#endif /* MANTARAY_MICROFACET_REFLECTION_BRDF_H */

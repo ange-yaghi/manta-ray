@@ -65,7 +65,7 @@ const manta::VectorNodeOutput *manta::SimpleBSDFMaterial::getEmissionNode() cons
 void manta::SimpleBSDFMaterial::_evaluate() {
     Material::_evaluate();
 
-    m_bsdf = static_cast<ObjectReferenceNodeOutput<BSDF> *>(m_bsdfInput)->getReference();
+    m_bsdf = getObject<BSDF>(m_bsdfInput);
 }
 
 void manta::SimpleBSDFMaterial::_initialize() {
@@ -113,8 +113,8 @@ void manta::SimpleBSDFMaterial::generateRays(RayContainer *rays, const LightRay 
         math::getScalar(math::dot(incident, v)),
         math::getScalar(math::dot(incident, normal)));
 
-    math::Vector outgoing_t;
-    math::real pdf;
+    math::Vector outgoing_t = math::loadScalar(333.333);
+    math::real pdf = 33.3333;
     
     const BSDF *bsdf = m_bsdf;
 
@@ -142,6 +142,11 @@ void manta::SimpleBSDFMaterial::generateRays(RayContainer *rays, const LightRay 
     ray.setDirection(outgoing);
     ray.setWeight(weight);
     ray.setIntensity(math::constants::Zero);
+
+    if (!(math::getX(outgoing) <= 2) || !(math::getY(outgoing) <= 2) || !(math::getZ(outgoing) <= 2)) {
+        std::cout << math::getX(outgoing) << ", " << math::getY(outgoing) << ", " << math::getZ(outgoing) << std::endl;
+        throw "Error";
+    }
 
     if (math::getScalar(math::dot(outgoing, normal)) >= 0) {
         ray.setSource(intersectionPoint.m_position);

@@ -1,9 +1,9 @@
-#ifndef MANTARAY_BILAYER_BSDF_H
-#define MANTARAY_BILAYER_BSDF_H
+#ifndef MANTARAY_BILAYER_BRDF_H
+#define MANTARAY_BILAYER_BRDF_H
 
-#include "bsdf.h"
+#include "bxdf.h"
 
-#include "lambertian_bsdf.h"
+#include "lambertian_brdf.h"
 #include "vector_node_output.h"
 
 namespace manta {
@@ -11,21 +11,21 @@ namespace manta {
     class MediaInterface;
     class MicrofacetDistribution;
 
-    class BilayerBSDF : public BSDF {
+    class BilayerBRDF : public BXDF {
     public:
-        BilayerBSDF();
-        virtual ~BilayerBSDF();
+        BilayerBRDF();
+        virtual ~BilayerBRDF();
 
         virtual math::Vector sampleF(const IntersectionPoint *surfaceInteraction, 
             const math::Vector &i, math::Vector *o, math::real *pdf, 
             StackAllocator *stackAllocator) const;
 
+        virtual math::Vector f(const IntersectionPoint *surfaceInteraction,
+            const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) const;
+
         void setCoatingDistribution(ObjectReferenceNodeOutput<MicrofacetDistribution> *coatingMaterial) 
             { m_coatingDistribution = coatingMaterial; }
         const piranha::pNodeInput getCoatingDistribution() { return m_coatingDistribution; }
-
-        void setDiffuseMaterial(LambertianBSDF *diffuseMaterial) {}
-        //LambertianBSDF *getDiffuseMaterial() { return m_diffuseMaterial; }
 
         void setSpecularAtNormal(const math::Vector &specular) { m_specular = specular; }
         math::Vector getSpecularAtNormal() const { return m_specular; }
@@ -40,11 +40,13 @@ namespace manta {
         piranha::pNodeInput getSpecularNode() const { return m_specularNode; }
 
     protected:
+        virtual void _evaluate();
+
         virtual void registerInputs();
 
     protected:
         piranha::pNodeInput m_coatingDistribution;
-        LambertianBSDF m_diffuseMaterial;
+        LambertianBRDF m_diffuseMaterial;
 
         piranha::pNodeInput m_diffuseNode;
         piranha::pNodeInput m_specularNode;
@@ -55,4 +57,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* MANTARAY_BILAYER_BSDF_H */
+#endif /* MANTARAY_BILAYER_BRDF_H */

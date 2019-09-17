@@ -28,7 +28,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
     }
 
     // Create all materials
-    LambertianBSDF lambert;
+    LambertianBRDF lambert;
 
     TextureNode blockWood;
     blockWood.loadFile(TEXTURE_PATH "dark_wood.jpg", true);
@@ -37,15 +37,14 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
     PhongDistribution blockCoating;
     blockCoating.setPower((math::real)300);
-    BilayerBSDF blockBSDF;
+    BilayerBRDF blockBSDF;
     blockBSDF.setCoatingDistribution(blockCoating.getMainOutput());
-    blockBSDF.setDiffuseMaterial(&lambert);
     //blockBSDF.setDiffuse(getColor(129, 216, 208)); // 0xf1, 0xc4, 0x0f
     blockBSDF.setDiffuseNode(blockWood.getMainOutput());
     blockBSDF.setSpecularAtNormal(math::loadVector(0.02f, 0.02f, 0.02f));
     SimpleBSDFMaterial *blockMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     blockMaterial->setName("Block");
-    blockMaterial->setBSDF(&blockBSDF);
+    blockMaterial->setBSDF(new BSDF(&blockBSDF));
     blockMaterial->setEmission(math::constants::Zero);
     //blockMaterial->setReflectance(math::loadVector(0.01f, 0.01f, 0.01f));
 
@@ -57,7 +56,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
     groundMaterial->setName("Ground");
     groundMaterial->setEmission(math::constants::Zero);
     //groundMaterial->setReflectance(math::loadVector(0.01f, 0.01f, 0.01f));
-    groundMaterial->setBSDF(&lambert);
+    groundMaterial->setBSDF(new BSDF(&lambert));
 
     SimpleBSDFMaterial *sunMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     sunMaterial->setName("Sun");

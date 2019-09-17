@@ -17,7 +17,8 @@ private import "../types/conversions.mr"
 private import "../types/operations.mr"
 private import "../surface/materials/material_library.mr"
 private import "../surface/materials/bsdf_material.mr"
-private import "../surface/bsdf/lambertian_bsdf.mr"
+private import "../surface/bsdf/lambertian_brdf.mr"
+private import "../surface/bsdf/bxdf_to_bsdf.mr"
 private import "../camera/utilities.mr"
 private import "../camera/cameras.mr"
 private import "../scene/scene_object.mr"
@@ -81,7 +82,7 @@ public node quick_render {
     bsdf_material(
         name: "Default",
         library: default_library,
-        bsdf: lambertian_bsdf(),
+        bsdf: lambertian_brdf(),
         reflectance: 0.5
     )
 

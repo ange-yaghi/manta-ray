@@ -8,37 +8,43 @@ manta::GgxDistribution::GgxDistribution() {
     m_width = (math::real)1.0;
     m_minMapWidth = (math::real)0.0;
     m_widthNode = nullptr;
+    m_useNodes = false;
 }
 
 manta::GgxDistribution::~GgxDistribution() {
     /* void */
 }
 
-void manta::GgxDistribution::initializeSessionMemory(const IntersectionPoint *surfaceInteraction, 
-    NodeSessionMemory *memory, StackAllocator *stackAllocator) const 
-{
-    MicrofacetDistribution::initializeSessionMemory(surfaceInteraction, memory, stackAllocator);
+manta::math::real manta::GgxDistribution::getWidth(const IntersectionPoint *surfaceInteraction) {
+    if (!m_useNodes) return m_width;
+    
+    const intersection_id id = surfaceInteraction->m_id;
+    const int threadId = surfaceInteraction->m_threadId;
 
-    GgxMemory *phongMemory = reinterpret_cast<GgxMemory *>((void *)memory->memory);
+    const GgxMemory *memory = m_cache.cacheGet(id, threadId);
 
-    if (m_widthNode != nullptr) {
-        // Sample the power input and save it in the state container
-        math::Vector rawWidth;
-        VectorNodeOutput *widthNode = static_cast<VectorNodeOutput *>(m_widthNode);
-        widthNode->sample(surfaceInteraction, (void *)&rawWidth);
+    if (memory == nullptr) {
+        // There was a cache miss
+        GgxMemory *newMemory = m_cache.cachePut(id, threadId);
+        math::Vector sampledWidth = math::constants::One;
 
-        math::real width = math::getScalar(rawWidth);
-        phongMemory->width = width * (m_width - m_minMapWidth) + m_minMapWidth;
+        // Sample the width input and save it in the state container
+        VectorNodeOutput *powerNode = static_cast<VectorNodeOutput *>(m_widthNode);
+        powerNode->sample(surfaceInteraction, (void *)&sampledWidth);
+
+        math::real width = math::getScalar(sampledWidth);
+        newMemory->width = width; // *(m_width - m_minMapWidth) + m_minMapWidth;
+
+        memory = newMemory;
     }
-    else {
-        phongMemory->width = m_width;
-    }
+
+    return memory->width;
 }
 
-manta::math::Vector manta::GgxDistribution::generateMicrosurfaceNormal(NodeSessionMemory *mem) const {
-    GgxMemory *memory = reinterpret_cast<GgxMemory *>((void *)mem->memory);
-
-    math::real width = memory->width;
+manta::math::Vector manta::GgxDistribution::generateMicrosurfaceNormal(
+    const IntersectionPoint *surfaceInteraction) 
+{
+    math::real width = getWidth(surfaceInteraction);
 
     math::real r1 = math::uniformRandom();
     math::real r2 = math::uniformRandom();
@@ -56,8 +62,9 @@ manta::math::Vector manta::GgxDistribution::generateMicrosurfaceNormal(NodeSessi
 }
 
 manta::math::real manta::GgxDistribution::calculateDistribution(
-        const math::Vector &m, NodeSessionMemory *mem) const {
-    GgxMemory *memory = reinterpret_cast<GgxMemory *>((void *)mem->memory);
+    const math::Vector &m, const IntersectionPoint *surfaceInteraction) 
+{
+    math::real width = getWidth(surfaceInteraction);
 
     math::real cos_theta_m = math::getZ(m);
 
@@ -65,7 +72,7 @@ manta::math::real manta::GgxDistribution::calculateDistribution(
 
     math::real cos2_theta_m = cos_theta_m * cos_theta_m;
     math::real tan2_theta_m = (1 - cos2_theta_m) / cos2_theta_m;
-    math::real width2 = memory->width * memory->width;
+    math::real width2 = width * width;
 
     // Calculate D(m)
     math::real s1 = (width2 + tan2_theta_m) * cos2_theta_m;
@@ -75,8 +82,9 @@ manta::math::real manta::GgxDistribution::calculateDistribution(
 }
 
 manta::math::real manta::GgxDistribution::calculateG1(const math::Vector &v, 
-        const math::Vector &m, NodeSessionMemory *mem) const {
-    GgxMemory *memory = reinterpret_cast<GgxMemory *>((void *)mem->memory);
+    const math::Vector &m, const IntersectionPoint *surfaceInteraction) 
+{
+    math::real width = getWidth(surfaceInteraction);
 
     math::real v_dot_m = math::getScalar(math::dot(v, m));
     math::real v_dot_n = (math::getZ(v));
@@ -88,11 +96,35 @@ manta::math::real manta::GgxDistribution::calculateG1(const math::Vector &v,
     math::real cos2_theta_v = cos_theta_v * cos_theta_v;
     math::real tan2_theta_v = (1 - cos2_theta_v) / cos2_theta_v;
 
-    math::real s1 = 1 + ::sqrt(1 + memory->width * memory->width * tan2_theta_v);
+    math::real s1 = 1 + ::sqrt(1 + width * width * tan2_theta_v);
 
     return (math::real)2.0 / s1;
 }
 
 void manta::GgxDistribution::registerInputs() {
     registerInput(&m_widthNode, "width");
+}
+
+void manta::GgxDistribution::_evaluate() {
+    /* void */
+}
+
+piranha::Node *manta::GgxDistribution::_optimize() {
+    m_useNodes = true;
+
+    if (ENABLE_OPTIMIZATION) {
+        bool isConstantWidth = m_widthNode->getParentNode()->hasFlag(piranha::Node::META_CONSTANT);
+
+        if (isConstantWidth) {
+            math::Vector constantWidth;
+
+            VectorNodeOutput *widthNode = static_cast<VectorNodeOutput *>(m_widthNode);
+            widthNode->sample(nullptr, (void *)&constantWidth);
+
+            m_width = math::getScalar(constantWidth);
+            m_useNodes = false;
+        }
+    }
+
+    return this;
 }

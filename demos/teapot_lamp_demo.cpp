@@ -57,19 +57,18 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
     rayTracer.setMaterialLibrary(new MaterialLibrary);
 
     // Create all materials
-    LambertianBSDF lambert;
+    LambertianBRDF lambert;
 
     PhongDistribution floorCoating;
     floorCoating.setPower((math::real)128);
 
-    BilayerBSDF floorBSDF;
+    BilayerBRDF floorBSDF;
     floorBSDF.setCoatingDistribution(floorCoating.getMainOutput());
     floorBSDF.setDiffuse(getColor(0xFF, 0xFF, 0xFF));
-    floorBSDF.setDiffuseMaterial(&lambert);
     floorBSDF.setSpecularAtNormal(math::loadVector(0.0, 0.0, 0.0));
 
     SimpleBSDFMaterial *floorMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
-    floorMaterial->setBSDF(&floorBSDF);
+    floorMaterial->setBSDF(new BSDF(&floorBSDF));
     floorMaterial->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial *lampLightMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
@@ -79,14 +78,13 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
     PhongDistribution teapotCoating;
     teapotCoating.setPower((math::real)1024);
 
-    BilayerBSDF teapotBSDF;
+    BilayerBRDF teapotBSDF;
     teapotBSDF.setCoatingDistribution(teapotCoating.getMainOutput());
     teapotBSDF.setDiffuse(getColor(0x89, 0xCF, 0xF0));
-    teapotBSDF.setDiffuseMaterial(&lambert);
     teapotBSDF.setSpecularAtNormal(math::loadVector(0.5, 0.5, 0.5));
 
     SimpleBSDFMaterial *teapotMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
-    teapotMaterial->setBSDF(&teapotBSDF);
+    teapotMaterial->setBSDF(new BSDF(&teapotBSDF));
     teapotMaterial->setEmission(math::constants::Zero);
 
     // Glass
@@ -104,7 +102,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
     SimpleBSDFMaterial *glassMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     glassMaterial->setName("Glass");
     glassMaterial->setReflectance(getColor(255, 255, 255));
-    glassMaterial->setBSDF(&simpleGlassBSDF);
+    glassMaterial->setBSDF(new BSDF(&simpleGlassBSDF));
     glassMaterial->setEmission(math::constants::Zero);
 
     // Create all scene geometry

@@ -184,7 +184,10 @@ void manta::RayTracer::tracePixel(int px, int py, const Scene *scene, CameraRayE
     waitForWorkers();
 }
 
-void manta::RayTracer::traceRayEmitter(const CameraRayEmitter *emitter, RayContainer *container, const Scene *scene, StackAllocator *s /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const {
+void manta::RayTracer::traceRayEmitter(const CameraRayEmitter *emitter, RayContainer *container, 
+    const Scene *scene, IntersectionPointManager *manager, StackAllocator *s 
+    /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const 
+{
     // Get the target ray container
 
     emitter->generateRays(container);
@@ -198,7 +201,7 @@ void manta::RayTracer::traceRayEmitter(const CameraRayEmitter *emitter, RayConta
 
         math::Vector intensity = math::constants::Zero;
 
-        traceRay(scene, ray, 0, s /**/ PATH_RECORDER_VAR /**/ STATISTICS_PARAM_INPUT);
+        traceRay(scene, ray, 0, manager, s /**/ PATH_RECORDER_VAR /**/ STATISTICS_PARAM_INPUT);
         intensity = ray->getWeightedIntensity();
 
         ray->setIntensity(intensity);
@@ -380,10 +383,16 @@ void manta::RayTracer::refineContact(const LightRay *ray, math::real depth, Inte
     }
 }
 
-void manta::RayTracer::traceRay(const Scene *scene, LightRay *ray, int degree, StackAllocator *s /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const {
+void manta::RayTracer::traceRay(
+    const Scene *scene, LightRay *ray, int degree, IntersectionPointManager *manager, 
+    StackAllocator *s /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const 
+{
     SceneObject *sceneObject = nullptr;
     IntersectionPoint point;
     point.m_lightRay = ray;
+    point.m_id = manager->generateId();
+    point.m_threadId = manager->getThreadId();
+    point.m_manager = manager;
 
     depthCull(scene, ray, &sceneObject, &point, s /**/ STATISTICS_PARAM_INPUT);
 
@@ -405,7 +414,7 @@ void manta::RayTracer::traceRay(const Scene *scene, LightRay *ray, int degree, S
             material->generateRays(&container, *ray, point, degree + 1, s);
         }
 
-        traceRays(scene, container, s /**/ PATH_RECORDER_VAR /**/ STATISTICS_PARAM_INPUT);
+        traceRays(scene, container, manager, s /**/ PATH_RECORDER_VAR /**/ STATISTICS_PARAM_INPUT);
         material->integrateRay(ray, container, point);
         container.destroyRays();
 
@@ -421,7 +430,10 @@ void manta::RayTracer::traceRay(const Scene *scene, LightRay *ray, int degree, S
     }
 }
 
-void manta::RayTracer::traceRays(const Scene *scene, const RayContainer &rayContainer, StackAllocator *s /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const {
+void manta::RayTracer::traceRays(const Scene *scene, const RayContainer &rayContainer, 
+    IntersectionPointManager *manager, StackAllocator *s 
+    /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const 
+{
     int nRays = rayContainer.getRayCount();
 
     for (int i = 0; i < nRays; i++) {
@@ -430,6 +442,6 @@ void manta::RayTracer::traceRays(const Scene *scene, const RayContainer &rayCont
         LightRay *ray = &rayContainer.getRays()[i];
         ray->calculateTransformations();
 
-        traceRay(scene, ray, rayContainer.getDegree(), s /**/ PATH_RECORDER_VAR /**/ STATISTICS_PARAM_INPUT);
+        traceRay(scene, ray, rayContainer.getDegree(), manager, s /**/ PATH_RECORDER_VAR /**/ STATISTICS_PARAM_INPUT);
     }
 }

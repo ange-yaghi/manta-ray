@@ -12,23 +12,10 @@ namespace manta {
 
     class Node : public piranha::Node {
     public:
-        struct NodeSessionMemory {
-            unsigned char memory[64];
-            void *extraMemory;
-        };
-
-    public:
         Node();
         virtual ~Node();
 
-        virtual void initializeSessionMemory(const IntersectionPoint *surfaceInteraction,
-            NodeSessionMemory *memory, StackAllocator *stackAllocator) const;
-        void destroySessionMemory(NodeSessionMemory *memory, StackAllocator *stackAllocator) const;
-
         void resolvePath(const Path *relative, Path *target) const;
-
-    protected:
-        bool m_enabled;
 
     protected:
         virtual void _initialize();

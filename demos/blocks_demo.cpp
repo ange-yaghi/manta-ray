@@ -42,21 +42,19 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
     MicrofacetReflectionBSDF bsdf2;
     bsdf2.setDistribution(&phongDist);
 
-    LambertianBSDF lambert;
+    LambertianBRDF lambert;
 
     DielectricMediaInterface fresnel;
     fresnel.setIorIncident((math::real)1.0);
     fresnel.setIorTransmitted((math::real)1.5);
 
-    BilayerBSDF blockBSDF;
-    blockBSDF.setDiffuseMaterial(&lambert);
+    BilayerBRDF blockBSDF;
     blockBSDF.setCoatingDistribution(phongDist.getMainOutput());
     blockBSDF.setDiffuseNode(map.getMainOutput());
     blockBSDF.setDiffuse(getColor(0xFF, 0xFF, 0xFF));
     blockBSDF.setSpecularAtNormal(math::loadVector(0.1f, 0.1f, 0.1f));
 
-    BilayerBSDF floorBSDF;
-    floorBSDF.setDiffuseMaterial(&lambert);
+    BilayerBRDF floorBSDF;
     floorBSDF.setCoatingDistribution(phongDist2.getMainOutput());
     floorBSDF.setDiffuse(getColor(0xFF, 0xFF, 0xFF));
     floorBSDF.setSpecularAtNormal(math::loadVector(0.75f, 0.75f, 0.75f));
@@ -67,19 +65,19 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
     simpleBlockMaterial->setName("Block");
     simpleBlockMaterial->setEmission(math::constants::Zero);
     simpleBlockMaterial->setReflectanceNode(whiteNode.getMainOutput());
-    simpleBlockMaterial->setBSDF(&blockBSDF);
+    simpleBlockMaterial->setBSDF(new BSDF(&blockBSDF));
 
     SimpleBSDFMaterial *simpleLetterMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     simpleLetterMaterial->setName("Letters");
     simpleLetterMaterial->setEmission(math::constants::Zero);
     simpleLetterMaterial->setReflectanceNode(whiteNode.getMainOutput());
-    simpleLetterMaterial->setBSDF(&blockBSDF);
+    simpleLetterMaterial->setBSDF(new BSDF(&blockBSDF));
 
     SimpleBSDFMaterial *simpleGroundMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     simpleGroundMaterial->setName("Ground");
     simpleGroundMaterial->setEmission(math::constants::Zero);
     simpleGroundMaterial->setReflectanceNode(whiteNode.getMainOutput());
-    simpleGroundMaterial->setBSDF(&floorBSDF);
+    simpleGroundMaterial->setBSDF(new BSDF(&floorBSDF));
 
     SimpleBSDFMaterial outdoorTopLightMaterial;
     outdoorTopLightMaterial.setEmission(math::loadVector(5.f, 5.f, 5.f));

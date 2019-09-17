@@ -17,7 +17,7 @@ bsdf_material floor_material(
     library: library,
     name: "Floor",
     reflectance: srgb_i(0x30, 0x33, 0x6b),
-    bsdf: microfacet_reflection_bsdf(
+    bsdf: microfacet_reflection_brdf(
         ggx_distribution(0.05)
     )
 )
@@ -34,7 +34,7 @@ bsdf_material cone_material(
 bsdf_material sphere_material(
     library: library,
     name: "Sphere",
-    bsdf: bilayer_bsdf(
+    bsdf: bilayer_brdf(
         coating: ggx_distribution(0.01),
         diffuse: srgb_i(0xeb, 0x4d, 0x4b),
         specular: 1.0

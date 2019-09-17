@@ -22,6 +22,8 @@
     <ClCompile Include="..\..\src\aperture.cpp" />
     <ClCompile Include="..\..\src\append_path_node.cpp" />
     <ClCompile Include="..\..\src\box_filter.cpp" />
+    <ClCompile Include="..\..\src\bxdf.cpp" />
+    <ClCompile Include="..\..\src\bxdf_to_bsdf_node.cpp" />
     <ClCompile Include="..\..\src\cached_vector_node.cpp" />
     <ClCompile Include="..\..\src\cached_vector_output.cpp" />
     <ClCompile Include="..\..\src\constructed_vector_node_output.cpp" />
@@ -30,6 +32,8 @@
     <ClCompile Include="..\..\src\date_node_output.cpp" />
     <ClCompile Include="..\..\src\filter.cpp" />
     <ClCompile Include="..\..\src\gaussian_filter.cpp" />
+    <ClCompile Include="..\..\src\intersection_point.cpp" />
+    <ClCompile Include="..\..\src\intersection_point_manager.cpp" />
     <ClCompile Include="..\..\src\kd_tree_node.cpp" />
     <ClCompile Include="..\..\src\language_rules.cpp" />
     <ClCompile Include="..\..\src\main_script_path.cpp" />
@@ -40,7 +44,7 @@
     <ClCompile Include="..\..\src\path.cpp" />
     <ClCompile Include="..\..\src\media_interface.cpp" />
     <ClCompile Include="..\..\src\biconvex_lens.cpp" />
-    <ClCompile Include="..\..\src\bilayer_bsdf.cpp" />
+    <ClCompile Include="..\..\src\bilayer_brdf.cpp" />
     <ClCompile Include="..\..\src\bsdf.cpp" />
     <ClCompile Include="..\..\src\camera_ray_emitter.cpp" />
     <ClCompile Include="..\..\src\camera_ray_emitter_group.cpp" />
@@ -60,7 +64,7 @@
     <ClCompile Include="..\..\src\image_output_node.cpp" />
     <ClCompile Include="..\..\src\jpeg_writer.cpp" />
     <ClCompile Include="..\..\src\kd_tree.cpp" />
-    <ClCompile Include="..\..\src\lambertian_bsdf.cpp" />
+    <ClCompile Include="..\..\src\lambertian_brdf.cpp" />
     <ClCompile Include="..\..\src\manta_math.cpp" />
     <ClCompile Include="..\..\src\opaque_media_interface.cpp" />
     <ClCompile Include="..\..\src\ramp_node.cpp" />
@@ -85,8 +89,8 @@
     <ClCompile Include="..\..\src\material_pointer.cpp" />
     <ClCompile Include="..\..\src\microfacet_distribution.cpp" />
     <ClCompile Include="..\..\src\microfacet_glass_bsdf.cpp" />
-    <ClCompile Include="..\..\src\microfacet_reflection_bsdf.cpp" />
-    <ClCompile Include="..\..\src\microfacet_transmission_bsdf.cpp" />
+    <ClCompile Include="..\..\src\microfacet_reflection_brdf.cpp" />
+    <ClCompile Include="..\..\src\microfacet_transmission_btdf.cpp" />
     <ClCompile Include="..\..\src\octree.cpp" />
     <ClCompile Include="..\..\src\os_utilities.cpp" />
     <ClCompile Include="..\..\src\phong_distribution.cpp" />
@@ -121,7 +125,7 @@
     <ClCompile Include="..\..\src\scene_geometry.cpp" />
     <ClCompile Include="..\..\src\scene_object.cpp" />
     <ClCompile Include="..\..\src\simple_lens.cpp" />
-    <ClCompile Include="..\..\src\perfect_specular_reflection_bsdf.cpp" />
+    <ClCompile Include="..\..\src\perfect_specular_reflection_brdf.cpp" />
     <ClCompile Include="..\..\src\sphere_primitive.cpp" />
     <ClCompile Include="..\..\src\spherical_surface.cpp" />
     <ClCompile Include="..\..\src\square_aperture.cpp" />
@@ -141,13 +145,18 @@
     <ClInclude Include="..\..\include\aperture.h" />
     <ClInclude Include="..\..\include\append_path_node.h" />
     <ClInclude Include="..\..\include\biconvex_lens.h" />
-    <ClInclude Include="..\..\include\bilayer_bsdf.h" />
+    <ClInclude Include="..\..\include\bilayer_brdf.h" />
     <ClInclude Include="..\..\include\binary_node.h" />
     <ClInclude Include="..\..\include\binary_node_output.h" />
     <ClInclude Include="..\..\include\box_filter.h" />
     <ClInclude Include="..\..\include\bsdf.h" />
+    <ClInclude Include="..\..\include\bxdf.h" />
+    <ClInclude Include="..\..\include\bxdf_to_bsdf_node.h" />
     <ClInclude Include="..\..\include\cached_vector_node.h" />
     <ClInclude Include="..\..\include\cached_vector_output.h" />
+    <ClInclude Include="..\..\include\intersection_point_manager.h" />
+    <ClInclude Include="..\..\include\intersection_point_types.h" />
+    <ClInclude Include="..\..\include\node_cache.h" />
     <ClInclude Include="..\..\include\camera_ray_emitter.h" />
     <ClInclude Include="..\..\include\camera_ray_emitter_group.h" />
     <ClInclude Include="..\..\include\cft_estimator_2d.h" />
@@ -190,7 +199,7 @@
     <ClInclude Include="..\..\include\path.h" />
     <ClInclude Include="..\..\include\jpeg_writer.h" />
     <ClInclude Include="..\..\include\kd_tree.h" />
-    <ClInclude Include="..\..\include\lambertian_bsdf.h" />
+    <ClInclude Include="..\..\include\lambertian_brdf.h" />
     <ClInclude Include="..\..\include\margins.h" />
     <ClInclude Include="..\..\include\convolution_node.h" />
     <ClInclude Include="..\..\include\mipmap.h" />
@@ -219,8 +228,8 @@
     <ClInclude Include="..\..\include\media_interface.h" />
     <ClInclude Include="..\..\include\microfacet_distribution.h" />
     <ClInclude Include="..\..\include\microfacet_glass_bsdf.h" />
-    <ClInclude Include="..\..\include\microfacet_reflection_bsdf.h" />
-    <ClInclude Include="..\..\include\microfacet_transmission_bsdf.h" />
+    <ClInclude Include="..\..\include\microfacet_reflection_brdf.h" />
+    <ClInclude Include="..\..\include\microfacet_transmission_btdf.h" />
     <ClInclude Include="..\..\include\octree.h" />
     <ClInclude Include="..\..\include\opaque_media_interface.h" />
     <ClInclude Include="..\..\include\os_utilities.h" />
@@ -266,7 +275,7 @@
     <ClInclude Include="..\..\include\scene_geometry.h" />
     <ClInclude Include="..\..\include\scene_object.h" />
     <ClInclude Include="..\..\include\simple_lens.h" />
-    <ClInclude Include="..\..\include\perfect_specular_reflection_bsdf.h" />
+    <ClInclude Include="..\..\include\perfect_specular_reflection_brdf.h" />
     <ClInclude Include="..\..\include\sphere_primitive.h" />
     <ClInclude Include="..\..\include\spherical_surface.h" />
     <ClInclude Include="..\..\include\sampler_2d.h" />
@@ -379,6 +388,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AssemblerOutput>AssemblyAndSourceCode</AssemblerOutput>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -405,6 +415,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AssemblerOutput>AssemblyAndSourceCode</AssemblerOutput>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -433,6 +444,8 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AssemblerOutput>AssemblyAndSourceCode</AssemblerOutput>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -462,6 +475,8 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AssemblerOutput>NoListing</AssemblerOutput>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

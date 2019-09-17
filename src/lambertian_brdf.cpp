@@ -1,14 +1,14 @@
-#include "../include/lambertian_bsdf.h"
+#include "../include/lambertian_brdf.h"
 
-manta::LambertianBSDF::LambertianBSDF() {
+manta::LambertianBRDF::LambertianBRDF() {
     m_output.setReference(this);
 }
 
-manta::LambertianBSDF::~LambertianBSDF() {
+manta::LambertianBRDF::~LambertianBRDF() {
     /* void */
 }
 
-manta::math::Vector manta::LambertianBSDF::sampleF(const IntersectionPoint *surfaceInteraction, 
+manta::math::Vector manta::LambertianBRDF::sampleF(const IntersectionPoint *surfaceInteraction, 
         const math::Vector &i, math::Vector *o, math::real *pdf, StackAllocator *stackAllocator) const {    
     // Uniformly sample a hemisphere
     math::real r1 = math::uniformRandom(math::constants::TWO_PI);
@@ -23,5 +23,11 @@ manta::math::Vector manta::LambertianBSDF::sampleF(const IntersectionPoint *surf
     *o = direction;
     *pdf = (math::real)1.0 / math::constants::TWO_PI;
 
+    return math::loadScalar((math::real)1.0 / math::constants::PI);
+}
+
+manta::math::Vector manta::LambertianBRDF::f(const IntersectionPoint *surfaceInteraction, 
+    const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) const 
+{
     return math::loadScalar((math::real)1.0 / math::constants::PI);
 }

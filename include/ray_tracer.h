@@ -9,6 +9,7 @@
 #include "manta_build_conf.h"
 #include "runtime_statistics.h"
 #include "vector_map_2d_node_output.h"
+#include "intersection_point_manager.h"
 
 #include <atomic>
 #include <mutex>
@@ -51,7 +52,8 @@ namespace manta {
         void tracePixel(int px, int py, const Scene *scene, 
             CameraRayEmitterGroup *rayEmitterGroup, ImagePlane *target);
         void traceRayEmitter(const CameraRayEmitter *emitter, RayContainer *container, 
-            const Scene *scene, StackAllocator *s /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const;
+            const Scene *scene, IntersectionPointManager *manager, 
+            StackAllocator *s /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const;
 
         int getThreadCount() const { return m_threadCount; }
 
@@ -65,7 +67,8 @@ namespace manta {
         JobQueue *getJobQueue() { return &m_jobQueue; }
         
         void traceRay(const Scene *scene, LightRay *ray, int degree, 
-            StackAllocator *s /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const;
+            IntersectionPointManager *manager, StackAllocator *s 
+            /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const;
         void incrementRayCompletion(const Job *job, int increment = 1);
 
         void setDeterministicSeedMode(bool enable) { m_deterministicSeed = enable; }
@@ -119,7 +122,7 @@ namespace manta {
         void refineContact(const LightRay *ray, math::real depth, IntersectionPoint *point, 
             SceneObject **closestObject, StackAllocator *s) const;
 
-        void traceRays(const Scene *scene, const RayContainer &rayContainer, 
+        void traceRays(const Scene *scene, const RayContainer &rayContainer, IntersectionPointManager *manager,
             StackAllocator *s /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const;
 
         math::Vector m_backgroundColor;

@@ -3,12 +3,18 @@
 
 #include "microfacet_distribution.h"
 
+#include "vector_node_output.h"
+#include "node_cache.h"
+
 namespace manta {
 
     // Forward declarations
     class VectorNodeOutput;
 
     class GgxDistribution : public MicrofacetDistribution {
+    public:
+        static constexpr bool ENABLE_OPTIMIZATION = true;
+
     public:
         struct GgxMemory {
             math::real width;
@@ -18,14 +24,13 @@ namespace manta {
         GgxDistribution();
         virtual ~GgxDistribution();
 
-        virtual void initializeSessionMemory(const IntersectionPoint *surfaceInteraction, 
-            NodeSessionMemory *memory, StackAllocator *stackAllocator) const;
+        math::real getWidth(const IntersectionPoint *surfaceInteraction);
 
-        virtual math::Vector generateMicrosurfaceNormal(NodeSessionMemory *mem) const;
+        virtual math::Vector generateMicrosurfaceNormal(const IntersectionPoint *surfaceInteraction);
         virtual math::real calculateDistribution(const math::Vector &m, 
-            NodeSessionMemory *mem) const;
+            const IntersectionPoint *surfaceInteraction);
         virtual math::real calculateG1(const math::Vector &v, const math::Vector &m, 
-            NodeSessionMemory *mem) const;
+            const IntersectionPoint *surfaceInteraction);
 
         void setWidth(math::real width) { m_width = width; }
         math::real getWidth() const { return m_width; }
@@ -39,10 +44,17 @@ namespace manta {
     protected:
         virtual void registerInputs();
 
+        virtual void _evaluate();
+        virtual piranha::Node *_optimize();
+
     protected:
         piranha::pNodeInput m_widthNode;
+        bool m_useNodes;
+
         math::real m_width;
         math::real m_minMapWidth;
+
+        NodeCache<GgxMemory> m_cache;
     };
 
 } /* namespace manta */

@@ -1,0 +1,17 @@
+module {
+    @name:          "Lambertian BRDF"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "Lambertian BRDF implementation"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
+private import "bxdf.mr"
+
+@doc: "Lambertian BRDF"
+public node lambertian_brdf => __mantaray__lambertian_brdf {
+    alias output __out [bxdf];
+}
