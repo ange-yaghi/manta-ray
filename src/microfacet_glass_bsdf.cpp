@@ -121,17 +121,17 @@ manta::math::Vector manta::MicrofacetGlassBSDF::f(const IntersectionPoint *surfa
     return math::constants::Zero;
 }
 
-manta::math::real manta::MicrofacetGlassBSDF::calculatePDF(const IntersectionPoint *surfaceInteraction, 
-    const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) const 
+manta::math::real manta::MicrofacetGlassBSDF::pdf(
+    const IntersectionPoint *surfaceInteraction, const math::Vector &i, const math::Vector &o) const 
 {
-    return math::real();
+    return math::real(0.0);
 }
 
 void manta::MicrofacetGlassBSDF::_evaluate() {
+    BXDF::_evaluate();
+
     m_distribution = getObject<MicrofacetDistribution>(m_distributionInput);
     m_mediaInterface = getObject<MediaInterface>(m_mediaInterfaceInput);
-
-    m_output.setReference(this);
 }
 
 void manta::MicrofacetGlassBSDF::registerInputs() {

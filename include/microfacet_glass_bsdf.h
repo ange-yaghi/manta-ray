@@ -18,8 +18,8 @@ namespace manta {
             StackAllocator *stackAllocator) const;
         virtual math::Vector f(const IntersectionPoint *surfaceInteraction,
             const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) const;
-        virtual math::real calculatePDF(const IntersectionPoint *surfaceInteraction, 
-            const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) const;
+        virtual math::real pdf(const IntersectionPoint *surfaceInteraction,
+            const math::Vector &i, const math::Vector &o) const;
 
         void setDistribution(MicrofacetDistribution *distribution)  { m_distribution = distribution; }
         MicrofacetDistribution *getDistribution() const { return m_distribution; }

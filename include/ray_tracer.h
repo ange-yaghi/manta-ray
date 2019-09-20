@@ -66,7 +66,7 @@ namespace manta {
         // Interface to workers
         JobQueue *getJobQueue() { return &m_jobQueue; }
         
-        void traceRay(const Scene *scene, LightRay *ray, int degree, 
+        math::Vector traceRay(const Scene *scene, LightRay *ray, int degree, 
             IntersectionPointManager *manager, StackAllocator *s 
             /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const;
         void incrementRayCompletion(const Job *job, int increment = 1);

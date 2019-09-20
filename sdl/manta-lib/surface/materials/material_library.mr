@@ -10,4 +10,9 @@ module {
 }
 
 @doc: "Material library channel type"
-public node material_library => __mantaray__material_library { /* void */ }
+public node material_library_channel => __mantaray__material_library_channel { /* void */ }
+
+@doc: "Empty material library"
+public node material_library => __mantaray__material_library {
+    alias output __out [material_library_channel];
+}

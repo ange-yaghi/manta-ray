@@ -763,7 +763,7 @@ bool manta::Mesh::detectQuadIntersection(int faceIndex, math::real minDepth, mat
     return true;
 }
 
-bool manta::Mesh::findClosestIntersection(int *faceList, int faceCount, const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const {
+bool manta::Mesh::findClosestIntersection(int *faceList, int faceCount, const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth /**/ STATISTICS_PROTOTYPE) const {
     math::Vector rayDir = ray->getDirection();
     math::Vector raySource = ray->getSource();
 

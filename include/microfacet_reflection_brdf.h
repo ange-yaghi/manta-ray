@@ -10,6 +10,9 @@ namespace manta {
 
     class MicrofacetReflectionBSDF : public BXDF {
     public:
+        static constexpr math::real MIN_EPSILON = (math::real)0.0;
+
+    public:
         MicrofacetReflectionBSDF();
         virtual ~MicrofacetReflectionBSDF();
 
@@ -18,20 +21,23 @@ namespace manta {
             StackAllocator *stackAllocator) const;
         virtual math::Vector f(const IntersectionPoint *surfaceInteraction,
             const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) const;
-        virtual math::real calculatePDF(const IntersectionPoint *surfaceInteraction, 
-            const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) const;
+        virtual math::real pdf(const IntersectionPoint *surfaceInteraction,
+            const math::Vector &i, const math::Vector &o) const;
 
         void setDistribution(MicrofacetDistribution *distribution) { m_distribution = distribution; }
         const MicrofacetDistribution *getDistribution() const { return m_distribution; }
 
-    protected:
-        virtual void _evaluate();
+        math::Vector getReflectivity(const IntersectionPoint *surfaceInteraction) const;
 
     protected:
-        piranha::pNodeInput m_distributionInput;
-        MicrofacetDistribution *m_distribution;
-        
+        virtual void _evaluate();
         virtual void registerInputs();
+
+        piranha::pNodeInput m_distributionInput;
+        piranha::pNodeInput m_reflectivityInput;
+
+        MicrofacetDistribution *m_distribution;
+        math::Vector m_baseReflectivity;
     };
 
 } /* namespace manta */

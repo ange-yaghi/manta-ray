@@ -17,6 +17,8 @@ namespace manta {
             StackAllocator *stackAllocator) const;
         virtual math::Vector f(const IntersectionPoint *surfaceInteraction,
             const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) const;
+        virtual math::real pdf(const IntersectionPoint *surfaceInteraction,
+            const math::Vector &i, const math::Vector &o) const;
     };
 
 } /* namespace manta */

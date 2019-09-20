@@ -33,6 +33,9 @@ manta::math::real manta::GgxDistribution::getWidth(const IntersectionPoint *surf
         powerNode->sample(surfaceInteraction, (void *)&sampledWidth);
 
         math::real width = math::getScalar(sampledWidth);
+        width = (width > (math::real)1.0) ? (math::real)1.0 : width;
+        width = (width < (math::real)0.0) ? (math::real)0.0 : width;
+
         newMemory->width = width; // *(m_width - m_minMapWidth) + m_minMapWidth;
 
         memory = newMemory;
@@ -76,7 +79,11 @@ manta::math::real manta::GgxDistribution::calculateDistribution(
 
     // Calculate D(m)
     math::real s1 = (width2 + tan2_theta_m) * cos2_theta_m;
-    math::real d_m = width2 / (math::constants::PI * s1 * s1);
+    math::real s1_2 = s1 * s1;
+
+    if (s1_2 == 0) return (math::real)0.0;
+
+    math::real d_m = width2 / (math::constants::PI * s1_2);
 
     return d_m;
 }
@@ -106,7 +113,7 @@ void manta::GgxDistribution::registerInputs() {
 }
 
 void manta::GgxDistribution::_evaluate() {
-    /* void */
+    m_output.setReference(this);
 }
 
 piranha::Node *manta::GgxDistribution::_optimize() {

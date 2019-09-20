@@ -121,6 +121,8 @@ manta::math::real manta::DielectricMediaInterface::ni(DIRECTION d) const {
 }
 
 void manta::DielectricMediaInterface::_evaluate() {
+    MediaInterface::_evaluate();
+
     piranha::native_float iorTransmitted, iorIncident;
 
     m_iorIncidentInput->fullCompute((void *)&iorIncident);

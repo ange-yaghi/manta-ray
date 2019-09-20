@@ -1,7 +1,7 @@
 #include "../include/lambertian_brdf.h"
 
 manta::LambertianBRDF::LambertianBRDF() {
-    m_output.setReference(this);
+    /* void */
 }
 
 manta::LambertianBRDF::~LambertianBRDF() {
@@ -30,4 +30,10 @@ manta::math::Vector manta::LambertianBRDF::f(const IntersectionPoint *surfaceInt
     const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) const 
 {
     return math::loadScalar((math::real)1.0 / math::constants::PI);
+}
+
+manta::math::real manta::LambertianBRDF::pdf(
+    const IntersectionPoint *surfaceInteraction, const math::Vector &i, const math::Vector &o) const 
+{
+    return (math::real)1.0 / math::constants::TWO_PI;
 }

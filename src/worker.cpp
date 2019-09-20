@@ -133,12 +133,12 @@ void manta::Worker::doJob(const Job *job) {
                     LightRay *ray = &rays[samp];
                     ray->calculateTransformations();
 
-                    m_rayTracer->traceRay(job->scene, ray, 0, &m_ipManager,
+                    math::Vector L = m_rayTracer->traceRay(job->scene, ray, 0, &m_ipManager,
                         m_stack /**/ PATH_RECORDER_ARG /**/ STATISTICS_ROOT(&m_statistics));
 
                     ImageSample &sample = samples[sampleCount++];
                     sample.imagePlaneLocation = ray->getImagePlaneLocation();
-                    sample.intensity = ray->getWeightedIntensity();
+                    sample.intensity = L;
 
                     if (sampleCount >= SAMPLE_BUFFER_CAPACITY) {
                         job->target->processSamples(samples, sampleCount, m_stack);

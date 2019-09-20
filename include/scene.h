@@ -21,6 +21,8 @@ namespace manta {
         int getSceneObjectCount() const { return (int)m_sceneObjects.size(); }
 
     protected:
+        virtual void _evaluate();
+
         std::vector<SceneObject *> m_sceneObjects;
     };
 

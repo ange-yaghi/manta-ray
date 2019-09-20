@@ -38,6 +38,9 @@ namespace manta {
         void addBxdf(BXDF *bxdf) { m_bxdfs[m_bxdfCount++] = bxdf; }
 
     protected:
+        virtual void _evaluate();
+
+    protected:
         BXDF *m_bxdfs[MAX_BXDFS];
         int m_bxdfCount;
     };

@@ -16,6 +16,9 @@ namespace manta {
 
         virtual void generateSamples(int sampleCount, math::Vector2 *target) const = 0;
         virtual int getTotalSampleCount(int sampleCount) const = 0;
+
+    protected:
+        virtual void _evaluate();
     };
 
 } /* namespace manta */

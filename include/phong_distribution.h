@@ -38,6 +38,7 @@ namespace manta {
         math::real getMinMapPower() const { return m_minMapPower; }
 
     protected:
+        virtual void _evaluate();
         virtual void registerInputs();
 
     protected:

@@ -11,3 +11,8 @@ module {
 
 @doc: "BXDF channel type"
 public node bxdf => __mantaray__bxdf { /* void */ }
+
+@doc: "Null BXDF reference"
+public node null_bxdf => __mantaray__null_bxdf {
+    alias output __out [bxdf];
+}

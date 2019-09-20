@@ -403,6 +403,12 @@
     <Filter Include="Source Files\sdl\nodes\library\conversions">
       <UniqueIdentifier>{70f4fdfe-f158-4336-ae75-333bb67b924b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\material\surface-modeling\sdl">
+      <UniqueIdentifier>{236e098d-75dc-46b6-9aef-e71915e2f459}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\material\interface\surface-modeling\sdl">
+      <UniqueIdentifier>{0a803db1-2bea-4133-897e-2ae00d793f35}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -767,6 +773,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\intersection_point_manager.cpp">
       <Filter>Source Files\ray-tracer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\add_bxdf_node.cpp">
+      <Filter>Source Files\material\interface\surface-modeling\sdl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1222,6 +1231,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\intersection_point_types.h">
       <Filter>Header Files\ray-tracer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\add_bxdf_node.h">
+      <Filter>Header Files\material\surface-modeling\sdl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

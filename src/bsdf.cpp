@@ -23,7 +23,29 @@ manta::math::Vector manta::BSDF::sampleF(const IntersectionPoint *surfaceInterac
     const math::Vector &i, math::Vector *o, math::real *pdf,
     StackAllocator *stackAllocator) const 
 {
-    return m_bxdfs[0]->sampleF(surfaceInteraction, i, o, pdf, stackAllocator);
+    int bxdf = rand() % m_bxdfCount;
+    math::Vector f = m_bxdfs[bxdf]->sampleF(surfaceInteraction, i, o, pdf, stackAllocator);
+
+    if (*pdf == (math::real)0.0) {
+        return math::constants::Zero;
+    }
+
+    if (m_bxdfCount > 1) {
+        for (int j = 0; j < m_bxdfCount; j++) {
+            if (j != bxdf) {
+                *pdf += m_bxdfs[j]->pdf(surfaceInteraction, i, *o);
+            }
+        }
+
+        *pdf /= m_bxdfCount;
+
+        f = math::constants::Zero;
+        for (int j = 0; j < m_bxdfCount; j++) {
+            f = math::add(f, m_bxdfs[j]->f(surfaceInteraction, i, *o, stackAllocator));
+        }
+    }
+
+    return f;
 }
 
 manta::math::Vector manta::BSDF::f(
@@ -40,4 +62,8 @@ manta::math::Vector manta::BSDF::f(
     }
 
     return math::constants::Zero;
+}
+
+void manta::BSDF::_evaluate() {
+    m_output.setReference(this);
 }

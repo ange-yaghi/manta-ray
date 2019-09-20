@@ -25,3 +25,9 @@ manta::math::Vector manta::PerfectSpecularReflectionBRDF::f(const IntersectionPo
 {
     return math::constants::Zero;
 }
+
+manta::math::real manta::PerfectSpecularReflectionBRDF::pdf(
+    const IntersectionPoint *surfaceInteraction, const math::Vector &i, const math::Vector &o) const 
+{
+    return math::real(0.0);
+}

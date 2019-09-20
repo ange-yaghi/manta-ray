@@ -13,6 +13,14 @@ manta::Material::~Material() {
     /* void */
 }
 
+manta::math::Vector manta::Material::getEmission(const IntersectionPoint &ip) const {
+    return math::constants::Zero;
+}
+
+manta::math::Vector manta::Material::getFilterColor(const IntersectionPoint &ip) const {
+    return math::constants::One;
+}
+
 void manta::Material::_initialize() {
     /* void */
 }

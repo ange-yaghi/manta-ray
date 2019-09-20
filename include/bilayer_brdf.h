@@ -23,6 +23,9 @@ namespace manta {
         virtual math::Vector f(const IntersectionPoint *surfaceInteraction,
             const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) const;
 
+        virtual math::real pdf(const IntersectionPoint *surfaceInteraction,
+            const math::Vector &i, const math::Vector &o) const;
+
         void setCoatingDistribution(ObjectReferenceNodeOutput<MicrofacetDistribution> *coatingMaterial) 
             { m_coatingDistribution = coatingMaterial; }
         const piranha::pNodeInput getCoatingDistribution() { return m_coatingDistribution; }
@@ -40,8 +43,6 @@ namespace manta {
         piranha::pNodeInput getSpecularNode() const { return m_specularNode; }
 
     protected:
-        virtual void _evaluate();
-
         virtual void registerInputs();
 
     protected:

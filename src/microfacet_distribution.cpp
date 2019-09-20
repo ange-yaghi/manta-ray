@@ -3,7 +3,7 @@
 #include "../include/stack_allocator.h"
 
 manta::MicrofacetDistribution::MicrofacetDistribution() {
-    m_output.setReference(this);
+    /* void */
 }
 
 manta::MicrofacetDistribution::~MicrofacetDistribution() {

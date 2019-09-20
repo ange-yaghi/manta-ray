@@ -7,8 +7,6 @@
 manta::SceneGeometry::SceneGeometry() {
     m_id = -1;
 
-    m_output.setReference(this);
-
     m_materialsInput = nullptr;
     m_defaultMaterial = nullptr;
     m_positionInput = nullptr;
@@ -51,6 +49,8 @@ void manta::SceneGeometry::_evaluate() {
     }
 
     m_defaultMaterialIndex = defaultMaterialIndex;
+
+    m_output.setReference(this);
 }
 
 void manta::SceneGeometry::registerInputs() {

@@ -20,7 +20,7 @@ manta::Octree::Octree() {
 }
 
 manta::Octree::~Octree() {
-
+    /* void */
 }
 
 void manta::Octree::initialize(math::real width, const math::Vector &position) {
@@ -192,7 +192,7 @@ bool manta::Octree::findClosestIntersection(
         if (!skip && rayDepth > currentMaxDepth) return false;
 
         if (leaf->faceCount > 0) {
-            bool foundInMesh = m_mesh->findClosestIntersection(m_faceLists[leaf->faceList], leaf->faceCount, ray, intersection, minDepth, currentMaxDepth, s /**/ STATISTICS_PARAM_INPUT);
+            bool foundInMesh = m_mesh->findClosestIntersection(m_faceLists[leaf->faceList], leaf->faceCount, ray, intersection, minDepth, currentMaxDepth /**/ STATISTICS_PARAM_INPUT);
             if (foundInMesh) {
                 found = true;
                 currentMaxDepth = intersection->depth;

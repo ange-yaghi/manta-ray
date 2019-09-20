@@ -52,6 +52,7 @@
 #include "../include/script_path_node.h"
 #include "../include/append_path_node.h"
 #include "../include/bxdf_to_bsdf_node.h"
+#include "../include/add_bxdf_node.h"
 
 manta::LanguageRules::LanguageRules() {
     /* void */
@@ -81,9 +82,9 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__microfacet_distribution", &ObjectChannel::MicrofacetDistributionChannel);
     registerBuiltinType <piranha::ChannelNode>(
         "__mantaray__material", &ObjectChannel::MaterialChannel);
-    registerBuiltinType <MaterialLibrary>(
-        "__mantaray__material_library", &ObjectChannel::MaterialLibraryChannel);
     registerBuiltinType <piranha::ChannelNode>(
+        "__mantaray__material_library_channel", &ObjectChannel::MaterialLibraryChannel);
+    registerBuiltinType <BSDF>(
         "__mantaray__bsdf", &ObjectChannel::BsdfChannel);
     registerBuiltinType <piranha::ChannelNode>(
         "__mantaray__bxdf", &ObjectChannel::BxdfChannel);
@@ -113,6 +114,8 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__filter", &ObjectChannel::FilterChannel);
 
     // Constructors
+    registerBuiltinType<MaterialLibrary>(
+        "__mantaray__material_library");
     registerBuiltinType<RayTracer>(
         "__mantaray__ray_tracer");
     registerBuiltinType<ConstructedVectorNode>(
@@ -123,6 +126,12 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__phong_distribution");
     registerBuiltinType<GgxDistribution>(
         "__mantaray__ggx_distribution");
+    registerBuiltinType<NullReferenceNode<BSDF>>(
+        "__mantaray__null_bsdf");
+    registerBuiltinType<NullReferenceNode<BXDF>>(
+        "__mantaray__null_bxdf");
+    registerBuiltinType<AddBxdfNode>(
+        "__mantaray__add_bxdf");
     registerBuiltinType<MicrofacetReflectionBSDF>(
         "__mantaray__microfacet_reflection_brdf");
     registerBuiltinType<SimpleBSDFMaterial>(

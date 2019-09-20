@@ -16,9 +16,6 @@ namespace manta {
         SceneObject();
         virtual ~SceneObject();
 
-        virtual void _evaluate();
-        virtual void registerInputs();
-
         void setGeometry(SceneGeometry *geometry) { m_geometry = geometry; }
         SceneGeometry *getGeometry() { return m_geometry; }
 
@@ -29,6 +26,9 @@ namespace manta {
         const char *getName() const { return m_name.c_str(); }
 
     protected:
+        virtual void _evaluate();
+        virtual void registerInputs();
+
         piranha::pNodeInput m_geometryInput;
         piranha::pNodeInput m_sceneInput;
         piranha::pNodeInput m_nameInput;

@@ -21,6 +21,7 @@
 #include "../include/os_utilities.h"
 #include "../include/material_library.h"
 #include "../include/vector_node_output.h"
+#include "../include/bsdf.h"
 
 #include <iostream>
 #include <thread>
@@ -199,11 +200,7 @@ void manta::RayTracer::traceRayEmitter(const CameraRayEmitter *emitter, RayConta
         LightRay *ray = &rays[i];
         ray->calculateTransformations();
 
-        math::Vector intensity = math::constants::Zero;
-
-        traceRay(scene, ray, 0, manager, s /**/ PATH_RECORDER_VAR /**/ STATISTICS_PARAM_INPUT);
-        intensity = ray->getWeightedIntensity();
-
+        math::Vector intensity = traceRay(scene, ray, 0, manager, s /**/ PATH_RECORDER_VAR /**/ STATISTICS_PARAM_INPUT);
         ray->setIntensity(intensity);
     }
 
@@ -250,6 +247,8 @@ void manta::RayTracer::_evaluate() {
     static_cast<piranha::NodeOutput *>(m_renderBlockSizeInput)->fullCompute((void *)&renderBlockSize);
     static_cast<piranha::NodeOutput *>(m_deterministicSeedInput)->fullCompute((void *)&deterministicSeed);
     static_cast<VectorNodeOutput *>(m_backgroundColorInput)->sample(nullptr, (void *)&m_backgroundColor);
+
+    //threadCount = 1;
 
     m_materialManager = getObject<MaterialLibrary>(m_materialLibraryInput);
     camera = getObject<CameraRayEmitterGroup>(m_cameraInput);
@@ -383,51 +382,126 @@ void manta::RayTracer::refineContact(const LightRay *ray, math::real depth, Inte
     }
 }
 
-void manta::RayTracer::traceRay(
+manta::math::Vector manta::RayTracer::traceRay(
     const Scene *scene, LightRay *ray, int degree, IntersectionPointManager *manager, 
     StackAllocator *s /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const 
 {
-    SceneObject *sceneObject = nullptr;
-    IntersectionPoint point;
-    point.m_lightRay = ray;
-    point.m_id = manager->generateId();
-    point.m_threadId = manager->getThreadId();
-    point.m_manager = manager;
+    constexpr int MAX_BOUNCES = 4;
 
-    depthCull(scene, ray, &sceneObject, &point, s /**/ STATISTICS_PARAM_INPUT);
+    LightRay *currentRay = ray;
+    LightRay localRay;
+    math::Vector beta = math::constants::One;
+    math::Vector L = math::constants::Zero;
 
-    if (sceneObject != nullptr) {
-        START_BRANCH(point.m_position); // For path recording
-        Material *material;
-        if (point.m_material == -1) {
-            material = sceneObject->getDefaultMaterial();
+    for (int bounces = 0; bounces < MAX_BOUNCES; bounces++) {
+        SceneObject *sceneObject = nullptr;
+        Material *material = nullptr;
+        IntersectionPoint point;
+        point.m_lightRay = currentRay;
+        point.m_id = manager->generateId();
+        point.m_threadId = manager->getThreadId();
+        point.m_manager = manager;
+
+        depthCull(scene, currentRay, &sceneObject, &point, s /**/ STATISTICS_PARAM_INPUT);
+
+        bool foundIntersection = (sceneObject != nullptr);
+
+        if (foundIntersection) {
+            material = (point.m_material == -1) 
+                ? sceneObject->getDefaultMaterial()
+                : material = m_materialManager->getMaterial(point.m_material);
+
+            math::Vector emission = material->getEmission(point);
+
+            L = math::add(
+                L,
+                math::mul(beta, emission)
+            );
         }
         else {
-            material = m_materialManager->getMaterial(point.m_material);
-        }
-        
-        // Create a new container
-        RayContainer container;
-        container.setStackAllocator(s);
-        container.setDegree(degree + 1);
-        if (point.m_valid) {
-            material->generateRays(&container, *ray, point, degree + 1, s);
+            L = math::add(
+                L,
+                math::mul(beta, m_backgroundColor)
+            );
+            break;
         }
 
-        traceRays(scene, container, manager, s /**/ PATH_RECORDER_VAR /**/ STATISTICS_PARAM_INPUT);
-        material->integrateRay(ray, container, point);
-        container.destroyRays();
+        // Generate a new path
+        math::Vector outgoingDir = math::negate(currentRay->getDirection());
+        math::Vector incomingDir, t_incomingDir;
 
-        END_BRANCH();
-    }
-    else {
-        // The ray hit nothing so it receives the background color
-        ray->setIntensity(m_backgroundColor);
+        math::Vector normal = math::getScalar(math::dot(outgoingDir, point.m_vertexNormal)) > 0
+            ? point.m_vertexNormal
+            : math::negate(point.m_vertexNormal);
 
-        // Point a ray at nothing
-        START_BRANCH(math::add(ray->getSource(), math::mul(ray->getDirection(), math::loadScalar((math::real)1.0))));
-        END_BRANCH();
+        // Generate basis vectors
+        math::Vector u = math::constants::YAxis;
+        math::Vector v;
+        math::Vector w = normal;
+        if (abs(math::getX(w)) < 0.1f) {
+            u = math::constants::XAxis;
+        }
+        u = math::normalize(math::cross(u, w));
+        v = math::cross(w, u);
+
+        // Transform incident ray
+        math::Vector t_dir = math::loadVector(
+            math::getScalar(math::dot(outgoingDir, u)),
+            math::getScalar(math::dot(outgoingDir, v)),
+            math::getScalar(math::dot(outgoingDir, w)));
+
+        BSDF *bsdf = material->getBSDF();
+        if (bsdf == nullptr) break;
+
+        math::real pdf;
+        math::Vector f = bsdf->sampleF(&point, t_dir, &t_incomingDir, &pdf, s);
+        f = math::mul(f, material->getFilterColor(point));
+        f = math::mask(f, math::constants::MaskOffW);
+
+        if (pdf == (math::real)0.0) break;
+        if (math::getScalar(math::maxComponent(f)) < (math::real)1E-4) break;
+
+        incomingDir = math::add(
+            math::mul(u, math::loadScalar(math::getX(t_incomingDir))),
+            math::mul(v, math::loadScalar(math::getY(t_incomingDir)))
+        );
+        incomingDir = math::add(
+            incomingDir,
+            math::mul(math::loadScalar(math::getZ(t_incomingDir)), w)
+        );
+
+        beta = math::mul(
+            math::mul(f, beta),
+            math::abs(math::dot(incomingDir, point.m_vertexNormal))
+        );
+        beta = math::div(
+            beta,
+            math::loadScalar(pdf)
+        );
+
+        if (std::isnan(math::getX(beta)) || std::isnan(math::getY(beta)) || std::isnan(math::getZ(beta))) {
+            int a = 0;
+        }
+
+        localRay.setDirection(incomingDir);
+        if (math::getScalar(math::dot(incomingDir, w)) >= 0) {
+            localRay.setSource(point.m_position);
+        }
+        else {
+            // The light ray is undergoing transmission
+            localRay.setSource(math::add(point.m_position, math::mul(localRay.getDirection(), math::loadScalar((math::real)1E-2))));
+        }
+        localRay.calculateTransformations();
+        currentRay = &localRay;
+
+        if (bounces > 3) {
+            math::real q = std::max((math::real)0.05, 1 - math::getScalar(math::maxComponent(beta)));
+            if (math::uniformRandom() < q) break;
+            beta = math::div(beta, math::loadScalar(1 - q));
+        }
     }
+
+    return L;
 }
 
 void manta::RayTracer::traceRays(const Scene *scene, const RayContainer &rayContainer, 

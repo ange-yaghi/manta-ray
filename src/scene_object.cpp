@@ -6,8 +6,6 @@ manta::SceneObject::SceneObject() {
     m_name = "";
     m_defaultMaterial = nullptr;
     m_geometry = nullptr;
-
-    m_output.setReference(this);
 }
 
 manta::SceneObject::~SceneObject() {
@@ -20,6 +18,7 @@ void manta::SceneObject::_evaluate() {
     static_cast<piranha::NodeOutput *>(m_nameInput)->fullCompute((void *)&m_name);
 
     m_scene->addSceneObject(this);
+    m_output.setReference(this);
 }
 
 void manta::SceneObject::registerInputs() {

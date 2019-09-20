@@ -4,8 +4,6 @@
 
 manta::Lens::Lens() {
     m_aperture = nullptr;
-
-    m_output.setReference(this);
 }
 
 manta::Lens::~Lens() {
@@ -45,6 +43,8 @@ void manta::Lens::_evaluate() {
 
     configure();
     update();
+
+    m_output.setReference(this);
 }
 
 void manta::Lens::_destroy() {

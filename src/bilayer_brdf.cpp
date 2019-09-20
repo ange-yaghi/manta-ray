@@ -139,8 +139,10 @@ manta::math::Vector manta::BilayerBRDF::f(const IntersectionPoint *surfaceIntera
     return math::constants::Zero;
 }
 
-void manta::BilayerBRDF::_evaluate() {
-    m_output.setReference(this);
+manta::math::real manta::BilayerBRDF::pdf(
+    const IntersectionPoint *surfaceInteraction, const math::Vector &i, const math::Vector &o) const 
+{
+    return math::real();
 }
 
 void manta::BilayerBRDF::registerInputs() {

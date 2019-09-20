@@ -2,8 +2,6 @@
 
 manta::Aperture::Aperture() {
     m_radius = (math::real)m_radius;
-
-    m_output.setReference(this);
 }
 
 manta::Aperture::~Aperture() {
@@ -19,6 +17,8 @@ void manta::Aperture::_evaluate() {
     m_radiusInput->fullCompute((void *)&radius);
 
     m_radius = (math::real)radius;
+
+    m_output.setReference(this);
 }
 
 void manta::Aperture::_destroy() {

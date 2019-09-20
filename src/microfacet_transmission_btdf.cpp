@@ -75,9 +75,9 @@ manta::math::Vector manta::MicrofacetTransmissionBTDF::f(const IntersectionPoint
     return math::constants::Zero;
 }
 
-manta::math::real manta::MicrofacetTransmissionBTDF::calculatePDF(
-        const IntersectionPoint *surfaceInteraction, 
-        const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) const 
+manta::math::real manta::MicrofacetTransmissionBTDF::pdf(
+    const IntersectionPoint *surfaceInteraction, const math::Vector &i, const math::Vector &o) const 
 {
-    return math::real();
+    return math::real(0.0);
 }
+

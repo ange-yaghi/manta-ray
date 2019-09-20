@@ -29,8 +29,15 @@ namespace manta {
             registerOutput(&m_output, "__out");
         }
 
+        virtual void _evaluate() {
+            m_output.setReference(nullptr);
+        }
+
         ObjectReferenceNodeOutput<Type> m_output;
     };
+
+    template <typename T_ReferenceType>
+    using NullReferenceNode = ObjectReferenceNode<T_ReferenceType>;
 
 } /* namespace manta */
 

@@ -100,6 +100,10 @@ manta::math::real manta::PhongDistribution::calculateG1(
     return secondTerm;
 }
 
+void manta::PhongDistribution::_evaluate() {
+    m_output.setReference(this);
+}
+
 void manta::PhongDistribution::registerInputs() {
     registerInput(&m_powerNode, "power");
 }
