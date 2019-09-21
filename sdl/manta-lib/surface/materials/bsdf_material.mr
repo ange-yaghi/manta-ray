@@ -12,14 +12,15 @@ module {
 private import "material_library.mr"
 private import "material.mr"
 private import "../bsdf/bsdf.mr"
-private import "../bsdf/lambertian_bsdf.mr"
+private import "../bsdf/lambertian_brdf.mr"
+private import "../bsdf/bxdf_to_bsdf.mr"
 private import "../../types/atomic_types.mr" as types
 private import "../../types/conversions.mr"
 
 public node bsdf_material => __mantaray__simple_bsdf_material {
     input name          [types::string]: "";
     modify library      [material_library];
-    input bsdf          [bsdf]: lambertian_bsdf(); // Defaults to Lambert
+    input bsdf          [bsdf]: lambertian_brdf(); // Defaults to Lambert
     input reflectance   [types::vector]: 1.0;
     input emission      [types::vector]: 0.0;
 

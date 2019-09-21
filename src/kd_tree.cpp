@@ -48,6 +48,8 @@ void manta::KDTree::_evaluate() {
     configure((math::real)width, center);
 
     analyzeWithProgress(mesh, granularity);
+
+    m_output.setReference(this);
 }
 
 void manta::KDTree::registerInputs() {
@@ -160,15 +162,19 @@ bool manta::KDTree::findClosestIntersection(const LightRay *ray, CoarseIntersect
                 const KDBoundingVolume &bv = m_nodeVolumes[objectOffset];
                 faceList = &m_faceLists[bv.faceListOffset];
 
-                math::real t0, t1;
+#if KD_TREE_WITH_BOUNDING_BOXES
                 INCREMENT_COUNTER(RuntimeStatistics::TOTAL_BV_TESTS);
+                math::real t0, t1;
                 if (bv.bounds.rayIntersect(*ray, &t0, &t1)) {
+#endif
                     INCREMENT_COUNTER(RuntimeStatistics::TOTAL_BV_HITS);
-                    if (m_mesh->findClosestIntersection(faceList, primitiveCount, ray, intersection, minDepth, closestHit, s /**/ STATISTICS_PARAM_INPUT)) {
+                    if (m_mesh->findClosestIntersection(faceList, primitiveCount, ray, intersection, minDepth, closestHit /**/ STATISTICS_PARAM_INPUT)) {
                         hit = true;
                         closestHit = intersection->depth;
                     }
+#if KD_TREE_WITH_BOUNDING_BOXES
                 }
+#endif
             }
             else {
                 // Nothing in this node
@@ -470,7 +476,6 @@ void manta::KDTree::initLeaf(int node, const std::vector<int> &faces, const AABB
         // Initialize the new volume
         KDBoundingVolume &volume = m_nodeVolumes[newNodeVolume];
         volume.faceListOffset = (int)workspace->faces.size();
-        volume.bounds = workspace->allFaceBounds[faces[0]];
 
         // Add all primitives to the list
         for (int i = 0; i < primitiveCount; i++) {
@@ -479,12 +484,15 @@ void manta::KDTree::initLeaf(int node, const std::vector<int> &faces, const AABB
             }
         }
 
+#if KD_TREE_WITH_BOUNDING_BOXES
         // Merge all bounds
+        volume.bounds = workspace->allFaceBounds[faces[0]];
         for (int i = 1; i < primitiveCount; i++) {
             if (!filtered[i]) {
                 volume.bounds.merge(workspace->allFaceBounds[faces[i]]);
             }
         }
+#endif /* KD_TREE_WITH_BOUNDING_BOXES */
     }
 
     if (filtered != nullptr) delete[] filtered;

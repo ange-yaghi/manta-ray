@@ -49,7 +49,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
     }
     
     // Create all materials
-    LambertianBSDF lambert;
+    LambertianBRDF lambert;
 
     PhongDistribution chromeCoating;
     chromeCoating.setPower(10000.f);
@@ -64,31 +64,29 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
     PhongDistribution floorDistribution;
     floorDistribution.setPower(128.f);
 
-    BilayerBSDF paintBsdf;
-    paintBsdf.setDiffuseMaterial(&lambert);
+    BilayerBRDF paintBsdf;
     paintBsdf.setCoatingDistribution(woodCoating.getMainOutput());
     paintBsdf.setDiffuseNode(texture.getMainOutput());
     paintBsdf.setSpecularAtNormal(math::loadVector(0.1f, 0.1f, 0.1f));
 
-    BilayerBSDF chromeBSDF;
-    chromeBSDF.setDiffuseMaterial(&lambert);
+    BilayerBRDF chromeBSDF;
     chromeBSDF.setCoatingDistribution(chromeCoating.getMainOutput());
     chromeBSDF.setDiffuse(getColor(0, 0, 0));
     chromeBSDF.setSpecularAtNormal(math::loadVector(0.95f, 0.95f, 0.95f));
 
-    MicrofacetReflectionBSDF floorBSDF;
+    MicrofacetBRDF floorBSDF;
     floorBSDF.setDistribution(&floorDistribution);
 
     SimpleBSDFMaterial *paintMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
-    paintMaterial->setBSDF(&paintBsdf);
+    paintMaterial->setBSDF(new BSDF(&paintBsdf));
     paintMaterial->setName("PenBody");
 
     SimpleBSDFMaterial *chromeMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
-    chromeMaterial->setBSDF(&chromeBSDF);
+    chromeMaterial->setBSDF(new BSDF(&chromeBSDF));
     chromeMaterial->setName("Chrome");
 
     SimpleBSDFMaterial *floorMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
-    floorMaterial->setBSDF(&floorBSDF);
+    floorMaterial->setBSDF(new BSDF(&floorBSDF));
     floorMaterial->setReflectanceNode(floorWood.getMainOutput());
     floorMaterial->setName("Backdrop");
 

@@ -13,6 +13,7 @@
 #include <atomic>
 
 #define OPTIMIZED_KD_TREE_NODE (true)
+#define KD_TREE_WITH_BOUNDING_BOXES (true)
 
 namespace manta {
 
@@ -83,11 +84,17 @@ namespace manta {
     };
 #endif /* OPTIMIZED_KD_TREE_NODE */
 
+#if KD_TREE_WITH_BOUNDING_BOXES
     struct KDBoundingVolume {
         AABB bounds;
         int faceListOffset;
         int padding[3];
     };
+#else
+    struct KDBoundingVolume {
+        int faceListOffset;
+    };
+#endif /* KD_TREE_WITH_BOUNDING_BOXES */
 
     struct KDBoundEdge {
         enum EdgeType {

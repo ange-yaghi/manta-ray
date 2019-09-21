@@ -102,9 +102,9 @@ namespace manta {
             math::real sz = shear.z;
 
             math::Vector s = math::loadVector(sx, sy);
-            math::Vector p0t_z = math::loadScalar(math::getZ(p0t));
-            math::Vector p1t_z = math::loadScalar(math::getZ(p1t));
-            math::Vector p2t_z = math::loadScalar(math::getZ(p2t));
+            math::Vector p0t_z = math::expandZ(p0t);
+            math::Vector p1t_z = math::expandZ(p1t);
+            math::Vector p2t_z = math::expandZ(p2t);
 
             p0t = math::add(p0t, math::mul(s, p0t_z));
             p1t = math::add(p1t, math::mul(s, p1t_z));
@@ -126,10 +126,10 @@ namespace manta {
             math::real p1t_sz = math::getZ(p1t) * sz;
             math::real p2t_sz = math::getZ(p2t) * sz;
 
-            math::real t_scaled = math::getScalar(math::dot(math::loadVector(e0, e1, e2), math::loadVector(p0t_sz, p1t_sz, p2t_sz)));
+            math::real t_scaled = e0 * p0t_sz + e1 * p1t_sz + e2 * p2t_sz;
 
             if (det < 0 && (t_scaled >= 0 || t_scaled < maxDepth * det)) return false;
-            else if (det > 0 && (t_scaled <= 0 || t_scaled > maxDepth *det)) return false;
+            else if (det > 0 && (t_scaled <= 0 || t_scaled > maxDepth * det)) return false;
 
             math::real invDet = 1 / det;
             output->depth = t_scaled * invDet;
@@ -144,8 +144,7 @@ namespace manta {
             math::real maxDepth, const LightRay *ray, CoarseCollisionOutput *output) const;
 
         bool findClosestIntersection(int *faceList, int faceCount, const LightRay *ray, 
-            CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, 
-            StackAllocator *s /**/ STATISTICS_PROTOTYPE) const;
+            CoarseIntersection *intersection, math::real minDepth, math::real maxDepth /**/ STATISTICS_PROTOTYPE) const;
 
         bool checkFaceAABB(int faceIndex, const AABB &bounds) const;
         void calculateFaceAABB(int faceIndex, AABB *target) const;

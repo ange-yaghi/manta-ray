@@ -1,5 +1,5 @@
 module {
-    @name:          "Microfacet Reflection BSDF"
+    @name:          "Microfacet Reflection BRDF"
     @project:       "MantaRay"
     @author:        "Ange Yaghi"
     @maintainer:    "Ange Yaghi"
@@ -9,13 +9,14 @@ module {
     @github:        "github.com/ange-yaghi/manta-ray"
 }
 
-private import "bsdf.mr"
+private import "bxdf.mr"
 private import "../microfacet-models/microfacet_distributions.mr"
 private import "../../types/atomic_types.mr"
 private import "../../types/conversions.mr"
 
-@doc: "Single layer reflection BSDF"
-public node microfacet_reflection_bsdf => __mantaray__microfacet_reflection_bsdf {
+@doc: "Single layer reflection BRDF"
+public node microfacet_brdf => __mantaray__microfacet_brdf {
     input distribution      [microfacet_distribution]: ggx_distribution(0.5);
-    alias output __out      [bsdf];
+    input reflectivity      [vector]: 1;
+    alias output __out      [bxdf];
 }

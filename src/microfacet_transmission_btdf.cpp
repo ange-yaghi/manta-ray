@@ -1,46 +1,31 @@
-#include "../include/microfacet_transmission_bsdf.h"
+#include "../include/microfacet_transmission_btdf.h"
 
 #include "../include/microfacet_distribution.h"
 
-manta::MicrofacetTransmissionBSDF::MicrofacetTransmissionBSDF() {
+manta::MicrofacetTransmissionBTDF::MicrofacetTransmissionBTDF() {
     m_distribution = nullptr;
 }
 
-manta::MicrofacetTransmissionBSDF::~MicrofacetTransmissionBSDF() {
+manta::MicrofacetTransmissionBTDF::~MicrofacetTransmissionBTDF() {
     /* void */
 }
 
-void manta::MicrofacetTransmissionBSDF::initializeSessionMemory(
-        const IntersectionPoint *surfaceInteraction, 
-        NodeSessionMemory *memory, StackAllocator *stackAllocator) const {
-    BSDF::initializeSessionMemory(surfaceInteraction, memory, stackAllocator);
-}
-
-manta::math::Vector manta::MicrofacetTransmissionBSDF::sampleF(
+manta::math::Vector manta::MicrofacetTransmissionBTDF::sampleF(
         const IntersectionPoint *surfaceInteraction, const math::Vector &i, math::Vector *o, 
-        math::real *pdf, StackAllocator *stackAllocator) const {
+        math::real *pdf, StackAllocator *stackAllocator) const 
+{
     constexpr math::Vector reflect = { (math::real)-1.0, (math::real)-1.0, (math::real)1.0, (math::real)1.0 };
 
-    // Allocate required memory
-    NodeSessionMemory s;
-    m_distribution->initializeSessionMemory(surfaceInteraction, &s, stackAllocator);
-
     math::real ior = m_mediaInterface->ior(surfaceInteraction->m_direction);
-    math::Vector m = m_distribution->generateMicrosurfaceNormal(&s);
+    math::Vector m = m_distribution->generateMicrosurfaceNormal(surfaceInteraction);
     math::Vector rt;
 
     if (!refract(i, m, ior, &rt)) {
-        // Free all memory
-        m_distribution->destroySessionMemory(&s, stackAllocator);
-
         *pdf = (math::real)0.0;
         return math::constants::Zero;
     }
 
     if ((math::getZ(rt) > 0) == (math::getZ(i) > 0)) {
-        // Free all memory
-        m_distribution->destroySessionMemory(&s, stackAllocator);
-
         *pdf = (math::real)0.0;
         return math::constants::Zero;
     }
@@ -51,9 +36,6 @@ manta::math::Vector manta::MicrofacetTransmissionBSDF::sampleF(
     *o = rt;
 
     if (i_dot_m <= (math::real)0.0) {
-        // Free all memory
-        m_distribution->destroySessionMemory(&s, stackAllocator);
-
         *pdf = (math::real)0.0;
         return math::constants::Zero;
     }
@@ -64,7 +46,7 @@ manta::math::Vector manta::MicrofacetTransmissionBSDF::sampleF(
     math::real jacobian_div = (ni * ::abs(i_dot_m) + no * ::abs(o_dot_m));
     jacobian /= (jacobian_div * jacobian_div);
 
-    *pdf = m_distribution->calculatePDF(m, &s) * jacobian;
+    *pdf = m_distribution->calculatePDF(m, surfaceInteraction) * jacobian;
 
     // Calculate transmitance
     math::real cosThetaI = ::abs(math::getZ(i));
@@ -72,7 +54,10 @@ manta::math::Vector manta::MicrofacetTransmissionBSDF::sampleF(
 
     math::real F = (math::real)m_mediaInterface->fresnelTerm(i, m, surfaceInteraction->m_direction);
 
-    math::real Ft_num = ior * ior * m_distribution->calculateDistribution(m, &s) * m_distribution->bidirectionalShadowMasking(i, rt, m, &s) * (1 - F);
+    math::real Ft_num = 
+        ior * ior * 
+        m_distribution->calculateDistribution(m, surfaceInteraction) * 
+        m_distribution->bidirectionalShadowMasking(i, rt, m, surfaceInteraction) * (1 - F);
     Ft_num *= ::abs(o_dot_m * i_dot_m);
 
     math::real Ft_div = (i_dot_m + ior * ::abs(o_dot_m));
@@ -81,14 +66,18 @@ manta::math::Vector manta::MicrofacetTransmissionBSDF::sampleF(
 
     math::Vector transmitance = math::loadScalar(Ft_num / Ft_div);
 
-    // Free all memory
-    m_distribution->destroySessionMemory(&s, stackAllocator);
-
     return transmitance;
 }
 
-manta::math::real manta::MicrofacetTransmissionBSDF::calculatePDF(
-        const IntersectionPoint *surfaceInteraction, 
-        const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) const {
-    return math::real();
+manta::math::Vector manta::MicrofacetTransmissionBTDF::f(const IntersectionPoint *surfaceInteraction, 
+    const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) const 
+{
+    return math::constants::Zero;
 }
+
+manta::math::real manta::MicrofacetTransmissionBTDF::pdf(
+    const IntersectionPoint *surfaceInteraction, const math::Vector &i, const math::Vector &o) const 
+{
+    return math::real(0.0);
+}
+

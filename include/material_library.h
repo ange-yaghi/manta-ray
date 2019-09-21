@@ -31,6 +31,9 @@ namespace manta {
         Material *searchByName(const std::string &name) const;
 
     protected:
+        virtual void _evaluate();
+
+    protected:
         std::vector<Material *> m_materials;
         int m_currentIndex;
     };

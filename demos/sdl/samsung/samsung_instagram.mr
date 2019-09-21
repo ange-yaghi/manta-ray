@@ -30,7 +30,7 @@ node matte_library {
     bsdf_material(
         library: matte_library,
         name: "Default",
-        bsdf: microfacet_reflection_bsdf(ggx_distribution(0.5)),
+        bsdf: microfacet_brdf(ggx_distribution(0.5)),
         reflectance: 1.0
     )
 }

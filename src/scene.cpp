@@ -3,7 +3,7 @@
 #include "../include/scene_object.h"
 
 manta::Scene::Scene() {
-    m_output.setReference(this);
+    /* void */
 }
 
 manta::Scene::~Scene() {
@@ -19,4 +19,8 @@ manta::SceneObject *manta::Scene::createSceneObject() {
 
 void manta::Scene::addSceneObject(SceneObject *object) {
     m_sceneObjects.push_back(object);
+}
+
+void manta::Scene::_evaluate() {
+    m_output.setReference(this);
 }

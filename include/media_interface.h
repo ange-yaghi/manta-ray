@@ -26,6 +26,9 @@ namespace manta {
         virtual math::real ior(DIRECTION d) const = 0;
         virtual math::real no(DIRECTION d) const = 0;
         virtual math::real ni(DIRECTION d) const = 0;
+
+    protected:
+        virtual void _evaluate();
     };
 
 } /* namespace manta */

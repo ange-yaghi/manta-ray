@@ -71,7 +71,7 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
     }
 
     // Create all materials
-    LambertianBSDF lambert;
+    LambertianBRDF lambert;
 
     PhongDistribution phongPhoneCase;
     phongPhoneCase.setPower(1024);
@@ -112,36 +112,31 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
     PhongDistribution mirrorPhong;
     mirrorPhong.setPower(20000);
 
-    BilayerBSDF phoneCaseBSDF;
-    phoneCaseBSDF.setDiffuseMaterial(&lambert);
+    BilayerBRDF phoneCaseBSDF;
     phoneCaseBSDF.setCoatingDistribution(phongPhoneCase.getMainOutput());
     phoneCaseBSDF.setDiffuse(getColor(0x0, 0x0, 0x0));
     phoneCaseBSDF.setSpecularAtNormal(math::loadVector(0.01f, 0.01f, 0.01f));
 
-    BilayerBSDF bayDoorBSDF;
-    bayDoorBSDF.setDiffuseMaterial(&lambert);
+    BilayerBRDF bayDoorBSDF;
     bayDoorBSDF.setCoatingDistribution(phongBayDoor.getMainOutput());
     bayDoorBSDF.setDiffuse(getColor(0x0, 0x0, 0x0));
     bayDoorBSDF.setSpecularAtNormal(math::loadVector(0.0f, 0.0f, 0.0f));
 
-    BilayerBSDF speakerGrillBSDF;
-    speakerGrillBSDF.setDiffuseMaterial(&lambert);
+    BilayerBRDF speakerGrillBSDF;
     speakerGrillBSDF.setCoatingDistribution(phongBayDoor.getMainOutput());
     speakerGrillBSDF.setDiffuseNode(speakerGrillTexture.getMainOutput());
     speakerGrillBSDF.setDiffuse(math::loadVector(0.1f, 0.1f, 0.1f));
     speakerGrillBSDF.setSpecularAtNormal(math::loadVector(0.0f, 0.0f, 0.0f));
 
-    BilayerBSDF blackPlasticBSDF;
-    blackPlasticBSDF.setDiffuseMaterial(&lambert);
+    BilayerBRDF blackPlasticBSDF;
     blackPlasticBSDF.setCoatingDistribution(phongBlackPlastic.getMainOutput());
     blackPlasticBSDF.setDiffuse(getColor(0x0, 0x0, 0x0));
     blackPlasticBSDF.setSpecularAtNormal(math::loadVector(0.05f, 0.05f, 0.05f));
 
-    MicrofacetReflectionBSDF mattePlasticBSDF;
+    MicrofacetBRDF mattePlasticBSDF;
     mattePlasticBSDF.setDistribution(&mattePlasticPhong);
 
-    BilayerBSDF floorBSDF;
-    floorBSDF.setDiffuseMaterial(&lambert);
+    BilayerBRDF floorBSDF;
     floorBSDF.setCoatingDistribution(phongFloor.getMainOutput());
     if (SCENE == UPRIGHT_SCENE || SCENE == BANNER_SCENE) {
         floorBSDF.setDiffuse(getColor(0, 0, 0));
@@ -152,8 +147,7 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
         floorBSDF.setSpecularAtNormal(math::loadVector(0.0f, 0.0f, 0.0f));
     }
 
-    BilayerBSDF backPlateBSDF;
-    backPlateBSDF.setDiffuseMaterial(&lambert);
+    BilayerBRDF backPlateBSDF;
     backPlateBSDF.setCoatingDistribution(phongBlackPlastic.getMainOutput());
     backPlateBSDF.setDiffuseNode(backPlateTexture.getMainOutput());
     backPlateBSDF.setSpecularAtNormal(math::loadVector(0.0f, 0.0f, 0.0f));
@@ -172,52 +166,52 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
     lensGlassBSDF.setDistribution(&phongGlass);
     lensGlassBSDF.setMediaInterface(&lensFresnel);
 
-    MicrofacetReflectionBSDF bronzeBSDF;
+    MicrofacetBRDF bronzeBSDF;
     bronzeBSDF.setDistribution(&phongBronze);
 
-    MicrofacetReflectionBSDF steelBSDF;
+    MicrofacetBRDF steelBSDF;
     steelBSDF.setDistribution(&phongSteel);
 
-    MicrofacetReflectionBSDF imageSensorBSDF;
+    MicrofacetBRDF imageSensorBSDF;
     imageSensorBSDF.setDistribution(&mattePlasticPhong);
 
-    MicrofacetReflectionBSDF mirrorBSDF;
+    MicrofacetBRDF mirrorBSDF;
     mirrorBSDF.setDistribution(&mirrorPhong);
 
     SimpleBSDFMaterial *defaultMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     defaultMaterial->setName("Default");
-    defaultMaterial->setBSDF(&lambert);
+    defaultMaterial->setBSDF(new BSDF(&lambert));
     defaultMaterial->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial *phoneCaseMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     phoneCaseMaterial->setName("PhoneCase");
     phoneCaseMaterial->setReflectance(getColor(255, 255, 255));
     phoneCaseMaterial->setReflectanceNode(smudgeMap.getMainOutput());
-    phoneCaseMaterial->setBSDF(&phoneCaseBSDF);
+    phoneCaseMaterial->setBSDF(new BSDF(&phoneCaseBSDF));
     phoneCaseMaterial->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial *bayDoorMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     bayDoorMaterial->setName("BayDoorMaterial");
     bayDoorMaterial->setReflectance(getColor(255, 255, 255));
-    bayDoorMaterial->setBSDF(&bayDoorBSDF);
+    bayDoorMaterial->setBSDF(new BSDF(&bayDoorBSDF));
     bayDoorMaterial->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial *bronzeMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     bronzeMaterial->setName("Bronze");
     bronzeMaterial->setReflectance(getColor(0xC0, 0xA5, 0x70));
-    bronzeMaterial->setBSDF(&bronzeBSDF);
+    bronzeMaterial->setBSDF(new BSDF(&bronzeBSDF));
     bronzeMaterial->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial *steelMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     steelMaterial->setName("Steel");
     steelMaterial->setReflectance(getColor(255, 255, 255));
-    steelMaterial->setBSDF(&steelBSDF);
+    steelMaterial->setBSDF(new BSDF(&steelBSDF));
     steelMaterial->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial *blackPlasticMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     blackPlasticMaterial->setName("BlackPlastic");
     blackPlasticMaterial->setReflectance(getColor(255, 255, 255));
-    blackPlasticMaterial->setBSDF(&blackPlasticBSDF);
+    blackPlasticMaterial->setBSDF(new BSDF(&blackPlasticBSDF));
     blackPlasticMaterial->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial *blackMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
@@ -229,61 +223,61 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
     SimpleBSDFMaterial *floorMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     floorMaterial->setName("Floor");
     floorMaterial->setReflectance(getColor(255, 255, 255));
-    floorMaterial->setBSDF(&floorBSDF);
+    floorMaterial->setBSDF(new BSDF(&floorBSDF));
     floorMaterial->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial *glassMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     glassMaterial->setName("Glass");
     glassMaterial->setReflectance(getColor(255, 255, 255));
-    glassMaterial->setBSDF(&simpleGlassBSDF);
+    glassMaterial->setBSDF(new BSDF(&simpleGlassBSDF));
     glassMaterial->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial *lensGlassMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     lensGlassMaterial->setName("LensGlass");
     lensGlassMaterial->setReflectance(getColor(255, 255, 255));
-    lensGlassMaterial->setBSDF(&lensGlassBSDF);
+    lensGlassMaterial->setBSDF(new BSDF(&lensGlassBSDF));
     lensGlassMaterial->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial *speakerGrillMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     speakerGrillMaterial->setName("SpeakerGrill");
     speakerGrillMaterial->setReflectance(getColor(255, 255, 255));
-    speakerGrillMaterial->setBSDF(&speakerGrillBSDF);
+    speakerGrillMaterial->setBSDF(new BSDF(&speakerGrillBSDF));
     speakerGrillMaterial->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial *screenMaskMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     screenMaskMaterial->setName("ScreenMask");
     screenMaskMaterial->setReflectance(getColor(5, 5, 5));
-    screenMaskMaterial->setBSDF(&lambert);
+    screenMaskMaterial->setBSDF(new BSDF(&lambert));
     screenMaskMaterial->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial *mattePlasticMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     mattePlasticMaterial->setName("MattePlastic");
     mattePlasticMaterial->setReflectance(getColor(0x52, 0x4f, 0x51));
-    mattePlasticMaterial->setBSDF(&mattePlasticBSDF);
+    mattePlasticMaterial->setBSDF(new BSDF(&mattePlasticBSDF));
     mattePlasticMaterial->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial *imageSensorMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     imageSensorMaterial->setName("ImageSensor");
     imageSensorMaterial->setReflectance(getColor(0x34, 0x2e, 0x38));
-    imageSensorMaterial->setBSDF(&imageSensorBSDF);
+    imageSensorMaterial->setBSDF(new BSDF(&imageSensorBSDF));
     imageSensorMaterial->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial *mirrorMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     mirrorMaterial->setName("Mirror");
     mirrorMaterial->setReflectance(getColor(255, 255, 255));
-    mirrorMaterial->setBSDF(&mirrorBSDF);
+    mirrorMaterial->setBSDF(new BSDF(&mirrorBSDF));
     mirrorMaterial->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial *flashColorMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     flashColorMaterial->setName("FlashColor");
     flashColorMaterial->setReflectance(getColor(0xE7, 0xE0, 0x7F));
-    flashColorMaterial->setBSDF(&lambert);
+    flashColorMaterial->setBSDF(new BSDF(&lambert));
     flashColorMaterial->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial *backPlateMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     backPlateMaterial->setName("BackPlate");
     backPlateMaterial->setReflectance(getColor(255, 255, 255));
-    backPlateMaterial->setBSDF(&backPlateBSDF);
+    backPlateMaterial->setBSDF(new BSDF(&backPlateBSDF));
     backPlateMaterial->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial *screenMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
@@ -291,7 +285,7 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
     screenMaterial->setEmissionNode(phoneScreenTexture.getMainOutput());
     screenMaterial->setEmission(math::loadVector(1.6f, 1.6f, 1.6f));
     screenMaterial->setReflectance(getColor(3, 3, 3));
-    screenMaterial->setBSDF(&lambert);
+    screenMaterial->setBSDF(new BSDF(&lambert));
 
     SimpleBSDFMaterial *strongLight = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     if (SCENE == UPRIGHT_SCENE || SCENE == BANNER_SCENE) strongLight->setEmission(math::loadVector(8.0f, 8.0f, 8.0f));

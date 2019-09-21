@@ -2,14 +2,14 @@
 
 #include "utilities.h"
 
-#include "../include/perfect_specular_reflection_bsdf.h"
-#include "../include/lambertian_bsdf.h"
-#include "../include/bilayer_bsdf.h"
+#include "../include/perfect_specular_reflection_brdf.h"
+#include "../include/lambertian_brdf.h"
+#include "../include/bilayer_brdf.h"
 #include "../include/stack_allocator.h"
 #include "../include/dielectric_media_interface.h"
 #include "../include/phong_distribution.h"
-#include "../include/microfacet_reflection_bsdf.h"
-#include "../include/microfacet_transmission_bsdf.h"
+#include "../include/microfacet_brdf.h"
+#include "../include/microfacet_transmission_btdf.h"
 #include "../include/microfacet_glass_bsdf.h"
 
 #include "../include/manta_math.h"
@@ -17,13 +17,13 @@
 using namespace manta;
 
 TEST(BSDFTests, BSDFSanityCheck) {
-    PerfectSpecularReflectionBSDF bsdf;
+    PerfectSpecularReflectionBRDF brdf;
 
     math::Vector incident = math::loadVector((math::real)1.0, (math::real)1.0, (math::real)0.0);
     math::Vector outgoing;
     math::real pdf;
 
-    math::Vector reflectance = bsdf.sampleF(nullptr, incident, &outgoing, &pdf, nullptr);
+    math::Vector reflectance = brdf.sampleF(nullptr, incident, &outgoing, &pdf, nullptr);
 
     math::Vector normal = math::loadVector((math::real)0.0, (math::real)0.0, (math::real)1.0);
     math::Vector expected = math::reflect(incident, normal);
@@ -34,7 +34,7 @@ TEST(BSDFTests, BSDFSanityCheck) {
 }
 
 TEST(BSDFTests, LambertBSDFEnergyConservation) {
-    LambertianBSDF bsdf;
+    LambertianBRDF bsdf;
 
     math::Vector incident = math::loadVector((math::real)1.0, (math::real)1.0, (math::real)0.0);
     incident = math::normalize(incident);
@@ -64,10 +64,7 @@ TEST(BSDFTests, PhongMicrofacetEnergyConservation) {
     PhongDistribution dist;
     dist.setPower((math::real)5.0);
 
-    Node::NodeSessionMemory mem;
-    dist.initializeSessionMemory(nullptr, &mem, nullptr);
-
-    MicrofacetReflectionBSDF bsdf;
+    MicrofacetBRDF bsdf;
     bsdf.setDistribution(&dist);
 
     math::Vector incident = math::loadVector((math::real)0.0, (math::real)0.0, (math::real)1.0);
@@ -80,10 +77,10 @@ TEST(BSDFTests, PhongMicrofacetEnergyConservation) {
 
     // Check that the distribution integrates to 1
     for (int i = 0; i < SAMPLE_COUNT; i++) {
-        math::Vector m = dist.generateMicrosurfaceNormal(&mem);
+        math::Vector m = dist.generateMicrosurfaceNormal(nullptr);
         math::real cos_theta_h = math::getZ(m);
-        math::real D = dist.calculateDistribution(m, &mem);
-        math::real pdf = dist.calculatePDF(m, &mem);
+        math::real D = dist.calculateDistribution(m, nullptr);
+        math::real pdf = dist.calculatePDF(m, nullptr);
 
         if (pdf > 0.0) {
             accum += D * cos_theta_h / pdf;
@@ -99,24 +96,23 @@ TEST(BSDFTests, PhongMicrofacetEnergyConservation) {
     EXPECT_NEAR(accum, 1.0, 1E-4);
 }
 
-TEST(BSDFTests, BilayerBSDFEnergyConservation) {
+TEST(BSDFTests, BilayerBRDFEnergyConservation) {
     
     PhongDistribution phong;
     phong.setPower((math::real)4.0);
 
-    MicrofacetReflectionBSDF bsdf1;
+    MicrofacetBRDF bsdf1;
     bsdf1.setDistribution(&phong);
-    //LambertianBSDF bsdf1;
-    LambertianBSDF bsdf2;
+    //LambertianBRDF bsdf1;
+    LambertianBRDF bsdf2;
     DielectricMediaInterface fresnel;
     fresnel.setIorIncident((math::real)1.0);
     fresnel.setIorTransmitted((math::real)1.5);
 
-    BilayerBSDF bsdf;
-    bsdf.setDiffuseMaterial(&bsdf2);
-    bsdf.setCoatingDistribution(phong.getMainOutput());
-    bsdf.setDiffuse(math::loadVector(1.0, 1.0, 1.0));
-    bsdf.setSpecularAtNormal(math::loadVector(1.0, 1.0, 1.0));
+    BilayerBRDF brdf;
+    brdf.setCoatingDistribution(phong.getMainOutput());
+    brdf.setDiffuse(math::loadVector(1.0, 1.0, 1.0));
+    brdf.setSpecularAtNormal(math::loadVector(1.0, 1.0, 1.0));
 
     math::Vector incident = math::loadVector((math::real)1000.0, (math::real)0.0, (math::real)1.0);
     incident = math::normalize(incident);
@@ -132,7 +128,7 @@ TEST(BSDFTests, BilayerBSDFEnergyConservation) {
     // Calculate rho
     for (int i = 0; i < SAMPLE_COUNT; i++) {
         math::Vector outgoing;
-        math::Vector reflectance = bsdf.sampleF(nullptr, incident, &outgoing, &pdf, &s);
+        math::Vector reflectance = brdf.sampleF(nullptr, incident, &outgoing, &pdf, &s);
 
         EXPECT_GE(math::getX(reflectance), 0.0);
         EXPECT_GE(math::getY(reflectance), 0.0);
@@ -157,14 +153,14 @@ TEST(BSDFTests, TransmissionBSDFTest) {
     PhongDistribution phong;
     phong.setPower((math::real)4.0);
 
-    MicrofacetTransmissionBSDF bsdf;
-    bsdf.setDistribution(&phong);
-    //LambertianBSDF bsdf1;
-    LambertianBSDF bsdf2;
+    MicrofacetTransmissionBTDF btdf;
+    btdf.setDistribution(&phong);
+    //LambertianBRDF bsdf1;
+    LambertianBRDF bsdf2;
     DielectricMediaInterface fresnel;
     fresnel.setIorIncident((math::real)1.0);
     fresnel.setIorTransmitted((math::real)1.5);
-    bsdf.setMediaInterface(&fresnel);
+    btdf.setMediaInterface(&fresnel);
 
     math::Vector incident = math::loadVector((math::real)1.0, (math::real)0.0, (math::real)1.0);
     incident = math::normalize(incident);
@@ -183,7 +179,7 @@ TEST(BSDFTests, TransmissionBSDFTest) {
     // Calculate rho
     for (int i = 0; i < SAMPLE_COUNT; i++) {
         math::Vector outgoing;
-        math::Vector transmitance = bsdf.sampleF(&point, incident, &outgoing, &pdf, &s);
+        math::Vector transmitance = btdf.sampleF(&point, incident, &outgoing, &pdf, &s);
 
         EXPECT_LT(math::getZ(outgoing), 0.0);
 

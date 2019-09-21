@@ -18,12 +18,6 @@ namespace manta {
         void setMaxDegree(int degree) { m_maxDegree = degree; }
         int getMaxDegree() const { return m_maxDegree; }
 
-        void generateRays(RayContainer *rays, const LightRay &incidentRay, 
-            const IntersectionPoint &intersectionPoint, int degree, 
-            StackAllocator *stackAllocator = nullptr) const;
-        virtual void integrateRay(LightRay *ray, const RayContainer &rays, 
-            const IntersectionPoint &intersectionPoint) const;
-
         void setReflectanceNode(VectorNodeOutput *node) { m_reflectanceNode = node; }
         const VectorNodeOutput *getReflectanceNode() const;
 
@@ -36,8 +30,12 @@ namespace manta {
         void setReflectance(const math::Vector &reflectance) { m_reflectance = reflectance; }
         math::Vector getReflectance() { return m_reflectance; }
 
-        void setBSDF(const BSDF *bsdf) { m_bsdf = bsdf; }
+        void setBSDF(BSDF *bsdf) { m_bsdf = bsdf; }
         const BSDF *getDefaultBSDF() const { return m_defaultBsdf; }
+
+        virtual math::Vector getFilterColor(const IntersectionPoint &ip) const;
+        virtual math::Vector getEmission(const IntersectionPoint &ip) const;
+        virtual BSDF *getBSDF() const { return m_bsdf; }
 
     protected:
         virtual void _evaluate();
@@ -53,7 +51,7 @@ namespace manta {
         piranha::pNodeInput m_bsdfInput;
 
         // Fixed parameters
-        const BSDF *m_bsdf;
+        BSDF *m_bsdf;
         math::Vector m_emission;
         math::Vector m_reflectance;
         const BSDF *m_defaultBsdf;

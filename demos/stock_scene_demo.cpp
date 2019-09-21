@@ -61,7 +61,7 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
 
     // Materials ==============================================================
 
-    LambertianBSDF lambert;
+    LambertianBRDF lambert;
 
     CachedVectorNode constS;
     constS.setValue(math::loadScalar(4.0f));
@@ -89,43 +89,42 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
     PhongDistribution phongShinySteel;
     phongShinySteel.setPower(5000.0f);
 
-    BilayerBSDF steelBSDF;
+    BilayerBRDF steelBSDF;
     steelBSDF.setCoatingDistribution(phongSteel.getMainOutput());
-    steelBSDF.setDiffuseMaterial(&lambert);
     steelBSDF.setDiffuseNode(metalTexture.getMainOutput());
     steelBSDF.setSpecularAtNormal(math::loadVector(1.0f, 1.0f, 1.0f));
     steelBSDF.setSpecularNode(invFingerprint.getMainOutput());
 
-    MicrofacetReflectionBSDF shinySteelBSDF;
+    MicrofacetBRDF shinySteelBSDF;
     shinySteelBSDF.setDistribution(&phongShinySteel);
 
     SimpleBSDFMaterial *steelMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     steelMaterial->setName("Steel");
-    steelMaterial->setBSDF(&steelBSDF);
+    steelMaterial->setBSDF(new BSDF(&steelBSDF));
     steelMaterial->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial *shinySteelMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     shinySteelMaterial->setName("ShinySteel");
-    shinySteelMaterial->setBSDF(&shinySteelBSDF);
+    shinySteelMaterial->setBSDF(new BSDF(&shinySteelBSDF));
     shinySteelMaterial->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial *blackSteelMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     blackSteelMaterial->setName("BlackSteel");
     blackSteelMaterial->setReflectance(getColor(0xC0, 0xC0, 0xC0));
-    blackSteelMaterial->setBSDF(&steelBSDF);
+    blackSteelMaterial->setBSDF(new BSDF(&steelBSDF));
     blackSteelMaterial->setEmission(math::constants::Zero);
 
     // Graphite
     PhongDistribution phongGraphite;
     phongGraphite.setPower(512);
 
-    MicrofacetReflectionBSDF graphiteBSDF;
+    MicrofacetBRDF graphiteBSDF;
     graphiteBSDF.setDistribution(&phongGraphite);
 
     SimpleBSDFMaterial *graphiteMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     graphiteMaterial->setName("Graphite");
     graphiteMaterial->setReflectance(getColor(0x29, 0x29, 0x29));
-    graphiteMaterial->setBSDF(&graphiteBSDF);
+    graphiteMaterial->setBSDF(new BSDF(&graphiteBSDF));
     graphiteMaterial->setEmission(math::constants::Zero);
 
     // Pencil paint
@@ -134,39 +133,38 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
     phongGloss.setPowerNode(fingerprintTexture.getMainOutput());
     phongGloss.setMinMapPower(256);
 
-    BilayerBSDF paintBSDF;
+    BilayerBRDF paintBSDF;
     paintBSDF.setCoatingDistribution(phongGloss.getMainOutput());
     if (ALT_VERSION) paintBSDF.setDiffuse(getColor(0x0F, 0x10, 0x40));
     else paintBSDF.setDiffuse(getColor(0xE9, 0xE2, 0xDF));
     paintBSDF.setSpecularAtNormal(math::loadScalar(0.1f));
-    paintBSDF.setDiffuseMaterial(&lambert);
 
     SimpleBSDFMaterial *paintMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     paintMaterial->setName("PencilPaint");
-    paintMaterial->setBSDF(&paintBSDF);
+    paintMaterial->setBSDF(new BSDF(&paintBSDF));
     paintMaterial->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial *defaultLambert = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
-    defaultLambert->setBSDF(&lambert);
+    defaultLambert->setBSDF(new BSDF(&lambert));
     defaultLambert->setName("Default");
     defaultLambert->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial *rubber = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
-    rubber->setBSDF(&lambert);
+    rubber->setBSDF(new BSDF(&lambert));
     rubber->setName("Eraser");
     rubber->setReflectance(getColor(0xFF, 0xFF, 0xFF));
     rubber->setReflectanceNode(eraserTexture.getMainOutput());
     rubber->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial *wood = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
-    wood->setBSDF(&lambert);
+    wood->setBSDF(new BSDF(&lambert));
     wood->setName("Wood");
     wood->setReflectance(getColor(0xFF, 0xFF, 0xFF));
     wood->setReflectanceNode(woodTexture.getMainOutput());
     wood->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial *floorMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
-    floorMaterial->setBSDF(&lambert);
+    floorMaterial->setBSDF(new BSDF(&lambert));
     floorMaterial->setName("Floor");
     floorMaterial->setReflectanceNode(floorTexture.getMainOutput());
     floorMaterial->setEmission(math::constants::Zero);

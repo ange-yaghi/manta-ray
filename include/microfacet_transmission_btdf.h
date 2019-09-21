@@ -1,5 +1,5 @@
-#ifndef MANTARAY_MICROFACET_TRANSMISSION_BSDF_H
-#define MANTARAY_MICROFACET_TRANSMISSION_BSDF_H
+#ifndef MANTARAY_MICROFACET_TRANSMISSION_BTDF_H
+#define MANTARAY_MICROFACET_TRANSMISSION_BTDF_H
 
 #include "bsdf.h"
 
@@ -8,19 +8,18 @@ namespace manta {
     class MicrofacetDistribution;
     class MediaInterface;
 
-    class MicrofacetTransmissionBSDF : public BSDF {
+    class MicrofacetTransmissionBTDF : public BSDF {
     public:
-        MicrofacetTransmissionBSDF();
-        virtual ~MicrofacetTransmissionBSDF();
-
-        virtual void initializeSessionMemory(const IntersectionPoint *surfaceInteraction, 
-            NodeSessionMemory *memory, StackAllocator *stackAllocator) const;
+        MicrofacetTransmissionBTDF();
+        virtual ~MicrofacetTransmissionBTDF();
 
         virtual math::Vector sampleF(const IntersectionPoint *surfaceInteraction, 
             const math::Vector &i, math::Vector *o, math::real *pdf, 
             StackAllocator *stackAllocator) const;
-        virtual math::real calculatePDF(const IntersectionPoint *surfaceInteraction, 
+        virtual math::Vector f(const IntersectionPoint *surfaceInteraction,
             const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) const;
+        virtual math::real pdf(const IntersectionPoint *surfaceInteraction,
+            const math::Vector &i, const math::Vector &o) const;
 
         void setDistribution(MicrofacetDistribution *distribution) 
             { m_distribution = distribution; }
@@ -37,4 +36,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* MANTARAY_MICROFACET_TRANSMISSION_BSDF_H */
+#endif /* MANTARAY_MICROFACET_TRANSMISSION_BTDF_H */

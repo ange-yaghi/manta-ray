@@ -29,7 +29,7 @@ bsdf_material cube_material(
     library: library,
     name: "Cube",
     reflectance: srgb_i(0xba, 0xdc, 0x58),
-    bsdf: microfacet_reflection_bsdf(
+    bsdf: microfacet_brdf(
         ggx_distribution(width: 0.5)
     )
 ```
@@ -66,7 +66,7 @@ bsdf_material cube_material(
 
 ![Alt text](assets/render5.jpg)
 
-Like the `microfacet_reflection_bsdf` node, a specific distribution can be specified for the glass material. We can make the glass a little less polished by passing in a GGX model with a width of 0.2.
+Like the `microfacet_brdf` node, a specific distribution can be specified for the glass material. We can make the glass a little less polished by passing in a GGX model with a width of 0.2.
 
 ```
 bsdf_material cube_material(
@@ -118,13 +118,13 @@ We can now see that the cube still emits the correct shade of green light but is
 
 ## Bilayer Material
 
-Many materials are composed of a relatively diffuse underlying layer with a glossy coating on top. MantaRay can approximate this effect using the `bilayer_bsdf` node. This BSDF is similar to the others discussed so far, but it has its own color inputs so we should remove the `reflectance` parameter from the `bsdf_material` for now. Let's use the bilayer model for the red sphere in the back to make it look a little more convincing:
+Many materials are composed of a relatively diffuse underlying layer with a glossy coating on top. MantaRay can approximate this effect using the `bilayer_brdf` node. This BSDF is similar to the others discussed so far, but it has its own color inputs so we should remove the `reflectance` parameter from the `bsdf_material` for now. Let's use the bilayer model for the red sphere in the back to make it look a little more convincing:
 
 ```
 bsdf_material sphere_material(
     library: library,
     name: "Sphere",
-    bsdf: bilayer_bsdf(
+    bsdf: bilayer_brdf(
         coating: ggx_distribution(0.01),
         diffuse: srgb_i(0xeb, 0x4d, 0x4b),
         specular: 0.1

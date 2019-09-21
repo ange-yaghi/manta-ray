@@ -8,14 +8,14 @@
 #include "../include/ggx_distribution.h"
 #include "../include/bsdf.h"
 #include "../include/simple_bsdf_material.h"
-#include "../include/bilayer_bsdf.h"
+#include "../include/bilayer_brdf.h"
 #include "../include/material_library.h"
-#include "../include/microfacet_reflection_bsdf.h"
+#include "../include/microfacet_brdf.h"
 #include "../include/kd_tree.h"
 #include "../include/obj_file_node.h"
 #include "../include/scene.h"
 #include "../include/scene_object.h"
-#include "../include/lambertian_bsdf.h"
+#include "../include/lambertian_brdf.h"
 #include "../include/grid_sampler.h"
 #include "../include/random_sampler.h"
 #include "../include/simple_sampler.h"
@@ -51,6 +51,8 @@
 #include "../include/main_script_path.h"
 #include "../include/script_path_node.h"
 #include "../include/append_path_node.h"
+#include "../include/bxdf_to_bsdf_node.h"
+#include "../include/add_bxdf_node.h"
 
 manta::LanguageRules::LanguageRules() {
     /* void */
@@ -80,10 +82,12 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__microfacet_distribution", &ObjectChannel::MicrofacetDistributionChannel);
     registerBuiltinType <piranha::ChannelNode>(
         "__mantaray__material", &ObjectChannel::MaterialChannel);
-    registerBuiltinType <MaterialLibrary>(
-        "__mantaray__material_library", &ObjectChannel::MaterialLibraryChannel);
     registerBuiltinType <piranha::ChannelNode>(
+        "__mantaray__material_library_channel", &ObjectChannel::MaterialLibraryChannel);
+    registerBuiltinType <BSDF>(
         "__mantaray__bsdf", &ObjectChannel::BsdfChannel);
+    registerBuiltinType <piranha::ChannelNode>(
+        "__mantaray__bxdf", &ObjectChannel::BxdfChannel);
     registerBuiltinType <piranha::ChannelNode>(
         "__mantaray__mesh", &ObjectChannel::MeshChannel);
     registerBuiltinType <piranha::ChannelNode>(
@@ -110,6 +114,8 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__filter", &ObjectChannel::FilterChannel);
 
     // Constructors
+    registerBuiltinType<MaterialLibrary>(
+        "__mantaray__material_library");
     registerBuiltinType<RayTracer>(
         "__mantaray__ray_tracer");
     registerBuiltinType<ConstructedVectorNode>(
@@ -120,20 +126,26 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__phong_distribution");
     registerBuiltinType<GgxDistribution>(
         "__mantaray__ggx_distribution");
-    registerBuiltinType<MicrofacetReflectionBSDF>(
-        "__mantaray__microfacet_reflection_bsdf");
+    registerBuiltinType<NullReferenceNode<BSDF>>(
+        "__mantaray__null_bsdf");
+    registerBuiltinType<NullReferenceNode<BXDF>>(
+        "__mantaray__null_bxdf");
+    registerBuiltinType<AddBxdfNode>(
+        "__mantaray__add_bxdf");
+    registerBuiltinType<MicrofacetBRDF>(
+        "__mantaray__microfacet_brdf");
     registerBuiltinType<SimpleBSDFMaterial>(
         "__mantaray__simple_bsdf_material");
-    registerBuiltinType<BilayerBSDF>(
-        "__mantaray__bilayer_bsdf");
+    registerBuiltinType<BilayerBRDF>(
+        "__mantaray__bilayer_brdf");
     registerBuiltinType<ObjFileNode>(
         "__mantaray__obj_file");
     registerBuiltinType<ObjFileNode>(
         "__mantaray__obj_file");
     registerBuiltinType <SceneObject>(
         "__mantaray__scene_object");
-    registerBuiltinType <LambertianBSDF>(
-        "__mantaray__lambertian_bsdf");
+    registerBuiltinType <LambertianBRDF>(
+        "__mantaray__lambertian_brdf");
     registerBuiltinType <GridSampler>(
         "__mantaray__grid_sampler");
     registerBuiltinType <RandomSampler>(
@@ -217,6 +229,9 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
     registerBuiltinType<piranha::StringToIntConversionNode>(
         "__mantaray__string_to_int");
 
+    registerBuiltinType<BxdfToBsdfNode>(
+        "__mantaray__bxdf_to_bsdf");
+
     // Unary operations
     registerBuiltinType<piranha::NumNegateOperationNode<piranha::native_float>>(
         "__mantaray__float_negate");
@@ -294,6 +309,11 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
     registerConversion(
         { &piranha::FundamentalType::StringType, &piranha::FundamentalType::IntType },
         "__mantaray__string_to_int"
+    );
+
+    registerConversion(
+        { &ObjectChannel::BxdfChannel, &ObjectChannel::BsdfChannel },
+        "__mantaray__bxdf_to_bsdf"
     );
 
     // ====================================================

@@ -25,7 +25,7 @@ math::real manta::math::uniformRandom(real range) {
 }
 
 math::Generic math::loadScalar(real s) {
-    return _mm_set_ps(s, s, s, s);
+    return _mm_set_ps1(s);
 }
 
 math::Generic math::loadVector(real x, real y, real z, real w) {
@@ -46,6 +46,22 @@ math::Generic manta::math::loadVector(const Vector2 &v1) {
 
 math::Generic math::loadVector(const Vector2 &v1, const Vector2 &v2) {
     return _mm_set_ps(v2.y, v2.x, v1.y, v1.x);
+}
+
+math::Generic math::expandX(const Vector &v) {
+    return _mm_shuffle_ps(v, v, _MM_SHUFFLE(0, 0, 0, 0));
+}
+
+math::Generic math::expandY(const Vector &v) {
+    return _mm_shuffle_ps(v, v, _MM_SHUFFLE(1, 1, 1, 1));
+}
+
+math::Generic math::expandZ(const Vector &v) {
+    return _mm_shuffle_ps(v, v, _MM_SHUFFLE(2, 2, 2, 2));
+}
+
+math::Generic math::expandW(const Vector &v) {
+    return _mm_shuffle_ps(v, v, _MM_SHUFFLE(3, 3, 3, 3));
 }
 
 math::Quaternion math::loadQuaternion(real angle, const Vector &axis) {
@@ -100,7 +116,9 @@ math::Vector2 manta::math::getVector2(const Vector &v) {
 }
 
 float math::getScalar(const Vector &v) {
-    return v.m128_f32[0];
+    float s;
+    _mm_store_ss(&s, v);
+    return s;
 }
 
 float math::getX(const Vector &v) {

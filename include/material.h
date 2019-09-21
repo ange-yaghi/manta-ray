@@ -15,6 +15,7 @@ namespace manta {
     struct IntersectionPoint;
     class RayContainer;
     class LightRay;
+    class BSDF;
 
     class Material : public ObjectReferenceNode<Material> {
     public:
@@ -24,14 +25,12 @@ namespace manta {
         void setName(const std::string &name) { m_name = name; }
         std::string getName() const { return m_name; }
 
-        virtual void generateRays(RayContainer *rays, const LightRay &ray, 
-            const IntersectionPoint &intersectionPoint, int degree,
-            StackAllocator *stackAllocator = nullptr) const = 0;
-        virtual void integrateRay(LightRay *ray, const RayContainer &rays, 
-            const IntersectionPoint &intersectionPoint) const = 0;
-
         void setIndex(int index) { m_index = index; }
         int getIndex() const { return m_index; }
+
+        virtual math::Vector getEmission(const IntersectionPoint &ip) const;
+        virtual math::Vector getFilterColor(const IntersectionPoint &ip) const;
+        virtual BSDF *getBSDF() const { return nullptr; }
 
     protected:
         virtual void _initialize();

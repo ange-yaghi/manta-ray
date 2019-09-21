@@ -48,7 +48,7 @@ public node samsung_materials {
     phong_distribution dist_matte_plastic(64)
     phong_distribution mirror_dist(20000)
 
-    lambertian_bsdf lambert()
+    lambertian_brdf lambert()
 
     // Materials
     bsdf_material default_material(
@@ -60,7 +60,7 @@ public node samsung_materials {
     bsdf_material phone_case(
         library: library,
         name: "PhoneCase",
-        bsdf: bilayer_bsdf(
+        bsdf: bilayer_brdf(
             coating: dist_phone_case,
             diffuse: 0,
             specular: 0.01
@@ -70,7 +70,7 @@ public node samsung_materials {
     bsdf_material bay_door(
         library: library,
         name: "BayDoorMaterial",
-        bsdf: bilayer_bsdf(
+        bsdf: bilayer_brdf(
             coating: dist_bay_door,
             diffuse: 0,
             specular: 0
@@ -80,20 +80,20 @@ public node samsung_materials {
     bsdf_material bronze(
         library: library,
         name: "Bronze",
-        bsdf: microfacet_reflection_bsdf(dist_bronze),
+        bsdf: microfacet_brdf(dist_bronze),
         reflectance: srgb_i(0xC0, 0xA5, 0x70)
     )
 
     bsdf_material steel(
         library: library,
         name: "Steel",
-        bsdf: microfacet_reflection_bsdf(dist_steel)
+        bsdf: microfacet_brdf(dist_steel)
     )
 
     bsdf_material back_plastic(
         library: library,
         name: "BlackPlastic",
-        bsdf: bilayer_bsdf(
+        bsdf: bilayer_brdf(
             coating: dist_back_plastic,
             diffuse: 0,
             specular: 0.05
@@ -110,7 +110,7 @@ public node samsung_materials {
     bsdf_material floor(
         library: library,
         name: "Floor",
-        bsdf: bilayer_bsdf(
+        bsdf: bilayer_brdf(
             coating: dist_floor,
             diffuse: 0,
             specular: 0.05
@@ -138,7 +138,7 @@ public node samsung_materials {
     bsdf_material speaker_grill_material(
         library: library,
         name: "SpeakerGrill",
-        bsdf: bilayer_bsdf(
+        bsdf: bilayer_brdf(
             coating: dist_bay_door,
             diffuse: 0.1 * speaker_grill,
             specular: 0
@@ -169,7 +169,7 @@ public node samsung_materials {
     bsdf_material mirror(
         library: library,
         name: "Mirror",
-        bsdf: microfacet_reflection_bsdf(mirror_dist)
+        bsdf: microfacet_brdf(mirror_dist)
     )
 
     bsdf_material flash_color(
@@ -182,7 +182,7 @@ public node samsung_materials {
     bsdf_material back_plate(
         library: library,
         name: "BackPlate",
-        bsdf: bilayer_bsdf(
+        bsdf: bilayer_brdf(
             coating: dist_back_plastic,
             diffuse: back_plate_texture,
             specular: 0
@@ -205,7 +205,7 @@ public node samsung_materials {
 public node samsung_lights {
     input library;
 
-    lambertian_bsdf lambert()
+    lambertian_brdf lambert()
 
     bsdf_material strong_light(
         library: library,

@@ -134,3 +134,10 @@ TEST(MathTests, MaxComponentTest) {
     n = math::maxComponent(n);
     CHECK_VEC_EQ(n, math::loadScalar(1), 0.0);
 }
+
+TEST(MathTests, ExpandTest) {
+    math::Vector n = math::loadVector(0, 0, 0, 1);
+    n = math::expandZ(n);
+    CHECK_VEC_EQ(n, math::loadScalar(1), 0.0);
+}
+

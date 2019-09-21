@@ -1,9 +1,13 @@
 #include "../include/media_interface.h"
 
 manta::MediaInterface::MediaInterface() {
-    m_output.setReference(this);
+    /* void */
 }
 
 manta::MediaInterface::~MediaInterface() {
     /* void */
+}
+
+void manta::MediaInterface::_evaluate() {
+    m_output.setReference(this);
 }

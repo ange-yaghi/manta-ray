@@ -4,7 +4,6 @@
 
 manta::MaterialLibrary::MaterialLibrary() {
     m_currentIndex = 0;
-    m_output.setReference(this);
 }
 
 manta::MaterialLibrary::~MaterialLibrary() {
@@ -26,4 +25,8 @@ manta::Material *manta::MaterialLibrary::searchByName(const std::string &name) c
     }
 
     return nullptr;
+}
+
+void manta::MaterialLibrary::_evaluate() {
+    m_output.setReference(this);
 }

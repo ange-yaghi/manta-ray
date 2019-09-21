@@ -18,7 +18,7 @@ auto node base_material {
     bsdf_material(
         name: "Base",
         library: library,
-        bsdf: microfacet_reflection_bsdf(ggx_distribution(0.5)),
+        bsdf: microfacet_brdf(ggx_distribution(0.5)),
         reflectance: 1.0
     )
 }
@@ -27,7 +27,7 @@ auto node gadget_material {
     bsdf_material(
         name: "Gadget",
         library: library,
-        bsdf: microfacet_reflection_bsdf(ggx_distribution(0.5)),
+        bsdf: microfacet_brdf(ggx_distribution(0.5)),
         reflectance: 1.0
     )
 }

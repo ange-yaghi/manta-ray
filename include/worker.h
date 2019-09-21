@@ -5,6 +5,7 @@
 #include "path_recorder.h"
 #include "manta_build_conf.h"
 #include "runtime_statistics.h"
+#include "intersection_point_manager.h"
 
 #include <thread>
 #include <atomic>
@@ -52,6 +53,8 @@ namespace manta {
         RayTracer *m_rayTracer;
 
         std::thread *m_thread;
+
+        IntersectionPointManager m_ipManager;
 
     protected:
         // Debugging/Path recording
