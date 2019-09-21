@@ -39,7 +39,7 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
     PhongDistribution phongDist2;
     phongDist2.setPower(16);
 
-    MicrofacetReflectionBSDF bsdf2;
+    MicrofacetBRDF bsdf2;
     bsdf2.setDistribution(&phongDist);
 
     LambertianBRDF lambert;

@@ -38,7 +38,7 @@
 #include "../include/phong_distribution.h"
 #include "../include/lambertian_brdf.h"
 #include "../include/ggx_distribution.h"
-#include "../include/microfacet_reflection_brdf.h"
+#include "../include/microfacet_brdf.h"
 #include "../include/microfacet_transmission_btdf.h"
 #include "../include/microfacet_glass_bsdf.h"
 #include "../include/material_pointer.h"

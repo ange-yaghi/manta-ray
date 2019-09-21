@@ -95,7 +95,7 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
     PhongDistribution phongSteel;
     phongSteel.setPower(1024);
 
-    MicrofacetReflectionBSDF steelBSDF;
+    MicrofacetBRDF steelBSDF;
     steelBSDF.setDistribution(&phongSteel);
 
     SimpleBSDFMaterial *steelMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
@@ -156,7 +156,7 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
     PhongDistribution ggxPhongEquiv;
     ggxPhongEquiv.setPower(10.0f);
 
-    MicrofacetReflectionBSDF ggxTestBDSF;
+    MicrofacetBRDF ggxTestBDSF;
     ggxTestBDSF.setDistribution(&ggxPhongEquiv);
 
     SimpleBSDFMaterial *ggxTestMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();

@@ -17,7 +17,7 @@ bsdf_material floor_material(
     library: library,
     name: "Floor",
     reflectance: srgb_i(0x30, 0x33, 0x6b),
-    bsdf: microfacet_reflection_brdf(
+    bsdf: microfacet_brdf(
         ggx_distribution(0.05)
     )
 )

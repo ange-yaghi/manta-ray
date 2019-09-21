@@ -42,7 +42,7 @@ auto node steel_materials {
         4.0
     )
 
-    bilayer_bsdf bsdf(
+    bilayer_brdf bsdf(
         coating: 
             phong_distribution(
                 power: curved_fingerprint * 10000.0 + 16.0
@@ -60,7 +60,7 @@ auto node shiny_steel_material {
             bsdf: bsdf
         );
 
-    microfacet_reflection_bsdf bsdf(
+    microfacet_brdf bsdf(
         distribution: phong_distribution(power: 5000.0)
     )
 }
@@ -74,7 +74,7 @@ auto node graphite_material {
             reflectance: srgb_i(0x29, 0x29, 0x29)
         );
 
-    microfacet_reflection_bsdf bsdf(
+    microfacet_brdf bsdf(
         distribution: phong_distribution(power: 512.0)
     )
 }
@@ -86,7 +86,7 @@ auto node paint_material {
         bsdf: bsdf
     )
 
-    bilayer_bsdf bsdf(
+    bilayer_brdf bsdf(
         coating: 
             phong_distribution(
                 power: 1024.0 * fingerprint + 256.0
@@ -104,7 +104,7 @@ auto node eraser_material {
     bsdf_material(
         name: "Eraser",
         library: library,
-        bsdf: lambertian_bsdf(),
+        bsdf: lambertian_brdf(),
         reflectance: eraser
     )
 }
@@ -117,7 +117,7 @@ auto node wood_material {
     bsdf_material(
         name: "Wood",
         library: library,
-        bsdf: lambertian_bsdf(),
+        bsdf: lambertian_brdf(),
         reflectance: wood
     )
 }
@@ -130,8 +130,8 @@ auto node floor_material {
     bsdf_material(
         name: "Floor",
         library: library,
-        bsdf: lambertian_bsdf(),
-        reflectance: floor
+        bsdf: lambertian_brdf(),
+        reflectance: uv_wrap(floor)
     )
 }
 
@@ -139,7 +139,7 @@ auto node light_material {
     bsdf_material(
         name: "Light",
         library: library,
-        bsdf: lambertian_bsdf(),
+        bsdf: lambertian_brdf(),
         reflectance: 0.0,
         emission: 4.0
     )
@@ -149,7 +149,7 @@ auto node default_material {
     bsdf_material(
         name: "Default",
         library: library,
-        bsdf: lambertian_bsdf()
+        bsdf: lambertian_brdf()
     )
 }
 

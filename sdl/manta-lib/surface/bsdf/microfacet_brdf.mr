@@ -15,7 +15,7 @@ private import "../../types/atomic_types.mr"
 private import "../../types/conversions.mr"
 
 @doc: "Single layer reflection BRDF"
-public node microfacet_reflection_brdf => __mantaray__microfacet_reflection_brdf {
+public node microfacet_brdf => __mantaray__microfacet_brdf {
     input distribution      [microfacet_distribution]: ggx_distribution(0.5);
     input reflectivity      [vector]: 1;
     alias output __out      [bxdf];

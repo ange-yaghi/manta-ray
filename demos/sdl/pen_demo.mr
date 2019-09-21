@@ -35,7 +35,7 @@ auto node pen_body_material {
         filename: "../../demos/textures/wood_roughness.jpg"
     )
 
-    bilayer_bsdf bsdf(
+    bilayer_brdf bsdf(
         coating: 
             phong_distribution(
                 power: 1000.0 * wood_roughness + 2.0
@@ -57,7 +57,7 @@ auto node pen_chrome_material {
         filename: "../../demos/textures/chrome_roughness.jpg"
     )
 
-    bilayer_bsdf bsdf(
+    bilayer_brdf bsdf(
         coating: 
             phong_distribution(
                 power: 10000.0 * chrome_roughness + 400.0
@@ -80,7 +80,7 @@ auto node backdrop_material {
         filename: "../../demos/textures/light_wood.jpg"
     )
 
-    microfacet_reflection_bsdf bsdf(
+    microfacet_brdf bsdf(
         distribution: phong_distribution(128.0)
     )
 }
@@ -90,7 +90,7 @@ auto node strong_light_material {
         bsdf_material(
             name: "StrongLight",
             library: library,
-            bsdf: lambertian_bsdf(),
+            bsdf: lambertian_brdf(),
             emission: 2.0,
             reflectance: 0.0
         );
@@ -101,7 +101,7 @@ auto node weak_light_material {
         bsdf_material(
             name: "WeakLight",
             library: library,
-            bsdf: lambertian_bsdf(),
+            bsdf: lambertian_brdf(),
             emission: 1.0,
             reflectance: 0.0
         );
@@ -112,7 +112,7 @@ auto node default_material {
         bsdf_material(
             name: "Default",
             library: library,
-            bsdf: lambertian_bsdf(),
+            bsdf: lambertian_brdf(),
             reflectance: vector(0.0, 1.0, 0.0)
         );
 }

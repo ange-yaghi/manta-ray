@@ -133,7 +133,7 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
     blackPlasticBSDF.setDiffuse(getColor(0x0, 0x0, 0x0));
     blackPlasticBSDF.setSpecularAtNormal(math::loadVector(0.05f, 0.05f, 0.05f));
 
-    MicrofacetReflectionBSDF mattePlasticBSDF;
+    MicrofacetBRDF mattePlasticBSDF;
     mattePlasticBSDF.setDistribution(&mattePlasticPhong);
 
     BilayerBRDF floorBSDF;
@@ -166,16 +166,16 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
     lensGlassBSDF.setDistribution(&phongGlass);
     lensGlassBSDF.setMediaInterface(&lensFresnel);
 
-    MicrofacetReflectionBSDF bronzeBSDF;
+    MicrofacetBRDF bronzeBSDF;
     bronzeBSDF.setDistribution(&phongBronze);
 
-    MicrofacetReflectionBSDF steelBSDF;
+    MicrofacetBRDF steelBSDF;
     steelBSDF.setDistribution(&phongSteel);
 
-    MicrofacetReflectionBSDF imageSensorBSDF;
+    MicrofacetBRDF imageSensorBSDF;
     imageSensorBSDF.setDistribution(&mattePlasticPhong);
 
-    MicrofacetReflectionBSDF mirrorBSDF;
+    MicrofacetBRDF mirrorBSDF;
     mirrorBSDF.setDistribution(&mirrorPhong);
 
     SimpleBSDFMaterial *defaultMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();

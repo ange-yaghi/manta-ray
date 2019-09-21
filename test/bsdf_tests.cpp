@@ -8,7 +8,7 @@
 #include "../include/stack_allocator.h"
 #include "../include/dielectric_media_interface.h"
 #include "../include/phong_distribution.h"
-#include "../include/microfacet_reflection_brdf.h"
+#include "../include/microfacet_brdf.h"
 #include "../include/microfacet_transmission_btdf.h"
 #include "../include/microfacet_glass_bsdf.h"
 
@@ -64,7 +64,7 @@ TEST(BSDFTests, PhongMicrofacetEnergyConservation) {
     PhongDistribution dist;
     dist.setPower((math::real)5.0);
 
-    MicrofacetReflectionBSDF bsdf;
+    MicrofacetBRDF bsdf;
     bsdf.setDistribution(&dist);
 
     math::Vector incident = math::loadVector((math::real)0.0, (math::real)0.0, (math::real)1.0);
@@ -101,7 +101,7 @@ TEST(BSDFTests, BilayerBRDFEnergyConservation) {
     PhongDistribution phong;
     phong.setPower((math::real)4.0);
 
-    MicrofacetReflectionBSDF bsdf1;
+    MicrofacetBRDF bsdf1;
     bsdf1.setDistribution(&phong);
     //LambertianBRDF bsdf1;
     LambertianBRDF bsdf2;

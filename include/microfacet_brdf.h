@@ -1,5 +1,5 @@
-#ifndef MANTARAY_MICROFACET_REFLECTION_BRDF_H
-#define MANTARAY_MICROFACET_REFLECTION_BRDF_H
+#ifndef MANTARAY_MICROFACET_BRDF_H
+#define MANTARAY_MICROFACET_BRDF_H
 
 #include "bxdf.h"
 
@@ -8,13 +8,13 @@ namespace manta {
     class MicrofacetDistribution;
     class MediaInterface;
 
-    class MicrofacetReflectionBSDF : public BXDF {
+    class MicrofacetBRDF : public BXDF {
     public:
         static constexpr math::real MIN_EPSILON = (math::real)0.0;
 
     public:
-        MicrofacetReflectionBSDF();
-        virtual ~MicrofacetReflectionBSDF();
+        MicrofacetBRDF();
+        virtual ~MicrofacetBRDF();
 
         virtual math::Vector sampleF(const IntersectionPoint *surfaceInteraction, 
             const math::Vector &i, math::Vector *o, math::real *pdf, 
@@ -42,4 +42,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* MANTARAY_MICROFACET_REFLECTION_BRDF_H */
+#endif /* MANTARAY_MICROFACET_BRDF_H */

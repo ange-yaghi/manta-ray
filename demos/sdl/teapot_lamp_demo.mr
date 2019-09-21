@@ -22,7 +22,7 @@ auto node settings {
 material_library library()
 scene scene()
 
-node teapot_material {
+auto node teapot_material {
     alias output material: 
         bsdf_material(
             name: "TeapotMaterial",
@@ -30,24 +30,23 @@ node teapot_material {
             bsdf: bsdf
         );
 
-    bilayer_bsdf bsdf(
+    bilayer_brdf bsdf(
         coating: phong_distribution(1024),
         diffuse: srgb_i(0x89, 0xCF, 0xF0),
         specular: vector(0.5, 0.5, 0.5)
     )
 }
 
-auto node test_material {
+node test_material {
     alias output material: 
         bsdf_material(
             name: "TeapotMaterial",
             library: library,
-            bsdf: lambertian_bsdf(),
+            bsdf: lambertian_brdf(),
             reflectance: 0.0,
-            emission: 1.0
-            //emission:
-            //    separator * glow_color + 
-            //    (1.0 - separator) * vector(glow_color.g, glow_color.b, glow_color.r)
+            emission:
+                separator * glow_color + 
+                (1.0 - separator) * vector(glow_color.g, glow_color.b, glow_color.r)
         );
 
     vector_var glow_color(
@@ -70,7 +69,7 @@ auto node floor_material {
             bsdf: bsdf
         );
 
-    bilayer_bsdf bsdf(
+    bilayer_brdf bsdf(
         coating: phong_distribution(128.0),
         diffuse: srgb_i(0xFF, 0xFF, 0xFF),
         specular: 0
@@ -83,9 +82,8 @@ auto node bulb_material {
             name: "BulbMaterial",
             library: library,
             reflectance: vector(),
-            //emission: srgb_i(255, 197, 143) * 50,
-            emission: 0,
-            bsdf: lambertian_bsdf()
+            emission: srgb_i(255, 197, 143) * 50,
+            bsdf: lambertian_brdf()
         );
 }
 

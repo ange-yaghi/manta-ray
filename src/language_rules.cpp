@@ -10,7 +10,7 @@
 #include "../include/simple_bsdf_material.h"
 #include "../include/bilayer_brdf.h"
 #include "../include/material_library.h"
-#include "../include/microfacet_reflection_brdf.h"
+#include "../include/microfacet_brdf.h"
 #include "../include/kd_tree.h"
 #include "../include/obj_file_node.h"
 #include "../include/scene.h"
@@ -132,8 +132,8 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__null_bxdf");
     registerBuiltinType<AddBxdfNode>(
         "__mantaray__add_bxdf");
-    registerBuiltinType<MicrofacetReflectionBSDF>(
-        "__mantaray__microfacet_reflection_brdf");
+    registerBuiltinType<MicrofacetBRDF>(
+        "__mantaray__microfacet_brdf");
     registerBuiltinType<SimpleBSDFMaterial>(
         "__mantaray__simple_bsdf_material");
     registerBuiltinType<BilayerBRDF>(

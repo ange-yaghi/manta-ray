@@ -426,6 +426,10 @@ manta::math::Vector manta::RayTracer::traceRay(
             break;
         }
 
+        // Get the BSDF associated with this material
+        BSDF *bsdf = material->getBSDF();
+        if (bsdf == nullptr) break;
+
         // Generate a new path
         math::Vector outgoingDir = math::negate(currentRay->getDirection());
         math::Vector incomingDir, t_incomingDir;
@@ -449,9 +453,6 @@ manta::math::Vector manta::RayTracer::traceRay(
             math::getScalar(math::dot(outgoingDir, u)),
             math::getScalar(math::dot(outgoingDir, v)),
             math::getScalar(math::dot(outgoingDir, w)));
-
-        BSDF *bsdf = material->getBSDF();
-        if (bsdf == nullptr) break;
 
         math::real pdf;
         math::Vector f = bsdf->sampleF(&point, t_dir, &t_incomingDir, &pdf, s);

@@ -1,20 +1,20 @@
-#include "../include/microfacet_reflection_brdf.h"
+#include "../include/microfacet_brdf.h"
 
 #include "../include/microfacet_distribution.h"
 #include "../include/vector_node_output.h"
 
-manta::MicrofacetReflectionBSDF::MicrofacetReflectionBSDF() {
+manta::MicrofacetBRDF::MicrofacetBRDF() {
     m_distribution = nullptr;
     m_distributionInput = nullptr;
 
     m_baseReflectivity = math::constants::One;
 }
 
-manta::MicrofacetReflectionBSDF::~MicrofacetReflectionBSDF() {
+manta::MicrofacetBRDF::~MicrofacetBRDF() {
     /* void */
 }
 
-manta::math::Vector manta::MicrofacetReflectionBSDF::sampleF(
+manta::math::Vector manta::MicrofacetBRDF::sampleF(
         const IntersectionPoint *surfaceInteraction, const math::Vector &i, 
         math::Vector *o, math::real *pdf, StackAllocator *stackAllocator) const 
 {
@@ -52,7 +52,7 @@ manta::math::Vector manta::MicrofacetReflectionBSDF::sampleF(
         getReflectivity(surfaceInteraction));
 }
 
-manta::math::Vector manta::MicrofacetReflectionBSDF::f(const IntersectionPoint *surfaceInteraction, 
+manta::math::Vector manta::MicrofacetBRDF::f(const IntersectionPoint *surfaceInteraction,
     const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) const 
 {
     math::Vector wh = math::normalize(math::add(i, o));
@@ -79,7 +79,7 @@ manta::math::Vector manta::MicrofacetReflectionBSDF::f(const IntersectionPoint *
         getReflectivity(surfaceInteraction));
 }
 
-manta::math::real manta::MicrofacetReflectionBSDF::pdf(
+manta::math::real manta::MicrofacetBRDF::pdf(
     const IntersectionPoint *surfaceInteraction, const math::Vector &i, const math::Vector &o) const 
 {
     math::Vector wh = math::normalize(math::add(i, o));
@@ -100,7 +100,7 @@ manta::math::real manta::MicrofacetReflectionBSDF::pdf(
     return pdf;
 }
 
-manta::math::Vector manta::MicrofacetReflectionBSDF::getReflectivity(
+manta::math::Vector manta::MicrofacetBRDF::getReflectivity(
     const IntersectionPoint *surfaceInteraction) const 
 {
     if (m_reflectivityInput == nullptr) return m_baseReflectivity;
@@ -112,7 +112,7 @@ manta::math::Vector manta::MicrofacetReflectionBSDF::getReflectivity(
     }
 }
 
-void manta::MicrofacetReflectionBSDF::_evaluate() {
+void manta::MicrofacetBRDF::_evaluate() {
     BXDF::_evaluate();
 
     ObjectReferenceNodeOutput<MicrofacetDistribution> *distInput = 
@@ -120,7 +120,7 @@ void manta::MicrofacetReflectionBSDF::_evaluate() {
     m_distribution = distInput->getReference();
 }
 
-void manta::MicrofacetReflectionBSDF::registerInputs() {
+void manta::MicrofacetBRDF::registerInputs() {
     registerInput(&m_distributionInput, "distribution");
     registerInput(&m_reflectivityInput, "reflectivity");
 }

@@ -95,7 +95,7 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
     steelBSDF.setSpecularAtNormal(math::loadVector(1.0f, 1.0f, 1.0f));
     steelBSDF.setSpecularNode(invFingerprint.getMainOutput());
 
-    MicrofacetReflectionBSDF shinySteelBSDF;
+    MicrofacetBRDF shinySteelBSDF;
     shinySteelBSDF.setDistribution(&phongShinySteel);
 
     SimpleBSDFMaterial *steelMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
@@ -118,7 +118,7 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
     PhongDistribution phongGraphite;
     phongGraphite.setPower(512);
 
-    MicrofacetReflectionBSDF graphiteBSDF;
+    MicrofacetBRDF graphiteBSDF;
     graphiteBSDF.setDistribution(&phongGraphite);
 
     SimpleBSDFMaterial *graphiteMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();

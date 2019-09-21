@@ -756,9 +756,6 @@
     <ClCompile Include="..\..\src\microfacet_glass_bsdf.cpp">
       <Filter>Source Files\material\interface\surface-modeling\bsdf\library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\microfacet_reflection_brdf.cpp">
-      <Filter>Source Files\material\interface\surface-modeling\bsdf\library</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\microfacet_transmission_btdf.cpp">
       <Filter>Source Files\material\interface\surface-modeling\bsdf\library</Filter>
     </ClCompile>
@@ -776,6 +773,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\add_bxdf_node.cpp">
       <Filter>Source Files\material\interface\surface-modeling\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\microfacet_brdf.cpp">
+      <Filter>Source Files\material\interface\surface-modeling\bsdf\library</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1208,9 +1208,6 @@
     <ClInclude Include="..\..\include\microfacet_glass_bsdf.h">
       <Filter>Header Files\material\surface-modeling\bsdf\library</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\microfacet_reflection_brdf.h">
-      <Filter>Header Files\material\surface-modeling\bsdf\library</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\microfacet_transmission_btdf.h">
       <Filter>Header Files\material\surface-modeling\bsdf\library</Filter>
     </ClInclude>
@@ -1234,6 +1231,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\add_bxdf_node.h">
       <Filter>Header Files\material\surface-modeling\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\microfacet_brdf.h">
+      <Filter>Header Files\material\surface-modeling\bsdf\library</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

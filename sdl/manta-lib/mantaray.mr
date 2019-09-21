@@ -55,7 +55,7 @@ public import "surface/bsdf/bxdf.mr"
 public import "surface/bsdf/bxdf_to_bsdf.mr"
 public import "surface/bsdf/bilayer_brdf.mr"
 public import "surface/bsdf/lambertian_brdf.mr"
-public import "surface/bsdf/microfacet_reflection_brdf.mr"
+public import "surface/bsdf/microfacet_brdf.mr"
 public import "surface/bsdf/glass_bsdf.mr"
 
 public import "surface/materials/material_library.mr"

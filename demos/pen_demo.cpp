@@ -74,7 +74,7 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
     chromeBSDF.setDiffuse(getColor(0, 0, 0));
     chromeBSDF.setSpecularAtNormal(math::loadVector(0.95f, 0.95f, 0.95f));
 
-    MicrofacetReflectionBSDF floorBSDF;
+    MicrofacetBRDF floorBSDF;
     floorBSDF.setDistribution(&floorDistribution);
 
     SimpleBSDFMaterial *paintMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();

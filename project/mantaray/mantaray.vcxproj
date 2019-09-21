@@ -90,7 +90,7 @@
     <ClCompile Include="..\..\src\material_pointer.cpp" />
     <ClCompile Include="..\..\src\microfacet_distribution.cpp" />
     <ClCompile Include="..\..\src\microfacet_glass_bsdf.cpp" />
-    <ClCompile Include="..\..\src\microfacet_reflection_brdf.cpp" />
+    <ClCompile Include="..\..\src\microfacet_brdf.cpp" />
     <ClCompile Include="..\..\src\microfacet_transmission_btdf.cpp" />
     <ClCompile Include="..\..\src\octree.cpp" />
     <ClCompile Include="..\..\src\os_utilities.cpp" />
@@ -230,7 +230,7 @@
     <ClInclude Include="..\..\include\media_interface.h" />
     <ClInclude Include="..\..\include\microfacet_distribution.h" />
     <ClInclude Include="..\..\include\microfacet_glass_bsdf.h" />
-    <ClInclude Include="..\..\include\microfacet_reflection_brdf.h" />
+    <ClInclude Include="..\..\include\microfacet_brdf.h" />
     <ClInclude Include="..\..\include\microfacet_transmission_btdf.h" />
     <ClInclude Include="..\..\include\octree.h" />
     <ClInclude Include="..\..\include\opaque_media_interface.h" />
