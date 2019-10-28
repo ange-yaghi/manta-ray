@@ -90,7 +90,7 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
     phongShinySteel.setPower(5000.0f);
 
     BilayerBRDF steelBSDF;
-    steelBSDF.setCoatingDistribution(phongSteel.getMainOutput());
+    steelBSDF.setCoatingDistribution(&phongSteel);
     steelBSDF.setDiffuseNode(metalTexture.getMainOutput());
     steelBSDF.setSpecularAtNormal(math::loadVector(1.0f, 1.0f, 1.0f));
     steelBSDF.setSpecularNode(invFingerprint.getMainOutput());
@@ -134,7 +134,7 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
     phongGloss.setMinMapPower(256);
 
     BilayerBRDF paintBSDF;
-    paintBSDF.setCoatingDistribution(phongGloss.getMainOutput());
+    paintBSDF.setCoatingDistribution(&phongGloss);
     if (ALT_VERSION) paintBSDF.setDiffuse(getColor(0x0F, 0x10, 0x40));
     else paintBSDF.setDiffuse(getColor(0xE9, 0xE2, 0xDF));
     paintBSDF.setSpecularAtNormal(math::loadScalar(0.1f));

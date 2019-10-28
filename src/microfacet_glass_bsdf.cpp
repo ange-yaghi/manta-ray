@@ -38,8 +38,8 @@ manta::math::Vector manta::MicrofacetGlassBSDF::sampleF(
 
         *o = ri;
 
-        math::real cosThetaO = ::abs(math::getZ(*o));
-        math::real cosThetaI = ::abs(math::getZ(i));
+        math::real cosThetaO = math::getZ(*o);
+        math::real cosThetaI = math::getZ(i);
 
         if (o_dot_m <= (math::real)0.0 ||
             cosThetaO <= (math::real)0.0 ||
@@ -76,8 +76,8 @@ manta::math::Vector manta::MicrofacetGlassBSDF::sampleF(
 
         *o = rt;
 
-        math::real cosThetaI = ::abs(math::getZ(i));
-        math::real cosThetaO = ::abs(math::getZ(rt));
+        math::real cosThetaI = math::getZ(i);
+        math::real cosThetaO = math::getZ(rt);
 
         if (i_dot_m <= (math::real)0.0 ||
             o_dot_m == (math::real)0.0 ||

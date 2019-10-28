@@ -11,6 +11,12 @@
 #include "../include/microfacet_brdf.h"
 #include "../include/microfacet_transmission_btdf.h"
 #include "../include/microfacet_glass_bsdf.h"
+#include "../include/bsdf.h"
+#include "../include/disney_diffuse_brdf.h"
+#include "../include/disney_ggx_distribution.h"
+#include "../include/disney_specular_brdf.h"
+#include "../include/disney_gtr_clearcoat_distribution.h"
+#include "../include/microfacet_brdf.h"
 
 #include "../include/manta_math.h"
 
@@ -110,7 +116,7 @@ TEST(BSDFTests, BilayerBRDFEnergyConservation) {
     fresnel.setIorTransmitted((math::real)1.5);
 
     BilayerBRDF brdf;
-    brdf.setCoatingDistribution(phong.getMainOutput());
+    brdf.setCoatingDistribution(&phong);
     brdf.setDiffuse(math::loadVector(1.0, 1.0, 1.0));
     brdf.setSpecularAtNormal(math::loadVector(1.0, 1.0, 1.0));
 
@@ -281,4 +287,147 @@ TEST(BSDFTests, GlassBSDFNANTest) {
     EXPECT_LE(math::getX(accum), 1.0f);
     EXPECT_LE(math::getY(accum), 1.0f);
     EXPECT_LE(math::getZ(accum), 1.0f);
+}
+
+TEST(BSDFTests, CompoundBSDFNanTest) {
+    // Generate Disney BSDF
+    DisneyDiffuseBRDF diffuseBrdf;
+    diffuseBrdf.setBaseColor(math::constants::One);
+    diffuseBrdf.setRoughness((math::real)0.5f);
+
+    DisneyGgxDistribution ggx;
+    ggx.setRoughness((math::real)0.5f);
+
+    DisneySpecularBRDF specularBrdf;
+    specularBrdf.setBaseColor(math::constants::One);
+    specularBrdf.setRoughness((math::real)0.5f);
+    specularBrdf.setMetallic((math::real)0.0f);
+    specularBrdf.setSpecular((math::real)0.5f);
+    specularBrdf.setDistribution(&ggx);
+
+    BSDF disneyBsdf;
+    disneyBsdf.addBxdf(&diffuseBrdf);
+    disneyBsdf.addBxdf(&specularBrdf);
+
+    math::Vector incident = math::loadVector((math::real)0.0, (math::real)0.0, (math::real)1.0);
+    incident = math::normalize(incident);
+    math::real pdf;
+    math::Vector normal = math::loadVector((math::real)0.0, (math::real)0.0, (math::real)1.0);
+
+    math::Vector accum = math::constants::Zero;
+    constexpr int SAMPLE_COUNT = 20000000;
+
+    StackAllocator s;
+    s.initialize(1000);
+
+    IntersectionPoint point;
+    point.m_direction = DielectricMediaInterface::DIRECTION_IN;
+
+    // Calculate rho
+    for (int i = 0; i < SAMPLE_COUNT; i++) {
+        // Non-functional code for debugging purposes
+        if (i == -1) {
+            int breakHere = 0;
+        }
+
+        math::Vector outgoing;
+        math::Vector reflectance = disneyBsdf.sampleF(&point, incident, &outgoing, &pdf, &s);
+
+        EXPECT_GE(math::getX(reflectance), 0.0f);
+        EXPECT_GE(math::getY(reflectance), 0.0f);
+        EXPECT_GE(math::getZ(reflectance), 0.0f);
+
+        EXPECT_FALSE(std::isnan(math::getX(reflectance)));
+        EXPECT_FALSE(std::isnan(math::getY(reflectance)));
+        EXPECT_FALSE(std::isnan(math::getZ(reflectance)));
+
+        EXPECT_FALSE(std::isinf(math::getX(reflectance)));
+        EXPECT_FALSE(std::isinf(math::getY(reflectance)));
+        EXPECT_FALSE(std::isinf(math::getZ(reflectance)));
+
+        EXPECT_FALSE(std::isnan(pdf));
+
+        EXPECT_FALSE(std::isnan(math::getX(reflectance)));
+        EXPECT_FALSE(std::isnan(math::getY(reflectance)));
+        EXPECT_FALSE(std::isnan(math::getZ(reflectance)));
+
+        EXPECT_GE(pdf, 0.0f);
+
+        if (pdf != 0.0f) {
+            math::Vector abs_cos_theta = math::abs(math::dot(outgoing, normal));
+            accum = math::add(accum, math::div(math::mul(reflectance, abs_cos_theta), math::loadScalar(pdf)));
+        }
+    }
+
+    accum = math::div(accum, math::loadScalar((math::real)SAMPLE_COUNT));
+
+    EXPECT_LE(math::getX(accum), 1.1f);
+    EXPECT_LE(math::getY(accum), 1.1f);
+    EXPECT_LE(math::getZ(accum), 1.1f);
+}
+
+TEST(BSDFTests, DisneyClearCoatTest) {
+    // Generate Disney Clearcoat BSDF
+    DisneyGtrClearcoatDistribution dist;
+    dist.setRoughness(0.1f);
+
+    MicrofacetBRDF brdf;
+    brdf.setDistribution(&dist);
+    brdf.setBaseReflectivity(math::constants::One);
+
+    math::Vector incident = math::loadVector((math::real)0.0, (math::real)0.0, (math::real)1.0);
+    incident = math::normalize(incident);
+    math::real pdf;
+    math::Vector normal = math::loadVector((math::real)0.0, (math::real)0.0, (math::real)1.0);
+
+    math::Vector accum = math::constants::Zero;
+    constexpr int SAMPLE_COUNT = 20000000;
+
+    StackAllocator s;
+    s.initialize(1000);
+
+    IntersectionPoint point;
+    point.m_direction = DielectricMediaInterface::DIRECTION_IN;
+
+    // Calculate rho
+    for (int i = 0; i < SAMPLE_COUNT; i++) {
+        // Non-functional code for debugging purposes
+        if (i == -1) {
+            int breakHere = 0;
+        }
+
+        math::Vector outgoing;
+        math::Vector reflectance = brdf.sampleF(&point, incident, &outgoing, &pdf, &s);
+
+        EXPECT_GE(math::getX(reflectance), 0.0f);
+        EXPECT_GE(math::getY(reflectance), 0.0f);
+        EXPECT_GE(math::getZ(reflectance), 0.0f);
+
+        EXPECT_FALSE(std::isnan(math::getX(reflectance)));
+        EXPECT_FALSE(std::isnan(math::getY(reflectance)));
+        EXPECT_FALSE(std::isnan(math::getZ(reflectance)));
+
+        EXPECT_FALSE(std::isinf(math::getX(reflectance)));
+        EXPECT_FALSE(std::isinf(math::getY(reflectance)));
+        EXPECT_FALSE(std::isinf(math::getZ(reflectance)));
+
+        EXPECT_FALSE(std::isnan(pdf));
+
+        EXPECT_FALSE(std::isnan(math::getX(reflectance)));
+        EXPECT_FALSE(std::isnan(math::getY(reflectance)));
+        EXPECT_FALSE(std::isnan(math::getZ(reflectance)));
+
+        EXPECT_GE(pdf, 0.0f);
+
+        if (pdf != 0.0f) {
+            math::Vector abs_cos_theta = math::abs(math::dot(outgoing, normal));
+            accum = math::add(accum, math::div(math::mul(reflectance, abs_cos_theta), math::loadScalar(pdf)));
+        }
+    }
+
+    accum = math::div(accum, math::loadScalar((math::real)SAMPLE_COUNT));
+
+    EXPECT_LE(math::getX(accum), 1.1f);
+    EXPECT_LE(math::getY(accum), 1.1f);
+    EXPECT_LE(math::getZ(accum), 1.1f);
 }

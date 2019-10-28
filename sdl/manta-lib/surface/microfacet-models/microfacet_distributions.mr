@@ -26,3 +26,15 @@ public node ggx_distribution => __mantaray__ggx_distribution {
     input width         [types::scalar] : 0.5;
     alias output __out  [::microfacet_distribution];
 }
+
+@doc: "Modified GGX distribution microfacet model for the Disney shader"
+public node disney_ggx_distribution => __mantaray__disney_ggx_distribution {
+    input roughness     [types::scalar] : 0.5;
+    alias output __out  [::microfacet_distribution];
+}
+
+@doc: "GTR1 distribution microfacet model for Disney shader clearcoat layer"
+public node disney_gtr_clearcoat_distribution => __mantaray__disney_gtr_clearcoat_distribution {
+    input roughness     [types::scalar] : 0.5;
+    alias output __out  [::microfacet_distribution];
+}

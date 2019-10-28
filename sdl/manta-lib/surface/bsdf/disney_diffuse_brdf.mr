@@ -1,0 +1,22 @@
+module {
+    @name:          "Disney Diffuse BRDF"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "Disney Diffuse BRDF implementation"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
+private import "bxdf.mr"
+private import "../../types/atomic_types.mr" as types
+private import "../../types/conversions.mr"
+
+@doc: "Disney Diffuse BRDF"
+public node disney_diffuse_brdf => __mantaray__disney_diffuse_brdf {
+    input base_color    [types::vector]: 1.0;
+    input roughness     [types::vector]: 1.0;
+
+    alias output __out  [bxdf];
+}

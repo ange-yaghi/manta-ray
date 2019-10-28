@@ -65,12 +65,12 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
     floorDistribution.setPower(128.f);
 
     BilayerBRDF paintBsdf;
-    paintBsdf.setCoatingDistribution(woodCoating.getMainOutput());
+    paintBsdf.setCoatingDistribution(&woodCoating);
     paintBsdf.setDiffuseNode(texture.getMainOutput());
     paintBsdf.setSpecularAtNormal(math::loadVector(0.1f, 0.1f, 0.1f));
 
     BilayerBRDF chromeBSDF;
-    chromeBSDF.setCoatingDistribution(chromeCoating.getMainOutput());
+    chromeBSDF.setCoatingDistribution(&chromeCoating);
     chromeBSDF.setDiffuse(getColor(0, 0, 0));
     chromeBSDF.setSpecularAtNormal(math::loadVector(0.95f, 0.95f, 0.95f));
 

@@ -49,13 +49,13 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
     fresnel.setIorTransmitted((math::real)1.5);
 
     BilayerBRDF blockBSDF;
-    blockBSDF.setCoatingDistribution(phongDist.getMainOutput());
+    blockBSDF.setCoatingDistribution(&phongDist);
     blockBSDF.setDiffuseNode(map.getMainOutput());
     blockBSDF.setDiffuse(getColor(0xFF, 0xFF, 0xFF));
     blockBSDF.setSpecularAtNormal(math::loadVector(0.1f, 0.1f, 0.1f));
 
     BilayerBRDF floorBSDF;
-    floorBSDF.setCoatingDistribution(phongDist2.getMainOutput());
+    floorBSDF.setCoatingDistribution(&phongDist2);
     floorBSDF.setDiffuse(getColor(0xFF, 0xFF, 0xFF));
     floorBSDF.setSpecularAtNormal(math::loadVector(0.75f, 0.75f, 0.75f));
 

@@ -38,7 +38,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
     PhongDistribution blockCoating;
     blockCoating.setPower((math::real)300);
     BilayerBRDF blockBSDF;
-    blockBSDF.setCoatingDistribution(blockCoating.getMainOutput());
+    blockBSDF.setCoatingDistribution(&blockCoating);
     //blockBSDF.setDiffuse(getColor(129, 216, 208)); // 0xf1, 0xc4, 0x0f
     blockBSDF.setDiffuseNode(blockWood.getMainOutput());
     blockBSDF.setSpecularAtNormal(math::loadVector(0.02f, 0.02f, 0.02f));

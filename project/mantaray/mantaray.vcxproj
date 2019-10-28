@@ -31,6 +31,10 @@
     <ClCompile Include="..\..\src\current_date_node.cpp" />
     <ClCompile Include="..\..\src\date_interface_node.cpp" />
     <ClCompile Include="..\..\src\date_node_output.cpp" />
+    <ClCompile Include="..\..\src\disney_diffuse_brdf.cpp" />
+    <ClCompile Include="..\..\src\disney_ggx_distribution.cpp" />
+    <ClCompile Include="..\..\src\disney_gtr_clearcoat_distribution.cpp" />
+    <ClCompile Include="..\..\src\disney_specular_brdf.cpp" />
     <ClCompile Include="..\..\src\filter.cpp" />
     <ClCompile Include="..\..\src\gaussian_filter.cpp" />
     <ClCompile Include="..\..\src\intersection_point.cpp" />
@@ -156,6 +160,10 @@
     <ClInclude Include="..\..\include\bxdf_to_bsdf_node.h" />
     <ClInclude Include="..\..\include\cached_vector_node.h" />
     <ClInclude Include="..\..\include\cached_vector_output.h" />
+    <ClInclude Include="..\..\include\disney_diffuse_brdf.h" />
+    <ClInclude Include="..\..\include\disney_ggx_distribution.h" />
+    <ClInclude Include="..\..\include\disney_gtr_clearcoat_distribution.h" />
+    <ClInclude Include="..\..\include\disney_specular_brdf.h" />
     <ClInclude Include="..\..\include\intersection_point_manager.h" />
     <ClInclude Include="..\..\include\intersection_point_types.h" />
     <ClInclude Include="..\..\include\node_cache.h" />
