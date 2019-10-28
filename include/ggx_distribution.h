@@ -18,6 +18,9 @@ namespace manta {
     public:
         struct GgxMemory {
             math::real width;
+            
+            bool calculatedDistribution;
+            math::real distribution;
         };
 
     public:
