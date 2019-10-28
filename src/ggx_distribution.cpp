@@ -8,7 +8,8 @@ manta::GgxDistribution::GgxDistribution() {
     m_width = (math::real)1.0;
     m_minMapWidth = (math::real)0.0;
     m_widthNode = nullptr;
-    m_useNodes = false;
+
+    m_useNodes = true;
 }
 
 manta::GgxDistribution::~GgxDistribution() {
@@ -16,7 +17,7 @@ manta::GgxDistribution::~GgxDistribution() {
 }
 
 manta::math::real manta::GgxDistribution::getWidth(const IntersectionPoint *surfaceInteraction) {
-    if (!m_useNodes) return m_width;
+    if (m_widthNode == nullptr || !m_useNodes) return m_width;
     
     const intersection_id id = surfaceInteraction->m_id;
     const int threadId = surfaceInteraction->m_threadId;
@@ -48,7 +49,24 @@ manta::math::Vector manta::GgxDistribution::generateMicrosurfaceNormal(
     const IntersectionPoint *surfaceInteraction) 
 {
     math::real width = getWidth(surfaceInteraction);
+    return generateMicrosurfaceNormal(width);
+}
 
+manta::math::real manta::GgxDistribution::calculateDistribution(
+    const math::Vector &m, const IntersectionPoint *surfaceInteraction) 
+{
+    math::real width = getWidth(surfaceInteraction);
+    return calculateDistribution(m, width);
+}
+
+manta::math::real manta::GgxDistribution::calculateG1(const math::Vector &v, 
+    const math::Vector &m, const IntersectionPoint *surfaceInteraction) 
+{
+    math::real width = getWidth(surfaceInteraction);
+    return calculateG1(v, m, width);
+}
+
+manta::math::Vector manta::GgxDistribution::generateMicrosurfaceNormal(math::real width) {
     math::real r1 = math::uniformRandom();
     math::real r2 = math::uniformRandom();
 
@@ -65,10 +83,8 @@ manta::math::Vector manta::GgxDistribution::generateMicrosurfaceNormal(
 }
 
 manta::math::real manta::GgxDistribution::calculateDistribution(
-    const math::Vector &m, const IntersectionPoint *surfaceInteraction) 
+    const math::Vector &m, math::real width) 
 {
-    math::real width = getWidth(surfaceInteraction);
-
     math::real cos_theta_m = math::getZ(m);
 
     if (cos_theta_m <= 0) return (math::real)0.0;
@@ -89,10 +105,8 @@ manta::math::real manta::GgxDistribution::calculateDistribution(
 }
 
 manta::math::real manta::GgxDistribution::calculateG1(const math::Vector &v, 
-    const math::Vector &m, const IntersectionPoint *surfaceInteraction) 
+    const math::Vector &m, math::real width) 
 {
-    math::real width = getWidth(surfaceInteraction);
-
     math::real v_dot_m = math::getScalar(math::dot(v, m));
     math::real v_dot_n = (math::getZ(v));
     if ((v_dot_m < 0) != (v_dot_n < 0)) return (math::real)0.0;

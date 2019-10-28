@@ -41,6 +41,11 @@ namespace manta {
         void setMinMapWidth(math::real power) { m_minMapWidth = power; }
         math::real getMinMapWidth() const { return m_minMapWidth; }
 
+    public:
+        static math::Vector generateMicrosurfaceNormal(math::real width);
+        static math::real calculateDistribution(const math::Vector &m, math::real width);
+        static math::real calculateG1(const math::Vector &v, const math::Vector &m, math::real width);
+
     protected:
         virtual void registerInputs();
 

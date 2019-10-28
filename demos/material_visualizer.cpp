@@ -82,7 +82,7 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
     woodCoating.setMinMapPower(2);
 
     BilayerBRDF simpleWoodBSDF;
-    simpleWoodBSDF.setCoatingDistribution(woodCoating.getMainOutput());
+    simpleWoodBSDF.setCoatingDistribution(&woodCoating);
     simpleWoodBSDF.setDiffuseNode(texture.getMainOutput());
     simpleWoodBSDF.setSpecularAtNormal(math::loadVector(0.0, 0.0, 0.0));
 
@@ -139,7 +139,7 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
     phongSteel2.setMinMapPower(8);
 
     BilayerBRDF steelBSDF2;
-    steelBSDF2.setCoatingDistribution(phongSteel2.getMainOutput());
+    steelBSDF2.setCoatingDistribution(&phongSteel2);
     steelBSDF2.setDiffuseNode(metalTexture.getMainOutput());
     steelBSDF2.setSpecularAtNormal(math::loadVector(1.0f, 1.0f, 1.0f));
     steelBSDF2.setSpecularNode(invFingerprint.getMainOutput());

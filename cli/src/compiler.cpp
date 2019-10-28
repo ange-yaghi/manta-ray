@@ -19,7 +19,7 @@ void mantaray_cli::Compiler::initialize() {
 
     std::ifstream configurationFile("mantaray_cli.conf");
     if (!configurationFile.is_open()) {
-        std::cout << "[NON-PRODUCTION VERSION] - mantaray_cli.conf not found";
+        std::cout << "[NON-PRODUCTION VERSION] - mantaray_cli.conf not found" << std::endl;
         m_compiler->addSearchPath(MANTARAY_STANDARD_LIB_DIR);
     }
     else {

@@ -6,6 +6,7 @@
 manta::MicrofacetBRDF::MicrofacetBRDF() {
     m_distribution = nullptr;
     m_distributionInput = nullptr;
+    m_reflectivityInput = nullptr;
 
     m_baseReflectivity = math::constants::One;
 }
@@ -26,8 +27,8 @@ manta::math::Vector manta::MicrofacetBRDF::sampleF(
 
     *o = ri;
 
-    math::real cosThetaO = ::abs(math::getZ(*o));
-    math::real cosThetaI = ::abs(math::getZ(i));
+    math::real cosThetaO = math::getZ(*o);
+    math::real cosThetaI = math::getZ(i);
 
     if (o_dot_m <= MIN_EPSILON ||
         cosThetaO <= MIN_EPSILON ||
@@ -59,8 +60,8 @@ manta::math::Vector manta::MicrofacetBRDF::f(const IntersectionPoint *surfaceInt
     math::real o_dot_wh = math::getScalar(math::dot(wh, o));
     math::real F = (math::real)1.0; // TODO: fresnel calculation goes here
 
-    math::real cosThetaO = ::abs(math::getZ(o));
-    math::real cosThetaI = ::abs(math::getZ(i));
+    math::real cosThetaO = math::getZ(o);
+    math::real cosThetaI = math::getZ(i);
 
     if (o_dot_wh <= MIN_EPSILON ||
         cosThetaO <= MIN_EPSILON ||
@@ -85,8 +86,8 @@ manta::math::real manta::MicrofacetBRDF::pdf(
     math::Vector wh = math::normalize(math::add(i, o));
     math::real o_dot_wh = math::getScalar(math::dot(wh, o));
 
-    math::real cosThetaO = ::abs(math::getZ(o));
-    math::real cosThetaI = ::abs(math::getZ(i));
+    math::real cosThetaO = math::getZ(o);
+    math::real cosThetaI = math::getZ(i);
 
     if (o_dot_wh <= MIN_EPSILON ||
         cosThetaO <= MIN_EPSILON ||
@@ -98,6 +99,10 @@ manta::math::real manta::MicrofacetBRDF::pdf(
     math::real pdf = m_distribution->calculatePDF(wh, surfaceInteraction) / ::abs(4 * o_dot_wh);
 
     return pdf;
+}
+
+void manta::MicrofacetBRDF::setBaseReflectivity(const math::Vector &reflectivity) {
+    m_baseReflectivity = reflectivity;
 }
 
 manta::math::Vector manta::MicrofacetBRDF::getReflectivity(

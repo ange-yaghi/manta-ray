@@ -63,7 +63,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
     floorCoating.setPower((math::real)128);
 
     BilayerBRDF floorBSDF;
-    floorBSDF.setCoatingDistribution(floorCoating.getMainOutput());
+    floorBSDF.setCoatingDistribution(&floorCoating);
     floorBSDF.setDiffuse(getColor(0xFF, 0xFF, 0xFF));
     floorBSDF.setSpecularAtNormal(math::loadVector(0.0, 0.0, 0.0));
 
@@ -79,7 +79,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
     teapotCoating.setPower((math::real)1024);
 
     BilayerBRDF teapotBSDF;
-    teapotBSDF.setCoatingDistribution(teapotCoating.getMainOutput());
+    teapotBSDF.setCoatingDistribution(&teapotCoating);
     teapotBSDF.setDiffuse(getColor(0x89, 0xCF, 0xF0));
     teapotBSDF.setSpecularAtNormal(math::loadVector(0.5, 0.5, 0.5));
 

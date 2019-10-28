@@ -1,0 +1,65 @@
+module {
+    @name:          "Disney BSDF"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "BSDF implementing the Disney shader"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
+private import "bsdf.mr"
+private import "bxdf.mr"
+private import "microfacet_brdf.mr"
+private import "disney_diffuse_brdf.mr"
+private import "disney_specular_brdf.mr"
+
+private import "../microfacet-models/microfacet_distributions.mr"
+private import "../../types/atomic_types.mr"
+private import "../../types/conversions.mr"
+private import "../../types/operations.mr"
+
+@doc: "Glass BSDF for glass transmission and reflection"
+public node disney_bsdf {
+    input base_color: 1.0;
+    input roughness: 0.5;
+    input specular: 0.0;
+    input clearcoat: 0.1;
+    input clearcoat_roughness: 0.05;
+
+    alias output bsdf: this;
+
+    bsdf this()
+
+    add_bxdf(
+        disney_diffuse_brdf(
+            base_color,
+            roughness
+        ),
+        this
+    )
+
+    add_bxdf(
+        disney_specular_brdf(
+            base_color: base_color,
+            roughness: roughness,
+            metallic: 0,
+            specular: specular
+        ),
+        this
+    )
+
+    add_bxdf(
+        disney_specular_brdf(
+            distribution:
+                disney_gtr_clearcoat_distribution(roughness: clearcoat_roughness),
+            base_color: 0,
+            roughness: clearcoat_roughness,
+            metallic: 0,
+            specular: 0.5,
+            power: clearcoat * scalar(0.25)
+        ),
+        this
+    )
+}

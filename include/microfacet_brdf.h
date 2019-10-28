@@ -27,6 +27,7 @@ namespace manta {
         void setDistribution(MicrofacetDistribution *distribution) { m_distribution = distribution; }
         const MicrofacetDistribution *getDistribution() const { return m_distribution; }
 
+        void setBaseReflectivity(const math::Vector &reflectivity);
         math::Vector getReflectivity(const IntersectionPoint *surfaceInteraction) const;
 
     protected:

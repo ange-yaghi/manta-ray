@@ -9,7 +9,8 @@ manta::LambertianBRDF::~LambertianBRDF() {
 }
 
 manta::math::Vector manta::LambertianBRDF::sampleF(const IntersectionPoint *surfaceInteraction, 
-        const math::Vector &i, math::Vector *o, math::real *pdf, StackAllocator *stackAllocator) const {    
+        const math::Vector &i, math::Vector *o, math::real *pdf, StackAllocator *stackAllocator) const 
+{
     // Uniformly sample a hemisphere
     math::real r1 = math::uniformRandom(math::constants::TWO_PI);
     math::real r2 = math::uniformRandom();

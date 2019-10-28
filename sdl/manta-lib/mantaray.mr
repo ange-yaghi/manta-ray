@@ -58,6 +58,10 @@ public import "surface/bsdf/lambertian_brdf.mr"
 public import "surface/bsdf/microfacet_brdf.mr"
 public import "surface/bsdf/glass_bsdf.mr"
 
+public import "surface/bsdf/disney_diffuse_brdf.mr"
+public import "surface/bsdf/disney_specular_brdf.mr"
+public import "surface/bsdf/disney_bsdf.mr"
+
 public import "surface/materials/material_library.mr"
 public import "surface/materials/material.mr"
 public import "surface/materials/bsdf_material.mr"

@@ -26,9 +26,12 @@ namespace manta {
         virtual math::real pdf(const IntersectionPoint *surfaceInteraction,
             const math::Vector &i, const math::Vector &o) const;
 
-        void setCoatingDistribution(ObjectReferenceNodeOutput<MicrofacetDistribution> *coatingMaterial) 
-            { m_coatingDistribution = coatingMaterial; }
-        const piranha::pNodeInput getCoatingDistribution() { return m_coatingDistribution; }
+        void setCoatingDistributionNode(ObjectReferenceNodeOutput<MicrofacetDistribution> *coatingDistribution) 
+            { m_coatingDistributionNode = coatingDistribution; }
+        const piranha::pNodeInput getCoatingDistributionNode() { return m_coatingDistributionNode; }
+
+        void setCoatingDistribution(MicrofacetDistribution *distribution);
+        MicrofacetDistribution *getCoatingDistribution() const { return m_coatingDistribution; }
 
         void setSpecularAtNormal(const math::Vector &specular) { m_specular = specular; }
         math::Vector getSpecularAtNormal() const { return m_specular; }
@@ -45,12 +48,15 @@ namespace manta {
     protected:
         virtual void registerInputs();
 
+        virtual void _evaluate();
+
     protected:
-        piranha::pNodeInput m_coatingDistribution;
+        MicrofacetDistribution *m_coatingDistribution;
         LambertianBRDF m_diffuseMaterial;
 
         piranha::pNodeInput m_diffuseNode;
         piranha::pNodeInput m_specularNode;
+        piranha::pNodeInput m_coatingDistributionNode;
 
         math::Vector m_specular;
         math::Vector m_diffuse;

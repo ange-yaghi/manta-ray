@@ -34,7 +34,7 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
     PhongDistribution spiderCoating;
     spiderCoating.setPower((math::real)8192);
     BilayerBRDF spiderBSDF;
-    spiderBSDF.setCoatingDistribution(spiderCoating.getMainOutput());
+    spiderBSDF.setCoatingDistribution(&spiderCoating);
     spiderBSDF.setDiffuse(getColor(0xf1, 0xc4, 0x0f));
     spiderBSDF.setSpecularAtNormal(math::loadVector(0.05f, 0.05f, 0.05f));
     SimpleBSDFMaterial *spiderMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
@@ -45,7 +45,7 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
     PhongDistribution groundCoating;
     groundCoating.setPower((math::real)64);
     BilayerBRDF groundBSDF;
-    groundBSDF.setCoatingDistribution(groundCoating.getMainOutput());
+    groundBSDF.setCoatingDistribution(&groundCoating);
     groundBSDF.setDiffuse(getColor(0xFF, 0xFF, 0xFF));
     groundBSDF.setSpecularAtNormal(math::loadVector(0.1f, 0.1f, 0.1f));
     SimpleBSDFMaterial *groundMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
