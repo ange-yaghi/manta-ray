@@ -30,11 +30,13 @@ namespace manta {
 
     protected:
         math::Vector m_baseColor;
+        math::Vector m_power;
         math::real m_roughness;
 
     protected:
         virtual void registerInputs();
 
+        piranha::pNodeInput m_powerNode;
         piranha::pNodeInput m_baseColorNode;
         piranha::pNodeInput m_roughnessNode;
     };

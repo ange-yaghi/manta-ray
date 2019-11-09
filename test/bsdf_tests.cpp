@@ -300,8 +300,8 @@ TEST(BSDFTests, CompoundBSDFNanTest) {
 
     DisneySpecularBRDF specularBrdf;
     specularBrdf.setBaseColor(math::constants::One);
+    specularBrdf.setMetallic((math::real)0.0);
     specularBrdf.setRoughness((math::real)0.5f);
-    specularBrdf.setMetallic((math::real)0.0f);
     specularBrdf.setSpecular((math::real)0.5f);
     specularBrdf.setDistribution(&ggx);
 
