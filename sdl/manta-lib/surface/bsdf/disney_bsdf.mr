@@ -20,9 +20,10 @@ private import "../../types/atomic_types.mr"
 private import "../../types/conversions.mr"
 private import "../../types/operations.mr"
 
-@doc: "Glass BSDF for glass transmission and reflection"
+@doc: "Disney BSDF"
 public node disney_bsdf {
     input base_color: 1.0;
+    input metallic: 0.0;
     input roughness: 0.5;
     input specular: 0.0;
     input clearcoat: 0.1;
@@ -32,32 +33,44 @@ public node disney_bsdf {
 
     bsdf this()
 
+    // Diffuse BRDF
     add_bxdf(
         disney_diffuse_brdf(
-            base_color,
-            roughness
+            base_color: base_color,
+            roughness: roughness,
+            power: scalar(1.0) - metallic
         ),
         this
     )
 
+    // Specular BRDF
     add_bxdf(
         disney_specular_brdf(
             base_color: base_color,
             roughness: roughness,
-            metallic: 0,
-            specular: specular
+            specular: specular * scalar(0.08),
+            power: scalar(1.0) - metallic
         ),
         this
     )
 
+    // Metallic BRDF
+    add_bxdf(
+        microfacet_brdf(
+            distribution: ggx_distribution(roughness),
+            reflectivity: base_color * scalar(metallic)
+        ),
+        this
+    )
+
+    // Clearcoat BRDF
     add_bxdf(
         disney_specular_brdf(
             distribution:
                 disney_gtr_clearcoat_distribution(roughness: clearcoat_roughness),
-            base_color: 0,
+            base_color: 1,
             roughness: clearcoat_roughness,
-            metallic: 0,
-            specular: 0.5,
+            specular: 0.08,
             power: clearcoat * scalar(0.25)
         ),
         this

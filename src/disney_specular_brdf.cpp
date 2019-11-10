@@ -7,15 +7,14 @@ manta::DisneySpecularBRDF::DisneySpecularBRDF() {
     m_distribution = nullptr;
     m_baseColor = math::constants::One;
     m_roughness = (math::real)1.0;
-    m_metallic = (math::real)1.0;
     m_specular = (math::real)1.0;
     m_power = (math::real)1.0;
 
     m_baseColorNode = nullptr;
     m_distributionNode = nullptr;
     m_roughnessNode = nullptr;
-    m_metallicNode = nullptr;
     m_specularNode = nullptr;
+    m_powerNode = nullptr;
 }
 
 manta::DisneySpecularBRDF::~DisneySpecularBRDF() {
@@ -46,48 +45,7 @@ manta::math::Vector manta::DisneySpecularBRDF::sampleF(const IntersectionPoint *
 
     *pdf = m_distribution->calculatePDF(m, surfaceInteraction) / ::abs(4 * o_dot_m);
 
-    auto pow5 = [](math::real v) { return (v * v) * (v * v) * v; };
-
-    // Calculate Schlick Fresnel approximation
-    math::Vector F0; // Incident specular amount 
-    if (m_specularNode != nullptr) {
-        math::Vector f;
-        static_cast<VectorNodeOutput *>(m_specularNode)->sample(surfaceInteraction, (void *)&f);
-
-        F0 = f;
-    }
-    else F0 = math::loadScalar(m_specular);
-
-    F0 = remapSpecular(F0);
-
-    math::Vector s = math::loadScalar(pow5(1 - o_dot_m));
-    math::Vector F = math::add(
-        F0,
-        math::mul(
-            math::sub(math::constants::One, F0),
-            s
-        ));
-
-    // Calculate reflectivity
-    math::Vector reflectivity = math::loadScalar(
-        m_distribution->calculateDistribution(m, surfaceInteraction) *
-        m_distribution->bidirectionalShadowMasking(i, *o, m, surfaceInteraction) /
-        (4 * cosThetaI * cosThetaO));
-
-    reflectivity = math::mul(reflectivity, F);
-
-    // Apply power attenuation 
-    math::Vector power = math::loadScalar(m_power);
-    if (m_powerNode != nullptr) {
-        math::Vector f;
-        static_cast<VectorNodeOutput *>(m_powerNode)->sample(surfaceInteraction, (void *)&f);
-
-        power = f;
-    }
-
-    reflectivity = math::mul(reflectivity, power);
-
-    return reflectivity;
+    return DisneySpecularBRDF::f(surfaceInteraction, i, *o, stackAllocator);
 }
 
 manta::math::Vector manta::DisneySpecularBRDF::f(const IntersectionPoint *surfaceInteraction, 
@@ -132,8 +90,6 @@ manta::math::Vector manta::DisneySpecularBRDF::f(const IntersectionPoint *surfac
     }
     else F0 = math::loadScalar(m_specular);
 
-    F0 = remapSpecular(F0);
-
     auto pow5 = [](math::real v) { return (v * v) * (v * v) * v; };
 
     math::Vector s = math::loadScalar(pow5(1 - o_dot_wh));
@@ -143,10 +99,8 @@ manta::math::Vector manta::DisneySpecularBRDF::f(const IntersectionPoint *surfac
             math::sub(math::constants::One, F0),
             s
         ));
-
-    return math::mul(
-        F,
-        reflectivity);
+    
+    return math::mul(F, reflectivity);
 }
 
 manta::math::real manta::DisneySpecularBRDF::pdf(const IntersectionPoint *surfaceInteraction, 
@@ -186,7 +140,6 @@ void manta::DisneySpecularBRDF::_evaluate() {
 void manta::DisneySpecularBRDF::registerInputs() {
     registerInput(&m_baseColorNode, "base_color");
     registerInput(&m_roughnessNode, "roughness");
-    registerInput(&m_metallicNode, "metallic");
     registerInput(&m_specularNode, "specular");
     registerInput(&m_distributionNode, "distribution");
     registerInput(&m_powerNode, "power");

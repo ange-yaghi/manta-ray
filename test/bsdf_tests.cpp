@@ -66,6 +66,48 @@ TEST(BSDFTests, LambertBSDFEnergyConservation) {
     CHECK_VEC3_EQ(accum, math::constants::One, 1E-3);
 }
 
+math::Vector comprehensiveBsdfTest(const math::Vector &incident, BSDF &bsdf, int sampleCount = 100000) {
+    static __int64 testId = 0;
+
+    math::Vector normal = math::loadVector((math::real)0.0, (math::real)0.0, (math::real)1.0);
+
+    StackAllocator s;
+    s.initialize(1000);
+
+    IntersectionPoint point;
+    point.m_direction = DielectricMediaInterface::DIRECTION_IN;
+
+    math::Vector accum = math::constants::Zero;
+
+    // Calculate rho
+    for (int i = 0; i < sampleCount; i++) {
+        // Non-functional code for debugging purposes
+        if (testId == 105065) {
+            int breakHere = 0;
+        }
+
+        math::real pdf;
+        math::Vector outgoing;
+
+        math::Vector reflectance = bsdf.sampleF(&point, incident, &outgoing, &pdf, &s);
+
+        EXPECT_VALID_VEC(reflectance);
+        EXPECT_VALID(pdf);
+
+        EXPECT_GE(pdf, 0.0f);
+
+        if (pdf != 0.0f) {
+            math::Vector abs_cos_theta = math::abs(math::dot(outgoing, normal));
+            accum = math::add(accum, math::div(math::mul(reflectance, abs_cos_theta), math::loadScalar(pdf)));
+        }
+
+        testId++;
+    }
+
+    accum = math::div(accum, math::loadScalar((math::real)sampleCount));
+    return accum;
+}
+
 TEST(BSDFTests, PhongMicrofacetEnergyConservation) {
     PhongDistribution dist;
     dist.setPower((math::real)5.0);
@@ -301,8 +343,7 @@ TEST(BSDFTests, CompoundBSDFNanTest) {
     DisneySpecularBRDF specularBrdf;
     specularBrdf.setBaseColor(math::constants::One);
     specularBrdf.setRoughness((math::real)0.5f);
-    specularBrdf.setMetallic((math::real)0.0f);
-    specularBrdf.setSpecular((math::real)0.5f);
+    specularBrdf.setSpecular((math::real)0.04f);
     specularBrdf.setDistribution(&ggx);
 
     BSDF disneyBsdf;
@@ -430,4 +471,39 @@ TEST(BSDFTests, DisneyClearCoatTest) {
     EXPECT_LE(math::getX(accum), 1.1f);
     EXPECT_LE(math::getY(accum), 1.1f);
     EXPECT_LE(math::getZ(accum), 1.1f);
+}
+
+TEST(BSDFTests, DisneyEdgeCaseTest) {
+    // Generate Disney BSDF
+    DisneyDiffuseBRDF diffuseBrdf;
+    diffuseBrdf.setBaseColor(math::constants::One);
+    diffuseBrdf.setRoughness((math::real)0.5f);
+
+    DisneyGgxDistribution ggx;
+    ggx.setRoughness((math::real)0.5f);
+
+    DisneySpecularBRDF specularBrdf;
+    specularBrdf.setBaseColor(math::constants::One);
+    specularBrdf.setRoughness((math::real)0.5f);
+    specularBrdf.setSpecular((math::real)0.5f);
+    specularBrdf.setDistribution(&ggx);
+
+    BSDF disneyBsdf;
+    disneyBsdf.addBxdf(&diffuseBrdf);
+    disneyBsdf.addBxdf(&specularBrdf);
+
+    math::Vector accum = math::constants::Zero;
+    accum = comprehensiveBsdfTest(math::loadVector(0.0f, 0.0f, 1.0f), disneyBsdf);
+    EXPECT_VALID_VEC(accum);
+
+    diffuseBrdf.setRoughness(0.0f);
+    specularBrdf.setRoughness(0.0f);
+    ggx.setRoughness(0.0f);
+    accum = comprehensiveBsdfTest(math::normalize(math::loadVector(0.0f, 1.0f, 1.0f)), disneyBsdf);
+    EXPECT_VALID_VEC(accum);
+
+    diffuseBrdf.setRoughness(0.01f);
+    specularBrdf.setRoughness(0.01f);
+    accum = comprehensiveBsdfTest(math::loadVector(0.0f, 0.0f, 1.0f), disneyBsdf);
+    EXPECT_VALID_VEC(accum);
 }

@@ -38,6 +38,7 @@ manta::math::real manta::GgxDistribution::getWidth(const IntersectionPoint *surf
         width = (width < (math::real)0.0) ? (math::real)0.0 : width;
 
         newMemory->width = width; // *(m_width - m_minMapWidth) + m_minMapWidth;
+        newMemory->calculatedDistribution = false;
 
         memory = newMemory;
     }
@@ -56,7 +57,22 @@ manta::math::real manta::GgxDistribution::calculateDistribution(
     const math::Vector &m, const IntersectionPoint *surfaceInteraction) 
 {
     math::real width = getWidth(surfaceInteraction);
-    return calculateDistribution(m, width);
+
+    const intersection_id id = surfaceInteraction->m_id;
+    const int threadId = surfaceInteraction->m_threadId;
+
+    const GgxMemory *memory = m_cache.cacheGet(id, threadId);
+
+    if (memory == nullptr || !memory->calculatedDistribution) {
+        GgxMemory *newMemory = m_cache.cachePut(id, threadId);
+        newMemory->width = width;
+        newMemory->calculatedDistribution = true;
+        newMemory->distribution = calculateDistribution(m, width);
+
+        memory = newMemory;
+    }
+
+    return memory->distribution;
 }
 
 manta::math::real manta::GgxDistribution::calculateG1(const math::Vector &v, 

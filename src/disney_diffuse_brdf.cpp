@@ -5,9 +5,11 @@
 manta::DisneyDiffuseBRDF::DisneyDiffuseBRDF() {
     m_baseColorNode = nullptr;
     m_roughnessNode = nullptr;
+    m_powerNode = nullptr;
 
     m_baseColor = math::constants::One;
     m_roughness = (math::real)1.0;
+    m_power = math::constants::One;
 }
 
 manta::DisneyDiffuseBRDF::~DisneyDiffuseBRDF() {
@@ -36,6 +38,7 @@ manta::math::Vector manta::DisneyDiffuseBRDF::f(const IntersectionPoint *surface
     const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) const
 {
     math::Vector baseColor = m_baseColor;
+    math::Vector power = m_power;
     math::real roughness = m_roughness;
 
     if (m_baseColorNode != nullptr) {
@@ -54,6 +57,14 @@ manta::math::Vector manta::DisneyDiffuseBRDF::f(const IntersectionPoint *surface
         roughness = math::getScalar(sampledRoughness);
     }
 
+    if (m_powerNode != nullptr) {
+        math::Vector sampledPower;
+        VectorNodeOutput *powerNode = static_cast<VectorNodeOutput *>(m_powerNode);
+        powerNode->sample(surfaceInteraction, (void *)&sampledPower);
+
+        power = sampledPower;
+    }
+
     math::Vector h = math::normalize(math::add(i, o));
     math::real h_dot_i = math::getScalar(math::dot(h, i));
     math::real h_dot_i_2 = h_dot_i * h_dot_i;
@@ -66,7 +77,9 @@ manta::math::Vector manta::DisneyDiffuseBRDF::f(const IntersectionPoint *surface
 
     math::real f_d = (1 + (f_d90 - 1) * pow5(1 - cos_theta_i)) * (1 + (f_d90 - 1) * pow5(1 - cos_theta_o)) / math::constants::PI;
 
-    return math::mul(math::loadScalar(f_d), baseColor);
+    math::Vector f = math::mul(math::loadScalar(f_d), baseColor);
+    f = math::mul(f, power);
+    return f;
 }
 
 manta::math::real manta::DisneyDiffuseBRDF::pdf(
@@ -78,4 +91,5 @@ manta::math::real manta::DisneyDiffuseBRDF::pdf(
 void manta::DisneyDiffuseBRDF::registerInputs() {
     registerInput(&m_baseColorNode, "base_color");
     registerInput(&m_roughnessNode, "roughness");
+    registerInput(&m_powerNode, "power");
 }
