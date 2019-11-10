@@ -8,14 +8,13 @@ manta::DisneySpecularBRDF::DisneySpecularBRDF() {
     m_baseColor = math::constants::One;
     m_roughness = (math::real)1.0;
     m_specular = (math::real)1.0;
-    m_metallic = (math::real)1.0;
     m_power = (math::real)1.0;
 
     m_baseColorNode = nullptr;
     m_distributionNode = nullptr;
     m_roughnessNode = nullptr;
     m_specularNode = nullptr;
-    m_metallicNode = nullptr;
+    m_powerNode = nullptr;
 }
 
 manta::DisneySpecularBRDF::~DisneySpecularBRDF() {
@@ -100,27 +99,6 @@ manta::math::Vector manta::DisneySpecularBRDF::f(const IntersectionPoint *surfac
             math::sub(math::constants::One, F0),
             s
         ));
-
-    // Blend metallic and dielectric models
-    math::Vector baseColor = m_baseColor;
-    if (m_baseColorNode != nullptr) {
-        math::Vector sampledTint;
-        static_cast<VectorNodeOutput *>(m_baseColorNode)->sample(surfaceInteraction, (void *)&sampledTint);
-
-        baseColor = math::mul(baseColor, sampledTint);
-    }
-
-    math::real metallic = m_metallic;
-    if (m_metallicNode != nullptr) {
-        math::Vector sampledMetallic;
-        static_cast<VectorNodeOutput *>(m_metallicNode)->sample(surfaceInteraction, (void *)&metallic);
-
-        metallic = metallic * math::getScalar(sampledMetallic);
-    }
-
-    F = math::add(
-        math::mul(math::loadScalar(metallic), baseColor),
-        math::mul(math::loadScalar(1 - metallic), F));
     
     return math::mul(F, reflectivity);
 }
@@ -161,7 +139,6 @@ void manta::DisneySpecularBRDF::_evaluate() {
 
 void manta::DisneySpecularBRDF::registerInputs() {
     registerInput(&m_baseColorNode, "base_color");
-    registerInput(&m_metallicNode, "metallic");
     registerInput(&m_roughnessNode, "roughness");
     registerInput(&m_specularNode, "specular");
     registerInput(&m_distributionNode, "distribution");

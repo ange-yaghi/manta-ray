@@ -9,6 +9,7 @@ manta::DisneyDiffuseBRDF::DisneyDiffuseBRDF() {
 
     m_baseColor = math::constants::One;
     m_roughness = (math::real)1.0;
+    m_power = math::constants::One;
 }
 
 manta::DisneyDiffuseBRDF::~DisneyDiffuseBRDF() {

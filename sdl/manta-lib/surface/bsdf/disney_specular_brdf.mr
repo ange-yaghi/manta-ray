@@ -17,7 +17,6 @@ private import "../../types/conversions.mr"
 @doc: "Disney Specular BRDF"
 public node disney_specular_brdf => __mantaray__disney_specular_brdf {
     input base_color    [types::vector]: 1.0;
-    input metallic      [types::vector]: 0.0;
     input roughness     [types::vector]: 1.0;
     input distribution  [microfacet_distribution]:
         disney_ggx_distribution(roughness: roughness);

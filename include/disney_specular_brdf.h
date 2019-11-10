@@ -40,15 +40,11 @@ namespace manta {
         void setPower(math::real power) { m_power = power; }
         math::real getPower() const { return m_power; }
 
-        void setMetallic(math::real metallic) { m_metallic = metallic; }
-        math::real getMetallic() const { return m_metallic; }
-
     protected:
         math::Vector m_baseColor;
         math::real m_specular;
         math::real m_roughness;
         math::real m_power;
-        math::real m_metallic;
 
     protected:
         static math::Vector remapSpecular(const math::Vector &specular);
@@ -59,7 +55,6 @@ namespace manta {
 
         piranha::pNodeInput m_baseColorNode;
         piranha::pNodeInput m_roughnessNode;
-        piranha::pNodeInput m_metallicNode;
         piranha::pNodeInput m_distributionNode;
         piranha::pNodeInput m_specularNode;
         piranha::pNodeInput m_powerNode;
