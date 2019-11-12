@@ -25,8 +25,8 @@ namespace manta {
 
         MediaInterface::DIRECTION m_direction;
 
-        intersection_id m_id;
-        int m_threadId;
+        intersection_id m_id = 0;
+        int m_threadId = 0;
         IntersectionPointManager *m_manager;
 
     public:

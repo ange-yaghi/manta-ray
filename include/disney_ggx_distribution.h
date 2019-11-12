@@ -16,7 +16,10 @@ namespace manta {
 
     public:
         struct DisneyGgxMemory {
-            math::real roughness;
+            math::real roughness = (math::real)0.0;
+
+            bool calculatedDistribution = false;
+            math::real distribution = (math::real)0.0;
         };
 
     public:

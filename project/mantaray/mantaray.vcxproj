@@ -158,6 +158,7 @@
     <ClInclude Include="..\..\include\bsdf.h" />
     <ClInclude Include="..\..\include\bxdf.h" />
     <ClInclude Include="..\..\include\bxdf_to_bsdf_node.h" />
+    <ClInclude Include="..\..\include\cacheable_input.h" />
     <ClInclude Include="..\..\include\cached_vector_node.h" />
     <ClInclude Include="..\..\include\cached_vector_output.h" />
     <ClInclude Include="..\..\include\disney_diffuse_brdf.h" />

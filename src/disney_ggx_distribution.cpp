@@ -3,6 +3,8 @@
 #include "../include/ggx_distribution.h"
 
 manta::DisneyGgxDistribution::DisneyGgxDistribution() {
+    m_roughness = (math::real)0.0;
+
     m_roughnessNode = nullptr;
     m_useNodes = true;
 }
@@ -57,8 +59,23 @@ manta::math::Vector manta::DisneyGgxDistribution::generateMicrosurfaceNormal(
 manta::math::real manta::DisneyGgxDistribution::calculateDistribution(
     const math::Vector &m, const IntersectionPoint *surfaceInteraction) 
 {
-    math::real alpha = getAlpha(surfaceInteraction);
-    return GgxDistribution::calculateDistribution(m, alpha);
+    math::real roughness = getRoughness(surfaceInteraction);
+    math::real alpha = roughness * roughness;
+
+    const intersection_id id = surfaceInteraction->m_id;
+    const int threadId = surfaceInteraction->m_threadId;
+
+    const DisneyGgxMemory *memory = m_cache.cacheGet(id, threadId);
+    if (memory == nullptr || !memory->calculatedDistribution) {
+        DisneyGgxMemory *newMemory = m_cache.cachePut(id, threadId);
+        newMemory->distribution = GgxDistribution::calculateDistribution(m, alpha);
+        newMemory->roughness = roughness;
+        newMemory->calculatedDistribution = true;
+
+        memory = newMemory;
+    }
+
+    return memory->distribution;
 }
 
 manta::math::real manta::DisneyGgxDistribution::calculateG1(const math::Vector &v, 
