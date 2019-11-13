@@ -72,6 +72,14 @@ namespace manta {
             return m_port;
         }
 
+        void setDefault(const T_Data &data) {
+            m_cachedValue = data;
+        }
+
+        const T_Data &getDefault() const {
+            return m_cachedValue;
+        }
+
     protected:
         NodeCache<T_Data> m_cache;
         piranha::pNodeInput m_port;
