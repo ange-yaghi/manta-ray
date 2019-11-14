@@ -90,7 +90,6 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
     // Glass
     PhongDistribution phongGlass;
     phongGlass.setPower(5000);
-    phongGlass.setMinMapPower(800);
     
     DielectricMediaInterface fresnel;
     fresnel.setIorIncident((math::real)1.0);

@@ -3,7 +3,7 @@
 #include "../include/ggx_distribution.h"
 
 manta::DisneyGgxDistribution::DisneyGgxDistribution() {
-    /* void */
+    m_roughness.setDefault(math::constants::One);
 }
 
 manta::DisneyGgxDistribution::~DisneyGgxDistribution() {

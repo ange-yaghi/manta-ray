@@ -3,6 +3,7 @@
 
 #include "microfacet_distribution.h"
 
+#include "cacheable_input.h"
 #include "node_cache.h"
 
 namespace manta {
@@ -13,11 +14,6 @@ namespace manta {
     class DisneyGtrClearcoatDistribution : public MicrofacetDistribution {
     public:
         static constexpr bool ENABLE_OPTIMIZATION = true;
-
-    public:
-        struct DisneyGtrClearcoatMemory {
-            math::real roughness;
-        };
 
     public:
         DisneyGtrClearcoatDistribution();
@@ -32,26 +28,20 @@ namespace manta {
         virtual math::real calculateG1(const math::Vector &v, const math::Vector &m,
             const IntersectionPoint *surfaceInteraction);
 
-        void setRoughness(math::real roughness) { m_roughness = roughness; }
-        math::real getRoughness() const { return m_roughness; }
+        void setRoughness(math::real roughness) { m_roughness.setDefault(math::loadScalar(roughness)); }
+        math::real getRoughness() const { return math::getScalar(m_roughness.getConstant()); }
 
-        void setRoughnessNode(piranha::pNodeInput node) { m_roughnessNode = node; }
-        piranha::pNodeInput getWidthNode() const { return m_roughnessNode; }
+        void setRoughnessNode(piranha::pNodeInput node) { m_roughness.setPort(node); }
+        piranha::pNodeInput getWidthNode() const { return m_roughness.getPort(); }
 
     protected:
-        piranha::pNodeInput m_roughnessNode;
-
         virtual void registerInputs();
 
         virtual void _evaluate();
         virtual piranha::Node *_optimize();
 
-        bool m_useNodes;
-
     protected:
-        math::real m_roughness;
-
-        NodeCache<DisneyGtrClearcoatMemory> m_cache;
+        CacheableInput<math::Vector> m_roughness;
     };
 
 } /* namespace manta */

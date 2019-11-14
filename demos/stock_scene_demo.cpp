@@ -84,7 +84,6 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
     PhongDistribution phongSteel;
     phongSteel.setPower(10000.0f);
     phongSteel.setPowerNode(specularPowerFingerprint.getMainOutput());
-    phongSteel.setMinMapPower(16.0f);
 
     PhongDistribution phongShinySteel;
     phongShinySteel.setPower(5000.0f);
@@ -131,7 +130,6 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
     PhongDistribution phongGloss;
     phongGloss.setPower(1024);
     phongGloss.setPowerNode(fingerprintTexture.getMainOutput());
-    phongGloss.setMinMapPower(256);
 
     BilayerBRDF paintBSDF;
     paintBSDF.setCoatingDistribution(&phongGloss);
