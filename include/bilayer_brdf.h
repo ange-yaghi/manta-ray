@@ -5,6 +5,7 @@
 
 #include "lambertian_brdf.h"
 #include "vector_node_output.h"
+#include "cacheable_input.h"
 
 namespace manta {
     
@@ -18,48 +19,45 @@ namespace manta {
 
         virtual math::Vector sampleF(const IntersectionPoint *surfaceInteraction, 
             const math::Vector &i, math::Vector *o, math::real *pdf, 
-            StackAllocator *stackAllocator) const;
+            StackAllocator *stackAllocator);
 
         virtual math::Vector f(const IntersectionPoint *surfaceInteraction,
-            const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) const;
+            const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator);
 
         virtual math::real pdf(const IntersectionPoint *surfaceInteraction,
-            const math::Vector &i, const math::Vector &o) const;
+            const math::Vector &i, const math::Vector &o);
 
-        void setCoatingDistributionNode(ObjectReferenceNodeOutput<MicrofacetDistribution> *coatingDistribution) 
-            { m_coatingDistributionNode = coatingDistribution; }
-        const piranha::pNodeInput getCoatingDistributionNode() { return m_coatingDistributionNode; }
+        void setCoatingDistributionNode(piranha::pNodeInput coatingDistributionNode) 
+            { m_coatingDistributionNode = coatingDistributionNode; }
+        piranha::pNodeInput getCoatingDistributionNode() { return m_coatingDistributionNode; }
 
         void setCoatingDistribution(MicrofacetDistribution *distribution);
         MicrofacetDistribution *getCoatingDistribution() const { return m_coatingDistribution; }
 
-        void setSpecularAtNormal(const math::Vector &specular) { m_specular = specular; }
-        math::Vector getSpecularAtNormal() const { return m_specular; }
+        void setSpecularAtNormal(const math::Vector &specular) { m_specular.setDefault(specular); }
+        math::Vector getSpecularAtNormal() const { return m_specular.getDefault(); }
 
-        void setDiffuse(const math::Vector &diffuse) { m_diffuse = diffuse; }
-        math::Vector getDiffuse() const { return m_diffuse; }
+        void setDiffuse(const math::Vector &diffuse) { m_diffuse.setDefault(diffuse); }
+        math::Vector getDiffuse() const { return m_diffuse.getDefault(); }
 
-        void setDiffuseNode(piranha::pNodeInput diffuseNode) { m_diffuseNode = diffuseNode; }
-        piranha::pNodeInput getDiffuseNode() const { return m_diffuseNode; }
+        void setDiffuseNode(piranha::pNodeInput diffuseNode) { m_diffuse.setPort(diffuseNode); }
+        piranha::pNodeInput getDiffuseNode() const { return m_diffuse.getPort(); }
 
-        void setSpecularNode(piranha::pNodeInput specularNode) { m_specularNode = specularNode; }
-        piranha::pNodeInput getSpecularNode() const { return m_specularNode; }
+        void setSpecularNode(piranha::pNodeInput specularNode) { m_specular.setPort(specularNode); }
+        piranha::pNodeInput getSpecularNode() const { return m_specular.getPort(); }
 
     protected:
         virtual void registerInputs();
 
         virtual void _evaluate();
+        piranha::Node *_optimize();
 
     protected:
         MicrofacetDistribution *m_coatingDistribution;
-        LambertianBRDF m_diffuseMaterial;
 
-        piranha::pNodeInput m_diffuseNode;
-        piranha::pNodeInput m_specularNode;
+        CacheableInput<math::Vector> m_diffuse;
+        CacheableInput<math::Vector> m_specular;
         piranha::pNodeInput m_coatingDistributionNode;
-
-        math::Vector m_specular;
-        math::Vector m_diffuse;
     };
 
 } /* namespace manta */

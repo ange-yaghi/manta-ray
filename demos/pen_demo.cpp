@@ -54,12 +54,10 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
     PhongDistribution chromeCoating;
     chromeCoating.setPower(10000.f);
     chromeCoating.setPowerNode(chromeRoughness.getMainOutput());
-    chromeCoating.setMinMapPower((math::real)400.0);
 
     PhongDistribution woodCoating;
     woodCoating.setPower(1000.f);
     woodCoating.setPowerNode(woodRoughness.getMainOutput());
-    woodCoating.setMinMapPower(2.f);
 
     PhongDistribution floorDistribution;
     floorDistribution.setPower(128.f);

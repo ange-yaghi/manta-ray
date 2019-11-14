@@ -5,16 +5,12 @@
 
 manta::DisneySpecularBRDF::DisneySpecularBRDF() {
     m_distribution = nullptr;
-    m_baseColor = math::constants::One;
-    m_roughness = (math::real)1.0;
-    m_specular = (math::real)1.0;
-    m_power = (math::real)1.0;
+    m_baseColor.setDefault(math::constants::One);
+    m_roughness.setDefault(math::constants::One);
+    m_specular.setDefault(math::constants::One);
+    m_power.setDefault(math::constants::One);
 
-    m_baseColorNode = nullptr;
     m_distributionNode = nullptr;
-    m_roughnessNode = nullptr;
-    m_specularNode = nullptr;
-    m_powerNode = nullptr;
 }
 
 manta::DisneySpecularBRDF::~DisneySpecularBRDF() {
@@ -22,7 +18,7 @@ manta::DisneySpecularBRDF::~DisneySpecularBRDF() {
 }
 
 manta::math::Vector manta::DisneySpecularBRDF::sampleF(const IntersectionPoint *surfaceInteraction, 
-    const math::Vector &i, math::Vector *o, math::real *pdf, StackAllocator *stackAllocator) const 
+    const math::Vector &i, math::Vector *o, math::real *pdf, StackAllocator *stackAllocator) 
 {
     constexpr math::Vector reflect = { (math::real)-1.0, (math::real)-1.0, (math::real)1.0, (math::real)1.0 };
 
@@ -49,7 +45,7 @@ manta::math::Vector manta::DisneySpecularBRDF::sampleF(const IntersectionPoint *
 }
 
 manta::math::Vector manta::DisneySpecularBRDF::f(const IntersectionPoint *surfaceInteraction, 
-    const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) const
+    const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator)
 {
     math::Vector wh = math::normalize(math::add(i, o));
     math::real o_dot_wh = math::getScalar(math::dot(wh, o));
@@ -70,25 +66,12 @@ manta::math::Vector manta::DisneySpecularBRDF::f(const IntersectionPoint *surfac
         (4 * cosThetaI * cosThetaO));
 
     // Apply power attenuation
-    math::Vector power = math::loadScalar(m_power);
-    if (m_powerNode != nullptr) {
-        math::Vector f;
-        static_cast<VectorNodeOutput *>(m_powerNode)->sample(surfaceInteraction, (void *)&f);
-
-        power = f;
-    }
+    math::Vector power = m_power.sample(surfaceInteraction);
 
     reflectivity = math::mul(reflectivity, power);
 
     // Calculate Schlick Fresnel approximation
-    math::Vector F0;
-    if (m_specularNode != nullptr) {
-        math::Vector f;
-        static_cast<VectorNodeOutput *>(m_specularNode)->sample(surfaceInteraction, (void *)&f);
-
-        F0 = f;
-    }
-    else F0 = math::loadScalar(m_specular);
+    math::Vector F0 = m_specular.sample(surfaceInteraction);
 
     auto pow5 = [](math::real v) { return (v * v) * (v * v) * v; };
 
@@ -104,7 +87,7 @@ manta::math::Vector manta::DisneySpecularBRDF::f(const IntersectionPoint *surfac
 }
 
 manta::math::real manta::DisneySpecularBRDF::pdf(const IntersectionPoint *surfaceInteraction, 
-    const math::Vector &i, const math::Vector &o) const
+    const math::Vector &i, const math::Vector &o)
 {
     math::Vector wh = math::normalize(math::add(i, o));
     math::real o_dot_wh = math::getScalar(math::dot(wh, o));
@@ -137,10 +120,19 @@ void manta::DisneySpecularBRDF::_evaluate() {
     m_distribution = getObject<MicrofacetDistribution>(m_distributionNode);
 }
 
+piranha::Node *manta::DisneySpecularBRDF::_optimize() {
+    m_baseColor.optimize();
+    m_roughness.optimize();
+    m_specular.optimize();
+    m_power.optimize();
+
+    return this;
+}
+
 void manta::DisneySpecularBRDF::registerInputs() {
-    registerInput(&m_baseColorNode, "base_color");
-    registerInput(&m_roughnessNode, "roughness");
-    registerInput(&m_specularNode, "specular");
+    registerInput(m_baseColor.getPortAddress(), "base_color");
+    registerInput(m_roughness.getPortAddress(), "roughness");
+    registerInput(m_specular.getPortAddress(), "specular");
     registerInput(&m_distributionNode, "distribution");
-    registerInput(&m_powerNode, "power");
+    registerInput(m_power.getPortAddress(), "power");
 }

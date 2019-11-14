@@ -4,8 +4,7 @@
 #include "../include/ggx_distribution.h"
 
 manta::DisneyGtrClearcoatDistribution::DisneyGtrClearcoatDistribution() {
-    m_roughnessNode = nullptr;
-    m_useNodes = true;
+    m_roughness.setConstant(math::constants::One);
 }
 
 manta::DisneyGtrClearcoatDistribution::~DisneyGtrClearcoatDistribution() {
@@ -15,32 +14,7 @@ manta::DisneyGtrClearcoatDistribution::~DisneyGtrClearcoatDistribution() {
 manta::math::real manta::DisneyGtrClearcoatDistribution::getRoughness(
     const IntersectionPoint *surfaceInteraction) 
 {
-    if (m_roughnessNode == nullptr || !m_useNodes) return m_roughness;
-
-    const intersection_id id = surfaceInteraction->m_id;
-    const int threadId = surfaceInteraction->m_threadId;
-
-    const DisneyGtrClearcoatMemory *memory = m_cache.cacheGet(id, threadId);
-
-    if (memory == nullptr) {
-        // There was a cache miss
-        DisneyGtrClearcoatMemory *newMemory = m_cache.cachePut(id, threadId);
-        math::Vector sampledRoughness = math::constants::One;
-
-        // Sample the width input and save it in the state container
-        VectorNodeOutput *roughnessNode = static_cast<VectorNodeOutput *>(m_roughnessNode);
-        roughnessNode->sample(surfaceInteraction, (void *)&sampledRoughness);
-
-        math::real roughness = math::getScalar(sampledRoughness);
-        roughness = (roughness > (math::real)1.0) ? (math::real)1.0 : roughness;
-        roughness = (roughness < (math::real)0.0) ? (math::real)0.0 : roughness;
-
-        newMemory->roughness = roughness;
-
-        memory = newMemory;
-    }
-
-    return memory->roughness;
+    return math::getScalar(m_roughness.sample(surfaceInteraction));
 }
 
 manta::math::real manta::DisneyGtrClearcoatDistribution::getAlpha(
@@ -109,7 +83,7 @@ manta::math::real manta::DisneyGtrClearcoatDistribution::calculateG1(
 }
 
 void manta::DisneyGtrClearcoatDistribution::registerInputs() {
-    registerInput(&m_roughnessNode, "roughness");
+    registerInput(m_roughness.getPortAddress(), "roughness");
 }
 
 void manta::DisneyGtrClearcoatDistribution::_evaluate() {
@@ -117,20 +91,8 @@ void manta::DisneyGtrClearcoatDistribution::_evaluate() {
 }
 
 piranha::Node *manta::DisneyGtrClearcoatDistribution::_optimize() {
-    m_useNodes = true;
-
     if (ENABLE_OPTIMIZATION) {
-        bool isConstantWidth = m_roughnessNode->getParentNode()->hasFlag(piranha::Node::META_CONSTANT);
-
-        if (isConstantWidth) {
-            math::Vector constantRoughness;
-
-            VectorNodeOutput *roughnessNode = static_cast<VectorNodeOutput *>(m_roughnessNode);
-            roughnessNode->sample(nullptr, (void *)&constantRoughness);
-
-            m_roughness = math::getScalar(constantRoughness);
-            m_useNodes = false;
-        }
+        m_roughness.optimize();
     }
 
     return this;

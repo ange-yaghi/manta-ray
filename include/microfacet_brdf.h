@@ -3,6 +3,8 @@
 
 #include "bxdf.h"
 
+#include "cacheable_input.h"
+
 namespace manta {
 
     class MicrofacetDistribution;
@@ -18,27 +20,27 @@ namespace manta {
 
         virtual math::Vector sampleF(const IntersectionPoint *surfaceInteraction, 
             const math::Vector &i, math::Vector *o, math::real *pdf, 
-            StackAllocator *stackAllocator) const;
+            StackAllocator *stackAllocator);
         virtual math::Vector f(const IntersectionPoint *surfaceInteraction,
-            const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) const;
+            const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator);
         virtual math::real pdf(const IntersectionPoint *surfaceInteraction,
-            const math::Vector &i, const math::Vector &o) const;
+            const math::Vector &i, const math::Vector &o);
 
         void setDistribution(MicrofacetDistribution *distribution) { m_distribution = distribution; }
         const MicrofacetDistribution *getDistribution() const { return m_distribution; }
 
         void setBaseReflectivity(const math::Vector &reflectivity);
-        math::Vector getReflectivity(const IntersectionPoint *surfaceInteraction) const;
+        math::Vector getReflectivity(const IntersectionPoint *surfaceInteraction);
 
     protected:
         virtual void _evaluate();
+        virtual piranha::Node *_optimize();
         virtual void registerInputs();
 
         piranha::pNodeInput m_distributionInput;
-        piranha::pNodeInput m_reflectivityInput;
+        CacheableInput<math::Vector> m_reflectivity;
 
         MicrofacetDistribution *m_distribution;
-        math::Vector m_baseReflectivity;
     };
 
 } /* namespace manta */

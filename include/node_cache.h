@@ -59,6 +59,8 @@ namespace manta {
 
             threadMemory.currentSlot = (threadMemory.currentSlot + 1) % CACHE_DEPTH;
 
+            memory.memory = T_Memory();
+
             return &memory.memory;
         }
 

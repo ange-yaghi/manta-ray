@@ -3,6 +3,8 @@
 
 #include "bxdf.h"
 
+#include "cacheable_input.h"
+
 namespace manta {
 
     class VectorMaterialNode;
@@ -14,31 +16,26 @@ namespace manta {
 
         virtual math::Vector sampleF(const IntersectionPoint *surfaceInteraction,
             const math::Vector &i, math::Vector *o, math::real *pdf,
-            StackAllocator *stackAllocator) const;
+            StackAllocator *stackAllocator);
 
         virtual math::Vector f(const IntersectionPoint *surfaceInteraction,
-            const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) const;
+            const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator);
 
         virtual math::real pdf(const IntersectionPoint *surfaceInteraction,
-            const math::Vector &i, const math::Vector &o) const;
+            const math::Vector &i, const math::Vector &o);
 
-        void setBaseColor(const math::Vector &baseColor) { m_baseColor = baseColor; }
-        math::Vector getBaseColor() const { return m_baseColor; }
+        void setBaseColor(const math::Vector &baseColor) { m_baseColor.setDefault(baseColor); }
+        math::Vector getBaseColor() const { return m_baseColor.getDefault(); }
 
-        void setRoughness(math::real roughness) { m_roughness = roughness; }
-        math::real getRoughness() const { return m_roughness; }
-
-    protected:
-        math::Vector m_baseColor;
-        math::Vector m_power;
-        math::real m_roughness;
+        void setRoughness(math::real roughness) { m_roughness.setDefault(math::loadScalar(roughness)); }
+        math::real getRoughness() const { return math::getScalar(m_roughness.getDefault()); }
 
     protected:
         virtual void registerInputs();
 
-        piranha::pNodeInput m_powerNode;
-        piranha::pNodeInput m_baseColorNode;
-        piranha::pNodeInput m_roughnessNode;
+        CacheableInput<math::Vector> m_power;
+        CacheableInput<math::Vector> m_baseColor;
+        CacheableInput<math::Vector> m_roughness;
     };
 
 } /* namespace manta */

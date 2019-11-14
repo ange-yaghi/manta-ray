@@ -3,6 +3,8 @@
 
 #include "bxdf.h"
 
+#include "cacheable_input.h"
+
 namespace manta {
 
     class VectorMaterialNode;
@@ -17,47 +19,42 @@ namespace manta {
 
         virtual math::Vector sampleF(const IntersectionPoint *surfaceInteraction,
             const math::Vector &i, math::Vector *o, math::real *pdf,
-            StackAllocator *stackAllocator) const;
+            StackAllocator *stackAllocator);
 
         virtual math::Vector f(const IntersectionPoint *surfaceInteraction,
-            const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) const;
+            const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator);
 
         virtual math::real pdf(const IntersectionPoint *surfaceInteraction,
-            const math::Vector &i, const math::Vector &o) const;
+            const math::Vector &i, const math::Vector &o);
 
         void setDistribution(MicrofacetDistribution *distribution) { m_distribution = distribution; }
         const MicrofacetDistribution *getDistribution() const { return m_distribution; }
 
-        void setBaseColor(const math::Vector &baseColor) { m_baseColor = baseColor; }
-        math::Vector getBaseColor() const { return m_baseColor; }
+        void setBaseColor(const math::Vector &baseColor) { m_baseColor.setConstant(baseColor); }
+        math::Vector getBaseColor() const { return m_baseColor.getConstant(); }
 
-        void setSpecular(math::real specular) { m_specular = specular; }
-        math::real getSpecularColor() const { return m_specular; }
+        void setSpecular(math::real specular) { m_specular.setConstant(math::loadVector(specular)); }
+        math::real getSpecularColor() const { return math::getScalar(m_specular.getConstant()); }
 
-        void setRoughness(math::real roughness) { m_roughness = roughness; }
-        math::real getRoughness() const { return m_roughness; }
+        void setRoughness(math::real roughness) { m_roughness.setConstant(math::loadVector(roughness)); }
+        math::real getRoughness() const { return math::getScalar(m_roughness.getConstant()); }
 
-        void setPower(math::real power) { m_power = power; }
-        math::real getPower() const { return m_power; }
-
-    protected:
-        math::Vector m_baseColor;
-        math::real m_specular;
-        math::real m_roughness;
-        math::real m_power;
+        void setPower(math::real power) { m_power.setConstant(math::loadVector(power)); }
+        math::real getPower() const { return math::getScalar(m_power.getConstant()); }
 
     protected:
         static math::Vector remapSpecular(const math::Vector &specular);
 
     protected:
         virtual void _evaluate();
+        virtual piranha::Node *_optimize();
         virtual void registerInputs();
 
-        piranha::pNodeInput m_baseColorNode;
-        piranha::pNodeInput m_roughnessNode;
+        CacheableInput<math::Vector> m_baseColor;
+        CacheableInput<math::Vector> m_roughness;
+        CacheableInput<math::Vector> m_specular;
+        CacheableInput<math::Vector> m_power;
         piranha::pNodeInput m_distributionNode;
-        piranha::pNodeInput m_specularNode;
-        piranha::pNodeInput m_powerNode;
 
         MicrofacetDistribution *m_distribution;
     };

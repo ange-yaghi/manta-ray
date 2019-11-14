@@ -79,7 +79,6 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
     PhongDistribution woodCoating;
     woodCoating.setPower(1000);
     woodCoating.setPowerNode(woodRoughness.getMainOutput());
-    woodCoating.setMinMapPower(2);
 
     BilayerBRDF simpleWoodBSDF;
     simpleWoodBSDF.setCoatingDistribution(&woodCoating);
@@ -136,7 +135,6 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
     PhongDistribution phongSteel2;
     phongSteel2.setPower(5000);
     phongSteel2.setPowerNode(specularPowerFingerprint.getMainOutput());
-    phongSteel2.setMinMapPower(8);
 
     BilayerBRDF steelBSDF2;
     steelBSDF2.setCoatingDistribution(&phongSteel2);

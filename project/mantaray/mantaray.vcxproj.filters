@@ -1259,6 +1259,9 @@
     <ClInclude Include="..\..\include\disney_gtr_clearcoat_distribution.h">
       <Filter>Header Files\material\surface-modeling\microfacet-distribution</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\cacheable_input.h">
+      <Filter>Header Files\sdl\nodes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\opencl_programs\mantaray.cl">

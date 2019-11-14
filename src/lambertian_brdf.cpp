@@ -9,7 +9,7 @@ manta::LambertianBRDF::~LambertianBRDF() {
 }
 
 manta::math::Vector manta::LambertianBRDF::sampleF(const IntersectionPoint *surfaceInteraction, 
-        const math::Vector &i, math::Vector *o, math::real *pdf, StackAllocator *stackAllocator) const 
+        const math::Vector &i, math::Vector *o, math::real *pdf, StackAllocator *stackAllocator) 
 {
     // Uniformly sample a hemisphere
     math::real r1 = math::uniformRandom(math::constants::TWO_PI);
@@ -28,13 +28,13 @@ manta::math::Vector manta::LambertianBRDF::sampleF(const IntersectionPoint *surf
 }
 
 manta::math::Vector manta::LambertianBRDF::f(const IntersectionPoint *surfaceInteraction, 
-    const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) const 
+    const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) 
 {
     return math::loadScalar((math::real)1.0 / math::constants::PI);
 }
 
 manta::math::real manta::LambertianBRDF::pdf(
-    const IntersectionPoint *surfaceInteraction, const math::Vector &i, const math::Vector &o) const 
+    const IntersectionPoint *surfaceInteraction, const math::Vector &i, const math::Vector &o) 
 {
     return (math::real)1.0 / math::constants::TWO_PI;
 }

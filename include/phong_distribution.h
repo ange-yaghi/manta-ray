@@ -3,7 +3,7 @@
 
 #include "microfacet_distribution.h"
 
-#include "node_cache.h"
+#include "cacheable_input.h"
 
 namespace manta {
 
@@ -11,11 +11,6 @@ namespace manta {
     class VectorNodeOutput;
 
     class PhongDistribution : public MicrofacetDistribution {
-    public:
-        struct PhongMemory {
-            math::real power;
-        };
-
     public:
         PhongDistribution();
         virtual ~PhongDistribution();
@@ -28,25 +23,18 @@ namespace manta {
         virtual math::real calculateG1(const math::Vector &v, const math::Vector &m, 
             const IntersectionPoint *surfaceInteraction);
 
-        void setPower(math::real power) { m_power = power; }
-        math::real getPower() const { return m_power; }
+        void setPower(math::real power) { m_power.setDefault(math::loadScalar(power)); }
+        math::real getPower() const { return math::getScalar(m_power.getDefault()); }
 
-        void setPowerNode(piranha::pNodeInput node) { m_powerNode = node; }
-        piranha::pNodeInput getPowerNode() const { return m_powerNode; }
-
-        void setMinMapPower(math::real power) { m_minMapPower = power; }
-        math::real getMinMapPower() const { return m_minMapPower; }
+        void setPowerNode(piranha::pNodeInput node) { m_power.setPort(node); }
+        piranha::pNodeInput getPowerNode() const { return m_power.getPort(); }
 
     protected:
         virtual void _evaluate();
         virtual void registerInputs();
 
     protected:
-        piranha::pNodeInput m_powerNode;
-        math::real m_power;
-        math::real m_minMapPower;
-
-        NodeCache<PhongMemory> m_cache;
+        CacheableInput<math::Vector> m_power;
     };
 
 } /* namespace manta */

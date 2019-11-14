@@ -5,9 +5,7 @@
 #include <assert.h>
 
 manta::PhongDistribution::PhongDistribution() {
-    m_power = (math::real)2.0;
-    m_minMapPower = (math::real)1.0;
-    m_powerNode = nullptr;
+    m_power.setDefault(math::constants::One);
 }
 
 manta::PhongDistribution::~PhongDistribution() {
@@ -15,27 +13,7 @@ manta::PhongDistribution::~PhongDistribution() {
 }
 
 manta::math::real manta::PhongDistribution::getPower(const IntersectionPoint *surfaceInteraction) {
-    if (m_powerNode == nullptr) return m_power;
-
-    const PhongMemory *memory = m_cache.cacheGet(surfaceInteraction->m_id, surfaceInteraction->m_threadId);
-
-    if (memory == nullptr) {
-        // There was a cache miss
-        PhongMemory *newMemory = m_cache.cachePut(surfaceInteraction->m_id, surfaceInteraction->m_threadId);
-        math::Vector sampledPower = math::constants::One;
-        if (m_powerNode != nullptr) {
-            // Sample the power input and save it in the state container
-            VectorNodeOutput *powerNode = static_cast<VectorNodeOutput *>(m_powerNode);
-            powerNode->sample(surfaceInteraction, (void *)&sampledPower);
-        }
-
-        math::real power = math::getScalar(sampledPower);
-        newMemory->power = power * (m_power - m_minMapPower) + m_minMapPower;
-
-        memory = newMemory;
-    }
-
-    return memory->power;
+    return math::getScalar(m_power.sample(surfaceInteraction));
 }
 
 manta::math::Vector manta::PhongDistribution::generateMicrosurfaceNormal(
@@ -105,5 +83,5 @@ void manta::PhongDistribution::_evaluate() {
 }
 
 void manta::PhongDistribution::registerInputs() {
-    registerInput(&m_powerNode, "power");
+    registerInput(m_power.getPortAddress(), "power");
 }

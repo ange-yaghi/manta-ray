@@ -22,13 +22,13 @@ namespace manta {
 
         virtual math::Vector sampleF(const IntersectionPoint *surfaceInteraction,
             const math::Vector &i, math::Vector *o, math::real *pdf,
-            StackAllocator *stackAllocator) const = 0;
+            StackAllocator *stackAllocator) = 0;
 
         virtual math::Vector f(const IntersectionPoint *surfaceInteraction,
-            const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) const = 0;
+            const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) = 0;
 
         virtual math::real pdf(const IntersectionPoint *surfaceInteraction,
-            const math::Vector &i, const math::Vector &o) const = 0;
+            const math::Vector &i, const math::Vector &o) = 0;
 
         static inline bool refract(const math::Vector &i, const math::Vector &n,
             math::real ior, math::Vector *t);

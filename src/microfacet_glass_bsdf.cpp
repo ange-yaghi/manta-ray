@@ -14,7 +14,7 @@ manta::MicrofacetGlassBSDF::~MicrofacetGlassBSDF() {
 
 manta::math::Vector manta::MicrofacetGlassBSDF::sampleF(
     const IntersectionPoint *surfaceInteraction, const math::Vector &i, 
-    math::Vector *o, math::real *pdf, StackAllocator *stackAllocator) const 
+    math::Vector *o, math::real *pdf, StackAllocator *stackAllocator) 
 {
     constexpr math::Vector reflect = { (math::real)-1.0, (math::real)-1.0, (math::real)1.0, (math::real)1.0 };
     
@@ -104,7 +104,7 @@ manta::math::Vector manta::MicrofacetGlassBSDF::sampleF(
 
         math::real Ft_div = (i_dot_m + (1 / ior) * ::abs(o_dot_m));
         Ft_div *= Ft_div;
-        Ft_div *= (cosThetaO * cosThetaI);
+        Ft_div *= ::abs(cosThetaO * cosThetaI);
 
         math::Vector transmitance = math::loadScalar(Ft_num / Ft_div);
 
@@ -116,13 +116,13 @@ manta::math::Vector manta::MicrofacetGlassBSDF::sampleF(
 }
 
 manta::math::Vector manta::MicrofacetGlassBSDF::f(const IntersectionPoint *surfaceInteraction, 
-    const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) const 
+    const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) 
 {
     return math::constants::Zero;
 }
 
 manta::math::real manta::MicrofacetGlassBSDF::pdf(
-    const IntersectionPoint *surfaceInteraction, const math::Vector &i, const math::Vector &o) const 
+    const IntersectionPoint *surfaceInteraction, const math::Vector &i, const math::Vector &o) 
 {
     return math::real(0.0);
 }
