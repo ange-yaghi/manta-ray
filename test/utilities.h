@@ -11,6 +11,7 @@
 
 #include <piranha.h>
 #include <string>
+#include <math.h>
 
 using namespace manta;
 
@@ -77,6 +78,23 @@ using namespace manta;
         EXPECT_NEAR(z, (ez), 1E-7); \
         EXPECT_NEAR(w, (ew), 1E-7); \
     }
+
+#define EXPECT_VALID(s) {           \
+    EXPECT_FALSE(std::isnan(s));    \
+    EXPECT_FALSE(std::isinf(s));    \
+}
+
+#define EXPECT_VALID_VEC(v) {       \
+    math::real x = math::getX(v);   \
+    math::real y = math::getY(v);   \
+    math::real z = math::getZ(v);   \
+    math::real w = math::getW(v);   \
+                                    \
+    EXPECT_VALID(x);                \
+    EXPECT_VALID(y);                \
+    EXPECT_VALID(z);                \
+    EXPECT_VALID(w);                \
+}
 
 #define CMF_PATH "../../../demos/cmfs/"
 #define WORKSPACE_PATH "../../../workspace/"

@@ -1,6 +1,6 @@
 #ifndef PIRANHA_VERSION_H
 #define PIRANHA_VERSION_H
 
-#define PIRANHA_VERSION "v0.0.7a"
+#define PIRANHA_VERSION "v0.0.8a"
 
 #endif /* PIRANHA_VERSION_H */

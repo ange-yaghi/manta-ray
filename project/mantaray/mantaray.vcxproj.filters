@@ -777,6 +777,18 @@
     <ClCompile Include="..\..\src\microfacet_brdf.cpp">
       <Filter>Source Files\material\interface\surface-modeling\bsdf\library</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\disney_diffuse_brdf.cpp">
+      <Filter>Source Files\material\interface\surface-modeling\bsdf\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\disney_specular_brdf.cpp">
+      <Filter>Source Files\material\interface\surface-modeling\bsdf\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\disney_ggx_distribution.cpp">
+      <Filter>Source Files\material\interface\surface-modeling\microfacet-model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\disney_gtr_clearcoat_distribution.cpp">
+      <Filter>Source Files\material\interface\surface-modeling\microfacet-model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\sphere_primitive.h">
@@ -1234,6 +1246,21 @@
     </ClInclude>
     <ClInclude Include="..\..\include\microfacet_brdf.h">
       <Filter>Header Files\material\surface-modeling\bsdf\library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\disney_diffuse_brdf.h">
+      <Filter>Header Files\material\surface-modeling\bsdf\library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\disney_specular_brdf.h">
+      <Filter>Header Files\material\surface-modeling\bsdf\library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\disney_ggx_distribution.h">
+      <Filter>Header Files\material\surface-modeling\microfacet-distribution</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\disney_gtr_clearcoat_distribution.h">
+      <Filter>Header Files\material\surface-modeling\microfacet-distribution</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\cacheable_input.h">
+      <Filter>Header Files\sdl\nodes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

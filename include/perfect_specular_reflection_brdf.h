@@ -14,11 +14,11 @@ namespace manta {
 
         virtual math::Vector sampleF(const IntersectionPoint *surfaceInteraction, 
             const math::Vector &i, math::Vector *o, math::real *pdf, 
-            StackAllocator *stackAllocator) const;
+            StackAllocator *stackAllocator);
         virtual math::Vector f(const IntersectionPoint *surfaceInteraction,
-            const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) const;
+            const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator);
         virtual math::real pdf(const IntersectionPoint *surfaceInteraction,
-            const math::Vector &i, const math::Vector &o) const;
+            const math::Vector &i, const math::Vector &o);
     };
 
 } /* namespace manta */

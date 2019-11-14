@@ -10,7 +10,7 @@ manta::PerfectSpecularReflectionBRDF::~PerfectSpecularReflectionBRDF() {
 
 manta::math::Vector manta::PerfectSpecularReflectionBRDF::sampleF(
     const IntersectionPoint *surfaceInteraction, const math::Vector &i, math::Vector *o, 
-    math::real *pdf, StackAllocator *stackAllocator) const 
+    math::real *pdf, StackAllocator *stackAllocator) 
 {
     constexpr math::Vector reflect = { (math::real)-1.0, (math::real)-1.0, (math::real)1.0, (math::real)1.0 };
 
@@ -21,13 +21,13 @@ manta::math::Vector manta::PerfectSpecularReflectionBRDF::sampleF(
 }
 
 manta::math::Vector manta::PerfectSpecularReflectionBRDF::f(const IntersectionPoint *surfaceInteraction, 
-    const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) const 
+    const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) 
 {
     return math::constants::Zero;
 }
 
 manta::math::real manta::PerfectSpecularReflectionBRDF::pdf(
-    const IntersectionPoint *surfaceInteraction, const math::Vector &i, const math::Vector &o) const 
+    const IntersectionPoint *surfaceInteraction, const math::Vector &i, const math::Vector &o) 
 {
     return math::real(0.0);
 }

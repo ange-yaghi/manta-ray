@@ -6,9 +6,13 @@
 #include "../include/object_channel_types.h"
 #include "../include/phong_distribution.h"
 #include "../include/ggx_distribution.h"
+#include "../include/disney_ggx_distribution.h"
+#include "../include/disney_gtr_clearcoat_distribution.h"
 #include "../include/bsdf.h"
 #include "../include/simple_bsdf_material.h"
 #include "../include/bilayer_brdf.h"
+#include "../include/disney_diffuse_brdf.h"
+#include "../include/disney_specular_brdf.h"
 #include "../include/material_library.h"
 #include "../include/microfacet_brdf.h"
 #include "../include/kd_tree.h"
@@ -126,6 +130,10 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__phong_distribution");
     registerBuiltinType<GgxDistribution>(
         "__mantaray__ggx_distribution");
+    registerBuiltinType<DisneyGgxDistribution>(
+        "__mantaray__disney_ggx_distribution");
+    registerBuiltinType<DisneyGtrClearcoatDistribution>(
+        "__mantaray__disney_gtr_clearcoat_distribution");
     registerBuiltinType<NullReferenceNode<BSDF>>(
         "__mantaray__null_bsdf");
     registerBuiltinType<NullReferenceNode<BXDF>>(
@@ -138,6 +146,10 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__simple_bsdf_material");
     registerBuiltinType<BilayerBRDF>(
         "__mantaray__bilayer_brdf");
+    registerBuiltinType<DisneyDiffuseBRDF>(
+        "__mantaray__disney_diffuse_brdf");
+    registerBuiltinType<DisneySpecularBRDF>(
+        "__mantaray__disney_specular_brdf");
     registerBuiltinType<ObjFileNode>(
         "__mantaray__obj_file");
     registerBuiltinType<ObjFileNode>(

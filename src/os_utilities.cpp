@@ -26,3 +26,16 @@ void manta::showConsoleCursor(bool show) {
 void manta::sleep(int milliseconds) {
     Sleep((DWORD)milliseconds);
 }
+
+manta::Path manta::getModuleDirectory() {
+    // Windows only implementation for now
+    char path[256];
+    DWORD result = GetModuleFileName(NULL, path, 256);
+
+    Path fullPath = Path(path);
+    Path parentPath;
+
+    fullPath.getParentPath(&parentPath);
+
+    return parentPath;
+}

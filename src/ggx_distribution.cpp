@@ -5,10 +5,7 @@
 #include <assert.h>
 
 manta::GgxDistribution::GgxDistribution() {
-    m_width = (math::real)1.0;
-    m_minMapWidth = (math::real)0.0;
-    m_widthNode = nullptr;
-    m_useNodes = false;
+    /* void */
 }
 
 manta::GgxDistribution::~GgxDistribution() {
@@ -16,39 +13,44 @@ manta::GgxDistribution::~GgxDistribution() {
 }
 
 manta::math::real manta::GgxDistribution::getWidth(const IntersectionPoint *surfaceInteraction) {
-    if (!m_useNodes) return m_width;
-    
-    const intersection_id id = surfaceInteraction->m_id;
-    const int threadId = surfaceInteraction->m_threadId;
-
-    const GgxMemory *memory = m_cache.cacheGet(id, threadId);
-
-    if (memory == nullptr) {
-        // There was a cache miss
-        GgxMemory *newMemory = m_cache.cachePut(id, threadId);
-        math::Vector sampledWidth = math::constants::One;
-
-        // Sample the width input and save it in the state container
-        VectorNodeOutput *powerNode = static_cast<VectorNodeOutput *>(m_widthNode);
-        powerNode->sample(surfaceInteraction, (void *)&sampledWidth);
-
-        math::real width = math::getScalar(sampledWidth);
-        width = (width > (math::real)1.0) ? (math::real)1.0 : width;
-        width = (width < (math::real)0.0) ? (math::real)0.0 : width;
-
-        newMemory->width = width; // *(m_width - m_minMapWidth) + m_minMapWidth;
-
-        memory = newMemory;
-    }
-
-    return memory->width;
+    return math::getScalar(m_width.sample(surfaceInteraction));
 }
 
 manta::math::Vector manta::GgxDistribution::generateMicrosurfaceNormal(
     const IntersectionPoint *surfaceInteraction) 
 {
     math::real width = getWidth(surfaceInteraction);
+    return generateMicrosurfaceNormal(width);
+}
 
+manta::math::real manta::GgxDistribution::calculateDistribution(
+    const math::Vector &m, const IntersectionPoint *surfaceInteraction) 
+{
+    math::real width = getWidth(surfaceInteraction);
+
+    const intersection_id id = surfaceInteraction->m_id;
+    const int threadId = surfaceInteraction->m_threadId;
+
+    const math::real *memory = m_distribution.cacheGet(id, threadId);
+
+    if (memory == nullptr) {
+        math::real *newValue = m_distribution.cachePut(id, threadId);
+        *newValue = calculateDistribution(m, width);
+
+        memory = newValue;
+    }
+
+    return *memory;
+}
+
+manta::math::real manta::GgxDistribution::calculateG1(const math::Vector &v, 
+    const math::Vector &m, const IntersectionPoint *surfaceInteraction) 
+{
+    math::real width = getWidth(surfaceInteraction);
+    return calculateG1(v, m, width);
+}
+
+manta::math::Vector manta::GgxDistribution::generateMicrosurfaceNormal(math::real width) {
     math::real r1 = math::uniformRandom();
     math::real r2 = math::uniformRandom();
 
@@ -65,10 +67,8 @@ manta::math::Vector manta::GgxDistribution::generateMicrosurfaceNormal(
 }
 
 manta::math::real manta::GgxDistribution::calculateDistribution(
-    const math::Vector &m, const IntersectionPoint *surfaceInteraction) 
+    const math::Vector &m, math::real width) 
 {
-    math::real width = getWidth(surfaceInteraction);
-
     math::real cos_theta_m = math::getZ(m);
 
     if (cos_theta_m <= 0) return (math::real)0.0;
@@ -89,10 +89,8 @@ manta::math::real manta::GgxDistribution::calculateDistribution(
 }
 
 manta::math::real manta::GgxDistribution::calculateG1(const math::Vector &v, 
-    const math::Vector &m, const IntersectionPoint *surfaceInteraction) 
+    const math::Vector &m, math::real width) 
 {
-    math::real width = getWidth(surfaceInteraction);
-
     math::real v_dot_m = math::getScalar(math::dot(v, m));
     math::real v_dot_n = (math::getZ(v));
     if ((v_dot_m < 0) != (v_dot_n < 0)) return (math::real)0.0;
@@ -109,7 +107,7 @@ manta::math::real manta::GgxDistribution::calculateG1(const math::Vector &v,
 }
 
 void manta::GgxDistribution::registerInputs() {
-    registerInput(&m_widthNode, "width");
+    registerInput(m_width.getPortAddress(), "width");
 }
 
 void manta::GgxDistribution::_evaluate() {
@@ -117,20 +115,8 @@ void manta::GgxDistribution::_evaluate() {
 }
 
 piranha::Node *manta::GgxDistribution::_optimize() {
-    m_useNodes = true;
-
     if (ENABLE_OPTIMIZATION) {
-        bool isConstantWidth = m_widthNode->getParentNode()->hasFlag(piranha::Node::META_CONSTANT);
-
-        if (isConstantWidth) {
-            math::Vector constantWidth;
-
-            VectorNodeOutput *widthNode = static_cast<VectorNodeOutput *>(m_widthNode);
-            widthNode->sample(nullptr, (void *)&constantWidth);
-
-            m_width = math::getScalar(constantWidth);
-            m_useNodes = false;
-        }
+        m_width.optimize();
     }
 
     return this;

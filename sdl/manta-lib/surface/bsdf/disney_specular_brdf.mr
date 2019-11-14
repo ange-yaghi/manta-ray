@@ -1,0 +1,27 @@
+module {
+    @name:          "Disney Specular BRDF"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "Disney Specular BRDF implementation"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
+private import "bxdf.mr"
+private import "../microfacet-models/microfacet_distributions.mr"
+private import "../../types/atomic_types.mr" as types
+private import "../../types/conversions.mr"
+
+@doc: "Disney Specular BRDF"
+public node disney_specular_brdf => __mantaray__disney_specular_brdf {
+    input base_color    [types::vector]: 1.0;
+    input roughness     [types::vector]: 1.0;
+    input distribution  [microfacet_distribution]:
+        disney_ggx_distribution(roughness: roughness);
+    input specular      [types::vector]: 1.0;
+    input power         [types::vector]: 1.0;
+
+    alias output __out  [bxdf];
+}
