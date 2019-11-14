@@ -2,6 +2,9 @@
 
 #include "../include/configuration.h"
 
+#include "../../include/path.h"
+#include "../../include/os_utilities.h"
+
 #include <iostream>
 
 mantaray_cli::Compiler::Compiler() {
@@ -17,7 +20,10 @@ mantaray_cli::Compiler::~Compiler() {
 void mantaray_cli::Compiler::initialize() {
     m_compiler->setFileExtension(".mr");
 
-    std::ifstream configurationFile("mantaray_cli.conf");
+    manta::Path directory = manta::getModuleDirectory();
+    manta::Path confFile = directory.append(manta::Path("mantaray_cli.conf"));
+
+    std::ifstream configurationFile(confFile.toString());
     if (!configurationFile.is_open()) {
         std::cout << "[NON-PRODUCTION VERSION] - mantaray_cli.conf not found" << std::endl;
         m_compiler->addSearchPath(MANTARAY_STANDARD_LIB_DIR);
@@ -25,7 +31,10 @@ void mantaray_cli::Compiler::initialize() {
     else {
         std::string path;
         std::getline(configurationFile, path);
-        m_compiler->addSearchPath(path);
+
+        manta::Path searchDirectory = directory.append(manta::Path(path));
+
+        m_compiler->addSearchPath(searchDirectory.toString());
     }
 
     m_rules.initialize();

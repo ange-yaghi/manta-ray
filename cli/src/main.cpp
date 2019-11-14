@@ -35,7 +35,6 @@ int main(int argc, char *argv[]) {
     else if (argc == 1) {
         std::cout << "  Script: ";
         std::getline(std::cin, scriptName);
-        std::cin.ignore(); // Ignore any trailing characters
 
         std::cout << "------------------------------------------------" << std::endl;
     }

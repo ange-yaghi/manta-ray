@@ -1,5 +1,7 @@
-#ifndef OS_UTILITIES_H
-#define OS_UTILITIES_H
+#ifndef MANTARAY_OS_UTILITIES_H
+#define MANTARAY_OS_UTILITIES_H
+
+#include "path.h"
 
 namespace manta {
 
@@ -7,6 +9,8 @@ namespace manta {
     void showConsoleCursor(bool show);
     void sleep(int milliseconds);
 
+    Path getModuleDirectory();
+
 } /* namespace manta */
 
-#endif /* OS_UTILITIES_H */
+#endif /* MANTARAY_OS_UTILITIES_H */
