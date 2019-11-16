@@ -13,15 +13,15 @@ manta::MicrofacetGlassBSDF::~MicrofacetGlassBSDF() {
 }
 
 manta::math::Vector manta::MicrofacetGlassBSDF::sampleF(
-    const IntersectionPoint *surfaceInteraction, const math::Vector &i, 
+    const IntersectionPoint *surfaceInteraction, const math::Vector2 &u, const math::Vector &i,
     math::Vector *o, math::real *pdf, StackAllocator *stackAllocator) 
 {
     constexpr math::Vector reflect = { (math::real)-1.0, (math::real)-1.0, (math::real)1.0, (math::real)1.0 };
     
-    math::real u = math::uniformRandom();
+    math::real d = math::uniformRandom();
 
     // Generate microfacet normal
-    math::Vector m = m_distribution->generateMicrosurfaceNormal(surfaceInteraction);
+    math::Vector m = m_distribution->generateMicrosurfaceNormal(surfaceInteraction, u);
 
     math::real ior = m_mediaInterface->ior(surfaceInteraction->m_direction);
     math::real F = m_mediaInterface->fresnelTerm(i, m, surfaceInteraction->m_direction);
@@ -31,7 +31,7 @@ manta::math::Vector manta::MicrofacetGlassBSDF::sampleF(
 
     math::real rPdf = 0.0, tPdf = 0.0;
 
-    if (u > (math::real)0.5) {
+    if (d > (math::real)0.5) {
         // Reflection
         math::Vector ri = math::reflect(i, m);
         o_dot_m = math::getScalar(math::dot(ri, m));

@@ -108,6 +108,11 @@ public node step => __mantaray__step {
     alias output __out [vector];
 }
 
+public node average => __mantaray__vector_average {
+    input __in [vector];
+    alias output __out [vector];
+}
+
 // Float operations
 
 public node float_divide => __mantaray__float_divide {

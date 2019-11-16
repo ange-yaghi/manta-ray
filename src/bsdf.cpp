@@ -20,11 +20,11 @@ manta::BSDF::~BSDF() {
 }
 
 manta::math::Vector manta::BSDF::sampleF(const IntersectionPoint *surfaceInteraction,
-    const math::Vector &i, math::Vector *o, math::real *pdf,
+    const math::Vector2 &u, const math::Vector &i, math::Vector *o, math::real *pdf,
     StackAllocator *stackAllocator) const 
 {
     int bxdf = rand() % m_bxdfCount;
-    math::Vector f = m_bxdfs[bxdf]->sampleF(surfaceInteraction, i, o, pdf, stackAllocator);
+    math::Vector f = m_bxdfs[bxdf]->sampleF(surfaceInteraction, u, i, o, pdf, stackAllocator);
 
     if (*pdf == (math::real)0.0) {
         return math::constants::Zero;

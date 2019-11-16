@@ -22,7 +22,8 @@ namespace manta {
 
         math::real getWidth(const IntersectionPoint *surfaceInteraction);
 
-        virtual math::Vector generateMicrosurfaceNormal(const IntersectionPoint *surfaceInteraction);
+        virtual math::Vector generateMicrosurfaceNormal(
+            const IntersectionPoint *surfaceInteraction, const math::Vector2 &u);
         virtual math::real calculateDistribution(const math::Vector &m, 
             const IntersectionPoint *surfaceInteraction);
         virtual math::real calculateG1(const math::Vector &v, const math::Vector &m, 
@@ -35,7 +36,7 @@ namespace manta {
         piranha::pNodeInput getWidthNode() const { return m_width.getPort(); }
 
     public:
-        static math::Vector generateMicrosurfaceNormal(math::real width);
+        static math::Vector generateMicrosurfaceNormal(math::real width, const math::Vector2 &u);
         static math::real calculateDistribution(const math::Vector &m, math::real width);
         static math::real calculateG1(const math::Vector &v, const math::Vector &m, math::real width);
 

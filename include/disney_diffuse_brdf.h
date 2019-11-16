@@ -15,7 +15,7 @@ namespace manta {
         virtual ~DisneyDiffuseBRDF();
 
         virtual math::Vector sampleF(const IntersectionPoint *surfaceInteraction,
-            const math::Vector &i, math::Vector *o, math::real *pdf,
+            const math::Vector2 &u, const math::Vector &i, math::Vector *o, math::real *pdf,
             StackAllocator *stackAllocator);
 
         virtual math::Vector f(const IntersectionPoint *surfaceInteraction,

@@ -14,7 +14,7 @@ namespace manta {
         virtual ~MicrofacetTransmissionBTDF();
 
         virtual math::Vector sampleF(const IntersectionPoint *surfaceInteraction, 
-            const math::Vector &i, math::Vector *o, math::real *pdf, 
+            const math::Vector2 &u, const math::Vector &i, math::Vector *o, math::real *pdf,
             StackAllocator *stackAllocator) const;
         virtual math::Vector f(const IntersectionPoint *surfaceInteraction,
             const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) const;

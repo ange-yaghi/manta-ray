@@ -41,6 +41,7 @@ namespace manta {
     class RayContainer;
     class ImagePlane;
     class MaterialLibrary;
+    class Sampler;
 
     class RayTracer : public Node {
     public:
@@ -67,7 +68,7 @@ namespace manta {
         JobQueue *getJobQueue() { return &m_jobQueue; }
         
         math::Vector traceRay(const Scene *scene, LightRay *ray, int degree, 
-            IntersectionPointManager *manager, StackAllocator *s 
+            IntersectionPointManager *manager, Sampler *sampler, StackAllocator *s 
             /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const;
         void incrementRayCompletion(const Job *job, int increment = 1);
 

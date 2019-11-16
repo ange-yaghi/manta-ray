@@ -13,12 +13,12 @@ manta::MicrofacetBRDF::~MicrofacetBRDF() {
 }
 
 manta::math::Vector manta::MicrofacetBRDF::sampleF(
-        const IntersectionPoint *surfaceInteraction, const math::Vector &i, 
-        math::Vector *o, math::real *pdf, StackAllocator *stackAllocator) 
+    const IntersectionPoint *surfaceInteraction, const math::Vector2 &u, const math::Vector &i,
+    math::Vector *o, math::real *pdf, StackAllocator *stackAllocator) 
 {
     constexpr math::Vector reflect = { (math::real)-1.0, (math::real)-1.0, (math::real)1.0, (math::real)1.0 };
 
-    math::Vector m = m_distribution->generateMicrosurfaceNormal(surfaceInteraction);
+    math::Vector m = m_distribution->generateMicrosurfaceNormal(surfaceInteraction, u);
     math::Vector ri = math::reflect(i, m);
     math::real o_dot_m = math::getScalar(math::dot(ri, m));
 

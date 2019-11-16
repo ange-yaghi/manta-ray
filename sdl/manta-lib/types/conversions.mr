@@ -34,6 +34,11 @@ public node int_to_string => __mantaray__int_to_string {
     alias output __out [string];
 }
 
+public node vector_to_string => __mantaray__vector_to_string {
+    input __in [vector];
+    alias output __out [string];
+}
+
 // Integer conversions
 public node string_to_int => __mantaray__string_to_int {
     input __in [string];

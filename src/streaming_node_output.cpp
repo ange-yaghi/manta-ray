@@ -37,6 +37,5 @@ void manta::StreamingNodeOutput::_evaluate() {
 }
 
 void manta::StreamingNodeOutput::_evaluateDimensions() {
-    setDimensions(1);
-    setDimensionSize(0, 1);
+    setDimensions(0);
 }

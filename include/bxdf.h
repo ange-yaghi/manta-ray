@@ -21,7 +21,7 @@ namespace manta {
         virtual ~BXDF();
 
         virtual math::Vector sampleF(const IntersectionPoint *surfaceInteraction,
-            const math::Vector &i, math::Vector *o, math::real *pdf,
+            const math::Vector2 &u, const math::Vector &i, math::Vector *o, math::real *pdf,
             StackAllocator *stackAllocator) = 0;
 
         virtual math::Vector f(const IntersectionPoint *surfaceInteraction,

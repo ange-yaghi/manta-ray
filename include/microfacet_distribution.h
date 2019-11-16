@@ -17,7 +17,8 @@ namespace manta {
         MicrofacetDistribution();
         virtual ~MicrofacetDistribution();
 
-        virtual math::Vector generateMicrosurfaceNormal(const IntersectionPoint *surfaceInteraction) = 0;
+        virtual math::Vector generateMicrosurfaceNormal(
+            const IntersectionPoint *surfaceInteraction, const math::Vector2 &u) = 0;
         virtual math::real calculatePDF(const math::Vector &m, const IntersectionPoint *surfaceInteraction);
         virtual math::real calculateDistribution(const math::Vector &m, 
             const IntersectionPoint *surfaceInteraction) = 0;

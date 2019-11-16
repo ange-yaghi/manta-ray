@@ -17,10 +17,10 @@ manta::math::real manta::GgxDistribution::getWidth(const IntersectionPoint *surf
 }
 
 manta::math::Vector manta::GgxDistribution::generateMicrosurfaceNormal(
-    const IntersectionPoint *surfaceInteraction) 
+    const IntersectionPoint *surfaceInteraction, const math::Vector2 &u)
 {
     math::real width = getWidth(surfaceInteraction);
-    return generateMicrosurfaceNormal(width);
+    return generateMicrosurfaceNormal(width, u);
 }
 
 manta::math::real manta::GgxDistribution::calculateDistribution(
@@ -50,9 +50,11 @@ manta::math::real manta::GgxDistribution::calculateG1(const math::Vector &v,
     return calculateG1(v, m, width);
 }
 
-manta::math::Vector manta::GgxDistribution::generateMicrosurfaceNormal(math::real width) {
-    math::real r1 = math::uniformRandom();
-    math::real r2 = math::uniformRandom();
+manta::math::Vector manta::GgxDistribution::generateMicrosurfaceNormal(
+    math::real width, const math::Vector2 &u) 
+{
+    math::real r1 = u.x;
+    math::real r2 = u.y;
 
     math::real rho_m = math::constants::TWO_PI * r2;
     math::real theta_m = ::atan(width * ::sqrt(r1) / ::sqrt(1 - r1));

@@ -8,6 +8,7 @@
 #include "../include/camera_ray_emitter.h"
 #include "../include/ray_container.h"
 #include "../include/image_plane.h"
+#include "../include/stratified_sampler.h"
 
 #include <sstream>
 #include <time.h>
@@ -128,12 +129,18 @@ void manta::Worker::doJob(const Job *job) {
                 LightRay *rays = container.getRays();
                 int rayCount = container.getRayCount();
 
+                StratifiedSampler sampler;
+                sampler.setLatticeWidth(8);
+                sampler.setLatticeHeight(8);
+                sampler.initialize(rayCount, 64);
+                sampler.startPixelSession();
+
                 for (int samp = 0; samp < rayCount; samp++) {
                     NEW_TREE(getTreeName(pixelIndex, samp), emitter->getPosition());
                     LightRay *ray = &rays[samp];
                     ray->calculateTransformations();
 
-                    math::Vector L = m_rayTracer->traceRay(job->scene, ray, 0, &m_ipManager,
+                    math::Vector L = m_rayTracer->traceRay(job->scene, ray, 0, &m_ipManager, &sampler,
                         m_stack /**/ PATH_RECORDER_ARG /**/ STATISTICS_ROOT(&m_statistics));
 
                     ImageSample &sample = samples[sampleCount++];
@@ -146,6 +153,8 @@ void manta::Worker::doJob(const Job *job) {
                     }
 
                     END_TREE();
+
+                    sampler.endSample();
                 }
 
                 container.destroyRays();

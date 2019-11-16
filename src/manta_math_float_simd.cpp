@@ -33,6 +33,10 @@ math::real manta::math::uniformRandom(real range) {
     return range * r;
 }
 
+int manta::math::uniformRandomInt(int range) {
+    return rand() % range;
+}
+
 math::Generic math::loadScalar(real s) {
     return _mm_set_ps1(s);
 }

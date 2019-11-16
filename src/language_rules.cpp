@@ -57,6 +57,8 @@
 #include "../include/append_path_node.h"
 #include "../include/bxdf_to_bsdf_node.h"
 #include "../include/add_bxdf_node.h"
+#include "../include/average_node_output.h"
+#include "../include/string_conversions.h"
 
 manta::LanguageRules::LanguageRules() {
     /* void */
@@ -244,6 +246,9 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
     registerBuiltinType<BxdfToBsdfNode>(
         "__mantaray__bxdf_to_bsdf");
 
+    registerBuiltinType<VectorToStringConversionNode>(
+        "__mantaray__vector_to_string");
+
     // Unary operations
     registerBuiltinType<piranha::NumNegateOperationNode<piranha::native_float>>(
         "__mantaray__float_negate");
@@ -260,6 +265,9 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
 
     registerBuiltinType<UvWrapNode>(
         "__mantaray__uv_wrap");
+
+    registerBuiltinType<AverageNode>(
+        "__mantaray__vector_average");
 
     // Binary operations
     registerBuiltinType<AddNode>(
@@ -321,6 +329,10 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
     registerConversion(
         { &piranha::FundamentalType::StringType, &piranha::FundamentalType::IntType },
         "__mantaray__string_to_int"
+    );
+    registerConversion(
+        { &VectorNodeOutput::VectorType, &piranha::FundamentalType::StringType },
+        "__mantaray__vector_to_string"
     );
 
     registerConversion(

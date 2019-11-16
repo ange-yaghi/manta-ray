@@ -22,6 +22,7 @@
 #include "../include/material_library.h"
 #include "../include/vector_node_output.h"
 #include "../include/bsdf.h"
+#include "../include/sampler.h"
 
 #include <iostream>
 #include <thread>
@@ -200,7 +201,7 @@ void manta::RayTracer::traceRayEmitter(const CameraRayEmitter *emitter, RayConta
         LightRay *ray = &rays[i];
         ray->calculateTransformations();
 
-        math::Vector intensity = traceRay(scene, ray, 0, manager, s /**/ PATH_RECORDER_VAR /**/ STATISTICS_PARAM_INPUT);
+        math::Vector intensity = traceRay(scene, ray, 0, manager, nullptr, s /**/ PATH_RECORDER_VAR /**/ STATISTICS_PARAM_INPUT);
         ray->setIntensity(intensity);
     }
 
@@ -383,7 +384,7 @@ void manta::RayTracer::refineContact(const LightRay *ray, math::real depth, Inte
 }
 
 manta::math::Vector manta::RayTracer::traceRay(
-    const Scene *scene, LightRay *ray, int degree, IntersectionPointManager *manager, 
+    const Scene *scene, LightRay *ray, int degree, IntersectionPointManager *manager, Sampler *sampler,
     StackAllocator *s /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const 
 {
     constexpr int MAX_BOUNCES = 4;
@@ -454,8 +455,11 @@ manta::math::Vector manta::RayTracer::traceRay(
             math::getScalar(math::dot(outgoingDir, v)),
             math::getScalar(math::dot(outgoingDir, w)));
 
+        math::Vector2 s_u = (sampler != nullptr)
+            ? sampler->generate2d()
+            : math::Vector2(math::uniformRandom(), math::uniformRandom());
         math::real pdf;
-        math::Vector f = bsdf->sampleF(&point, t_dir, &t_incomingDir, &pdf, s);
+        math::Vector f = bsdf->sampleF(&point, s_u, t_dir, &t_incomingDir, &pdf, s);
         f = math::mul(f, material->getFilterColor(point));
         f = math::mask(f, math::constants::MaskOffW);
 
@@ -517,6 +521,6 @@ void manta::RayTracer::traceRays(const Scene *scene, const RayContainer &rayCont
         LightRay *ray = &rayContainer.getRays()[i];
         ray->calculateTransformations();
 
-        traceRay(scene, ray, rayContainer.getDegree(), manager, s /**/ PATH_RECORDER_VAR /**/ STATISTICS_PARAM_INPUT);
+        traceRay(scene, ray, rayContainer.getDegree(), manager, nullptr, s /**/ PATH_RECORDER_VAR /**/ STATISTICS_PARAM_INPUT);
     }
 }

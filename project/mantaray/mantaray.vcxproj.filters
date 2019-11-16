@@ -409,6 +409,12 @@
     <Filter Include="Source Files\material\interface\surface-modeling\sdl">
       <UniqueIdentifier>{0a803db1-2bea-4133-897e-2ae00d793f35}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\sampling">
+      <UniqueIdentifier>{9516ba64-e194-4861-a0cc-f87b2d7135e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sampling">
+      <UniqueIdentifier>{e9fb18cb-f0a8-4abb-8509-516b4ba10356}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -788,6 +794,18 @@
     </ClCompile>
     <ClCompile Include="..\..\src\disney_gtr_clearcoat_distribution.cpp">
       <Filter>Source Files\material\interface\surface-modeling\microfacet-model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\pixel_based_sampler.cpp">
+      <Filter>Source Files\sampling</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\sampler.cpp">
+      <Filter>Source Files\sampling</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\stratified_sampler.cpp">
+      <Filter>Source Files\sampling</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\string_conversions.cpp">
+      <Filter>Source Files\sdl\nodes\output-ports\conversions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1261,6 +1279,21 @@
     </ClInclude>
     <ClInclude Include="..\..\include\cacheable_input.h">
       <Filter>Header Files\sdl\nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sampler.h">
+      <Filter>Header Files\sampling</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\pixel_based_sampler.h">
+      <Filter>Header Files\sampling</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\stratified_sampler.h">
+      <Filter>Header Files\sampling</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\string_conversions.h">
+      <Filter>Header Files\sdl\nodes\output-ports\conversions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\average_node_output.h">
+      <Filter>Header Files\sdl\nodes\output-ports\operations</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -25,13 +25,13 @@ manta::math::real manta::DisneyGtrClearcoatDistribution::getAlpha(
 }
 
 manta::math::Vector manta::DisneyGtrClearcoatDistribution::generateMicrosurfaceNormal(
-    const IntersectionPoint *surfaceInteraction)
+    const IntersectionPoint *surfaceInteraction, const math::Vector2 &u)
 {
     math::real alpha = getAlpha(surfaceInteraction);
     math::real alpha_2 = alpha * alpha;
 
-    math::real r1 = math::uniformRandom();
-    math::real r2 = math::uniformRandom();
+    math::real r1 = u.x;
+    math::real r2 = u.y;
 
     math::real rho_m = math::constants::TWO_PI * r2;
     math::real cos_theta_m_2 = (alpha_2 < 1)

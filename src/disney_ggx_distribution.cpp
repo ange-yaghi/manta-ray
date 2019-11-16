@@ -22,10 +22,10 @@ manta::math::real manta::DisneyGgxDistribution::getAlpha(const IntersectionPoint
 }
 
 manta::math::Vector manta::DisneyGgxDistribution::generateMicrosurfaceNormal(
-    const IntersectionPoint *surfaceInteraction) 
+    const IntersectionPoint *surfaceInteraction, const math::Vector2 &u)
 {
     math::real alpha = getAlpha(surfaceInteraction);
-    return GgxDistribution::generateMicrosurfaceNormal(alpha);
+    return GgxDistribution::generateMicrosurfaceNormal(alpha, u);
 }
 
 manta::math::real manta::DisneyGgxDistribution::calculateDistribution(

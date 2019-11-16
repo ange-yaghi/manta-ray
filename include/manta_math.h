@@ -61,6 +61,7 @@ namespace manta {
         typedef Vector2_t<real> Vector2;
         typedef Vector2_t<real_d> Vector2_d;
         typedef Vector2_t<real_f> Vector2_f;
+        typedef Vector2_t<int> Vector2_i;
 
         template<typename T>
         struct Vector3_t {
@@ -199,6 +200,7 @@ namespace manta {
         // Math functions
         Vector uniformRandom4(real range = (real)1.0);
         real uniformRandom(real range = (real)1.0);
+        int uniformRandomInt(int range);
 
         // Vector/General Quaternion
         Generic loadScalar(real s);

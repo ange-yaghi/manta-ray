@@ -17,7 +17,8 @@ namespace manta {
 
         math::real getPower(const IntersectionPoint *surfaceInteraction);
 
-        virtual math::Vector generateMicrosurfaceNormal(const IntersectionPoint *surfaceInteraction);
+        virtual math::Vector generateMicrosurfaceNormal(
+            const IntersectionPoint *surfaceInteraction, const math::Vector2 &u);
         virtual math::real calculateDistribution(const math::Vector &m, 
             const IntersectionPoint *surfaceInteraction);
         virtual math::real calculateG1(const math::Vector &v, const math::Vector &m, 

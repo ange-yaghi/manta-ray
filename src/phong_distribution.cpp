@@ -17,12 +17,12 @@ manta::math::real manta::PhongDistribution::getPower(const IntersectionPoint *su
 }
 
 manta::math::Vector manta::PhongDistribution::generateMicrosurfaceNormal(
-    const IntersectionPoint *surfaceInteraction) 
+    const IntersectionPoint *surfaceInteraction, const math::Vector2 &u)
 {
     math::real power = getPower(surfaceInteraction);
 
-    math::real r1 = math::uniformRandom();
-    math::real r2 = math::uniformRandom();
+    math::real r1 = u.x;
+    math::real r2 = u.y;
 
     math::real rho_m = math::constants::TWO_PI * r2;
     math::real cos_theta_m = ::pow(r1, (math::real)1.0 / (power + (math::real)2.0));

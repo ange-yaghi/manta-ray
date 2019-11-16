@@ -11,13 +11,14 @@ manta::MicrofacetTransmissionBTDF::~MicrofacetTransmissionBTDF() {
 }
 
 manta::math::Vector manta::MicrofacetTransmissionBTDF::sampleF(
-        const IntersectionPoint *surfaceInteraction, const math::Vector &i, math::Vector *o, 
-        math::real *pdf, StackAllocator *stackAllocator) const 
+    const IntersectionPoint *surfaceInteraction, const math::Vector2 &u, 
+    const math::Vector &i, math::Vector *o,
+    math::real *pdf, StackAllocator *stackAllocator) const 
 {
     constexpr math::Vector reflect = { (math::real)-1.0, (math::real)-1.0, (math::real)1.0, (math::real)1.0 };
 
     math::real ior = m_mediaInterface->ior(surfaceInteraction->m_direction);
-    math::Vector m = m_distribution->generateMicrosurfaceNormal(surfaceInteraction);
+    math::Vector m = m_distribution->generateMicrosurfaceNormal(surfaceInteraction, u);
     math::Vector rt;
 
     if (!refract(i, m, ior, &rt)) {
