@@ -18,6 +18,8 @@ manta::Worker::Worker() {
     m_thread = nullptr;
 
     m_deterministicSeed = false;
+
+    m_sampler = nullptr;
 }
 
 manta::Worker::~Worker() {
@@ -25,7 +27,9 @@ manta::Worker::~Worker() {
     assert(m_thread == nullptr);
 }
 
-void manta::Worker::initialize(mem_size stackSize, RayTracer *rayTracer, int workerId, bool deterministicSeed, const std::string &pathRecorderOutputDirectory) {
+void manta::Worker::initialize(mem_size stackSize, RayTracer *rayTracer, int workerId, 
+    bool deterministicSeed, const std::string &pathRecorderOutputDirectory, unsigned int seed) 
+{
     if (stackSize > 0) {
         m_stack = new StackAllocator;
         m_stack->initialize(stackSize);
@@ -38,6 +42,9 @@ void manta::Worker::initialize(mem_size stackSize, RayTracer *rayTracer, int wor
     m_deterministicSeed = deterministicSeed;
     m_workerId = workerId;
     m_pathRecorderOutputDirectory = pathRecorderOutputDirectory;
+
+    m_sampler = m_rayTracer->getSampler()->clone();
+    m_sampler->seed(seed);
 
     // Initialize all statistics
     m_statistics.reset();
@@ -103,7 +110,10 @@ void manta::Worker::doJob(const Job *job) {
 
     for (int x = job->startX; x <= job->endX; x++) {
         for (int y = job->startY; y <= job->endY; y++) {
+            m_sampler->startPixelSession();
+
             CameraRayEmitter *emitter = job->group->createEmitter(x, y, m_stack);
+            emitter->setSampler(m_sampler);
             int pixelIndex = job->group->getResolutionX() * y + x;
 
             if (m_deterministicSeed) {
@@ -120,31 +130,18 @@ void manta::Worker::doJob(const Job *job) {
             math::Vector result = math::constants::Zero;
 
             if (emitter != nullptr) {
-                RayContainer container;
-                container.setStackAllocator(m_stack);
-
                 emitter->setStackAllocator(m_stack);
-                emitter->generateRays(&container);
 
-                LightRay *rays = container.getRays();
-                int rayCount = container.getRayCount();
-
-                StratifiedSampler sampler;
-                sampler.setLatticeWidth(8);
-                sampler.setLatticeHeight(8);
-                sampler.initialize(rayCount, 64);
-                sampler.startPixelSession();
-
-                for (int samp = 0; samp < rayCount; samp++) {
+                do {
                     NEW_TREE(getTreeName(pixelIndex, samp), emitter->getPosition());
-                    LightRay *ray = &rays[samp];
-                    ray->calculateTransformations();
+                    LightRay ray; emitter->generateRay(&ray);
+                    ray.calculateTransformations();
 
-                    math::Vector L = m_rayTracer->traceRay(job->scene, ray, 0, &m_ipManager, &sampler,
+                    math::Vector L = m_rayTracer->traceRay(job->scene, &ray, 0, &m_ipManager, m_sampler,
                         m_stack /**/ PATH_RECORDER_ARG /**/ STATISTICS_ROOT(&m_statistics));
 
                     ImageSample &sample = samples[sampleCount++];
-                    sample.imagePlaneLocation = ray->getImagePlaneLocation();
+                    sample.imagePlaneLocation = ray.getImagePlaneLocation();
                     sample.intensity = L;
 
                     if (sampleCount >= SAMPLE_BUFFER_CAPACITY) {
@@ -154,10 +151,7 @@ void manta::Worker::doJob(const Job *job) {
 
                     END_TREE();
 
-                    sampler.endSample();
-                }
-
-                container.destroyRays();
+                } while (emitter->getSampler()->startNextSample());
             }
             m_rayTracer->incrementRayCompletion(job);
 

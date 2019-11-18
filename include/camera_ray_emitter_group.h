@@ -9,7 +9,7 @@
 namespace manta {
 
     class ImagePlane;
-    class Sampler2d;
+    class Sampler;
     class CameraRayEmitter;
     class RayContainer;
 
@@ -39,11 +39,8 @@ namespace manta {
         void setDirection(const math::Vector &direction) { m_direction = direction; }
         math::Vector getDirection() const { return m_direction; }
 
-        void setSampleCount(int samples) { m_samples = samples; }
-        int getSampleCount() const { return m_samples; }
-
-        void setSampler(Sampler2d *sampler) { m_sampler = sampler; }
-        Sampler2d *getSampler() const { return m_sampler; }
+        void setSampler(Sampler *sampler) { m_sampler = sampler; }
+        Sampler *getSampler() const { return m_sampler; }
 
         virtual void configure() = 0;
 
@@ -79,8 +76,6 @@ namespace manta {
         piranha::pNodeInput m_resolutionYInput;
         piranha::pNodeInput m_planeHeightInput;
         piranha::pNodeInput m_planeDistanceInput;
-        piranha::pNodeInput m_sampleInput;
-        piranha::pNodeInput m_samplerInput;
 
     protected:
         math::Vector m_up;
@@ -93,8 +88,7 @@ namespace manta {
         math::real_d m_planeHeight;
         math::real_d m_planeDistance;
 
-        int m_samples;
-        Sampler2d *m_sampler;
+        Sampler *m_sampler;
     };
 
 } /* namespace manta */

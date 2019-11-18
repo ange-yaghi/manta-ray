@@ -6,6 +6,7 @@
 #include "manta_build_conf.h"
 #include "runtime_statistics.h"
 #include "intersection_point_manager.h"
+#include "stratified_sampler.h"
 
 #include <thread>
 #include <atomic>
@@ -35,7 +36,8 @@ namespace manta {
         ~Worker();
 
         void initialize(mem_size stackSize, RayTracer *rayTracer, int workerId, 
-            bool deterministicSeed, const std::string &pathRecorderOutputDirectory);
+            bool deterministicSeed, const std::string &pathRecorderOutputDirectory,
+            unsigned int seed);
         void start(bool multithreaded = true);
         void join();
         void destroy();
@@ -51,6 +53,8 @@ namespace manta {
 
         StackAllocator *m_stack;
         RayTracer *m_rayTracer;
+
+        Sampler *m_sampler;
 
         std::thread *m_thread;
 

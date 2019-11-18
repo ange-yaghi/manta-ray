@@ -372,7 +372,6 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
         camera->setResolutionX(resolutionX);
         camera->setResolutionY(resolutionY);
     }
-    camera->setSampleCount(samplesPerPixel);
     group = camera;
 
     // Create the raytracer

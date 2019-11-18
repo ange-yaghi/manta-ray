@@ -528,9 +528,6 @@
     <ClCompile Include="..\..\src\standard_camera_ray_emitter_group.cpp">
       <Filter>Source Files\emitter\camera-ray-emitter</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\random_sampler.cpp">
-      <Filter>Source Files\emitter\sampler</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\simple_sampler.cpp">
       <Filter>Source Files\emitter\sampler</Filter>
     </ClCompile>
@@ -807,6 +804,9 @@
     <ClCompile Include="..\..\src\string_conversions.cpp">
       <Filter>Source Files\sdl\nodes\output-ports\conversions</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\random_sampler.cpp">
+      <Filter>Source Files\sampling</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\sphere_primitive.h">
@@ -961,9 +961,6 @@
     </ClInclude>
     <ClInclude Include="..\..\include\standard_camera_ray_emitter_group.h">
       <Filter>Header Files\emitter\camera-ray-emitter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\random_sampler.h">
-      <Filter>Header Files\emitter\sampler</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\simple_sampler.h">
       <Filter>Header Files\emitter\sampler</Filter>
@@ -1294,6 +1291,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\average_node_output.h">
       <Filter>Header Files\sdl\nodes\output-ports\operations</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\random_sampler.h">
+      <Filter>Header Files\sampling</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

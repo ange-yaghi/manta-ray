@@ -1,8 +1,7 @@
 #include "../include/lens_camera_ray_emitter.h"
 
 #include "../include/light_ray.h"
-#include "../include/lens.h"
-#include "../include/sampler_2d.h"
+#include "../include/sampler.h"
 #include "../include/stack_allocator.h"
 #include "../include/ray_container.h"
 
@@ -14,39 +13,22 @@ manta::LensCameraRayEmitter::~LensCameraRayEmitter() {
     /* void */
 }
 
-void manta::LensCameraRayEmitter::generateRays(RayContainer *rayContainer) const {
-    Lens::LensScanHint hint;
-    m_lens->lensScan(m_imagePlaneOrigin, 4, m_pixelIncrement.x, &hint);
-    if (hint.failed) return;
+void manta::LensCameraRayEmitter::initialize() {
+    m_lens->lensScan(m_imagePlaneOrigin, 4, m_pixelIncrement.x, &m_lensHint);
+}
 
-    int totalRayCount = m_sampler->getTotalSampleCount(m_sampleCount);
-    
-    // Create all rays
-    rayContainer->initializeRays(totalRayCount);
-    rayContainer->setDegree(0);
-    LightRay *rays = rayContainer->getRays();
+void manta::LensCameraRayEmitter::generateRay(LightRay *ray) const {
+    const math::Vector2 samplePoint = m_sampler->generate2d();
+    math::Vector position = transformToImagePlane(
+        math::Vector2(samplePoint.x - (math::real)0.5, samplePoint.y - (math::real)0.5));
 
-    math::Vector2 *sampleOrigins = 
-        (math::Vector2 *)m_stackAllocator->allocate(sizeof(math::Vector2) * totalRayCount, 1);
-    m_sampler->generateSamples(totalRayCount, sampleOrigins);
+    ray->setIntensity(math::constants::Zero);
+    ray->setWeight(math::constants::One);
 
-    for (int i = 0; i < totalRayCount; i++) {
-        LightRay &ray = rays[i];
+    bool result = m_lens->generateOutgoingRay(position, &m_lensHint, ray);
 
-        const math::Vector2 samplePoint = sampleOrigins[i];
-        math::Vector position = transformToImagePlane(
-            math::Vector2(samplePoint.x - (math::real)0.5, samplePoint.y - (math::real)0.5));
-
-        ray.setIntensity(math::constants::Zero);
-        ray.setWeight(math::constants::One);
-
-        bool result = m_lens->generateOutgoingRay(position, &hint, &rays[i]);
-
-        ray.setImagePlaneLocation(
-            math::Vector2(
-                -(samplePoint.x - (math::real)0.5) + (math::real)m_pixelX,
-                (samplePoint.y - (math::real)0.5) + (math::real)m_pixelY));
-    }
-
-    m_stackAllocator->free((void *)sampleOrigins);
+    ray->setImagePlaneLocation(
+        math::Vector2(
+            -(samplePoint.x - (math::real)0.5) + (math::real)m_pixelX,
+            (samplePoint.y - (math::real)0.5) + (math::real)m_pixelY));
 }

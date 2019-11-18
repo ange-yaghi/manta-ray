@@ -5,18 +5,20 @@
 
 namespace manta {
 
-    class Sampler2d;
-    class RayContainer;
+    class Sampler;
     class StackAllocator;
+    class LightRay;
 
     class CameraRayEmitter {
     public:
         CameraRayEmitter();
         virtual ~CameraRayEmitter();
 
-        virtual void generateRays(RayContainer *rayContainer) const = 0;
-        void setSampler(Sampler2d *sampler) { m_sampler = sampler; }
-        Sampler2d *getSampler() const { return m_sampler; }
+        virtual void initialize();
+        virtual void generateRay(LightRay *ray) const = 0;
+
+        void setSampler(Sampler *sampler) { m_sampler = sampler; }
+        Sampler *getSampler() const { return m_sampler; }
 
         void setSampleCount(int samples) { m_sampleCount = samples; }
         int getSampleCount() const { return m_sampleCount; }
@@ -49,7 +51,7 @@ namespace manta {
         math::Vector transformToImagePlane(const math::Vector2 coordinates) const;
 
     protected:
-        Sampler2d *m_sampler;
+        Sampler *m_sampler;
 
         math::Vector m_position;
         math::Vector m_direction;

@@ -181,7 +181,6 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
         camera->setPlaneHeight(1.0f); // 0.75
         camera->setResolutionX(resolutionX);
         camera->setResolutionY(resolutionY);
-        camera->setSampleCount(samplesPerPixel);
         camera->setSampler(&randomSampler);
 
         group = camera;
@@ -201,7 +200,6 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
         camera->setLens(&lens);
         camera->setResolutionX(resolutionX);
         camera->setResolutionY(resolutionY);
-        camera->setSampleCount(samplesPerPixel);
 
         group = camera;
     }

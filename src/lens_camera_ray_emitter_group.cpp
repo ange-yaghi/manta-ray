@@ -34,7 +34,6 @@ manta::CameraRayEmitter *manta::LensCameraRayEmitterGroup::
     loc = math::add(loc, math::mul(m_lens->getUp(), math::loadScalar(y - (math::real)m_lens->getSensorHeight() / (math::real)2.0)));
     loc = math::add(loc, m_lens->getSensorLocation());
 
-    newEmitter->setSampleCount(m_samples);
     newEmitter->setPosition(m_position);
     newEmitter->setImagePlaneOrigin(loc);
     newEmitter->setSampler(m_sampler);
@@ -53,10 +52,6 @@ void manta::LensCameraRayEmitterGroup::_initialize() {
 
 void manta::LensCameraRayEmitterGroup::_evaluate() {
     Lens *lens = getObject<Lens>(m_lensInput);
-    m_sampler = getObject<Sampler2d>(m_samplerInput);
-
-    piranha::native_int samples;
-    m_sampleInput->fullCompute((void *)&samples);
 
     setUp(lens->getUp());
     setDirection(lens->getDirection());
@@ -64,7 +59,6 @@ void manta::LensCameraRayEmitterGroup::_evaluate() {
     setResolutionX(lens->getSensorResolutionX());
     setResolutionY(lens->getSensorResolutionY());
     setLens(lens);
-    setSampleCount((int)samples);
 
     m_output.setReference(this);
 
@@ -77,6 +71,4 @@ void manta::LensCameraRayEmitterGroup::_destroy() {
 
 void manta::LensCameraRayEmitterGroup::registerInputs() {
     registerInput(&m_lensInput, "lens");
-    registerInput(&m_sampleInput, "samples");
-    registerInput(&m_samplerInput, "sampler");
 }

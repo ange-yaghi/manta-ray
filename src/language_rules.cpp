@@ -20,9 +20,8 @@
 #include "../include/scene.h"
 #include "../include/scene_object.h"
 #include "../include/lambertian_brdf.h"
-#include "../include/grid_sampler.h"
+#include "../include/stratified_sampler.h"
 #include "../include/random_sampler.h"
-#include "../include/simple_sampler.h"
 #include "../include/standard_camera_ray_emitter_group.h"
 #include "../include/ray_tracer.h"
 #include "../include/image_output_node.h"
@@ -160,12 +159,10 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__scene_object");
     registerBuiltinType <LambertianBRDF>(
         "__mantaray__lambertian_brdf");
-    registerBuiltinType <GridSampler>(
-        "__mantaray__grid_sampler");
+    registerBuiltinType <StratifiedSampler>(
+        "__mantaray__stratified_sampler");
     registerBuiltinType <RandomSampler>(
         "__mantaray__random_sampler");
-    registerBuiltinType <SimpleSampler>(
-        "__mantaray__simple_sampler");
     registerBuiltinType <StandardCameraRayEmitterGroup>(
         "__mantaray__standard_camera");
     registerBuiltinType <ImageOutputNode>(

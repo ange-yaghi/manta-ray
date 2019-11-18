@@ -233,7 +233,6 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
     camera->setPlaneHeight(cameraPlaneSize);
     camera->setResolutionX(1920 / 2);
     camera->setResolutionY(1080 / 2);
-    camera->setSampleCount(samplesPerPixel);
     group = camera;
 
     // Create the raytracer

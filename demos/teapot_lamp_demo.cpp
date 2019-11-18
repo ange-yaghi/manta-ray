@@ -175,7 +175,6 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
     camera.setPlaneHeight(1.0f);
     camera.setResolutionX(resolutionX);
     camera.setResolutionY(resolutionY);
-    camera.setSampleCount(samplesPerPixel);
     camera.setSampler(&randomSampler);
 
     // Create the raytracer

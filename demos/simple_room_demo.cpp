@@ -117,7 +117,6 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
     camera.setPlaneHeight(1.0f);
     camera.setResolutionX(resolutionX);
     camera.setResolutionY(resolutionY);
-    camera.setSampleCount(samplesPerPixel);
 
     // Output the results to a scene buffer
     ImagePlane sceneBuffer;

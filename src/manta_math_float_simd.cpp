@@ -21,7 +21,7 @@ math::Vector manta::math::uniformRandom4(real range) {
 
 math::real manta::math::uniformRandom(real range) {
     static constexpr math::real MAX_RAND = 0.9999f;
-
+    //return 0.5f;
     real r = (rand() % RAND_MAX) / ((real)(RAND_MAX - 1));
 
     // Limit the random number such that it is less than 1
@@ -34,6 +34,7 @@ math::real manta::math::uniformRandom(real range) {
 }
 
 int manta::math::uniformRandomInt(int range) {
+    //return 5 % range;
     return rand() % range;
 }
 

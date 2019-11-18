@@ -4,28 +4,31 @@ module {
     @author:        "Ange Yaghi"
     @maintainer:    "Ange Yaghi"
     @copyright:     "Copyright 2019, Ange Yaghi"
-    @doc:           "Defines all 2D samplers used in MantaRay"
+    @doc:           "Defines all samplers used in MantaRay"
     @version:       "0.0.1a"
     @github:        "github.com/ange-yaghi/manta-ray"
 }
 
 private import "../../types/atomic_types.mr"
 
-@doc: "2D sampler channel type"
-public node sampler_2d => __mantaray__sampler { /* void */ }
+@doc: "Sampler channel type"
+public node sampler => __mantaray__sampler { /* void */ }
 
-@doc: "2D uniform grid sampler"
-public node grid_sampler => __mantaray__grid_sampler {
-    input grid_width    [int]: 4;
-    alias output __out  [sampler_2d];
+@doc: "Stratified (grid) sampler"
+public node stratified_sampler => __mantaray__stratified_sampler {
+    input width         [int]: 4;
+    input height        [int]: 4;
+    input jitter        [bool]: true;
+    alias output __out  [sampler];
 }
 
-@doc: "Generate random samples in 2D space"
-public node random_sampler => __mantaray__random_sampler { 
-    alias output __out  [sampler_2d];
+@doc: "Random sampler"
+public node random_sampler => __mantaray__random_sampler {
+    input samples       [int];
+    alias output __out  [sampler];
 }
 
-@doc: "Simple sampler that generates only one sample value"
-public node simple_sampler => __mantaray__simple_sampler { 
-    alias output __out  [sampler_2d];
-}
+//@doc: "Simple sampler that generates only one sample value"
+//public node simple_sampler => __mantaray__simple_sampler { 
+//    alias output __out  [sampler];
+//}

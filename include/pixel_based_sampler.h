@@ -14,12 +14,12 @@ namespace manta {
         PixelBasedSampler();
         ~PixelBasedSampler();
 
-        void initialize(int samplesPerPixel, int dimensionCount);
+        void configure(int samplesPerPixel, int dimensionCount);
 
         virtual math::real generate1d();
         virtual math::Vector2 generate2d();
 
-        virtual void endSample();
+        virtual bool startNextSample();
 
     protected:
         std::vector<std::vector<math::real>> m_1dSamples;

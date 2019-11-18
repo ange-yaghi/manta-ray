@@ -1,7 +1,7 @@
 #include "../include/standard_camera_ray_emitter_group.h"
 
 #include "../include/standard_camera_ray_emitter.h"
-#include "../include/sampler_2d.h"
+#include "../include/sampler.h"
 
 manta::StandardCameraRayEmitterGroup::StandardCameraRayEmitterGroup() {
     /* void */
@@ -41,7 +41,6 @@ manta::CameraRayEmitter *manta::StandardCameraRayEmitterGroup::
     newEmitter->setPosition(m_position);
     newEmitter->setImagePlaneOrigin(loc);
     newEmitter->setSampler(m_sampler);
-    newEmitter->setSampleCount(m_samples);
     newEmitter->setRight(m_right);
     newEmitter->setUp(m_up);
     newEmitter->setPixelIncrement(math::Vector2(m_xIncrement, m_yIncrement));

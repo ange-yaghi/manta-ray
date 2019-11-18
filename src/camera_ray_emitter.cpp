@@ -14,6 +14,10 @@ manta::CameraRayEmitter::~CameraRayEmitter() {
     /* void */
 }
 
+void manta::CameraRayEmitter::initialize() {
+    /* void */
+}
+
 manta::math::Vector manta::CameraRayEmitter::transformToImagePlane(const math::Vector2 coordinates) const {
     math::Vector u = math::mul(m_right, math::loadScalar(coordinates.x * m_pixelIncrement.x));
     math::Vector v = math::mul(m_up, math::loadScalar(coordinates.y * m_pixelIncrement.y));

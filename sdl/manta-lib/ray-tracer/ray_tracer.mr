@@ -16,6 +16,7 @@ private import "../types/atomic_types.mr"
 private import "../types/conversions.mr"
 private import "../image/vector_map.mr"
 private import "../signal-processing/filters/filters.mr"
+private import "../signal-processing/samplers/samplers.mr"
 
 @doc: "Unidirectional MantaRay ray-tracer"
 public node ray_tracer => __mantaray__ray_tracer {
@@ -24,6 +25,7 @@ public node ray_tracer => __mantaray__ray_tracer {
     input camera        [camera];
     input materials     [material_library];
     input filter        [filter]: gaussian_filter();
+    input sampler       [sampler]: random_sampler(1);
 
     // Optional inputs
     input multithreaded [bool]: true;

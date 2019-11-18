@@ -81,6 +81,9 @@ namespace manta {
         void setMaterialLibrary(MaterialLibrary *materialLibrary) { m_materialManager = materialLibrary; }
         MaterialLibrary *getMaterialLibrary() { return m_materialManager; }
 
+        Sampler *getSampler() const { return m_sampler; }
+        void setSampler(Sampler *sampler) { m_sampler = sampler; }
+
     protected:
         virtual void _evaluate();
         virtual void _initialize();
@@ -96,8 +99,11 @@ namespace manta {
         piranha::pNodeInput m_sceneInput;
         piranha::pNodeInput m_cameraInput;
         piranha::pNodeInput m_filterInput;
+        piranha::pNodeInput m_samplerInput;
 
         VectorMap2DNodeOutput m_output;
+
+        Sampler *m_sampler;
 
     protected:
         // Multithreading features

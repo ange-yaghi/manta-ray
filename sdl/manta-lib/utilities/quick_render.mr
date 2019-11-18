@@ -72,9 +72,7 @@ public node quick_render {
         resolution_x:   resolution_x,
         resolution_y:   resolution_y,
         plane_height:   plane_height,
-        plane_distance: plane_distance,
-        samples:        samples,
-        sampler:        random_sampler()
+        plane_distance: plane_distance
     )
 
     // Default material, matte white
@@ -106,7 +104,8 @@ public node quick_render {
         scene: scene,
         camera: camera,
         materials: materials,
-        background: background
+        background: background,
+        sampler: random_sampler(1024) // stratified_sampler(32, 32, true)
     )
 
     log("Render complete\n")

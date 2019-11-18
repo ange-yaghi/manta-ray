@@ -143,7 +143,6 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
         camera->setPlaneHeight(1.0f);
         camera->setResolutionX(resolutionX);
         camera->setResolutionY(resolutionY);
-        camera->setSampleCount(samplesPerPixel);
 
         group = camera;
     }
@@ -161,7 +160,6 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
         camera->setLens(&lens);
         camera->setResolutionX(resolutionX);
         camera->setResolutionY(resolutionY);
-        camera->setSampleCount(samplesPerPixel);
         camera->setSampler(&sampler);
 
         group = camera;

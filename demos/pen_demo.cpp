@@ -161,7 +161,6 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
         camera->setPlaneHeight(0.25f);
         camera->setResolutionX(resolutionX);
         camera->setResolutionY(resolutionY);
-        camera->setSampleCount(samplesPerPixel);
         group = camera;
     }
     else {
@@ -178,7 +177,6 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
         camera->setLens(&lens);
         camera->setResolutionX(resolutionX);
         camera->setResolutionY(resolutionY);
-        camera->setSampleCount(samplesPerPixel);
         camera->setSampler(&sampler);
 
         group = camera;

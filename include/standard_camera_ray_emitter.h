@@ -5,14 +5,14 @@
 
 namespace manta {
 
-    class RayContainer;
+    class LightRay;
 
     class StandardCameraRayEmitter : public CameraRayEmitter {
     public:
         StandardCameraRayEmitter();
         virtual ~StandardCameraRayEmitter();
 
-        virtual void generateRays(RayContainer *rayContainer) const;
+        virtual void generateRay(LightRay *ray) const;
     };
 
 } /* namespace manta */

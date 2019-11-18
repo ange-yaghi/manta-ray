@@ -123,7 +123,6 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
         camera->setPlaneHeight(0.7f);
         camera->setResolutionX(resolutionX);
         camera->setResolutionY(resolutionY);
-        camera->setSampleCount(samplesPerPixel);
 
         group = camera;
     }
@@ -141,7 +140,6 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
         camera->setLens(&lens);
         camera->setResolutionX(resolutionX);
         camera->setResolutionY(resolutionY);
-        camera->setSampleCount(samplesPerPixel);
         camera->setSampler(&sampler);
 
         group = camera;

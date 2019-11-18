@@ -10,8 +10,7 @@ manta::CameraRayEmitterGroup::CameraRayEmitterGroup() {
     m_resolutionYInput = nullptr;
     m_planeHeightInput = nullptr;
     m_planeDistanceInput = nullptr;
-    m_sampleInput = nullptr;
-    m_samplerInput = nullptr;
+    m_sampler = nullptr;
 }
 
 manta::CameraRayEmitterGroup::~CameraRayEmitterGroup() {
@@ -33,9 +32,6 @@ void manta::CameraRayEmitterGroup::_evaluate() {
     static_cast<piranha::FloatValueOutput *>(m_planeHeightInput)->fullCompute((void *)&m_planeHeight);
     static_cast<piranha::FloatValueOutput *>(m_planeDistanceInput)->fullCompute((void *)&m_planeDistance);
 
-    static_cast<piranha::IntValueOutput *>(m_sampleInput)->fullCompute((void *)&m_samples);
-    m_sampler = static_cast<ObjectReferenceNodeOutput<Sampler2d> *>(m_samplerInput)->getReference();
-
     m_output.setReference(this);
 }
 
@@ -51,6 +47,4 @@ void manta::CameraRayEmitterGroup::registerInputs() {
     registerInput(&m_resolutionYInput, "resolution_y");
     registerInput(&m_planeHeightInput, "plane_height");
     registerInput(&m_planeDistanceInput, "plane_distance");
-    registerInput(&m_sampleInput, "samples");
-    registerInput(&m_samplerInput, "sampler");
 }

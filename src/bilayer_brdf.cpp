@@ -22,9 +22,8 @@ manta::math::Vector manta::BilayerBRDF::sampleF(const IntersectionPoint *surface
 {
     math::Vector diffuseR = m_diffuse.sample(surfaceInteraction);
     math::Vector specularR = m_specular.sample(surfaceInteraction);
-    
-    math::Vector2 nu = u;
-    math::real d = math::uniformRandom();
+
+    math::real d = u.x;
 
     math::real coatingPDF;
     math::real diffusePDF;
@@ -35,6 +34,7 @@ manta::math::Vector manta::BilayerBRDF::sampleF(const IntersectionPoint *surface
 
     if (d < (math::real)0.5) {
         // Ray reflects off of the coating
+        math::Vector2 nu = math::Vector2(d * (math::real)2.0, u.y);
         m = m_coatingDistribution->generateMicrosurfaceNormal(surfaceInteraction, nu);
         math::Vector ri = math::reflect(i, m);
         wh = m;
@@ -42,6 +42,7 @@ manta::math::Vector manta::BilayerBRDF::sampleF(const IntersectionPoint *surface
     }
     else {
         // Ray is transmitted through the coating material
+        math::Vector2 nu = math::Vector2((d - (math::real)0.5) * (math::real)2.0, u.y);
         math::Vector diffuseO;
 
         // Uniformly sample a hemisphere

@@ -8,15 +8,19 @@ manta::RandomSampler::~RandomSampler() {
     /* void */
 }
 
-void manta::RandomSampler::generateSamples(int sampleCount, math::Vector2 *target) const {
-    for (int s = 0; s < sampleCount; s++) {
-        math::real r1 = math::uniformRandom();
-        math::real r2 = math::uniformRandom();
-
-        target[s] = math::Vector2(r1, r2);
-    }
+manta::math::real manta::RandomSampler::generate1d() {
+    return uniformRandom();
 }
 
-int manta::RandomSampler::getTotalSampleCount(int sampleCount) const {
-    return sampleCount;
+manta::math::Vector2 manta::RandomSampler::generate2d() {
+    return math::Vector2(
+        uniformRandom(),
+        uniformRandom());
+}
+
+manta::Sampler *manta::RandomSampler::clone() const {
+    RandomSampler *newSampler = new RandomSampler;
+    newSampler->setSamplesPerPixel(m_samplesPerPixel);
+    
+    return newSampler;
 }

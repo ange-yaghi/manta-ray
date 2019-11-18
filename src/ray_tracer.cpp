@@ -30,6 +30,17 @@
 #include <sstream>
 
 manta::RayTracer::RayTracer() {
+    m_multithreadedInput = nullptr;
+    m_threadCountInput = nullptr;
+    m_renderBlockSizeInput = nullptr;
+    m_backgroundColorInput = nullptr;
+    m_deterministicSeedInput = nullptr;
+    m_materialLibraryInput = nullptr;
+    m_sceneInput = nullptr;
+    m_cameraInput = nullptr;
+    m_filterInput = nullptr;
+    m_samplerInput = nullptr;
+
     m_deterministicSeed = false;
     m_pathRecordingOutputDirectory = "";
     m_backgroundColor = math::constants::Zero;
@@ -190,22 +201,17 @@ void manta::RayTracer::traceRayEmitter(const CameraRayEmitter *emitter, RayConta
     const Scene *scene, IntersectionPointManager *manager, StackAllocator *s 
     /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const 
 {
-    // Get the target ray container
+    //emitter->getSampler()->startPixelSession();
 
-    emitter->generateRays(container);
+    //for (int i = 0; i < rayCount; i++) {
+    //    LightRay *ray = &rays[i];
+    //    ray->calculateTransformations();
 
-    LightRay *rays = container->getRays();
-    int rayCount = container->getRayCount();
+    //    math::Vector intensity = traceRay(scene, ray, 0, manager, nullptr, s /**/ PATH_RECORDER_VAR /**/ STATISTICS_PARAM_INPUT);
+    //    ray->setIntensity(intensity);
+    //}
 
-    for (int i = 0; i < rayCount; i++) {
-        LightRay *ray = &rays[i];
-        ray->calculateTransformations();
-
-        math::Vector intensity = traceRay(scene, ray, 0, manager, nullptr, s /**/ PATH_RECORDER_VAR /**/ STATISTICS_PARAM_INPUT);
-        ray->setIntensity(intensity);
-    }
-
-    container->calculateIntensity();
+    //container->calculateIntensity();
 }
 
 void manta::RayTracer::configure(mem_size stackSize, mem_size workerStackSize, int threadCount, int renderBlockSize, bool multithreaded) {
@@ -249,12 +255,11 @@ void manta::RayTracer::_evaluate() {
     static_cast<piranha::NodeOutput *>(m_deterministicSeedInput)->fullCompute((void *)&deterministicSeed);
     static_cast<VectorNodeOutput *>(m_backgroundColorInput)->sample(nullptr, (void *)&m_backgroundColor);
 
-    //threadCount = 1;
-
     m_materialManager = getObject<MaterialLibrary>(m_materialLibraryInput);
     camera = getObject<CameraRayEmitterGroup>(m_cameraInput);
     scene = getObject<Scene>(m_sceneInput);
     filter = getObject<Filter>(m_filterInput);
+    m_sampler = getObject<Sampler>(m_samplerInput);
 
     configure(200 * MB, 50 * MB, threadCount, renderBlockSize, multithreaded);
     setDeterministicSeedMode(deterministicSeed);
@@ -284,6 +289,7 @@ void manta::RayTracer::registerInputs() {
     registerInput(&m_sceneInput, "scene");
     registerInput(&m_cameraInput, "camera");
     registerInput(&m_filterInput, "filter");
+    registerInput(&m_samplerInput, "sampler");
 }
 
 void manta::RayTracer::registerOutputs() {
@@ -293,8 +299,10 @@ void manta::RayTracer::registerOutputs() {
 void manta::RayTracer::createWorkers() {
     m_workers = new Worker[m_threadCount];
 
+    std::mt19937 seedGenerator;
+
     for (int i = 0; i < m_threadCount; i++) {
-        m_workers[i].initialize(m_workerStackSize, this, i, m_deterministicSeed, m_pathRecordingOutputDirectory);
+        m_workers[i].initialize(m_workerStackSize, this, i, m_deterministicSeed, m_pathRecordingOutputDirectory, seedGenerator());
     }
 }
 
@@ -362,8 +370,9 @@ void manta::RayTracer::depthCull(const Scene *scene, const LightRay *ray, SceneO
     }
 }
 
-void manta::RayTracer::refineContact(const LightRay *ray, math::real depth, IntersectionPoint *point, 
-                        SceneObject **closestObject, StackAllocator *s) const {
+void manta::RayTracer::refineContact(const LightRay *ray, math::real depth, 
+    IntersectionPoint *point, SceneObject **closestObject, StackAllocator *s) const 
+{
     // Simple bias
     math::real d = depth;
     d -= (math::real)5E-3;
