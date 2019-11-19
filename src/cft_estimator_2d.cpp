@@ -12,10 +12,12 @@ manta::CftEstimator2D::CftEstimator2D() {
 }
 
 manta::CftEstimator2D::~CftEstimator2D() {
-    
+    /* void */
 }
 
-void manta::CftEstimator2D::initialize(const ComplexMap2D *spatialFunction, math::real_d phyiscalWidth, math::real_d physicalHeight) {
+void manta::CftEstimator2D::initialize(
+    const ComplexMap2D *spatialFunction, math::real_d phyiscalWidth, math::real_d physicalHeight) 
+{
     m_physicalWidth = phyiscalWidth;
     m_physicalHeight = physicalHeight;
 
@@ -33,7 +35,9 @@ void manta::CftEstimator2D::destroy() {
     m_discreteApproximation.destroy();
 }
 
-manta::math::Complex manta::CftEstimator2D::sample(math::real_d freq_x, math::real_d freq_y, math::real_d w) const {
+manta::math::Complex manta::CftEstimator2D::sample(
+    math::real_d freq_x, math::real_d freq_y, math::real_d w) const 
+{
     math::real_d k_x, k_y;
 
     k_x = freq_x * m_physicalWidth;
@@ -70,7 +74,9 @@ manta::math::real_d manta::CftEstimator2D::getVerticalFreqStep() const {
     return getFreqStep(m_physicalHeight);
 }
 
-manta::math::real_d manta::CftEstimator2D::getFreqRange(int horizontalSamples, math::real_d physicalWidth) {
+manta::math::real_d manta::CftEstimator2D::getFreqRange(
+    int horizontalSamples, math::real_d physicalWidth) 
+{
     math::real_d maxFreq = (horizontalSamples / 2) / physicalWidth;
     return maxFreq;
 }
@@ -79,12 +85,16 @@ manta::math::real_d manta::CftEstimator2D::getFreqStep(math::real_d physicalWidt
     return 1 / physicalWidth;
 }
 
-manta::math::real_d manta::CftEstimator2D::getMinPhysicalDim(math::real_d freqStep, math::real_d minDim) {
+manta::math::real_d manta::CftEstimator2D::getMinPhysicalDim(
+    math::real_d freqStep, math::real_d minDim) 
+{
     math::real_d perfect = 1 / freqStep;
     return (perfect > minDim) ? perfect : minDim;
 }
 
-int manta::CftEstimator2D::getMinSamples(math::real_d maxFreq, math::real_d physicalDim, int maxSamples) {
+int manta::CftEstimator2D::getMinSamples(
+    math::real_d maxFreq, math::real_d physicalDim, int maxSamples) 
+{
     // Calculate a rough approximation based on the maximum frequency
     int firstApprox = (int)(maxFreq * physicalDim * 2);
 

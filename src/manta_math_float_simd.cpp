@@ -503,8 +503,8 @@ math::Matrix math::loadMatrix(const Quaternion &quat, const Vector &origin) {
     Generic wwww = _mm_shuffle_ps(q, nq, _MM_SHUFFLE(0, 0, 0, 0));
 
     Generic i1 = _mm_mul_ps(xxxy, zyyz);    // [2xz, 2xy, 2xy, 2yz]
-    Generic i2 =  _mm_mul_ps(yzzx, wwww); // [2yw, 2zw, -2zw, -2xw]
-    Generic calc1 = _mm_add_ps(i1, i2);    // [2xz - 2yw, 2xy + 2zy, 2xy - 2zy, 2yz - 2xw]
+    Generic i2 =  _mm_mul_ps(yzzx, wwww);   // [2yw, 2zw, -2zw, -2xw]
+    Generic calc1 = _mm_add_ps(i1, i2);     // [2xz - 2yw, 2xy + 2zy, 2xy - 2zy, 2yz - 2xw]
 
     // Stage 2
 
