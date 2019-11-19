@@ -26,7 +26,7 @@ namespace manta {
         virtual void lensScan(const math::Vector &sensorElement, int div, 
             math::real span, LensScanHint *target) const;
         virtual bool generateOutgoingRay(const math::Vector &sensorElement, 
-            const LensScanHint *hint, LightRay *targetRay) const;
+            const LensScanHint *hint, LightRay *targetRay, const math::Vector2 &u) const;
 
     protected:
         void lensScan(const math::Vector &sensorElement, math::real x, math::real y, 

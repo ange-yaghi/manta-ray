@@ -6,7 +6,6 @@
 #include "../include/light_ray.h"
 #include "../include/camera_ray_emitter_group.h"
 #include "../include/camera_ray_emitter.h"
-#include "../include/ray_container.h"
 #include "../include/image_plane.h"
 #include "../include/stratified_sampler.h"
 
@@ -114,6 +113,7 @@ void manta::Worker::doJob(const Job *job) {
 
             CameraRayEmitter *emitter = job->group->createEmitter(x, y, m_stack);
             emitter->setSampler(m_sampler);
+            emitter->initialize();
             int pixelIndex = job->group->getResolutionX() * y + x;
 
             if (m_deterministicSeed) {
@@ -134,19 +134,24 @@ void manta::Worker::doJob(const Job *job) {
 
                 do {
                     NEW_TREE(getTreeName(pixelIndex, samp), emitter->getPosition());
-                    LightRay ray; emitter->generateRay(&ray);
-                    ray.calculateTransformations();
 
-                    math::Vector L = m_rayTracer->traceRay(job->scene, &ray, 0, &m_ipManager, m_sampler,
-                        m_stack /**/ PATH_RECORDER_ARG /**/ STATISTICS_ROOT(&m_statistics));
+                    LightRay ray; 
+                    emitter->generateRay(&ray);
 
-                    ImageSample &sample = samples[sampleCount++];
-                    sample.imagePlaneLocation = ray.getImagePlaneLocation();
-                    sample.intensity = L;
+                    if (ray.getCameraWeight() > 0) {
+                        ray.calculateTransformations();
 
-                    if (sampleCount >= SAMPLE_BUFFER_CAPACITY) {
-                        job->target->processSamples(samples, sampleCount, m_stack);
-                        sampleCount = 0;
+                        math::Vector L = m_rayTracer->traceRay(job->scene, &ray, 0, &m_ipManager, m_sampler,
+                            m_stack /**/ PATH_RECORDER_ARG /**/ STATISTICS_ROOT(&m_statistics));
+
+                        ImageSample &sample = samples[sampleCount++];
+                        sample.imagePlaneLocation = ray.getImagePlaneLocation();
+                        sample.intensity = L;
+
+                        if (sampleCount >= SAMPLE_BUFFER_CAPACITY) {
+                            job->target->processSamples(samples, sampleCount, m_stack);
+                            sampleCount = 0;
+                        }
                     }
 
                     END_TREE();

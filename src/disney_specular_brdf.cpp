@@ -4,13 +4,13 @@
 #include "../include/vector_node_output.h"
 
 manta::DisneySpecularBRDF::DisneySpecularBRDF() {
-    m_distribution = nullptr;
     m_baseColor.setDefault(math::constants::One);
     m_roughness.setDefault(math::constants::One);
     m_specular.setDefault(math::constants::One);
     m_power.setDefault(math::constants::One);
 
     m_distributionNode = nullptr;
+    m_distribution = nullptr;
 }
 
 manta::DisneySpecularBRDF::~DisneySpecularBRDF() {

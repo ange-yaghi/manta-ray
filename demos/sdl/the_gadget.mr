@@ -2,7 +2,8 @@ private import "mantaray.mr"
 private import "utilities.mr"
 
 auto node settings {
-    output samples: 100;
+    output sample_pattern_width: 10;
+    output samples: sample_pattern_width * sample_pattern_width;
     output resolution_x: 1900;
     output resolution_y: 1268;
     output output_dir: "../../workspace/render/bitmap/";
@@ -58,9 +59,7 @@ auto private node scene_standard_camera {
         resolution_x: settings.resolution_x,
         resolution_y: settings.resolution_y,
         plane_height: 0.4, // 0.4, 0.27
-        plane_distance: 1.0,
-        samples: settings.samples,
-        sampler: random_sampler()
+        plane_distance: 1.0
     );
 }
 
@@ -68,7 +67,11 @@ ray_tracer mr(
     scene: scene,
     camera: settings.camera,
     materials: library,
-    background: 1.3
+    background: 1.3,
+    sampler: stratified_sampler(
+        settings.sample_pattern_width,
+        settings.sample_pattern_width,
+        jitter: true)
 )
 
 image_output(

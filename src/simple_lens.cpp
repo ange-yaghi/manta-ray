@@ -228,36 +228,27 @@ void manta::SimpleLens::registerInputs() {
 }
 
 bool manta::SimpleLens::generateOutgoingRay(
-    const math::Vector &sensorElement, const LensScanHint *hint, LightRay *targetRay) const 
-{
-    constexpr int MAX_ATTEMPTS = 100000;
-
-    if (hint->failed) return false;
-    
+    const math::Vector &sensorElement, const LensScanHint *hint, LightRay *targetRay, const math::Vector2 &u) const 
+{    
     math::real maxR = hint->radius;
-    
-    // Try to find a suitable outgoing ray MAX_ATTEMPTS times
-    for (int i = 0; i < MAX_ATTEMPTS; i++) {
-        math::real randTheta = math::uniformRandom(math::constants::TWO_PI);
-        math::real randR = math::uniformRandom(1.0);
 
-        math::real randX = cos(randTheta) * sqrt(randR) * maxR + hint->centerX;
-        math::real randY = sin(randTheta) * sqrt(randR) * maxR + hint->centerY;
+    math::real randTheta = u.x * math::constants::TWO_PI;
+    math::real randR = u.y;
 
-        math::Vector target = m_lens.getPosition();
-        target = math::add(target, math::mul(math::loadScalar(randX), m_right));
-        target = math::add(target, math::mul(math::loadScalar(randY), m_up));
+    math::real randX = cos(randTheta) * sqrt(randR) * maxR + hint->centerX;
+    math::real randY = sin(randTheta) * sqrt(randR) * maxR + hint->centerY;
 
-        math::Vector direction = math::sub(target, sensorElement);
-        direction = math::normalize(direction);
+    math::Vector target = m_lens.getPosition();
+    target = math::add(target, math::mul(math::loadScalar(randX), m_right));
+    target = math::add(target, math::mul(math::loadScalar(randY), m_up));
 
-        LightRay ray;
-        ray.setDirection(direction);
-        ray.setSource(sensorElement);
+    math::Vector direction = math::sub(target, sensorElement);
+    direction = math::normalize(direction);
 
-        bool success = transformRay(&ray, targetRay);
-        if (success) return true;
-    }
+    LightRay ray;
+    ray.setDirection(direction);
+    ray.setSource(sensorElement);
 
-    return false;
+    bool success = transformRay(&ray, targetRay);
+    return success;
 }

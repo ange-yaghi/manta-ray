@@ -44,7 +44,7 @@ void manta::Lens::_evaluate() {
     configure();
     update();
 
-    m_output.setReference(this);
+    setOutput(this);
 }
 
 void manta::Lens::_destroy() {

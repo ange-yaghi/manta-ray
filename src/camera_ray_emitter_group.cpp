@@ -26,13 +26,21 @@ void manta::CameraRayEmitterGroup::_evaluate() {
     static_cast<VectorNodeOutput *>(m_positionInput)->sample(nullptr, (void *)&m_position);
     static_cast<VectorNodeOutput *>(m_directionInput)->sample(nullptr, (void *)&m_direction);
 
-    static_cast<piranha::IntValueOutput *>(m_resolutionXInput)->fullCompute((void *)&m_resolutionX);
-    static_cast<piranha::IntValueOutput *>(m_resolutionYInput)->fullCompute((void *)&m_resolutionY);
+    piranha::native_int resolutionX, resolutionY;
+    piranha::native_float planeHeight, planeDistance;
 
-    static_cast<piranha::FloatValueOutput *>(m_planeHeightInput)->fullCompute((void *)&m_planeHeight);
-    static_cast<piranha::FloatValueOutput *>(m_planeDistanceInput)->fullCompute((void *)&m_planeDistance);
+    m_resolutionXInput->fullCompute((void *)&resolutionX);
+    m_resolutionYInput->fullCompute((void *)&resolutionY);
 
-    m_output.setReference(this);
+    m_planeHeightInput->fullCompute((void *)&planeHeight);
+    m_planeDistanceInput->fullCompute((void *)&planeDistance);
+
+    m_resolutionX = resolutionX;
+    m_resolutionY = resolutionY;
+    m_planeHeight = planeHeight;
+    m_planeDistance = planeDistance;
+
+    setOutput(this);
 }
 
 void manta::CameraRayEmitterGroup::_initialize() {

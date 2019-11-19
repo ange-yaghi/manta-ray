@@ -4,13 +4,11 @@
 #include "../include/intersection_point.h"
 
 manta::BSDF::BSDF() : ObjectReferenceNode<BSDF>() {
-    m_output.setReference(this);
-
     m_bxdfCount = 0;
 }
 
-manta::BSDF::BSDF(BXDF *bxdf) {
-    m_output.setReference(this);
+manta::BSDF::BSDF(BXDF *bxdf) : ObjectReferenceNode<BSDF>() {
+    m_bxdfCount = 0;
 
     addBxdf(bxdf);
 }
@@ -65,5 +63,5 @@ manta::math::Vector manta::BSDF::f(
 }
 
 void manta::BSDF::_evaluate() {
-    m_output.setReference(this);
+    setOutput(this);
 }

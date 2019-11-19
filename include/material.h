@@ -28,8 +28,8 @@ namespace manta {
         void setIndex(int index) { m_index = index; }
         int getIndex() const { return m_index; }
 
-        virtual math::Vector getEmission(const IntersectionPoint &ip) const;
-        virtual math::Vector getFilterColor(const IntersectionPoint &ip) const;
+        virtual math::Vector getEmission(const IntersectionPoint &ip);
+        virtual math::Vector getFilterColor(const IntersectionPoint &ip);
         virtual BSDF *getBSDF() const { return nullptr; }
 
     protected:

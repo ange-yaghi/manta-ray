@@ -287,8 +287,19 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__vector_min");
     registerBuiltinType<MeshMergeNode>(
         "__mantaray__mesh_merge");
+
+    // -- Float operations
     registerBuiltinType<piranha::OperationNodeSpecialized<
         piranha::native_float, piranha::DivideOperationNodeOutput>>("__mantaray__float_divide");
+
+    // -- Int operations
+    registerBuiltinType<piranha::OperationNodeSpecialized<
+        piranha::native_int, piranha::MultiplyOperationNodeOutput>>("__mantaray__int_multiply");
+    registerBuiltinType<piranha::OperationNodeSpecialized<
+        piranha::native_int, piranha::AddOperationNodeOutput>>("__mantaray__int_add");
+    registerBuiltinType<piranha::OperationNodeSpecialized<
+        piranha::native_int, piranha::SubtractOperationNodeOutput>>("__mantaray__int_sub");
+
     registerBuiltinType<piranha::OperationNodeSpecialized<
         piranha::native_string, piranha::AddOperationNodeOutput>>("__mantaray__string_add");
 
@@ -399,6 +410,20 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
     registerOperator(
         { piranha::IrBinaryOperator::DIV, &piranha::FundamentalType::FloatType, &piranha::FundamentalType::IntType },
         "__mantaray__float_divide"
+    );
+
+    // Int operators
+    registerOperator(
+        { piranha::IrBinaryOperator::MUL, &piranha::FundamentalType::IntType, &piranha::FundamentalType::IntType },
+        "__mantaray__int_multiply"
+    );
+    registerOperator(
+        { piranha::IrBinaryOperator::ADD, &piranha::FundamentalType::IntType, &piranha::FundamentalType::IntType },
+        "__mantaray__int_add"
+    );
+    registerOperator(
+        { piranha::IrBinaryOperator::SUB, &piranha::FundamentalType::IntType, &piranha::FundamentalType::IntType },
+        "__mantaray__int_sub"
     );
 
     // String operators

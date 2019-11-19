@@ -19,7 +19,7 @@ void manta::Filter::_evaluate() {
     m_extents.x = (math::real)radius;
     m_extents.y = (math::real)radius;
 
-    m_output.setReference(this);
+    setOutput(this);
 }
 
 void manta::Filter::registerInputs() {

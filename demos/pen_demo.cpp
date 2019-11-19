@@ -149,7 +149,6 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
     lens.update();
 
     RandomSampler sampler;
-    SimpleSampler simpleSampler;
 
     if (!LENS_SIMULATION) {
         StandardCameraRayEmitterGroup *camera = new StandardCameraRayEmitterGroup;

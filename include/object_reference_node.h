@@ -33,6 +33,8 @@ namespace manta {
             m_output.setReference(nullptr);
         }
 
+        void setOutput(Type *output) { m_output.setReference(output); }
+
         ObjectReferenceNodeOutput<Type> m_output;
     };
 

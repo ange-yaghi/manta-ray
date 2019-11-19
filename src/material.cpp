@@ -6,18 +6,19 @@ manta::Material::Material() {
     m_name = "";
     m_index = -1;
 
-    m_output.setReference(this);
+    m_library = nullptr;
+    m_nameInput = nullptr;
 }
 
 manta::Material::~Material() {
     /* void */
 }
 
-manta::math::Vector manta::Material::getEmission(const IntersectionPoint &ip) const {
+manta::math::Vector manta::Material::getEmission(const IntersectionPoint &ip) {
     return math::constants::Zero;
 }
 
-manta::math::Vector manta::Material::getFilterColor(const IntersectionPoint &ip) const {
+manta::math::Vector manta::Material::getFilterColor(const IntersectionPoint &ip) {
     return math::constants::One;
 }
 
@@ -26,13 +27,14 @@ void manta::Material::_initialize() {
 }
 
 void manta::Material::_evaluate() {
-    MaterialLibrary *library =
-        static_cast<ObjectReferenceNodeOutput<MaterialLibrary> *>(m_library)
-            ->getReference();
-
+    MaterialLibrary *library = getObject<MaterialLibrary>(m_library);
     library->addMaterial(this);
 
-    static_cast<piranha::NodeOutput *>(m_nameInput)->fullCompute((void *)&m_name);
+    piranha::native_string name;
+    m_nameInput->fullCompute((void *)&name);
+    m_name = name;
+
+    setOutput(this);
 }
 
 void manta::Material::registerInputs() {

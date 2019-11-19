@@ -63,7 +63,7 @@ void manta::DisneyGgxDistribution::registerInputs() {
 }
 
 void manta::DisneyGgxDistribution::_evaluate() {
-    m_output.setReference(this);
+    setOutput(this);
 }
 
 piranha::Node *manta::DisneyGgxDistribution::_optimize() {

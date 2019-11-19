@@ -14,12 +14,11 @@
 #include "../include/memory_management.h"
 #include "../include/image_plane.h"
 #include "../include/standard_camera_ray_emitter_group.h"
-#include "../include/grid_sampler.h"
 
 #include "../include/manta_math.h"
 
 using namespace manta;
 
 TEST(IntegrationTests, BasicTest) {
-
+    /* unfinished */
 }

@@ -43,7 +43,7 @@ void manta::Sampler::seed(unsigned int seed) {
 }
 
 void manta::Sampler::_evaluate() {
-    m_output.setReference(this);
+    setOutput(this);
 
     piranha::native_int samples;
     m_samplesPerPixelInput->fullCompute((void *)&samples);

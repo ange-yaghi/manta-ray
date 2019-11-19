@@ -22,5 +22,5 @@ void manta::Scene::addSceneObject(SceneObject *object) {
 }
 
 void manta::Scene::_evaluate() {
-    m_output.setReference(this);
+    setOutput(this);
 }

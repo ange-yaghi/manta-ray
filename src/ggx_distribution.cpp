@@ -113,7 +113,7 @@ void manta::GgxDistribution::registerInputs() {
 }
 
 void manta::GgxDistribution::_evaluate() {
-    m_output.setReference(this);
+    setOutput(this);
 }
 
 piranha::Node *manta::GgxDistribution::_optimize() {

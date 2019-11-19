@@ -17,11 +17,15 @@ manta::math::Vector manta::MicrofacetGlassBSDF::sampleF(
     math::Vector *o, math::real *pdf, StackAllocator *stackAllocator) 
 {
     constexpr math::Vector reflect = { (math::real)-1.0, (math::real)-1.0, (math::real)1.0, (math::real)1.0 };
-    
-    math::real d = math::uniformRandom();
+
+    // Choose which distribution to sample and remap the stratified samples
+    math::real d = u.x;
+    math::Vector2 nu = (d > (math::real)0.5)
+        ? math::Vector2((u.x - (math::real)0.5) * (math::real)2.0, u.y)
+        : math::Vector2(u.x * (math::real)2.0, u.y);
 
     // Generate microfacet normal
-    math::Vector m = m_distribution->generateMicrosurfaceNormal(surfaceInteraction, u);
+    math::Vector m = m_distribution->generateMicrosurfaceNormal(surfaceInteraction, nu);
 
     math::real ior = m_mediaInterface->ior(surfaceInteraction->m_direction);
     math::real F = m_mediaInterface->fresnelTerm(i, m, surfaceInteraction->m_direction);

@@ -79,7 +79,7 @@ manta::math::real manta::PhongDistribution::calculateG1(
 }
 
 void manta::PhongDistribution::_evaluate() {
-    m_output.setReference(this);
+    setOutput(this);
 }
 
 void manta::PhongDistribution::registerInputs() {

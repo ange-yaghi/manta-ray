@@ -50,7 +50,7 @@ void manta::SceneGeometry::_evaluate() {
 
     m_defaultMaterialIndex = defaultMaterialIndex;
 
-    m_output.setReference(this);
+    setOutput(this);
 }
 
 void manta::SceneGeometry::registerInputs() {

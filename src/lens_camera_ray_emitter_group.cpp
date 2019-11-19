@@ -2,7 +2,6 @@
 
 #include "../include/lens_camera_ray_emitter.h"
 #include "../include/lens.h"
-#include "../include/sampler_2d.h"
 
 manta::LensCameraRayEmitterGroup::LensCameraRayEmitterGroup() {
     m_lens = nullptr;
@@ -60,7 +59,7 @@ void manta::LensCameraRayEmitterGroup::_evaluate() {
     setResolutionY(lens->getSensorResolutionY());
     setLens(lens);
 
-    m_output.setReference(this);
+    setOutput(this);
 
     configure();
 }

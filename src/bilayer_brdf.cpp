@@ -30,14 +30,12 @@ manta::math::Vector manta::BilayerBRDF::sampleF(const IntersectionPoint *surface
 
     math::Vector wh;
 
-    math::Vector m;
-
     if (d < (math::real)0.5) {
         // Ray reflects off of the coating
         math::Vector2 nu = math::Vector2(d * (math::real)2.0, u.y);
-        m = m_coatingDistribution->generateMicrosurfaceNormal(surfaceInteraction, nu);
-        math::Vector ri = math::reflect(i, m);
-        wh = m;
+        wh = m_coatingDistribution->generateMicrosurfaceNormal(surfaceInteraction, nu);
+        math::Vector ri = math::reflect(i, wh);
+
         *o = ri;
     }
     else {

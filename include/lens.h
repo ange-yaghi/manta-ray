@@ -59,7 +59,7 @@ namespace manta {
         virtual void lensScan(const math::Vector &sensorElement,
             int div, math::real span, LensScanHint *target) const = 0;
         virtual bool generateOutgoingRay(const math::Vector &sensorElement,
-            const LensScanHint *hint, LightRay *targetRay) const = 0;
+            const LensScanHint *hint, LightRay *targetRay, const math::Vector2 &u) const = 0;
 
         void setSensorWidth(math::real width) { m_sensorWidth = width; }
         math::real getSensorWidth() const { return m_sensorWidth; }

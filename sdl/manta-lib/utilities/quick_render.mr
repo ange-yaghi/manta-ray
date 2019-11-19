@@ -105,7 +105,7 @@ public node quick_render {
         camera: camera,
         materials: materials,
         background: background,
-        sampler: random_sampler(1024) // stratified_sampler(32, 32, true)
+        sampler: random_sampler(samples)
     )
 
     log("Render complete\n")

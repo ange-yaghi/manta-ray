@@ -13,12 +13,15 @@ manta::SceneObject::~SceneObject() {
 }
 
 void manta::SceneObject::_evaluate() {
-    m_scene = static_cast<ObjectReferenceNodeOutput<Scene> *>(m_sceneInput)->getReference();
-    m_geometry = static_cast<ObjectReferenceNodeOutput<SceneGeometry> *>(m_geometryInput)->getReference();
-    static_cast<piranha::NodeOutput *>(m_nameInput)->fullCompute((void *)&m_name);
+    m_scene = getObject<Scene>(m_sceneInput);
+    m_geometry = getObject<SceneGeometry>(m_geometryInput);
 
+    piranha::native_string name;
+    m_nameInput->fullCompute((void *)&name);
+
+    m_name = name;
     m_scene->addSceneObject(this);
-    m_output.setReference(this);
+    setOutput(this);
 }
 
 void manta::SceneObject::registerInputs() {

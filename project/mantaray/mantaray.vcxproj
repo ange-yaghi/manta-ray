@@ -62,7 +62,6 @@
     <ClCompile Include="..\..\src\dielectric_media_interface.cpp" />
     <ClCompile Include="..\..\src\fraunhofer_diffraction.cpp" />
     <ClCompile Include="..\..\src\ggx_distribution.cpp" />
-    <ClCompile Include="..\..\src\grid_sampler.cpp" />
     <ClCompile Include="..\..\src\image_byte_buffer.cpp" />
     <ClCompile Include="..\..\src\image_file_node.cpp" />
     <ClCompile Include="..\..\src\image_handling.cpp" />
@@ -78,7 +77,6 @@
     <ClCompile Include="..\..\src\remap_node_output.cpp" />
     <ClCompile Include="..\..\src\rgb_space.cpp" />
     <ClCompile Include="..\..\src\sampler.cpp" />
-    <ClCompile Include="..\..\src\sample_container.cpp" />
     <ClCompile Include="..\..\src\script_path_node.cpp" />
     <ClCompile Include="..\..\src\signal_processing.cpp" />
     <ClCompile Include="..\..\src\spectrum.cpp" />
@@ -106,11 +104,8 @@
     <ClCompile Include="..\..\src\polygonal_aperture.cpp" />
     <ClCompile Include="..\..\src\primitives.cpp" />
     <ClCompile Include="..\..\src\random_sampler.cpp" />
-    <ClCompile Include="..\..\src\ray_container.cpp" />
     <ClCompile Include="..\..\src\remap_node.cpp" />
-    <ClCompile Include="..\..\src\sampler_2d.cpp" />
     <ClCompile Include="..\..\src\simple_bsdf_material.cpp" />
-    <ClCompile Include="..\..\src\simple_sampler.cpp" />
     <ClCompile Include="..\..\src\circular_aperture.cpp" />
     <ClCompile Include="..\..\src\gpu_kernel_opencl.cpp" />
     <ClCompile Include="..\..\src\gpu_manager_opencl.cpp" />
@@ -193,7 +188,6 @@
     <ClInclude Include="..\..\include\gaussian_filter.h" />
     <ClInclude Include="..\..\include\geometry.h" />
     <ClInclude Include="..\..\include\ggx_distribution.h" />
-    <ClInclude Include="..\..\include\grid_sampler.h" />
     <ClInclude Include="..\..\include\image_sample.h" />
     <ClInclude Include="..\..\include\kd_tree_node.h" />
     <ClInclude Include="..\..\include\language_rules.h" />
@@ -206,7 +200,6 @@
     <ClInclude Include="..\..\include\padded_frame_output.h" />
     <ClInclude Include="..\..\include\pixel_based_sampler.h" />
     <ClInclude Include="..\..\include\sampler.h" />
-    <ClInclude Include="..\..\include\sample_container.h" />
     <ClInclude Include="..\..\include\script_path_node.h" />
     <ClInclude Include="..\..\include\stratified_sampler.h" />
     <ClInclude Include="..\..\include\streaming_node_output.h" />
@@ -257,11 +250,9 @@
     <ClInclude Include="..\..\include\polygonal_aperture.h" />
     <ClInclude Include="..\..\include\primitives.h" />
     <ClInclude Include="..\..\include\random_sampler.h" />
-    <ClInclude Include="..\..\include\ray_container.h" />
     <ClInclude Include="..\..\include\remap_node.h" />
     <ClInclude Include="..\..\include\runtime_statistics.h" />
     <ClInclude Include="..\..\include\simple_bsdf_material.h" />
-    <ClInclude Include="..\..\include\simple_sampler.h" />
     <ClInclude Include="..\..\include\circular_aperture.h" />
     <ClInclude Include="..\..\include\gpu_kernel.h" />
     <ClInclude Include="..\..\include\gpu_kernel_opencl.h" />
@@ -298,7 +289,6 @@
     <ClInclude Include="..\..\include\perfect_specular_reflection_brdf.h" />
     <ClInclude Include="..\..\include\sphere_primitive.h" />
     <ClInclude Include="..\..\include\spherical_surface.h" />
-    <ClInclude Include="..\..\include\sampler_2d.h" />
     <ClInclude Include="..\..\include\square_aperture.h" />
     <ClInclude Include="..\..\include\stack_allocator.h" />
     <ClInclude Include="..\..\include\stack_list.h" />

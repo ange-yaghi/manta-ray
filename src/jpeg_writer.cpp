@@ -15,7 +15,7 @@ manta::JpegWriter::JpegWriter() {
 }
 
 manta::JpegWriter::~JpegWriter() {
-
+    /* void */
 }
 
 bool manta::JpegWriter::write(ImageByteBuffer *buffer, const char *fileName) {

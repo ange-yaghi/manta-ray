@@ -3,7 +3,6 @@
 #include "../include/light_ray.h"
 #include "../include/sampler.h"
 #include "../include/stack_allocator.h"
-#include "../include/ray_container.h"
 
 manta::LensCameraRayEmitter::LensCameraRayEmitter() {
     m_lens = nullptr;
@@ -23,9 +22,10 @@ void manta::LensCameraRayEmitter::generateRay(LightRay *ray) const {
         math::Vector2(samplePoint.x - (math::real)0.5, samplePoint.y - (math::real)0.5));
 
     ray->setIntensity(math::constants::Zero);
-    ray->setWeight(math::constants::One);
 
-    bool result = m_lens->generateOutgoingRay(position, &m_lensHint, ray);
+    bool result = m_lens->generateOutgoingRay(position, &m_lensHint, ray, m_sampler->generate2d());
+
+    if (!result) ray->setCameraWeight((math::real)0.0);
 
     ray->setImagePlaneLocation(
         math::Vector2(

@@ -19,10 +19,8 @@ namespace manta {
         math::Vector getIntensity() const { return m_intensity; }
         void setIntensity(const math::Vector &intensity) { m_intensity = intensity; }
 
-        math::Vector getWeightedIntensity() const { return math::mul(m_intensity, m_weight); }
-
-        void setWeight(math::Vector weight) { m_weight = weight; }
-        math::Vector getWeight() const { return m_weight; }
+        void setCameraWeight(math::real weight) { m_cameraWeight = weight; }
+        math::real getCameraWeight() const { return m_cameraWeight; }
 
         void setPdf(math::real pdf) { m_pdf = pdf; }
         math::real getPdf() const { return m_pdf; }
@@ -55,7 +53,7 @@ namespace manta {
         math::Vector m_source;
 
         math::Vector m_intensity;
-        math::Vector m_weight;
+        math::real m_cameraWeight;
 
         math::real m_pdf;
 

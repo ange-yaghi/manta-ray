@@ -15,7 +15,6 @@
 #include "../include/path_recorder.h"
 #include "../include/standard_allocator.h"
 #include "../include/stack_list.h"
-#include "../include/ray_container.h"
 #include "../include/coarse_intersection.h"
 #include "../include/image_plane.h"
 #include "../include/os_utilities.h"
@@ -195,23 +194,6 @@ void manta::RayTracer::tracePixel(int px, int py, const Scene *scene, CameraRayE
     createWorkers();
     startWorkers();
     waitForWorkers();
-}
-
-void manta::RayTracer::traceRayEmitter(const CameraRayEmitter *emitter, RayContainer *container, 
-    const Scene *scene, IntersectionPointManager *manager, StackAllocator *s 
-    /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const 
-{
-    //emitter->getSampler()->startPixelSession();
-
-    //for (int i = 0; i < rayCount; i++) {
-    //    LightRay *ray = &rays[i];
-    //    ray->calculateTransformations();
-
-    //    math::Vector intensity = traceRay(scene, ray, 0, manager, nullptr, s /**/ PATH_RECORDER_VAR /**/ STATISTICS_PARAM_INPUT);
-    //    ray->setIntensity(intensity);
-    //}
-
-    //container->calculateIntensity();
 }
 
 void manta::RayTracer::configure(mem_size stackSize, mem_size workerStackSize, int threadCount, int renderBlockSize, bool multithreaded) {
@@ -494,7 +476,7 @@ manta::math::Vector manta::RayTracer::traceRay(
         );
 
         if (std::isnan(math::getX(beta)) || std::isnan(math::getY(beta)) || std::isnan(math::getZ(beta))) {
-            int a = 0;
+            int breakHere = 0;
         }
 
         localRay.setDirection(incomingDir);
@@ -510,26 +492,13 @@ manta::math::Vector manta::RayTracer::traceRay(
 
         if (bounces > 3) {
             math::real q = std::max((math::real)0.05, 1 - math::getScalar(math::maxComponent(beta)));
-            if (math::uniformRandom() < q) break;
+            math::real d = (sampler != nullptr)
+                ? sampler->generate1d()
+                : math::uniformRandom();
+            if (d < q) break;
             beta = math::div(beta, math::loadScalar(1 - q));
         }
     }
 
     return L;
-}
-
-void manta::RayTracer::traceRays(const Scene *scene, const RayContainer &rayContainer, 
-    IntersectionPointManager *manager, StackAllocator *s 
-    /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const 
-{
-    int nRays = rayContainer.getRayCount();
-
-    for (int i = 0; i < nRays; i++) {
-        INCREMENT_COUNTER(RuntimeStatistics::RAYS_CAST);
-
-        LightRay *ray = &rayContainer.getRays()[i];
-        ray->calculateTransformations();
-
-        traceRay(scene, ray, rayContainer.getDegree(), manager, nullptr, s /**/ PATH_RECORDER_VAR /**/ STATISTICS_PARAM_INPUT);
-    }
 }

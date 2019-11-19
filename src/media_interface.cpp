@@ -9,5 +9,5 @@ manta::MediaInterface::~MediaInterface() {
 }
 
 void manta::MediaInterface::_evaluate() {
-    m_output.setReference(this);
+    setOutput(this);
 }

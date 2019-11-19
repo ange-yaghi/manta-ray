@@ -3,7 +3,6 @@
 #include "../include/sampler.h"
 #include "../include/light_ray.h"
 #include "../include/stack_allocator.h"
-#include "../include/ray_container.h"
 
 manta::StandardCameraRayEmitter::StandardCameraRayEmitter() {
     /* void */
@@ -24,7 +23,7 @@ void manta::StandardCameraRayEmitter::generateRay(LightRay *ray) const {
     ray->setDirection(dir);
     ray->setSource(m_position);
     ray->setIntensity(math::constants::Zero);
-    ray->setWeight(math::constants::One);
+    ray->setCameraWeight((math::real)1.0);
     ray->setImagePlaneLocation(
         math::Vector2(
             samplePoint.x - (math::real)0.5 + (math::real)m_pixelX,

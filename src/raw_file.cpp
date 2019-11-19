@@ -6,11 +6,11 @@
 #include <fstream>
 
 manta::RawFile::RawFile() {
-
+    /* void */
 }
 
 manta::RawFile::~RawFile() {
-
+    /* void */
 }
 
 bool manta::RawFile::writeRawFile(const char *fname, const ImagePlane *buffer) const {

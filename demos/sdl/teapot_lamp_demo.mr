@@ -142,16 +142,15 @@ standard_camera camera(
     resolution_x: settings.resolution_x,
     resolution_y: settings.resolution_y,
     plane_height: 1.0,
-    plane_distance: 1.0,
-    samples: settings.samples,
-    sampler: random_sampler()
+    plane_distance: 1.0
 )
 
 ray_tracer mr(
     scene: scene,
     camera: camera,
     materials: library,
-    background: 0
+    background: 0,
+    sampler: random_sampler(settings.samples)
 )
 
 image_output(

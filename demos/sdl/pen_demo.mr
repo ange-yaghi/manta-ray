@@ -149,17 +149,13 @@ auto private node pen_standard_camera {
         resolution_x: settings.resolution_x,
         resolution_y: settings.resolution_y,
         plane_height: 0.25,
-        plane_distance: 1.0,
-        samples: settings.samples,
-        sampler: random_sampler()
+        plane_distance: 1.0
     );
 }
 
 auto private node pen_lens_camera {
     alias output __out: lens_camera(
-        lens: lens,
-        samples: settings.samples,
-        sampler: random_sampler()
+        lens: lens
     );
 
     simple_lens lens(
@@ -187,7 +183,8 @@ ray_tracer mr(
     scene: scene,
     camera: settings.camera,
     materials: library,
-    background: 0.0
+    background: 0.0,
+    sampler: random_sampler(settings.samples)
 )
 
 image_output(

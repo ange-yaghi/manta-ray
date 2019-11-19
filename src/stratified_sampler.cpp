@@ -93,7 +93,7 @@ void manta::StratifiedSampler::_evaluate() {
 
     PixelBasedSampler::configure(m_latticeWidth * m_latticeHeight, 8);
 
-    m_output.setReference(this);
+    setOutput(this);
 }
 
 void manta::StratifiedSampler::registerInputs() {

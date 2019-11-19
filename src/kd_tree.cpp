@@ -49,7 +49,7 @@ void manta::KDTree::_evaluate() {
 
     analyzeWithProgress(mesh, granularity);
 
-    m_output.setReference(this);
+    setOutput(this);
 }
 
 void manta::KDTree::registerInputs() {

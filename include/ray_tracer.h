@@ -38,7 +38,6 @@ namespace manta {
     class SceneObject;
     class Worker;
     class PathRecorder;
-    class RayContainer;
     class ImagePlane;
     class MaterialLibrary;
     class Sampler;
@@ -52,9 +51,6 @@ namespace manta {
             ImagePlane *target);
         void tracePixel(int px, int py, const Scene *scene, 
             CameraRayEmitterGroup *rayEmitterGroup, ImagePlane *target);
-        void traceRayEmitter(const CameraRayEmitter *emitter, RayContainer *container, 
-            const Scene *scene, IntersectionPointManager *manager, 
-            StackAllocator *s /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const;
 
         int getThreadCount() const { return m_threadCount; }
 
@@ -128,9 +124,6 @@ namespace manta {
             IntersectionPoint *point, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const;
         void refineContact(const LightRay *ray, math::real depth, IntersectionPoint *point, 
             SceneObject **closestObject, StackAllocator *s) const;
-
-        void traceRays(const Scene *scene, const RayContainer &rayContainer, IntersectionPointManager *manager,
-            StackAllocator *s /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const;
 
         math::Vector m_backgroundColor;
 

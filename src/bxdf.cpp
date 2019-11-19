@@ -9,5 +9,5 @@ manta::BXDF::~BXDF() {
 }
 
 void manta::BXDF::_evaluate() {
-    m_output.setReference(this);
+    setOutput(this);
 }

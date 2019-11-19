@@ -128,3 +128,23 @@ public node string_add => __mantaray__string_add {
     input __in1 [string];
     alias output __out [string];
 }
+
+// Int operations
+
+public node int_add => __mantaray__int_add {
+    input __in0 [int];
+    input __in1 [int];
+    alias output __out [int];
+}
+
+public node int_mul => __mantaray__int_multiply {
+    input __in0 [int];
+    input __in1 [int];
+    alias output __out [int];
+}
+
+public node int_sub => __mantaray__int_sub {
+    input __in0 [int];
+    input __in1 [int];
+    alias output __out [int];
+}

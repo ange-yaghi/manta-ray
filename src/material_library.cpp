@@ -28,5 +28,5 @@ manta::Material *manta::MaterialLibrary::searchByName(const std::string &name) c
 }
 
 void manta::MaterialLibrary::_evaluate() {
-    m_output.setReference(this);
+    setOutput(this);
 }

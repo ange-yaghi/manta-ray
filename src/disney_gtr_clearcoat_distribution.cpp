@@ -87,7 +87,7 @@ void manta::DisneyGtrClearcoatDistribution::registerInputs() {
 }
 
 void manta::DisneyGtrClearcoatDistribution::_evaluate() {
-    m_output.setReference(this);
+    setOutput(this);
 }
 
 piranha::Node *manta::DisneyGtrClearcoatDistribution::_optimize() {
