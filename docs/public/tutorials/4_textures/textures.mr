@@ -1,0 +1,49 @@
+import "mantaray.mr"
+
+material_library library()
+
+image_file crate("crate.jpg")
+
+bsdf_material cube_material(
+    library: library,
+    name: "Cube",
+    reflectance: scalar(1.0) - crate,
+    bsdf: microfacet_brdf(
+        ggx_distribution(0.5)
+    )
+)
+
+bsdf_material floor_material(
+    library: library,
+    name: "Floor",
+    reflectance: srgb_i(0xDD, 0xDD, 0xDD),
+    bsdf: microfacet_brdf(
+        ggx_distribution(0.5)
+    )
+)
+
+bsdf_material cone_material(
+    library: library,
+    name: "Cone",
+    reflectance: srgb_i(0xDD, 0xDD, 0xDD),
+    bsdf: microfacet_brdf(
+        ggx_distribution(0.5)
+    )
+)
+
+bsdf_material sphere_material(
+    library: library,
+    name: "Sphere",
+    reflectance: srgb_i(0xDD, 0xDD, 0xDD),
+    bsdf: microfacet_brdf(
+        ggx_distribution(0.5)
+    )
+)
+
+quick_render(
+    materials: library,
+    object_file: "simple_scene.obj",
+    camera_target: vector(0.0, 1.5, 0.0),
+    camera_position: vector(5.0, 3.5, 5.0),
+    samples: 128
+)

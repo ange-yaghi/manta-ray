@@ -153,6 +153,7 @@ If the specular is set to 0 then the coating layer will only be reflective at ve
 We've now explored some of the more sophisticated surface models provided by MantaRay. In the next tutorial we'll look at applying textures.
 
 * [Previous Tutorial (Basics of Materials)](../2_basics_of_materials/2_basics_of_materials.md)
+* [Next Tutorial (Textures)](../4_textures/4_textures.md)
 
 ## Useful Links
 

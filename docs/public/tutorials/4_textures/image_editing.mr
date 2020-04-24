@@ -1,0 +1,6 @@
+import "mantaray.mr"
+
+image_output(
+    1.0 - image_file("crate.jpg"),
+    "inverted_crate.jpg"
+)
