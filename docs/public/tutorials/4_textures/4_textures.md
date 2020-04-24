@@ -78,13 +78,13 @@ As expected, only the red channel is present in the color of the cube in the ren
 
 ![Alt text](assets/render3.jpg)
 
-Further manipulations are also possible. Inverting an image is also possible:
+Further manipulations like inverting an image are also possible:
 
 ```
 bsdf_material cube_material(
     library: library,
     name: "Cube",
-    reflectance: scalar(1.0) - crate,
+    reflectance: 1.0 - crate,
     bsdf: microfacet_brdf(
         ggx_distribution(0.5)
     )
@@ -95,7 +95,7 @@ This produces the following output:
 
 ![Alt text](assets/render4.jpg)
 
-The ```scalar(1.0)``` node in this instance would be equivalent to ```vector(1.0, 1.0, 1.0, 1.0)```.
+The scalar ```1.0``` in this instance would be equivalent to ```vector(1.0, 1.0, 1.0, 1.0)``` as it's automatically expanded.
 
 ## Exporting Images
 
@@ -106,7 +106,7 @@ MantaRay can also be used as a basic image editor. This can be achieved using th
 |`map`|The image to export.|
 |`filename`|The filename of the saved image.|
 
-A simple script to load an image file, invert it and then save the output would be as follows:
+A simple script that loads an image file, inverts it and then saves the output would be as follows:
 
 ```
 import "mantaray.mr"
@@ -117,7 +117,7 @@ image_output(
 )
 ```
 
-As can be seen, with minimal syntax and only intuitive mathematical operations, complex image manipulations could be done all in MantaRay's SDL. In later tutorials it will be shown how this can be applied to convenient post-processing of rendered images.
+As can be seen, with minimal syntax and only intuitive mathematical operations, complex image manipulations can be done all in MantaRay's SDL. In later tutorials it will be shown how this can be applied to convenient post-processing of rendered images.
 
 
 ## Conclusion
