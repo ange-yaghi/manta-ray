@@ -8,8 +8,8 @@ namespace piranha {
     template<int index>
     class VectorSplitOutput : public FloatValueOutput {
     public:
-        VectorSplitOutput() {}
-        ~VectorSplitOutput() {}
+        VectorSplitOutput() { m_input = nullptr; }
+        ~VectorSplitOutput() { /* void */ }
 
         virtual void fullCompute(void *_target) const {
             piranha::native_float *target = reinterpret_cast<piranha::native_float *>(_target);

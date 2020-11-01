@@ -14,16 +14,16 @@ namespace piranha {
 
     class IrAttributeDefinition : public IrParserStructure {
     public:
-        enum DIRECTION {
-            INPUT,
-            OUTPUT,
-            MODIFY,
-            TOGGLE
+        enum class Direction {
+            Input,
+            Output,
+            Modify,
+            Toggle
         };
 
     public:
         IrAttributeDefinition(const IrTokenInfo_string &directionToken, 
-            const IrTokenInfo_string &name, DIRECTION dir);
+            const IrTokenInfo_string &name, Direction dir);
         IrAttributeDefinition(const IrTokenInfo_string &name);
         virtual ~IrAttributeDefinition();
 
@@ -39,8 +39,8 @@ namespace piranha {
         bool isAlias() const { return m_isAlias; }
 
         const IrTokenInfo *getDirectionToken() const { return &m_directionToken; }
-        void setDirection(DIRECTION direction) { m_direction = direction; }
-        DIRECTION getDirection() const { return m_direction; }
+        void setDirection(Direction direction) { m_direction = direction; }
+        Direction getDirection() const { return m_direction; }
 
         virtual IrParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output);
 
@@ -55,6 +55,7 @@ namespace piranha {
         virtual void _checkTypes(IrContextTree *context);
 
         bool isInput() const;
+        bool isThis() const;
 
     protected:
         IrTokenInfo_string m_directionToken;
@@ -64,7 +65,7 @@ namespace piranha {
 
         IrValue *m_defaultValue;
 
-        DIRECTION m_direction;
+        Direction m_direction;
         bool m_isAlias;
 
         std::vector<IrInputConnection *> m_impliedMembers;

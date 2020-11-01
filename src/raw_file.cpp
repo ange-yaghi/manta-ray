@@ -104,9 +104,9 @@ void *manta::RawFile::generatePixelArray(const ImagePlane *buffer, int version, 
                 for (int y = 0; y < height; y++) {
                     FloatPixel_v1 *px = &v[y * width + x];
                     math::Vector value = buffer->sample(x, y);
-                    px->r = (float)math::getX(value);
-                    px->g = (float)math::getY(value);
-                    px->b = (float)math::getZ(value);
+                    px->r = (math::real_f)math::getX(value);
+                    px->g = (math::real_f)math::getY(value);
+                    px->b = (math::real_f)math::getZ(value);
                 }
             }
 
@@ -121,9 +121,9 @@ void *manta::RawFile::generatePixelArray(const ImagePlane *buffer, int version, 
                 for (int y = 0; y < height; y++) {
                     DoublePixel_v1 *px = &v[y * width + x];
                     math::Vector value = buffer->sample(x, y);
-                    px->r = math::getX(value);
-                    px->g = math::getY(value);
-                    px->b = math::getZ(value);
+                    px->r = (math::real_d)math::getX(value);
+                    px->g = (math::real_d)math::getY(value);
+                    px->b = (math::real_d)math::getZ(value);
                 }
             }
 

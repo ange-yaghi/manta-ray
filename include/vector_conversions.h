@@ -41,7 +41,7 @@ namespace manta {
         piranha::pNodeInput m_input;
 
     protected:
-        virtual piranha::Node *_optimize();
+        virtual piranha::Node *_optimize(piranha::NodeAllocator *nodeAllocator);
     };
 
     template <typename T_VectorConversionOutput>
@@ -77,22 +77,23 @@ namespace manta {
         }
 
     protected:
-        virtual piranha::Node *_optimize() {
+        virtual piranha::Node *_optimize(piranha::NodeAllocator *nodeAllocator) {
             addFlag(piranha::Node::META_ACTIONLESS);
 
             VectorNodeOutput *input = static_cast<VectorNodeOutput *>(*m_output.getInputConnection());
 
-            bool isConstant = input->getParentNode()->hasFlag(piranha::Node::META_CONSTANT);
+            const bool isConstant = input->getParentNode()->hasFlag(piranha::Node::META_CONSTANT);
             if (isConstant) {
                 addFlag(piranha::Node::META_CONSTANT);
 
-                bool result = evaluate();
+                const bool result = evaluate();
                 if (!result) return nullptr;
 
                 math::Vector constantValue;
                 m_output.sample(nullptr, (void *)&constantValue);
 
-                CachedVectorNode *cached = new CachedVectorNode(constantValue);
+                CachedVectorNode *cached = nodeAllocator->allocate<CachedVectorNode>();
+                cached->setValue(constantValue);
                 mapOptimizedPort(cached, "__out", "__out");
 
                 return cached;

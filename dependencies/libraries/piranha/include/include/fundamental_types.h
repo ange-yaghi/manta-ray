@@ -49,21 +49,21 @@ namespace piranha {
     typedef int             native_int;
     typedef vector          native_vector;
 
-    enum LiteralType {
-        LITERAL_FLOAT,
-        LITERAL_BOOL,
-        LITERAL_STRING,
-        LITERAL_INT,
-        LITERAL_UNDEFINED
+    enum class LiteralType {
+        Float,
+        Boolean,
+        String,
+        Integer,
+        Undefined
     };
 
     template <typename NativeType>
-    inline LiteralType LiteralTypeLookup() { static_assert(false, "Looking up a type that does not exist"); return LITERAL_UNDEFINED; };
+    inline LiteralType LiteralTypeLookup() { static_assert(false, "Looking up a type that does not exist"); return LiteralType::Undefined; };
 
-    template <> inline LiteralType LiteralTypeLookup<native_float>() { return LITERAL_FLOAT; }
-    template <> inline LiteralType LiteralTypeLookup<native_bool>() { return LITERAL_BOOL; }
-    template <> inline LiteralType LiteralTypeLookup<native_int>() { return LITERAL_INT; }
-    template <> inline LiteralType LiteralTypeLookup<native_string>() { return LITERAL_STRING; }
+    template <> inline LiteralType LiteralTypeLookup<native_float>() { return LiteralType::Float; }
+    template <> inline LiteralType LiteralTypeLookup<native_bool>() { return LiteralType::Boolean; }
+    template <> inline LiteralType LiteralTypeLookup<native_int>() { return LiteralType::Integer; }
+    template <> inline LiteralType LiteralTypeLookup<native_string>() { return LiteralType::String; }
 
     template <typename NativeType>
     inline const ChannelType *NativeTypeLookup() { static_assert(false, "Looking up a type that does not exist"); return nullptr; }

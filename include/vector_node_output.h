@@ -20,7 +20,7 @@ namespace manta {
 		void calculateAllDimensions(VectorMap2D *target) const;
 
 	protected:
-		virtual piranha::Node *generateInterface();
+		virtual piranha::Node *newInterface(piranha::NodeAllocator *nodeAllocator);
 
 	protected:
 		bool m_scalar;

@@ -15,12 +15,13 @@
 #include "node.h"
 #include "literal_node.h"
 #include "fundamental_types.h"
+#include "memory_tracker.h"
 
 namespace piranha {
 
     class IrNode;
 
-    template <typename T, IrValue::VALUE_TYPE TypeCode>
+    template <typename T, IrValue::ValueType TypeCode>
     class IrValueConstant : public IrValue {
     protected:
         typedef T_IrTokenInfo<T> _TokenInfo;
@@ -82,7 +83,7 @@ namespace piranha {
         _TokenInfo m_token;
     };
 
-    template <typename T, IrValue::VALUE_TYPE TypeCode>
+    template <typename T, IrValue::ValueType TypeCode>
     class IrValueLiteral : public IrValueConstant<T, TypeCode> {
     protected:
         typedef IrValueConstant<T, TypeCode> Base;
@@ -94,7 +95,7 @@ namespace piranha {
         virtual void _expand(IrContextTree *context) {
             if (Base::m_rules == nullptr) return;
 
-            std::string builtinType =
+            const std::string builtinType =
                 Base::m_rules->resolveLiteralBuiltinType(LiteralTypeLookup<T>());
 
             if (builtinType.empty()) {
@@ -110,9 +111,9 @@ namespace piranha {
             }
 
             // Generate the expansion
-            IrAttributeList *attributeList = new IrAttributeList();
+            IrAttributeList *attributeList = TRACK(new IrAttributeList());
 
-            IrLiteralNode<T> *expansion = new IrLiteralNode<T>();
+            IrLiteralNode<T> *expansion = TRACK(new IrLiteralNode<T>());
             expansion->setName("\"" + Base::valueToString() + "\"");
             expansion->setLiteralData(Base::template validateData<T>(Base::m_value));
             expansion->setAttributes(attributeList);
@@ -151,7 +152,7 @@ namespace piranha {
     };
 
     // Specialized type for labels
-    class IrValueLabel : public IrValueConstant<std::string, IrValue::CONSTANT_LABEL> {
+    class IrValueLabel : public IrValueConstant<std::string, IrValue::ValueType::ConstantLabel> {
     public:
         IrValueLabel(const _TokenInfo &value) : IrValueConstant(value) { /* void */ }
         ~IrValueLabel() { /* void */ }
@@ -177,8 +178,8 @@ namespace piranha {
                 IR_FAIL();
 
                 if (query.recordErrors && IR_EMPTY_CONTEXT()) {
-                    IR_ERR_OUT(new CompilationError(m_summaryToken,
-                        ErrorCode::UnresolvedReference, query.inputContext));
+                    IR_ERR_OUT(TRACK(TRACK(new CompilationError(m_summaryToken,
+                        ErrorCode::UnresolvedReference, query.inputContext))));
                 }
 
                 return nullptr;
@@ -201,7 +202,7 @@ namespace piranha {
     };
 
     // Specialized type for node references
-    class IrValueNodeRef : public IrValueConstant<IrNode *, IrValue::NODE_REF> {
+    class IrValueNodeRef : public IrValueConstant<IrNode *, IrValue::ValueType::NodeReference> {
     public:
         IrValueNodeRef(const _TokenInfo &value) : IrValueConstant(value) { 
             registerComponent(value.data); 
@@ -240,7 +241,7 @@ namespace piranha {
 
     // Specialized type for internal structure references (during expansions)
     class IrInternalReference 
-        : public IrValueConstant<IrParserStructure *, IrValue::INTERNAL_REFERENCE> 
+        : public IrValueConstant<IrParserStructure *, IrValue::ValueType::InternalReference> 
     {
     public:
         IrInternalReference(IrParserStructure *reference, IrContextTree *newContext) 
@@ -283,10 +284,10 @@ namespace piranha {
         IrContextTree *m_newContext;
     };
 
-    typedef IrValueLiteral<piranha::native_int, IrValue::CONSTANT_INT> IrValueInt;
-    typedef IrValueLiteral<piranha::native_string, IrValue::CONSTANT_STRING> IrValueString;
-    typedef IrValueLiteral<piranha::native_float, IrValue::CONSTANT_FLOAT> IrValueFloat;
-    typedef IrValueLiteral<piranha::native_bool, IrValue::CONSTANT_BOOL> IrValueBool;
+    typedef IrValueLiteral<piranha::native_int, IrValue::ValueType::ConstantInt> IrValueInt;
+    typedef IrValueLiteral<piranha::native_string, IrValue::ValueType::ConstantString> IrValueString;
+    typedef IrValueLiteral<piranha::native_float, IrValue::ValueType::ConstantFloat> IrValueFloat;
+    typedef IrValueLiteral<piranha::native_bool, IrValue::ValueType::ConstantBool> IrValueBool;
 
 } /* namespace piranha */
 

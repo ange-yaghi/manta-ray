@@ -3,6 +3,7 @@
 
 #include "channel_type.h"
 #include "node_output.h"
+#include "node_allocator.h"
 
 #include <string>
 #include <vector>
@@ -35,14 +36,13 @@ namespace piranha {
         };
 
         struct NodeOutputPortReference {
-            NodeOutput *const *output;
+            NodeOutput **output;
             Node *nodeOutput;
             std::string name;
         };
 
         struct PortSkeleton {
             NodeOutput *output;
-            Node *nodeOutput;
             std::string name;
 
             IrAttributeDefinition *definition;
@@ -64,6 +64,12 @@ namespace piranha {
         struct MetaFlag {
             std::string name;
             int data;
+        };
+
+        enum class MemorySpace {
+            Unknown,
+            PiranhaInternal,
+            ClientExternal
         };
 
     public:
@@ -151,13 +157,16 @@ namespace piranha {
 
         virtual bool isLiteral() const { return false; }
 
-        Node *optimize();
-        Node *getUnoptimizedForm() const { return m_unoptimizedNode; }
+        Node *optimize(NodeAllocator *allocator);
+
         bool isOptimized() const { return m_optimizedNode != nullptr; }
-        bool isOptimizedOut() const { return m_optimizedNode != this; }
+        bool isOptimizedOut() const;
 
         bool isDead() const { return m_dead; }
         void markDead() { m_dead = true; }
+
+        MemorySpace getMemorySpace() const { return m_memorySpace; }
+        void setMemorySpace(MemorySpace space) { m_memorySpace = space; }
 
         void mapOptimizedPort(Node *optimizedNode, const std::string &localName, const std::string &mappedName) const;
         void addPortMapping(const std::string &localName, const std::string &mappedName);
@@ -197,7 +206,7 @@ namespace piranha {
         void registerOutput(NodeOutput *node, const std::string &name);
 
         std::vector<NodeOutputPortReference> m_outputReferences;
-        void registerOutputReference(NodeOutput *const *output, const std::string &name, Node *node = nullptr);
+        void registerOutputReference(NodeOutput **output, const std::string &name, Node *node = nullptr);
 
         PortSkeleton *getSkeleton(const std::string &name);
         std::vector<PortSkeleton> m_portSkeletons;
@@ -232,14 +241,15 @@ namespace piranha {
 
     protected:
         // Automatic optimization
-        virtual Node *_optimize();
+        virtual Node *_optimize(NodeAllocator *allocator);
 
         Node *m_optimizedNode;
-        Node *m_unoptimizedNode;
 
         bool m_dead;
 
         std::vector<PortMapping> m_portMapping;
+
+        MemorySpace m_memorySpace;
 
     protected:
         // Metadata flags

@@ -16,28 +16,28 @@ namespace piranha {
     class FundamentalOutput<piranha::native_float> : public NodeOutput {
     public:
         FundamentalOutput() : NodeOutput(&FundamentalType::FloatType) {};
-        ~FundamentalOutput() {}
+        ~FundamentalOutput() { /* void */ }
     };
 
     template <>
     class FundamentalOutput<piranha::native_int> : public NodeOutput {
     public:
         FundamentalOutput() : NodeOutput(&FundamentalType::IntType) {};
-        ~FundamentalOutput() {}
+        ~FundamentalOutput() { /* void */ }
     };
 
     template <>
     class FundamentalOutput<piranha::native_bool> : public NodeOutput {
     public:
         FundamentalOutput() : NodeOutput(&FundamentalType::BoolType) {};
-        ~FundamentalOutput() {}
+        ~FundamentalOutput() { /* void */ }
     };
 
     template <>
     class FundamentalOutput<piranha::native_string> : public NodeOutput {
     public:
         FundamentalOutput() : NodeOutput(&FundamentalType::StringType) {};
-        ~FundamentalOutput() {}
+        ~FundamentalOutput() { /* void */ }
     };
 
     typedef FundamentalOutput<piranha::native_float> FloatValueOutput;

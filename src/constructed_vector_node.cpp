@@ -22,7 +22,7 @@ void manta::ConstructedVectorNode::_destroy() {
     /* void */
 }
 
-piranha::Node *manta::ConstructedVectorNode::_optimize() {
+piranha::Node *manta::ConstructedVectorNode::_optimize(piranha::NodeAllocator *nodeAllocator) {
     addFlag(piranha::Node::META_ACTIONLESS);
 
     piranha::pNodeInput x, y, z, w;
@@ -46,7 +46,8 @@ piranha::Node *manta::ConstructedVectorNode::_optimize() {
         math::Vector constantValue;
         m_output.sample(nullptr, (void *)&constantValue);
 
-        CachedVectorNode *cached = new CachedVectorNode(constantValue);
+        CachedVectorNode *cached = nodeAllocator->allocate<CachedVectorNode>();
+        cached->setValue(constantValue);
         mapOptimizedPort(cached, "__out", "__out");
 
         return cached;

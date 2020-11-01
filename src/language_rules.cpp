@@ -310,10 +310,10 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
     // ====================================================
     // Literal types
     // ====================================================
-    registerLiteralType(piranha::LITERAL_FLOAT, "__mantaray__literal_float");
-    registerLiteralType(piranha::LITERAL_STRING, "__mantaray__literal_string");
-    registerLiteralType(piranha::LITERAL_INT, "__mantaray__literal_int");
-    registerLiteralType(piranha::LITERAL_BOOL, "__mantaray__literal_bool");
+    registerLiteralType(piranha::LiteralType::Float, "__mantaray__literal_float");
+    registerLiteralType(piranha::LiteralType::String, "__mantaray__literal_string");
+    registerLiteralType(piranha::LiteralType::Integer, "__mantaray__literal_int");
+    registerLiteralType(piranha::LiteralType::Boolean, "__mantaray__literal_bool");
 
     // ====================================================
     // Conversions
@@ -354,81 +354,81 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
 
     // Vector operators
     registerOperator(
-        { piranha::IrBinaryOperator::MUL, &VectorNodeOutput::VectorType, &VectorNodeOutput::VectorType },
+        { piranha::IrBinaryOperator::Operator::Mul, &VectorNodeOutput::VectorType, &VectorNodeOutput::VectorType },
         "__mantaray__vector_mul"
     );
     registerOperator(
-        { piranha::IrBinaryOperator::MUL, &VectorNodeOutput::VectorType, &piranha::FundamentalType::FloatType },
+        { piranha::IrBinaryOperator::Operator::Mul, &VectorNodeOutput::VectorType, &piranha::FundamentalType::FloatType },
         "__mantaray__vector_mul"
     );
     registerOperator(
-        { piranha::IrBinaryOperator::MUL, &VectorNodeOutput::VectorType, &piranha::FundamentalType::IntType },
+        { piranha::IrBinaryOperator::Operator::Mul, &VectorNodeOutput::VectorType, &piranha::FundamentalType::IntType },
         "__mantaray__vector_mul"
     );
     registerOperator(
-        { piranha::IrBinaryOperator::DIV, &VectorNodeOutput::VectorType, &VectorNodeOutput::VectorType },
+        { piranha::IrBinaryOperator::Operator::Div, &VectorNodeOutput::VectorType, &VectorNodeOutput::VectorType },
         "__mantaray__vector_div"
     );
     registerOperator(
-        { piranha::IrBinaryOperator::DIV, &VectorNodeOutput::VectorType, &piranha::FundamentalType::FloatType },
+        { piranha::IrBinaryOperator::Operator::Div, &VectorNodeOutput::VectorType, &piranha::FundamentalType::FloatType },
         "__mantaray__vector_div"
     );
     registerOperator(
-        { piranha::IrBinaryOperator::DIV, &VectorNodeOutput::VectorType, &piranha::FundamentalType::IntType },
+        { piranha::IrBinaryOperator::Operator::Div, &VectorNodeOutput::VectorType, &piranha::FundamentalType::IntType },
         "__mantaray__vector_div"
     );
     registerOperator(
-        { piranha::IrBinaryOperator::ADD, &VectorNodeOutput::VectorType, &VectorNodeOutput::VectorType },
+        { piranha::IrBinaryOperator::Operator::Add, &VectorNodeOutput::VectorType, &VectorNodeOutput::VectorType },
         "__mantaray__vector_add"
     );
     registerOperator(
-        { piranha::IrBinaryOperator::ADD, &VectorNodeOutput::VectorType, &piranha::FundamentalType::FloatType },
+        { piranha::IrBinaryOperator::Operator::Add, &VectorNodeOutput::VectorType, &piranha::FundamentalType::FloatType },
         "__mantaray__vector_add"
     );
     registerOperator(
-        { piranha::IrBinaryOperator::ADD, &VectorNodeOutput::VectorType, &piranha::FundamentalType::IntType },
+        { piranha::IrBinaryOperator::Operator::Add, &VectorNodeOutput::VectorType, &piranha::FundamentalType::IntType },
         "__mantaray__vector_add"
     );
     registerOperator(
-        { piranha::IrBinaryOperator::SUB, &VectorNodeOutput::VectorType, &VectorNodeOutput::VectorType },
+        { piranha::IrBinaryOperator::Operator::Sub, &VectorNodeOutput::VectorType, &VectorNodeOutput::VectorType },
         "__mantaray__vector_sub"
     );
     registerOperator(
-        { piranha::IrBinaryOperator::SUB, &VectorNodeOutput::VectorType, &piranha::FundamentalType::FloatType },
+        { piranha::IrBinaryOperator::Operator::Sub, &VectorNodeOutput::VectorType, &piranha::FundamentalType::FloatType },
         "__mantaray__vector_sub"
     );
     registerOperator(
-        { piranha::IrBinaryOperator::SUB, &VectorNodeOutput::VectorType, &piranha::FundamentalType::IntType },
+        { piranha::IrBinaryOperator::Operator::Sub, &VectorNodeOutput::VectorType, &piranha::FundamentalType::IntType },
         "__mantaray__vector_sub"
     );
 
     // Float operators
     registerOperator(
-        { piranha::IrBinaryOperator::DIV, &piranha::FundamentalType::FloatType, &piranha::FundamentalType::FloatType },
+        { piranha::IrBinaryOperator::Operator::Div, &piranha::FundamentalType::FloatType, &piranha::FundamentalType::FloatType },
         "__mantaray__float_divide"
     );
     registerOperator(
-        { piranha::IrBinaryOperator::DIV, &piranha::FundamentalType::FloatType, &piranha::FundamentalType::IntType },
+        { piranha::IrBinaryOperator::Operator::Div, &piranha::FundamentalType::FloatType, &piranha::FundamentalType::IntType },
         "__mantaray__float_divide"
     );
 
     // Int operators
     registerOperator(
-        { piranha::IrBinaryOperator::MUL, &piranha::FundamentalType::IntType, &piranha::FundamentalType::IntType },
+        { piranha::IrBinaryOperator::Operator::Mul, &piranha::FundamentalType::IntType, &piranha::FundamentalType::IntType },
         "__mantaray__int_multiply"
     );
     registerOperator(
-        { piranha::IrBinaryOperator::ADD, &piranha::FundamentalType::IntType, &piranha::FundamentalType::IntType },
+        { piranha::IrBinaryOperator::Operator::Add, &piranha::FundamentalType::IntType, &piranha::FundamentalType::IntType },
         "__mantaray__int_add"
     );
     registerOperator(
-        { piranha::IrBinaryOperator::SUB, &piranha::FundamentalType::IntType, &piranha::FundamentalType::IntType },
+        { piranha::IrBinaryOperator::Operator::Sub, &piranha::FundamentalType::IntType, &piranha::FundamentalType::IntType },
         "__mantaray__int_sub"
     );
 
     // String operators
     registerOperator(
-        { piranha::IrBinaryOperator::ADD, &piranha::FundamentalType::StringType, &piranha::FundamentalType::StringType },
+        { piranha::IrBinaryOperator::Operator::Add, &piranha::FundamentalType::StringType, &piranha::FundamentalType::StringType },
         "__mantaray__string_add"
     );
 
@@ -436,11 +436,11 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
     // Unary operators
     // ====================================================
     registerUnaryOperator(
-        { piranha::IrUnaryOperator::NUM_NEGATE, &piranha::FundamentalType::FloatType },
+        { piranha::IrUnaryOperator::Operator::NumericNegate, &piranha::FundamentalType::FloatType },
         "__mantaray__float_negate"
     );
     registerUnaryOperator(
-        { piranha::IrUnaryOperator::NUM_NEGATE, &VectorNodeOutput::VectorType },
+        { piranha::IrUnaryOperator::Operator::NumericNegate, &VectorNodeOutput::VectorType },
         "__mantaray__vector_negate"
     );
 }

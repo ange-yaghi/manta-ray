@@ -1,5 +1,5 @@
-#ifndef PIRANHA_VETOR_SPLIT_NODE_H
-#define PIRANHA_VETOR_SPLIT_NODE_H
+#ifndef PIRANHA_VECTOR_SPLIT_NODE_H
+#define PIRANHA_VECTOR_SPLIT_NODE_H
 
 #include "../include/node.h"
 
@@ -14,7 +14,7 @@ namespace piranha {
     class VectorSplitNode : public Node {
     public:
         VectorSplitNode() {
-            /* void */
+            m_primaryInput = nullptr;
         }
 
         ~VectorSplitNode() {
@@ -57,4 +57,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* PIRANHA_VETOR_SPLIT_NODE_H */
+#endif /* PIRANHA_VECTOR_SPLIT_NODE_H */

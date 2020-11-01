@@ -3,6 +3,7 @@
 
 #include "fundamental_output.h"
 
+#include "memory_tracker.h"
 #include "vector_split_node.h"
 
 namespace piranha {
@@ -10,12 +11,12 @@ namespace piranha {
     template <>
     class FundamentalOutput<piranha::vector> : public NodeOutput {
     public:
-        FundamentalOutput() : NodeOutput(&FundamentalType::VectorType) {};
-        ~FundamentalOutput() {}
+        FundamentalOutput() : NodeOutput(&FundamentalType::VectorType) { /* void */ };
+        ~FundamentalOutput() { /* void */ }
 
     protected:
-        virtual Node *generateInterface() {
-            VectorSplitNode *vectorInterface = new VectorSplitNode();
+        virtual Node *newInterface(NodeAllocator *nodeAllocator) {
+            VectorSplitNode *vectorInterface = nodeAllocator->allocate<VectorSplitNode>();
             vectorInterface->initialize();
             vectorInterface->connectInput(this, "__in", nullptr);
 

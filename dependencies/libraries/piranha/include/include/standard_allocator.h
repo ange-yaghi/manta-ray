@@ -1,12 +1,13 @@
 #ifndef PIRANHA_STANDARD_ALLOCATOR_H
 #define PIRANHA_STANDARD_ALLOCATOR_H
 
+#include "memory_tracker.h"
+#include "build_settings.h"
+
 #include <assert.h>
 #include <new>
 
 #include <iostream>
-
-#define STD_ALLOC_ENABLE_LEDGER (true)
 
 namespace piranha {
 
@@ -19,7 +20,7 @@ namespace piranha {
 
         template <typename t_alloc>
         t_alloc *allocate(unsigned int n = 1, unsigned int alignment = 1) {
-#ifdef STD_ALLOC_ENABLE_LEDGER
+#if STD_ALLOC_ENABLE_LEDGER
             m_allocationLedger++;
 #endif /* STD_ALLOC_ENABLE_LEDGER */
 
@@ -30,21 +31,21 @@ namespace piranha {
 
             if (alignment == 1) {
                 if (n == 1) {
-                    newObject = new t_alloc;
+                    newObject = TRACK(new t_alloc);
                 }
                 else {
-                    newObject = new t_alloc[n];
+                    newObject = TRACK(new t_alloc[n]);
                 }
             }
             else {
                 void *buffer = _aligned_malloc(sizeof(t_alloc) * n, alignment);
                 if (n == 1) {
-                    newObject = new (buffer) t_alloc;
+                    newObject = TRACK(new (buffer) t_alloc);
                 }
                 else {
                     newObject = (t_alloc *)buffer;
                     for (unsigned int i = 0; i < n; i++) {
-                        new ((t_alloc *)buffer + i) t_alloc;
+                        TRACK(new ((t_alloc *)buffer + i) t_alloc);
                     }
                 }
             }
@@ -56,7 +57,7 @@ namespace piranha {
         void free(t_alloc *memory, int n = 1) {
             if (memory == nullptr) return;
 
-#ifdef STD_ALLOC_ENABLE_LEDGER
+#if STD_ALLOC_ENABLE_LEDGER
             m_allocationLedger--;
             assert(m_allocationLedger >= 0);
 #endif /* STD_ALLOC_ENABLE_LEDGER */
@@ -65,10 +66,10 @@ namespace piranha {
             m_currentUsage -= sizeof(t_alloc) * n;
 
             if (n == 1) {
-                delete memory;
+                delete FTRACK(memory);
             }
             else {
-                delete[] memory;
+                delete[] FTRACK(memory);
             }
         }
 
@@ -76,7 +77,7 @@ namespace piranha {
         void aligned_free(t_alloc *memory, int n = 1) {
             if (memory == nullptr) return;
 
-#ifdef STD_ALLOC_ENABLE_LEDGER
+#if STD_ALLOC_ENABLE_LEDGER
             m_allocationLedger--;
             assert(m_allocationLedger >= 0);
 #endif /* STD_ALLOC_ENABLE_LEDGER */
@@ -88,7 +89,7 @@ namespace piranha {
                 memory[i].~t_alloc();
             }
 
-            _aligned_free((void *)memory);
+            _aligned_free(FTRACK((void *)memory));
         }
 
         unsigned int getMaxUsage() const { return m_maxUsage; }

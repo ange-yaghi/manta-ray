@@ -44,7 +44,7 @@ namespace manta {
         virtual void registerInputs();
 
         virtual void _evaluate();
-        virtual piranha::Node *_optimize();
+        virtual piranha::Node *_optimize(piranha::NodeAllocator *nodeAllocator);
 
     protected:
         CacheableInput<math::Vector> m_width;

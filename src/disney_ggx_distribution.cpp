@@ -66,7 +66,7 @@ void manta::DisneyGgxDistribution::_evaluate() {
     setOutput(this);
 }
 
-piranha::Node *manta::DisneyGgxDistribution::_optimize() {
+piranha::Node *manta::DisneyGgxDistribution::_optimize(piranha::NodeAllocator *nodeAllocator) {
     if (ENABLE_OPTIMIZATION) {
         m_roughness.optimize();
     }

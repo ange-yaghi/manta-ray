@@ -70,7 +70,7 @@ namespace piranha {
         }
 
     protected:
-        virtual Node *_optimize() {
+        virtual Node *_optimize(NodeAllocator *nodeAllocator) {
             addFlag(Node::META_ACTIONLESS);
 
             bool isConstant = true;
@@ -82,11 +82,11 @@ namespace piranha {
             if (isConstant) {
                 addFlag(Node::META_CONSTANT);
 
-                bool result = evaluate();
+                const bool result = evaluate();
                 if (!result) return nullptr;
 
                 DefaultLiteralNode<piranha::native_float> *newLiteral =
-                    new DefaultLiteralNode<piranha::native_float>();
+                    nodeAllocator->allocate<DefaultLiteralNode<piranha::native_float>>();
 
                 piranha::native_float computedValue;
                 m_output.fullCompute((void *)&computedValue);

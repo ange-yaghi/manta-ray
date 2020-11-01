@@ -158,7 +158,7 @@ void manta::BilayerBRDF::_evaluate() {
     }
 }
 
-piranha::Node *manta::BilayerBRDF::_optimize() {
+piranha::Node *manta::BilayerBRDF::_optimize(piranha::NodeAllocator *nodeAllocator) {
     m_diffuse.optimize();
     m_specular.optimize();
 

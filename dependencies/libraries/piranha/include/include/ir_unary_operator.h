@@ -9,18 +9,18 @@ namespace piranha {
 
     class IrUnaryOperator : public IrValue {
     public:
-        enum OPERATOR {
-            DEFAULT,
-            NUM_NEGATE,
-            BOOL_NEGATE,
-            POSITIVE
+        enum class Operator {
+            Default,
+            NumericNegate,
+            BoolNegate,
+            Positive
         };
 
     public:
-        IrUnaryOperator(OPERATOR op, IrValue *operand);
+        IrUnaryOperator(Operator op, IrValue *operand);
         ~IrUnaryOperator();
 
-        OPERATOR getOperator() const { return m_operator; }
+        Operator getOperator() const { return m_operator; }
         IrValue *getOperand() const { return m_operand; }
 
         virtual IrParserStructure *getImmediateReference(const IrReferenceQuery &query, IrReferenceInfo *output);
@@ -29,7 +29,7 @@ namespace piranha {
         void _expand(IrContextTree *context);
 
     protected:
-        OPERATOR m_operator;
+        Operator m_operator;
         IrValue *m_operand;
     };
 

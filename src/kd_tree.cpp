@@ -14,6 +14,7 @@
 
 manta::KDTree::KDTree() {
     m_nodes = nullptr;
+    m_nodeVolumes = nullptr;
     m_nodeCapacity = 0;
     m_nodeCount = 0;
 

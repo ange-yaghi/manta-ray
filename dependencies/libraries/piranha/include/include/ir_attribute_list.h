@@ -20,6 +20,8 @@ namespace piranha {
         IrAttribute *getAttribute(IrAttributeDefinition *definition) const;
         int getAttributeCount() const { return (int)m_attributes.size(); }
 
+        virtual void free();
+
     protected:
         std::vector<IrAttribute *> m_attributes;
     };

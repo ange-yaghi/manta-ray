@@ -47,7 +47,7 @@ namespace manta {
 
     protected:
         virtual void _evaluate();
-        virtual piranha::Node *_optimize();
+        virtual piranha::Node *_optimize(piranha::NodeAllocator *nodeAllocator);
         virtual void registerInputs();
 
         CacheableInput<math::Vector> m_baseColor;

@@ -45,7 +45,7 @@ namespace piranha {
     };
 
     struct OperatorMapping {
-        IrBinaryOperator::OPERATOR op;
+        IrBinaryOperator::Operator op;
         const ChannelType *leftType;
         const ChannelType *rightType;
         bool reversible = true;
@@ -75,7 +75,7 @@ namespace piranha {
     };
 
     struct UnaryOperatorMapping {
-        IrUnaryOperator::OPERATOR op;
+        IrUnaryOperator::Operator op;
         const ChannelType *type;
         bool isBase = true;
 
@@ -119,17 +119,17 @@ namespace piranha {
 
         Node *generateNode(const std::string &builtinName) const;
         std::string resolveOperatorBuiltinType(
-            IrBinaryOperator::OPERATOR op, const ChannelType *left, const ChannelType *right) const;
+            IrBinaryOperator::Operator op, const ChannelType *left, const ChannelType *right) const;
         std::string resolveUnaryOperatorBuiltinType(
-            IrUnaryOperator::OPERATOR op, const ChannelType *type) const;
+            IrUnaryOperator::Operator op, const ChannelType *type) const;
         const ChannelType *resolveChannelType(const std::string &builtinName) const;
 
         template <typename NativeType>
         std::string getLiteralBuiltinName() const { return ""; }
-        template<> std::string getLiteralBuiltinName<piranha::native_bool>() const { return *m_literalRules.lookup(LITERAL_BOOL); }
-        template<> std::string getLiteralBuiltinName<piranha::native_string>() const  { return *m_literalRules.lookup(LITERAL_STRING); }
-        template<> std::string getLiteralBuiltinName<piranha::native_int>() const  { return *m_literalRules.lookup(LITERAL_INT); }
-        template<> std::string getLiteralBuiltinName<piranha::native_float>() const { return *m_literalRules.lookup(LITERAL_FLOAT); }
+        template<> std::string getLiteralBuiltinName<piranha::native_bool>() const { return *m_literalRules.lookup(LiteralType::Boolean); }
+        template<> std::string getLiteralBuiltinName<piranha::native_string>() const  { return *m_literalRules.lookup(LiteralType::String); }
+        template<> std::string getLiteralBuiltinName<piranha::native_int>() const  { return *m_literalRules.lookup(LiteralType::Integer); }
+        template<> std::string getLiteralBuiltinName<piranha::native_float>() const { return *m_literalRules.lookup(LiteralType::Float); }
 
         bool checkConversion(const ChannelType *input, const ChannelType *output) const;
         Node *generateConversion(const ChannelType *input, const ChannelType *output);
@@ -139,11 +139,13 @@ namespace piranha {
 
         const Node *getReferenceNode(const std::string &builtinType) const;
 
+        NodeAllocator *getNodeAllocator() const { return m_nodeAllocator; }
+
     protected:
         virtual void registerBuiltinNodeTypes() = 0;
 
-        Node *generateOperator(IrBinaryOperator::OPERATOR op, const ChannelType *left, const ChannelType *right);
-        Node *generateUnaryOperator(IrUnaryOperator::OPERATOR op, const ChannelType *type);
+        Node *generateOperator(IrBinaryOperator::Operator op, const ChannelType *left, const ChannelType *right);
+        Node *generateUnaryOperator(IrUnaryOperator::Operator op, const ChannelType *type);
 
     protected:
         Node *generateBuiltinType(const std::string &typeName) const;
@@ -153,6 +155,7 @@ namespace piranha {
             BuiltinRule *newRule =
                 m_builtinRules.newValue<SpecializedRule<BuiltinTypeInfo, NodeType, Node>>(builtinName);
             newRule->setValue({ nodeType });
+            newRule->generateReference(getNodeAllocator());
         }
 
         void registerLiteralType(LiteralType literalType, const std::string &builtinType);
@@ -160,6 +163,8 @@ namespace piranha {
         void registerConversion(const NodeTypeConversion &conversion, const std::string &builtinType);
         void registerOperator(const OperatorMapping &op, const std::string &builtinType);
         void registerUnaryOperator(const UnaryOperatorMapping &op, const std::string &builtinType);
+
+        void setNodeAllocator(NodeAllocator *nodeAllocator) { m_nodeAllocator = nodeAllocator; }
 
     public:
         template <typename BaseType>
@@ -172,7 +177,8 @@ namespace piranha {
         KeyValueLookup<UnaryOperatorMapping, std::string> m_unaryOperatorRules;
         KeyValueLookup<LiteralType, std::string> m_literalRules;
 
-        NodeProgram *m_nodeProgram;
+        NodeAllocator m_defaultNodeAllocator;
+        NodeAllocator *m_nodeAllocator;
     };
 
 } /* namespace piranha */

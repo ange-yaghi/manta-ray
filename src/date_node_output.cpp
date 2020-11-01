@@ -18,9 +18,9 @@ void manta::DateNodeOutput::fullCompute(void *_target) const {
     *target = m_time;
 }
 
-piranha::Node * manta::DateNodeOutput::generateInterface() {
+piranha::Node *manta::DateNodeOutput::newInterface(piranha::NodeAllocator *nodeAllocator) {
     DateInterfaceNode *dateInterface =
-        StandardAllocator::Global()->allocate<DateInterfaceNode>(16);
+        nodeAllocator->allocate<DateInterfaceNode>();
     dateInterface->initialize();
     dateInterface->connectInput(this, "__in", nullptr);
 

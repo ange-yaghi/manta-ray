@@ -5,7 +5,10 @@
 
 
 manta::SrgbNodeOutput::SrgbNodeOutput() {
-    /* void */
+    m_r = nullptr;
+    m_g = nullptr;
+    m_b = nullptr;
+    m_a = nullptr;
 }
 
 manta::SrgbNodeOutput::~SrgbNodeOutput() {

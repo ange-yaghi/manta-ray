@@ -40,6 +40,8 @@ namespace piranha {
 
         bool isEmpty() const { return m_context == nullptr; }
 
+        virtual void free();
+
     protected:
         IrContextTree *_getMain();
 

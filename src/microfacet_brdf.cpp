@@ -116,7 +116,7 @@ void manta::MicrofacetBRDF::_evaluate() {
     m_distribution = distInput->getReference();
 }
 
-piranha::Node * manta::MicrofacetBRDF::_optimize() {
+piranha::Node * manta::MicrofacetBRDF::_optimize(piranha::NodeAllocator *nodeAllocator) {
     m_reflectivity.optimize();
 
     return this;

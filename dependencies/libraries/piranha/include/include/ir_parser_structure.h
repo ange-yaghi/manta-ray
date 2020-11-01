@@ -129,6 +129,8 @@ namespace piranha {
         bool isInfiniteLoop(IrContextTree *context);
         void setInfiniteLoop(IrContextTree *context);
 
+        virtual void free();
+
     public:
         // Compilation stages
         void resolveDefinitions();
@@ -157,6 +159,8 @@ namespace piranha {
 
         virtual void _expand(IrContextTree *context);
 
+        void addTree(IrContextTree *tree) { m_trees.push_back(tree); }
+
     protected:
         IrCompilationUnit *m_parentUnit;
         IrParserStructure *m_scopeParent;
@@ -166,6 +170,7 @@ namespace piranha {
         PKeyValueLookup<IrContextTree, IrNode *> m_expansions;
         std::vector<IrContextTree *> m_infiniteLoops;
 
+        std::vector<IrContextTree *> m_trees;
         std::vector<IrParserStructure *> m_components;
 
     protected:

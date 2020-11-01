@@ -66,6 +66,6 @@ void manta::IntToVectorConversionOutput::registerInputs() {
     registerInput(&m_input);
 }
 
-piranha::Node *manta::IntToVectorConversionOutput::_optimize() {
+piranha::Node *manta::IntToVectorConversionOutput::_optimize(piranha::NodeAllocator *nodeAllocator) {
     return nullptr;
 }

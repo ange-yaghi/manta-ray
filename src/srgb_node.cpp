@@ -35,7 +35,7 @@ void manta::SrgbNode::registerInputs() {
     registerInput(m_output.getAConnection(), "a");
 }
 
-piranha::Node *manta::SrgbNode::_optimize() {
+piranha::Node *manta::SrgbNode::_optimize(piranha::NodeAllocator *nodeAllocator) {
     addFlag(piranha::Node::META_ACTIONLESS);
 
     piranha::pNodeInput r, g, b, a;
@@ -44,7 +44,7 @@ piranha::Node *manta::SrgbNode::_optimize() {
     b = *m_output.getBConnection();
     a = *m_output.getAConnection();
 
-    bool isConstant =
+    const bool isConstant =
         r->getParentNode()->hasFlag(piranha::Node::META_CONSTANT) &&
         g->getParentNode()->hasFlag(piranha::Node::META_CONSTANT) &&
         b->getParentNode()->hasFlag(piranha::Node::META_CONSTANT) &&
@@ -53,13 +53,14 @@ piranha::Node *manta::SrgbNode::_optimize() {
     if (isConstant) {
         addFlag(piranha::Node::META_CONSTANT);
 
-        bool result = evaluate();
+        const bool result = evaluate();
         if (!result) return nullptr;
 
         math::Vector constantValue;
         m_output.sample(nullptr, (void *)&constantValue);
 
-        CachedVectorNode *cached = new CachedVectorNode(constantValue);
+        CachedVectorNode *cached = nodeAllocator->allocate<CachedVectorNode>();
+        cached->setValue(constantValue);
         mapOptimizedPort(cached, "__out", "color");
 
         return cached;

@@ -4,17 +4,21 @@
 #include "node_container.h"
 #include "pkey_value_lookup.h"
 #include "ir_compilation_unit.h"
+#include "language_rules.h"
 
 #include <vector>
 
 namespace piranha {
 
     class Node;
-    class LanguageRules;
+    class NodeAllocator;
     class IrParserStructure;
     class IrContextTree;
 
     class NodeProgram {
+    public:
+        static const bool CheckDuplicates = true;
+
     public:
         NodeProgram();
         ~NodeProgram();
@@ -22,6 +26,7 @@ namespace piranha {
         void initialize();
         void optimize();
         bool execute();
+        void free();
 
         void writeAssembly(const std::string &fname) const;
 
@@ -31,6 +36,7 @@ namespace piranha {
 
         void addNode(Node *node);
         Node *getCachedInstance(IrParserStructure *ir, IrContextTree *context);
+        Node *getCachedInstance(Node *node);
 
         void addContainer(IrContextTree *context, NodeContainer *container);
         NodeContainer *getContainer(IrContextTree *context);
@@ -41,9 +47,15 @@ namespace piranha {
         void setRootUnit(IrCompilationUnit *unit) { m_rootUnit = unit; }
         IrCompilationUnit *getRootUnit() const { return m_rootUnit; }
 
+        void setRootContext(IrContextTree *context) { m_rootContext = context; }
+        IrContextTree *getRootContext() const { return m_rootContext; }
+
+        NodeAllocator *getNodeAllocator() { return m_rootUnit->getRules()->getNodeAllocator(); }
+
     protected:
         bool m_initialized;
 
+        IrContextTree *m_rootContext;
         IrCompilationUnit *m_rootUnit;
 
         NodeContainer m_topLevelContainer;

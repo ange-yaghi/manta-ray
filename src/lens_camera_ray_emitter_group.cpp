@@ -19,6 +19,12 @@ void manta::LensCameraRayEmitterGroup::configure() {
 
     m_xIncrement = m_lens->getSensorWidth() / getResolutionX();
     m_yIncrement = m_lens->getSensorHeight() / getResolutionY();
+
+    setUp(m_lens->getUp());
+    setDirection(m_lens->getDirection());
+    setPosition(m_lens->getPosition());
+    setResolutionX(m_lens->getSensorResolutionX());
+    setResolutionY(m_lens->getSensorResolutionY());
 }
 
 manta::CameraRayEmitter *manta::LensCameraRayEmitterGroup::
@@ -29,9 +35,12 @@ manta::CameraRayEmitter *manta::LensCameraRayEmitterGroup::
     math::real x = (ix + (math::real)0.5) * m_xIncrement;
     math::real y = (iy + (math::real)0.5) * m_yIncrement;
 
-    math::Vector loc = math::mul(m_lens->getSensorRight(), math::loadScalar(- x + m_lens->getSensorWidth() / (math::real)2.0));
-    loc = math::add(loc, math::mul(m_lens->getUp(), math::loadScalar(y - (math::real)m_lens->getSensorHeight() / (math::real)2.0)));
-    loc = math::add(loc, m_lens->getSensorLocation());
+    math::Vector offset_x = math::loadScalar(-x + m_lens->getSensorWidth() / (math::real)2.0);
+    math::Vector offset_y = math::loadScalar(y - m_lens->getSensorHeight() / (math::real)2.0);
+
+    math::Vector loc = m_lens->getSensorLocation();
+    loc = math::add(loc, math::mul(m_lens->getUp(), offset_y));
+    loc = math::add(loc, math::mul(m_lens->getSensorRight(), offset_x));
 
     newEmitter->setPosition(m_position);
     newEmitter->setImagePlaneOrigin(loc);
@@ -52,13 +61,7 @@ void manta::LensCameraRayEmitterGroup::_initialize() {
 void manta::LensCameraRayEmitterGroup::_evaluate() {
     Lens *lens = getObject<Lens>(m_lensInput);
 
-    setUp(lens->getUp());
-    setDirection(lens->getDirection());
-    setPosition(lens->getPosition());
-    setResolutionX(lens->getSensorResolutionX());
-    setResolutionY(lens->getSensorResolutionY());
     setLens(lens);
-
     setOutput(this);
 
     configure();

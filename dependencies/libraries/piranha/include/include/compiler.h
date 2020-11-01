@@ -20,6 +20,7 @@ namespace piranha {
         ~Compiler();
 
         IrCompilationUnit *compile(const IrPath &scriptPath);
+        void free();
         IrCompilationUnit *getUnit(const IrPath &scriptPath) const;
 
         int getUnitCount() const { return (int)m_units.size(); }

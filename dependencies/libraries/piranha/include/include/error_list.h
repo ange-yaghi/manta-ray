@@ -16,7 +16,7 @@ namespace piranha {
         CompilationError *getCompilationError(int index) const { return m_compilationErrors[index]; }
         int getErrorCount() const { return (int)m_compilationErrors.size(); }
 
-        void destroy();
+        void free();
 
     protected:
         std::vector<CompilationError *> m_compilationErrors;

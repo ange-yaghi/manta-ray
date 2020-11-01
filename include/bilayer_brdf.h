@@ -50,7 +50,7 @@ namespace manta {
         virtual void registerInputs();
 
         virtual void _evaluate();
-        piranha::Node *_optimize();
+        piranha::Node *_optimize(piranha::NodeAllocator *nodeAllocator);
 
     protected:
         MicrofacetDistribution *m_coatingDistribution;

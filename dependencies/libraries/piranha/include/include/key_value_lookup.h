@@ -1,6 +1,8 @@
 #ifndef PIRANHA_KEY_VALUE_LOOKUP_H
 #define PIRANHA_KEY_VALUE_LOOKUP_H
 
+#include "memory_tracker.h"
+
 #include <vector>
 
 namespace piranha {
@@ -19,7 +21,9 @@ namespace piranha {
         }
 
         ~KeyValueLookup() {
-            /* void */
+            for (const KeyValuePair kvp : m_lookupTable) {
+                delete FTRACK(kvp.value);
+            }
         }
 
         int getEntryCount() const {
@@ -45,11 +49,11 @@ namespace piranha {
             return m_lookupTable[index].value;
         }
 
-        template <typename T>
+        template <typename T_Value>
         ValueType *newValue(const KeyType &key) {
             KeyValuePair kvp;
             kvp.key = key;
-            kvp.value = new T();
+            kvp.value = TRACK(new T_Value());
 
             m_lookupTable.push_back(kvp);
 
@@ -59,7 +63,7 @@ namespace piranha {
         ValueType *newValue(const KeyType &key) {
             KeyValuePair kvp;
             kvp.key = key;
-            kvp.value = new ValueType();
+            kvp.value = TRACK(new ValueType());
 
             m_lookupTable.push_back(kvp);
 

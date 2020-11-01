@@ -23,7 +23,7 @@ void manta::VectorSplitNode::_destroy() {
     /* void */
 }
 
-piranha::Node *manta::VectorSplitNode::_optimize() {
+piranha::Node *manta::VectorSplitNode::_optimize(piranha::NodeAllocator *nodeAllocator) {
     addFlag(piranha::Node::META_ACTIONLESS);
 
     return this;

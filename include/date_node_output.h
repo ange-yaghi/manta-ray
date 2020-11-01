@@ -24,7 +24,7 @@ namespace manta {
         time_t m_time;
 
     protected:
-        virtual piranha::Node *generateInterface();
+        virtual piranha::Node *newInterface(piranha::NodeAllocator *nodeAllocator);
     };
 
 } /* namespace manta */

@@ -116,7 +116,7 @@ void manta::GgxDistribution::_evaluate() {
     setOutput(this);
 }
 
-piranha::Node *manta::GgxDistribution::_optimize() {
+piranha::Node *manta::GgxDistribution::_optimize(piranha::NodeAllocator *nodeAllocator) {
     if (ENABLE_OPTIMIZATION) {
         m_width.optimize();
     }

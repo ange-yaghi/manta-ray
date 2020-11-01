@@ -23,7 +23,7 @@ namespace manta {
         const SrgbNodeOutput *getMainOutput() const { return &m_output; }
 
     protected:
-        virtual Node *_optimize();
+        virtual piranha::Node *_optimize(piranha::NodeAllocator *nodeAllocator);
 
     protected:
         SrgbNodeOutput m_output;

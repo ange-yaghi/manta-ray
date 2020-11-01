@@ -23,7 +23,7 @@ namespace manta {
         virtual void _evaluate();
         virtual void _destroy();
 
-        virtual piranha::Node *_optimize();
+        virtual piranha::Node *_optimize(piranha::NodeAllocator *nodeAllocator);
 
         virtual void registerOutputs();
 

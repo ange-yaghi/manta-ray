@@ -23,7 +23,7 @@ namespace piranha {
             /* void */
         }
 
-        virtual Node *_optimize() {
+        virtual Node *_optimize(NodeAllocator *nodeAllocator) {
             Node::addFlag(Node::META_CONSTANT);
             Node::addFlag(Node::META_ACTIONLESS);
 

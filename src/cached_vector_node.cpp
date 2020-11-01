@@ -24,7 +24,7 @@ void manta::CachedVectorNode::_destroy() {
     /* void */
 }
 
-piranha::Node *manta::CachedVectorNode::_optimize() {
+piranha::Node *manta::CachedVectorNode::_optimize(piranha::NodeAllocator *nodeAllocator) {
     addFlag(piranha::Node::META_CONSTANT);
     addFlag(piranha::Node::META_ACTIONLESS);
 

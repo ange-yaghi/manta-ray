@@ -19,11 +19,6 @@ void manta::StandardCameraRayEmitterGroup::configure() {
 
     m_right = math::cross(m_direction, m_up);
     m_planeCenter = math::add(m_position, math::mul(m_direction, math::loadScalar((math::real)m_planeDistance)));
-
-    //m_sampler->setAxis1(m_right);
-    //m_sampler->setAxis2(m_up);
-    //m_sampler->setBoundaryHeight(m_yIncrement);
-    //m_sampler->setBoundaryWidth(m_xIncrement);
 }
 
 manta::CameraRayEmitter *manta::StandardCameraRayEmitterGroup::

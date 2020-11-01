@@ -37,7 +37,7 @@ namespace piranha {
         virtual void _evaluate();
         virtual void _destroy();
 
-        virtual Node *_optimize();
+        virtual Node *_optimize(NodeAllocator *nodeAllocator);
 
     protected:
         std::vector<NodeContainer *> m_children;

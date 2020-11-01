@@ -50,10 +50,10 @@ void manta::VectorNodeOutput::calculateAllDimensions(VectorMap2D *target) const 
     }
 }
 
-piranha::Node *manta::VectorNodeOutput::generateInterface() {
+piranha::Node *manta::VectorNodeOutput::newInterface(piranha::NodeAllocator *nodeAllocator) {
     if (!m_scalar) {
-        VectorSplitNode *vectorInterface = 
-            StandardAllocator::Global()->allocate<VectorSplitNode>(16);
+        VectorSplitNode *vectorInterface =
+            nodeAllocator->allocate<VectorSplitNode>();
         vectorInterface->initialize();
         vectorInterface->connectInput(this, "__in", nullptr);
 

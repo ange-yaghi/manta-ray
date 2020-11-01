@@ -6,7 +6,7 @@
 
 #include <iostream>
 
-#define STD_ALLOC_ENABLE_LEDGER (true)
+#define MANTA_STD_ALLOC_ENABLE_LEDGER (true)
 
 namespace manta {
 
@@ -19,9 +19,9 @@ namespace manta {
 
         template <typename t_alloc>
         t_alloc *allocate(unsigned int n = 1, unsigned int alignment = 1) {
-#ifdef STD_ALLOC_ENABLE_LEDGER
+#if MANTA_STD_ALLOC_ENABLE_LEDGER
             m_allocationLedger++;
-#endif /* STD_ALLOC_ENABLE_LEDGER */
+#endif /* MANTA_STD_ALLOC_ENABLE_LEDGER */
 
             unsigned int usage = sizeof(t_alloc) * n;
             m_currentUsage += usage;
@@ -56,10 +56,10 @@ namespace manta {
         void free(t_alloc *memory, int n = 1) {
             if (memory == nullptr) return;
 
-#ifdef STD_ALLOC_ENABLE_LEDGER
+#if MANTA_STD_ALLOC_ENABLE_LEDGER
             m_allocationLedger--;
             assert(m_allocationLedger >= 0);
-#endif /* STD_ALLOC_ENABLE_LEDGER */
+#endif /* MANTA_STD_ALLOC_ENABLE_LEDGER */
             assert(m_currentUsage >= sizeof(t_alloc) * n);
 
             m_currentUsage -= sizeof(t_alloc) * n;
@@ -76,10 +76,10 @@ namespace manta {
         void aligned_free(t_alloc *memory, int n = 1) {
             if (memory == nullptr) return;
 
-#ifdef STD_ALLOC_ENABLE_LEDGER
+#if MANTA_STD_ALLOC_ENABLE_LEDGER
             m_allocationLedger--;
             assert(m_allocationLedger >= 0);
-#endif /* STD_ALLOC_ENABLE_LEDGER */
+#endif /* MANTA_STD_ALLOC_ENABLE_LEDGER */
             assert(m_currentUsage >= sizeof(t_alloc));
 
             m_currentUsage -= sizeof(t_alloc) * n;

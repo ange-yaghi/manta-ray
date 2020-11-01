@@ -34,7 +34,7 @@ namespace manta {
 
     protected:
         virtual void _evaluate();
-        virtual piranha::Node *_optimize();
+        virtual piranha::Node *_optimize(piranha::NodeAllocator *nodeAllocator);
         virtual void registerInputs();
 
         piranha::pNodeInput m_distributionInput;

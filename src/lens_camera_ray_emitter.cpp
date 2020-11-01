@@ -17,18 +17,19 @@ void manta::LensCameraRayEmitter::initialize() {
 }
 
 void manta::LensCameraRayEmitter::generateRay(LightRay *ray) const {
-    const math::Vector2 samplePoint = m_sampler->generate2d();
-    math::Vector position = transformToImagePlane(
-        math::Vector2(samplePoint.x - (math::real)0.5, samplePoint.y - (math::real)0.5));
-
     ray->setIntensity(math::constants::Zero);
 
-    bool result = m_lens->generateOutgoingRay(position, &m_lensHint, ray, m_sampler->generate2d());
+    const math::Vector2 p_u = m_sampler->generate2d();
+    const math::Vector2 l_u = m_sampler->generate2d();
+    math::Vector position = transformToImagePlane(
+        math::Vector2(p_u.x - (math::real)0.5, p_u.y - (math::real)0.5));
+
+    bool result = m_lens->generateOutgoingRay(position, &m_lensHint, ray, l_u);
 
     if (!result) ray->setCameraWeight((math::real)0.0);
 
     ray->setImagePlaneLocation(
         math::Vector2(
-            -(samplePoint.x - (math::real)0.5) + (math::real)m_pixelX,
-            (samplePoint.y - (math::real)0.5) + (math::real)m_pixelY));
+            -(p_u.x - (math::real)0.5) + (math::real)m_pixelX,
+            (p_u.y - (math::real)0.5) + (math::real)m_pixelY));
 }

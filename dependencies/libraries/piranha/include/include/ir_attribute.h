@@ -30,6 +30,8 @@ namespace piranha {
 
         virtual bool isExternalInput() const { return true; }
 
+        virtual void free();
+
     protected:
         IrTokenInfo_string m_name;
         IrValue *m_value;

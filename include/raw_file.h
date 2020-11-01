@@ -1,5 +1,7 @@
-#ifndef RAW_FILE_H
-#define RAW_FILE_H
+#ifndef MANTARAY_RAW_FILE_H
+#define MANTARAY_RAW_FILE_H
+
+#include "manta_math.h"
 
 namespace manta {
 
@@ -21,15 +23,15 @@ namespace manta {
         };
 
         struct FloatPixel_v1 {
-            float r;
-            float g;
-            float b;
+            math::real_f r;
+            math::real_f g;
+            math::real_f b;
         };
 
         struct DoublePixel_v1 {
-            double r;
-            double g;
-            double b;
+            math::real_d r;
+            math::real_d g;
+            math::real_d b;
         };
 
     public:
@@ -53,4 +55,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* RAW_WRITER_H */
+#endif /* MANTARAY_RAW_FILE_H */

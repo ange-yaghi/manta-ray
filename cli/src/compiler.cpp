@@ -84,7 +84,7 @@ void mantaray_cli::Compiler::printTrace() {
 
 void mantaray_cli::Compiler::execute() {
     if (getState() == OPTIMIZATION_SUCCESS) {
-        bool result = m_program.execute();
+        const bool result = m_program.execute();
         setState(COMPLETE);
 
         if (!result) {

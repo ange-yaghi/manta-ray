@@ -10,8 +10,8 @@ namespace piranha {
     template <typename NativeType>
     class LiteralNode : public Node {
     public:
-        LiteralNode() {}
-        ~LiteralNode() {}
+        LiteralNode() { /* void */ }
+        ~LiteralNode() { /* void */ }
 
         virtual void setData(NativeType data) = 0;
         virtual bool isLiteral() const { return true; }

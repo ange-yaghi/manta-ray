@@ -38,7 +38,7 @@ namespace manta {
 
         void optimize() {
             if (m_port != nullptr) {
-                bool isConstant = m_port->getParentNode()->hasFlag(piranha::Node::META_CONSTANT);
+                const bool isConstant = m_port->getParentNode()->hasFlag(piranha::Node::META_CONSTANT);
 
                 if (isConstant) {
                     T_Data constantValue;

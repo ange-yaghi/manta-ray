@@ -47,6 +47,8 @@ namespace piranha {
         const ChannelType *getChannelType();
         IrNodeDefinition *getAliasType();
 
+        virtual void free();
+
     protected:
         IrTokenInfo_string m_name;
 

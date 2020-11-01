@@ -26,10 +26,10 @@ namespace piranha {
 
     class IrCompilationUnit : public IrParserStructure {
     public:
-        enum ParseResult {
-            IO_ERROR,
-            SUCCESS,
-            FAIL
+        enum class ParseResult {
+            IoError,
+            Success,
+            Fail
         };
 
     public:
@@ -72,6 +72,10 @@ namespace piranha {
         void resolveAll();
         void validateAll();
 
+        void registerStructure(IrParserStructure *structure);
+
+        virtual void free();
+
     protected:
         virtual void _expand();
         virtual void _checkInstantiation();
@@ -84,6 +88,8 @@ namespace piranha {
         Scanner *m_scanner = nullptr;
 
         Path m_path;
+
+        std::vector<IrParserStructure *> m_allStructures;
 
         std::vector<IrNode *> m_nodes;
         std::vector<IrImportStatement *> m_importStatements;

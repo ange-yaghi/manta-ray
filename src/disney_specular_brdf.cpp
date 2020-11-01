@@ -120,7 +120,7 @@ void manta::DisneySpecularBRDF::_evaluate() {
     m_distribution = getObject<MicrofacetDistribution>(m_distributionNode);
 }
 
-piranha::Node *manta::DisneySpecularBRDF::_optimize() {
+piranha::Node *manta::DisneySpecularBRDF::_optimize(piranha::NodeAllocator *nodeAllocator) {
     m_baseColor.optimize();
     m_roughness.optimize();
     m_specular.optimize();

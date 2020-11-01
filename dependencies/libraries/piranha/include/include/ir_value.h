@@ -15,28 +15,28 @@ namespace piranha {
 
     class IrValue : public IrParserStructure {
     public:
-        enum VALUE_TYPE {
-            CONSTANT_FLOAT,
-            CONSTANT_INT,
-            CONSTANT_STRING,
-            CONSTANT_LABEL,
-            CONSTANT_BOOL,
+        enum class ValueType {
+            ConstantFloat,
+            ConstantInt,
+            ConstantString,
+            ConstantLabel,
+            ConstantBool,
 
-            BINARY_OPERATION,
-            UNARY_OPERATION,
+            BinaryOperation,
+            UnaryOperation,
 
-            NODE_REF,
-            INTERNAL_REFERENCE
+            NodeReference,
+            InternalReference
         };
 
     public:
-        IrValue(VALUE_TYPE type);
+        IrValue(ValueType type);
         virtual ~IrValue();
 
-        VALUE_TYPE getType() const { return m_type; }
+        ValueType getType() const { return m_type; }
 
     private:
-        VALUE_TYPE m_type;
+        ValueType m_type;
     };
 
 } /* namespace piranha */

@@ -12,19 +12,19 @@ namespace piranha {
 
     class IrBinaryOperator : public IrValue {
     public:
-        enum OPERATOR {
-            DOT,
-            ADD,
-            SUB,
-            MUL,
-            DIV
+        enum class Operator {
+            Dot,
+            Add,
+            Sub,
+            Mul,
+            Div
         };
 
     public:
-        IrBinaryOperator(OPERATOR op, IrValue *leftOperand, IrValue *rightOperand);
+        IrBinaryOperator(Operator op, IrValue *leftOperand, IrValue *rightOperand);
         ~IrBinaryOperator();
 
-        OPERATOR getOperator() const { return m_operator; }
+        Operator getOperator() const { return m_operator; }
         IrValue *getLeft() const { return m_leftOperand; }
         IrValue *getRight() const { return m_rightOperand; }
 
@@ -35,7 +35,7 @@ namespace piranha {
         void _expand(IrContextTree *tree);
 
     protected:
-        OPERATOR m_operator;
+        Operator m_operator;
         IrValue *m_leftOperand;
         IrValue *m_rightOperand;
 

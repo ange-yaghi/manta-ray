@@ -12,15 +12,20 @@
 #include "../autogen/parser.auto.h"
 #include "ir_token_info.h"
 #include "ir_token_info.h"
+#include "memory_tracker.h"
 
 namespace piranha {
 
     class Scanner : public yyFlexLexer {
     public:
         Scanner(std::istream *in) : yyFlexLexer(in) {
-            m_loc = new piranha::Parser::location_type();
+            m_loc = TRACK(new piranha::Parser::location_type());
             m_loc->colStart = m_loc->colEnd = 1;
             m_loc->lineStart = m_loc->lineEnd = 1;
+        }
+
+        virtual ~Scanner() {
+            delete FTRACK(m_loc);
         }
 
         using FlexLexer::yylex;

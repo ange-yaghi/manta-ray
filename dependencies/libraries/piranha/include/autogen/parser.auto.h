@@ -67,6 +67,7 @@
     #include "../include/ir_structure_list.h"
     #include "../include/ir_visibility.h"
     #include "../include/ir_unary_operator.h"
+    #include "../include/memory_tracker.h"
 
     #include <string>
 
@@ -95,7 +96,7 @@
     #pragma warning (disable: 4065)
     #endif
 
-#line 99 "E:\\Software\\manta-ray_refactor\\manta-ray\\dependencies\\submodules\\piranha\\scripts\\/../autogen/parser.auto.h" // lalr1.cc:401
+#line 100 "E:\\Software\\manta-ray_refactor\\manta-ray\\dependencies\\submodules\\piranha\\scripts\\/../autogen/parser.auto.h" // lalr1.cc:401
 
 # include <cassert>
 # include <cstdlib> // std::abort
@@ -211,7 +212,7 @@
 
 #line 5 "E:\\Software\\manta-ray_refactor\\manta-ray\\dependencies\\submodules\\piranha\\scripts\\/../flex-bison/specification.y" // lalr1.cc:401
 namespace piranha {
-#line 215 "E:\\Software\\manta-ray_refactor\\manta-ray\\dependencies\\submodules\\piranha\\scripts\\/../autogen/parser.auto.h" // lalr1.cc:401
+#line 216 "E:\\Software\\manta-ray_refactor\\manta-ray\\dependencies\\submodules\\piranha\\scripts\\/../autogen/parser.auto.h" // lalr1.cc:401
 
 
 
@@ -437,6 +438,8 @@ namespace piranha {
       char dummy5[sizeof (piranha::IrImportStatement *)];
 
       // node
+      // node_member
+      // inline_node_member
       // inline_node
       char dummy6[sizeof (piranha::IrNode *)];
 
@@ -846,24 +849,24 @@ namespace piranha {
         // Type destructor.
 switch (yytype)
     {
-      case 74: // attribute
+      case 76: // attribute
         value.template destroy< piranha::IrAttribute * > ();
         break;
 
-      case 66: // port_declaration
-      case 67: // port_status
-      case 68: // port_value
-      case 69: // port_connection
-      case 70: // documented_port_definition
+      case 67: // port_declaration
+      case 68: // port_status
+      case 69: // port_value
+      case 70: // port_connection
+      case 71: // documented_port_definition
         value.template destroy< piranha::IrAttributeDefinition * > ();
         break;
 
-      case 65: // port_definitions
+      case 66: // port_definitions
         value.template destroy< piranha::IrAttributeDefinitionList * > ();
         break;
 
-      case 72: // connection_block
-      case 73: // attribute_list
+      case 74: // connection_block
+      case 75: // attribute_list
         value.template destroy< piranha::IrAttributeList * > ();
         break;
 
@@ -874,21 +877,23 @@ switch (yytype)
         break;
 
       case 55: // node
-      case 71: // inline_node
+      case 56: // node_member
+      case 72: // inline_node_member
+      case 73: // inline_node
         value.template destroy< piranha::IrNode * > ();
         break;
 
-      case 58: // node_name
-      case 59: // node_inline
-      case 60: // node_shadow
-      case 61: // node_definition
-      case 62: // specific_node_definition
-      case 63: // immediate_node_definition
-      case 64: // node_decorator
+      case 59: // node_name
+      case 60: // node_inline
+      case 61: // node_shadow
+      case 62: // node_definition
+      case 63: // specific_node_definition
+      case 64: // immediate_node_definition
+      case 65: // node_decorator
         value.template destroy< piranha::IrNodeDefinition * > ();
         break;
 
-      case 56: // node_list
+      case 57: // node_list
         value.template destroy< piranha::IrNodeList * > ();
         break;
 
@@ -946,20 +951,20 @@ switch (yytype)
       case 41: // '.'
       case 42: // '^'
       case 53: // type_name
-      case 57: // standard_operator
-      case 77: // string
+      case 58: // standard_operator
+      case 79: // string
         value.template destroy< piranha::IrTokenInfo_string > ();
         break;
 
-      case 75: // label_value
-      case 76: // value
-      case 78: // constant
-      case 79: // atomic_value
-      case 80: // primary_exp
-      case 81: // data_access
-      case 82: // unary_exp
-      case 83: // mul_exp
-      case 84: // add_exp
+      case 77: // label_value
+      case 78: // value
+      case 80: // constant
+      case 81: // atomic_value
+      case 82: // primary_exp
+      case 83: // data_access
+      case 84: // unary_exp
+      case 85: // mul_exp
+      case 86: // add_exp
         value.template destroy< piranha::IrValue * > ();
         break;
 
@@ -1564,7 +1569,7 @@ switch (yytype)
   static const short yypgoto_[];
 
   // YYDEFGOTO[NTERM-NUM].
-  static const signed char yydefgoto_[];
+  static const short yydefgoto_[];
 
   // YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
   // positive, shift that token.  If negative, reduce the rule whose
@@ -1818,9 +1823,9 @@ switch (yytype)
     enum
     {
       yyeof_ = 0,
-      yylast_ = 307,     ///< Last index in yytable_.
-      yynnts_ = 41,  ///< Number of nonterminal symbols.
-      yyfinal_ = 57, ///< Termination state number.
+      yylast_ = 391,     ///< Last index in yytable_.
+      yynnts_ = 43,  ///< Number of nonterminal symbols.
+      yyfinal_ = 80, ///< Termination state number.
       yyterror_ = 1,
       yyerrcode_ = 256,
       yyntokens_ = 44  ///< Number of tokens.
@@ -1835,7 +1840,7 @@ switch (yytype)
 
 #line 5 "E:\\Software\\manta-ray_refactor\\manta-ray\\dependencies\\submodules\\piranha\\scripts\\/../flex-bison/specification.y" // lalr1.cc:401
 } // piranha
-#line 1839 "E:\\Software\\manta-ray_refactor\\manta-ray\\dependencies\\submodules\\piranha\\scripts\\/../autogen/parser.auto.h" // lalr1.cc:401
+#line 1844 "E:\\Software\\manta-ray_refactor\\manta-ray\\dependencies\\submodules\\piranha\\scripts\\/../autogen/parser.auto.h" // lalr1.cc:401
 
 
 
