@@ -29,7 +29,8 @@ void manta::ObjFileNode::_evaluate() {
     m_defaultMaterial->fullCompute((void *)&defaultMaterial);
 
     Path resolvedPath;
-    resolvePath(&Path(filename.c_str()), &resolvedPath);
+    const Path filePath(filename.c_str());
+    resolvePath(&filePath, &resolvedPath);
 
     MaterialLibrary *library =
         static_cast<ObjectReferenceNodeOutput<MaterialLibrary> *>(m_materialLibrary)->getReference();

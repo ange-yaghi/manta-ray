@@ -10,7 +10,7 @@
 mantaray_cli::Compiler::Compiler() {
     m_compiler = new piranha::Compiler(&m_rules);
 
-    m_optimizationEnabled = true;
+    m_optimizationEnabled = false;
 }
 
 mantaray_cli::Compiler::~Compiler() {

@@ -40,7 +40,8 @@ void manta::ImageOutputNode::_evaluate() {
         static_cast<piranha::NodeOutput *>(m_filenameInput)->fullCompute((void *)&rawFilename);
 
         Path finalPath;
-        resolvePath(&Path(rawFilename), &finalPath);
+        const Path rawFilePath(rawFilename);
+        resolvePath(&rawFilePath, &finalPath);
 
         filename = finalPath.toString();
     }
