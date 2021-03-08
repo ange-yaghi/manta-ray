@@ -1,5 +1,8 @@
-#include "../../include/manta.h"
 #include "../include/compiler.h"
+
+#include "../../include/manta.h"
+#include "../../include/session.h"
+#include "../../include/console.h"
 
 #include <iostream>
 
@@ -24,6 +27,8 @@ int main(int argc, char *argv[]) {
 
     mantaray_cli::Compiler compiler;
     compiler.initialize();
+
+    manta::Session::get().setConsole(new manta::Console());
 
     std::string scriptName;
     if (argc == 2) {

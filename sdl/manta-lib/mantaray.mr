@@ -9,6 +9,7 @@ module {
 }
 
 public import "ray-tracer/ray_tracer.mr"
+public import "ray-tracer/image_plane.mr"
 
 public import "image/image_output.mr"
 public import "image/vector_map.mr"
@@ -42,6 +43,8 @@ public import "primitives/primitives.mr"
 public import "utilities/console.mr"
 public import "utilities/quick_render.mr"
 public import "utilities/paths.mr"
+
+public import "ui/image_plane_preview.mr"
 
 // ========================================================
 // Surface/Material Models

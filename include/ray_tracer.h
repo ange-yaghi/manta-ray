@@ -83,6 +83,7 @@ namespace manta {
     protected:
         virtual void _evaluate();
         virtual void _initialize();
+        virtual void _destroy();
         virtual void registerInputs();
         virtual void registerOutputs();
 
@@ -94,8 +95,8 @@ namespace manta {
         piranha::pNodeInput m_materialLibraryInput;
         piranha::pNodeInput m_sceneInput;
         piranha::pNodeInput m_cameraInput;
-        piranha::pNodeInput m_filterInput;
         piranha::pNodeInput m_samplerInput;
+        piranha::pNodeInput m_imagePlaneInput;
 
         VectorMap2DNodeOutput m_output;
 
@@ -126,6 +127,7 @@ namespace manta {
             SceneObject **closestObject, StackAllocator *s) const;
 
         math::Vector m_backgroundColor;
+        VectorMap2D *m_outputImage;
 
     protected:
         // Material library

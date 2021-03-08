@@ -400,6 +400,27 @@
     <Filter Include="Source Files\sampling">
       <UniqueIdentifier>{e9fb18cb-f0a8-4abb-8509-516b4ba10356}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\debugging\logging">
+      <UniqueIdentifier>{399bc9df-6447-4005-8cd2-67185be487c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\debugging\logging">
+      <UniqueIdentifier>{cf311555-6bd9-4df5-bc9e-c4b496aa3c8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\session">
+      <UniqueIdentifier>{6dad5e9a-e185-4697-95c0-b3d311513949}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\session">
+      <UniqueIdentifier>{f136dfa0-6435-4d46-9ebd-bd0f98226208}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl\nodes\library\console">
+      <UniqueIdentifier>{1590f88d-98b1-44bc-a716-9bbc248a919b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl\nodes\library\ui">
+      <UniqueIdentifier>{c84d4b39-cfa6-4f3b-a93b-53614b82a122}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sdl\nodes\library\ui">
+      <UniqueIdentifier>{fff917a8-a73e-4bbb-9956-e7482efd6a2b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -776,6 +797,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\random_sampler.cpp">
       <Filter>Source Files\sampling</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\console.cpp">
+      <Filter>Source Files\debugging\logging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\session.cpp">
+      <Filter>Source Files\session</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\image_plane_preview_node.cpp">
+      <Filter>Source Files\sdl\nodes\library\ui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1249,6 +1279,21 @@
     </ClInclude>
     <ClInclude Include="..\..\include\random_sampler.h">
       <Filter>Header Files\sampling</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\console.h">
+      <Filter>Header Files\debugging\logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\session.h">
+      <Filter>Header Files\session</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\console_log_node.h">
+      <Filter>Header Files\sdl\nodes\library\console</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\image_plane_preview_node.h">
+      <Filter>Header Files\sdl\nodes\library\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\preview_manager.h">
+      <Filter>Header Files\session</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,10 +1,13 @@
 #ifndef MANTARAY_IMAGE_PLANE_H
 #define MANTARAY_IMAGE_PLANE_H
 
+#include "object_reference_node.h"
+
 #include "image_sample.h"
 #include "job_queue.h"
 #include "manta_math.h"
 #include "stack_allocator.h"
+#include "session.h"
 
 #include <condition_variable>
 #include <mutex>
@@ -14,7 +17,7 @@ namespace manta {
 
     class Filter;
 
-    class ImagePlane {
+    class ImagePlane : public ObjectReferenceNode<ImagePlane> {
     public:
         ImagePlane();
         ~ImagePlane();
@@ -43,6 +46,19 @@ namespace manta {
         void processSamples(ImageSample *samples, int sampleCount, StackAllocator *stack);
 
         void normalize();
+
+    protected:
+        virtual void _evaluate();
+        virtual void _initialize();
+        virtual void _destroy();
+
+        virtual void registerInputs();
+        virtual void registerOutputs();
+
+        piranha::pNodeInput m_filterInput;
+        piranha::pNodeInput m_imagePlanePreviewInput;
+
+        ImagePlanePreview *m_previewTarget;
 
     protected:
         int m_width;

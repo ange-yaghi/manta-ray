@@ -4,6 +4,8 @@
 #include "../include/gaussian_filter.h"
 #include "../include/triangle_filter.h"
 #include "../include/box_filter.h"
+#include "../include/image_plane_preview_node.h"
+#include "../include/vector_map_2d.h"
 
 #include <assert.h>
 #include <iostream>
@@ -14,6 +16,10 @@ manta::ImagePlane::ImagePlane() {
     m_buffer = nullptr;
     m_sampleWeightSums = nullptr;
     m_filter = nullptr;
+
+    m_filterInput = nullptr;
+    m_imagePlanePreviewInput = nullptr;
+    m_previewTarget = nullptr;
 }
 
 manta::ImagePlane::~ImagePlane() {
@@ -28,7 +34,7 @@ void manta::ImagePlane::initialize(int width, int height) {
     m_width = width;
     m_height = height;
 
-    int pixelCount = width * height;
+    const int pixelCount = width * height;
 
     m_buffer = (math::Vector *)_aligned_malloc(sizeof(math::Vector) * pixelCount, 16);
     m_sampleWeightSums = StandardAllocator::Global()->allocate <math::real>(pixelCount);
@@ -36,6 +42,11 @@ void manta::ImagePlane::initialize(int width, int height) {
     for (int i = 0; i < pixelCount; i++) {
         m_buffer[i] = math::constants::Zero;
         m_sampleWeightSums[i] = (math::real)0.0;
+    }
+
+    if (m_previewTarget != nullptr) {
+        m_previewTarget->map = new VectorMap2D;
+        m_previewTarget->map->initialize(m_width, m_height);
     }
 
     assert(m_buffer != nullptr);
@@ -105,29 +116,28 @@ void manta::ImagePlane::processSamples(ImageSample *samples, int sampleCount, St
 
     Block *blocks = (Block *)stack->allocate(sizeof(Block), 16);
     Block *currentBlock = blocks;
-    int blockCount = 0;
 
+    int blockCount = 0;
     for (int i = 0; i < sampleCount; i++) {
         const ImageSample &sample = samples[i];
-        math::Vector2 extents = m_filter->getExtents();
-        int left = (int)(floor(sample.imagePlaneLocation.x - extents.x));
-        int right = (int)(ceil(sample.imagePlaneLocation.x + extents.x) + (math::real)0.5);
-        int top = (int)(floor(sample.imagePlaneLocation.y - extents.y));
-        int bottom = (int)(ceil(sample.imagePlaneLocation.y + extents.y) + (math::real)0.5); 
+        const math::Vector2 extents = m_filter->getExtents();
+        const int left = (int)(floor(sample.imagePlaneLocation.x - extents.x));
+        const int right = (int)(ceil(sample.imagePlaneLocation.x + extents.x) + (math::real)0.5);
+        const int top = (int)(floor(sample.imagePlaneLocation.y - extents.y));
+        const int bottom = (int)(ceil(sample.imagePlaneLocation.y + extents.y) + (math::real)0.5); 
 
         for (int x = left; x <= right; x++) {
             for (int y = top; y <= bottom; y++) {
-                bool inBounds = checkPixel(x, y);
-                if (!inBounds) continue;
+                if (!checkPixel(x, y)) continue;
 
-                math::Vector2 p(
+                const math::Vector2 p(
                     sample.imagePlaneLocation.x - (math::real)x, 
                     sample.imagePlaneLocation.y - (math::real)y
                 );
 
                 if (FAST_ABS(p.x) > extents.x || FAST_ABS(p.y) > extents.y) continue;
 
-                math::Vector weight = m_filter->evaluate(p);
+                const math::Vector weight = m_filter->evaluate(p);
                 currentBlock->value = math::mul(weight, sample.intensity);
                 currentBlock->weight = math::getScalar(weight);
                 currentBlock->x = x;
@@ -147,6 +157,11 @@ void manta::ImagePlane::processSamples(ImageSample *samples, int sampleCount, St
 
         value = math::add(value, block.value);
         weightSum += block.weight;
+
+        // temp
+        if (m_previewTarget != nullptr) {
+            m_previewTarget->map->set(math::div(value, math::loadScalar(weightSum)), block.x, block.y);
+        }
     }
 
     stack->free(blocks);
@@ -175,4 +190,29 @@ void manta::ImagePlane::normalize() {
             }
         }
     }
+}
+
+void manta::ImagePlane::_evaluate() {
+    m_filter = static_cast<ObjectReferenceNodeOutput<Filter> *>(m_filterInput)->getReference();
+    m_previewTarget =
+        static_cast<ObjectReferenceNodeOutput<ImagePlanePreview> *>(m_imagePlanePreviewInput)->getReference();
+
+    m_output.setReference(this);
+}
+
+void manta::ImagePlane::_initialize() {
+    /* void */
+}
+
+void manta::ImagePlane::_destroy() {
+    /* void */
+}
+
+void manta::ImagePlane::registerInputs() {
+    registerInput(&m_imagePlanePreviewInput, "preview");
+    registerInput(&m_filterInput, "filter");
+}
+
+void manta::ImagePlane::registerOutputs() {
+    ObjectReferenceNode::registerOutputs();
 }

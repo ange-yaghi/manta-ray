@@ -58,6 +58,10 @@
 #include "../include/add_bxdf_node.h"
 #include "../include/average_node_output.h"
 #include "../include/string_conversions.h"
+#include "../include/console_log_node.h"
+#include "../include/image_plane.h"
+#include "../include/image_plane_preview_node.h"
+#include "../include/session.h"
 
 manta::LanguageRules::LanguageRules() {
     /* void */
@@ -73,7 +77,7 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
     // ====================================================
 
     // Channels
-    registerBuiltinType < piranha::ChannelNode> (
+    registerBuiltinType<piranha::ChannelNode> (
         "__mantaray__float", &piranha::FundamentalType::FloatType);
     registerBuiltinType<piranha::ChannelNode>(
         "__mantaray__int", &piranha::FundamentalType::IntType);
@@ -81,42 +85,46 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__bool", &piranha::FundamentalType::BoolType);
     registerBuiltinType<VectorSplitNode>(
         "__mantaray__vector", &VectorNodeOutput::VectorType);
-    registerBuiltinType <piranha::ChannelNode> (
+    registerBuiltinType<piranha::ChannelNode> (
         "__mantaray__string", &piranha::FundamentalType::StringType);
-    registerBuiltinType <piranha::ChannelNode>(
+    registerBuiltinType<piranha::ChannelNode>(
         "__mantaray__microfacet_distribution", &ObjectChannel::MicrofacetDistributionChannel);
-    registerBuiltinType <piranha::ChannelNode>(
+    registerBuiltinType<piranha::ChannelNode>(
         "__mantaray__material", &ObjectChannel::MaterialChannel);
-    registerBuiltinType <piranha::ChannelNode>(
+    registerBuiltinType<piranha::ChannelNode>(
         "__mantaray__material_library_channel", &ObjectChannel::MaterialLibraryChannel);
-    registerBuiltinType <BSDF>(
+    registerBuiltinType<BSDF>(
         "__mantaray__bsdf", &ObjectChannel::BsdfChannel);
-    registerBuiltinType <piranha::ChannelNode>(
+    registerBuiltinType<piranha::ChannelNode>(
         "__mantaray__bxdf", &ObjectChannel::BxdfChannel);
-    registerBuiltinType <piranha::ChannelNode>(
+    registerBuiltinType<piranha::ChannelNode>(
         "__mantaray__mesh", &ObjectChannel::MeshChannel);
-    registerBuiltinType <piranha::ChannelNode>(
+    registerBuiltinType<piranha::ChannelNode>(
         "__mantaray__scene_geometry", &ObjectChannel::SceneGeometryChannel);
-    registerBuiltinType <piranha::ChannelNode>(
+    registerBuiltinType<piranha::ChannelNode>(
         "__mantaray__scene_object_channel", &ObjectChannel::SceneGeometryChannel);
-    registerBuiltinType <Scene>(
+    registerBuiltinType<Scene>(
         "__mantaray__scene", &ObjectChannel::SceneChannel);
-    registerBuiltinType <piranha::ChannelNode>(
+    registerBuiltinType<piranha::ChannelNode>(
         "__mantaray__camera", &ObjectChannel::CameraChannel);
     registerBuiltinType <piranha::ChannelNode>(
         "__mantaray__sampler", &ObjectChannel::SamplerChannel);
-    registerBuiltinType <piranha::NoOpNode>(
+    registerBuiltinType<piranha::NoOpNode>(
         "__mantaray__vector_map", &VectorMap2DNodeOutput::VectorMap2dType);
-    registerBuiltinType <piranha::ChannelNode>(
+    registerBuiltinType<piranha::ChannelNode>(
         "__mantaray__aperture", &ObjectChannel::ApertureChannel);
-    registerBuiltinType <DateInterfaceNode>(
+    registerBuiltinType<DateInterfaceNode>(
         "__mantaray__date", &DateNodeOutput::DateType);
-    registerBuiltinType <piranha::ChannelNode>(
+    registerBuiltinType<piranha::ChannelNode>(
         "__mantaray__lens", &ObjectChannel::LensChannel);
-    registerBuiltinType <piranha::ChannelNode>(
+    registerBuiltinType<piranha::ChannelNode>(
         "__mantaray__media_interface", &ObjectChannel::MediaInterfaceChannel);
-    registerBuiltinType <piranha::ChannelNode>(
+    registerBuiltinType<piranha::ChannelNode>(
         "__mantaray__filter", &ObjectChannel::FilterChannel);
+    registerBuiltinType<piranha::ChannelNode>(
+        "__mantaray__image_plane_preview_channel", &ObjectChannel::ImagePlanePreviewChannel);
+    registerBuiltinType<piranha::ChannelNode>(
+        "__mantaray__image_plane", &ObjectChannel::ImagePlaneChannel);
 
     // Constructors
     registerBuiltinType<MaterialLibrary>(
@@ -155,67 +163,73 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__obj_file");
     registerBuiltinType<ObjFileNode>(
         "__mantaray__obj_file");
-    registerBuiltinType <SceneObject>(
+    registerBuiltinType<SceneObject>(
         "__mantaray__scene_object");
-    registerBuiltinType <LambertianBRDF>(
+    registerBuiltinType<LambertianBRDF>(
         "__mantaray__lambertian_brdf");
-    registerBuiltinType <StratifiedSampler>(
+    registerBuiltinType<StratifiedSampler>(
         "__mantaray__stratified_sampler");
-    registerBuiltinType <RandomSampler>(
+    registerBuiltinType<RandomSampler>(
         "__mantaray__random_sampler");
-    registerBuiltinType <StandardCameraRayEmitterGroup>(
+    registerBuiltinType<StandardCameraRayEmitterGroup>(
         "__mantaray__standard_camera");
-    registerBuiltinType <ImageOutputNode>(
+    registerBuiltinType<ImageOutputNode>(
         "__mantaray__image_output");
-    registerBuiltinType <SpherePrimitive>(
+    registerBuiltinType<SpherePrimitive>(
         "__mantaray__sphere");
-    registerBuiltinType <SrgbNode>(
+    registerBuiltinType<SrgbNode>(
         "__mantaray__srgb");
-    registerBuiltinType <ImageFileNode>(
+    registerBuiltinType<ImageFileNode>(
         "__mantaray__image_file");
-    registerBuiltinType <CircularAperture>(
+    registerBuiltinType<CircularAperture>(
         "__mantaray__circular_aperture");
-    registerBuiltinType <SquareAperture>(
+    registerBuiltinType<SquareAperture>(
         "__mantaray__square_aperture");
-    registerBuiltinType <PolygonalAperture>(
+    registerBuiltinType<PolygonalAperture>(
         "__mantaray__polygonal_aperture");
-    registerBuiltinType <FraunhoferDiffraction>(
+    registerBuiltinType<FraunhoferDiffraction>(
         "__mantaray__fraunhofer_diffraction");
-    registerBuiltinType <ConvolutionNode>(
+    registerBuiltinType<ConvolutionNode>(
         "__mantaray__convolve_2d");
-    registerBuiltinType <StepNode>(
+    registerBuiltinType<StepNode>(
         "__mantaray__step");
-    registerBuiltinType <PaddedFrameNode>(
+    registerBuiltinType<PaddedFrameNode>(
         "__mantaray__padded_frame");
-    registerBuiltinType <CurrentDateNode>(
+    registerBuiltinType<CurrentDateNode>(
         "__mantaray__current_date");
-    registerBuiltinType <SimpleLens>(
+    registerBuiltinType<SimpleLens>(
         "__mantaray__simple_lens");
-    registerBuiltinType <LensCameraRayEmitterGroup>(
+    registerBuiltinType<LensCameraRayEmitterGroup>(
         "__mantaray__lens_camera");
-    registerBuiltinType <OpaqueMediaInterface>(
+    registerBuiltinType<OpaqueMediaInterface>(
         "__mantaray__opaque_media_interface");
-    registerBuiltinType <DielectricMediaInterface>(
+    registerBuiltinType<DielectricMediaInterface>(
         "__mantaray__dielectric_media_interface");
-    registerBuiltinType <MicrofacetGlassBSDF>(
+    registerBuiltinType<MicrofacetGlassBSDF>(
         "__mantaray__glass_bsdf");
-    registerBuiltinType <TriangleFilter>(
+    registerBuiltinType<TriangleFilter>(
         "__mantaray__triangle_filter");
-    registerBuiltinType <BoxFilter>(
+    registerBuiltinType<BoxFilter>(
         "__mantaray__box_filter");
-    registerBuiltinType <GaussianFilter>(
+    registerBuiltinType<GaussianFilter>(
         "__mantaray__gaussian_filter");
-    registerBuiltinType <MainScriptPathNode>(
+    registerBuiltinType<MainScriptPathNode>(
         "__mantaray__main_script_path");
-    registerBuiltinType <ScriptPathNode>(
+    registerBuiltinType<ScriptPathNode>(
         "__mantaray__script_path");
-    registerBuiltinType <AppendPathNode>(
+    registerBuiltinType<AppendPathNode>(
         "__mantaray__append_path");
+    registerBuiltinType<NullReferenceNode<ImagePlanePreview>>(
+        "__mantaray__null_image_plane_preview");
+    registerBuiltinType<ImagePlanePreviewNode>(
+        "__mantaray__image_plane_preview");
+    registerBuiltinType<ImagePlane>(
+        "__mantaray__standard_image_plane");
 
     // Actions
-    registerBuiltinType <piranha::ConsoleInputNode>(
+    registerBuiltinType<piranha::ConsoleInputNode>(
         "__mantaray__console_in");
-    registerBuiltinType <piranha::ConsoleOutputNode>(
+    registerBuiltinType<ConsoleOutputNode>(
         "__mantaray__console_out");
 
     // Literals

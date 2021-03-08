@@ -53,6 +53,10 @@ void manta::KDTree::_evaluate() {
     setOutput(this);
 }
 
+void manta::KDTree::_destroy() {
+    destroy();
+}
+
 void manta::KDTree::registerInputs() {
     registerInput(&m_centerInput, "center");
     registerInput(&m_meshInput, "mesh");

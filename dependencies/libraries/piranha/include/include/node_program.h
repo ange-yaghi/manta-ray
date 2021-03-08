@@ -52,6 +52,9 @@ namespace piranha {
 
         NodeAllocator *getNodeAllocator() { return m_rootUnit->getRules()->getNodeAllocator(); }
 
+        void kill() { m_kill = true; }
+        bool isKilled() const { return m_kill; }
+
     protected:
         bool m_initialized;
 
@@ -66,6 +69,8 @@ namespace piranha {
         bool m_runtimeError;
         std::string m_errorMessage;
         Node *m_errorNode;
+
+        std::atomic<bool> m_kill;
     };
 
 } /* namespace piranha */

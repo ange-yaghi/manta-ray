@@ -61,7 +61,9 @@ void manta::ObjFileNode::_evaluate() {
 }
 
 void manta::ObjFileNode::_destroy() {
-    /* void */
+    if (m_mesh != nullptr) {
+        m_mesh->destroy();
+    }
 }
 
 void manta::ObjFileNode::registerInputs() {

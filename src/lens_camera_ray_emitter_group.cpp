@@ -12,10 +12,10 @@ manta::LensCameraRayEmitterGroup::~LensCameraRayEmitterGroup() {
 }
 
 void manta::LensCameraRayEmitterGroup::configure() {
-    int resolutionX = m_lens->getSensorResolutionX();
-    int resolutionY = m_lens->getSensorResolutionY();
+    const int resolutionX = m_lens->getSensorResolutionX();
+    const int resolutionY = m_lens->getSensorResolutionY();
 
-    int nRays = resolutionX * resolutionY;
+    const int nRays = resolutionX * resolutionY;
 
     m_xIncrement = m_lens->getSensorWidth() / getResolutionX();
     m_yIncrement = m_lens->getSensorHeight() / getResolutionY();
@@ -32,11 +32,11 @@ manta::CameraRayEmitter *manta::LensCameraRayEmitterGroup::
 {
     LensCameraRayEmitter *newEmitter = allocateEmitter<LensCameraRayEmitter>(stackAllocator);
 
-    math::real x = (ix + (math::real)0.5) * m_xIncrement;
-    math::real y = (iy + (math::real)0.5) * m_yIncrement;
+    const math::real x = (ix + (math::real)0.5) * m_xIncrement;
+    const math::real y = (iy + (math::real)0.5) * m_yIncrement;
 
-    math::Vector offset_x = math::loadScalar(-x + m_lens->getSensorWidth() / (math::real)2.0);
-    math::Vector offset_y = math::loadScalar(y - m_lens->getSensorHeight() / (math::real)2.0);
+    const math::Vector offset_x = math::loadScalar(-x + m_lens->getSensorWidth() / (math::real)2.0);
+    const math::Vector offset_y = math::loadScalar(y - m_lens->getSensorHeight() / (math::real)2.0);
 
     math::Vector loc = m_lens->getSensorLocation();
     loc = math::add(loc, math::mul(m_lens->getUp(), offset_y));

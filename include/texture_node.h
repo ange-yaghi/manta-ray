@@ -1,5 +1,5 @@
-#ifndef MANTARAY_TEXTURE_MAP_H
-#define MANTARAY_TEXTURE_MAP_H
+#ifndef MANTARAY_TEXTURE_NODE_H
+#define MANTARAY_TEXTURE_NODE_H
 
 #include <piranha.h>
 
@@ -36,4 +36,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* MANTARAY_TEXTURE_MAP_H */
+#endif /* MANTARAY_TEXTURE_NODE_H */

@@ -3,7 +3,7 @@
 #include "../include/mesh.h"
 
 manta::KdTreeNode::KdTreeNode() {
-    /* void */
+    m_meshInput = nullptr;
 }
 
 manta::KdTreeNode::~KdTreeNode() {
@@ -26,7 +26,7 @@ void manta::KdTreeNode::_evaluate() {
 }
 
 void manta::KdTreeNode::_destroy() {
-    /* void */
+    m_kdTree.destroy();
 }
 
 void manta::KdTreeNode::registerOutputs() {

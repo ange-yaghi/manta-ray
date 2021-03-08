@@ -139,6 +139,7 @@ namespace manta {
     public:
         // Node interface
         virtual void _evaluate();
+        virtual void _destroy();
         virtual void registerInputs();
 
     protected:

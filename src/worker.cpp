@@ -114,7 +114,7 @@ void manta::Worker::doJob(const Job *job) {
             CameraRayEmitter *emitter = job->group->createEmitter(x, y, m_stack);
             emitter->setSampler(m_sampler);
             emitter->initialize();
-            int pixelIndex = job->group->getResolutionX() * y + x;
+            const int pixelIndex = job->group->getResolutionX() * y + x;
 
             if (m_deterministicSeed) {
                 // Seed the random number generator with the emitter index

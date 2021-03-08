@@ -1,0 +1,23 @@
+module {
+    @name:          "Image Plane"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2021, Ange Yaghi"
+    @doc:           "Image plane types"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
+private import "../signal-processing/filters/filters.mr"
+private import "../ui/image_plane_preview.mr"
+
+@doc: "Image Plane channel type"
+public node image_plane_channel => __mantaray__image_plane { /* void */ }
+
+@doc: "Standard image plane"
+public node image_plane => __mantaray__standard_image_plane {
+    input filter        [filter]: gaussian_filter();
+    input preview       [image_plane_preview]: null_image_plane_preview();
+    alias output __out  [image_plane_channel];
+}

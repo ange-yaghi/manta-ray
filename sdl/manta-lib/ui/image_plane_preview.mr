@@ -1,0 +1,26 @@
+module {
+    @name:          "Image Plane Preview"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2021, Ange Yaghi"
+    @doc:           "Image plane types"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
+private import "../types/atomic_types.mr"
+
+@doc: "Image plane preview channel type"
+public node image_plane_preview_channel => __mantaray__image_plane_preview_channel { /* void */ }
+
+@doc: "Null image plane preview channel type"
+public node null_image_plane_preview => __mantaray__null_image_plane_preview {
+    alias output __out  [image_plane_preview_channel];
+}
+
+@doc: "Standard image plane preview"
+public node image_plane_preview => __mantaray__image_plane_preview {
+    input title         [string]: "Image Plane Preview";
+    alias output __out  [image_plane_preview_channel];
+}

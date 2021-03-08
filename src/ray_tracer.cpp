@@ -22,6 +22,7 @@
 #include "../include/vector_node_output.h"
 #include "../include/bsdf.h"
 #include "../include/sampler.h"
+#include "../include/console.h"
 
 #include <iostream>
 #include <thread>
@@ -37,13 +38,17 @@ manta::RayTracer::RayTracer() {
     m_materialLibraryInput = nullptr;
     m_sceneInput = nullptr;
     m_cameraInput = nullptr;
-    m_filterInput = nullptr;
     m_samplerInput = nullptr;
+    m_imagePlaneInput = nullptr;
+    m_outputImage = nullptr;
+    m_workers = nullptr;
 
     m_deterministicSeed = false;
     m_pathRecordingOutputDirectory = "";
     m_backgroundColor = math::constants::Zero;
     m_currentRay = 0;
+
+    m_threadCount = 0;
 }
 
 manta::RayTracer::~RayTracer() {
@@ -61,23 +66,14 @@ void manta::RayTracer::traceAll(const Scene *scene, CameraRayEmitterGroup *group
     group->configure();
 
     // Initialize the target
-    int resX = group->getResolutionX();
-    int resY = group->getResolutionY();
-
-    // TEMP: initialize physical sensor extents
-    math::real py = (math::real)1.0;
-    math::real px = ((math::real)(resX) / resY);
+    const int resX = group->getResolutionX();
+    const int resY = group->getResolutionY();
 
     target->initialize(resX, resY);
 
     // Create jobs
-    int emitterCount = group->getResolutionX() * group->getResolutionY();
-    int start = 0;
-    int end = 0;
-    bool done = false;
-
-    int horizontalBlocks = resX / m_renderBlockSize + 1;
-    int verticalBlocks = resY / m_renderBlockSize + 1;
+    const int horizontalBlocks = resX / m_renderBlockSize + 1;
+    const int verticalBlocks = resY / m_renderBlockSize + 1;
 
     for (int i = 0; i < horizontalBlocks; i++) {
         for (int j = 0; j < verticalBlocks; j++) {
@@ -144,39 +140,36 @@ void manta::RayTracer::traceAll(const Scene *scene, CameraRayEmitterGroup *group
     }
 #endif /* ENABLE_DETAILED_STATISTICS */
 
-    std::cout <<        "================================================" << std::endl;
-    std::cout <<        "Total processing time:               " << diff.count() << " s" << std::endl;
-    std::cout <<        "------------------------------------------------" << std::endl;
-    std::cout <<        "Standard allocator peak usage:       " << StandardAllocator::Global()->getMaxUsage() / (double)MB << " MB" << std::endl;
-    std::cout <<        "Main allocator peak usage:           " << m_stack.getMaxUsage() / (double)MB << " MB" << std::endl;
+    std::stringstream ss_out;
+    ss_out <<        "================================================" << std::endl;
+    ss_out <<        "Total processing time:               " << diff.count() << " s" << std::endl;
+    ss_out <<        "------------------------------------------------" << std::endl;
+    ss_out <<        "Standard allocator peak usage:       " << StandardAllocator::Global()->getMaxUsage() / (double)MB << " MB" << std::endl;
+    ss_out <<        "Main allocator peak usage:           " << m_stack.getMaxUsage() / (double)MB << " MB" << std::endl;
     unsigned __int64 totalUsage = m_stack.getMaxUsage() + StandardAllocator::Global()->getMaxUsage();
     for (int i = 0; i < m_threadCount; i++) {
         std::stringstream ss;
         ss <<            "Worker " << i << " peak memory usage:";
-        std::cout << ss.str();
+        ss_out << ss.str();
         for (int j = 0; j < (37 - ss.str().length()); j++) {
-            std::cout << " ";
+            ss_out << " ";
         }
-        std::cout << m_workers[i].getMaxMemoryUsage() / (double)MB << " MB" << std::endl;
+        ss_out << m_workers[i].getMaxMemoryUsage() / (double)MB << " MB" << std::endl;
         totalUsage += m_workers[i].getMaxMemoryUsage();
     }
-    std::cout <<        "                                     -----------" << std::endl;
-    std::cout <<        "Total memory usage:                  " << totalUsage / (double)MB << " MB" << std::endl;
-    std::cout <<        "================================================" << std::endl;
+    ss_out <<        "                                     -----------" << std::endl;
+    ss_out <<        "Total memory usage:                  " << totalUsage / (double)MB << " MB" << std::endl;
+    ss_out <<        "================================================" << std::endl;
+
+    Session::get().getConsole()->out(ss_out.str());
 
     // Bring back the cursor
     showConsoleCursor(true);
 }
 
 void manta::RayTracer::tracePixel(int px, int py, const Scene *scene, CameraRayEmitterGroup *group, ImagePlane *target) {
-    // Set up the emitter group
     group->initialize();
-
-    // Initialize the target
-    int resX = group->getResolutionX();
-    int resY = group->getResolutionY();
-
-    target->initialize(resX, resY);
+    target->initialize(group->getResolutionX(), group->getResolutionY());
 
     // Create the singular job for the pixel
     Job job;
@@ -205,13 +198,18 @@ void manta::RayTracer::configure(mem_size stackSize, mem_size workerStackSize, i
 }
 
 void manta::RayTracer::destroy() {
+    if (m_outputImage != nullptr) {
+        m_outputImage->destroy();
+        delete m_outputImage;
+    }
+
     destroyWorkers();
 }
 
 void manta::RayTracer::incrementRayCompletion(const Job *job, int increment) {
     m_outputLock.lock();
     
-    int emitterCount = job->group->getResolutionX() * job->group->getResolutionY();
+    const int emitterCount = job->group->getResolutionX() * job->group->getResolutionY();
     m_currentRay += increment;
 
     // Print in increments of 1000 or the last 1000 one by one
@@ -229,7 +227,6 @@ void manta::RayTracer::_evaluate() {
     bool deterministicSeed;
     CameraRayEmitterGroup *camera;
     Scene *scene;
-    Filter *filter;
 
     static_cast<piranha::NodeOutput *>(m_multithreadedInput)->fullCompute((void *)&multithreaded);
     static_cast<piranha::NodeOutput *>(m_threadCountInput)->fullCompute((void *)&threadCount);
@@ -238,27 +235,29 @@ void manta::RayTracer::_evaluate() {
     static_cast<VectorNodeOutput *>(m_backgroundColorInput)->sample(nullptr, (void *)&m_backgroundColor);
 
     m_materialManager = getObject<MaterialLibrary>(m_materialLibraryInput);
+    m_sampler = getObject<Sampler>(m_samplerInput);
     camera = getObject<CameraRayEmitterGroup>(m_cameraInput);
     scene = getObject<Scene>(m_sceneInput);
-    filter = getObject<Filter>(m_filterInput);
-    m_sampler = getObject<Sampler>(m_samplerInput);
+    ImagePlane *imagePlane = getObject<ImagePlane>(m_imagePlaneInput);
 
     configure(200 * MB, 50 * MB, threadCount, renderBlockSize, multithreaded);
     setDeterministicSeedMode(deterministicSeed);
 
-    ImagePlane imagePlane;
-    imagePlane.setFilter(filter);
-    traceAll(scene, camera, &imagePlane);
+    traceAll(scene, camera, imagePlane);
 
-    VectorMap2D *vectorMap = new VectorMap2D();
-    vectorMap->copy(&imagePlane);
-    imagePlane.destroy();
+    m_outputImage = new VectorMap2D();
+    m_outputImage->copy(imagePlane);
+    imagePlane->destroy();
 
-    m_output.setMap(vectorMap);
+    m_output.setMap(m_outputImage);
 }
 
 void manta::RayTracer::_initialize() {
     /* void */
+}
+
+void manta::RayTracer::_destroy() {
+    destroy();
 }
 
 void manta::RayTracer::registerInputs() {
@@ -270,8 +269,8 @@ void manta::RayTracer::registerInputs() {
     registerInput(&m_materialLibraryInput, "materials");
     registerInput(&m_sceneInput, "scene");
     registerInput(&m_cameraInput, "camera");
-    registerInput(&m_filterInput, "filter");
     registerInput(&m_samplerInput, "sampler");
+    registerInput(&m_imagePlaneInput, "image_plane");
 }
 
 void manta::RayTracer::registerOutputs() {
@@ -289,8 +288,7 @@ void manta::RayTracer::createWorkers() {
 }
 
 void manta::RayTracer::startWorkers() {
-    int workerCount = m_threadCount;
-
+    const int workerCount = m_threadCount;
     std::cout << "Starting " << workerCount << " workers" << std::endl;
 
     for (int i = 0; i < workerCount; i++) {
@@ -299,26 +297,26 @@ void manta::RayTracer::startWorkers() {
 }
 
 void manta::RayTracer::waitForWorkers() {
-    int workerCount = m_threadCount;
-
+    const int workerCount = m_threadCount;
     for (int i = 0; i < workerCount; i++) {
         m_workers[i].join();
     }
 }
 
 void manta::RayTracer::destroyWorkers() {
-    int workerCount = m_threadCount;
-
+    const int workerCount = m_threadCount;
     for (int i = 0; i < workerCount; i++) {
         m_workers[i].destroy();
     }
 
-    delete[] m_workers;
-    m_workers = nullptr;
+    if (m_workers != nullptr) {
+        delete[] m_workers;
+        m_workers = nullptr;
+    }
 }
 
 void manta::RayTracer::depthCull(const Scene *scene, const LightRay *ray, SceneObject **closestObject, IntersectionPoint *point, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const {
-    int objectCount = scene->getSceneObjectCount();
+    const int objectCount = scene->getSceneObjectCount();
 
     CoarseIntersection closestIntersection;
     math::real closestDepth = math::constants::REAL_MAX;
@@ -396,8 +394,7 @@ manta::math::Vector manta::RayTracer::traceRay(
 
         depthCull(scene, currentRay, &sceneObject, &point, s /**/ STATISTICS_PARAM_INPUT);
 
-        bool foundIntersection = (sceneObject != nullptr);
-
+        const bool foundIntersection = (sceneObject != nullptr);
         if (foundIntersection) {
             material = (point.m_material == -1) 
                 ? sceneObject->getDefaultMaterial()
