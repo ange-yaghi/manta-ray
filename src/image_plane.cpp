@@ -4,7 +4,6 @@
 #include "../include/gaussian_filter.h"
 #include "../include/triangle_filter.h"
 #include "../include/box_filter.h"
-#include "../include/image_plane_preview_node.h"
 #include "../include/vector_map_2d.h"
 
 #include <assert.h>
@@ -18,7 +17,7 @@ manta::ImagePlane::ImagePlane() {
     m_filter = nullptr;
 
     m_filterInput = nullptr;
-    m_imagePlanePreviewInput = nullptr;
+    m_imagePreviewInput = nullptr;
     m_previewTarget = nullptr;
 }
 
@@ -39,25 +38,24 @@ void manta::ImagePlane::initialize(int width, int height) {
     m_buffer = (math::Vector *)_aligned_malloc(sizeof(math::Vector) * pixelCount, 16);
     m_sampleWeightSums = StandardAllocator::Global()->allocate <math::real>(pixelCount);
 
+    assert(m_buffer != nullptr);
+
     for (int i = 0; i < pixelCount; i++) {
         m_buffer[i] = math::constants::Zero;
         m_sampleWeightSums[i] = (math::real)0.0;
     }
 
     if (m_previewTarget != nullptr) {
-        m_previewTarget->map = new VectorMap2D;
-        m_previewTarget->map->initialize(m_width, m_height);
-    }
+        VectorMap2D *target = new VectorMap2D;
+        target->initialize(m_width, m_height);
 
-    assert(m_buffer != nullptr);
+        Session::get().attachTargetToImagePreview(m_previewTarget, target);
+    }
 }
 
 void manta::ImagePlane::destroy() {
-    assert(m_buffer != nullptr);
-    assert(m_sampleWeightSums != nullptr);
-
-    _aligned_free(m_buffer);
-    StandardAllocator::Global()->free(m_sampleWeightSums);
+    if (m_buffer != nullptr) _aligned_free(m_buffer);
+    if (m_sampleWeightSums != nullptr) StandardAllocator::Global()->free(m_sampleWeightSums);
 
     // Reset member variables
     m_buffer = nullptr;
@@ -195,7 +193,7 @@ void manta::ImagePlane::normalize() {
 void manta::ImagePlane::_evaluate() {
     m_filter = static_cast<ObjectReferenceNodeOutput<Filter> *>(m_filterInput)->getReference();
     m_previewTarget =
-        static_cast<ObjectReferenceNodeOutput<ImagePlanePreview> *>(m_imagePlanePreviewInput)->getReference();
+        static_cast<ObjectReferenceNodeOutput<ImagePreview> *>(m_imagePreviewInput)->getReference();
 
     m_output.setReference(this);
 }
@@ -205,11 +203,11 @@ void manta::ImagePlane::_initialize() {
 }
 
 void manta::ImagePlane::_destroy() {
-    /* void */
+    destroy();
 }
 
 void manta::ImagePlane::registerInputs() {
-    registerInput(&m_imagePlanePreviewInput, "preview");
+    registerInput(&m_imagePreviewInput, "preview");
     registerInput(&m_filterInput, "filter");
 }
 

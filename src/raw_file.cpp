@@ -78,7 +78,7 @@ bool manta::RawFile::readRawFile(const char *fname, ImagePlane *buffer) const {
     }
 
     file.read((char *)pixelData, pixelDataSize);
-    bool result = readPixelArray(dataHeader, pixelData, buffer, mainHeader.version);
+    const bool result = readPixelArray(dataHeader, pixelData, buffer, mainHeader.version);
 
     if (!result) {
         buffer->destroy();

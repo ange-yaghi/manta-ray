@@ -18,6 +18,11 @@ namespace mantaray_ui {
         static Application *s_application;
 
     public:
+        static const ysVector StandardBlue;
+        static const ysVector StandardRed;
+        static const ysVector StandardYellow;
+
+    public:
         Application();
         ~Application();
 
@@ -45,6 +50,8 @@ namespace mantaray_ui {
         dbasic::DeltaEngine m_engine;
         dbasic::AssetManager m_assetManager;
 
+        dbasic::Font *m_font;
+
         dbasic::TextRenderer m_textRenderer;
         UiConsole m_console;
 
@@ -55,6 +62,10 @@ namespace mantaray_ui {
         std::vector<CompilerThread *> m_compilerThreads;
 
         ysTexture *testTexture;
+
+        std::atomic<int> m_fileChangeCount;
+        double m_fileChangeDebounce;
+        bool m_debounceTriggered;
     };
 
 } /* namespace mantaray_ui */

@@ -10,7 +10,7 @@ module {
 }
 
 private import "../signal-processing/filters/filters.mr"
-private import "../ui/image_plane_preview.mr"
+private import "../ui/image_preview.mr"
 
 @doc: "Image Plane channel type"
 public node image_plane_channel => __mantaray__image_plane { /* void */ }
@@ -18,6 +18,6 @@ public node image_plane_channel => __mantaray__image_plane { /* void */ }
 @doc: "Standard image plane"
 public node image_plane => __mantaray__standard_image_plane {
     input filter        [filter]: gaussian_filter();
-    input preview       [image_plane_preview]: null_image_plane_preview();
+    input preview       [image_preview]: null_image_preview();
     alias output __out  [image_plane_channel];
 }

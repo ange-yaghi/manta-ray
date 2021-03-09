@@ -29,15 +29,22 @@ namespace dbasic {
         void SetRenderer(UiRenderer *renderer) { m_renderer = renderer; }
         UiRenderer *GetRenderer() const { return m_renderer; }
 
+        void SetColor(const ysVector &color) { m_currentColor = color; }
+        ysVector GetColor() const { return m_currentColor; }
+
     protected:
         DeltaEngine *m_engine;
         UiRenderer *m_renderer;
 
         Font *m_font;
 
+        ysVector m_currentColor;
+
     public:
         // Drawing Text
         void RenderText(const std::string &s, float x, float y, float h);
+        void RenderMonospaceText(const std::string &s, float x, float y, float h, float w);
+        float CalculateWidth(const std::string &s, float h) const;
 
         // Utilities
         static bool IsWhitespace(char c);

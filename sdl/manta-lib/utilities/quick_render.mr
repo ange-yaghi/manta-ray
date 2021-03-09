@@ -31,7 +31,7 @@ private import "../ray-tracer/image_plane.mr"
 private import "../signal-processing/samplers/samplers.mr"
 private import "../image/image_output.mr"
 private import "../mesh/obj_file.mr"
-private import "../ui/image_plane_preview.mr"
+private import "../ui/image_preview.mr"
 
 public node quick_render {
     input object_file;
@@ -47,7 +47,7 @@ public node quick_render {
     input plane_height:     1.0;
     input plane_distance:   1.0;
     input output_name:      "quick_render";
-    input preview:          null_image_plane_preview();
+    input preview:          null_image_preview();
     input output_dir:       "";
 
     // Save the current date/time

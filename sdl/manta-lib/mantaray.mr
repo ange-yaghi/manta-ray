@@ -44,7 +44,7 @@ public import "utilities/console.mr"
 public import "utilities/quick_render.mr"
 public import "utilities/paths.mr"
 
-public import "ui/image_plane_preview.mr"
+public import "ui/image_preview.mr"
 
 // ========================================================
 // Surface/Material Models

@@ -6,6 +6,8 @@
 #include "../include/runtime_statistics.h"
 #include "../include/os_utilities.h"
 #include "../include/vector_node_output.h"
+#include "../include/session.h"
+#include "../include/console.h"
 
 #include <algorithm>
 #include <thread>
@@ -218,21 +220,27 @@ void manta::KDTree::analyzeWithProgress(Mesh *mesh, int maxSize) {
     std::thread thread(&KDTree::analyze, this, mesh, maxSize);
 
     while (!isComplete()) {
-        std::cout << "Generating KD tree:..." << m_progress * (math::real)100.0 << "%                    \r";
+        std::stringstream ss;
+        ss << "Generating KD tree:..." << m_progress * (math::real)100.0 << "%                    \r";
+        Session::get().getConsole()->out(ss.str());
         sleep(20);    
     }
 
     // Wait for the thread to finish
     thread.join();
 
-    std::cout << "Generating KD tree... " << (math::real)100.0 << "%                    \r" << std::endl;
+    std::stringstream ss;
+    ss << "Generating KD tree... " << (math::real)100.0 << "%                    \r" << std::endl;
+    Session::get().getConsole()->out(ss.str());
 
     showConsoleCursor(true);
 
     auto endTime = std::chrono::system_clock::now();
     std::chrono::duration<double> diff = endTime - startTime;
 
-    std::cout << "KD tree generation took: " << diff.count() << "s" << std::endl;
+    ss = std::stringstream();
+    ss << "KD tree generation took: " << diff.count() << "s" << std::endl;
+    Session::get().getConsole()->out(ss.str());
 }
 
 void manta::KDTree::analyze(Mesh *mesh, int maxSize) {

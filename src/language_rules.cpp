@@ -60,7 +60,7 @@
 #include "../include/string_conversions.h"
 #include "../include/console_log_node.h"
 #include "../include/image_plane.h"
-#include "../include/image_plane_preview_node.h"
+#include "../include/image_preview_node.h"
 #include "../include/session.h"
 
 manta::LanguageRules::LanguageRules() {
@@ -122,7 +122,7 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
     registerBuiltinType<piranha::ChannelNode>(
         "__mantaray__filter", &ObjectChannel::FilterChannel);
     registerBuiltinType<piranha::ChannelNode>(
-        "__mantaray__image_plane_preview_channel", &ObjectChannel::ImagePlanePreviewChannel);
+        "__mantaray__image_preview_channel", &ObjectChannel::ImagePreviewChannel);
     registerBuiltinType<piranha::ChannelNode>(
         "__mantaray__image_plane", &ObjectChannel::ImagePlaneChannel);
 
@@ -219,10 +219,10 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__script_path");
     registerBuiltinType<AppendPathNode>(
         "__mantaray__append_path");
-    registerBuiltinType<NullReferenceNode<ImagePlanePreview>>(
-        "__mantaray__null_image_plane_preview");
-    registerBuiltinType<ImagePlanePreviewNode>(
-        "__mantaray__image_plane_preview");
+    registerBuiltinType<NullReferenceNode<ImagePreview>>(
+        "__mantaray__null_image_preview");
+    registerBuiltinType<ImagePreviewNode>(
+        "__mantaray__image_preview");
     registerBuiltinType<ImagePlane>(
         "__mantaray__standard_image_plane");
 

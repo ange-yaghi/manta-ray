@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <mutex>
 
 namespace manta {
 
@@ -10,14 +11,16 @@ namespace manta {
     class ImagePlane;
     class VectorMap2D;
 
-    struct ImagePlanePreview {
-        std::string name;
-        VectorMap2D *map;
+    struct ImagePreview {
+        std::string name = "";
+        VectorMap2D *map = nullptr;
+        std::atomic_bool finalized = false;
     };
 
-    struct ImagePreview {
+    struct ImagePreviewContainer {
         std::string name;
         VectorMap2D *map;
+        bool finalized;
     };
 
     class Session {
@@ -30,14 +33,18 @@ namespace manta {
         void setConsole(Console *console) { m_console = console; }
         Console *getConsole() const { return m_console; }
 
-        ImagePlanePreview *createImagePlanePreview(const std::string &name);
-        int getImagePlanePreviewCount() const { return (int)m_imagePlanePreviews.size(); }
-        ImagePlanePreview *getImagePlanePreview(int index) { return m_imagePlanePreviews[index]; }
+        ImagePreview *createImagePreview(const std::string &name);
+        void destroyImagePreview(ImagePreview *preview);
+        void attachTargetToImagePreview(ImagePreview *preview, VectorMap2D *target);
+        void detachTargetFromImagePreview(ImagePreview *preview);
+        void clearImagePreviews();
+        void getImagePreviews(std::vector<ImagePreviewContainer> &target);
 
     protected:
         Console *m_console;
 
-        std::vector<ImagePlanePreview *> m_imagePlanePreviews;
+        std::mutex m_imagePreviewLock;
+        std::vector<ImagePreview *> m_imagePreviews;
     };
 
 } /* namespace manta */

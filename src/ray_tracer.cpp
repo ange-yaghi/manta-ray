@@ -107,7 +107,7 @@ void manta::RayTracer::traceAll(const Scene *scene, CameraRayEmitterGroup *group
 
     // Print a single new line to terminate progress display
     // See RayTracer::incrementRayCompletion
-    std::cout << std::endl;
+    Session::get().getConsole()->out("\n");
 
     auto endTime = std::chrono::system_clock::now();
     std::chrono::duration<double> diff = endTime - startTime;
@@ -214,7 +214,9 @@ void manta::RayTracer::incrementRayCompletion(const Job *job, int increment) {
 
     // Print in increments of 1000 or the last 1000 one by one
     if (m_currentRay % 1000 == 0 || m_currentRay >= (emitterCount - 1000)) {
-        std::cout << "Ray " << m_currentRay << "/" << emitterCount << "                      \r" << std::flush;
+        std::stringstream ss;
+        ss << "Ray " << m_currentRay << "/" << emitterCount << "                      \r";
+        Session::get().getConsole()->out(ss.str());
     }
 
     m_outputLock.unlock();
@@ -247,7 +249,6 @@ void manta::RayTracer::_evaluate() {
 
     m_outputImage = new VectorMap2D();
     m_outputImage->copy(imagePlane);
-    imagePlane->destroy();
 
     m_output.setMap(m_outputImage);
 }
@@ -289,7 +290,9 @@ void manta::RayTracer::createWorkers() {
 
 void manta::RayTracer::startWorkers() {
     const int workerCount = m_threadCount;
-    std::cout << "Starting " << workerCount << " workers" << std::endl;
+    std::stringstream ss;
+    ss << "Starting " << workerCount << " workers" << std::endl;
+    Session::get().getConsole()->out(ss.str());
 
     for (int i = 0; i < workerCount; i++) {
         m_workers[i].start(m_multithreaded);

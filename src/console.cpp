@@ -10,6 +10,6 @@ manta::Console::~Console() {
     /* void */
 }
 
-void manta::Console::out(const std::string &text) {
+void manta::Console::out(const std::string &text, const math::Vector &color) {
     std::cout << text;
 }

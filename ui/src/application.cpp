@@ -3,14 +3,22 @@
 #include "../../include/os_utilities.h"
 #include "../../include/vector_map_2d.h"
 #include "../../include/manta_math.h"
+#include "../include/grid.h"
 
 #include <Windows.h>
 
 mantaray_ui::Application *mantaray_ui::Application::s_application = nullptr;
 
+const ysVector mantaray_ui::Application::StandardBlue = ysColor::srgbiToSrgb(0x00A4E9);
+const ysVector mantaray_ui::Application::StandardRed = ysColor::srgbiToSrgb(0xFF1549);
+const ysVector mantaray_ui::Application::StandardYellow = ysColor::srgbiToSrgb(0xFF9F15);
+
 mantaray_ui::Application::Application() {
     m_inputFile = "../../workspace/ui_test/script/test.mr";
     m_fileWatcherThread = nullptr;
+    m_fileChangeCount = 0;
+    m_fileChangeDebounce = 0.0f;
+    m_debounceTriggered = false;
 }
 
 mantaray_ui::Application::~Application() {
@@ -35,6 +43,7 @@ void mantaray_ui::Application::initialize(void *instance, ysContextObject::Devic
     }
 
     m_engine.GetConsole()->SetDefaultFontDirectory(enginePath + "/fonts/");
+    m_engine.SetConsoleEnabled(false);
 
     const std::string shaderPath = enginePath + "/shaders/";
 
@@ -43,7 +52,7 @@ void mantaray_ui::Application::initialize(void *instance, ysContextObject::Devic
     settings.DepthBuffer = true;
     settings.Instance = instance;
     settings.ShaderDirectory = shaderPath.c_str();
-    settings.WindowTitle = "Delta Template Application";
+    settings.WindowTitle = "MantaRay Preview";
     settings.WindowPositionX = 0;
     settings.WindowPositionY = 0;
     settings.WindowStyle = ysWindow::WindowStyle::Windowed;
@@ -55,7 +64,7 @@ void mantaray_ui::Application::initialize(void *instance, ysContextObject::Devic
     m_engine.InitializeConsoleShaders(&m_shaderSet);
     m_engine.SetShaderSet(&m_shaderSet);
 
-    m_shaders.SetClearColor(ysColor::srgbiToLinear(0x34, 0x98, 0xdb));
+    m_shaders.SetClearColor(ysColor::srgbiToLinear(0x0B0D10));
 
     m_assetManager.SetEngine(&m_engine);
 
@@ -68,7 +77,8 @@ void mantaray_ui::Application::initialize(void *instance, ysContextObject::Devic
     m_fileWatcherThread = new std::thread(&Application::listenForFileChanges, this);
     m_fileWatcherThread->detach();
 
-    m_console.initialize(&m_textRenderer);
+    m_engine.LoadFont(&m_font, "../../assets/fonts/overpass-mono/overpass-mono-regular.otf", 4096, 16);
+    m_console.initialize(&m_textRenderer, m_font);
     manta::Session::get().setConsole(&m_console);
 
     testTexture = nullptr;
@@ -92,6 +102,8 @@ ysTexture *mantaray_ui::Application::createTexture(const manta::VectorMap2D *vec
     ysTexture *newTexture;
     m_engine.GetDevice()->CreateTexture(&newTexture, width, height, buffer);
 
+    delete[] buffer;
+
     return newTexture;
 }
 
@@ -108,7 +120,21 @@ void mantaray_ui::Application::recompile() {
 }
 
 void mantaray_ui::Application::process() {
-    
+    if (m_fileChangeCount > 0) {
+        m_fileChangeDebounce = 0.5f;
+        m_fileChangeCount = 0;
+        m_debounceTriggered = true;
+    }
+
+    if (m_debounceTriggered) {
+        m_fileChangeDebounce -= m_engine.GetFrameLength();
+        if (m_fileChangeDebounce < 0.0f) {
+            m_debounceTriggered = false;
+
+            manta::Session::get().getConsole()->out("File modification detected. Recompiling.\n");
+            recompile();
+        }
+    }
 }
 
 void mantaray_ui::Application::render() {
@@ -120,18 +146,21 @@ void mantaray_ui::Application::render() {
     m_shaders.SetFogNear(10000.0f);
     m_shaders.SetFogFar(10001.0f);
 
-    //m_shaders.SetCameraPosition(ysMath::LoadVector(0.0f, 0.0f, 10.0f));
-    //m_shaders.SetCameraUp(ysMath::Constants::YAxis);
+    BoundingBox screenExtents(screenWidth, screenHeight);
+    Grid screenGrid(screenExtents, 5, 5, 10.0f);
 
-    if (m_engine.IsKeyDown(ysKey::Code::A)) {
-        manta::Session &session = manta::Session::get();
-        if (manta::Session::get().getImagePlanePreviewCount() > 0) {
-            m_engine.GetDevice()->DestroyTexture(testTexture);
+    m_console.setExtents(screenGrid.GetRange(0, 0, 0, 4));
 
-            manta::ImagePlanePreview *preview = manta::Session::get().getImagePlanePreview(manta::Session::get().getImagePlanePreviewCount() - 1);
-            if (preview->map != nullptr) {
-                testTexture = createTexture(preview->map);
-            }
+    manta::Session &session = manta::Session::get();
+    std::vector<manta::ImagePreviewContainer> previews;
+    manta::Session::get().getImagePreviews(previews);
+
+    if (previews.size() > 0) {
+        m_engine.GetDevice()->DestroyTexture(testTexture);
+
+        manta::ImagePreviewContainer &preview = previews.back();
+        if (preview.map != nullptr) {
+            testTexture = createTexture(preview.map);
         }
     }
 
@@ -139,9 +168,10 @@ void mantaray_ui::Application::render() {
 
     m_console.render();
 
-    BoundingBox bb(screenWidth / 1.5, screenHeight / 1.5);
-    bb = bb.AlignLeft(0).AlignBottom(0);
-    drawBox(bb, ysColor::srgbiToLinear(255, 255, 255));
+    if (testTexture != nullptr) {
+        BoundingBox preview = screenGrid.GetRange(1, 4, 0, 4);
+        drawBox(preview, ysColor::srgbiToLinear(255, 255, 255));
+    }
 }
 
 void mantaray_ui::Application::run() {
@@ -166,6 +196,10 @@ void mantaray_ui::Application::drawBox(const BoundingBox &box, const ysVector &c
     const int wx = m_engine.GetScreenWidth();
     const int wy = m_engine.GetScreenHeight();
 
+    const float fit_x = box.Width() / testTexture->GetWidth();
+    const float fit_y = box.Height() / testTexture->GetHeight();
+    const float scale = (fit_x < fit_y) ? fit_x : fit_y;
+
     m_shaders.SetBaseColor(color);
     m_shaders.SetLit(false);
     m_shaders.SetColorReplace(false);
@@ -175,7 +209,9 @@ void mantaray_ui::Application::drawBox(const BoundingBox &box, const ysVector &c
             ysMath::LoadVector(
                 box.CenterX() - wx / 2.0f,
                 box.CenterY() - wy / 2.0f)));
-    m_shaders.SetScale(box.Width() / 2, box.Height() / 2);
+    m_shaders.SetScale(
+        scale * testTexture->GetWidth() / 2.0f, 
+        scale * testTexture->GetHeight() / 2.0f);
     m_engine.DrawBox(m_shaders.GetRegularFlags());
 }
 
@@ -203,8 +239,8 @@ void mantaray_ui::Application::listenForFileChanges() {
         buffer,
         sizeof(FILE_NOTIFY_INFORMATION) * 1024,
         TRUE,
-        FILE_NOTIFY_CHANGE_SECURITY | FILE_NOTIFY_CHANGE_CREATION | FILE_NOTIFY_CHANGE_LAST_ACCESS |
-        FILE_NOTIFY_CHANGE_LAST_WRITE | FILE_NOTIFY_CHANGE_SIZE | FILE_NOTIFY_CHANGE_ATTRIBUTES |
+        FILE_NOTIFY_CHANGE_SECURITY | FILE_NOTIFY_CHANGE_CREATION |
+        FILE_NOTIFY_CHANGE_LAST_WRITE |
         FILE_NOTIFY_CHANGE_DIR_NAME | FILE_NOTIFY_CHANGE_FILE_NAME,
         &bytesReturned,
         NULL,
@@ -221,7 +257,7 @@ void mantaray_ui::Application::listenForFileChanges() {
 
         switch (buffer[0].Action) {
         case FILE_ACTION_MODIFIED:
-            recompile();
+            m_fileChangeCount = m_fileChangeCount + 1;
             break;
         case FILE_ACTION_ADDED:
             break;

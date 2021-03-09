@@ -1,9 +1,11 @@
 #include "../include/compiler.h"
 
 #include "../include/configuration.h"
+#include "../include/application.h"
 
 #include "../../include/path.h"
 #include "../../include/os_utilities.h"
+#include "../../include/console.h"
 
 #include <iostream>
 
@@ -65,6 +67,7 @@ void mantaray_ui::Compiler::compile(const piranha::IrPath &path) {
         }
         else {
             setState(State::CompilationFail);
+            printTrace();
         }
     }
 }
@@ -108,9 +111,11 @@ void mantaray_ui::Compiler::kill() {
 
 void mantaray_ui::Compiler::printError(const piranha::CompilationError *err) {
     const piranha::ErrorCode_struct &errorCode = err->getErrorCode();
-    std::cout << err->getCompilationUnit()->getPath().getStem()
+    std::stringstream ss;
+    ss << err->getCompilationUnit()->getPath().getStem()
         << "(" << err->getErrorLocation()->lineStart << "): error "
         << errorCode.stage << errorCode.code << ": " << errorCode.info << std::endl;
+    manta::Session::get().getConsole()->out(ss.str(), Application::StandardRed);
 
     piranha::IrContextTree *context = err->getInstantiation();
     while (context != nullptr) {
@@ -124,11 +129,13 @@ void mantaray_ui::Compiler::printError(const piranha::CompilationError *err) {
             if (instanceName.empty()) formattedName = "<unnamed> " + definitionName;
             else formattedName = instanceName + " " + definitionName;
 
-            std::cout
+            ss = std::stringstream();
+            ss
                 << "       While instantiating: "
                 << instance->getParentUnit()->getPath().getStem()
                 << "(" << instance->getSummaryToken()->lineStart << "): "
                 << formattedName << std::endl;
+            manta::Session::get().getConsole()->out(ss.str(), Application::StandardRed);
         }
 
         context = context->getParent();

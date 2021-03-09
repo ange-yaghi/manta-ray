@@ -804,7 +804,7 @@
     <ClCompile Include="..\..\src\session.cpp">
       <Filter>Source Files\session</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\image_plane_preview_node.cpp">
+    <ClCompile Include="..\..\src\image_preview_node.cpp">
       <Filter>Source Files\sdl\nodes\library\ui</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1289,11 +1289,11 @@
     <ClInclude Include="..\..\include\console_log_node.h">
       <Filter>Header Files\sdl\nodes\library\console</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\image_plane_preview_node.h">
-      <Filter>Header Files\sdl\nodes\library\ui</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\preview_manager.h">
       <Filter>Header Files\session</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\image_preview_node.h">
+      <Filter>Header Files\sdl\nodes\library\ui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

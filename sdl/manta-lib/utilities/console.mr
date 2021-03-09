@@ -10,6 +10,7 @@ module {
 }
 
 private import "../types/atomic_types.mr"
+private import "../types/conversions.mr"
 
 @doc: "Get user console input"
 public node user_in => __mantaray__console_in {
@@ -20,4 +21,5 @@ public node user_in => __mantaray__console_in {
 @doc: "Log a string to the console"
 public node log => __mantaray__console_out {
     input data [string]: "\n";
+    input color [vector]: 0.5;
 }

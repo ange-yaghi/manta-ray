@@ -67,6 +67,7 @@ manta::math::Vector manta::DisneySpecularBRDF::f(const IntersectionPoint *surfac
 
     // Apply power attenuation
     math::Vector power = m_power.sample(surfaceInteraction);
+    math::Vector baseColor = m_baseColor.sample(surfaceInteraction);
 
     reflectivity = math::mul(reflectivity, power);
 
@@ -83,7 +84,9 @@ manta::math::Vector manta::DisneySpecularBRDF::f(const IntersectionPoint *surfac
             s
         ));
     
-    return math::mul(F, reflectivity);
+    return math::mul(
+        math::mul(F, reflectivity),
+        baseColor);
 }
 
 manta::math::real manta::DisneySpecularBRDF::pdf(const IntersectionPoint *surfaceInteraction, 

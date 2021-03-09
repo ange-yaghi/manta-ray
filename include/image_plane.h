@@ -56,9 +56,9 @@ namespace manta {
         virtual void registerOutputs();
 
         piranha::pNodeInput m_filterInput;
-        piranha::pNodeInput m_imagePlanePreviewInput;
+        piranha::pNodeInput m_imagePreviewInput;
 
-        ImagePlanePreview *m_previewTarget;
+        ImagePreview *m_previewTarget;
 
     protected:
         int m_width;

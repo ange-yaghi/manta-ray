@@ -12,6 +12,7 @@ namespace manta {
     public:
         ConsoleOutputNode() {
             m_dataOut = nullptr;
+            m_color = nullptr;
         }
 
         ~ConsoleOutputNode() {
@@ -27,11 +28,15 @@ namespace manta {
             std::string data;
             m_dataOut->fullCompute(&data);
 
-            Session::get().getConsole()->out(data);
+            math::Vector color;
+            static_cast<VectorNodeOutput *>(m_color)->sample(nullptr, (void *)&color);
+
+            Session::get().getConsole()->out(data, color);
         }
 
         virtual void registerInputs() {
             registerInput(&m_dataOut, "data");
+            registerInput(&m_color, "color");
         }
 
         virtual void registerOutputs() {
@@ -40,6 +45,7 @@ namespace manta {
 
     protected:
         piranha::pNodeInput m_dataOut;
+        piranha::pNodeInput m_color;
     };
 
 } /* namespace manta */

@@ -14,6 +14,7 @@ namespace dbasic {
     struct ConsoleVertex {
         ysVector2 Pos = { 0.0f, 0.0f };
         ysVector2 TexCoord = { 0.0f, 0.0f };
+        ysVector4 Color = { 1.0f, 1.0f, 1.0f, 1.0f };
     };
 
     struct ShaderObjectVariables {
