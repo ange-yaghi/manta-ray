@@ -24,8 +24,7 @@ void manta::LensCameraRayEmitter::generateRay(LightRay *ray) const {
     math::Vector position = transformToImagePlane(
         math::Vector2(p_u.x - (math::real)0.5, p_u.y - (math::real)0.5));
 
-    bool result = m_lens->generateOutgoingRay(position, &m_lensHint, ray, l_u);
-
+    const bool result = m_lens->generateOutgoingRay(position, &m_lensHint, ray, l_u);
     if (!result) ray->setCameraWeight((math::real)0.0);
 
     ray->setImagePlaneLocation(

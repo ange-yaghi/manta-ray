@@ -21,7 +21,7 @@ public:
 
     virtual bool SetWindowStyle(WindowStyle style);
 
-    virtual void ScreenToLocal(int &x, int &y);
+    virtual void ScreenToLocal(int &x, int &y) const;
 
     virtual bool IsVisible();
 

@@ -85,6 +85,7 @@ void manta::RayTracer::traceAll(const Scene *scene, CameraRayEmitterGroup *group
             newJob.startY = j * m_renderBlockSize;
             newJob.endX = (i + 1) * m_renderBlockSize - 1;
             newJob.endY = (j + 1) * m_renderBlockSize - 1;
+            newJob.samples = 0;
 
             if (newJob.startX >= resX) continue;
             if (newJob.startY >= resY) continue;

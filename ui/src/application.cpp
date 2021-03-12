@@ -19,6 +19,15 @@ mantaray_ui::Application::Application() {
     m_fileChangeCount = 0;
     m_fileChangeDebounce = 0.0f;
     m_debounceTriggered = false;
+    m_zoom = 0;
+    m_updateTimer = 0.0f;
+
+    m_lastMouseX = 0;
+    m_lastMouseY = 0;
+
+    m_pan = ysMath::Constants::Zero;
+    m_dragging = false;
+    m_textureUpdateComplete = true;
 }
 
 mantaray_ui::Application::~Application() {
@@ -69,6 +78,7 @@ void mantaray_ui::Application::initialize(void *instance, ysContextObject::Devic
     m_assetManager.SetEngine(&m_engine);
 
     m_shaders.SetCameraMode(dbasic::DefaultShaders::CameraMode::Flat);
+    m_shaderSet.GetStage(0)->GetRenderTarget()->SetDepthTestEnabled(false);
 
     m_textRenderer.SetEngine(&m_engine);
     m_textRenderer.SetRenderer(m_engine.GetUiRenderer());
@@ -81,7 +91,8 @@ void mantaray_ui::Application::initialize(void *instance, ysContextObject::Devic
     m_console.initialize(&m_textRenderer, m_font);
     manta::Session::get().setConsole(&m_console);
 
-    testTexture = nullptr;
+    m_updateIndex = 0;
+    m_blendLocation = 0.0;
 }
 
 ysTexture *mantaray_ui::Application::createTexture(const manta::VectorMap2D *vectorMap) {
@@ -92,9 +103,9 @@ ysTexture *mantaray_ui::Application::createTexture(const manta::VectorMap2D *vec
     for (int i = 0; i < width; ++i) {
         for (int j = 0; j < height; ++j) {
             const manta::math::Vector v = vectorMap->get(i, j);
-            buffer[(j * width + i) * 4 + 0] = (int)(manta::math::getX(v) * 255);
-            buffer[(j * width + i) * 4 + 1] = (int)(manta::math::getY(v) * 255);
-            buffer[(j * width + i) * 4 + 2] = (int)(manta::math::getZ(v) * 255);
+            buffer[(j * width + i) * 4 + 0] = (int)(min(std::round(manta::math::getX(v) * 255), 255));
+            buffer[(j * width + i) * 4 + 1] = (int)(min(std::round(manta::math::getY(v) * 255), 255));
+            buffer[(j * width + i) * 4 + 2] = (int)(min(std::round(manta::math::getZ(v) * 255), 255));
             buffer[(j * width + i) * 4 + 3] = 0xFF;
         }
     }
@@ -105,6 +116,48 @@ ysTexture *mantaray_ui::Application::createTexture(const manta::VectorMap2D *vec
     delete[] buffer;
 
     return newTexture;
+}
+
+void mantaray_ui::Application::updateImageThread(const manta::VectorMap2D *vectorMap, int index) {
+    ysTexture *newTexture = createTexture(vectorMap);
+
+    std::lock_guard<std::mutex> lock(m_textureLock);
+    if (m_previewSnapshots.size() > 0) {
+        if (m_previewSnapshots.back().index > index) {
+            m_engine.GetDevice()->DestroyTexture(newTexture);
+            return;
+        }
+    }
+
+    m_previewSnapshots.push_back({ newTexture, index });
+
+    m_textureUpdateComplete = true;
+}
+
+float mantaray_ui::Application::clamp(float s, float left, float right) {
+    if (s > right) return right;
+    else if (s < left) return left;
+    else return s;
+}
+
+void mantaray_ui::Application::getBlend(ysTexture **texture0, ysTexture **texture1, float &blend, float &extent) {
+    std::lock_guard<std::mutex> lock(m_textureLock);
+
+    extent = 0;
+
+    const int n = m_previewSnapshots.size();
+    if (n > 0) {
+        *texture0 = nullptr;
+        *texture1 = m_previewSnapshots.back().texture;
+        blend = 1.0f;
+    }
+    else {
+        *texture1 = nullptr;
+    }
+}
+
+void mantaray_ui::Application::updateImage() {
+    
 }
 
 void mantaray_ui::Application::recompile() {
@@ -119,9 +172,19 @@ void mantaray_ui::Application::recompile() {
     m_compilerThreads.push_back(newCompilerThread);
 }
 
+mantaray_ui::BoundingBox mantaray_ui::Application::fitImage(int width, int height, const BoundingBox &extents) {
+    const float fit_x = extents.Width() / width;
+    const float fit_y = extents.Height() / height;
+    const float imageScale = ((fit_x < fit_y) ? fit_x : fit_y);
+
+    return BoundingBox(width * imageScale, height * imageScale)
+        .AlignCenterX(extents.CenterX())
+        .AlignCenterY(extents.CenterY());
+}
+
 void mantaray_ui::Application::process() {
     if (m_fileChangeCount > 0) {
-        m_fileChangeDebounce = 0.5f;
+        m_fileChangeDebounce = 0.1f;
         m_fileChangeCount = 0;
         m_debounceTriggered = true;
     }
@@ -135,6 +198,15 @@ void mantaray_ui::Application::process() {
             recompile();
         }
     }
+
+    int mouseX, mouseY;
+    m_engine.GetOsMousePos(&mouseX, &mouseY);
+
+    if (m_engine.GetGameWindow()->IsOnScreen(mouseX, mouseY)) {
+        m_zoom += (m_engine.GetMouseWheel() - m_lastMouseWheel);
+    }
+
+    m_lastMouseWheel = m_engine.GetMouseWheel();
 }
 
 void mantaray_ui::Application::render() {
@@ -147,31 +219,84 @@ void mantaray_ui::Application::render() {
     m_shaders.SetFogFar(10001.0f);
 
     BoundingBox screenExtents(screenWidth, screenHeight);
-    Grid screenGrid(screenExtents, 5, 5, 10.0f);
+    Grid screenGrid(screenExtents, 10, 5, 10.0f);
 
-    m_console.setExtents(screenGrid.GetRange(0, 0, 0, 4));
+    BoundingBox terminalArea = screenGrid.GetFullRange(0, 2, 0, 4);
+    m_console.setExtents(terminalArea.MarginOffset(-10.0f, -10.0f));
 
     manta::Session &session = manta::Session::get();
     std::vector<manta::ImagePreviewContainer> previews;
     manta::Session::get().getImagePreviews(previews);
 
-    if (previews.size() > 0) {
-        m_engine.GetDevice()->DestroyTexture(testTexture);
+    m_updateTimer -= m_engine.GetFrameLength();
 
+    if (previews.size() > 0 && m_updateTimer <= 0.0f) {
         manta::ImagePreviewContainer &preview = previews.back();
         if (preview.map != nullptr) {
-            testTexture = createTexture(preview.map);
+            std::thread updateThread(&Application::updateImageThread, this, preview.map, m_updateIndex++);
+            updateThread.detach();
         }
     }
 
+    updateImage();
+
     m_shaders.ResetLights();
 
-    m_console.render();
+    BoundingBox displayArea = screenGrid.GetFullRange(3, 9, 0, 4);
+    drawBox(displayArea, ysColor::srgbiToLinear(0x0B0D10), ysMath::Constants::One, ysMath::Constants::Zero);
 
-    if (testTexture != nullptr) {
-        BoundingBox preview = screenGrid.GetRange(1, 4, 0, 4);
-        drawBox(preview, ysColor::srgbiToLinear(255, 255, 255));
+    int mouseX, mouseY;
+    m_engine.GetOsMousePos(&mouseX, &mouseY);
+    const int mouseDx = mouseX - m_lastMouseX;
+    const int mouseDy = mouseY - m_lastMouseY;
+
+    m_lastMouseX = mouseX;
+    m_lastMouseY = mouseY;
+
+    const float zoomScale = std::pow(0.5, -m_zoom / 240.0f);
+
+    if (m_engine.GetGameWindow()->IsOnScreen(mouseX, mouseY)) {
+        if (m_engine.ProcessMouseButtonDown(ysMouse::Button::Left)) {
+            m_dragging = true;
+        }
     }
+
+    if (m_engine.IsMouseButtonDown(ysMouse::Button::Left) && m_dragging) {
+        m_pan = ysMath::Add(m_pan, ysMath::LoadVector(mouseDx / zoomScale, mouseDy / zoomScale));
+    }
+    else {
+        m_dragging = false;
+    }
+
+    ysTexture *t0, *t1;
+    float blend, extent;
+    getBlend(&t0, &t1, blend, extent);
+
+    if (t1 != nullptr) {
+        const BoundingBox preview = fitImage(t1->GetWidth(), t1->GetHeight(), displayArea.MarginOffset(-20.0f, -20.0f));
+        const BoundingBox outline = preview.MarginOffset(1.0f, 1.0f);
+
+        drawBox(outline, ysColor::srgbiToLinear(0x333333), ysMath::LoadScalar(zoomScale), m_pan);
+        if (t0 != nullptr) drawImage(t0, preview, ysMath::LoadVector(1.0f, 1.0f, 1.0f, 1.0f), ysMath::LoadScalar(zoomScale), m_pan);
+        drawImage(t1, preview, ysMath::LoadVector(1.0f, 1.0f, 1.0f, blend), ysMath::LoadScalar(zoomScale), m_pan);
+
+        if (m_blendLocation < extent) {
+            m_blendLocation += m_engine.GetFrameLength() * 2;
+
+            if (m_blendLocation >= extent) {
+                m_blendLocation = extent;
+            }
+        }
+    }
+
+    drawBox(terminalArea.MarginOffset(1.0f, 1.0f), ysColor::srgbiToLinear(0x394351), ysMath::Constants::One, ysMath::Constants::Zero);
+    drawBox(terminalArea, ysColor::srgbiToLinear(0x0B0D10), ysMath::Constants::One, ysMath::Constants::Zero);
+
+    if (m_updateTimer < 0.0f) {
+        m_updateTimer = 2.0f;
+    }
+
+    m_console.render();
 }
 
 void mantaray_ui::Application::run() {
@@ -192,26 +317,56 @@ void mantaray_ui::Application::destroy() {
     m_engine.Destroy();
 }
 
-void mantaray_ui::Application::drawBox(const BoundingBox &box, const ysVector &color) {
+void mantaray_ui::Application::drawImage(ysTexture *texture, const BoundingBox &box, const ysVector &color, const ysVector &scale, const ysVector &offset) {
     const int wx = m_engine.GetScreenWidth();
     const int wy = m_engine.GetScreenHeight();
 
-    const float fit_x = box.Width() / testTexture->GetWidth();
-    const float fit_y = box.Height() / testTexture->GetHeight();
-    const float scale = (fit_x < fit_y) ? fit_x : fit_y;
+    ysMatrix transform = ysMath::MatMult(
+        ysMath::ScaleTransform(scale),
+        ysMath::TranslationTransform(
+            ysMath::LoadVector(
+                ysMath::GetX(offset),
+                ysMath::GetY(offset))));
+
+    transform = ysMath::MatMult(
+        ysMath::TranslationTransform(ysMath::LoadVector(box.CenterX() - wx / 2.0f, box.CenterY() - wy / 2.0f)),
+        transform);
 
     m_shaders.SetBaseColor(color);
     m_shaders.SetLit(false);
     m_shaders.SetColorReplace(false);
-    m_shaders.SetDiffuseTexture(testTexture);
-    m_shaders.SetObjectTransform(
+    m_shaders.SetDiffuseTexture(texture);
+    m_shaders.SetObjectTransform(transform);
+    m_shaders.SetScale(box.Width() / 2.0f, box.Height() / 2.0f);
+    m_engine.DrawBox(m_shaders.GetRegularFlags());
+}
+
+void mantaray_ui::Application::drawBox(
+    const BoundingBox &box, 
+    const ysVector &color, 
+    const ysVector &scale, 
+    const ysVector &offset) 
+{
+    const int wx = m_engine.GetScreenWidth();
+    const int wy = m_engine.GetScreenHeight();
+
+    ysMatrix transform = ysMath::MatMult(
+        ysMath::ScaleTransform(scale),
         ysMath::TranslationTransform(
             ysMath::LoadVector(
-                box.CenterX() - wx / 2.0f,
-                box.CenterY() - wy / 2.0f)));
-    m_shaders.SetScale(
-        scale * testTexture->GetWidth() / 2.0f, 
-        scale * testTexture->GetHeight() / 2.0f);
+                ysMath::GetX(offset),
+                ysMath::GetY(offset))));
+
+    transform = ysMath::MatMult(
+        ysMath::TranslationTransform(ysMath::LoadVector(box.CenterX() - wx / 2.0f, box.CenterY() - wy / 2.0f)),
+        transform);
+
+    m_shaders.SetBaseColor(color);
+    m_shaders.SetLit(false);
+    m_shaders.SetColorReplace(true);
+    m_shaders.SetDiffuseTexture(nullptr);
+    m_shaders.SetObjectTransform(transform);
+    m_shaders.SetScale(box.Width() / 2.0f, box.Height() / 2.0f);
     m_engine.DrawBox(m_shaders.GetRegularFlags());
 }
 

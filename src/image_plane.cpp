@@ -136,6 +136,7 @@ void manta::ImagePlane::processSamples(ImageSample *samples, int sampleCount, St
                 if (FAST_ABS(p.x) > extents.x || FAST_ABS(p.y) > extents.y) continue;
 
                 const math::Vector weight = m_filter->evaluate(p);
+
                 currentBlock->value = math::mul(weight, sample.intensity);
                 currentBlock->weight = math::getScalar(weight);
                 currentBlock->x = x;
@@ -155,10 +156,18 @@ void manta::ImagePlane::processSamples(ImageSample *samples, int sampleCount, St
 
         value = math::add(value, block.value);
         weightSum += block.weight;
+    }
 
-        // temp
-        if (m_previewTarget != nullptr) {
-            m_previewTarget->map->set(math::div(value, math::loadScalar(weightSum)), block.x, block.y);
+    if (m_previewTarget != nullptr) {
+        for (int i = 0; i < blockCount; ++i) {
+            const Block &block = blocks[i];
+
+            math::Vector &value = m_buffer[block.y * m_width + block.x];
+            math::real &weightSum = m_sampleWeightSums[block.y * m_width + block.x];
+
+            if (weightSum != 0) {
+                m_previewTarget->map->set(math::div(value, math::loadScalar(weightSum)), block.x, block.y);
+            }
         }
     }
 

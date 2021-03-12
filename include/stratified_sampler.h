@@ -46,7 +46,7 @@ namespace manta {
         template <typename T>
         void shuffle(std::vector<T> &v, int count, int dimensionCount) {
             for (int i = 0; i < count; i++) {
-                int other = i + uniformRandomInt(count - i);
+                const int other = i + uniformRandomInt(count - i);
                 for (int j = 0; j < dimensionCount; j++) {
                     std::swap(v[dimensionCount  * i + j],
                         v[dimensionCount * other + j]);

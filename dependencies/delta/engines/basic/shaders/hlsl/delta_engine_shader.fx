@@ -324,5 +324,5 @@ float4 PS(VS_OUTPUT input) : SV_Target {
 			lerp(
 				totalLighting.rgb,
 				FogColor.rgb,
-				fogAttenuation)), 1.0);
+				fogAttenuation)), baseColor.a);
 }

@@ -24,6 +24,8 @@ public:
     // Window Interface
     virtual ysError NewWindow(ysWindow **window) = 0;
 
+    int GetWindowCount() const;
+    ysWindow *GetWindow(int index);
     void CloseWindow(ysWindow *window);
     void DeleteWindow(ysWindow *window);
 

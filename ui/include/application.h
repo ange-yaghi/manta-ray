@@ -17,6 +17,11 @@ namespace mantaray_ui {
     protected:
         static Application *s_application;
 
+        struct PreviewSnapshot {
+            ysTexture *texture;
+            int index;
+        };
+
     public:
         static const ysVector StandardBlue;
         static const ysVector StandardRed;
@@ -30,7 +35,8 @@ namespace mantaray_ui {
         void run();
         void destroy();
 
-        void drawBox(const BoundingBox &box, const ysVector &color);
+        void drawImage(ysTexture *texture, const BoundingBox &box, const ysVector &color, const ysVector &scale, const ysVector &pan);
+        void drawBox(const BoundingBox &box, const ysVector &color, const ysVector &scale, const ysVector &pan);
 
         void listenForFileChanges();
 
@@ -38,7 +44,13 @@ namespace mantaray_ui {
 
         ysTexture *createTexture(const manta::VectorMap2D *vectorMap);
 
+        void updateImageThread(const manta::VectorMap2D *vectorMap, int index);
+        static float clamp(float s, float left, float right);
+        void getBlend(ysTexture **texture0, ysTexture **texture1, float &blend, float &extent);
+        void updateImage();
         void recompile();
+
+        BoundingBox fitImage(int width, int height, const BoundingBox &extents);
 
     protected:
         void process();
@@ -61,11 +73,25 @@ namespace mantaray_ui {
 
         std::vector<CompilerThread *> m_compilerThreads;
 
-        ysTexture *testTexture;
+        std::mutex m_textureLock;
+        std::vector<PreviewSnapshot> m_previewSnapshots;
+        float m_blendLocation;
+        int m_updateIndex;
 
         std::atomic<int> m_fileChangeCount;
+        std::atomic<bool> m_textureUpdateComplete;
         double m_fileChangeDebounce;
         bool m_debounceTriggered;
+
+        double m_updateTimer;
+
+        int m_lastMouseWheel;
+        int m_zoom;
+        bool m_dragging;
+        int m_lastMouseX;
+        int m_lastMouseY;
+
+        ysVector m_pan;
     };
 
 } /* namespace mantaray_ui */

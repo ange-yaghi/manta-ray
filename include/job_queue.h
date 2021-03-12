@@ -18,6 +18,7 @@ namespace manta {
         int startY;
         int endX;
         int endY;
+        int samples;
     };
 
     class JobQueue {

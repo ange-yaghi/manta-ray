@@ -20,13 +20,13 @@ void mantaray_ui::UiConsole::initialize(dbasic::TextRenderer *textRenderer, dbas
 
     m_lines.push_back({});
 
-    outCentered("///////////////// MantaRay /////////////////", ysColor::srgbiToSrgb(0x00A4E9));
-    outCentered("*                                          *", ysColor::srgbiToSrgb(0x00A4E9));
-    outCentered("* 2021 | (c) [A|T|G]                       *", ysColor::srgbiToSrgb(0x00A4E9));
-    outCentered("*                                          *", ysColor::srgbiToSrgb(0x00A4E9));
-    outCentered("////////////////////////////////////////////", ysColor::srgbiToSrgb(0x00A4E9));
+    out("///////////////// MantaRay ////////////////\n", ysColor::srgbiToSrgb(0x00A4E9));
+    out("*                                         *\n", ysColor::srgbiToSrgb(0x00A4E9));
+    out("* 2021 | (c) [A|T|G]                      *\n", ysColor::srgbiToSrgb(0x00A4E9));
+    out("*                                         *\n", ysColor::srgbiToSrgb(0x00A4E9));
+    out("///////////////////////////////////////////\n", ysColor::srgbiToSrgb(0x00A4E9));
     
-    outCentered("Listening...", ysColor::srgbiToSrgb(0xFF9F15));
+    out("Listening...\n", ysColor::srgbiToSrgb(0xFF9F15));
 }
 
 void mantaray_ui::UiConsole::setExtents(const BoundingBox &box) {
