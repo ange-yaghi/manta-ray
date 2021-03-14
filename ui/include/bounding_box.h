@@ -36,6 +36,7 @@ namespace mantaray_ui {
         BoundingBox &AlignLeft(float left);
         BoundingBox &AlignCenterX(float hCenter);
         BoundingBox &AlignCenterY(float vCenter);
+        BoundingBox &PixelPerfect();
 
         BoundingBox Add(const BoundingBox &box) const;
 

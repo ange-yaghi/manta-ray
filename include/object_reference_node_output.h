@@ -11,7 +11,7 @@ namespace manta {
     class ObjectReferenceNodeOutput : public piranha::NodeOutput {
     public:
         ObjectReferenceNodeOutput() : NodeOutput(LookupChannelType<Type>()) {
-            /* void */
+            m_data = nullptr;
         }
 
         virtual ~ObjectReferenceNodeOutput() {

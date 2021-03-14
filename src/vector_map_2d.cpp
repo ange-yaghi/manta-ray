@@ -8,6 +8,8 @@
 
 manta::VectorMap2D::VectorMap2D() {
     m_data = nullptr;
+    m_width = 0;
+    m_height = 0;
 }
 
 manta::VectorMap2D::~VectorMap2D() {
@@ -15,6 +17,8 @@ manta::VectorMap2D::~VectorMap2D() {
 }
 
 void manta::VectorMap2D::initialize(int width, int height, const math::Vector &value) {
+    assert(m_data == nullptr);
+
     m_width = width;
     m_height = height;
 

@@ -37,8 +37,7 @@ manta::KDTree::~KDTree() {
 }
 
 void manta::KDTree::_evaluate() {
-    Mesh *mesh = nullptr;
-    mesh = ((ObjectReferenceNodeOutput<Mesh> *)m_meshInput)->getReference();
+    Mesh *mesh = getObject<Mesh>(m_meshInput);
 
     piranha::native_float width;
     piranha::native_int granularity;

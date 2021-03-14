@@ -31,7 +31,6 @@ namespace mantaray_ui {
         void setExtents(const BoundingBox &box);
 
         virtual void out(const std::string &text, const manta::math::Vector &color = manta::math::constants::One);
-
         void outCentered(const std::string &text, const manta::math::Vector &color = manta::math::constants::One);
 
         void render();

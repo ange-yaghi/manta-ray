@@ -14,8 +14,8 @@ void manta::MeshMergeNode::_initialize() {
 }
 
 void manta::MeshMergeNode::_evaluate() {
-    Mesh *leftMesh = static_cast<ObjectReferenceNodeOutput<Mesh> *>(m_leftMesh)->getReference();
-    Mesh *rightMesh = static_cast<ObjectReferenceNodeOutput<Mesh> *>(m_rightMesh)->getReference();
+    Mesh *leftMesh = getObject<Mesh>(m_leftMesh);
+    Mesh *rightMesh = getObject<Mesh>(m_rightMesh);
 
     leftMesh->merge(rightMesh);
 

@@ -34,6 +34,7 @@
     <ClCompile Include="..\..\ui\src\compiler.cpp" />
     <ClCompile Include="..\..\ui\src\compiler_thread.cpp" />
     <ClCompile Include="..\..\ui\src\grid.cpp" />
+    <ClCompile Include="..\..\ui\src\preview.cpp" />
     <ClCompile Include="..\..\ui\src\ui_console.cpp" />
     <ClCompile Include="..\..\ui\src\main.cpp" />
     <ClCompile Include="..\..\ui\src\application.cpp" />
@@ -46,6 +47,7 @@
     <ClInclude Include="..\..\ui\include\delta.h" />
     <ClInclude Include="..\..\ui\include\application.h" />
     <ClInclude Include="..\..\ui\include\grid.h" />
+    <ClInclude Include="..\..\ui\include\preview.h" />
     <ClInclude Include="..\..\ui\include\ui_console.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

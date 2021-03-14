@@ -21,6 +21,9 @@ namespace manta {
         void setUp(const math::Vector &up) { m_up = up; }
         math::Vector getUp() const { return m_up; }
 
+        ImagePlane *getImagePlane() const { return m_imagePlane; }
+        void setImagePlane(ImagePlane *plane) { m_imagePlane = plane; }
+
         void setResolutionX(int resolution) { m_resolutionX = resolution; }
         int getResolutionX() const { return m_resolutionX; }
 
@@ -72,10 +75,9 @@ namespace manta {
         piranha::pNodeInput m_upInput;
         piranha::pNodeInput m_positionInput;
         piranha::pNodeInput m_directionInput;
-        piranha::pNodeInput m_resolutionXInput;
-        piranha::pNodeInput m_resolutionYInput;
         piranha::pNodeInput m_planeHeightInput;
         piranha::pNodeInput m_planeDistanceInput;
+        piranha::pNodeInput m_imagePlaneInput;
 
     protected:
         math::Vector m_up;
@@ -89,6 +91,7 @@ namespace manta {
         math::real_d m_planeDistance;
 
         Sampler *m_sampler;
+        ImagePlane *m_imagePlane;
     };
 
 } /* namespace manta */

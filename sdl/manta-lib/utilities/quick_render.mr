@@ -31,7 +31,6 @@ private import "../ray-tracer/image_plane.mr"
 private import "../signal-processing/samplers/samplers.mr"
 private import "../image/image_output.mr"
 private import "../mesh/obj_file.mr"
-private import "../ui/image_preview.mr"
 
 public node quick_render {
     input object_file;
@@ -47,7 +46,7 @@ public node quick_render {
     input plane_height:     1.0;
     input plane_distance:   1.0;
     input output_name:      "quick_render";
-    input preview:          null_image_preview();
+    input image_plane:      image_plane(width: resolution_x, height: resolution_y);
     input output_dir:       "";
 
     // Save the current date/time
@@ -72,8 +71,7 @@ public node quick_render {
         up:             camera_controller.up,
         position:       camera_controller.position,
         direction:      camera_controller.direction,
-        resolution_x:   resolution_x,
-        resolution_y:   resolution_y,
+        image_plane:    image_plane,
         plane_height:   plane_height,
         plane_distance: plane_distance
     )
@@ -108,10 +106,7 @@ public node quick_render {
         camera: camera,
         materials: materials,
         background: background,
-        sampler: random_sampler(samples),
-        image_plane: image_plane(
-            preview: preview
-        )
+        sampler: random_sampler(samples)
     )
 
     log("Render complete\n")

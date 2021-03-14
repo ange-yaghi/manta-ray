@@ -1,7 +1,7 @@
 #include "../include/vector_split_node.h"
 
 manta::VectorSplitNode::VectorSplitNode() {
-    /* void */
+    m_input = nullptr;
 }
 
 manta::VectorSplitNode::~VectorSplitNode() {

@@ -20,13 +20,11 @@ void mantaray_ui::UiConsole::initialize(dbasic::TextRenderer *textRenderer, dbas
 
     m_lines.push_back({});
 
-    out("///////////////// MantaRay ////////////////\n", ysColor::srgbiToSrgb(0x00A4E9));
-    out("*                                         *\n", ysColor::srgbiToSrgb(0x00A4E9));
-    out("* 2021 | (c) [A|T|G]                      *\n", ysColor::srgbiToSrgb(0x00A4E9));
-    out("*                                         *\n", ysColor::srgbiToSrgb(0x00A4E9));
-    out("///////////////////////////////////////////\n", ysColor::srgbiToSrgb(0x00A4E9));
-    
-    out("Listening...\n", ysColor::srgbiToSrgb(0xFF9F15));
+    out("///////////////// MantaRay ////////////////\n", Application::StandardBlue);
+    out("*                                         *\n", Application::StandardBlue);
+    out("* 2021 | (c) [A|T|G]                      *\n", Application::StandardBlue);
+    out("*                                         *\n", Application::StandardBlue);
+    out("///////////////////////////////////////////\n", Application::StandardBlue);
 }
 
 void mantaray_ui::UiConsole::setExtents(const BoundingBox &box) {
@@ -79,9 +77,14 @@ void mantaray_ui::UiConsole::render() {
     const int h = m_textRenderer->GetEngine()->GetScreenHeight();
 
     const float height = 16;
+    const int maxLines = (int)(m_boundingBox.Height() / height);
 
     int currentLine = 0;
-    for (const TextLine &line : m_lines) {
+    const int totalLines = (int)m_lines.size();
+    const int start = max(0, totalLines - maxLines);
+    for (int i = start; i < totalLines; ++i) {
+        TextLine &line = m_lines[i];
+
         for (const TextBlock &block : line.textBlocks) {
             m_textRenderer->SetColor(block.color);
             

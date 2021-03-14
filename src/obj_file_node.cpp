@@ -32,11 +32,10 @@ void manta::ObjFileNode::_evaluate() {
     const Path filePath(filename.c_str());
     resolvePath(&filePath, &resolvedPath);
 
-    MaterialLibrary *library =
-        static_cast<ObjectReferenceNodeOutput<MaterialLibrary> *>(m_materialLibrary)->getReference();
+    MaterialLibrary *library = getObject<MaterialLibrary>(m_materialLibrary);
 
     ObjFileLoader loader;
-    bool result = loader.loadObjFile(resolvedPath.toString().c_str());
+    const bool result = loader.loadObjFile(resolvedPath.toString().c_str());
     if (!result) {
         throwError("Could not open .obj file: " + resolvedPath.toString());
         return;

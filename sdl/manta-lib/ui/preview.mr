@@ -1,0 +1,19 @@
+module {
+    @name:          "Preview"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2021, Ange Yaghi"
+    @doc:           "Preview a value in the MantaRay UI"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
+private import "../types/atomic_types.mr"
+private import "../surface/color/color.mr"
+
+@doc: "Standard preview"
+public node preview => __mantaray__preview {
+    input title         [string]: "Preview";
+    input data          [vector]: srgb_i(255, 0, 255);
+}

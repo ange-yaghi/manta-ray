@@ -37,6 +37,12 @@
     <Filter Include="Source Files\utilities">
       <UniqueIdentifier>{b8853212-ba77-4e1e-909f-0399691a44cf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\previews">
+      <UniqueIdentifier>{7182fe1a-f926-4ae5-9323-231fdc8debb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\previews">
+      <UniqueIdentifier>{71b92a5b-dea8-4c54-8994-c5a37b348e55}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\ui\src\main.cpp">
@@ -59,6 +65,9 @@
     </ClCompile>
     <ClCompile Include="..\..\ui\src\grid.cpp">
       <Filter>Source Files\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ui\src\preview.cpp">
+      <Filter>Source Files\previews</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -85,6 +94,9 @@
     </ClInclude>
     <ClInclude Include="..\..\ui\include\grid.h">
       <Filter>Header Files\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ui\include\preview.h">
+      <Filter>Header Files\previews</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -8,6 +8,7 @@
 #include "ui_console.h"
 #include "compiler_thread.h"
 #include "bounding_box.h"
+#include "preview.h"
 
 #include <thread>
 
@@ -17,9 +18,13 @@ namespace mantaray_ui {
     protected:
         static Application *s_application;
 
-        struct PreviewSnapshot {
-            ysTexture *texture;
-            int index;
+        enum class State {
+            Undefined,
+            Ready,
+            CompilingAndExecuting,
+            Killing,
+            Finalizing,
+            Destroying
         };
 
     public:
@@ -38,19 +43,21 @@ namespace mantaray_ui {
         void drawImage(ysTexture *texture, const BoundingBox &box, const ysVector &color, const ysVector &scale, const ysVector &pan);
         void drawBox(const BoundingBox &box, const ysVector &color, const ysVector &scale, const ysVector &pan);
 
+        void clearPreviews();
+
         void listenForFileChanges();
 
         dbasic::TextRenderer *getTextRenderer() { return &m_textRenderer; }
 
-        ysTexture *createTexture(const manta::VectorMap2D *vectorMap);
-
-        void updateImageThread(const manta::VectorMap2D *vectorMap, int index);
         static float clamp(float s, float left, float right);
-        void getBlend(ysTexture **texture0, ysTexture **texture1, float &blend, float &extent);
-        void updateImage();
-        void recompile();
+        void compile();
 
         BoundingBox fitImage(int width, int height, const BoundingBox &extents);
+
+        void fsm();
+        void fsmChangeState(State nextState);
+
+        Preview *getPreviewForNode(manta::PreviewNode *node);
 
     protected:
         void process();
@@ -71,12 +78,15 @@ namespace mantaray_ui {
 
         std::thread *m_fileWatcherThread;
 
-        std::vector<CompilerThread *> m_compilerThreads;
+        CompilerThread * m_compilerThread;
 
-        std::mutex m_textureLock;
-        std::vector<PreviewSnapshot> m_previewSnapshots;
+        std::vector<Preview *> m_previews;
+        Preview *m_activePreview;
+        
         float m_blendLocation;
         int m_updateIndex;
+
+        State m_currentState;
 
         std::atomic<int> m_fileChangeCount;
         std::atomic<bool> m_textureUpdateComplete;
@@ -86,12 +96,14 @@ namespace mantaray_ui {
         double m_updateTimer;
 
         int m_lastMouseWheel;
-        int m_zoom;
+        
         bool m_dragging;
         int m_lastMouseX;
         int m_lastMouseY;
 
-        ysVector m_pan;
+        std::atomic<bool> m_compileTriggered;
+        std::atomic<bool> m_manualCompileTriggered;
+        std::atomic<bool> m_cancelTriggered;
     };
 
 } /* namespace mantaray_ui */

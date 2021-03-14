@@ -89,7 +89,7 @@ std::string manta::Worker::getTreeName(int pixelIndex, int sample) const {
 
 void manta::Worker::work() {
     Job currentJob;
-    while (m_rayTracer->getJobQueue()->pop(&currentJob)) {
+    while (m_rayTracer->getJobQueue()->pop(&currentJob) && !m_rayTracer->getProgram()->isKilled()) {
         doJob(&currentJob);
     }
 
@@ -108,7 +108,11 @@ void manta::Worker::doJob(const Job *job) {
     ImageSample *samples = (ImageSample *)m_stack->allocate(sizeof(ImageSample) * SAMPLE_BUFFER_CAPACITY, 16);
 
     for (int x = job->startX; x <= job->endX; x++) {
+        if (m_rayTracer->getProgram()->isKilled()) break;
+
         for (int y = job->startY; y <= job->endY; y++) {
+            if (m_rayTracer->getProgram()->isKilled()) break;
+
             m_sampler->startPixelSession();
 
             CameraRayEmitter *emitter = job->group->createEmitter(x, y, m_stack);

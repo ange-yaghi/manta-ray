@@ -4,6 +4,8 @@
 #include "compiler.h"
 
 #include <thread>
+#include <mutex>
+#include <condition_variable>
 
 namespace mantaray_ui {
 
@@ -17,14 +19,23 @@ namespace mantaray_ui {
         void kill();
         void destroy();
 
-        bool isDone();
+        bool isDestroyed() const { return m_destroyed; }
+        bool isExecutionComplete() const { return m_executionComplete; }
+
+        void setContinue(bool cont);
+        bool getContinue() const { return m_continue; }
 
     protected:
         void compileAndExecuteThread(const piranha::IrPath &path);
 
     protected:
         Compiler m_compiler;
-        std::atomic<bool> m_done;
+        std::atomic<bool> m_destroyed;
+        std::atomic<bool> m_executionComplete;
+        bool m_continue;
+
+        std::mutex m_waitLock;
+        std::condition_variable m_waitCv;
 
         std::thread *m_executionThread;
     };

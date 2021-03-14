@@ -47,6 +47,9 @@ namespace manta {
 
         void normalize();
 
+        void setPreviewTarget(VectorMap2D *target) { m_previewTarget = target; }
+        VectorMap2D *getPreviewTarget() const { return m_previewTarget; }
+
     protected:
         virtual void _evaluate();
         virtual void _initialize();
@@ -56,9 +59,8 @@ namespace manta {
         virtual void registerOutputs();
 
         piranha::pNodeInput m_filterInput;
-        piranha::pNodeInput m_imagePreviewInput;
-
-        ImagePreview *m_previewTarget;
+        piranha::pNodeInput m_resolutionXInput;
+        piranha::pNodeInput m_resolutionYInput;
 
     protected:
         int m_width;
@@ -66,6 +68,8 @@ namespace manta {
         math::Vector *m_buffer;
         math::real *m_sampleWeightSums;
         Filter *m_filter;
+
+        VectorMap2D *m_previewTarget;
 
     protected:
         std::mutex m_lock;

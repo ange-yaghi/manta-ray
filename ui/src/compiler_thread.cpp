@@ -2,7 +2,9 @@
 
 mantaray_ui::CompilerThread::CompilerThread() {
     m_executionThread = nullptr;
-    m_done = false;
+    m_executionComplete = false;
+    m_destroyed = false;
+    m_continue = false;
 }
 
 mantaray_ui::CompilerThread::~CompilerThread() {
@@ -25,10 +27,26 @@ void mantaray_ui::CompilerThread::destroy() {
     /* void */
 }
 
+void mantaray_ui::CompilerThread::setContinue(bool cont) {
+    std::lock_guard<std::mutex> lock(m_waitLock);
+    m_continue = cont;
+
+    m_waitCv.notify_one();
+}
+
 void mantaray_ui::CompilerThread::compileAndExecuteThread(const piranha::IrPath &path) {
     m_compiler.compile(path);
     m_compiler.execute();
+
+    m_executionComplete = true;
+
+    std::unique_lock<std::mutex> lock(m_waitLock);
+    m_waitCv.wait(lock, [this] { return m_continue; });
+
     m_compiler.destroy();
 
-    m_done = true;
+    m_destroyed = true;
+
+    lock.unlock();
+    m_waitCv.notify_one();
 }

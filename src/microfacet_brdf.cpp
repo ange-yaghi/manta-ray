@@ -110,10 +110,7 @@ manta::math::Vector manta::MicrofacetBRDF::getReflectivity(
 
 void manta::MicrofacetBRDF::_evaluate() {
     BXDF::_evaluate();
-
-    ObjectReferenceNodeOutput<MicrofacetDistribution> *distInput = 
-        static_cast<ObjectReferenceNodeOutput<MicrofacetDistribution> *>(m_distributionInput);
-    m_distribution = distInput->getReference();
+    m_distribution = getObject<MicrofacetDistribution>(m_distributionInput);
 }
 
 piranha::Node * manta::MicrofacetBRDF::_optimize(piranha::NodeAllocator *nodeAllocator) {

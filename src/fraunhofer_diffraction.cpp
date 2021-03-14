@@ -339,7 +339,7 @@ void manta::FraunhoferDiffraction::_evaluate() {
 
     int resolution;
     m_resolutionInput->fullCompute((void *)&resolution);
-    Aperture *aperture = static_cast<ObjectReferenceNodeOutput<Aperture> *>(m_apertureInput)->getReference();
+    Aperture *aperture = getObject<Aperture>(m_apertureInput);
 
     piranha::native_float sensorWidth;
     m_sensorWidthInput->fullCompute((void *)&sensorWidth);

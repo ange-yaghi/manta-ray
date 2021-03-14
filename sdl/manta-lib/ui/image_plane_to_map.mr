@@ -1,0 +1,19 @@
+module {
+    @name:          "Image Plane Converter"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2021, Ange Yaghi"
+    @doc:           "Converts an image plane to a 2D map"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
+private import "image/vector_map.mr"
+private import "../ray-tracer/image_plane.mr"
+
+@doc: "Image plane to 2D map converter"
+public node image_plane_to_map => __mantaray__image_plane_to_map {
+    input image_plane   [image_plane];
+    alias output __out  [vector_map];
+}

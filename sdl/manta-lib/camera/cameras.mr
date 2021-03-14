@@ -11,6 +11,7 @@ module {
 
 private import "lenses.mr"
 private import "../types/atomic_types.mr"
+private import "../ray-tracer/image_plane.mr"
 private import "../signal-processing/samplers/samplers.mr"
 
 @doc: "Camera channel type"
@@ -21,8 +22,7 @@ public node standard_camera => __mantaray__standard_camera {
     input up                [vector];
     input position          [vector];
     input direction         [vector];
-    input resolution_x      [int];
-    input resolution_y      [int];
+    input image_plane       [image_plane];
     input plane_height      [float]: 1.0;
     input plane_distance    [float]: 1.0;
 

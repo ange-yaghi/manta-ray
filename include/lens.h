@@ -10,6 +10,7 @@ namespace manta {
     // Forward declarations
     class Aperture;
     class LightRay;
+    class ImagePlane;
 
     class Lens : public ObjectReferenceNode<Lens> {
     public:
@@ -67,6 +68,9 @@ namespace manta {
         void setSensorHeight(math::real height) { m_sensorHeight = height; }
         math::real getSensorHeight() const { return m_sensorHeight; }
 
+        ImagePlane *getImagePlane() const { return m_imagePlane; }
+        void setImagePlane(ImagePlane *imagePlane) { m_imagePlane = imagePlane; }
+
     protected:
         math::Vector m_position;
         math::Vector m_direction;
@@ -80,6 +84,7 @@ namespace manta {
         int m_sensorResolutionX;
         int m_sensorResolutionY;
 
+        ImagePlane *m_imagePlane;
         Aperture *m_aperture;
 
     protected:
@@ -95,8 +100,7 @@ namespace manta {
         piranha::pNodeInput m_upInput;
         piranha::pNodeInput m_radiusInput;
         piranha::pNodeInput m_sensorHeightInput;
-        piranha::pNodeInput m_resolutionXInput;
-        piranha::pNodeInput m_resolutionYInput;
+        piranha::pNodeInput m_imagePlaneInput;
         piranha::pNodeInput m_apertureInput;
     };
 

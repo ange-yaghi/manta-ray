@@ -17,8 +17,10 @@ manta::ImagePlane::ImagePlane() {
     m_filter = nullptr;
 
     m_filterInput = nullptr;
-    m_imagePreviewInput = nullptr;
     m_previewTarget = nullptr;
+
+    m_resolutionXInput = nullptr;
+    m_resolutionYInput = nullptr;
 }
 
 manta::ImagePlane::~ImagePlane() {
@@ -43,13 +45,6 @@ void manta::ImagePlane::initialize(int width, int height) {
     for (int i = 0; i < pixelCount; i++) {
         m_buffer[i] = math::constants::Zero;
         m_sampleWeightSums[i] = (math::real)0.0;
-    }
-
-    if (m_previewTarget != nullptr) {
-        VectorMap2D *target = new VectorMap2D;
-        target->initialize(m_width, m_height);
-
-        Session::get().attachTargetToImagePreview(m_previewTarget, target);
     }
 }
 
@@ -166,7 +161,7 @@ void manta::ImagePlane::processSamples(ImageSample *samples, int sampleCount, St
             math::real &weightSum = m_sampleWeightSums[block.y * m_width + block.x];
 
             if (weightSum != 0) {
-                m_previewTarget->map->set(math::div(value, math::loadScalar(weightSum)), block.x, block.y);
+                m_previewTarget->set(math::div(value, math::loadScalar(weightSum)), block.x, block.y);
             }
         }
     }
@@ -200,9 +195,13 @@ void manta::ImagePlane::normalize() {
 }
 
 void manta::ImagePlane::_evaluate() {
-    m_filter = static_cast<ObjectReferenceNodeOutput<Filter> *>(m_filterInput)->getReference();
-    m_previewTarget =
-        static_cast<ObjectReferenceNodeOutput<ImagePreview> *>(m_imagePreviewInput)->getReference();
+    m_filter = getObject<Filter>(m_filterInput);
+
+    piranha::native_int width, height;
+    m_resolutionXInput->fullCompute((void *)&width);
+    m_resolutionYInput->fullCompute((void *)&height);
+
+    initialize(width, height);
 
     m_output.setReference(this);
 }
@@ -216,8 +215,9 @@ void manta::ImagePlane::_destroy() {
 }
 
 void manta::ImagePlane::registerInputs() {
-    registerInput(&m_imagePreviewInput, "preview");
     registerInput(&m_filterInput, "filter");
+    registerInput(&m_resolutionXInput, "width");
+    registerInput(&m_resolutionYInput, "height");
 }
 
 void manta::ImagePlane::registerOutputs() {

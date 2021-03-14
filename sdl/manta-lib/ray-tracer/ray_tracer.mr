@@ -26,7 +26,6 @@ public node ray_tracer => __mantaray__ray_tracer {
     input camera        [camera];
     input materials     [material_library];
     input sampler       [sampler]: random_sampler(1);
-    input image_plane   [image_plane]: image_plane();
 
     // Optional inputs
     input multithreaded [bool]: true;

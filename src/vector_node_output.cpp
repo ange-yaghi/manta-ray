@@ -22,9 +22,10 @@ manta::VectorNodeOutput::~VectorNodeOutput() {
 
 void manta::VectorNodeOutput::calculateAllDimensions(VectorMap2D *target) const {
     int width, height;
-    int dimensions = getDimensions();
+    const int dimensions = getDimensions();
     if (dimensions == 0) {
-        return;
+        width = 1;
+        height = 1;
     }
     else if (dimensions == 1) {
         width = getSize(0);

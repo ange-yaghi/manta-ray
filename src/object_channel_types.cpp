@@ -17,4 +17,3 @@ const piranha::ChannelType manta::ObjectChannel::LensChannel("LensChannel");
 const piranha::ChannelType manta::ObjectChannel::MediaInterfaceChannel("MediaInterfaceChannel");
 const piranha::ChannelType manta::ObjectChannel::FilterChannel("FilterChannel");
 const piranha::ChannelType manta::ObjectChannel::ImagePlaneChannel("ImagePlaneChannel");
-const piranha::ChannelType manta::ObjectChannel::ImagePreviewChannel("ImagePreviewChannel");

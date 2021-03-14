@@ -88,6 +88,15 @@ mantaray_ui::BoundingBox &mantaray_ui::BoundingBox::AlignCenterY(float vCenter) 
     return *this;
 }
 
+mantaray_ui::BoundingBox &mantaray_ui::BoundingBox::PixelPerfect() {
+    m_min.y = (float)(int)m_min.y;
+    m_max.y = (float)(int)m_max.y;
+    m_min.x = (float)(int)m_min.x;
+    m_max.x = (float)(int)m_max.x;
+
+    return *this;
+}
+
 mantaray_ui::BoundingBox mantaray_ui::BoundingBox::Add(const BoundingBox &box) const {
     BoundingBox result;
     result.m_min.x = min(box.m_min.x, m_min.x);

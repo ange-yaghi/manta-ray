@@ -15,64 +15,30 @@ manta::Session &manta::Session::get() {
     return session;
 }
 
-manta::ImagePreview *manta::Session::createImagePreview(const std::string &name) {
-    const std::lock_guard<std::mutex> lock(m_imagePreviewLock);
-
-    ImagePreview *newPreview = new ImagePreview;
-    newPreview->name = name;
-    newPreview->map = nullptr;
-
-    m_imagePreviews.push_back(newPreview);
-
-    return newPreview;
+std::vector<manta::PreviewNode *> manta::Session::getPreviews() {
+    std::lock_guard<std::mutex> lock(m_previewLock);
+    return m_previews;
 }
 
-void manta::Session::destroyImagePreview(ImagePreview *preview) {
-    const std::lock_guard<std::mutex> lock(m_imagePreviewLock);
+void manta::Session::registerPreview(PreviewNode *preview) {
+    std::lock_guard<std::mutex> lock(m_previewLock);
+    m_previews.push_back(preview);
+}
 
-    if (preview->map != nullptr) {
-        preview->map->destroy();
-        delete preview->map;
-    }
-    
-    const int count = m_imagePreviews.size();
-    for (int i = 0; i < count; ++i) {
-        if (m_imagePreviews[i] == preview) {
-            m_imagePreviews[i] = m_imagePreviews[count - 1];
+void manta::Session::deregisterPreview(PreviewNode *preview) {
+    std::lock_guard<std::mutex> lock(m_previewLock);
+    const int n = getPreviewCount();
+    if (n == 0) return;
+
+    for (int i = 0; i < n; ++i) {
+        if (m_previews[i] == preview) {
+            m_previews[i] = m_previews[n - 1];
+            break;
+        }
+        else if (i == n - 1) {
+            return;
         }
     }
 
-    m_imagePreviews.resize(count - 1);
-
-    delete preview; 
-}
-
-void manta::Session::attachTargetToImagePreview(ImagePreview *preview, VectorMap2D *target) {
-    const std::lock_guard<std::mutex> lock(m_imagePreviewLock);
-    preview->map = target;
-}
-
-void manta::Session::detachTargetFromImagePreview(ImagePreview *preview) {
-    const std::lock_guard<std::mutex> lock(m_imagePreviewLock);
-    preview->map = nullptr;
-}
-
-void manta::Session::clearImagePreviews() {
-    const std::lock_guard<std::mutex> lock(m_imagePreviewLock);
-
-    for (ImagePreview *preview : m_imagePreviews) {
-        if (preview->map != nullptr) {
-            preview->map->destroy();
-            delete preview->map;
-        }
-        delete preview;
-    }
-}
-
-void manta::Session::getImagePreviews(std::vector<ImagePreviewContainer> &target) {
-    const std::lock_guard<std::mutex> lock(m_imagePreviewLock);
-
-    for (ImagePreview *preview : m_imagePreviews) {
-        target.push_back({preview->name, preview->map, preview->finalized});
-    }
+    m_previews.resize(n - 1);
 }

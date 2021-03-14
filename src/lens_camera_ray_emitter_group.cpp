@@ -25,6 +25,7 @@ void manta::LensCameraRayEmitterGroup::configure() {
     setPosition(m_lens->getPosition());
     setResolutionX(m_lens->getSensorResolutionX());
     setResolutionY(m_lens->getSensorResolutionY());
+    setImagePlane(m_lens->getImagePlane());
 }
 
 manta::CameraRayEmitter *manta::LensCameraRayEmitterGroup::

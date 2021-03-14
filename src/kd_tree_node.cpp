@@ -17,8 +17,7 @@ void manta::KdTreeNode::_initialize() {
 void manta::KdTreeNode::_evaluate() {
     m_kdTree.configure((math::real)1000.0, math::constants::Zero);
 
-    Mesh *mesh = nullptr;
-    mesh = ((ObjectReferenceNodeOutput<Mesh> *)m_meshInput)->getReference();
+    Mesh *mesh = getObject<Mesh>(m_meshInput);
 
     m_kdTree.analyzeWithProgress(mesh, 2);
     

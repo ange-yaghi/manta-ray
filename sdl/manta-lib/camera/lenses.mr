@@ -10,6 +10,7 @@ module {
 }
 
 import "apertures.mr"
+import "../ray-tracer/image_plane.mr"
 import "../types/atomic_types.mr"
 
 @doc: "Lens channel type"
@@ -22,8 +23,7 @@ public node simple_lens => __mantaray__simple_lens {
     input up            [vector];
     input radius        [float];
     input sensor_height [float];
-    input resolution_x  [int];
-    input resolution_y  [int];
+    input image_plane   [image_plane];
     input aperture      [aperture]: circular_aperture(radius);
     input focus         [float];
 

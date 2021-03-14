@@ -39,7 +39,6 @@ manta::RayTracer::RayTracer() {
     m_sceneInput = nullptr;
     m_cameraInput = nullptr;
     m_samplerInput = nullptr;
-    m_imagePlaneInput = nullptr;
     m_outputImage = nullptr;
     m_workers = nullptr;
 
@@ -65,15 +64,9 @@ void manta::RayTracer::traceAll(const Scene *scene, CameraRayEmitterGroup *group
     // Set up the emitter group
     group->configure();
 
-    // Initialize the target
-    const int resX = group->getResolutionX();
-    const int resY = group->getResolutionY();
-
-    target->initialize(resX, resY);
-
     // Create jobs
-    const int horizontalBlocks = resX / m_renderBlockSize + 1;
-    const int verticalBlocks = resY / m_renderBlockSize + 1;
+    const int horizontalBlocks = target->getWidth() / m_renderBlockSize + 1;
+    const int verticalBlocks = target->getHeight() / m_renderBlockSize + 1;
 
     for (int i = 0; i < horizontalBlocks; i++) {
         for (int j = 0; j < verticalBlocks; j++) {
@@ -87,10 +80,10 @@ void manta::RayTracer::traceAll(const Scene *scene, CameraRayEmitterGroup *group
             newJob.endY = (j + 1) * m_renderBlockSize - 1;
             newJob.samples = 0;
 
-            if (newJob.startX >= resX) continue;
-            if (newJob.startY >= resY) continue;
-            if (newJob.endX >= resX) newJob.endX = resX - 1;
-            if (newJob.endY >= resY) newJob.endY = resY - 1;
+            if (newJob.startX >= target->getWidth()) continue;
+            if (newJob.startY >= target->getHeight()) continue;
+            if (newJob.endX >= target->getWidth()) newJob.endX = target->getWidth() - 1;
+            if (newJob.endY >= target->getHeight()) newJob.endY = target->getHeight() - 1;
 
             m_jobQueue.push(newJob);
         }
@@ -241,15 +234,14 @@ void manta::RayTracer::_evaluate() {
     m_sampler = getObject<Sampler>(m_samplerInput);
     camera = getObject<CameraRayEmitterGroup>(m_cameraInput);
     scene = getObject<Scene>(m_sceneInput);
-    ImagePlane *imagePlane = getObject<ImagePlane>(m_imagePlaneInput);
 
     configure(200 * MB, 50 * MB, threadCount, renderBlockSize, multithreaded);
     setDeterministicSeedMode(deterministicSeed);
 
-    traceAll(scene, camera, imagePlane);
+    traceAll(scene, camera, camera->getImagePlane());
 
     m_outputImage = new VectorMap2D();
-    m_outputImage->copy(imagePlane);
+    m_outputImage->copy(camera->getImagePlane());
 
     m_output.setMap(m_outputImage);
 }
@@ -272,7 +264,6 @@ void manta::RayTracer::registerInputs() {
     registerInput(&m_sceneInput, "scene");
     registerInput(&m_cameraInput, "camera");
     registerInput(&m_samplerInput, "sampler");
-    registerInput(&m_imagePlaneInput, "image_plane");
 }
 
 void manta::RayTracer::registerOutputs() {

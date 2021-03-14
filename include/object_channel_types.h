@@ -23,7 +23,6 @@ namespace manta {
         static const piranha::ChannelType MediaInterfaceChannel;
         static const piranha::ChannelType FilterChannel;
         static const piranha::ChannelType ImagePlaneChannel;
-        static const piranha::ChannelType ImagePreviewChannel;
     };
 
     template <typename Type> 
@@ -52,7 +51,6 @@ namespace manta {
     class MediaInterface;
     class Filter;
     class ImagePlane;
-    struct ImagePreview;
 
     // Helper macro
 #define ASSIGN_CHANNEL_TYPE(type, channel) template <> extern inline const piranha::ChannelType *LookupChannelType<type>() { return &ObjectChannel::channel; }
@@ -76,7 +74,6 @@ namespace manta {
     ASSIGN_CHANNEL_TYPE(MediaInterface, MediaInterfaceChannel);
     ASSIGN_CHANNEL_TYPE(Filter, FilterChannel);
     ASSIGN_CHANNEL_TYPE(ImagePlane, ImagePlaneChannel);
-    ASSIGN_CHANNEL_TYPE(ImagePreview, ImagePreviewChannel);
 
 } /* namespace manta */
 

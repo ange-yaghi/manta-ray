@@ -34,11 +34,10 @@ void manta::SceneGeometry::_initialize() {
 void manta::SceneGeometry::_evaluate() {
     static_cast<VectorNodeOutput *>(m_positionInput)->sample(nullptr, (void *)&m_position);
 
-    std::string defaultMaterial;
+    piranha::native_string defaultMaterial;
     m_defaultMaterial->fullCompute((void *)&defaultMaterial);
 
-    m_library =
-        static_cast<ObjectReferenceNodeOutput<MaterialLibrary> *>(m_materialsInput)->getReference();
+    m_library = getObject<MaterialLibrary>(m_materialsInput);
 
     int defaultMaterialIndex = -1;
     if (!defaultMaterial.empty()) {

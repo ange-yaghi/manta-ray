@@ -38,7 +38,8 @@
     <ClCompile Include="..\..\src\disney_specular_brdf.cpp" />
     <ClCompile Include="..\..\src\filter.cpp" />
     <ClCompile Include="..\..\src\gaussian_filter.cpp" />
-    <ClCompile Include="..\..\src\image_preview_node.cpp" />
+    <ClCompile Include="..\..\src\image_plane_converter_node.cpp" />
+    <ClCompile Include="..\..\src\preview_node.cpp" />
     <ClCompile Include="..\..\src\intersection_point.cpp" />
     <ClCompile Include="..\..\src\intersection_point_manager.cpp" />
     <ClCompile Include="..\..\src\kd_tree_node.cpp" />
@@ -170,7 +171,8 @@
     <ClInclude Include="..\..\include\disney_ggx_distribution.h" />
     <ClInclude Include="..\..\include\disney_gtr_clearcoat_distribution.h" />
     <ClInclude Include="..\..\include\disney_specular_brdf.h" />
-    <ClInclude Include="..\..\include\image_preview_node.h" />
+    <ClInclude Include="..\..\include\image_plane_converter_node.h" />
+    <ClInclude Include="..\..\include\preview_node.h" />
     <ClInclude Include="..\..\include\intersection_point_manager.h" />
     <ClInclude Include="..\..\include\intersection_point_types.h" />
     <ClInclude Include="..\..\include\node_cache.h" />

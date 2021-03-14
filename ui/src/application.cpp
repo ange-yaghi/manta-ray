@@ -3,6 +3,7 @@
 #include "../../include/os_utilities.h"
 #include "../../include/vector_map_2d.h"
 #include "../../include/manta_math.h"
+#include "../../include/preview_node.h"
 #include "../include/grid.h"
 
 #include <Windows.h>
@@ -19,15 +20,20 @@ mantaray_ui::Application::Application() {
     m_fileChangeCount = 0;
     m_fileChangeDebounce = 0.0f;
     m_debounceTriggered = false;
-    m_zoom = 0;
     m_updateTimer = 0.0f;
 
     m_lastMouseX = 0;
     m_lastMouseY = 0;
 
-    m_pan = ysMath::Constants::Zero;
     m_dragging = false;
     m_textureUpdateComplete = true;
+    m_activePreview = nullptr;
+
+    m_manualCompileTriggered = false;
+    m_compileTriggered = false;
+    m_cancelTriggered = false;
+
+    m_currentState = State::Ready;
 }
 
 mantaray_ui::Application::~Application() {
@@ -93,45 +99,9 @@ void mantaray_ui::Application::initialize(void *instance, ysContextObject::Devic
 
     m_updateIndex = 0;
     m_blendLocation = 0.0;
-}
 
-ysTexture *mantaray_ui::Application::createTexture(const manta::VectorMap2D *vectorMap) {
-    const int width = vectorMap->getWidth();
-    const int height = vectorMap->getHeight();
-    unsigned char *buffer = new unsigned char[width * height * 4];
-
-    for (int i = 0; i < width; ++i) {
-        for (int j = 0; j < height; ++j) {
-            const manta::math::Vector v = vectorMap->get(i, j);
-            buffer[(j * width + i) * 4 + 0] = (int)(min(std::round(manta::math::getX(v) * 255), 255));
-            buffer[(j * width + i) * 4 + 1] = (int)(min(std::round(manta::math::getY(v) * 255), 255));
-            buffer[(j * width + i) * 4 + 2] = (int)(min(std::round(manta::math::getZ(v) * 255), 255));
-            buffer[(j * width + i) * 4 + 3] = 0xFF;
-        }
-    }
-
-    ysTexture *newTexture;
-    m_engine.GetDevice()->CreateTexture(&newTexture, width, height, buffer);
-
-    delete[] buffer;
-
-    return newTexture;
-}
-
-void mantaray_ui::Application::updateImageThread(const manta::VectorMap2D *vectorMap, int index) {
-    ysTexture *newTexture = createTexture(vectorMap);
-
-    std::lock_guard<std::mutex> lock(m_textureLock);
-    if (m_previewSnapshots.size() > 0) {
-        if (m_previewSnapshots.back().index > index) {
-            m_engine.GetDevice()->DestroyTexture(newTexture);
-            return;
-        }
-    }
-
-    m_previewSnapshots.push_back({ newTexture, index });
-
-    m_textureUpdateComplete = true;
+    m_currentState = State::Undefined;
+    fsmChangeState(State::Ready);
 }
 
 float mantaray_ui::Application::clamp(float s, float left, float right) {
@@ -140,36 +110,10 @@ float mantaray_ui::Application::clamp(float s, float left, float right) {
     else return s;
 }
 
-void mantaray_ui::Application::getBlend(ysTexture **texture0, ysTexture **texture1, float &blend, float &extent) {
-    std::lock_guard<std::mutex> lock(m_textureLock);
-
-    extent = 0;
-
-    const int n = m_previewSnapshots.size();
-    if (n > 0) {
-        *texture0 = nullptr;
-        *texture1 = m_previewSnapshots.back().texture;
-        blend = 1.0f;
-    }
-    else {
-        *texture1 = nullptr;
-    }
-}
-
-void mantaray_ui::Application::updateImage() {
-    
-}
-
-void mantaray_ui::Application::recompile() {
-    for (CompilerThread *thread : m_compilerThreads) {
-        thread->kill();
-    }
-
-    CompilerThread *newCompilerThread = new CompilerThread;
-    newCompilerThread->initialize();
-    newCompilerThread->compileAndExecute(piranha::IrPath(m_inputFile));
-    
-    m_compilerThreads.push_back(newCompilerThread);
+void mantaray_ui::Application::compile() {
+    m_compilerThread = new CompilerThread;
+    m_compilerThread->initialize();
+    m_compilerThread->compileAndExecute(piranha::IrPath(m_inputFile));
 }
 
 mantaray_ui::BoundingBox mantaray_ui::Application::fitImage(int width, int height, const BoundingBox &extents) {
@@ -180,6 +124,131 @@ mantaray_ui::BoundingBox mantaray_ui::Application::fitImage(int width, int heigh
     return BoundingBox(width * imageScale, height * imageScale)
         .AlignCenterX(extents.CenterX())
         .AlignCenterY(extents.CenterY());
+}
+
+void mantaray_ui::Application::fsm() {
+    State nextState = m_currentState;
+    if (m_currentState == State::Ready) {
+        if (m_compileTriggered || m_manualCompileTriggered) {
+            nextState = State::CompilingAndExecuting;
+        }
+    }
+    else if (m_currentState == State::CompilingAndExecuting) {
+        if (m_compileTriggered || m_manualCompileTriggered || m_cancelTriggered) {
+            nextState = State::Killing;
+        }
+        else if (m_compilerThread->isExecutionComplete()) {
+            nextState = State::Finalizing;
+        }
+    }
+    else if (m_currentState == State::Killing) {
+        if (m_compilerThread->isExecutionComplete()) {
+            nextState = State::Destroying;
+        }
+    }
+    else if (m_currentState == State::Finalizing) {
+        bool doneUpdating = true;
+        for (Preview *preview : m_previews) {
+            if (preview->isUpdating()) {
+                doneUpdating = false;
+                break;
+            }
+        }
+
+        if (doneUpdating) {
+            nextState = State::Destroying;
+        }
+    }
+    else if (m_currentState == State::Destroying) {
+        if (m_compilerThread->isDestroyed()) {
+            nextState = State::Ready;
+        }
+    }
+
+    fsmChangeState(nextState);
+}
+
+void mantaray_ui::Application::fsmChangeState(State nextState) {
+    const ysVector standardColor = ysColor::srgbiToSrgb(0xFF9F15);
+
+    if (nextState == State::Ready) {
+        if (m_currentState == State::Destroying) {
+            manta::Session::get().getConsole()->out("All memory freed.\n", StandardBlue);
+
+            delete m_compilerThread;
+            m_compilerThread = nullptr;
+
+            m_console.out("Listening...\n", StandardYellow);
+        }
+        else if (m_currentState == State::Undefined) {
+            m_console.out("Listening...\n", StandardYellow);
+        }
+    }
+    else if (nextState == State::CompilingAndExecuting) {
+        if (m_currentState == State::Ready) {
+            if (m_compileTriggered) {
+                manta::Session::get().getConsole()->out("File modification detected. Recompiling.\n", StandardBlue);
+            }
+            else if (m_manualCompileTriggered) {
+                manta::Session::get().getConsole()->out("Enter key press detected. Recompiling.\n", StandardBlue);
+            }
+
+            clearPreviews();
+            compile();
+
+            m_compileTriggered = false;
+            m_manualCompileTriggered = false;
+        }
+    }
+    else if (nextState == State::Killing) {
+        if (m_currentState == State::CompilingAndExecuting) {
+            if (m_compileTriggered) {
+                manta::Session::get().getConsole()->out("File modification detected. Stopping job.\n", StandardRed);
+            }
+            else if (m_manualCompileTriggered) {
+                manta::Session::get().getConsole()->out("Enter key press detected. Stopping job.\n", StandardRed);
+            }
+            else if (m_cancelTriggered) {
+                manta::Session::get().getConsole()->out("Render cancelled. Stopping job.\n", StandardRed);
+            }
+
+            m_compilerThread->kill();
+            m_compilerThread->setContinue(true);
+
+            m_cancelTriggered = false;
+        }
+    }
+    else if (nextState == State::Finalizing) {
+        if (m_currentState == State::CompilingAndExecuting) {
+            manta::Session::get().getConsole()->out("Execution complete. Finalizing.\n", StandardBlue);
+
+            for (Preview *preview : m_previews) {
+                preview->update();
+            }
+        }
+    }
+    else if (nextState == State::Destroying) {
+        if (m_currentState == State::Killing) {
+            m_compilerThread->setContinue(true);
+            manta::Session::get().getConsole()->out("Job successfully stopped. Freeing memory.\n", StandardBlue);
+        }
+        else if (m_currentState == State::Finalizing) {
+            m_compilerThread->setContinue(true);
+            manta::Session::get().getConsole()->out("All previews finalized. Freeing memory.\n", StandardBlue);
+        }
+    }
+
+    m_currentState = nextState;
+}
+
+mantaray_ui::Preview *mantaray_ui::Application::getPreviewForNode(manta::PreviewNode *node) {
+    for (Preview *preview : m_previews) {
+        if (preview->getPreviewNode() == node) {
+            return preview;
+        }
+    }
+
+    return nullptr;
 }
 
 void mantaray_ui::Application::process() {
@@ -193,20 +262,62 @@ void mantaray_ui::Application::process() {
         m_fileChangeDebounce -= m_engine.GetFrameLength();
         if (m_fileChangeDebounce < 0.0f) {
             m_debounceTriggered = false;
-
-            manta::Session::get().getConsole()->out("File modification detected. Recompiling.\n");
-            recompile();
+            m_compileTriggered = true;
         }
     }
 
-    int mouseX, mouseY;
-    m_engine.GetOsMousePos(&mouseX, &mouseY);
-
-    if (m_engine.GetGameWindow()->IsOnScreen(mouseX, mouseY)) {
-        m_zoom += (m_engine.GetMouseWheel() - m_lastMouseWheel);
+    if (m_engine.GetGameWindow()->IsActive()) {
+        if (m_engine.ProcessKeyDown(ysKey::Code::Return)) {
+            m_manualCompileTriggered = true;
+        }
+        else if (m_engine.ProcessKeyDown(ysKey::Code::Escape)) {
+            m_cancelTriggered = true;
+        }
+        else if (m_engine.ProcessKeyDown(ysKey::Code::Down)) {
+            if (m_activePreview != nullptr) {
+                const int newIndex = min(m_activePreview->getIndex() + 1, m_previews.size() - 1);
+                m_activePreview = m_previews[newIndex];
+            }
+        }
+        else if (m_engine.ProcessKeyDown(ysKey::Code::Up)) {
+            const int newIndex = max(m_activePreview->getIndex() - 1, 0);
+            m_activePreview = m_previews[newIndex];
+        }
     }
 
-    m_lastMouseWheel = m_engine.GetMouseWheel();
+    fsm();
+
+    std::vector<manta::PreviewNode *> nodes = manta::Session::get().getPreviews();
+    if (m_currentState != State::Destroying) {
+        for (manta::PreviewNode *node : nodes) {
+            if (getPreviewForNode(node) == nullptr) {
+                Preview *newPreview = new Preview;
+                newPreview->initialize(&m_engine, (int)m_previews.size());
+                newPreview->setPreviewNode(node);
+                newPreview->update();
+
+                m_previews.push_back(newPreview);
+
+                m_activePreview = newPreview;
+            }
+        }
+    }
+
+    if (m_currentState == State::CompilingAndExecuting) {
+        if (m_previews.size() > 0) {
+            if (m_updateTimer <= 0.0f) {
+                m_activePreview->update();
+            }
+        }
+    }
+
+    for (Preview *preview : m_previews) {
+        preview->clean();
+    }
+
+    if (m_updateTimer < 0.0f) {
+        m_updateTimer = 2.0f;
+    }
 }
 
 void mantaray_ui::Application::render() {
@@ -221,29 +332,27 @@ void mantaray_ui::Application::render() {
     BoundingBox screenExtents(screenWidth, screenHeight);
     Grid screenGrid(screenExtents, 10, 5, 10.0f);
 
-    BoundingBox terminalArea = screenGrid.GetFullRange(0, 2, 0, 4);
+    BoundingBox terminalArea = screenGrid.GetFullRange(0, 2, 0, 4).PixelPerfect();
     m_console.setExtents(terminalArea.MarginOffset(-10.0f, -10.0f));
 
     manta::Session &session = manta::Session::get();
-    std::vector<manta::ImagePreviewContainer> previews;
-    manta::Session::get().getImagePreviews(previews);
+    std::vector<manta::PreviewNode *> previews = manta::Session::get().getPreviews();
 
     m_updateTimer -= m_engine.GetFrameLength();
 
-    if (previews.size() > 0 && m_updateTimer <= 0.0f) {
-        manta::ImagePreviewContainer &preview = previews.back();
-        if (preview.map != nullptr) {
-            std::thread updateThread(&Application::updateImageThread, this, preview.map, m_updateIndex++);
-            updateThread.detach();
-        }
-    }
-
-    updateImage();
-
     m_shaders.ResetLights();
 
-    BoundingBox displayArea = screenGrid.GetFullRange(3, 9, 0, 4);
-    drawBox(displayArea, ysColor::srgbiToLinear(0x0B0D10), ysMath::Constants::One, ysMath::Constants::Zero);
+    BoundingBox fullDisplayArea = screenGrid.GetFullRange(3, 9, 0, 4);
+    BoundingBox displayArea = BoundingBox(fullDisplayArea.Width(), fullDisplayArea.Height() - 50.0f)
+        .AlignBottom(fullDisplayArea.Bottom())
+        .AlignLeft(fullDisplayArea.Left())
+        .PixelPerfect();
+    BoundingBox statusArea = BoundingBox(fullDisplayArea.Width(), 50.0f)
+        .AlignTop(fullDisplayArea.Top())
+        .AlignLeft(fullDisplayArea.Left())
+        .PixelPerfect();
+
+    drawBox(fullDisplayArea, ysColor::srgbiToLinear(0x0B0D10), ysMath::Constants::One, ysMath::Constants::Zero);
 
     int mouseX, mouseY;
     m_engine.GetOsMousePos(&mouseX, &mouseY);
@@ -253,48 +362,57 @@ void mantaray_ui::Application::render() {
     m_lastMouseX = mouseX;
     m_lastMouseY = mouseY;
 
-    const float zoomScale = std::pow(0.5, -m_zoom / 240.0f);
-
-    if (m_engine.GetGameWindow()->IsOnScreen(mouseX, mouseY)) {
+    const bool mouseOnScreen = m_engine.GetGameWindow()->IsOnScreen(mouseX, mouseY);
+    if (mouseOnScreen) {
         if (m_engine.ProcessMouseButtonDown(ysMouse::Button::Left)) {
             m_dragging = true;
         }
     }
 
-    if (m_engine.IsMouseButtonDown(ysMouse::Button::Left) && m_dragging) {
-        m_pan = ysMath::Add(m_pan, ysMath::LoadVector(mouseDx / zoomScale, mouseDy / zoomScale));
-    }
-    else {
-        m_dragging = false;
-    }
+    if (m_activePreview != nullptr) {
+        if (mouseOnScreen) {
+            m_activePreview->zoom(m_engine.GetMouseWheel() - m_lastMouseWheel);
 
-    ysTexture *t0, *t1;
-    float blend, extent;
-    getBlend(&t0, &t1, blend, extent);
-
-    if (t1 != nullptr) {
-        const BoundingBox preview = fitImage(t1->GetWidth(), t1->GetHeight(), displayArea.MarginOffset(-20.0f, -20.0f));
-        const BoundingBox outline = preview.MarginOffset(1.0f, 1.0f);
-
-        drawBox(outline, ysColor::srgbiToLinear(0x333333), ysMath::LoadScalar(zoomScale), m_pan);
-        if (t0 != nullptr) drawImage(t0, preview, ysMath::LoadVector(1.0f, 1.0f, 1.0f, 1.0f), ysMath::LoadScalar(zoomScale), m_pan);
-        drawImage(t1, preview, ysMath::LoadVector(1.0f, 1.0f, 1.0f, blend), ysMath::LoadScalar(zoomScale), m_pan);
-
-        if (m_blendLocation < extent) {
-            m_blendLocation += m_engine.GetFrameLength() * 2;
-
-            if (m_blendLocation >= extent) {
-                m_blendLocation = extent;
+            if (m_engine.ProcessMouseButtonDown(ysMouse::Button::Right)) {
+                m_activePreview->resetPan();
+                m_activePreview->resetZoom();
             }
+        }
+
+        const float zoomScale = std::pow(0.5, -m_activePreview->getZoom() / 240.0f);
+        if (m_engine.IsMouseButtonDown(ysMouse::Button::Left) && m_dragging) {
+            m_activePreview->pan(ysMath::LoadVector(mouseDx / zoomScale, mouseDy / zoomScale));
+        }
+        else {
+            m_dragging = false;
+        }
+
+        ysTexture *texture = m_activePreview->getCurrentPreview();
+
+        if (texture != nullptr) {
+            const BoundingBox preview = fitImage(texture->GetWidth(), texture->GetHeight(), displayArea.MarginOffset(-20.0f, -20.0f));
+            const BoundingBox outline = preview.MarginOffset(1.0f, 1.0f);
+
+            drawBox(outline, ysColor::srgbiToLinear(0x333333), ysMath::LoadScalar(zoomScale), m_activePreview->getPan());
+            drawImage(texture, preview, ysMath::LoadVector(1.0f, 1.0f, 1.0f, 1.0f), ysMath::LoadScalar(zoomScale), m_activePreview->getPan());
         }
     }
 
+    drawBox(BoundingBox(statusArea).AlignBottom(statusArea.Bottom() - 1), ysColor::srgbiToLinear(0x394351), ysMath::Constants::One, ysMath::Constants::Zero);
+    drawBox(statusArea, ysColor::srgbiToLinear(0x0B0D10), ysMath::Constants::One, ysMath::Constants::Zero);
+    m_textRenderer.SetColor(ysColor::srgbiToSrgb(0x00A4E9));
+    m_textRenderer.RenderText(
+        (m_activePreview != nullptr)
+            ? m_activePreview->getTitle()
+            : "No Preview Available",
+        statusArea.Left() - (screenWidth / 2.0f) + 20.0f,
+        statusArea.Top() - 16.0f - (screenHeight / 2.0f) - 20.0f,
+        16.0f);
+
+    m_lastMouseWheel = m_engine.GetMouseWheel();
+
     drawBox(terminalArea.MarginOffset(1.0f, 1.0f), ysColor::srgbiToLinear(0x394351), ysMath::Constants::One, ysMath::Constants::Zero);
     drawBox(terminalArea, ysColor::srgbiToLinear(0x0B0D10), ysMath::Constants::One, ysMath::Constants::Zero);
-
-    if (m_updateTimer < 0.0f) {
-        m_updateTimer = 2.0f;
-    }
 
     m_console.render();
 }
@@ -368,6 +486,15 @@ void mantaray_ui::Application::drawBox(
     m_shaders.SetObjectTransform(transform);
     m_shaders.SetScale(box.Width() / 2.0f, box.Height() / 2.0f);
     m_engine.DrawBox(m_shaders.GetRegularFlags());
+}
+
+void mantaray_ui::Application::clearPreviews() {
+    for (Preview *preview : m_previews) {
+        delete preview;
+    }
+
+    m_previews.clear();
+    m_activePreview = nullptr;
 }
 
 void mantaray_ui::Application::listenForFileChanges() {
