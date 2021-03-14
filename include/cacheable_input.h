@@ -14,6 +14,7 @@ namespace manta {
         CacheableInput() {
             m_optimizedOut = false;
             m_port = nullptr;
+            m_cachedValue = math::constants::Zero;
         }
 
         ~CacheableInput() {

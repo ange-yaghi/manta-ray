@@ -1,5 +1,7 @@
 #include "../include/preview.h"
 
+#include "../../include/rgb_space.h"
+
 mantaray_ui::Preview::Preview() {
     m_engine = nullptr;
     m_updateIndex = 0;
@@ -36,9 +38,9 @@ ysTexture *mantaray_ui::Preview::createTexture(const manta::VectorMap2D *vectorM
     for (int i = 0; i < width; ++i) {
         for (int j = 0; j < height; ++j) {
             const manta::math::Vector v = vectorMap->get(i, j);
-            buffer[(j * width + i) * 4 + 0] = (int)(min(std::round(manta::math::getX(v) * 255), 255));
-            buffer[(j * width + i) * 4 + 1] = (int)(min(std::round(manta::math::getY(v) * 255), 255));
-            buffer[(j * width + i) * 4 + 2] = (int)(min(std::round(manta::math::getZ(v) * 255), 255));
+            buffer[(j * width + i) * 4 + 0] = (int)(min(std::round(manta::RgbSpace::applyGammaSrgb(manta::math::getX(v)) * 255), 255));
+            buffer[(j * width + i) * 4 + 1] = (int)(min(std::round(manta::RgbSpace::applyGammaSrgb(manta::math::getY(v)) * 255), 255));
+            buffer[(j * width + i) * 4 + 2] = (int)(min(std::round(manta::RgbSpace::applyGammaSrgb(manta::math::getZ(v)) * 255), 255));
             buffer[(j * width + i) * 4 + 3] = 0xFF;
         }
     }
@@ -51,7 +53,9 @@ ysTexture *mantaray_ui::Preview::createTexture(const manta::VectorMap2D *vectorM
     return newTexture;
 }
 
-void mantaray_ui::Preview::update() {
+void mantaray_ui::Preview::update(bool force) {
+    if (m_updateQueue > 0 && !force) return;
+
     ++m_updateQueue;
 
     m_title = m_previewNode->getTitle();

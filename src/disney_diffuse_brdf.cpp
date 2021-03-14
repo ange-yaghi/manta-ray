@@ -61,6 +61,14 @@ manta::math::real manta::DisneyDiffuseBRDF::pdf(
     return (math::real)1.0 / math::constants::TWO_PI;
 }
 
+piranha::Node *manta::DisneyDiffuseBRDF::_optimize(piranha::NodeAllocator *nodeAllocator) {
+    m_power.optimize();
+    m_baseColor.optimize();
+    m_roughness.optimize();
+
+    return this;
+}
+
 void manta::DisneyDiffuseBRDF::registerInputs() {
     registerInput(m_baseColor.getPortAddress(), "base_color");
     registerInput(m_roughness.getPortAddress(), "roughness");

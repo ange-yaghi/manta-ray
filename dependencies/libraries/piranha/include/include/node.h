@@ -22,32 +22,32 @@ namespace piranha {
     class Node {
     public:
         struct NodeInputPort {
-            pNodeInput *input;
-            Node *nodeInput;
-            Node *dependency;
-            std::string name;
-            bool modifiesInput;
-            bool enableInput;
+            pNodeInput *input = nullptr;
+            Node *nodeInput = nullptr;
+            Node *dependency = nullptr;
+            std::string name = "";
+            bool modifiesInput = false;
+            bool enableInput = false;
         };
 
         struct NodeOutputPort {
-            NodeOutput *output;
-            std::string name;
+            NodeOutput *output = nullptr;
+            std::string name = "";
         };
 
         struct NodeOutputPortReference {
-            NodeOutput **output;
-            Node *nodeOutput;
-            std::string name;
+            NodeOutput **output = nullptr;
+            Node *nodeOutput = nullptr;
+            std::string name = "";
         };
 
         struct PortSkeleton {
-            NodeOutput *output;
-            std::string name;
+            NodeOutput *output = nullptr;
+            std::string name = "";
 
-            IrAttributeDefinition *definition;
-            IrContextTree *context;
-            NodeContainer *container;
+            IrAttributeDefinition *definition = nullptr;
+            IrContextTree *context = nullptr;
+            NodeContainer *container = nullptr;
         };
 
         struct PortInfo {

@@ -28,7 +28,7 @@ namespace mantaray_ui {
         void setPreviewNode(manta::PreviewNode *node) { m_previewNode = node; }
         manta::PreviewNode *getPreviewNode() const { return m_previewNode; }
 
-        void update();
+        void update(bool force);
         void clean();
 
         void pan(const ysVector &pan) { m_pan = ysMath::Add(m_pan, pan); }

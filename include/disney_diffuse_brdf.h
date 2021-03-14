@@ -31,6 +31,7 @@ namespace manta {
         math::real getRoughness() const { return math::getScalar(m_roughness.getDefault()); }
 
     protected:
+        virtual piranha::Node *_optimize(piranha::NodeAllocator *nodeAllocator);
         virtual void registerInputs();
 
         CacheableInput<math::Vector> m_power;

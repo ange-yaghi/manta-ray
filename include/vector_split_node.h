@@ -34,4 +34,3 @@ namespace manta {
 } /* namespace manta */
 
 #endif /* MANTARAY_VECTOR_SPLIT_NODE_H */
-

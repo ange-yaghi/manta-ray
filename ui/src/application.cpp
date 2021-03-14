@@ -223,7 +223,7 @@ void mantaray_ui::Application::fsmChangeState(State nextState) {
             manta::Session::get().getConsole()->out("Execution complete. Finalizing.\n", StandardBlue);
 
             for (Preview *preview : m_previews) {
-                preview->update();
+                preview->update(true);
             }
         }
     }
@@ -294,7 +294,7 @@ void mantaray_ui::Application::process() {
                 Preview *newPreview = new Preview;
                 newPreview->initialize(&m_engine, (int)m_previews.size());
                 newPreview->setPreviewNode(node);
-                newPreview->update();
+                newPreview->update(true);
 
                 m_previews.push_back(newPreview);
 
@@ -306,7 +306,7 @@ void mantaray_ui::Application::process() {
     if (m_currentState == State::CompilingAndExecuting) {
         if (m_previews.size() > 0) {
             if (m_updateTimer <= 0.0f) {
-                m_activePreview->update();
+                m_activePreview->update(false);
             }
         }
     }
@@ -316,7 +316,7 @@ void mantaray_ui::Application::process() {
     }
 
     if (m_updateTimer < 0.0f) {
-        m_updateTimer = 2.0f;
+        m_updateTimer = 0.1f;
     }
 }
 
