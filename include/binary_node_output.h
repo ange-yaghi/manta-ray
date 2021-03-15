@@ -97,8 +97,8 @@ namespace manta {
 
             for (int i = 0; i < dimensions; i++) {
                 int size = 0;
-                if (left->getSize(i) > size) size = left->getSize(i);
-                if (right->getSize(i) > size) size = right->getSize(i);
+                if (left->getDimensions() > i &&  left->getSize(i) > size) size = left->getSize(i);
+                if (right->getDimensions() > i && right->getSize(i) > size) size = right->getSize(i);
 
                 setDimensionSize(i, size);
             }

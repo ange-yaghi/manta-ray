@@ -7,6 +7,7 @@
 
 #include <string>
 #include <vector>
+#include <mutex>
 
 namespace piranha {
 
@@ -223,7 +224,8 @@ namespace piranha {
 
         // Initialization status
         bool m_initialized;
-        bool m_evaluated;
+        bool m_evaluating;
+        std::atomic<bool> m_evaluated;
         bool m_checkedEnabled;
 
         bool m_enabled;

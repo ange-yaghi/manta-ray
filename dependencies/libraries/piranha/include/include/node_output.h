@@ -61,6 +61,7 @@ namespace piranha {
         Node *m_interface;
 
         bool m_evaluated;
+        bool m_evaluating;
         bool m_checkedEnabled;
 
         bool m_enabled;

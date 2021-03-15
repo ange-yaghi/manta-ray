@@ -88,8 +88,7 @@ void manta::ImageFileNode::_evaluate() {
     }
     StandardAllocator::Global()->free(pixelData, image->h);
 
-    // Free the SDL image
-    SDL_free((void *)image);
+    SDL_FreeSurface(image);
 
     m_output.setMap(&m_imageMap);
 }

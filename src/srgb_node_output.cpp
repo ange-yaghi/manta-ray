@@ -49,7 +49,7 @@ void manta::SrgbNodeOutput::sample(const IntersectionPoint *surfaceInteraction, 
     );
 }
 
-void manta::SrgbNodeOutput::discreteSample2D(int x, int y, void *target) const {
+void manta::SrgbNodeOutput::discreteSample2d(int x, int y, void *target) const {
     (void)x;
     (void)y;
 

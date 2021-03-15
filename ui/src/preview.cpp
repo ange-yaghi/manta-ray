@@ -1,6 +1,7 @@
 #include "../include/preview.h"
 
 #include "../../include/rgb_space.h"
+#include "../../include/console.h"
 
 mantaray_ui::Preview::Preview() {
     m_engine = nullptr;
@@ -18,6 +19,17 @@ mantaray_ui::Preview::~Preview() {
 void mantaray_ui::Preview::initialize(dbasic::DeltaEngine *engine, int index) {
     m_engine = engine;
     m_index = index;
+}
+
+void mantaray_ui::Preview::destroy() {
+    std::lock_guard<std::mutex> lock(m_textureLock);
+
+    for (PreviewSnapshot &snapshot : m_previewSnapshots) {
+        if (snapshot.texture != nullptr) {
+            m_engine->GetDevice()->DestroyTexture(snapshot.texture);
+            snapshot.texture = nullptr;
+        }
+    }
 }
 
 ysTexture *mantaray_ui::Preview::getCurrentPreview() {
@@ -76,7 +88,10 @@ void mantaray_ui::Preview::clean() {
 }
 
 void mantaray_ui::Preview::updateThread(int index) {
-    if (!m_previewNode->isEvaluated()) return;
+    if (!m_previewNode->isEvaluated()) {
+        --m_updateQueue;
+        return;
+    }
 
     manta::VectorMap2D *map = new manta::VectorMap2D;
     m_previewNode->getOutput()->calculateAllDimensions(map);
@@ -89,6 +104,9 @@ void mantaray_ui::Preview::updateThread(int index) {
             m_engine->GetDevice()->DestroyTexture(newTexture);
             map->destroy();
             delete map;
+
+            --m_updateQueue;
+
             return;
         }
     }

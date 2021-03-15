@@ -82,10 +82,10 @@ void manta::ConstructedVectorNodeOutput::_evaluateDimensions() {
 
     for (int i = 0; i < dimensions; i++) {
         int size = 0;
-        if (x->getSize(i) > size) size = x->getSize(i);
-        if (y->getSize(i) > size) size = y->getSize(i);
-        if (z->getSize(i) > size) size = z->getSize(i);
-        if (w->getSize(i) > size) size = w->getSize(i);
+        if (x->getDimensions() > i && x->getSize(i) > size) size = x->getSize(i);
+        if (y->getDimensions() > i && y->getSize(i) > size) size = y->getSize(i);
+        if (z->getDimensions() > i && z->getSize(i) > size) size = z->getSize(i);
+        if (w->getDimensions() > i && w->getSize(i) > size) size = w->getSize(i);
 
         setDimensionSize(i, size);
     }

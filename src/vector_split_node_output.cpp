@@ -48,9 +48,7 @@ void manta::VectorSplitNodeOutput::_evaluateDimensions() {
 
     input->evaluateDimensions();
 
-    int dimensions = 0;
-    if (input->getDimensions() > dimensions) dimensions = input->getDimensions();
-
+    const int dimensions = input->getDimensions();
     setDimensions(dimensions);
 
     for (int i = 0; i < dimensions; i++) {

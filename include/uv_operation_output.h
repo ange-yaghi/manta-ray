@@ -76,7 +76,7 @@ namespace manta {
             VectorNodeOutput *input = static_cast<VectorNodeOutput *>(m_input);
             input->evaluateDimensions();
 
-            int dimensions = input->getDimensions();
+            const int dimensions = input->getDimensions();
             setDimensions(dimensions);
 
             for (int i = 0; i < dimensions; i++) {

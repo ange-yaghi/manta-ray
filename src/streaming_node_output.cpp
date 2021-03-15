@@ -6,6 +6,10 @@ manta::StreamingNodeOutput::
 {
     m_dimensionsEvaluated = false;
     m_dimensionCount = 0;
+
+    for (int i = 0; i < 4; ++i) {
+        m_dimensions[i] = INT_MAX;
+    }
 }
 
 manta::StreamingNodeOutput::~StreamingNodeOutput() {
@@ -25,6 +29,8 @@ int manta::StreamingNodeOutput::getLargestDimensionSize() const {
 }
 
 void manta::StreamingNodeOutput::evaluateDimensions() {
+    if (m_dimensionsEvaluated) return;
+
     _evaluateDimensions();
 
     m_dimensionsEvaluated = true;
@@ -32,6 +38,12 @@ void manta::StreamingNodeOutput::evaluateDimensions() {
 
 void manta::StreamingNodeOutput::_evaluate() {
     evaluateDimensions();
+
+    if (m_dimensionCount == 2) {
+        if (m_dimensions[0] > 2000 || m_dimensions[1] > 2000) {
+            throw;
+        }
+    }
 }
 
 void manta::StreamingNodeOutput::_evaluateDimensions() {

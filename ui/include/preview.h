@@ -22,6 +22,7 @@ namespace mantaray_ui {
         ~Preview();
 
         void initialize(dbasic::DeltaEngine *engine, int index);
+        void destroy();
 
         ysTexture *getCurrentPreview();
 

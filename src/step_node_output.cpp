@@ -99,10 +99,10 @@ void manta::StepNodeOutput::_evaluateDimensions() {
 
     for (int i = 0; i < dimensions; i++) {
         int size = 0;
-        if (input->getSize(i) > size) size = input->getSize(i);
-        if (dc->getSize(i) > size) size = dc->getSize(i);
-        if (foot->getSize(i) > size) size = foot->getSize(i);
-        if (step->getSize(i) > size) size = step->getSize(i);
+        if (input->getDimensions() > i && input->getSize(i) > size) size = input->getSize(i);
+        if (dc->getDimensions() > i && dc->getSize(i) > size) size = dc->getSize(i);
+        if (foot->getDimensions() > i && foot->getSize(i) > size) size = foot->getSize(i);
+        if (step->getDimensions() > i && step->getSize(i) > size) size = step->getSize(i);
 
         setDimensionSize(i, size);
     }

@@ -490,6 +490,7 @@ void mantaray_ui::Application::drawBox(
 
 void mantaray_ui::Application::clearPreviews() {
     for (Preview *preview : m_previews) {
+        preview->destroy();
         delete preview;
     }
 
