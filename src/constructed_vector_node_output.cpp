@@ -1,7 +1,10 @@
 #include "../include/constructed_vector_node_output.h"
 
 manta::ConstructedVectorNodeOutput::ConstructedVectorNodeOutput() {
-    /* void */
+    m_x = nullptr;
+    m_y = nullptr;
+    m_z = nullptr;
+    m_w = nullptr;
 }
 
 manta::ConstructedVectorNodeOutput::~ConstructedVectorNodeOutput() {

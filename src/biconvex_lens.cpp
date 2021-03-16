@@ -124,11 +124,10 @@ bool manta::BiconvexLens::transformLightRayReverse(const LightRay *ray, LightRay
 }
 
 manta::math::real manta::BiconvexLens::calculateFocalLength() const {
-    math::real R1 = m_inputSurface.getRadius();
-    math::real R2 = -m_outputSurface.getRadius();
-    math::real d = m_depth;
+    const math::real R1 = m_inputSurface.getRadius();
+    const math::real R2 = -m_outputSurface.getRadius();
 
-    math::real inv_f = (m_ior - (math::real)1.0) * 
+    const math::real inv_f = (m_ior - (math::real)1.0) * 
         ((math::real)1.0 / R1 - (math::real)1.0 / R2 + (m_ior - (math::real)1.0) / (m_ior * R1 * R2));
 
     return (math::real)1.0 / inv_f;

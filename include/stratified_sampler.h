@@ -48,8 +48,9 @@ namespace manta {
             for (int i = 0; i < count; i++) {
                 const int other = i + uniformRandomInt(count - i);
                 for (int j = 0; j < dimensionCount; j++) {
-                    std::swap(v[dimensionCount  * i + j],
-                        v[dimensionCount * other + j]);
+                    std::swap(
+                        v[(size_t)dimensionCount  * i + j],
+                        v[(size_t)dimensionCount * other + j]);
                 }
             }
         }

@@ -32,7 +32,7 @@ void manta::ImageByteBuffer::initialize(const unsigned char *buffer,
 
     m_buffer = StandardAllocator::Global()->allocate<unsigned char>(m_width * m_height * m_pitch);
 
-    memcpy((void *)m_buffer, (void *)buffer, m_width * m_height * m_pitch);
+    memcpy((void *)m_buffer, (void *)buffer, (size_t)m_width * m_height * m_pitch);
 }
 
 void manta::ImageByteBuffer::initialize(

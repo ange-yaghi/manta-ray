@@ -1,7 +1,8 @@
 #include "../include/aperture.h"
 
 manta::Aperture::Aperture() {
-    m_radius = (math::real)m_radius;
+    m_radius = (math::real)0.0;
+    m_radiusInput = nullptr;
 }
 
 manta::Aperture::~Aperture() {

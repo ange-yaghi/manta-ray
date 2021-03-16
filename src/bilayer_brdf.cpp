@@ -8,6 +8,7 @@
 
 manta::BilayerBRDF::BilayerBRDF() {
     m_coatingDistributionNode = nullptr;
+    m_coatingDistribution = nullptr;
 
     m_diffuse.setDefault(math::constants::One);
     m_specular.setDefault(math::constants::One);
@@ -17,19 +18,22 @@ manta::BilayerBRDF::~BilayerBRDF() {
     /* void */
 }
 
-manta::math::Vector manta::BilayerBRDF::sampleF(const IntersectionPoint *surfaceInteraction, 
-    const math::Vector2 &u, const math::Vector &i, math::Vector *o, math::real *pdf, StackAllocator *stackAllocator)
+manta::math::Vector manta::BilayerBRDF::sampleF(
+    const IntersectionPoint *surfaceInteraction,
+    const math::Vector2 &u,
+    const math::Vector &i,
+    math::Vector *o,
+    math::real *pdf,
+    StackAllocator *stackAllocator)
 {
-    math::Vector diffuseR = m_diffuse.sample(surfaceInteraction);
-    math::Vector specularR = m_specular.sample(surfaceInteraction);
+    const math::Vector diffuseR = m_diffuse.sample(surfaceInteraction);
+    const math::Vector specularR = m_specular.sample(surfaceInteraction);
 
-    math::real d = u.x;
+    const math::real d = u.x;
 
     math::real coatingPDF;
     math::real diffusePDF;
-
     math::Vector wh;
-
     if (d < (math::real)0.5) {
         // Ray reflects off of the coating
         math::Vector2 nu = math::Vector2(d * (math::real)2.0, u.y);
@@ -68,8 +72,8 @@ manta::math::Vector manta::BilayerBRDF::sampleF(const IntersectionPoint *surface
 
     wh = math::normalize(wh);
 
-    math::real cosThetaO = math::getZ(*o);
-    math::real cosThetaI = math::getZ(i);
+    const math::real cosThetaO = math::getZ(*o);
+    const math::real cosThetaI = math::getZ(i);
 
     if (cosThetaO <= (math::real)0.0 || cosThetaI <= (math::real)0.0) {
         *pdf = 0.0;
@@ -93,8 +97,8 @@ manta::math::Vector manta::BilayerBRDF::sampleF(const IntersectionPoint *surface
     // Calculate reflectance
     auto pow5 = [](math::real v) { return (v * v) * (v * v) * v; };
 
-    math::real absCosThetaI = ::abs(cosThetaI);
-    math::real absCosThetaO = ::abs(cosThetaO);
+    const math::real absCosThetaI = ::abs(cosThetaI);
+    const math::real absCosThetaO = ::abs(cosThetaO);
 
     math::Vector diffuse = math::loadScalar((math::real)28.0 / ((math::real)23.0 * math::constants::PI));
     diffuse = math::mul(diffuse, diffuseR);
@@ -103,8 +107,7 @@ manta::math::Vector manta::BilayerBRDF::sampleF(const IntersectionPoint *surface
     diffuse = math::mul(diffuse, math::loadScalar(1 - pow5(1 - (math::real)0.5 * absCosThetaO)));
 
     math::Vector specular;
-    
-    math::real absCosThetaOI = std::max(absCosThetaI, absCosThetaO);
+    const math::real absCosThetaOI = std::max(absCosThetaI, absCosThetaO);
     if (o_dot_wh <= 0 || absCosThetaOI == 0 || math::getZ(wh) < 0) {
         specular = math::constants::Zero;
     }
@@ -121,7 +124,7 @@ manta::math::Vector manta::BilayerBRDF::sampleF(const IntersectionPoint *surface
     }
 
     // Return reflectance
-    math::Vector fr = math::add(diffuse, specular);
+    const math::Vector fr = math::add(diffuse, specular);
 
     assert(!(::isnan(math::getX(fr)) || ::isnan(math::getY(fr)) || ::isnan(math::getZ(fr))));
 

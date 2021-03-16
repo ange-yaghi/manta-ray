@@ -4,7 +4,8 @@
 #include "../include/bxdf.h"
 
 manta::AddBxdfNode::AddBxdfNode() {
-    /* void */
+    m_bxdfInput = nullptr;
+    m_bsdfInput = nullptr;
 }
 
 manta::AddBxdfNode::~AddBxdfNode() {

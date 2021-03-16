@@ -1,7 +1,7 @@
 #include "../include/bxdf_to_bsdf_node.h"
 
 manta::BxdfToBsdfNode::BxdfToBsdfNode() {
-    /* void */
+    m_bxdfInput = nullptr;
 }
 
 manta::BxdfToBsdfNode::~BxdfToBsdfNode() {

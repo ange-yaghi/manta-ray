@@ -1,7 +1,6 @@
 #ifndef YS_TIMING_H
 #define YS_TIMING_H
 
-#include <intrin.h>
 #include <stdint.h>
 
 uint64_t SystemTime();

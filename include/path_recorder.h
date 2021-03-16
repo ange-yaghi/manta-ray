@@ -12,17 +12,17 @@ namespace manta {
     class PathRecorder {
     public:
         struct PathSegment {
-            math::Vector position;
+            math::Vector position = math::constants::Zero;
 
-            PathSegment *parent;
+            PathSegment *parent = nullptr;
             std::vector<PathSegment *>children;
 
-            int vertexIndex;
+            int vertexIndex = -1;
         };
 
         struct Tree {
-            PathSegment *path;
-            std::string name;
+            PathSegment *path = nullptr;
+            std::string name = "";
         };
 
     public:

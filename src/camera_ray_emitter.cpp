@@ -8,6 +8,13 @@ manta::CameraRayEmitter::CameraRayEmitter() {
     m_position = math::constants::Zero;
     m_direction = math::constants::Zero;
     m_sampleCount = 0;
+
+    m_stackAllocator = nullptr;
+    m_imagePlaneOrigin = math::constants::Zero;
+    m_pixelX = 0;
+    m_pixelY = 0;
+    m_right = math::constants::Zero;
+    m_up = math::constants::Zero;
 }
 
 manta::CameraRayEmitter::~CameraRayEmitter() {

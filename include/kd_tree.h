@@ -97,17 +97,22 @@ namespace manta {
 #endif /* KD_TREE_WITH_BOUNDING_BOXES */
 
     struct KDBoundEdge {
-        enum EdgeType {
+        enum class EdgeType {
             Start,
-            End
+            End,
+            Unknown
         };
 
         KDBoundEdge() {
-            /* void */
+            primitiveIndex = -1;
+            t = 0.0f;
+            edgeType = EdgeType::Start;
         }
 
         KDBoundEdge(math::real t, int primitiveIndex, bool start) : t(t), primitiveIndex(primitiveIndex) {
-            edgeType = start ? EdgeType::Start : EdgeType::End;
+            edgeType = start
+                ? EdgeType::Start
+                : EdgeType::End;
         }
 
         math::real t;

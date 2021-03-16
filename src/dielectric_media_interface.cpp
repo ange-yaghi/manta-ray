@@ -14,15 +14,17 @@ manta::DielectricMediaInterface::~DielectricMediaInterface() {
     /* void */
 }
 
-manta::math::real manta::DielectricMediaInterface::fresnelTerm(const math::Vector &i, 
-        const math::Vector &m, DIRECTION d) const {
+manta::math::real manta::DielectricMediaInterface::fresnelTerm(
+    const math::Vector &i,
+    const math::Vector &m,
+    Direction d) const
+{
     math::real ni, no;
-
-    if (d == DIRECTION_IN) {
+    if (d == Direction::In) {
         ni = m_iorIncident;
         no = m_iorTransmitted;
     }
-    else if (d == DIRECTION_OUT) {
+    else if (d == Direction::Out) {
         ni = m_iorTransmitted;
         no = m_iorIncident;
     }
@@ -47,15 +49,17 @@ manta::math::real manta::DielectricMediaInterface::fresnelTerm(const math::Vecto
     return t1 * t2;
 }
 
-manta::math::real manta::DielectricMediaInterface::fresnelTerm(math::real cosThetaI, 
-        math::real *pdf, DIRECTION d) const {
+manta::math::real manta::DielectricMediaInterface::fresnelTerm(
+    math::real cosThetaI,
+    math::real *pdf,
+    Direction d) const
+{
     math::real ni, no;
-
-    if (d == DIRECTION_IN) {
+    if (d == Direction::In) {
         ni = m_iorIncident;
         no = m_iorTransmitted;
     }
-    else if (d == DIRECTION_OUT) {
+    else if (d == Direction::Out) {
         ni = m_iorTransmitted;
         no = m_iorIncident;
     }
@@ -81,14 +85,13 @@ manta::math::real manta::DielectricMediaInterface::fresnelTerm(math::real cosThe
     return (Rparl * Rparl + Rperp * Rperp) / (math::real)2.0;
 }
 
-manta::math::real manta::DielectricMediaInterface::ior(DIRECTION d) const {
+manta::math::real manta::DielectricMediaInterface::ior(Direction d) const {
     math::real ni, no;
-
-    if (d == DIRECTION_IN) {
+    if (d == Direction::In) {
         ni = m_iorIncident;
         no = m_iorTransmitted;
     }
-    else if (d == DIRECTION_OUT) {
+    else if (d == Direction::Out) {
         ni = m_iorTransmitted;
         no = m_iorIncident;
     }
@@ -96,11 +99,11 @@ manta::math::real manta::DielectricMediaInterface::ior(DIRECTION d) const {
     return ni / no;
 }
 
-manta::math::real manta::DielectricMediaInterface::no(DIRECTION d) const {
-    if (d == DIRECTION_IN) {
+manta::math::real manta::DielectricMediaInterface::no(Direction d) const {
+    if (d == Direction::In) {
         return m_iorTransmitted;
     }
-    else if (d == DIRECTION_OUT) {
+    else if (d == Direction::Out) {
         return m_iorIncident;
     }
 
@@ -108,11 +111,11 @@ manta::math::real manta::DielectricMediaInterface::no(DIRECTION d) const {
     return m_iorTransmitted;
 }
 
-manta::math::real manta::DielectricMediaInterface::ni(DIRECTION d) const {
-    if (d == DIRECTION_IN) {
+manta::math::real manta::DielectricMediaInterface::ni(Direction d) const {
+    if (d == Direction::In) {
         return m_iorIncident;
     }
-    else if (d == DIRECTION_OUT) {
+    else if (d == Direction::Out) {
         return m_iorTransmitted;
     }
 

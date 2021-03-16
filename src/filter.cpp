@@ -1,7 +1,7 @@
 #include "../include/filter.h"
 
 manta::Filter::Filter() {
-    /* void */
+    m_radiusInput = nullptr;
 }
 
 manta::Filter::~Filter() {

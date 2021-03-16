@@ -6,7 +6,7 @@
 const piranha::ChannelType manta::DateNodeOutput::DateType("DateType");
 
 manta::DateNodeOutput::DateNodeOutput() : piranha::NodeOutput(&DateType) {
-    /* void */
+    m_time = 0;
 }
 
 manta::DateNodeOutput::~DateNodeOutput() {

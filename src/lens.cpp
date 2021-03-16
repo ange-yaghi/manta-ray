@@ -39,9 +39,6 @@ void manta::Lens::_evaluate() {
     m_sensorWidth = (math::real)sensorWidth;
     m_radius = (math::real)radius;
 
-    m_sensorResolutionX = m_sensorResolutionX;
-    m_sensorResolutionY = m_sensorResolutionY;
-
     m_aperture = getObject<Aperture>(m_apertureInput);
 
     configure();

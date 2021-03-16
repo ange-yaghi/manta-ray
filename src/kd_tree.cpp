@@ -94,9 +94,14 @@ void manta::KDTree::destroy() {
     }
 }
 
-bool manta::KDTree::findClosestIntersection(const LightRay *ray, CoarseIntersection *intersection, 
-                                            math::real minDepth, math::real maxDepth, StackAllocator *s    
-                                            /**/ STATISTICS_PROTOTYPE) const {
+bool manta::KDTree::findClosestIntersection(
+    const LightRay *ray,
+    CoarseIntersection *intersection,
+    math::real minDepth,
+    math::real maxDepth,
+    StackAllocator *s    
+    /**/ STATISTICS_PROTOTYPE) const
+{
     math::real tmin, tmax;
     if (!m_bounds.rayIntersect(*ray, &tmin, &tmax)) {
         return false;
@@ -110,10 +115,6 @@ bool manta::KDTree::findClosestIntersection(const LightRay *ray, CoarseIntersect
     math::real closestHit = std::min(tmax, maxDepth);
     const KDTreeNode *node = &m_nodes[0];
     while (node != nullptr) {
-#ifdef _DEBUG
-        // I've left this here for convenience when debugging
-        int nodeIndex = (int)(node - m_nodes);
-#endif
         if (closestHit < tmin) break;
         if (!node->isLeaf()) {
             int axis = node->getSplitAxis();
@@ -146,10 +147,6 @@ bool manta::KDTree::findClosestIntersection(const LightRay *ray, CoarseIntersect
                 node = secondChild;
             }
             else {
-#ifdef _DEBUG
-                // As above I've left this for convenience when debugging
-                int secondChildIndex = (int)(secondChild - m_nodes);
-#endif
                 // Add second child to queue
                 jobs[currentJob].node = secondChild;
                 jobs[currentJob].tmin = tPlane;
@@ -161,8 +158,8 @@ bool manta::KDTree::findClosestIntersection(const LightRay *ray, CoarseIntersect
             }
         }
         else {
-            int primitiveCount = node->getPrimitiveCount();
-            int objectOffset = node->getObjectOffset();
+            const int primitiveCount = node->getPrimitiveCount();
+            const int objectOffset = node->getObjectOffset();
             int *faceList;
             if (primitiveCount > 0) {
                 const KDBoundingVolume &bv = m_nodeVolumes[objectOffset];

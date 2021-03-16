@@ -75,7 +75,7 @@ math::Vector comprehensiveBsdfTest(const math::Vector &incident, BSDF &bsdf, int
     s.initialize(1000);
 
     IntersectionPoint point;
-    point.m_direction = DielectricMediaInterface::DIRECTION_IN;
+    point.m_direction = DielectricMediaInterface::Direction::In;
 
     math::Vector accum = math::constants::Zero;
 
@@ -222,7 +222,7 @@ TEST(BSDFTests, TransmissionBSDFTest) {
     s.initialize(1000);
 
     IntersectionPoint point;
-    point.m_direction = DielectricMediaInterface::DIRECTION_IN;
+    point.m_direction = DielectricMediaInterface::Direction::In;
 
     // Calculate rho
     for (int i = 0; i < SAMPLE_COUNT; i++) {
@@ -289,7 +289,7 @@ TEST(BSDFTests, GlassBSDFNANTest) {
     s.initialize(1000);
 
     IntersectionPoint point;
-    point.m_direction = DielectricMediaInterface::DIRECTION_OUT;
+    point.m_direction = DielectricMediaInterface::Direction::Out;
 
     // Calculate rho
     for (int i = 0; i < SAMPLE_COUNT; i++) {
@@ -362,7 +362,7 @@ TEST(BSDFTests, CompoundBSDFNanTest) {
     s.initialize(1000);
 
     IntersectionPoint point;
-    point.m_direction = DielectricMediaInterface::DIRECTION_IN;
+    point.m_direction = DielectricMediaInterface::Direction::In;
 
     // Calculate rho
     for (int i = 0; i < SAMPLE_COUNT; i++) {
@@ -428,7 +428,7 @@ TEST(BSDFTests, DisneyClearCoatTest) {
     s.initialize(1000);
 
     IntersectionPoint point;
-    point.m_direction = DielectricMediaInterface::DIRECTION_IN;
+    point.m_direction = DielectricMediaInterface::Direction::In;
 
     // Calculate rho
     for (int i = 0; i < SAMPLE_COUNT; i++) {

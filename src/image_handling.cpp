@@ -10,7 +10,7 @@ Uint32 GetPixel24(SDL_Surface *surface, int x, int y) {
     Uint32 color = 0;
 
     Uint8 *pixel = (Uint8*)surface->pixels;
-    pixel += (y * surface->pitch) + (x * sizeof(Uint8) * 3);
+    pixel += (y * (size_t)surface->pitch) + (x * sizeof(Uint8) * 3);
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
     color |= pixel[0] << 16;
     color |= pixel[1] << 8;
@@ -27,22 +27,22 @@ Uint32 GetPixel24(SDL_Surface *surface, int x, int y) {
 void PlacePixel24(SDL_Surface * surface, int x, int y, const manta::math::Vector &color) {
     Uint32 color32 = 0;
 
-    manta::math::real r = manta::math::getX(color);
-    manta::math::real g = manta::math::getY(color);
-    manta::math::real b = manta::math::getZ(color);
+    manta::math::real_d r = (manta::math::real_d)manta::math::getX(color);
+    manta::math::real_d g = (manta::math::real_d)manta::math::getY(color);
+    manta::math::real_d b = (manta::math::real_d)manta::math::getZ(color);
 
     manta::math::real gamma = (manta::math::real)1.0;
 
-    r = (manta::math::real)pow(manta::math::clamp(r), 1 / gamma);
-    g = (manta::math::real)pow(manta::math::clamp(g), 1 / gamma);
-    b = (manta::math::real)pow(manta::math::clamp(b), 1 / gamma);
+    r = pow(manta::math::clamp(r), 1 / gamma);
+    g = pow(manta::math::clamp(g), 1 / gamma);
+    b = pow(manta::math::clamp(b), 1 / gamma);
 
     color32 |= lround(r * 255);
     color32 |= (lround(g * 255) << 8);
     color32 |= (lround(b * 255) << 16);
 
     Uint8 * pixel = (Uint8*)surface->pixels;
-    pixel += (y * surface->pitch) + (x * sizeof(Uint8) * 3);
+    pixel += (y * (size_t)surface->pitch) + (x * sizeof(Uint8) * 3);
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
     pixel[0] = (color32 >> 24) & 0xFF;
     pixel[1] = (color32 >> 16) & 0xFF;
@@ -80,10 +80,8 @@ void manta::SaveImageData(const math::Vector *target, int width, int height, con
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
             PlacePixel24(surface, i, j, target[j * width + i]);
-            const char *err = SDL_GetError();
         }
     }
 
     SDL_SaveBMP(surface, fname);
-    const char *err = SDL_GetError();
 }

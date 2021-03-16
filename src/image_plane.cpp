@@ -177,18 +177,18 @@ void manta::ImagePlane::normalize() {
 
             value = math::div(value, math::loadScalar(weightSum));
 
-            constexpr math::Vector DEBUG_RED = { (math::real)1.0, (math::real)0.0, (math::real)0.0 };
-            constexpr math::Vector DEBUG_BLUE = { (math::real)0.0, (math::real)0.0, (math::real)1.0 };
-            constexpr math::Vector DEBUG_GREEN = { (math::real)0.0, (math::real)1.0, (math::real)0.0 };
+            constexpr math::Vector DebugRed = { { (math::real)1.0, (math::real)0.0, (math::real)0.0 } };
+            constexpr math::Vector DebugBlue = { { (math::real)0.0, (math::real)0.0, (math::real)1.0 } };
+            constexpr math::Vector DebugGreen = { { (math::real)0.0, (math::real)1.0, (math::real)0.0 } };
 
             if (std::isnan(math::getX(value)) || std::isnan(math::getY(value)) || std::isnan(math::getZ(value))) {
-                value = DEBUG_RED;
+                value = DebugRed;
             }
             else if (std::isinf(math::getX(value)) || std::isinf(math::getY(value)) || std::isinf(math::getZ(value))) {
-                value = DEBUG_GREEN;
+                value = DebugGreen;
             }
             else if (math::getX(value) < 0 || math::getY(value) < 0 || math::getZ(value) < 0) {
-                value = DEBUG_BLUE;
+                value = DebugBlue;
             }
         }
     }

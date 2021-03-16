@@ -23,47 +23,47 @@
 namespace manta {
 
     struct RuntimeStatistics {
-        enum COUNTER {
+        enum class Counter {
             // Counters
-            TRIANGLE_TESTS,
-            QUAD_TESTS,
-            RAYS_CAST,
-            TOTAL_BV_TESTS,
-            TOTAL_BV_HITS,
-            UNNECESSARY_PRIMITIVE_TESTS,
+            TriangleTests,
+            QuadTests,
+            RaysCast,
+            TotalBvTests,
+            TotalBvHits,
+            UnecessaryPrimitiveTests,
 
             // Special label for counter count
-            COUNTER_COUNT
+            Count
         };
 
         // Increment an individual counter
-        inline void incrementCounter(COUNTER counter) { counters[(int)counter]++; }
-        inline void incrementCounter(COUNTER counter, int amount) { counters[(int)counter] += amount; }
+        inline void incrementCounter(Counter counter) { counters[(int)counter]++; }
+        inline void incrementCounter(Counter counter, int amount) { counters[(int)counter] += amount; }
         void reset() {
-            for (int i = 0; i < COUNTER_COUNT; i++) {
+            for (int i = 0; i < (int)Counter::Count; i++) {
                 counters[i] = 0;
             }
         }
 
         void add(const RuntimeStatistics *r) {
-            for (int i = 0; i < COUNTER_COUNT; i++) {
+            for (int i = 0; i < (int)Counter::Count; i++) {
                 counters[i] += r->counters[i];
             }
         }
 
-        const char *getCounterName(COUNTER counter) const {
+        const char *getCounterName(Counter counter) const {
             switch (counter) {
-            case TRIANGLE_TESTS:
+            case Counter::TriangleTests:
                 return "TRIANGLE TESTS";
-            case QUAD_TESTS:
+            case Counter::QuadTests:
                 return "QUAD TESTS";
-            case RAYS_CAST:
+            case Counter::RaysCast:
                 return "RAYS CAST";
-            case TOTAL_BV_HITS:
+            case Counter::TotalBvHits:
                 return "TOTAL BV HITS";
-            case TOTAL_BV_TESTS:
+            case Counter::TotalBvTests:
                 return "TOTAL BV TESTS";
-            case UNNECESSARY_PRIMITIVE_TESTS:
+            case Counter::UnecessaryPrimitiveTests:
                 return "UNNECESSARY PRIMITIVE TESTS";
             default:
                 return "UNKNOWN COUNTER";
@@ -71,7 +71,7 @@ namespace manta {
         }
 
         // All counters
-        unsigned __int64 counters[COUNTER_COUNT];
+        unsigned __int64 counters[(int)Counter::Count];
     };
 
 } /* namespace manta */

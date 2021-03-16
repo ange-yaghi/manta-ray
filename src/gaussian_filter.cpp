@@ -8,7 +8,9 @@ manta::GaussianFilter::GaussianFilter() {
     m_alpha = (math::real)0.0;
     m_expX = (math::real)0.0;
     m_expY = (math::real)0.0;
+
     m_cache = nullptr;
+    m_alphaInput = nullptr;
 }
 
 manta::GaussianFilter::~GaussianFilter() {
@@ -38,7 +40,7 @@ manta::math::real manta::GaussianFilter::gaussian(math::real d, math::real expv)
 
 manta::math::real manta::GaussianFilter::gaussianCache(math::real d) {
     constexpr int actualSteps = CACHE_STEPS - SAFETY_FACTOR;
-    int index = (int)(actualSteps * (std::abs(d) * m_invR));
+    const int index = (int)(actualSteps * (std::abs(d) * m_invR));
     return m_cache[index];
 }
 

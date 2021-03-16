@@ -49,12 +49,10 @@ manta::math::Vector manta::BSDF::sampleF(const IntersectionPoint *surfaceInterac
 manta::math::Vector manta::BSDF::f(
     const IntersectionPoint *surfaceInteraction, const math::Vector &i, const math::Vector &o) const
 {
-    math::Vector local_i = surfaceInteraction->worldToLocal(i);
-    math::Vector local_o = surfaceInteraction->worldToLocal(o);
+    const math::Vector local_i = surfaceInteraction->worldToLocal(i);
+    const math::Vector local_o = surfaceInteraction->worldToLocal(o);
 
-    bool isReflection = surfaceInteraction->isReflection(i, o);
-
-    int bxdfCount = getBxdfCount();
+    const int bxdfCount = getBxdfCount();
     for (int i = 0; i < bxdfCount; i++) {
         m_bxdfs[i]->f(surfaceInteraction, local_i, local_o, nullptr);
     }

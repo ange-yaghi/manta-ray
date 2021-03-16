@@ -100,7 +100,7 @@ bool manta::Spectrum::loadCsv(const char *fname) {
     m_values = StandardAllocator::Global()->allocate<math::real>(m_pointCount);
     m_externalMemoryAllocation = false;
     m_startWavelength = tempEntries[0].wavelength;
-    m_endWaveLength = tempEntries[m_pointCount - 1].wavelength;
+    m_endWaveLength = tempEntries[(size_t)m_pointCount - 1].wavelength;
 
     for (int i = 0; i < m_pointCount; i++) {
         m_values[i] = tempEntries[i].power;

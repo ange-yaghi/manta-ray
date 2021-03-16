@@ -10,6 +10,10 @@ manta::PolygonalAperture::PolygonalAperture() {
 
     m_edges = nullptr;
     m_edgeCount = 0;
+
+    m_edgeCountInput = nullptr;
+    m_angleInput = nullptr;
+    m_bladeCurvatureInput = nullptr;
 }
 
 manta::PolygonalAperture::~PolygonalAperture() {
@@ -70,13 +74,13 @@ void manta::PolygonalAperture::destroy() {
 }
 
 bool manta::PolygonalAperture::filter(math::real x, math::real y) const {
-    enum SIGN {
-        NONE,
-        NEGATIVE,
-        POSITIVE
+    enum class Sign {
+        None,
+        Negative,
+        Positive
     };
 
-    SIGN s = NONE;
+    Sign s = Sign::None;
     bool insidePolygon = true;
     for (int i = 0; i < m_edgeCount; i++) {
         const Edge &edge = m_edges[i];
@@ -89,12 +93,12 @@ bool manta::PolygonalAperture::filter(math::real x, math::real y) const {
 
         if (c == 0) continue;
         else if (c < 0) {
-            if (s == POSITIVE) { insidePolygon = false; break;  }
-            else s = NEGATIVE;
+            if (s == Sign::Positive) { insidePolygon = false; break;  }
+            else s = Sign::Negative;
         }
         else if (c > 0) {
-            if (s == NEGATIVE) { insidePolygon = false; break;  }
-            else s = POSITIVE;
+            if (s == Sign::Negative) { insidePolygon = false; break;  }
+            else s = Sign::Positive;
         }
     }
 
@@ -109,9 +113,9 @@ bool manta::PolygonalAperture::filter(math::real x, math::real y) const {
     // Early exit if the aperture is perfectly circular
     if (m_bladeCurvature == (math::real)1.0) return true;
 
-    math::real mag_inv = 1 / ::sqrt(mag_2);
-    math::real radial_x = x * mag_inv;
-    math::real radial_y = y * mag_inv;
+    const math::real mag_inv = 1 / ::sqrt(mag_2);
+    const math::real radial_x = x * mag_inv;
+    const math::real radial_y = y * mag_inv;
 
     math::real polygonLimitR = math::constants::REAL_MAX;
     for (int i = 0; i < m_edgeCount; i++) {
@@ -130,8 +134,7 @@ bool manta::PolygonalAperture::filter(math::real x, math::real y) const {
     polygonLimitR *= m_radius;
 
     // Smoothly interpolate between polygonal limit and circular limit
-    math::real radius_mid = m_radius * m_bladeCurvature + polygonLimitR * (1 - m_bladeCurvature);
-
+    const math::real radius_mid = m_radius * m_bladeCurvature + polygonLimitR * (1 - m_bladeCurvature);
     if (mag_2 > radius_mid * radius_mid) return false;
 
     return true;

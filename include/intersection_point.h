@@ -23,7 +23,7 @@ namespace manta {
         bool m_intersection;
         bool m_valid;
 
-        MediaInterface::DIRECTION m_direction;
+        MediaInterface::Direction m_direction;
 
         intersection_id m_id = 0;
         int m_threadId = 0;

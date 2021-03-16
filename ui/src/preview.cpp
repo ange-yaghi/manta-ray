@@ -62,7 +62,9 @@ ysTexture *mantaray_ui::Preview::createTexture(const manta::VectorMap2D *vectorM
 
     delete[] buffer;
 
-    return newTexture;
+    return (error == ysError::None)
+        ? newTexture
+        : nullptr;
 }
 
 void mantaray_ui::Preview::update(bool force) {

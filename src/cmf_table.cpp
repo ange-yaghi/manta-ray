@@ -119,18 +119,20 @@ manta::CmfTable::Entry manta::CmfTable::sampleXyz(math::real_d wavelength) const
 }
 
 manta::ColorXyz manta::CmfTable::spectralToXyz(const Spectrum *spectrum) const {
-    math::real_d start = spectrum->getStartWavelength();
-    math::real_d end = spectrum->getEndWavelength();
-    math::real_d step = spectrum->getStep();
-    int dataPoints = spectrum->getPointCount();
+    const math::real_d start = spectrum->getStartWavelength();
+    const math::real_d end = spectrum->getEndWavelength();
+    const math::real_d step = spectrum->getStep();
+    const int dataPoints = spectrum->getPointCount();
 
     math::real_d reimannSumX = (math::real_d)0.0;
     math::real_d reimannSumY = (math::real_d)0.0;
     math::real_d reimannSumZ = (math::real_d)0.0;
     for (int i = 0; i < dataPoints - 1; i++) {
-        math::real_d wavelength = step * i + start;
-        ColorXyz response0 = sampleXyz(wavelength).colorXyz;
-        ColorXyz response1 = sampleXyz(wavelength + step).colorXyz;
+        const math::real_d wavelength = step * i + start;
+        if (wavelength > end) break;
+
+        const ColorXyz response0 = sampleXyz(wavelength).colorXyz;
+        const ColorXyz response1 = sampleXyz(wavelength + step).colorXyz;
 
         reimannSumX += (spectrum->getValueDiscrete(i) * response0.x + 
             spectrum->getValueDiscrete(i + 1) * response1.x);

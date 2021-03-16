@@ -169,8 +169,6 @@ void mantaray_ui::Application::fsm() {
 }
 
 void mantaray_ui::Application::fsmChangeState(State nextState) {
-    const ysVector standardColor = ysColor::srgbiToSrgb(0xFF9F15);
-
     if (nextState == State::Ready) {
         if (m_currentState == State::Destroying) {
             manta::Session::get().getConsole()->out("All memory freed.\n", StandardBlue);
@@ -275,7 +273,7 @@ void mantaray_ui::Application::process() {
         }
         else if (m_engine.ProcessKeyDown(ysKey::Code::Down)) {
             if (m_activePreview != nullptr) {
-                const int newIndex = min(m_activePreview->getIndex() + 1, m_previews.size() - 1);
+                const int newIndex = min(m_activePreview->getIndex() + 1, (int)m_previews.size() - 1);
                 m_activePreview = m_previews[newIndex];
             }
         }
@@ -321,10 +319,10 @@ void mantaray_ui::Application::process() {
 }
 
 void mantaray_ui::Application::render() {
-    const int screenWidth = m_engine.GetGameWindow()->GetGameWidth();
-    const int screenHeight = m_engine.GetGameWindow()->GetGameHeight();
+    const float screenWidth = (float)m_engine.GetGameWindow()->GetGameWidth();
+    const float screenHeight = (float)m_engine.GetGameWindow()->GetGameHeight();
 
-    m_shaders.SetScreenDimensions((float)screenWidth, (float)screenHeight);
+    m_shaders.SetScreenDimensions(screenWidth, screenHeight);
     m_shaders.CalculateUiCamera();
     m_shaders.SetFogNear(10000.0f);
     m_shaders.SetFogFar(10001.0f);
@@ -334,9 +332,6 @@ void mantaray_ui::Application::render() {
 
     BoundingBox terminalArea = screenGrid.GetFullRange(0, 2, 0, 4).PixelPerfect();
     m_console.setExtents(terminalArea.MarginOffset(-10.0f, -10.0f));
-
-    manta::Session &session = manta::Session::get();
-    std::vector<manta::PreviewNode *> previews = manta::Session::get().getPreviews();
 
     m_updateTimer -= m_engine.GetFrameLength();
 
@@ -379,7 +374,7 @@ void mantaray_ui::Application::render() {
             }
         }
 
-        const float zoomScale = std::pow(0.5, -m_activePreview->getZoom() / 240.0f);
+        const float zoomScale = std::pow(0.5f, -m_activePreview->getZoom() / 240.0f);
         if (m_engine.IsMouseButtonDown(ysMouse::Button::Left) && m_dragging) {
             m_activePreview->pan(ysMath::LoadVector(mouseDx / zoomScale, mouseDy / zoomScale));
         }

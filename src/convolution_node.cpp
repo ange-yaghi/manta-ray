@@ -65,9 +65,6 @@ void manta::ConvolutionNode::_evaluate() {
         margins.top = 0;
     }
 
-    int width = a_map->getWidth();
-    int height = a_map->getHeight();
-
     m_outputMap.initialize(margins.width, margins.height);
 
     // Perform 3-channel convolution

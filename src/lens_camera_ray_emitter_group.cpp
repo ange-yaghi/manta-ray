@@ -5,6 +5,8 @@
 
 manta::LensCameraRayEmitterGroup::LensCameraRayEmitterGroup() {
     m_lens = nullptr;
+    m_xIncrement = (math::real)0;
+    m_yIncrement = (math::real)0;
 }
 
 manta::LensCameraRayEmitterGroup::~LensCameraRayEmitterGroup() {
@@ -12,11 +14,6 @@ manta::LensCameraRayEmitterGroup::~LensCameraRayEmitterGroup() {
 }
 
 void manta::LensCameraRayEmitterGroup::configure() {
-    const int resolutionX = m_lens->getSensorResolutionX();
-    const int resolutionY = m_lens->getSensorResolutionY();
-
-    const int nRays = resolutionX * resolutionY;
-
     m_xIncrement = m_lens->getSensorWidth() / getResolutionX();
     m_yIncrement = m_lens->getSensorHeight() / getResolutionY();
 
@@ -60,7 +57,7 @@ void manta::LensCameraRayEmitterGroup::_initialize() {
 }
 
 void manta::LensCameraRayEmitterGroup::_evaluate() {
-    Lens *lens = getObject<Lens>(m_lensInput);
+    const Lens *lens = getObject<Lens>(m_lensInput);
 
     setLens(lens);
     setOutput(this);

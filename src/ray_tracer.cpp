@@ -360,10 +360,10 @@ void manta::RayTracer::refineContact(const LightRay *ray, math::real depth,
     if (math::getScalar(math::dot(point->m_faceNormal, ray->getDirection())) > 0.0) {
         point->m_faceNormal = math::negate(point->m_faceNormal);
         point->m_vertexNormal = math::negate(point->m_vertexNormal);
-        point->m_direction = MediaInterface::DIRECTION_OUT;
+        point->m_direction = MediaInterface::Direction::Out;
     }
     else {
-        point->m_direction = MediaInterface::DIRECTION_IN;
+        point->m_direction = MediaInterface::Direction::In;
     }
 }
 
@@ -467,9 +467,7 @@ manta::math::Vector manta::RayTracer::traceRay(
             math::loadScalar(pdf)
         );
 
-        if (std::isnan(math::getX(beta)) || std::isnan(math::getY(beta)) || std::isnan(math::getZ(beta))) {
-            int breakHere = 0;
-        }
+        assert(!std::isnan(math::getX(beta)) && !std::isnan(math::getY(beta)) && !std::isnan(math::getZ(beta)));
 
         localRay.setDirection(incomingDir);
         if (math::getScalar(math::dot(incomingDir, w)) >= 0) {

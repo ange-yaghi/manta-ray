@@ -6,7 +6,6 @@ void manta::IntersectionPoint::calculateCachedValues() {
         ? math::constants::XAxis
         : math::constants::YAxis;
     math::Vector m_vertexV;
-    math::Vector w = m_vertexNormal;
     
     m_vertexU = math::normalize(math::cross(m_vertexU, m_vertexNormal));
     m_vertexV = math::cross(m_vertexNormal, m_vertexU);

@@ -32,7 +32,7 @@ void manta::Session::deregisterPreview(PreviewNode *preview) {
 
     for (int i = 0; i < n; ++i) {
         if (m_previews[i] == preview) {
-            m_previews[i] = m_previews[n - 1];
+            m_previews[i] = m_previews[(size_t)n - 1];
             break;
         }
         else if (i == n - 1) {
@@ -40,5 +40,5 @@ void manta::Session::deregisterPreview(PreviewNode *preview) {
         }
     }
 
-    m_previews.resize(n - 1);
+    m_previews.resize((size_t)n - 1);
 }

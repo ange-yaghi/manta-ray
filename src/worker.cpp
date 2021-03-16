@@ -131,8 +131,6 @@ void manta::Worker::doJob(const Job *job) {
                 srand((unsigned int)xn);
             }
 
-            math::Vector result = math::constants::Zero;
-
             if (emitter != nullptr) {
                 emitter->setStackAllocator(m_stack);
 

@@ -20,16 +20,14 @@ manta::DisneySpecularBRDF::~DisneySpecularBRDF() {
 manta::math::Vector manta::DisneySpecularBRDF::sampleF(const IntersectionPoint *surfaceInteraction, 
     const math::Vector2 &u, const math::Vector &i, math::Vector *o, math::real *pdf, StackAllocator *stackAllocator)
 {
-    constexpr math::Vector reflect = { (math::real)-1.0, (math::real)-1.0, (math::real)1.0, (math::real)1.0 };
-
-    math::Vector m = m_distribution->generateMicrosurfaceNormal(surfaceInteraction, u);
-    math::Vector ri = math::reflect(i, m);
-    math::real o_dot_m = math::getScalar(math::dot(ri, m));
+    const math::Vector m = m_distribution->generateMicrosurfaceNormal(surfaceInteraction, u);
+    const math::Vector ri = math::reflect(i, m);
+    const math::real o_dot_m = math::getScalar(math::dot(ri, m));
 
     *o = ri;
 
-    math::real cosThetaO = math::getZ(*o);
-    math::real cosThetaI = math::getZ(i);
+    const math::real cosThetaO = math::getZ(*o);
+    const math::real cosThetaI = math::getZ(i);
 
     if (o_dot_m <= MIN_EPSILON ||
         cosThetaO <= MIN_EPSILON ||
@@ -47,11 +45,11 @@ manta::math::Vector manta::DisneySpecularBRDF::sampleF(const IntersectionPoint *
 manta::math::Vector manta::DisneySpecularBRDF::f(const IntersectionPoint *surfaceInteraction, 
     const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator)
 {
-    math::Vector wh = math::normalize(math::add(i, o));
-    math::real o_dot_wh = math::getScalar(math::dot(wh, o));
+    const math::Vector wh = math::normalize(math::add(i, o));
+    const math::real o_dot_wh = math::getScalar(math::dot(wh, o));
 
-    math::real cosThetaO = math::getZ(o);
-    math::real cosThetaI = math::getZ(i);
+    const math::real cosThetaO = math::getZ(o);
+    const math::real cosThetaI = math::getZ(i);
 
     if (o_dot_wh <= MIN_EPSILON ||
         cosThetaO <= MIN_EPSILON ||
@@ -66,18 +64,18 @@ manta::math::Vector manta::DisneySpecularBRDF::f(const IntersectionPoint *surfac
         (4 * cosThetaI * cosThetaO));
 
     // Apply power attenuation
-    math::Vector power = m_power.sample(surfaceInteraction);
-    math::Vector baseColor = m_baseColor.sample(surfaceInteraction);
+    const math::Vector power = m_power.sample(surfaceInteraction);
+    const math::Vector baseColor = m_baseColor.sample(surfaceInteraction);
 
     reflectivity = math::mul(reflectivity, power);
 
     // Calculate Schlick Fresnel approximation
-    math::Vector F0 = m_specular.sample(surfaceInteraction);
+    const math::Vector F0 = m_specular.sample(surfaceInteraction);
 
     auto pow5 = [](math::real v) { return (v * v) * (v * v) * v; };
 
-    math::Vector s = math::loadScalar(pow5(1 - o_dot_wh));
-    math::Vector F = math::add(
+    const math::Vector s = math::loadScalar(pow5(1 - o_dot_wh));
+    const math::Vector F = math::add(
         F0,
         math::mul(
             math::sub(math::constants::One, F0),
@@ -92,11 +90,11 @@ manta::math::Vector manta::DisneySpecularBRDF::f(const IntersectionPoint *surfac
 manta::math::real manta::DisneySpecularBRDF::pdf(const IntersectionPoint *surfaceInteraction, 
     const math::Vector &i, const math::Vector &o)
 {
-    math::Vector wh = math::normalize(math::add(i, o));
-    math::real o_dot_wh = math::getScalar(math::dot(wh, o));
+    const math::Vector wh = math::normalize(math::add(i, o));
+    const math::real o_dot_wh = math::getScalar(math::dot(wh, o));
 
-    math::real cosThetaO = math::getZ(o);
-    math::real cosThetaI = math::getZ(i);
+    const math::real cosThetaO = math::getZ(o);
+    const math::real cosThetaI = math::getZ(i);
 
     if (o_dot_wh <= MIN_EPSILON ||
         cosThetaO <= MIN_EPSILON ||
@@ -105,16 +103,14 @@ manta::math::real manta::DisneySpecularBRDF::pdf(const IntersectionPoint *surfac
         return (math::real)0.0;
     }
 
-    math::real pdf = m_distribution->calculatePDF(wh, surfaceInteraction) / ::abs(4 * o_dot_wh);
+    const math::real pdf = m_distribution->calculatePDF(wh, surfaceInteraction) / ::abs(4 * o_dot_wh);
 
     return pdf;
 }
 
 manta::math::Vector manta::DisneySpecularBRDF::remapSpecular(const math::Vector &specular) {
-    constexpr math::Vector MAX_INCIDENT_RESPONSE = { 
-        (math::real)0.08, (math::real)0.08, (math::real)0.08, (math::real)0.08 };
-
-    return math::mul(specular, MAX_INCIDENT_RESPONSE);
+    constexpr math::Vector MaxIncidentResponse = { { (math::real)0.08, (math::real)0.08, (math::real)0.08, (math::real)0.08 } };
+    return math::mul(specular, MaxIncidentResponse);
 }
 
 void manta::DisneySpecularBRDF::_evaluate() {

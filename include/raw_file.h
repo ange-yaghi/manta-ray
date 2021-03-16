@@ -47,10 +47,11 @@ namespace manta {
 
     protected:
         void *generatePixelArray(const ImagePlane *buffer, int version, int *size) const;
-        void *generateEmptyPixelArray(void *dataHeader, int version, int *pixelDataSize) const ;
+        void freePixelArray(void *pixelArray, int version) const;
+        void *generateEmptyPixelArray(void *dataHeader, int version, int *pixelDataSize) const;
         bool readPixelArray(void *dataHeader, void *pixelData, ImagePlane *buffer, int version) const;
-
         void *generateDataHeader(const ImagePlane *buffer, int version, int *size) const;
+        void freeDataHeader(void *dataHeader, int version) const;
     };
 
 } /* namespace manta */

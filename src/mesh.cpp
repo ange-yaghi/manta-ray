@@ -48,25 +48,21 @@ manta::Mesh::~Mesh() {
 }
 
 void manta::Mesh::initialize(int faceCount, int vertexCount, int normalCount, int texCoordCount) {
-    m_faces = StandardAllocator::Global()->allocate<Face>(faceCount);
-    m_auxFaceData = StandardAllocator::Global()->allocate<AuxFaceData>(faceCount);
-
     // By default assume there are no quads in the mesh
     m_quadFaces = nullptr;
     m_auxQuadFaceData = nullptr;
-
+    m_faces = StandardAllocator::Global()->allocate<Face>(faceCount);
+    m_auxFaceData = StandardAllocator::Global()->allocate<AuxFaceData>(faceCount);
     m_vertices = StandardAllocator::Global()->allocate<math::Vector>(vertexCount, 16);
+    m_normals = (normalCount > 0)
+        ? StandardAllocator::Global()->allocate<math::Vector>(normalCount, 16)
+        : nullptr;
+    m_textureCoords = (texCoordCount > 0)
+        ? StandardAllocator::Global()->allocate<math::Vector>(texCoordCount, 16)
+        : nullptr;
 
-    if (normalCount > 0) {
-        m_normals = StandardAllocator::Global()->allocate<math::Vector>(normalCount, 16);
-    }
-
-    if (texCoordCount > 0) {
-        m_textureCoords = StandardAllocator::Global()->allocate<math::Vector>(texCoordCount, 16);
-    }
-
-    m_triangleFaceCount = faceCount;
     m_quadFaceCount = 0;
+    m_triangleFaceCount = faceCount;
     m_vertexCount = vertexCount;
     m_normalCount = normalCount;
     m_texCoordCount = texCoordCount;
@@ -96,11 +92,11 @@ void manta::Mesh::filterDegenerateFaces() {
     // Delete faces that are too small
     int actualFaceCount = m_triangleFaceCount;
     for (int i = 0; i < actualFaceCount; i++) {
-        math::Vector u = m_vertices[m_faces[i].u];
-        math::Vector v = m_vertices[m_faces[i].v];
-        math::Vector w = m_vertices[m_faces[i].w];
+        const math::Vector u = m_vertices[m_faces[i].u];
+        const math::Vector v = m_vertices[m_faces[i].v];
+        const math::Vector w = m_vertices[m_faces[i].w];
 
-        math::Vector normal = math::cross(math::sub(v, u), math::sub(w, u));
+        const math::Vector normal = math::cross(math::sub(v, u), math::sub(w, u));
         if (abs(math::getX(normal)) < 1E-9 && abs(math::getY(normal)) < 1E-9 && abs(math::getZ(normal)) < 1E-9) {
             m_faces[i] = m_faces[actualFaceCount - 1];
             m_auxFaceData[i] = m_auxFaceData[actualFaceCount - 1];
@@ -315,9 +311,6 @@ void manta::Mesh::computeBounds() {
 }
 
 bool manta::Mesh::findClosestIntersection(const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const {
-    math::Vector rayDir = ray->getDirection();
-    math::Vector raySource = ray->getSource();
-
     CoarseCollisionOutput output;
     math::real currentMaxDepth = maxDepth;
     bool found = false;
@@ -359,12 +352,12 @@ bool manta::Mesh::findClosestIntersection(const LightRay *ray, CoarseIntersectio
 }
 
 void manta::Mesh::fineIntersection(const math::Vector &r, IntersectionPoint *p, const CoarseIntersection *hint) const {
-    int faceIndex = hint->faceHint;
+    const int faceIndex = hint->faceHint;
 
-    math::real u, v, w; // Barycentric coordinates
-    u = hint->su;
-    v = hint->sv;
-    w = hint->sw;
+    // Barycentric coordinates
+    math::real u = hint->su;
+    math::real v = hint->sv;
+    math::real w = hint->sw;
 
     math::Vector *vertices[3];
     AuxData *data[3];
@@ -377,8 +370,7 @@ void manta::Mesh::fineIntersection(const math::Vector &r, IntersectionPoint *p, 
         QuadFace *face = &m_quadFaces[faceIndex - m_triangleFaceCount];
         QuadAuxFaceData *auxData = &m_auxQuadFaceData[faceIndex - m_triangleFaceCount];
 
-        int subHint = hint->subdivisionHint;
-        if (subHint == 0) {
+        if (hint->subdivisionHint == 0) {
             vertices[0] = &m_vertices[face->u];
             vertices[1] = &m_vertices[face->v];
             vertices[2] = &m_vertices[face->w];
@@ -426,9 +418,6 @@ void manta::Mesh::fineIntersection(const math::Vector &r, IntersectionPoint *p, 
 
     math::Vector vertexNormal;
     math::Vector textureCoordinates;
-    const AuxFaceData &auxData = m_auxFaceData[faceIndex];
-
-    //math::Vector faceNormal = math::normalize(math::cross(math::sub(*vertices[1], *vertices[0]), math::sub(*vertices[2], *vertices[0])));
 
     if (m_perVertexNormals) {
         if (data[0]->n != -1 && data[1]->n != -1 && data[2]->n != -1) {
@@ -447,8 +436,6 @@ void manta::Mesh::fineIntersection(const math::Vector &r, IntersectionPoint *p, 
     else {
         vertexNormal = math::normalize(math::cross(math::sub(*vertices[1], *vertices[0]), math::sub(*vertices[2], *vertices[0])));
     }
-
-    math::Vector faceNormal = vertexNormal;
 
     if (m_useTextureCoords) {
         if (data[0]->t != -1 && data[1]->t != -1 && data[2]->t != -1) {
@@ -469,7 +456,7 @@ void manta::Mesh::fineIntersection(const math::Vector &r, IntersectionPoint *p, 
     }
 
     p->m_vertexNormal = vertexNormal;
-    p->m_faceNormal = faceNormal;
+    p->m_faceNormal = vertexNormal;
     p->m_position = r;
     p->m_textureCoodinates = textureCoordinates;
     p->m_material = material;
@@ -477,11 +464,11 @@ void manta::Mesh::fineIntersection(const math::Vector &r, IntersectionPoint *p, 
 
 bool manta::Mesh::fastIntersection(const LightRay *ray) const {
     if (m_fastIntersectEnabled) {
-        math::Vector d_pos = math::sub(ray->getSource(), m_fastIntersectPosition);
-        math::Vector d_dot_dir = math::dot(d_pos, ray->getDirection());
-        math::Vector mag2 = math::magnitudeSquared3(d_pos);
+        const math::Vector d_pos = math::sub(ray->getSource(), m_fastIntersectPosition);
+        const math::Vector d_dot_dir = math::dot(d_pos, ray->getDirection());
+        const math::Vector mag2 = math::magnitudeSquared3(d_pos);
 
-        math::Vector radius2 = math::loadScalar(m_fastIntersectRadius * m_fastIntersectRadius);
+        const math::Vector radius2 = math::loadScalar(m_fastIntersectRadius * m_fastIntersectRadius);
         math::Vector det = math::sub(math::mul(d_dot_dir, d_dot_dir), math::sub(mag2, radius2));
 
         if (math::getScalar(det) < (math::real)0.0) {
@@ -489,11 +476,11 @@ bool manta::Mesh::fastIntersection(const LightRay *ray) const {
         }
         else {
             det = math::sqrt(det);
-            math::Vector t1 = math::sub(det, d_dot_dir);
-            math::Vector t2 = math::sub(math::negate(det), d_dot_dir);
+            const math::Vector t1 = math::sub(det, d_dot_dir);
+            const math::Vector t2 = math::sub(math::negate(det), d_dot_dir);
 
-            math::real t1_s = math::getScalar(t1);
-            math::real t2_s = math::getScalar(t2);
+            const math::real t1_s = math::getScalar(t1);
+            const math::real t2_s = math::getScalar(t2);
 
             return t1_s > (math::real)0.0 || t2_s > (math::real)0.0;
         }
@@ -501,8 +488,11 @@ bool manta::Mesh::fastIntersection(const LightRay *ray) const {
     else return true;
 }
 
-void manta::Mesh::loadObjFileData(ObjFileLoader *data, MaterialLibrary *materialLibrary, 
-    int defaultMaterialIndex, unsigned int globalId) 
+void manta::Mesh::loadObjFileData(
+    ObjFileLoader *data,
+    MaterialLibrary *materialLibrary,
+    int defaultMaterialIndex,
+    unsigned int globalId) 
 {
     initialize(data->getFaceCount(), data->getVertexCount(), data->getNormalCount(), data->getTexCoordCount());
 
@@ -573,10 +563,10 @@ void manta::Mesh::loadObjFileData(ObjFileLoader *data, MaterialLibrary *material
 }
 
 void manta::Mesh::merge(const Mesh *mesh) {
-    int newFaceCount = m_triangleFaceCount + mesh->getTriangleFaceCount();
-    int newVertexCount = m_vertexCount + mesh->getVertexCount();
-    int newNormalCount = m_normalCount + mesh->getNormalCount();
-    int newTexCoordCount = m_texCoordCount + mesh->getTexCoordCount();
+    const int newFaceCount = m_triangleFaceCount + mesh->getTriangleFaceCount();
+    const int newVertexCount = m_vertexCount + mesh->getVertexCount();
+    const int newNormalCount = m_normalCount + mesh->getNormalCount();
+    const int newTexCoordCount = m_texCoordCount + mesh->getTexCoordCount();
 
     Face *newFaces = nullptr;
     AuxFaceData *newAuxFaceData = nullptr;
@@ -666,19 +656,24 @@ void manta::Mesh::merge(const Mesh *mesh) {
     m_texCoordCount = newTexCoordCount;
 }
 
-bool manta::Mesh::detectQuadIntersection(int faceIndex, math::real minDepth, math::real maxDepth, const LightRay *ray, CoarseCollisionOutput *output) const {
+bool manta::Mesh::detectQuadIntersection(
+    int faceIndex,
+    math::real minDepth,
+    math::real maxDepth,
+    const LightRay *ray,
+    CoarseCollisionOutput *output) const
+{
     QuadFace &face = m_quadFaces[faceIndex];
 
-    int kx = ray->getKX();
-    int ky = ray->getKY();
-    int kz = ray->getKZ();
+    const int kx = ray->getKX();
+    const int ky = ray->getKY();
+    const int kz = ray->getKZ();
 
-    math::Vector v0, v1, vu;
-    v0 = m_vertices[face.v];
-    v1 = m_vertices[face.w];
-    vu = m_vertices[face.u];
+    const math::Vector v0 = m_vertices[face.v];
+    const math::Vector v1 = m_vertices[face.w];
+    const math::Vector vu = m_vertices[face.u];
 
-    math::Vector rayOrigin = ray->getSource();
+    const math::Vector rayOrigin = ray->getSource();
     math::Vector pe0t = math::sub(v0, rayOrigin);
     math::Vector pe1t = math::sub(v1, rayOrigin);
     math::Vector put = math::sub(vu, rayOrigin);
@@ -688,21 +683,21 @@ bool manta::Mesh::detectQuadIntersection(int faceIndex, math::real minDepth, mat
     put = math::permute(put, kx, ky, kz);
 
     const math::Vector3 &shear = ray->getShear();
-    math::real sx = shear.x;
-    math::real sy = shear.y;
-    math::real sz = shear.z;
+    const math::real sx = shear.x;
+    const math::real sy = shear.y;
+    const math::real sz = shear.z;
 
-    math::Vector s = math::loadVector(sx, sy);
-    math::Vector p0t_z = math::loadScalar(math::getZ(pe0t));
-    math::Vector p1t_z = math::loadScalar(math::getZ(pe1t));
-    math::Vector put_z = math::loadScalar(math::getZ(put));
+    const math::Vector s = math::loadVector(sx, sy);
+    const math::Vector p0t_z = math::loadScalar(math::getZ(pe0t));
+    const math::Vector p1t_z = math::loadScalar(math::getZ(pe1t));
+    const math::Vector put_z = math::loadScalar(math::getZ(put));
 
     pe0t = math::add(pe0t, math::mul(s, p0t_z));
     pe1t = math::add(pe1t, math::mul(s, p1t_z));
     put = math::add(put, math::mul(s, put_z));
 
-    math::real e_half = math::getX(pe0t) * math::getY(pe1t) - math::getY(pe0t) * math::getX(pe1t);
-    math::real e_u = math::getX(put) * math::getY(pe0t) - math::getY(put) * math::getX(pe0t);
+    const  math::real e_half = math::getX(pe0t) * math::getY(pe1t) - math::getY(pe0t) * math::getX(pe1t);
+    const math::real e_u = math::getX(put) * math::getY(pe0t) - math::getY(put) * math::getX(pe0t);
 
     int subdivision;
     math::Vector p0t, p1t, p2t;
@@ -744,16 +739,16 @@ bool manta::Mesh::detectQuadIntersection(int faceIndex, math::real minDepth, mat
     }
 
     // Compute distance
-    math::real p0t_sz = math::getZ(p0t) * sz;
-    math::real p1t_sz = math::getZ(p1t) * sz;
-    math::real p2t_sz = math::getZ(p2t) * sz;
+    const math::real p0t_sz = math::getZ(p0t) * sz;
+    const math::real p1t_sz = math::getZ(p1t) * sz;
+    const math::real p2t_sz = math::getZ(p2t) * sz;
 
-    math::real t_scaled = math::getScalar(math::dot(math::loadVector(e0, e1, e2), math::loadVector(p0t_sz, p1t_sz, p2t_sz)));
+    const  math::real t_scaled = math::getScalar(math::dot(math::loadVector(e0, e1, e2), math::loadVector(p0t_sz, p1t_sz, p2t_sz)));
 
     if (det < 0 && (t_scaled >= 0 || t_scaled < maxDepth * det)) return false;
     else if (det > 0 && (t_scaled <= 0 || t_scaled > maxDepth *det)) return false;
 
-    math::real invDet = 1 / det;
+    const math::real invDet = 1 / det;
     output->depth = t_scaled * invDet;
     output->u = e0 * invDet;
     output->v = e1 * invDet;
@@ -764,14 +759,11 @@ bool manta::Mesh::detectQuadIntersection(int faceIndex, math::real minDepth, mat
 }
 
 bool manta::Mesh::findClosestIntersection(int *faceList, int faceCount, const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth /**/ STATISTICS_PROTOTYPE) const {
-    math::Vector rayDir = ray->getDirection();
-    math::Vector raySource = ray->getSource();
-
-    CoarseCollisionOutput output;
     math::real currentMaxDepth = maxDepth;
     bool found = false;
+    CoarseCollisionOutput output;
     for (int i = 0; i < faceCount; i++) {
-        int face = faceList[i];
+        const int face = faceList[i];
         if (face < m_triangleFaceCount) {
             // Face is a triangle
             AABB &aabb = m_faceBounds[face];
@@ -828,8 +820,8 @@ bool manta::Mesh::findClosestIntersection(int *faceList, int faceCount, const Li
     return found;
 }
 
-#define max(a, b) ((a) > (b) ? (a) : (b))
-#define min(a, b) ((a) < (b) ? (a) : (b))
+#define fast_max(a, b) ((a) > (b) ? (a) : (b))
+#define fast_min(a, b) ((a) < (b) ? (a) : (b))
 
 bool manta::Mesh::checkFaceAABB(int faceIndex, const AABB &bounds) const {
     if (faceIndex >= m_triangleFaceCount) {
@@ -899,7 +891,7 @@ bool manta::Mesh::checkFaceAABB(const math::Vector &v0, const math::Vector &v1, 
 
             math::Vector a = math::cross(u, f);
 
-            if (abs(math::getX(a)) < 1e-6 && abs(math::getY(a) < 1e-6) && abs(math::getZ(a) < 1e-6)) {
+            if (abs(math::getX(a)) < 1e-6 && abs(math::getY(a)) < 1e-6 && abs(math::getZ(a)) < 1e-6) {
                 math::Vector n = math::cross(f, altF);
                 a = math::cross(n, f);
             }
@@ -910,34 +902,33 @@ bool manta::Mesh::checkFaceAABB(const math::Vector &v0, const math::Vector &v1, 
             p1 = math::getScalar(math::dot(v1_rel, a));
             p2 = math::getScalar(math::dot(v2_rel, a));
 
-            math::real maxp = max(max(p0, p1), p2);
-            math::real minp = min(min(p0, p1), p2);
+            math::real maxp = fast_max(fast_max(p0, p1), p2);
+            math::real minp = fast_min(fast_min(p0, p1), p2);
 
             if (minp > r) return false;
             if (maxp < -r) return false;
         }
     }
 
-    math::real maxX = max(max(math::getX(v0_rel), math::getX(v1_rel)), math::getX(v2_rel));
-    math::real minX = min(min(math::getX(v0_rel), math::getX(v1_rel)), math::getX(v2_rel));
+    const math::real maxX = fast_max(fast_max(math::getX(v0_rel), math::getX(v1_rel)), math::getX(v2_rel));
+    const math::real minX = fast_min(fast_min(math::getX(v0_rel), math::getX(v1_rel)), math::getX(v2_rel));
 
-    math::real maxY = max(max(math::getY(v0_rel), math::getY(v1_rel)), math::getY(v2_rel));
-    math::real minY = min(min(math::getY(v0_rel), math::getY(v1_rel)), math::getY(v2_rel));
+    const math::real maxY = fast_max(fast_max(math::getY(v0_rel), math::getY(v1_rel)), math::getY(v2_rel));
+    const math::real minY = fast_min(fast_min(math::getY(v0_rel), math::getY(v1_rel)), math::getY(v2_rel));
 
-    math::real maxZ = max(max(math::getZ(v0_rel), math::getZ(v1_rel)), math::getZ(v2_rel));
-    math::real minZ = min(min(math::getZ(v0_rel), math::getZ(v1_rel)), math::getZ(v2_rel));
+    const math::real maxZ = fast_max(fast_max(math::getZ(v0_rel), math::getZ(v1_rel)), math::getZ(v2_rel));
+    const math::real minZ = fast_min(fast_min(math::getZ(v0_rel), math::getZ(v1_rel)), math::getZ(v2_rel));
 
     if (maxX < -e0 || minX > e0) return false;
     if (maxY < -e1 || minY > e1) return false;
     if (maxZ < -e2 || minZ > e2) return false;
 
-    math::Vector planeNormal = math::cross(f0, f1);
-    math::Vector t = math::dot(planeNormal, v0_rel);
-    math::real planeD = math::getScalar(math::dot(planeNormal, v0));
+    const math::Vector planeNormal = math::cross(f0, f1);
+    const  math::real planeD = math::getScalar(math::dot(planeNormal, v0));
 
     // Check the plane
-    math::real plane_r = e0 * abs(math::getX(planeNormal)) + e1 * abs(math::getY(planeNormal)) + e2 * abs(math::getZ(planeNormal));
-    math::real s = math::getScalar(math::dot(planeNormal, c)) - planeD;
+    const math::real plane_r = e0 * abs(math::getX(planeNormal)) + e1 * abs(math::getY(planeNormal)) + e2 * abs(math::getZ(planeNormal));
+    const math::real s = math::getScalar(math::dot(planeNormal, c)) - planeD;
 
     return abs(s) <= plane_r;
 }

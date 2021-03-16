@@ -108,9 +108,8 @@ void manta::ImageFileNode::registerOutputs() {
 }
 
 void manta::ImageFileNode::getPixel(const SDL_Surface *surface, int x, int y, Pixel *pixelOut) {
-    Uint32 color = 0;
     Uint8 *pixel = (Uint8 *)surface->pixels;
-    pixel += (y * surface->pitch) + (x * sizeof(Uint8) * surface->format->BytesPerPixel);
+    pixel += (y * (size_t)surface->pitch) + (x * sizeof(Uint8) * surface->format->BytesPerPixel);
 
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
     pixelOut->r = pixel[0];

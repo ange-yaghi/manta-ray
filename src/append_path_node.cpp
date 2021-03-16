@@ -3,7 +3,7 @@
 #include "../include/path.h"
 
 manta::AppendPathNode::AppendPathNode() {
-    /* void */
+    m_basePath = nullptr;
 }
 
 manta::AppendPathNode::~AppendPathNode() {

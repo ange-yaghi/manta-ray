@@ -40,8 +40,8 @@ bool manta::RawFile::writeRawFile(const char *fname, const ImagePlane *buffer) c
     file.write((const char *)pixelArray, pixelArraySize);
     file.close();
 
-    delete dataHeader;
-    delete[] pixelArray;
+    freeDataHeader(dataHeader, VERSION);
+    freePixelArray(pixelArray, VERSION);
 
     return true;
 }
@@ -94,11 +94,11 @@ bool manta::RawFile::readRawFile(const char *fname, ImagePlane *buffer) const {
 void *manta::RawFile::generatePixelArray(const ImagePlane *buffer, int version, int *size) const {
     if (version == 0x1) {
         size_t s = sizeof(math::real);
-        int width = buffer->getWidth();
-        int height = buffer->getHeight();
+        const int width = buffer->getWidth();
+        const int height = buffer->getHeight();
         if (s == 4) {
             // Single precision floating point
-            FloatPixel_v1 *v = new FloatPixel_v1[width * height];
+            FloatPixel_v1 *v = new FloatPixel_v1[(size_t)width * height];
 
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
@@ -115,7 +115,7 @@ void *manta::RawFile::generatePixelArray(const ImagePlane *buffer, int version, 
         }
         else if (s == 8) {
             // Double precision floating point
-            DoublePixel_v1 *v = new DoublePixel_v1[width * height];
+            DoublePixel_v1 *v = new DoublePixel_v1[(size_t)width * height];
 
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
@@ -133,6 +133,18 @@ void *manta::RawFile::generatePixelArray(const ImagePlane *buffer, int version, 
         else return nullptr;
     }
     else return nullptr;
+}
+
+void manta::RawFile::freePixelArray(void *pixelArray, int version) const {
+    if (version == 0x1) {
+        const size_t s = sizeof(math::real);
+        if (s == 4) {
+            delete reinterpret_cast<FloatPixel_v1 *>(pixelArray);
+        }
+        else if (s == 8) {
+            delete reinterpret_cast<DoublePixel_v1 *>(pixelArray);
+        }
+    }
 }
 
 void *manta::RawFile::generateEmptyPixelArray(void *dataHeader, int version, int *pixelDataSize) const {
@@ -194,4 +206,10 @@ void *manta::RawFile::generateDataHeader(const ImagePlane *buffer, int version, 
         return (void *)dataHeader;
     }
     else return nullptr;
+}
+
+void manta::RawFile::freeDataHeader(void *dataHeader, int version) const {
+    if (version == 0x1) {
+        delete reinterpret_cast<DataHeader_v1 *>(dataHeader);
+    }
 }

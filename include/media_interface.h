@@ -9,9 +9,9 @@ namespace manta {
 
     class MediaInterface : public ObjectReferenceNode<MediaInterface> {
     public:
-        enum DIRECTION {
-            DIRECTION_IN,
-            DIRECTION_OUT
+        enum class Direction {
+            In,
+            Out
         };
 
     public:
@@ -19,13 +19,13 @@ namespace manta {
         virtual ~MediaInterface();
 
         virtual math::real fresnelTerm(const math::Vector &i, const math::Vector &m, 
-            DIRECTION d) const = 0;
+            Direction d) const = 0;
         virtual math::real fresnelTerm(math::real cosThetaI, math::real *pdf, 
-            DIRECTION d) const = 0;
+            Direction d) const = 0;
 
-        virtual math::real ior(DIRECTION d) const = 0;
-        virtual math::real no(DIRECTION d) const = 0;
-        virtual math::real ni(DIRECTION d) const = 0;
+        virtual math::real ior(Direction d) const = 0;
+        virtual math::real no(Direction d) const = 0;
+        virtual math::real ni(Direction d) const = 0;
 
     protected:
         virtual void _evaluate();

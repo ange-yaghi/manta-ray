@@ -17,12 +17,12 @@ namespace manta {
         math::real getIorTransmitted() const { return m_iorTransmitted; }
 
         virtual math::real fresnelTerm(const math::Vector &i, const math::Vector &m, 
-            DIRECTION d) const;
-        virtual math::real fresnelTerm(math::real cosThetaI, math::real *pdf, DIRECTION d) const;
+            Direction d) const;
+        virtual math::real fresnelTerm(math::real cosThetaI, math::real *pdf, Direction d) const;
 
-        virtual math::real ior(DIRECTION d) const;
-        virtual math::real no(DIRECTION d) const;
-        virtual math::real ni(DIRECTION d) const;
+        virtual math::real ior(Direction d) const;
+        virtual math::real no(Direction d) const;
+        virtual math::real ni(Direction d) const;
 
     protected:
         math::real m_iorIncident;

@@ -12,18 +12,6 @@ namespace manta {
     class VectorMap2D;
     class PreviewNode;
 
-    struct ImagePreview {
-        std::string name = "";
-        VectorMap2D *map = nullptr;
-        std::atomic_bool finalized = false;
-    };
-
-    struct ImagePreviewContainer {
-        std::string name;
-        VectorMap2D *map;
-        bool finalized;
-    };
-
     class Session {
     public:
         Session();

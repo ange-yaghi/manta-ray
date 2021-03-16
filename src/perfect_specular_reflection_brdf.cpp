@@ -12,7 +12,7 @@ manta::math::Vector manta::PerfectSpecularReflectionBRDF::sampleF(
     const IntersectionPoint *surfaceInteraction, const math::Vector2 &u, const math::Vector &i, math::Vector *o, 
     math::real *pdf, StackAllocator *stackAllocator) 
 {
-    constexpr math::Vector reflect = { (math::real)-1.0, (math::real)-1.0, (math::real)1.0, (math::real)1.0 };
+    constexpr math::Vector reflect = { { (math::real)-1.0, (math::real)-1.0, (math::real)1.0, (math::real)1.0 } };
 
     *o = math::mul(i, reflect);
     *pdf = (math::real)1.0;

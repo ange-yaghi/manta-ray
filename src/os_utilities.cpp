@@ -30,7 +30,7 @@ void manta::sleep(int milliseconds) {
 manta::Path manta::getModuleDirectory() {
     // Windows only implementation for now
     char path[256];
-    DWORD result = GetModuleFileName(NULL, path, 256);
+    GetModuleFileName(NULL, path, 256);
 
     Path fullPath = Path(path);
     Path parentPath;

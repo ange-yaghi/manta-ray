@@ -441,23 +441,23 @@ bool manta::Octree::checkPlane(const OctreeBV *leaf, const math::Vector &n, math
 bool manta::Octree::checkTriangle(const OctreeBV *leaf, const math::Vector &v0, const math::Vector &v1, const math::Vector &v2) const {
     math::real p0, p1, p2, r;
 
-    math::Vector c = math::mul(math::add(leaf->maxPoint, leaf->minPoint), math::constants::Half);
-    math::Vector extents = math::mul(math::sub(leaf->maxPoint, leaf->minPoint), math::constants::Half);
-    math::real e0 = math::getX(extents);
-    math::real e1 = math::getY(extents);
-    math::real e2 = math::getZ(extents);
+    const math::Vector c = math::mul(math::add(leaf->maxPoint, leaf->minPoint), math::constants::Half);
+    const math::Vector extents = math::mul(math::sub(leaf->maxPoint, leaf->minPoint), math::constants::Half);
+    const math::real e0 = math::getX(extents);
+    const math::real e1 = math::getY(extents);
+    const math::real e2 = math::getZ(extents);
 
-    math::Vector v0_rel = math::sub(v0, c);
-    math::Vector v1_rel = math::sub(v1, c);
-    math::Vector v2_rel = math::sub(v2, c);
+    const math::Vector v0_rel = math::sub(v0, c);
+    const math::Vector v1_rel = math::sub(v1, c);
+    const  math::Vector v2_rel = math::sub(v2, c);
 
-    math::Vector f0 = math::sub(v1_rel, v0_rel);
-    math::Vector f1 = math::sub(v2_rel, v1_rel);
-    math::Vector f2 = math::sub(v0_rel, v2_rel);
+    const math::Vector f0 = math::sub(v1_rel, v0_rel);
+    const math::Vector f1 = math::sub(v2_rel, v1_rel);
+    const math::Vector f2 = math::sub(v0_rel, v2_rel);
 
-    math::Vector u0 = math::constants::XAxis;
-    math::Vector u1 = math::constants::YAxis;
-    math::Vector u2 = math::constants::ZAxis;
+    const math::Vector u0 = math::constants::XAxis;
+    const math::Vector u1 = math::constants::YAxis;
+    const math::Vector u2 = math::constants::ZAxis;
 
     // Naive implementation for now
     for (int i = 0; i < 3; i++) {
@@ -481,8 +481,7 @@ bool manta::Octree::checkTriangle(const OctreeBV *leaf, const math::Vector &v0, 
             }
 
             math::Vector a = math::cross(u, f);
-
-            if (abs(math::getX(a)) < 1e-6 && abs(math::getY(a) < 1e-6) && abs(math::getZ(a) < 1e-6)) {
+            if (abs(math::getX(a)) < 1e-6 && abs(math::getY(a)) < 1e-6 && abs(math::getZ(a)) < 1e-6) {
                 math::Vector n = math::cross(f, altF);
                 a = math::cross(n, f);
             }
@@ -493,30 +492,29 @@ bool manta::Octree::checkTriangle(const OctreeBV *leaf, const math::Vector &v0, 
             p1 = math::getScalar(math::dot(v1_rel, a));
             p2 = math::getScalar(math::dot(v2_rel, a));
 
-            math::real maxp = max(max(p0, p1), p2);
-            math::real minp = min(min(p0, p1), p2);
+            const math::real maxp = max(max(p0, p1), p2);
+            const math::real minp = min(min(p0, p1), p2);
 
             if (minp > r) return false;
             if (maxp < -r) return false;
         }
     }
 
-    math::real maxX = max(max(math::getX(v0_rel), math::getX(v1_rel)), math::getX(v2_rel));
-    math::real minX = min(min(math::getX(v0_rel), math::getX(v1_rel)), math::getX(v2_rel));
+    const math::real maxX = max(max(math::getX(v0_rel), math::getX(v1_rel)), math::getX(v2_rel));
+    const math::real minX = min(min(math::getX(v0_rel), math::getX(v1_rel)), math::getX(v2_rel));
 
-    math::real maxY = max(max(math::getY(v0_rel), math::getY(v1_rel)), math::getY(v2_rel));
-    math::real minY = min(min(math::getY(v0_rel), math::getY(v1_rel)), math::getY(v2_rel));
+    const math::real maxY = max(max(math::getY(v0_rel), math::getY(v1_rel)), math::getY(v2_rel));
+    const math::real minY = min(min(math::getY(v0_rel), math::getY(v1_rel)), math::getY(v2_rel));
 
-    math::real maxZ = max(max(math::getZ(v0_rel), math::getZ(v1_rel)), math::getZ(v2_rel));
-    math::real minZ = min(min(math::getZ(v0_rel), math::getZ(v1_rel)), math::getZ(v2_rel));
+    const math::real maxZ = max(max(math::getZ(v0_rel), math::getZ(v1_rel)), math::getZ(v2_rel));
+    const math::real minZ = min(min(math::getZ(v0_rel), math::getZ(v1_rel)), math::getZ(v2_rel));
 
     if (maxX < -e0 || minX > e0) return false;
     if (maxY < -e1 || minY > e1) return false;
     if (maxZ < -e2 || minZ > e2) return false;
 
-    math::Vector planeNormal = math::cross(f0, f1);
-    math::Vector t = math::dot(planeNormal, v0_rel);
-    math::real planeD = math::getScalar(math::dot(planeNormal, v0));
+    const math::Vector planeNormal = math::cross(f0, f1);
+    const math::real planeD = math::getScalar(math::dot(planeNormal, v0));
     return checkPlane(leaf, planeNormal, planeD);
 }
 
@@ -524,25 +522,27 @@ bool manta::Octree::AABBIntersect(const OctreeBV *leaf, const LightRay *ray, mat
     math::real tmin = (math::real)0.0;
     math::real tmax = math::constants::REAL_MAX;
 
-    math::Vector rayDir = ray->getDirection();
-    math::Vector rayOrigin = ray->getSource();
+    const math::Vector rayDir = ray->getDirection();
+    const math::Vector rayOrigin = ray->getSource();
 
-    math::Vector maxPoint = leaf->maxPoint;
-    math::Vector minPoint = leaf->minPoint;
+    const math::Vector maxPoint = leaf->maxPoint;
+    const math::Vector minPoint = leaf->minPoint;
 
-    math::Vector t1_v = math::mul(math::sub(minPoint, rayOrigin), ood);
+    const math::Vector t1_v = math::mul(math::sub(minPoint, rayOrigin), ood);
     math::Vector t2_v = math::mul(math::sub(maxPoint, rayOrigin), ood);
 
     math::Vector t1_v_temp = math::componentMin(t1_v, t2_v);
     t2_v = math::componentMax(t1_v, t2_v);
 
-    math::real rayDirX = math::getX(rayDir);
+    const math::real rayDirX = math::getX(rayDir);
     if (rayDirX < 1E-6 && rayDirX > -1E-6) {
-        if (math::getX(rayOrigin) < math::getX(minPoint) || math::getX(rayOrigin) > math::getX(maxPoint)) return false;
+        if (math::getX(rayOrigin) < math::getX(minPoint) || math::getX(rayOrigin) > math::getX(maxPoint)) {
+            return false;
+        }
     }
     else {
-        math::real t1 = math::getX(t1_v_temp);
-        math::real t2 = math::getX(t2_v);
+        const math::real t1 = math::getX(t1_v_temp);
+        const math::real t2 = math::getX(t2_v);
 
         tmin = (tmin > t1) ? tmin : t1;
         tmax = t2;
@@ -552,11 +552,13 @@ bool manta::Octree::AABBIntersect(const OctreeBV *leaf, const LightRay *ray, mat
 
     math::real rayDirY = math::getY(rayDir);
     if (rayDirY < 1E-6 && rayDirY > -1E-6) {
-        if (math::getY(rayOrigin) < math::getY(minPoint) || math::getY(rayOrigin) > math::getY(maxPoint)) return false;
+        if (math::getY(rayOrigin) < math::getY(minPoint) || math::getY(rayOrigin) > math::getY(maxPoint)) {
+            return false;
+        }
     }
     else {
-        math::real t1 = math::getY(t1_v_temp);
-        math::real t2 = math::getY(t2_v);
+        const math::real t1 = math::getY(t1_v_temp);
+        const math::real t2 = math::getY(t2_v);
 
         tmin = (tmin > t1) ? tmin : t1;
         tmax = (tmax > t2) ? t2 : tmax;
@@ -566,11 +568,13 @@ bool manta::Octree::AABBIntersect(const OctreeBV *leaf, const LightRay *ray, mat
 
     math::real rayDirZ = math::getZ(rayDir);
     if (rayDirZ < 1E-6 && rayDirZ > -1E-6) {
-        if (math::getZ(rayOrigin) < math::getZ(minPoint) || math::getZ(rayOrigin) > math::getZ(maxPoint)) return false;
+        if (math::getZ(rayOrigin) < math::getZ(minPoint) || math::getZ(rayOrigin) > math::getZ(maxPoint)) {
+            return false;
+        }
     }
     else {
-        math::real t1 = math::getZ(t1_v_temp);
-        math::real t2 = math::getZ(t2_v);
+        const math::real t1 = math::getZ(t1_v_temp);
+        const math::real t2 = math::getZ(t2_v);
 
         tmin = (tmin > t1) ? tmin : t1;
         tmax = (tmax > t2) ? t2 : tmax;
@@ -587,9 +591,11 @@ bool manta::Octree::AABBIntersect(const OctreeBV *leaf, const math::Vector &p, m
     v = math::componentMax(v, leaf->minPoint);
     v = math::componentMin(v, leaf->maxPoint);
 
-    math::real radius2 = radius * radius;
+    const math::real radius2 = radius * radius;
     if (math::getScalar(math::magnitudeSquared3(math::sub(p, v))) > radius2) {
         return false;
     }
-    return true;
+    else {
+        return true;
+    }
 }
