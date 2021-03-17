@@ -12,7 +12,7 @@
 mantaray_ui::Compiler::Compiler() {
     m_compiler = new piranha::Compiler(&m_rules);
 
-    m_optimizationEnabled = false;
+    m_optimizationEnabled = true;
     m_state = State::Ready;
 
     m_executionThread = nullptr;

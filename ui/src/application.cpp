@@ -314,7 +314,7 @@ void mantaray_ui::Application::process() {
     }
 
     if (m_updateTimer < 0.0f) {
-        m_updateTimer = 0.1f;
+        m_updateTimer = 2.0f;
     }
 }
 

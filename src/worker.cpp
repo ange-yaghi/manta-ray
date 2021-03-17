@@ -105,6 +105,7 @@ void manta::Worker::doJob(const Job *job) {
     constexpr int SAMPLE_BUFFER_CAPACITY = 0x1 << 7;
 
     int sampleCount = 0;
+    int pixelCounter = 0;
     ImageSample *samples = (ImageSample *)m_stack->allocate(sizeof(ImageSample) * SAMPLE_BUFFER_CAPACITY, 16);
 
     for (int x = job->startX; x <= job->endX; x++) {
@@ -160,7 +161,12 @@ void manta::Worker::doJob(const Job *job) {
 
                 } while (emitter->getSampler()->startNextSample());
             }
-            m_rayTracer->incrementRayCompletion(job);
+            ++pixelCounter;
+
+            if (pixelCounter >= 1024) {
+                m_rayTracer->incrementRayCompletion(job, pixelCounter);
+                pixelCounter = 0;
+            }
 
             job->group->freeEmitter(emitter, m_stack);
         }
@@ -170,6 +176,8 @@ void manta::Worker::doJob(const Job *job) {
         job->target->processSamples(samples, sampleCount, m_stack);
         sampleCount = 0;
     }
+
+    m_rayTracer->incrementRayCompletion(job, pixelCounter);
 
     m_stack->free((void *)samples);
 }

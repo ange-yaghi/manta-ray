@@ -46,6 +46,7 @@ manta::RayTracer::RayTracer() {
     m_pathRecordingOutputDirectory = "";
     m_backgroundColor = math::constants::Zero;
     m_currentRay = 0;
+    m_lastRayPrint = 0;
 
     m_threadCount = 0;
 }
@@ -207,10 +208,12 @@ void manta::RayTracer::incrementRayCompletion(const Job *job, int increment) {
     m_currentRay += increment;
 
     // Print in increments of 1000 or the last 1000 one by one
-    if (m_currentRay % 1000 == 0 || m_currentRay >= (emitterCount - 1000)) {
+    if ((m_currentRay - m_lastRayPrint) > 1000 || m_currentRay >= (emitterCount - 1000)) {
         std::stringstream ss;
         ss << "Ray " << m_currentRay << "/" << emitterCount << "                      \r";
         Session::get().getConsole()->out(ss.str());
+
+        m_lastRayPrint = m_currentRay;
     }
 
     m_outputLock.unlock();

@@ -134,7 +134,8 @@ namespace manta {
 
     protected:
         // Statistics
-        std::atomic<int> m_currentRay;
+        int m_currentRay;
+        int m_lastRayPrint;
         std::mutex m_outputLock;
 
         StackAllocator m_stack;
