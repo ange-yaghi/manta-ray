@@ -43,16 +43,16 @@ namespace manta {
     template <UNARY_OPERATION op>
     using UnaryNode = SingleOutputNode<UnaryNodeOutput<op>>;
 
-    template <UV_OPERATION op>
+    template <UvOperation op>
     using UvNode = SingleOutputNode<UvOperationOutput<op>>;
 
-    typedef UnaryNode<NEGATE>           VectorNegateNode;
-    typedef UnaryNode<NORMALIZE>        VectorNormalizeNode;
-    typedef UnaryNode<MAGNITUDE>        VectorMagnitudeNode;
-    typedef UnaryNode<MAX_COMPONENT>    VectorMaxComponentNode;
-    typedef UnaryNode<ABSOLUTE>         VectorAbsoluteNode;
+    typedef UnaryNode<NEGATE> VectorNegateNode;
+    typedef UnaryNode<NORMALIZE> VectorNormalizeNode;
+    typedef UnaryNode<MAGNITUDE> VectorMagnitudeNode;
+    typedef UnaryNode<MAX_COMPONENT> VectorMaxComponentNode;
+    typedef UnaryNode<ABSOLUTE> VectorAbsoluteNode;
 
-    typedef UvNode<WRAP>                UvWrapNode;
+    typedef UvNode<UvOperation::Wrap> UvWrapNode;
 
 } /* namespace manta */
 

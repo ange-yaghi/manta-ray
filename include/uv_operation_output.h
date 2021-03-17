@@ -7,11 +7,11 @@
 
 namespace manta {
 
-    enum UV_OPERATION {
-        WRAP
+    enum class UvOperation {
+        Wrap
     };
 
-    template <UV_OPERATION op>
+    template <UvOperation op>
     class UvOperationOutput : public VectorNodeOutput {
     public:
 
@@ -24,22 +24,23 @@ namespace manta {
             /* void */
         }
 
-        static inline bool doOp(const IntersectionPoint *surfaceInteraction, IntersectionPoint *output) {
+        static inline math::Vector doOp(const math::Vector &uv) {
             switch (op) {
-            case WRAP:
-                return wrap(surfaceInteraction, output);
+            case UvOperation::Wrap:
+                return wrap(uv);
             default:
-                return false;
+                return math::constants::Zero;
             }
         }
 
-        static inline bool wrap(const IntersectionPoint *surfaceInteraction, IntersectionPoint *output) {
-            math::real u = math::getX(surfaceInteraction->m_textureCoodinates);
-            math::real v = math::getY(surfaceInteraction->m_textureCoodinates);
+        static inline math::Vector wrap(const math::Vector &uv) {
+            const math::real u = math::getX(uv);
+            const math::real v = math::getY(uv);
 
             if (u <= (math::real)1.0 && u >= (math::real)0.0 &&
-                v <= (math::real)1.0 && v >= (math::real)0.0) {
-                return false;
+                v <= (math::real)1.0 && v >= (math::real)0.0) 
+            {
+                return uv;
             }
 
             math::real fu = fmodf(u, (math::real)1.0);
@@ -48,24 +49,19 @@ namespace manta {
             if (fu < (math::real)0.0) fu += (math::real)1.0;
             if (fv < (math::real)0.0) fv += (math::real)1.0;
 
-            math::Vector newCoordinates = math::loadVector(fu, fv);
-
-            *output = *surfaceInteraction;
-            output->m_textureCoodinates = newCoordinates;
-
-            return true;
+            return math::loadVector(fu, fv);
         }
 
         virtual void sample(const IntersectionPoint *surfaceInteraction, void *target) const {
-            IntersectionPoint newIntersectionPoint;
-            bool changed = doOp(surfaceInteraction, &newIntersectionPoint);
-
-            if (!changed) static_cast<VectorNodeOutput *>(m_input)->sample(surfaceInteraction, target);
-            else static_cast<VectorNodeOutput *>(m_input)->sample(&newIntersectionPoint, target);
+            math::Vector input;
+            static_cast<VectorNodeOutput *>(m_input)->sample(surfaceInteraction, &input);
+            *reinterpret_cast<math::Vector *>(target) = doOp(input);
         }
 
         virtual void discreteSample2d(int x, int y, void *target) const {
-            static_cast<VectorNodeOutput *>(m_input)->discreteSample2d(x, y, target);
+            math::Vector input;
+            static_cast<VectorNodeOutput *>(m_input)->discreteSample2d(x, y, &input);
+            *reinterpret_cast<math::Vector *>(target) = doOp(input);
         }
 
         virtual void getDataReference(const void **target) const {
@@ -97,4 +93,4 @@ namespace manta {
 
 } /* namespace manta */
 
-#endif /* MANTARAY_UNARY_NODE_OUTPUT_H */
+#endif /* MANTARAY_UV_OPERATION_OUTPUT_H */
