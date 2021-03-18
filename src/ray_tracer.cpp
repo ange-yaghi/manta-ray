@@ -107,6 +107,8 @@ void manta::RayTracer::traceAll(const Scene *scene, CameraRayEmitterGroup *group
     auto endTime = std::chrono::system_clock::now();
     std::chrono::duration<double> diff = endTime - startTime;
 
+    std::stringstream ss_out;
+
 #if ENABLE_DETAILED_STATISTICS
     RuntimeStatistics combinedStatistics;
     combinedStatistics.reset();
@@ -117,25 +119,24 @@ void manta::RayTracer::traceAll(const Scene *scene, CameraRayEmitterGroup *group
     }
 
     // Display statistics
-    std::cout <<        "================================================" << std::endl;
-    std::cout <<        "Run-time Statistics" << std::endl;
-    std::cout <<        "------------------------------------------------" << std::endl;
-    int counterCount = RuntimeStatistics::COUNTER_COUNT;
+    ss_out <<        "================================================" << std::endl;
+    ss_out <<        "Run-time Statistics" << std::endl;
+    ss_out <<        "------------------------------------------------" << std::endl;
+    const int counterCount = (int)RuntimeStatistics::Counter::Count;
     for (int i = 0; i < counterCount; i++) {
         unsigned __int64 counter = combinedStatistics.counters[i];
-        const char *counterName = combinedStatistics.getCounterName((RuntimeStatistics::COUNTER)i);
+        const char *counterName = combinedStatistics.getCounterName((RuntimeStatistics::Counter)i);
         std::stringstream ss;
         ss << counterName << ":";
-        std::cout << ss.str();
+        ss_out << ss.str();
         for (int j = 0; j < (37 - ss.str().length()); j++) {
-            std::cout << " ";
+            ss_out << " ";
         }
 
-        std::cout << counter << std::endl;
+        ss_out << counter << std::endl;
     }
 #endif /* ENABLE_DETAILED_STATISTICS */
 
-    std::stringstream ss_out;
     ss_out <<        "================================================" << std::endl;
     ss_out <<        "Total processing time:               " << diff.count() << " s" << std::endl;
     ss_out <<        "------------------------------------------------" << std::endl;
@@ -313,7 +314,14 @@ void manta::RayTracer::destroyWorkers() {
     }
 }
 
-void manta::RayTracer::depthCull(const Scene *scene, const LightRay *ray, SceneObject **closestObject, IntersectionPoint *point, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const {
+void manta::RayTracer::depthCull(
+    const Scene *scene,
+    const LightRay *ray,
+    SceneObject **closestObject,
+    IntersectionPoint *point,
+    StackAllocator *s
+    /**/ STATISTICS_PROTOTYPE) const
+{
     const int objectCount = scene->getSceneObjectCount();
 
     CoarseIntersection closestIntersection;

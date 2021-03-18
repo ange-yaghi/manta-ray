@@ -310,12 +310,19 @@ void manta::Mesh::computeBounds() {
     }
 }
 
-bool manta::Mesh::findClosestIntersection(const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const {
+bool manta::Mesh::findClosestIntersection(
+    const LightRay *ray,
+    CoarseIntersection *intersection,
+    math::real minDepth,
+    math::real maxDepth,
+    StackAllocator *s
+    /**/ STATISTICS_PROTOTYPE) const
+{
     CoarseCollisionOutput output;
     math::real currentMaxDepth = maxDepth;
     bool found = false;
     for (int i = 0; i < m_triangleFaceCount; i++) {
-        INCREMENT_COUNTER(RuntimeStatistics::TRIANGLE_TESTS);
+        INCREMENT_COUNTER(RuntimeStatistics::Counter::TriangleTests);
         if (detectTriangleIntersection(i, minDepth, currentMaxDepth, ray, &output)) {
             intersection->depth = output.depth;
             intersection->faceHint = i; // Face index
@@ -332,7 +339,7 @@ bool manta::Mesh::findClosestIntersection(const LightRay *ray, CoarseIntersectio
     }
 
     for (int i = 0; i < m_quadFaceCount; i++) {
-        INCREMENT_COUNTER(RuntimeStatistics::QUAD_TESTS);
+        INCREMENT_COUNTER(RuntimeStatistics::Counter::QuadTests);
         if (detectQuadIntersection(i, minDepth, currentMaxDepth, ray, &output)) {
             intersection->depth = output.depth;
             intersection->faceHint = i; // Face index
@@ -768,14 +775,14 @@ bool manta::Mesh::findClosestIntersection(int *faceList, int faceCount, const Li
             // Face is a triangle
             AABB &aabb = m_faceBounds[face];
 
-            INCREMENT_COUNTER(RuntimeStatistics::TOTAL_BV_TESTS);
+            INCREMENT_COUNTER(RuntimeStatistics::Counter::TotalBvTests);
             math::real tmin, tmax;
             if (aabb.rayIntersect(*ray, &tmin, &tmax)) {
-                INCREMENT_COUNTER(RuntimeStatistics::TOTAL_BV_HITS);
+                INCREMENT_COUNTER(RuntimeStatistics::Counter::TotalBvHits);
 
                 if (tmin > currentMaxDepth || tmax < minDepth) continue;
 
-                INCREMENT_COUNTER(RuntimeStatistics::TRIANGLE_TESTS);
+                INCREMENT_COUNTER(RuntimeStatistics::Counter::TriangleTests);
                 if (detectTriangleIntersection(face, minDepth, currentMaxDepth, ray, &output)) {
                     intersection->depth = output.depth;
                     intersection->faceHint = faceList[i]; // Face index
@@ -790,7 +797,7 @@ bool manta::Mesh::findClosestIntersection(int *faceList, int faceCount, const Li
                     found = true;
                 }
                 else {
-                    INCREMENT_COUNTER(RuntimeStatistics::UNNECESSARY_PRIMITIVE_TESTS);
+                    INCREMENT_COUNTER(RuntimeStatistics::Counter::UnecessaryPrimitiveTests);
                 }
             }
         }
@@ -800,7 +807,7 @@ bool manta::Mesh::findClosestIntersection(int *faceList, int faceCount, const Li
         int face = faceList[i];
         if (face >= m_triangleFaceCount) {
             // Face is a quad
-            INCREMENT_COUNTER(RuntimeStatistics::QUAD_TESTS);
+            INCREMENT_COUNTER(RuntimeStatistics::Counter::QuadTests);
             if (detectQuadIntersection(face - m_triangleFaceCount, minDepth, currentMaxDepth, ray, &output)) {
                 intersection->depth = output.depth;
                 intersection->faceHint = faceList[i]; // Face index

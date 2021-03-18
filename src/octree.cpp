@@ -39,7 +39,14 @@ void manta::Octree::destroy() {
     StandardAllocator::Global()->free(m_faceLists, m_faceListsCount);
 }
 
-bool manta::Octree::findClosestIntersection(const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const {
+bool manta::Octree::findClosestIntersection(
+    const LightRay *ray,
+    CoarseIntersection *intersection,
+    math::real minDepth,
+    math::real maxDepth,
+    StackAllocator *s
+    /**/ STATISTICS_PROTOTYPE) const
+{
     math::Vector ood = math::div(math::constants::One, ray->getDirection());
     return findClosestIntersection(&m_tree, ray, ood, intersection, minDepth, maxDepth, s /**/ STATISTICS_PARAM_INPUT, true);
 }
@@ -181,14 +188,15 @@ bool manta::Octree::findClosestIntersection(
     CoarseIntersection *intersection, 
     math::real minDepth, 
     math::real maxDepth, 
-    StackAllocator *s /**/ STATISTICS_PROTOTYPE, bool skip) const {
+    StackAllocator *s /**/ STATISTICS_PROTOTYPE, bool skip) const
+{
     math::real currentMaxDepth = maxDepth;
     math::real rayDepth = math::constants::REAL_MAX;
     bool found = false;
 
-    INCREMENT_COUNTER(RuntimeStatistics::TOTAL_BV_TESTS);
+    INCREMENT_COUNTER(RuntimeStatistics::Counter::TotalBvTests);
     if (skip || AABBIntersect(leaf, ray, &rayDepth, ood)) {
-        INCREMENT_COUNTER(RuntimeStatistics::TOTAL_BV_HITS);
+        INCREMENT_COUNTER(RuntimeStatistics::Counter::TotalBvHits);
         if (!skip && rayDepth > currentMaxDepth) return false;
 
         if (leaf->faceCount > 0) {
@@ -199,7 +207,7 @@ bool manta::Octree::findClosestIntersection(
             }
         }
 
-        int childCount = leaf->childCount;
+        const int childCount = leaf->childCount;
         OctreeBV *childList = m_childLists[leaf->childList];
         for (int i = 0; i < childCount; i++) {
             bool foundInChild = findClosestIntersection(&childList[i], ray, ood, intersection, minDepth, currentMaxDepth, s /**/ STATISTICS_PARAM_INPUT);

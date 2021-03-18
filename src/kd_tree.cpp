@@ -166,11 +166,11 @@ bool manta::KDTree::findClosestIntersection(
                 faceList = &m_faceLists[bv.faceListOffset];
 
 #if KD_TREE_WITH_BOUNDING_BOXES
-                INCREMENT_COUNTER(RuntimeStatistics::TOTAL_BV_TESTS);
+                INCREMENT_COUNTER(RuntimeStatistics::Counter::TotalBvTests);
                 math::real t0, t1;
                 if (bv.bounds.rayIntersect(*ray, &t0, &t1)) {
 #endif
-                    INCREMENT_COUNTER(RuntimeStatistics::TOTAL_BV_HITS);
+                    INCREMENT_COUNTER(RuntimeStatistics::Counter::TotalBvHits);
                     if (m_mesh->findClosestIntersection(faceList, primitiveCount, ray, intersection, minDepth, closestHit /**/ STATISTICS_PARAM_INPUT)) {
                         hit = true;
                         closestHit = intersection->depth;
