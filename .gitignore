@@ -366,3 +366,6 @@ My Advisor Results*/
 
 # Temporary Blender files
 *.blend1
+
+# VTune
+**/VTune Profiler Results/*

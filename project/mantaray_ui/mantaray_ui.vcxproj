@@ -120,7 +120,7 @@
     <OutDir>$(ProjectDir)\..\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
     <LibraryPath>$(ProjectDir)/../../dependencies/delta/lib/$(PlatformTarget)/$(Configuration);$(ProjectDir)/../../dependencies/libraries/SDL/lib/$(PlatformTarget);$(ProjectDir)/../../dependencies\libraries\D3DX\lib\$(PlatformTarget);$(ProjectDir)/../../dependencies\libraries\DirectSound\lib\$(PlatformTarget);$(ProjectDir)/../../dependencies\libraries\DXGI\lib\$(PlatformTarget);$(ProjectDir)/../../dependencies\libraries\boost-filesystem\lib\$(PlatformTarget)\$(Configuration);$(SolutionDir)\..\dependencies\libraries\piranha\lib\$(PlatformTarget)\$(Configuration);$(SolutionDir)\$(Platform)\$(Configuration)\;$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\$(PlatformTarget);$(LibraryPath)</LibraryPath>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
     <EnableMicrosoftCodeAnalysis>true</EnableMicrosoftCodeAnalysis>
     <EnableClangTidyCodeAnalysis>false</EnableClangTidyCodeAnalysis>
   </PropertyGroup>
@@ -142,7 +142,7 @@
     <OutDir>$(ProjectDir)\..\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>$(PlatformTarget)\$(Configuration)\</IntDir>
     <LibraryPath>$(ProjectDir)/../../dependencies/delta/lib/$(PlatformTarget)/$(Configuration);$(ProjectDir)/../../dependencies/libraries/SDL/lib/$(PlatformTarget);$(ProjectDir)/../../dependencies\libraries\D3DX\lib\$(PlatformTarget);$(ProjectDir)/../../dependencies\libraries\DirectSound\lib\$(PlatformTarget);$(ProjectDir)/../../dependencies\libraries\DXGI\lib\$(PlatformTarget);$(ProjectDir)/../../dependencies\libraries\boost-filesystem\lib\$(PlatformTarget)\$(Configuration);$(SolutionDir)\..\dependencies\libraries\piranha\lib\$(PlatformTarget)\$(Configuration);$(SolutionDir)\$(Platform)\$(Configuration)\;$(SolutionDir)\..\dependencies\libraries\libjpeg-turbo\lib\$(PlatformTarget);$(LibraryPath)</LibraryPath>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
     <EnableMicrosoftCodeAnalysis>true</EnableMicrosoftCodeAnalysis>
     <EnableClangTidyCodeAnalysis>false</EnableClangTidyCodeAnalysis>
   </PropertyGroup>
