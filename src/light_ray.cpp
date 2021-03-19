@@ -3,13 +3,15 @@
 manta::LightRay::LightRay() {
     m_intensity = math::constants::Zero;
     m_cameraWeight = (math::real)1.0;
-    m_kx = m_ky = m_kz -1;
+    m_kx = m_ky = m_kz = -1;
     m_direction = math::constants::Zero;
     m_inverseDirection = math::constants::Zero;
     m_meta = 0;
     m_pdf = (math::real)0;
     m_permutedDirection = math::constants::Zero;
     m_source = math::constants::Zero;
+
+    resetCache();
 }
 
 manta::LightRay::~LightRay() {

@@ -15,8 +15,8 @@ namespace manta {
         LensElement();
         virtual ~LensElement();
 
-        virtual bool transformLightRay(const LightRay *ray, LightRay *transformed) const = 0;
-        virtual bool transformLightRayReverse(const LightRay *ray, LightRay *transformed) const = 0;
+        virtual bool transformLightRay(LightRay *ray, LightRay *transformed) const = 0;
+        virtual bool transformLightRayReverse(LightRay *ray, LightRay *transformed) const = 0;
         virtual math::real calculateFocalLength() const = 0;
 
         void setDepth(math::real depth) { m_depth = depth; }

@@ -15,7 +15,7 @@ namespace manta {
         SphericalSurface();
         ~SphericalSurface();
 
-        virtual bool transformLightRay(const LightRay *ray, bool convex, 
+        virtual bool transformLightRay(LightRay *ray, bool convex, 
             bool incoming, LightRay *transformed) const;
 
         SpherePrimitive *getSphere() { return &m_sphere; }

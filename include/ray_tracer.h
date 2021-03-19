@@ -120,7 +120,7 @@ namespace manta {
 
     protected:
         // Ray tracing features
-        void depthCull(const Scene *scene, const LightRay *ray, SceneObject **closestObject, 
+        void depthCull(const Scene *scene, LightRay *ray, SceneObject **closestObject, 
             IntersectionPoint *point, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const;
         void refineContact(const LightRay *ray, math::real depth, IntersectionPoint *point, 
             SceneObject **closestObject, StackAllocator *s) const;

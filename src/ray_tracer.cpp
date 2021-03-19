@@ -316,7 +316,7 @@ void manta::RayTracer::destroyWorkers() {
 
 void manta::RayTracer::depthCull(
     const Scene *scene,
-    const LightRay *ray,
+    LightRay *ray,
     SceneObject **closestObject,
     IntersectionPoint *point,
     StackAllocator *s
@@ -390,6 +390,8 @@ manta::math::Vector manta::RayTracer::traceRay(
     math::Vector L = math::constants::Zero;
 
     for (int bounces = 0; bounces < MAX_BOUNCES; bounces++) {
+        currentRay->resetCache();
+
         SceneObject *sceneObject = nullptr;
         Material *material = nullptr;
         IntersectionPoint point;

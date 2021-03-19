@@ -311,7 +311,7 @@ void manta::Mesh::computeBounds() {
 }
 
 bool manta::Mesh::findClosestIntersection(
-    const LightRay *ray,
+    LightRay *ray,
     CoarseIntersection *intersection,
     math::real minDepth,
     math::real maxDepth,
@@ -469,7 +469,7 @@ void manta::Mesh::fineIntersection(const math::Vector &r, IntersectionPoint *p, 
     p->m_material = material;
 }
 
-bool manta::Mesh::fastIntersection(const LightRay *ray) const {
+bool manta::Mesh::fastIntersection(LightRay *ray) const {
     if (m_fastIntersectEnabled) {
         const math::Vector d_pos = math::sub(ray->getSource(), m_fastIntersectPosition);
         const math::Vector d_dot_dir = math::dot(d_pos, ray->getDirection());
@@ -765,13 +765,16 @@ bool manta::Mesh::detectQuadIntersection(
     return true;
 }
 
-bool manta::Mesh::findClosestIntersection(int *faceList, int faceCount, const LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth /**/ STATISTICS_PROTOTYPE) const {
+bool manta::Mesh::findClosestIntersection(int *faceList, int faceCount, LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth /**/ STATISTICS_PROTOTYPE) const {
     math::real currentMaxDepth = maxDepth;
     bool found = false;
     CoarseCollisionOutput output;
     for (int i = 0; i < faceCount; i++) {
         const int face = faceList[i];
-        if (face < m_triangleFaceCount) {
+        if (ray->getTouched(face)) continue;
+        else ray->setTouched(face);
+
+        //if (face < m_triangleFaceCount) {
             // Face is a triangle
             AABB &aabb = m_faceBounds[face];
 
@@ -800,9 +803,10 @@ bool manta::Mesh::findClosestIntersection(int *faceList, int faceCount, const Li
                     INCREMENT_COUNTER(RuntimeStatistics::Counter::UnecessaryPrimitiveTests);
                 }
             }
-        }
+        //}
     }
 
+    /*
     for (int i = 0; i < faceCount; i++) {
         int face = faceList[i];
         if (face >= m_triangleFaceCount) {
@@ -822,7 +826,7 @@ bool manta::Mesh::findClosestIntersection(int *faceList, int faceCount, const Li
                 found = true;
             }
         }
-    }
+    }*/
 
     return found;
 }

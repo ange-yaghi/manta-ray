@@ -40,7 +40,7 @@ void manta::Octree::destroy() {
 }
 
 bool manta::Octree::findClosestIntersection(
-    const LightRay *ray,
+    LightRay *ray,
     CoarseIntersection *intersection,
     math::real minDepth,
     math::real maxDepth,
@@ -55,7 +55,7 @@ void manta::Octree::fineIntersection(const math::Vector &r, IntersectionPoint *p
     hint->sceneGeometry->fineIntersection(r, p, hint);
 }
 
-bool manta::Octree::fastIntersection(const LightRay * ray) const {
+bool manta::Octree::fastIntersection(LightRay *ray) const {
     return true;
 }
 
@@ -183,7 +183,7 @@ void manta::Octree::writeToObjFile(const OctreeBV *leaf, std::ofstream &f, int &
 
 bool manta::Octree::findClosestIntersection(
     const OctreeBV *leaf, 
-    const LightRay *ray, 
+    LightRay *ray, 
     const math::Vector &ood, 
     CoarseIntersection *intersection, 
     math::real minDepth, 

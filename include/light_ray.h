@@ -7,6 +7,8 @@ namespace manta {
 
     class LightRay {
     public:
+        static const int HashSize = 16;
+    public:
         LightRay();
         ~LightRay();
 
@@ -43,6 +45,10 @@ namespace manta {
         void setMeta(int meta) { m_meta = meta; }
         int getMeta() const { return m_meta; }
 
+        void resetCache() { for (int i = 0; i < HashSize; ++i) { m_recent[i] = -1; } }
+        void setTouched(int face) { m_recent[face % HashSize] = face; }
+        bool getTouched(int face) const { return m_recent[face % HashSize] == face; }
+
     protected:
         int m_meta;
 
@@ -61,6 +67,8 @@ namespace manta {
         math::Vector3 m_shear;
         math::Vector m_permutedDirection;
         math::Vector m_inverseDirection;
+
+        int m_recent[HashSize];
     };
 
 } /* namespace manta */

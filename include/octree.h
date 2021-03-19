@@ -47,12 +47,12 @@ namespace manta {
         void initialize(math::real width, const math::Vector &position);
         void destroy();
 
-        virtual bool findClosestIntersection(const LightRay *ray, 
+        virtual bool findClosestIntersection(LightRay *ray, 
             CoarseIntersection *intersection, math::real minDepth, 
             math::real maxDepth, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const;
         virtual void fineIntersection(const math::Vector &r, IntersectionPoint *p, 
             const CoarseIntersection *hint) const;
-        virtual bool fastIntersection(const LightRay *ray) const;
+        virtual bool fastIntersection(LightRay *ray) const;
 
         void analyze(Mesh *mesh, int maxSize);
 
@@ -66,7 +66,7 @@ namespace manta {
         int countFaces(const OctreeBV *leaf) const;
         int countLeaves(const OctreeBV *leaf) const;
 
-        bool findClosestIntersection(const OctreeBV *leaf, const LightRay *ray, 
+        bool findClosestIntersection(const OctreeBV *leaf, LightRay *ray, 
             const math::Vector &ood, CoarseIntersection *intersection,
             math::real minDepth, math::real maxDepth, 
             StackAllocator *s /**/ STATISTICS_PROTOTYPE, bool skip = false) const;

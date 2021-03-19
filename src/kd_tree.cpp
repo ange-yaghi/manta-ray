@@ -95,7 +95,7 @@ void manta::KDTree::destroy() {
 }
 
 bool manta::KDTree::findClosestIntersection(
-    const LightRay *ray,
+    LightRay *ray,
     CoarseIntersection *intersection,
     math::real minDepth,
     math::real maxDepth,
@@ -111,26 +111,27 @@ bool manta::KDTree::findClosestIntersection(
     KDJob jobs[MAX_DEPTH];
     int currentJob = 0;
 
-    bool hit = false;
     math::real closestHit = std::min(tmax, maxDepth);
+    if (closestHit < tmin) return false;
+
+    bool hit = false;
     const KDTreeNode *node = &m_nodes[0];
     while (node != nullptr) {
-        if (closestHit < tmin) break;
+        //if (closestHit < tmin) break;
         if (!node->isLeaf()) {
             int axis = node->getSplitAxis();
             math::real split = node->getSplit();
 
             math::real o_axis = math::get(ray->getSource(), axis);
             math::real tPlane = (split - o_axis) * math::get(ray->getInverseDirection(), axis);
-            const bool eq = o_axis == split;
-            if (eq) {
+            if (split - o_axis == (math::real)0.0) {
                 // Edge case
                 // Explanation: somtimes inverse direction can be inf. This will result in tPlane being NaN.
                 tPlane = (math::real)0.0;
             }
 
             const KDTreeNode *firstChild, *secondChild;
-            bool belowFirst = (o_axis < split) || (eq && math::get(ray->getDirection(), axis) <= 0);
+            bool belowFirst = (o_axis < split) || (o_axis == split && math::get(ray->getDirection(), axis) <= 0);
 
             if (belowFirst) {
                 firstChild = node + 1;
@@ -189,6 +190,8 @@ bool manta::KDTree::findClosestIntersection(
                 node = jobs[currentJob].node;
                 tmin = jobs[currentJob].tmin;
                 tmax = jobs[currentJob].tmax;
+
+                if (closestHit < tmin) break;
             }
             else break;
         }
@@ -205,7 +208,7 @@ void manta::KDTree::fineIntersection(const math::Vector &r, IntersectionPoint *p
     hint->sceneGeometry->fineIntersection(r, p, hint);
 }
 
-bool manta::KDTree::fastIntersection(const LightRay *ray) const {
+bool manta::KDTree::fastIntersection(LightRay *ray) const {
     return true;
 }
 

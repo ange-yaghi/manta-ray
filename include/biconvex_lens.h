@@ -16,8 +16,8 @@ namespace manta {
         void setOutputSurfaceRadius(math::real radius);
 
         void configure();
-        virtual bool transformLightRay(const LightRay *ray, LightRay *transformed) const;
-        virtual bool transformLightRayReverse(const LightRay *ray, LightRay *transformed) const;
+        virtual bool transformLightRay(LightRay *ray, LightRay *transformed) const;
+        virtual bool transformLightRayReverse(LightRay *ray, LightRay *transformed) const;
 
         virtual math::real calculateFocalLength() const;
 

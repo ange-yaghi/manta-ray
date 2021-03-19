@@ -33,7 +33,7 @@ void manta::BiconvexLens::configure() {
     m_outputSurface.setIor(m_ior);
 }
 
-bool manta::BiconvexLens::transformLightRay(const LightRay *ray, LightRay *transformed) const {
+bool manta::BiconvexLens::transformLightRay(LightRay *ray, LightRay *transformed) const {
     LightRay intermediate;
     bool flag;
     math::Vector dist;
@@ -78,7 +78,7 @@ bool manta::BiconvexLens::transformLightRay(const LightRay *ray, LightRay *trans
     return true;
 }
 
-bool manta::BiconvexLens::transformLightRayReverse(const LightRay *ray, LightRay *transformed) const {
+bool manta::BiconvexLens::transformLightRayReverse(LightRay *ray, LightRay *transformed) const {
     LightRay intermediate;
     bool flag;
     math::Vector dist;

@@ -38,7 +38,7 @@ namespace manta {
 
         virtual void setFocus(math::real dist) = 0;
         virtual void setFocalLength(math::real focalLength) = 0;
-        virtual bool transformRay(const LightRay *inputRay, LightRay *outputRay) const = 0;
+        virtual bool transformRay(LightRay *inputRay, LightRay *outputRay) const = 0;
 
         math::Vector getSensorLocation() const { return m_sensorLocation; }
         math::Vector getSensorUp() const { return m_up; }

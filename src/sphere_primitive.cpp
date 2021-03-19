@@ -12,11 +12,11 @@ manta::SpherePrimitive::~SpherePrimitive() {
     /* void */
 }
 
-bool manta::SpherePrimitive::fastIntersection(const LightRay *ray) const {
+bool manta::SpherePrimitive::fastIntersection(LightRay *ray) const {
     return true;
 }
 
-bool manta::SpherePrimitive::findClosestIntersection(const LightRay *ray, 
+bool manta::SpherePrimitive::findClosestIntersection(LightRay *ray, 
         CoarseIntersection *intersection, math::real minDepth, 
         math::real maxDepth, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const 
 {    

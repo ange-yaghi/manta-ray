@@ -19,7 +19,7 @@ namespace manta {
         SpherePrimitive();
         virtual ~SpherePrimitive();
 
-        virtual bool findClosestIntersection(const LightRay *ray, CoarseIntersection *intersection, 
+        virtual bool findClosestIntersection(LightRay *ray, CoarseIntersection *intersection, 
             math::real minDepth, math::real maxDepth, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const;
         virtual math::Vector getClosestPoint(const CoarseIntersection *hint, 
             const math::Vector &p) const;
@@ -27,7 +27,7 @@ namespace manta {
             SceneObject *object) const;
         virtual void fineIntersection(const math::Vector &r, IntersectionPoint *p, 
             const CoarseIntersection *hint) const;
-        virtual bool fastIntersection(const LightRay *ray) const;
+        virtual bool fastIntersection(LightRay *ray) const;
 
         void detectIntersection(const LightRay *ray, IntersectionPoint *convex, 
             IntersectionPoint *concave) const;

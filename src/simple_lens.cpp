@@ -40,7 +40,7 @@ void manta::SimpleLens::setFocalLength(math::real focalLength) {
     /* void */
 }
 
-bool manta::SimpleLens::transformRay(const LightRay *inputRay, LightRay *outputRay) const {
+bool manta::SimpleLens::transformRay(LightRay *inputRay, LightRay *outputRay) const {
     bool flag = m_lens.transformLightRay(inputRay, outputRay);
     if (!flag) return false;
 

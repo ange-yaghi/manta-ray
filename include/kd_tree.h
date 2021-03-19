@@ -157,14 +157,14 @@ namespace manta {
         void configure(math::real width, const math::Vector &position);
         void destroy();
 
-        virtual bool findClosestIntersection(const LightRay *ray, 
+        virtual bool findClosestIntersection(LightRay *ray, 
             CoarseIntersection *intersection, math::real minDepth, 
             math::real maxDepth, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const;
         virtual math::Vector getClosestPoint(const CoarseIntersection *hint, 
             const math::Vector &p) const;
         virtual void fineIntersection(const math::Vector &r, IntersectionPoint *p, 
             const CoarseIntersection *hint) const;
-        virtual bool fastIntersection(const LightRay *ray) const;
+        virtual bool fastIntersection(LightRay *ray) const;
 
         void analyzeWithProgress(Mesh *mesh, int maxSize);
         void analyze(Mesh *mesh, int maxSize);

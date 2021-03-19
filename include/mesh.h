@@ -32,12 +32,12 @@ namespace manta {
         void findQuads();
         void computeBounds();
 
-        virtual bool findClosestIntersection(const LightRay *ray, 
+        virtual bool findClosestIntersection(LightRay *ray, 
             CoarseIntersection *intersection, math::real minDepth, 
             math::real maxDepth, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const;
         virtual void fineIntersection(const math::Vector &r, IntersectionPoint *p, 
             const CoarseIntersection *hint) const;
-        virtual bool fastIntersection(const LightRay *ray) const;
+        virtual bool fastIntersection(LightRay *ray) const;
 
         int getFaceCount() const { return m_triangleFaceCount + m_quadFaceCount; }
         int getTriangleFaceCount() const { return m_triangleFaceCount; }
@@ -143,7 +143,7 @@ namespace manta {
         bool detectQuadIntersection(int faceIndex, math::real minDepth, 
             math::real maxDepth, const LightRay *ray, CoarseCollisionOutput *output) const;
 
-        bool findClosestIntersection(int *faceList, int faceCount, const LightRay *ray, 
+        bool findClosestIntersection(int *faceList, int faceCount, LightRay *ray, 
             CoarseIntersection *intersection, math::real minDepth, math::real maxDepth /**/ STATISTICS_PROTOTYPE) const;
 
         bool checkFaceAABB(int faceIndex, const AABB &bounds) const;

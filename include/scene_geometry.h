@@ -21,12 +21,12 @@ namespace manta {
         SceneGeometry();
         ~SceneGeometry();
 
-        virtual bool findClosestIntersection(const LightRay *ray, 
+        virtual bool findClosestIntersection(LightRay *ray, 
             CoarseIntersection *intersection, math::real minDepth, math::real maxDepth, 
             StackAllocator *s /**/ STATISTICS_PROTOTYPE) const = 0;
         virtual void fineIntersection(const math::Vector &r, 
             IntersectionPoint *p, const CoarseIntersection *hint) const = 0;
-        virtual bool fastIntersection(const LightRay *ray) const = 0;
+        virtual bool fastIntersection(LightRay *ray) const = 0;
 
         void setId(int id);
         int getId() const;
