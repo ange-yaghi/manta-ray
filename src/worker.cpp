@@ -108,10 +108,10 @@ void manta::Worker::doJob(const Job *job) {
     int pixelCounter = 0;
     ImageSample *samples = (ImageSample *)m_stack->allocate(sizeof(ImageSample) * SAMPLE_BUFFER_CAPACITY, 16);
 
-    for (int x = job->startX; x <= job->endX; x++) {
+    for (int y = job->startY; y <= job->endY; ++y) {
         if (m_rayTracer->getProgram()->isKilled()) break;
 
-        for (int y = job->startY; y <= job->endY; y++) {
+        for (int x = job->startX; x <= job->endX; ++x) {
             if (m_rayTracer->getProgram()->isKilled()) break;
 
             m_sampler->startPixelSession();
@@ -144,7 +144,7 @@ void manta::Worker::doJob(const Job *job) {
                     if (ray.getCameraWeight() > 0) {
                         ray.calculateTransformations();
 
-                        math::Vector L = m_rayTracer->traceRay(job->scene, &ray, 0, &m_ipManager, m_sampler,
+                        const math::Vector L = m_rayTracer->traceRay(job->scene, &ray, 0, &m_ipManager, m_sampler,
                             m_stack /**/ PATH_RECORDER_ARG /**/ STATISTICS_ROOT(&m_statistics));
 
                         ImageSample &sample = samples[sampleCount++];

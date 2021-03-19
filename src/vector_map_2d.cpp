@@ -24,8 +24,8 @@ void manta::VectorMap2D::initialize(int width, int height, const math::Vector &v
 
     m_data = StandardAllocator::Global()->allocate<math::Vector>(m_width * m_height, 16);
 
-    for (int i = 0; i < m_width; i++) {
-        for (int j = 0; j < m_height; j++) {
+    for (int j = 0; j < m_height; j++) {
+        for (int i = 0; i < m_width; i++) {
             set(value, i, j);
         }
     }
@@ -118,7 +118,7 @@ void manta::VectorMap2D::applyGamma(math::real gamma) {
 
 manta::math::real manta::VectorMap2D::getMaxMagnitude() const {
     math::real maxMagnitude = 0.0;
-    int pCount = m_width * m_height;
+    const int pCount = m_width * m_height;
     for (int i = 0; i < pCount; i++) {
         math::real mag = math::getScalar(math::magnitude(m_data[i]));
         
@@ -178,11 +178,11 @@ int manta::VectorMap2D::getSafeHeight() const {
 void manta::VectorMap2D::roll(VectorMap2D *target) const {
     target->initialize(m_width, m_height);
 
-    int offsetX = m_width / 2;
-    int offsetY = m_height / 2;
+    const int offsetX = m_width / 2;
+    const int offsetY = m_height / 2;
 
-    for (int i = 0; i < m_width; i++) {
-        for (int j = 0; j < m_height; j++) {
+    for (int j = 0; j < m_height; ++j) {
+        for (int i = 0; i < m_width; ++i) {
             math::Vector v = get(i, j);
             target->set(v, (i + offsetX) % m_width, (j + offsetY) % m_height);
         }

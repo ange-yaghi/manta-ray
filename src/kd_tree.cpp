@@ -122,14 +122,15 @@ bool manta::KDTree::findClosestIntersection(
 
             math::real o_axis = math::get(ray->getSource(), axis);
             math::real tPlane = (split - o_axis) * math::get(ray->getInverseDirection(), axis);
-            if (split - o_axis == (math::real)0.0) {
+            const bool eq = o_axis == split;
+            if (eq) {
                 // Edge case
                 // Explanation: somtimes inverse direction can be inf. This will result in tPlane being NaN.
                 tPlane = (math::real)0.0;
             }
 
             const KDTreeNode *firstChild, *secondChild;
-            bool belowFirst = (o_axis < split) || (o_axis == split && math::get(ray->getDirection(), axis) <= 0);
+            bool belowFirst = (o_axis < split) || (eq && math::get(ray->getDirection(), axis) <= 0);
 
             if (belowFirst) {
                 firstChild = node + 1;

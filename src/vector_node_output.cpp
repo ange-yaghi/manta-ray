@@ -42,8 +42,8 @@ void manta::VectorNodeOutput::calculateAllDimensions(VectorMap2D *target) const 
 
     target->initialize(width, height);
 
-    for (int i = 0; i < width; i++) {
-        for (int j = 0; j < height; j++) {
+    for (int j = 0; j < height; j++) {
+        for (int i = 0; i < width; i++) {
             math::Vector v;
             discreteSample2d(i, j, &v);
             target->set(v, i, j);
