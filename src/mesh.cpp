@@ -788,7 +788,7 @@ bool manta::Mesh::findClosestIntersection(int *faceList, int faceCount, LightRay
                 INCREMENT_COUNTER(RuntimeStatistics::Counter::TriangleTests);
                 if (detectTriangleIntersection(face, minDepth, currentMaxDepth, ray, &output)) {
                     intersection->depth = output.depth;
-                    intersection->faceHint = faceList[i]; // Face index
+                    intersection->faceHint = face; // Face index
                     intersection->subdivisionHint = -1; // Not used for triangles
                     intersection->sceneGeometry = this;
 
