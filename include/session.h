@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <mutex>
+#include <map>
 
 namespace manta {
 
@@ -11,6 +12,7 @@ namespace manta {
     class ImagePlane;
     class VectorMap2D;
     class PreviewNode;
+    class KDTree;
 
     class Session {
     public:
@@ -27,11 +29,15 @@ namespace manta {
         int getPreviewCount() const { return (int)m_previews.size(); }
         std::vector<PreviewNode *> getPreviews();
 
+        KDTree *getCachedKdTree(const std::string &key);
+        void putCachedKdTree(const std::string &key, KDTree *tree);
+
     protected:
         Console *m_console;
 
         std::mutex m_previewLock;
         std::vector<PreviewNode *> m_previews;
+        std::map<std::string, KDTree *> m_kdTreeCache;
     };
 
 } /* namespace manta */

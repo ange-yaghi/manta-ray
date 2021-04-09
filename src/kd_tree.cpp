@@ -118,14 +118,14 @@ bool manta::KDTree::findClosestIntersection(
     const KDTreeNode *node = &m_nodes[0];
     while (true) {
         if (!node->isLeaf()) {
-            int axis = node->getSplitAxis();
-            math::real split = node->getSplit();
+            const int axis = node->getSplitAxis();
+            const math::real split = node->getSplit();
 
-            math::real o_axis = math::get(ray->getSource(), axis);
-            math::real tPlane = (split - o_axis) * math::get(ray->getInverseDirection(), axis);
+            const math::real o_axis = math::get(ray->getSource(), axis);
+            const math::real tPlane = (split - o_axis) * math::get(ray->getInverseDirection(), axis);
 
             const KDTreeNode *firstChild, *secondChild;
-            bool belowFirst = (o_axis < split) || (o_axis == split && math::get(ray->getDirection(), axis) <= 0);
+            const bool belowFirst = (o_axis < split) || (o_axis == split && math::get(ray->getDirection(), axis) <= 0);
 
             if (belowFirst) {
                 firstChild = node + 1;
@@ -165,7 +165,7 @@ bool manta::KDTree::findClosestIntersection(
                 INCREMENT_COUNTER(RuntimeStatistics::Counter::TotalBvTests);
                 math::real t0, t1;
                 if (bv.bounds.rayIntersect(*ray, &t0, &t1)) {
-#endif
+#endif /* KD_TREE_WITH_BOUNDING_BOXES */
                     INCREMENT_COUNTER(RuntimeStatistics::Counter::TotalBvHits);
                     if (m_mesh->findClosestIntersection(faceList, primitiveCount, ray, intersection, minDepth, closestHit /**/ STATISTICS_PARAM_INPUT)) {
                         hit = true;
@@ -173,7 +173,7 @@ bool manta::KDTree::findClosestIntersection(
                     }
 #if KD_TREE_WITH_BOUNDING_BOXES
                 }
-#endif
+#endif /* KD_TREE_WITH_BOUNDING_BOXES */
             }
             else {
                 // Nothing in this node
@@ -290,6 +290,10 @@ void manta::KDTree::analyze(Mesh *mesh, int maxSize) {
 
     setProgress((math::real)1.0);
     setComplete(true);
+}
+
+void manta::KDTree::setMesh(Mesh *mesh) {
+    m_mesh = mesh;
 }
 
 void manta::KDTree::_analyze(int currentNode, AABB *nodeBounds, const std::vector<int> &faces, 

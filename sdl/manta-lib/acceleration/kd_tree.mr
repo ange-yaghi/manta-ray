@@ -20,5 +20,7 @@ public node kd_tree => __mantaray__kd_tree {
     input width         [float]: 256.0;
     input granularity   [int]: 4;
     input center        [vector]: 0;
+    input cache_key         [string]: "cache-kd_tree";
+    input overwrite_cache   [bool]: false;
     alias output __out  [scene_geometry];
 }

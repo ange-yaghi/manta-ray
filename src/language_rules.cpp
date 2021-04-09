@@ -15,7 +15,7 @@
 #include "../include/disney_specular_brdf.h"
 #include "../include/material_library.h"
 #include "../include/microfacet_brdf.h"
-#include "../include/kd_tree.h"
+#include "../include/kd_tree_node.h"
 #include "../include/obj_file_node.h"
 #include "../include/scene.h"
 #include "../include/scene_object.h"
@@ -132,7 +132,7 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__ray_tracer");
     registerBuiltinType<ConstructedVectorNode>(
         "__mantaray__vector_constructor");
-    registerBuiltinType<KDTree>(
+    registerBuiltinType<KdTreeNode>(
         "__mantaray__kd_tree");
     registerBuiltinType<PhongDistribution>(
         "__mantaray__phong_distribution");

@@ -1,6 +1,7 @@
 #include "../include/session.h"
 
 #include "../include/vector_map_2d.h"
+#include "../include/kd_tree.h"
 
 manta::Session::Session() {
     m_console = nullptr;
@@ -18,6 +19,22 @@ manta::Session &manta::Session::get() {
 std::vector<manta::PreviewNode *> manta::Session::getPreviews() {
     std::lock_guard<std::mutex> lock(m_previewLock);
     return m_previews;
+}
+
+manta::KDTree *manta::Session::getCachedKdTree(const std::string &key) {
+    auto kdTree = m_kdTreeCache.find(key);
+    return kdTree == m_kdTreeCache.end()
+        ? nullptr
+        : kdTree->second;
+}
+
+void manta::Session::putCachedKdTree(const std::string &key, KDTree *tree) {
+    KDTree *cached = getCachedKdTree(key);
+    if (cached != nullptr) {
+        delete cached;
+    }
+
+    m_kdTreeCache.emplace(key, tree);
 }
 
 void manta::Session::registerPreview(PreviewNode *preview) {

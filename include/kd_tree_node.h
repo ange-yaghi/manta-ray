@@ -3,8 +3,6 @@
 
 #include "object_reference_node.h"
 
-#include "kd_tree.h"
-
 namespace manta {
 
     class KdTreeNode : public ObjectReferenceNode<KDTree> {
@@ -12,7 +10,7 @@ namespace manta {
         KdTreeNode();
         virtual ~KdTreeNode();
 
-        KDTree *getKdTree() { return &m_kdTree; }
+        KDTree *getKdTree() const { return m_kdTree; }
 
     protected:
         virtual void _initialize();
@@ -24,9 +22,14 @@ namespace manta {
 
     protected:
         piranha::pNodeInput m_meshInput;
+        piranha::pNodeInput m_granularityInput;
+        piranha::pNodeInput m_widthInput;
+        piranha::pNodeInput m_centerInput;
+        piranha::pNodeInput m_cacheKeyInput;
+        piranha::pNodeInput m_overwriteCacheInput;
 
     protected:
-        KDTree m_kdTree;
+        KDTree *m_kdTree;
     };
 
 } /* namespace manta */

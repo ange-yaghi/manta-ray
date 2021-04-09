@@ -169,6 +169,8 @@ namespace manta {
         void analyzeWithProgress(Mesh *mesh, int maxSize);
         void analyze(Mesh *mesh, int maxSize);
 
+        void setMesh(Mesh *mesh);
+
         int createNode();
         int createNodeVolume();
         KDTreeNode *getNode(int index) { return &m_nodes[index]; }
