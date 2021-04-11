@@ -63,6 +63,7 @@
 #include "../include/preview_node.h"
 #include "../include/session.h"
 #include "../include/image_plane_converter_node.h"
+#include "../include/bump_node.h"
 
 manta::LanguageRules::LanguageRules() {
     /* void */
@@ -224,6 +225,8 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__standard_image_plane");
     registerBuiltinType<ImagePlaneConverterNode>(
         "__mantaray__image_plane_to_map");
+    registerBuiltinType<BumpNode>(
+        "__mantaray__bump");
 
     // Actions
     registerBuiltinType<piranha::ConsoleInputNode>(

@@ -23,6 +23,8 @@
     <ClCompile Include="..\..\src\aperture.cpp" />
     <ClCompile Include="..\..\src\append_path_node.cpp" />
     <ClCompile Include="..\..\src\box_filter.cpp" />
+    <ClCompile Include="..\..\src\bump_node_output.cpp" />
+    <ClCompile Include="..\..\src\bump_node.cpp" />
     <ClCompile Include="..\..\src\bxdf.cpp" />
     <ClCompile Include="..\..\src\bxdf_to_bsdf_node.cpp" />
     <ClCompile Include="..\..\src\cached_vector_node.cpp" />
@@ -160,6 +162,8 @@
     <ClInclude Include="..\..\include\binary_node_output.h" />
     <ClInclude Include="..\..\include\box_filter.h" />
     <ClInclude Include="..\..\include\bsdf.h" />
+    <ClInclude Include="..\..\include\bump_node.h" />
+    <ClInclude Include="..\..\include\bump_node_output.h" />
     <ClInclude Include="..\..\include\bxdf.h" />
     <ClInclude Include="..\..\include\bxdf_to_bsdf_node.h" />
     <ClInclude Include="..\..\include\cacheable_input.h" />

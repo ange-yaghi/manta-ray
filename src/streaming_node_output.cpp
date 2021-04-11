@@ -40,9 +40,9 @@ void manta::StreamingNodeOutput::_evaluate() {
     evaluateDimensions();
 
     if (m_dimensionCount == 2) {
-        if (m_dimensions[0] > 2000 || m_dimensions[1] > 2000) {
-            throw;
-        }
+        //if (m_dimensions[0] > 2000 || m_dimensions[1] > 2000) {
+        //    throw;
+        //}
     }
 }
 

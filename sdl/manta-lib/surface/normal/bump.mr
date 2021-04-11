@@ -1,0 +1,21 @@
+module {
+    @name:          "Bump"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2019, Ange Yaghi"
+    @doc:           "Defines node for calculating bump normals"
+    @version:       "0.1.0a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
+private import "../../types/atomic_types.mr" as types
+private import "../../types/conversions.mr"
+private import "../materials/surface_interaction.mr"
+
+public node bump => __mantaray__bump {
+    input displacement [types::scalar]: 0.0;
+    input normal [types::vector]: surface_interaction().normal;
+
+    alias output bump_normal [types::vector];
+}

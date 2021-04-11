@@ -467,6 +467,10 @@ void manta::Mesh::fineIntersection(const math::Vector &r, IntersectionPoint *p, 
     p->m_position = r;
     p->m_textureCoodinates = textureCoordinates;
     p->m_material = material;
+    p->m_mesh = this;
+    p->m_faceIndex = faceIndex;
+
+    p->calculatePartialDerivatives();
 }
 
 bool manta::Mesh::fastIntersection(LightRay *ray) const {

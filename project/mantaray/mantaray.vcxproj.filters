@@ -421,6 +421,18 @@
     <Filter Include="Source Files\sdl\nodes\library\ui">
       <UniqueIdentifier>{fff917a8-a73e-4bbb-9956-e7482efd6a2b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\sdl\nodes\output-ports\normal">
+      <UniqueIdentifier>{3ce945ff-159e-4483-89b4-579a5862317f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sdl\nodes\output-ports\normal">
+      <UniqueIdentifier>{b3402896-b022-4dd7-ad91-a2d23a3574eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sdl\nodes\library\normal">
+      <UniqueIdentifier>{0505f96c-bc7e-4df5-9d93-5ab679c155e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl\nodes\library\normal">
+      <UniqueIdentifier>{c9f90369-07ee-4cca-bd28-82bab3cfb6e5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -809,6 +821,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\image_plane_converter_node.cpp">
       <Filter>Source Files\sdl\nodes\library\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bump_node.cpp">
+      <Filter>Source Files\sdl\nodes\library\normal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\bump_node_output.cpp">
+      <Filter>Source Files\sdl\nodes\output-ports\normal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1300,6 +1318,12 @@
     </ClInclude>
     <ClInclude Include="..\..\include\image_plane_converter_node.h">
       <Filter>Header Files\sdl\nodes\library\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\bump_node.h">
+      <Filter>Header Files\sdl\nodes\library\normal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\bump_node_output.h">
+      <Filter>Header Files\sdl\nodes\output-ports\normal</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

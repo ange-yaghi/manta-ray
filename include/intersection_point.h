@@ -29,6 +29,28 @@ namespace manta {
         int m_threadId = 0;
         IntersectionPointManager *m_manager;
 
+        const Mesh *m_mesh = nullptr;
+        int m_faceIndex = -1;
+
+    public:
+        math::Vector u_basis;
+        math::Vector v_basis;
+
+        math::Vector p0;
+        math::Vector n0;
+        math::Vector t0;
+
+        math::real u;
+        math::real v;
+
+        math::Vector dtdu;
+        math::Vector dtdv;
+        math::Vector dndu;
+        math::Vector dndv;
+
+        void calculatePartialDerivatives();
+        void offset(math::real du, math::real dv);
+
     public:
         void calculateCachedValues();
 

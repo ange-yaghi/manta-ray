@@ -47,7 +47,9 @@ namespace manta {
         int getTexCoordCount() const { return m_texCoordCount; }
 
         void setPerVertexNormals(bool perVertexNormals) { m_perVertexNormals = perVertexNormals; }
+        bool getPerVertexNormals() const { return m_perVertexNormals; }
         void setUseTexCoords(bool useTexCoords) { m_useTextureCoords = useTexCoords; }
+        bool getUseTexCoords() const { return m_useTextureCoords; }
 
         Face *getFaces() { return m_faces; }
         AuxFaceData *getAuxFaceData() { return m_auxFaceData; }

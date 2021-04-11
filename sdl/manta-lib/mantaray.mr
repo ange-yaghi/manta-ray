@@ -73,6 +73,8 @@ public import "surface/materials/surface_interaction.mr"
 
 public import "surface/color/color.mr"
 
+public import "surface/normal/bump.mr"
+
 // ========================================================
 // Signal Processing
 // ========================================================
