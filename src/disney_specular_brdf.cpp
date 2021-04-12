@@ -129,6 +129,8 @@ piranha::Node *manta::DisneySpecularBRDF::_optimize(piranha::NodeAllocator *node
 }
 
 void manta::DisneySpecularBRDF::registerInputs() {
+    BXDF::registerInputs();
+
     registerInput(m_baseColor.getPortAddress(), "base_color");
     registerInput(m_roughness.getPortAddress(), "roughness");
     registerInput(m_specular.getPortAddress(), "specular");

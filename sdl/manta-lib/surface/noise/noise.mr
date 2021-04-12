@@ -1,0 +1,27 @@
+module {
+    @name:          "Perlin Noise"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2021, Ange Yaghi"
+    @doc:           "Defines Perlin Noise"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
+private import "../../types/atomic_types.mr"
+private import "../../types/conversions.mr"
+
+@doc: "Perlin Noise"
+public node perlin_noise => __mantaray__perlin_noise {
+    input in [vector]: 0;
+    alias output out [vector];
+}
+
+@doc: "Turbulence Noise"
+public node turbulence_noise => __mantaray__turbulence_noise {
+    input in [vector]: 0;
+    input octaves [int]: 2;
+    input omega [scalar]: 0.5;
+    alias output out [vector];
+}

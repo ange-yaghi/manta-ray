@@ -148,6 +148,8 @@ void manta::MicrofacetGlassBSDF::_evaluate() {
 }
 
 void manta::MicrofacetGlassBSDF::registerInputs() {
+    BXDF::registerInputs();
+
     registerInput(&m_distributionInput, "distribution");
     registerInput(&m_mediaInterfaceInput, "media_interface");
 }

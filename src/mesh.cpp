@@ -425,6 +425,7 @@ void manta::Mesh::fineIntersection(const math::Vector &r, IntersectionPoint *p, 
 
     math::Vector vertexNormal;
     math::Vector textureCoordinates;
+    const math::Vector faceNormal = math::normalize(math::cross(math::sub(*vertices[1], *vertices[0]), math::sub(*vertices[2], *vertices[0])));
 
     if (m_perVertexNormals) {
         if (data[0]->n != -1 && data[1]->n != -1 && data[2]->n != -1) {
@@ -441,7 +442,7 @@ void manta::Mesh::fineIntersection(const math::Vector &r, IntersectionPoint *p, 
         }
     }
     else {
-        vertexNormal = math::normalize(math::cross(math::sub(*vertices[1], *vertices[0]), math::sub(*vertices[2], *vertices[0])));
+        vertexNormal = faceNormal;
     }
 
     if (m_useTextureCoords) {
@@ -463,7 +464,7 @@ void manta::Mesh::fineIntersection(const math::Vector &r, IntersectionPoint *p, 
     }
 
     p->m_vertexNormal = vertexNormal;
-    p->m_faceNormal = vertexNormal;
+    p->m_faceNormal = faceNormal;
     p->m_position = r;
     p->m_textureCoodinates = textureCoordinates;
     p->m_material = material;

@@ -70,6 +70,8 @@ piranha::Node *manta::DisneyDiffuseBRDF::_optimize(piranha::NodeAllocator *nodeA
 }
 
 void manta::DisneyDiffuseBRDF::registerInputs() {
+    BXDF::registerInputs();
+
     registerInput(m_baseColor.getPortAddress(), "base_color");
     registerInput(m_roughness.getPortAddress(), "roughness");
     registerInput(m_power.getPortAddress(), "power");

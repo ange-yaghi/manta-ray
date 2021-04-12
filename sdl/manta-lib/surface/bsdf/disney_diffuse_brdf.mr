@@ -10,6 +10,7 @@ module {
 }
 
 private import "bxdf.mr"
+private import "../materials/surface_interaction.mr"
 private import "../../types/atomic_types.mr" as types
 private import "../../types/conversions.mr"
 
@@ -18,6 +19,7 @@ public node disney_diffuse_brdf => __mantaray__disney_diffuse_brdf {
     input base_color    [types::vector]: 1.0;
     input roughness     [types::vector]: 1.0;
     input power         [types::vector]: 1.0;
+    input normal        [types::vector]: surface_interaction().normal;
 
     alias output __out  [bxdf];
 }

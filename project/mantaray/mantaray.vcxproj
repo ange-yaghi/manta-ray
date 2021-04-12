@@ -41,6 +41,8 @@
     <ClCompile Include="..\..\src\filter.cpp" />
     <ClCompile Include="..\..\src\gaussian_filter.cpp" />
     <ClCompile Include="..\..\src\image_plane_converter_node.cpp" />
+    <ClCompile Include="..\..\src\perlin_noise_node.cpp" />
+    <ClCompile Include="..\..\src\perlin_noise_node_output.cpp" />
     <ClCompile Include="..\..\src\preview_node.cpp" />
     <ClCompile Include="..\..\src\intersection_point.cpp" />
     <ClCompile Include="..\..\src\intersection_point_manager.cpp" />
@@ -96,6 +98,8 @@
     <ClCompile Include="..\..\src\string_conversions.cpp" />
     <ClCompile Include="..\..\src\surface_interaction_node.cpp" />
     <ClCompile Include="..\..\src\triangle_filter.cpp" />
+    <ClCompile Include="..\..\src\turbulence_noise_node.cpp" />
+    <ClCompile Include="..\..\src\turbulence_noise_node_output.cpp" />
     <ClCompile Include="..\..\src\vector_conversions.cpp" />
     <ClCompile Include="..\..\src\vector_map_2d.cpp" />
     <ClCompile Include="..\..\src\material_library.cpp" />
@@ -176,6 +180,8 @@
     <ClInclude Include="..\..\include\disney_gtr_clearcoat_distribution.h" />
     <ClInclude Include="..\..\include\disney_specular_brdf.h" />
     <ClInclude Include="..\..\include\image_plane_converter_node.h" />
+    <ClInclude Include="..\..\include\perlin_noise_node.h" />
+    <ClInclude Include="..\..\include\perlin_noise_node_output.h" />
     <ClInclude Include="..\..\include\preview_node.h" />
     <ClInclude Include="..\..\include\intersection_point_manager.h" />
     <ClInclude Include="..\..\include\intersection_point_types.h" />
@@ -243,6 +249,8 @@
     <ClInclude Include="..\..\include\surface_interaction_node.h" />
     <ClInclude Include="..\..\include\surface_interaction_node_output.h" />
     <ClInclude Include="..\..\include\triangle_filter.h" />
+    <ClInclude Include="..\..\include\turbulence_noise_node.h" />
+    <ClInclude Include="..\..\include\turbulence_noise_node_output.h" />
     <ClInclude Include="..\..\include\unary_node.h" />
     <ClInclude Include="..\..\include\unary_node_output.h" />
     <ClInclude Include="..\..\include\uv_operation_output.h" />

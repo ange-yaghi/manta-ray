@@ -75,6 +75,8 @@ public import "surface/color/color.mr"
 
 public import "surface/normal/bump.mr"
 
+public import "surface/noise/noise.mr"
+
 // ========================================================
 // Signal Processing
 // ========================================================

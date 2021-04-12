@@ -6,6 +6,7 @@
 #include "manta_math.h"
 #include "media_interface.h"
 #include "object_reference_node.h"
+#include "cacheable_input.h"
 
 #include <algorithm>
 #include <math.h>
@@ -33,8 +34,17 @@ namespace manta {
         static inline bool refract(const math::Vector &i, const math::Vector &n,
             math::real ior, math::Vector *t);
 
+        void generateBasisVectors(const math::Vector &direction, const IntersectionPoint *surfaceInteraction, math::Vector *u, math::Vector *v, math::Vector *w);
+        math::Vector transform(const math::Vector &direction, const math::Vector &u, const math::Vector &v, const math::Vector &w);
+        math::Vector inverseTransform(const math::Vector &direction, const math::Vector &u, const math::Vector &v, const math::Vector &w);
+        math::Vector sampleNormal(const IntersectionPoint *surfaceInteraction);
+
     protected:
         virtual void _evaluate();
+        virtual void registerInputs();
+
+    protected:
+        CacheableInput<math::Vector> m_normal;
     };
 
     inline bool BXDF::refract(const math::Vector &i, const math::Vector &n,

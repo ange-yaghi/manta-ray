@@ -17,12 +17,27 @@ manta::BSDF::~BSDF() {
     /* void */
 }
 
-manta::math::Vector manta::BSDF::sampleF(const IntersectionPoint *surfaceInteraction,
-    const math::Vector2 &u, const math::Vector &i, math::Vector *o, math::real *pdf,
+manta::math::Vector manta::BSDF::sampleF(
+    const IntersectionPoint *surfaceInteraction,
+    const math::Vector2 &u,
+    const math::Vector &i,
+    math::Vector *o,
+    math::real *pdf,
     StackAllocator *stackAllocator) const 
 {
-    int bxdf = rand() % m_bxdfCount;
-    math::Vector f = m_bxdfs[bxdf]->sampleF(surfaceInteraction, u, i, o, pdf, stackAllocator);
+    const int bxdf_i = rand() % m_bxdfCount;
+
+    BXDF *bxdf = m_bxdfs[bxdf_i];
+    const math::Vector normal = bxdf->sampleNormal(surfaceInteraction);
+
+    math::Vector basis_u, basis_v, basis_w;
+    bxdf->generateBasisVectors(i, surfaceInteraction, &basis_u, &basis_v, &basis_w);
+
+    const math::Vector i_local = bxdf->transform(i, basis_u, basis_v, basis_w);
+    math::Vector o_local;
+    math::Vector f = bxdf->sampleF(surfaceInteraction, u, i_local, &o_local, pdf, stackAllocator);
+
+    *o = bxdf->inverseTransform(o_local, basis_u, basis_v, basis_w);
 
     if (*pdf == (math::real)0.0) {
         return math::constants::Zero;
@@ -30,17 +45,19 @@ manta::math::Vector manta::BSDF::sampleF(const IntersectionPoint *surfaceInterac
 
     if (m_bxdfCount > 1) {
         for (int j = 0; j < m_bxdfCount; j++) {
-            if (j != bxdf) {
-                *pdf += m_bxdfs[j]->pdf(surfaceInteraction, i, *o);
-            }
+            if (j != bxdf_i) {
+                math::Vector basis_u, basis_v, basis_w;
+                m_bxdfs[j]->generateBasisVectors(i, surfaceInteraction, &basis_u, &basis_v, &basis_w);
+
+                const math::Vector i_local = m_bxdfs[j]->transform(i, basis_u, basis_v, basis_w);
+                const math::Vector o_local = m_bxdfs[j]->transform(*o, basis_u, basis_v, basis_w);
+
+                *pdf += m_bxdfs[j]->pdf(surfaceInteraction, i_local, o_local);
+                f = math::add(f, m_bxdfs[j]->f(surfaceInteraction, i_local, o_local, stackAllocator));
+            }   
         }
 
         *pdf /= m_bxdfCount;
-
-        f = math::constants::Zero;
-        for (int j = 0; j < m_bxdfCount; j++) {
-            f = math::add(f, m_bxdfs[j]->f(surfaceInteraction, i, *o, stackAllocator));
-        }
     }
 
     return f;

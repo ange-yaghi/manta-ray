@@ -10,6 +10,7 @@ module {
 }
 
 private import "bxdf.mr"
+private import "../materials/surface_interaction.mr"
 private import "../microfacet-models/microfacet_distributions.mr"
 private import "../../types/atomic_types.mr" as types
 private import "../../types/conversions.mr"
@@ -19,6 +20,7 @@ public node bilayer_brdf => __mantaray__bilayer_brdf {
     input coating   [microfacet_distribution]: phong_distribution(16.0);
     input diffuse   [types::vector]: 1.0;
     input specular  [types::vector]: 1.0;
+    input normal    [types::vector]: surface_interaction().normal;
 
     alias output __out  [bxdf];
 }

@@ -126,6 +126,8 @@ piranha::Node * manta::MicrofacetBRDF::_optimize(piranha::NodeAllocator *nodeAll
 }
 
 void manta::MicrofacetBRDF::registerInputs() {
+    BXDF::registerInputs();
+
     registerInput(&m_distributionInput, "distribution");
     registerInput(m_reflectivity.getPortAddress(), "reflectivity");
 }

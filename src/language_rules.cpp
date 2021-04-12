@@ -64,6 +64,8 @@
 #include "../include/session.h"
 #include "../include/image_plane_converter_node.h"
 #include "../include/bump_node.h"
+#include "../include/perlin_noise_node.h"
+#include "../include/turbulence_noise_node.h"
 
 manta::LanguageRules::LanguageRules() {
     /* void */
@@ -227,6 +229,10 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__image_plane_to_map");
     registerBuiltinType<BumpNode>(
         "__mantaray__bump");
+    registerBuiltinType<PerlinNoiseNode>(
+        "__mantaray__perlin_noise");
+    registerBuiltinType<TurbulenceNoiseNode>(
+        "__mantaray__turbulence_noise");
 
     // Actions
     registerBuiltinType<piranha::ConsoleInputNode>(

@@ -45,8 +45,12 @@ namespace manta {
         int m_bxdfCount;
     };
 
-    inline bool BSDF::refract(const math::Vector &i, const math::Vector &n,
-        math::real ior, math::Vector *t) {
+    inline bool BSDF::refract(
+        const math::Vector &i,
+        const math::Vector &n,
+        math::real ior,
+        math::Vector *t)
+    {
             math::real cosThetaI = math::getScalar(math::dot(n, i));
             math::real sin2ThetaI = std::max((math::real)0.0, (math::real)1.0 - cosThetaI * cosThetaI);
             math::real sin2ThetaT = ior * ior * sin2ThetaI;

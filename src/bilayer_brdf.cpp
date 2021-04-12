@@ -148,6 +148,8 @@ void manta::BilayerBRDF::setCoatingDistribution(MicrofacetDistribution *distribu
 }
 
 void manta::BilayerBRDF::registerInputs() {
+    BXDF::registerInputs();
+
     registerInput(&m_coatingDistributionNode, "coating");
     registerInput(m_diffuse.getPortAddress(), "diffuse");
     registerInput(m_specular.getPortAddress(), "specular");

@@ -379,8 +379,14 @@ void manta::RayTracer::refineContact(const LightRay *ray, math::real depth,
 }
 
 manta::math::Vector manta::RayTracer::traceRay(
-    const Scene *scene, LightRay *ray, int degree, IntersectionPointManager *manager, Sampler *sampler,
-    StackAllocator *s /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const 
+    const Scene *scene,
+    LightRay *ray,
+    int degree,
+    IntersectionPointManager *manager,
+    Sampler *sampler,
+    StackAllocator *s /**/
+    PATH_RECORDER_DECL /**/
+    STATISTICS_PROTOTYPE) const 
 {
     constexpr int MAX_BOUNCES = 4;
 
@@ -428,48 +434,19 @@ manta::math::Vector manta::RayTracer::traceRay(
         if (bsdf == nullptr) break;
 
         // Generate a new path
-        math::Vector outgoingDir = math::negate(currentRay->getDirection());
-        math::Vector incomingDir, t_incomingDir;
-
-        math::Vector normal = math::getScalar(math::dot(outgoingDir, point.m_vertexNormal)) > 0
-            ? point.m_vertexNormal
-            : math::negate(point.m_vertexNormal);
-
-        // Generate basis vectors
-        math::Vector u = math::constants::YAxis;
-        math::Vector v;
-        math::Vector w = normal;
-        if (abs(math::getX(w)) < 0.1f) {
-            u = math::constants::XAxis;
-        }
-        u = math::normalize(math::cross(u, w));
-        v = math::cross(w, u);
-
-        // Transform incident ray
-        math::Vector t_dir = math::loadVector(
-            math::getScalar(math::dot(outgoingDir, u)),
-            math::getScalar(math::dot(outgoingDir, v)),
-            math::getScalar(math::dot(outgoingDir, w)));
+        const math::Vector outgoingDir = math::negate(currentRay->getDirection());
+        math::Vector incomingDir;
 
         math::Vector2 s_u = (sampler != nullptr)
             ? sampler->generate2d()
             : math::Vector2(math::uniformRandom(), math::uniformRandom());
         math::real pdf;
-        math::Vector f = bsdf->sampleF(&point, s_u, t_dir, &t_incomingDir, &pdf, s);
+        math::Vector f = bsdf->sampleF(&point, s_u, outgoingDir, &incomingDir, &pdf, s);
         f = math::mul(f, material->getFilterColor(point));
         f = math::mask(f, math::constants::MaskOffW);
 
         if (pdf == (math::real)0.0) break;
         if (math::getScalar(math::maxComponent(f)) < (math::real)1E-4) break;
-
-        incomingDir = math::add(
-            math::mul(u, math::loadScalar(math::getX(t_incomingDir))),
-            math::mul(v, math::loadScalar(math::getY(t_incomingDir)))
-        );
-        incomingDir = math::add(
-            incomingDir,
-            math::mul(math::loadScalar(math::getZ(t_incomingDir)), w)
-        );
 
         beta = math::mul(
             math::mul(f, beta),
@@ -482,6 +459,7 @@ manta::math::Vector manta::RayTracer::traceRay(
 
         assert(!std::isnan(math::getX(beta)) && !std::isnan(math::getY(beta)) && !std::isnan(math::getZ(beta)));
 
+        /*
         localRay.setDirection(incomingDir);
         if (math::getScalar(math::dot(incomingDir, w)) >= 0) {
             localRay.setSource(point.m_position);
@@ -489,7 +467,9 @@ manta::math::Vector manta::RayTracer::traceRay(
         else {
             // The light ray is undergoing transmission
             localRay.setSource(math::add(point.m_position, math::mul(localRay.getDirection(), math::loadScalar((math::real)1E-2))));
-        }
+        }*/
+        localRay.setDirection(incomingDir);
+        localRay.setSource(point.m_position);
         localRay.calculateTransformations();
         currentRay = &localRay;
 

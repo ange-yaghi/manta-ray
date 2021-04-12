@@ -10,14 +10,10 @@ manta::BumpNodeOutput::~BumpNodeOutput() {
 }
 
 void manta::BumpNodeOutput::sample(const IntersectionPoint *surfaceInteraction, void *target) const {
-    const math::real du = 0.0001f;
-    const math::real dv = 0.0001f;
+    const math::real du = 0.001f;
+    const math::real dv = 0.001f;
 
-    IntersectionPoint offsetPoint0 = *surfaceInteraction;
-    offsetPoint0.offset(du, (math::real)0.0);
-
-    IntersectionPoint offsetPoint1 = *surfaceInteraction;
-    offsetPoint1.offset((math::real)0.0, dv);
+    IntersectionPoint main = *surfaceInteraction;
 
     VectorNodeOutput *displacement = static_cast<VectorNodeOutput *>(m_displacement);
     VectorNodeOutput *normal = static_cast<VectorNodeOutput *>(m_normal);
@@ -25,16 +21,26 @@ void manta::BumpNodeOutput::sample(const IntersectionPoint *surfaceInteraction, 
     math::Vector disp0, disp1, disp2;
     math::Vector norm0, norm1, norm2;
 
-    displacement->sample(surfaceInteraction, &disp0);
+    normal->sample(surfaceInteraction, &norm0);
+
+    main.m_vertexNormal = norm0;
+    main.calculatePartialDerivatives();
+
+    IntersectionPoint offsetPoint0 = main;
+    IntersectionPoint offsetPoint1 = main;
+
+    offsetPoint0.offset(du, (math::real)0.0);
+    offsetPoint1.offset((math::real)0.0, dv);
+
+    displacement->sample(&main, &disp0);
     displacement->sample(&offsetPoint0, &disp1);
     displacement->sample(&offsetPoint1, &disp2);
-
-    normal->sample(surfaceInteraction, &norm0);
+    
     normal->sample(&offsetPoint0, &norm1);
     normal->sample(&offsetPoint1, &norm2);
 
     const math::Vector p0 =
-        math::add(surfaceInteraction->m_position, math::mul(disp0, norm0));
+        math::add(main.m_position, math::mul(disp0, norm0));
     const math::Vector p1 =
         math::add(offsetPoint0.m_position, math::mul(disp1, norm1));
     const math::Vector p2 =

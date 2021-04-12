@@ -433,6 +433,18 @@
     <Filter Include="Header Files\sdl\nodes\library\normal">
       <UniqueIdentifier>{c9f90369-07ee-4cca-bd28-82bab3cfb6e5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\material\noise">
+      <UniqueIdentifier>{692ebd6b-e051-44dd-815f-2cab54c5643a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\material\noise">
+      <UniqueIdentifier>{da81d5f1-91b5-4897-9a58-727a55d859b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl\nodes\library\noise">
+      <UniqueIdentifier>{b679bb64-6bfe-4db4-852e-ca123aa820f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sdl\nodes\library\noise">
+      <UniqueIdentifier>{19c2e752-10e7-4f5f-b02e-0aa02955bafc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -827,6 +839,18 @@
     </ClCompile>
     <ClCompile Include="..\..\src\bump_node_output.cpp">
       <Filter>Source Files\sdl\nodes\output-ports\normal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\perlin_noise_node_output.cpp">
+      <Filter>Source Files\material\noise</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\perlin_noise_node.cpp">
+      <Filter>Source Files\sdl\nodes\library\noise</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\turbulence_noise_node.cpp">
+      <Filter>Source Files\sdl\nodes\library\noise</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\turbulence_noise_node_output.cpp">
+      <Filter>Source Files\material\noise</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1324,6 +1348,18 @@
     </ClInclude>
     <ClInclude Include="..\..\include\bump_node_output.h">
       <Filter>Header Files\sdl\nodes\output-ports\normal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\perlin_noise_node.h">
+      <Filter>Header Files\sdl\nodes\library\noise</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\perlin_noise_node_output.h">
+      <Filter>Header Files\material\noise</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\turbulence_noise_node_output.h">
+      <Filter>Header Files\material\noise</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\turbulence_noise_node.h">
+      <Filter>Header Files\sdl\nodes\library\noise</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

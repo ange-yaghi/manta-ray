@@ -10,6 +10,7 @@ module {
 }
 
 private import "bxdf.mr"
+private import "../materials/surface_interaction.mr"
 private import "../microfacet-models/microfacet_distributions.mr"
 private import "../../types/atomic_types.mr" as types
 private import "../../types/conversions.mr"
@@ -22,6 +23,7 @@ public node disney_specular_brdf => __mantaray__disney_specular_brdf {
         disney_ggx_distribution(roughness: roughness);
     input specular      [types::vector]: 1.0;
     input power         [types::vector]: 1.0;
+    input normal        [types::vector]: surface_interaction().normal;
 
     alias output __out  [bxdf];
 }
