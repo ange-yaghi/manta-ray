@@ -13,8 +13,12 @@ namespace manta {
         Light();
         ~Light();
 
-        virtual math::Vector sampleIncoming(const IntersectionPoint &ref, const math::Vector2 &u, math::Vector *wi, math::real *pdf) const = 0;
+        virtual math::Vector sampleIncoming(const IntersectionPoint &ref, const math::Vector2 &u, math::Vector *wi, math::real *pdf, math::real *depth) const = 0;
         virtual math::real pdfIncoming(const IntersectionPoint &ref, const math::Vector &wi) const = 0;
+
+        virtual math::Vector L(const IntersectionPoint &ref, const math::Vector &wi) const = 0;
+
+        virtual bool intersect(const math::Vector &src, const math::Vector &dir, math::real *depth) const = 0;
     };
 
 } /* namespace manta */

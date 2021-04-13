@@ -36,5 +36,9 @@ manta::math::Vector manta::LambertianBRDF::f(const IntersectionPoint *surfaceInt
 manta::math::real manta::LambertianBRDF::pdf(
     const IntersectionPoint *surfaceInteraction, const math::Vector &i, const math::Vector &o) 
 {
+    if (math::getZ(o) < 0) {
+        return 0;
+    }
+
     return (math::real)1.0 / math::constants::TWO_PI;
 }

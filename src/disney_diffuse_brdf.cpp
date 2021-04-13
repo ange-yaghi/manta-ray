@@ -58,6 +58,10 @@ manta::math::Vector manta::DisneyDiffuseBRDF::f(const IntersectionPoint *surface
 manta::math::real manta::DisneyDiffuseBRDF::pdf(
     const IntersectionPoint *surfaceInteraction, const math::Vector &i, const math::Vector &o)
 {
+    if (math::getZ(o) < 0) {
+        return 0;
+    }
+
     return (math::real)1.0 / math::constants::TWO_PI;
 }
 

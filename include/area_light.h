@@ -7,10 +7,22 @@ namespace manta {
         AreaLight();
         ~AreaLight();
 
-        virtual math::Vector sampleIncoming(const IntersectionPoint &ref, const math::Vector2 &u, math::Vector *wi, math::real *pdf) const;
+        virtual math::Vector sampleIncoming(const IntersectionPoint &ref, const math::Vector2 &u, math::Vector *wi, math::real *pdf, math::real *depth) const;
         virtual math::real pdfIncoming(const IntersectionPoint &ref, const math::Vector &wi) const;
 
+        virtual math::Vector L(const IntersectionPoint &ref, const math::Vector &wi) const;
+
+        virtual bool intersect(const math::Vector &src, const math::Vector &dir, math::real *depth) const;
+
         math::real getArea() const;
+
+        void setUp(const math::Vector &up) { m_up = up; }
+        void setDirection(const math::Vector &direction) { m_direction = direction; }
+        void setOrigin(const math::Vector &origin) { m_origin = origin; }
+        void setIntensity(const math::Vector &intensity) { m_intensity = intensity; }
+
+        void setWidth(math::real width) { m_width = width; }
+        void setHeight(math::real height) { m_height = height; }
 
     protected:
         math::real pdfIncoming(const math::Vector &ref, const math::Vector &p, const math::Vector &wi) const;

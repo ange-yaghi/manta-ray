@@ -8,6 +8,7 @@
 namespace manta {
 
     class SceneObject;
+    class Light;
 
     class Scene : public ObjectReferenceNode<Scene> {
     public:
@@ -20,10 +21,15 @@ namespace manta {
         SceneObject *getSceneObject(int index) const { return m_sceneObjects[index]; }
         int getSceneObjectCount() const { return (int)m_sceneObjects.size(); }
 
+        void addLight(Light *light) { m_lights.push_back(light); }
+        Light *getLight(int index) const { return m_lights[index]; }
+        int getLightCount() const { return (int)m_lights.size(); }
+
     protected:
         virtual void _evaluate();
 
         std::vector<SceneObject *> m_sceneObjects;
+        std::vector<Light *> m_lights;
     };
 
 } /* namespace manta */

@@ -66,15 +66,40 @@ manta::math::Vector manta::BSDF::sampleF(
 manta::math::Vector manta::BSDF::f(
     const IntersectionPoint *surfaceInteraction, const math::Vector &i, const math::Vector &o) const
 {
-    const math::Vector local_i = surfaceInteraction->worldToLocal(i);
-    const math::Vector local_o = surfaceInteraction->worldToLocal(o);
+    math::Vector f = math::constants::Zero;
 
     const int bxdfCount = getBxdfCount();
-    for (int i = 0; i < bxdfCount; i++) {
-        m_bxdfs[i]->f(surfaceInteraction, local_i, local_o, nullptr);
+    for (int j = 0; j < bxdfCount; ++j) {
+        math::Vector basis_u, basis_v, basis_w;
+        m_bxdfs[j]->generateBasisVectors(i, surfaceInteraction, &basis_u, &basis_v, &basis_w);
+
+        const math::Vector i_local = m_bxdfs[j]->transform(i, basis_u, basis_v, basis_w);
+        const math::Vector o_local = m_bxdfs[j]->transform(o, basis_u, basis_v, basis_w);
+
+        f = math::add(
+            f,
+            m_bxdfs[j]->f(surfaceInteraction, i_local, o_local, nullptr));
     }
 
-    return math::constants::Zero;
+    return f;
+}
+
+manta::math::real manta::BSDF::pdf(const IntersectionPoint *surfaceInteraction, const math::Vector &i, const math::Vector &o) const {
+    math::real pdf = 0;
+
+    for (int j = 0; j < m_bxdfCount; j++) {
+        math::Vector basis_u, basis_v, basis_w;
+        m_bxdfs[j]->generateBasisVectors(i, surfaceInteraction, &basis_u, &basis_v, &basis_w);
+
+        const math::Vector i_local = m_bxdfs[j]->transform(i, basis_u, basis_v, basis_w);
+        const math::Vector o_local = m_bxdfs[j]->transform(o, basis_u, basis_v, basis_w);
+
+        pdf += m_bxdfs[j]->pdf(surfaceInteraction, i_local, o_local);
+    }
+
+    pdf /= m_bxdfCount;
+
+    return pdf;
 }
 
 void manta::BSDF::_evaluate() {

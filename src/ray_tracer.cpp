@@ -23,6 +23,7 @@
 #include "../include/bsdf.h"
 #include "../include/sampler.h"
 #include "../include/console.h"
+#include "../include/light.h"
 
 #include <iostream>
 #include <thread>
@@ -220,6 +221,113 @@ void manta::RayTracer::incrementRayCompletion(const Job *job, int increment) {
     m_outputLock.unlock();
 }
 
+manta::math::Vector manta::RayTracer::uniformSampleOneLight(IntersectionPoint *point, const Scene *scene, Sampler *sampler, StackAllocator *stackAllocator) const {
+    const int lightCount = scene->getLightCount();
+    if (lightCount == 0) return math::constants::Zero;
+    const int light_i = std::min((int)(sampler->generate1d() * lightCount), lightCount - 1);
+
+    Light *light = scene->getLight(light_i);
+
+    const math::Vector2 uLight = sampler->generate2d();
+    const math::Vector2 uScattering = sampler->generate2d();
+
+    const math::Vector l_n = math::loadScalar((math::real)lightCount);
+    return math::mul(
+        l_n,
+        estimateDirect(point, uScattering, light, uLight, scene, sampler, stackAllocator)
+    );
+}
+
+manta::math::Vector manta::RayTracer::estimateDirect(
+    IntersectionPoint *point,
+    const math::Vector2 &uScattering,
+    const Light *light,
+    const math::Vector2 &uLight,
+    const Scene *scene,
+    Sampler *sampler,
+    StackAllocator *stackAllocator) const
+{
+    math::Vector wi;
+    math::real lightPdf = 0, scatteringPdf = 0;
+    math::Vector Ld = math::constants::Zero;
+    math::real depth;
+    math::Vector Li = light->sampleIncoming(*point, uLight, &wi, &lightPdf, &depth);
+
+    math::Vector f;
+    if (lightPdf > 0) {
+        f = point->m_bsdf->f(point, point->m_lightRay->getDirection(), math::negate(wi));
+        f = math::mul(
+            f,
+            math::abs(math::dot(wi, point->m_vertexNormal)));
+        scatteringPdf = point->m_bsdf->pdf(point, point->m_lightRay->getDirection(), math::negate(wi));
+
+        if (scatteringPdf != 0) {
+            SceneObject *object;
+            IntersectionPoint testPoint;
+            LightRay testRay;
+            testRay.setDirection(wi);
+            testRay.setSource(point->m_position);
+            testRay.calculateTransformations();
+            depthCull(scene, &testRay, &object, &testPoint, stackAllocator, depth);
+
+            if (testPoint.m_valid) {
+                Li = math::constants::Zero;
+            }
+        }
+        else {
+            Li = math::constants::Zero;
+        }
+
+        const math::real w = powerHeuristic(1, lightPdf, 1, scatteringPdf);
+        Ld = math::add(Ld, math::mul(f, math::mul(Li, math::loadScalar(w / lightPdf))));
+    }
+
+    f = point->m_bsdf->sampleF(point, uScattering, point->m_lightRay->getDirection(), &wi, &scatteringPdf, stackAllocator);
+    f = math::mul(
+        f,
+        math::abs(math::dot(wi, point->m_vertexNormal)));
+
+    if (scatteringPdf > 0) {
+        math::real weight = 1;
+        lightPdf = light->pdfIncoming(*point, wi);
+        if (lightPdf == 0) {
+            return Ld;
+        }
+
+        weight = powerHeuristic(1, scatteringPdf, 1, lightPdf);
+
+        const bool intersectsLight = light->intersect(point->m_position, wi, &depth);
+
+        SceneObject *object;
+        IntersectionPoint testPoint;
+        LightRay testRay;
+        testRay.setDirection(wi);
+        testRay.setSource(point->m_position);
+        testRay.calculateTransformations();
+        depthCull(scene, &testRay, &object, &testPoint, stackAllocator, depth);
+
+        if (!testPoint.m_valid) {
+            // TODO: inputs are technically wrong
+            Li = light->L(testPoint, wi);
+        }
+        else {
+            Li = math::constants::Zero;
+        }
+
+        Ld = math::add(
+            Ld,
+            math::mul(math::mul(f, Li), math::loadScalar(weight / scatteringPdf)));
+    }
+
+    return Ld;
+}
+
+manta::math::real manta::RayTracer::powerHeuristic(int nf, math::real f_pdf, int ng, math::real g_pdf) {
+    const math::real f = nf * f_pdf;
+    const math::real g = ng * g_pdf;
+    return (f * f) / (f * f + g * g);
+}
+
 void manta::RayTracer::_evaluate() {
     int threadCount;
     int renderBlockSize;
@@ -319,13 +427,14 @@ void manta::RayTracer::depthCull(
     LightRay *ray,
     SceneObject **closestObject,
     IntersectionPoint *point,
-    StackAllocator *s
+    StackAllocator *s,
+    math::real startingDepth
     /**/ STATISTICS_PROTOTYPE) const
 {
     const int objectCount = scene->getSceneObjectCount();
 
     CoarseIntersection closestIntersection;
-    math::real closestDepth = math::constants::REAL_MAX;
+    math::real closestDepth = startingDepth;
 
     // Find the closest intersection
     bool found = false;
@@ -406,7 +515,7 @@ manta::math::Vector manta::RayTracer::traceRay(
         point.m_threadId = manager->getThreadId();
         point.m_manager = manager;
 
-        depthCull(scene, currentRay, &sceneObject, &point, s /**/ STATISTICS_PARAM_INPUT);
+        depthCull(scene, currentRay, &sceneObject, &point, s, math::constants::REAL_MAX /**/ STATISTICS_PARAM_INPUT);
 
         const bool foundIntersection = (sceneObject != nullptr);
         if (foundIntersection) {
@@ -432,6 +541,12 @@ manta::math::Vector manta::RayTracer::traceRay(
         // Get the BSDF associated with this material
         BSDF *bsdf = material->getBSDF();
         if (bsdf == nullptr) break;
+
+        point.m_bsdf = bsdf;
+
+        L = math::add(
+            L,
+            math::mul(beta, uniformSampleOneLight(&point, scene, sampler, s)));
 
         // Generate a new path
         const math::Vector outgoingDir = math::negate(currentRay->getDirection());

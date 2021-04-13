@@ -18,15 +18,18 @@ manta::math::Vector manta::AreaLight::sampleIncoming(
     const IntersectionPoint &ref,
     const math::Vector2 &u,
     math::Vector *wi,
-    math::real *pdf) const
+    math::real *pdf,
+    math::real *depth) const
 {
-    const math::real offset_u = (u.x * (math::real)2.0 - (math::real)1.0) * m_width;
-    const math::real offset_v = (u.y * (math::real)2.0 - (math::real)1.0) * m_height;
+    const math::real offset_u = (u.x * (math::real)2.0 - (math::real)1.0) * m_width / (math::real)2.0;
+    const math::real offset_v = (u.y * (math::real)2.0 - (math::real)1.0) * m_height / (math::real)2.0;
 
     const math::Vector right = math::normalize(math::cross(m_direction, m_up));
 
     math::Vector pos = math::add(m_origin, math::mul(m_up, math::loadScalar(offset_v)));
     pos = math::add(pos, math::mul(right, math::loadScalar(offset_u)));
+
+    *depth = math::getScalar(math::magnitude(math::sub(pos, ref.m_position)));
 
     *wi = math::normalize(math::sub(pos, ref.m_position));
     *pdf = pdfIncoming(ref.m_position, pos, *wi);
@@ -35,7 +38,48 @@ manta::math::Vector manta::AreaLight::sampleIncoming(
 }
 
 manta::math::real manta::AreaLight::pdfIncoming(const IntersectionPoint &ref, const math::Vector &wi) const {
-    return math::real();
+    math::real depth;
+    const bool intersects = intersect(ref.m_position, wi, &depth);
+
+    if (!intersects) return 0;
+    else {
+        const math::Vector i = math::add(
+            ref.m_position,
+            math::mul(math::loadScalar(depth), wi)
+        );
+
+        return pdfIncoming(ref.m_position, i, wi);
+    }
+}
+
+manta::math::Vector manta::AreaLight::L(const IntersectionPoint &ref, const math::Vector &wi) const {
+    return m_intensity;
+}
+
+bool manta::AreaLight::intersect(const math::Vector &src, const math::Vector &dir, math::real *depth) const {
+    const math::Vector d = math::div(
+        math::dot(math::sub(src, m_origin), m_direction),
+        math::dot(dir, m_direction)
+    );
+
+    *depth = math::getScalar(d);
+
+    if (*depth < 0) return false;
+
+    const math::Vector i = math::add(
+        src,
+        math::mul(d, dir)
+    );
+
+    const math::Vector local_i = math::sub(i, m_origin);
+
+    const math::Vector right = math::normalize(math::cross(m_direction, m_up));
+    const math::real u = math::getScalar(math::dot(local_i, right));
+    const math::real v = math::getScalar(math::dot(local_i, m_up));
+
+    if (std::abs(u) > m_width / 2) return false;
+    else if (std::abs(v) > m_height / 2) return false;
+    else return true;
 }
 
 manta::math::real manta::AreaLight::getArea() const {

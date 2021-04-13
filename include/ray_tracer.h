@@ -41,6 +41,7 @@ namespace manta {
     class ImagePlane;
     class MaterialLibrary;
     class Sampler;
+    class Light;
 
     class RayTracer : public Node {
     public:
@@ -63,10 +64,21 @@ namespace manta {
         // Interface to workers
         JobQueue *getJobQueue() { return &m_jobQueue; }
         
-        math::Vector traceRay(const Scene *scene, LightRay *ray, int degree, 
-            IntersectionPointManager *manager, Sampler *sampler, StackAllocator *s 
+        math::Vector traceRay(const Scene *scene, LightRay *ray, int degree,
+            IntersectionPointManager *manager, Sampler *sampler, StackAllocator *s
             /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const;
         void incrementRayCompletion(const Job *job, int increment = 1);
+
+        math::Vector uniformSampleOneLight(IntersectionPoint *point, const Scene *scene, Sampler *sampler, StackAllocator *stackAllocator) const;
+        math::Vector estimateDirect(
+            IntersectionPoint *point,
+            const math::Vector2 &uScattering,
+            const Light *light,
+            const math::Vector2 &uLight,
+            const Scene *scene,
+            Sampler *sampler,
+            StackAllocator *stackAllocator) const;
+        static math::real powerHeuristic(int nf, math::real f_pdf, int ng, math::real g_pdf);
 
         void setDeterministicSeedMode(bool enable) { m_deterministicSeed = enable; }
         bool isDeterministicSeedMode() const { return m_deterministicSeed; }
@@ -121,7 +133,7 @@ namespace manta {
     protected:
         // Ray tracing features
         void depthCull(const Scene *scene, LightRay *ray, SceneObject **closestObject, 
-            IntersectionPoint *point, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const;
+            IntersectionPoint *point, StackAllocator *s, math::real startingDepth /**/ STATISTICS_PROTOTYPE) const;
         void refineContact(const LightRay *ray, math::real depth, IntersectionPoint *point, 
             SceneObject **closestObject, StackAllocator *s) const;
 

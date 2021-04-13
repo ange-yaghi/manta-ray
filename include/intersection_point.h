@@ -30,6 +30,7 @@ namespace manta {
         IntersectionPointManager *m_manager;
 
         const Mesh *m_mesh = nullptr;
+        const BSDF *m_bsdf = nullptr;
         int m_faceIndex = -1;
 
     public:

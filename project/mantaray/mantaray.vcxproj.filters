@@ -445,6 +445,12 @@
     <Filter Include="Source Files\sdl\nodes\library\noise">
       <UniqueIdentifier>{19c2e752-10e7-4f5f-b02e-0aa02955bafc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\lights">
+      <UniqueIdentifier>{5764a568-6cb2-4c63-b362-72dd3d09e124}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\lights">
+      <UniqueIdentifier>{20894dbb-346c-4467-bf4a-59a791764d5d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -851,6 +857,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\turbulence_noise_node_output.cpp">
       <Filter>Source Files\material\noise</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\light.cpp">
+      <Filter>Source Files\lights</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\area_light.cpp">
+      <Filter>Source Files\lights</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1360,6 +1372,12 @@
     </ClInclude>
     <ClInclude Include="..\..\include\turbulence_noise_node.h">
       <Filter>Header Files\sdl\nodes\library\noise</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\light.h">
+      <Filter>Header Files\lights</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\area_light.h">
+      <Filter>Header Files\lights</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
