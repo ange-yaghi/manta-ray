@@ -14,7 +14,7 @@ manta::Scene::Scene() {
     newAreaLight->setOrigin(math::loadVector(0, 2, 0));
     newAreaLight->setUp(math::loadVector(1, 0, 0));
 
-    //addLight(newAreaLight);
+    addLight(newAreaLight);
 }
 
 manta::Scene::~Scene() {

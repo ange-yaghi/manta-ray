@@ -255,12 +255,8 @@ manta::math::Vector manta::RayTracer::estimateDirect(
 
     math::Vector f;
     if (lightPdf > 0) {
-        f = point->m_bsdf->f(point, point->m_lightRay->getDirection(), math::negate(wi));
-        f = math::mul(
-            f,
-            math::abs(math::dot(wi, point->m_vertexNormal)));
+        f = point->m_bsdf->f(point, point->m_lightRay->getDirection(), math::negate(wi), true);
         scatteringPdf = point->m_bsdf->pdf(point, point->m_lightRay->getDirection(), math::negate(wi));
-
         if (scatteringPdf != 0) {
             SceneObject *object;
             IntersectionPoint testPoint;
@@ -282,41 +278,36 @@ manta::math::Vector manta::RayTracer::estimateDirect(
         Ld = math::add(Ld, math::mul(f, math::mul(Li, math::loadScalar(w / lightPdf))));
     }
 
-    f = point->m_bsdf->sampleF(point, uScattering, point->m_lightRay->getDirection(), &wi, &scatteringPdf, stackAllocator);
-    f = math::mul(
-        f,
-        math::abs(math::dot(wi, point->m_vertexNormal)));
-
+    f = point->m_bsdf->sampleF(point, uScattering, math::negate(point->m_lightRay->getDirection()), &wi, &scatteringPdf, stackAllocator, true);
     if (scatteringPdf > 0) {
-        math::real weight = 1;
         lightPdf = light->pdfIncoming(*point, wi);
         if (lightPdf == 0) {
             return Ld;
         }
 
-        weight = powerHeuristic(1, scatteringPdf, 1, lightPdf);
+        const math::real weight = powerHeuristic(1, scatteringPdf, 1, lightPdf);
 
-        const bool intersectsLight = light->intersect(point->m_position, wi, &depth);
+        if (light->intersect(point->m_position, wi, &depth)) {
+            SceneObject *object;
+            IntersectionPoint testPoint;
+            LightRay testRay;
+            testRay.setDirection(wi);
+            testRay.setSource(point->m_position);
+            testRay.calculateTransformations();
+            depthCull(scene, &testRay, &object, &testPoint, stackAllocator, depth);
 
-        SceneObject *object;
-        IntersectionPoint testPoint;
-        LightRay testRay;
-        testRay.setDirection(wi);
-        testRay.setSource(point->m_position);
-        testRay.calculateTransformations();
-        depthCull(scene, &testRay, &object, &testPoint, stackAllocator, depth);
+            if (!testPoint.m_valid) {
+                // TODO: inputs are technically wrong
+                Li = light->L(testPoint, wi);
+            }
+            else {
+                Li = math::constants::Zero;
+            }
 
-        if (!testPoint.m_valid) {
-            // TODO: inputs are technically wrong
-            Li = light->L(testPoint, wi);
+            Ld = math::add(
+                Ld,
+                math::mul(math::mul(f, Li), math::loadScalar(weight / scatteringPdf)));
         }
-        else {
-            Li = math::constants::Zero;
-        }
-
-        Ld = math::add(
-            Ld,
-            math::mul(math::mul(f, Li), math::loadScalar(weight / scatteringPdf)));
     }
 
     return Ld;

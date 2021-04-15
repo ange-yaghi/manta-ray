@@ -23,7 +23,8 @@ manta::math::Vector manta::BSDF::sampleF(
     const math::Vector &i,
     math::Vector *o,
     math::real *pdf,
-    StackAllocator *stackAllocator) const 
+    StackAllocator *stackAllocator,
+    bool cosineWeight) const 
 {
     const int bxdf_i = rand() % m_bxdfCount;
 
@@ -36,6 +37,10 @@ manta::math::Vector manta::BSDF::sampleF(
     const math::Vector i_local = bxdf->transform(i, basis_u, basis_v, basis_w);
     math::Vector o_local;
     math::Vector f = bxdf->sampleF(surfaceInteraction, u, i_local, &o_local, pdf, stackAllocator);
+
+    if (cosineWeight) {
+        f = math::mul(f, math::expandZ(o_local));
+    }
 
     *o = bxdf->inverseTransform(o_local, basis_u, basis_v, basis_w);
 
@@ -53,7 +58,13 @@ manta::math::Vector manta::BSDF::sampleF(
                 const math::Vector o_local = m_bxdfs[j]->transform(*o, basis_u, basis_v, basis_w);
 
                 *pdf += m_bxdfs[j]->pdf(surfaceInteraction, i_local, o_local);
-                f = math::add(f, m_bxdfs[j]->f(surfaceInteraction, i_local, o_local, stackAllocator));
+
+                math::Vector f_i = m_bxdfs[j]->f(surfaceInteraction, i_local, o_local, stackAllocator);
+                if (cosineWeight) {
+                    f_i = math::mul(f_i, math::expandZ(o_local));
+                }
+
+                f = math::add(f, f_i);
             }   
         }
 
@@ -64,7 +75,10 @@ manta::math::Vector manta::BSDF::sampleF(
 }
 
 manta::math::Vector manta::BSDF::f(
-    const IntersectionPoint *surfaceInteraction, const math::Vector &i, const math::Vector &o) const
+    const IntersectionPoint *surfaceInteraction,
+    const math::Vector &i,
+    const math::Vector &o,
+    bool cosineWeight) const
 {
     math::Vector f = math::constants::Zero;
 
@@ -76,17 +90,25 @@ manta::math::Vector manta::BSDF::f(
         const math::Vector i_local = m_bxdfs[j]->transform(i, basis_u, basis_v, basis_w);
         const math::Vector o_local = m_bxdfs[j]->transform(o, basis_u, basis_v, basis_w);
 
+        math::Vector f_i = m_bxdfs[j]->f(surfaceInteraction, i_local, o_local, nullptr);
+        if (cosineWeight) {
+            f_i = math::mul(f_i, math::expandZ(o_local));
+        }
+
         f = math::add(
             f,
-            m_bxdfs[j]->f(surfaceInteraction, i_local, o_local, nullptr));
+            f_i);
     }
 
     return f;
 }
 
-manta::math::real manta::BSDF::pdf(const IntersectionPoint *surfaceInteraction, const math::Vector &i, const math::Vector &o) const {
+manta::math::real manta::BSDF::pdf(
+    const IntersectionPoint *surfaceInteraction,
+    const math::Vector &i,
+    const math::Vector &o) const
+{
     math::real pdf = 0;
-
     for (int j = 0; j < m_bxdfCount; j++) {
         math::Vector basis_u, basis_v, basis_w;
         m_bxdfs[j]->generateBasisVectors(i, surfaceInteraction, &basis_u, &basis_v, &basis_w);

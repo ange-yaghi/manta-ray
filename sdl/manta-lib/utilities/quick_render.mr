@@ -41,6 +41,7 @@ public node quick_render {
     input camera_up:        vector(0, 1, 0);
     input background:       1.0;
     input samples:          128;
+    input sampler:          random_sampler(samples);
     input resolution_x:     1920;
     input resolution_y:     1080;
     input plane_height:     1.0;
@@ -106,7 +107,7 @@ public node quick_render {
         camera: camera,
         materials: materials,
         background: background,
-        sampler: random_sampler(samples)
+        sampler: sampler
     )
 
     log("Render complete\n")
@@ -114,6 +115,7 @@ public node quick_render {
 
     image_output(
         map: mantaray.image,
+        jpeg_quality: 100,
         filename: 
             output_dir + current_date.as_string + "_" + output_name + 
             "_S" + string(samples) + ".jpg"

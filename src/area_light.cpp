@@ -57,8 +57,14 @@ manta::math::Vector manta::AreaLight::L(const IntersectionPoint &ref, const math
 }
 
 bool manta::AreaLight::intersect(const math::Vector &src, const math::Vector &dir, math::real *depth) const {
+    math::real d_dot_n = math::getScalar(math::dot(dir, m_direction));
+
+    if (d_dot_n == 0) {
+        return false;
+    }
+
     const math::Vector d = math::div(
-        math::dot(math::sub(src, m_origin), m_direction),
+        math::dot(math::sub(m_origin, src), m_direction),
         math::dot(dir, m_direction)
     );
 
