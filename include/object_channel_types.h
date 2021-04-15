@@ -16,6 +16,7 @@ namespace manta {
         static const piranha::ChannelType MaterialLibraryChannel;
         static const piranha::ChannelType SceneObjectChannel;
         static const piranha::ChannelType SceneChannel;
+        static const piranha::ChannelType LightChannel;
         static const piranha::ChannelType SamplerChannel;
         static const piranha::ChannelType CameraChannel;
         static const piranha::ChannelType ApertureChannel;
@@ -43,6 +44,7 @@ namespace manta {
     class SceneGeometry;
     class Scene;
     class SceneObject;
+    class Light;
     class CameraRayEmitterGroup;
     class Sampler;
     class Sampler2d; // Deprecated
@@ -66,6 +68,7 @@ namespace manta {
     ASSIGN_CHANNEL_TYPE(MaterialLibrary, MaterialLibraryChannel);
     ASSIGN_CHANNEL_TYPE(Scene, SceneChannel);
     ASSIGN_CHANNEL_TYPE(SceneObject, SceneObjectChannel);
+    ASSIGN_CHANNEL_TYPE(Light, LightChannel);
     ASSIGN_CHANNEL_TYPE(CameraRayEmitterGroup, CameraChannel);
     ASSIGN_CHANNEL_TYPE(Sampler, SamplerChannel);
     ASSIGN_CHANNEL_TYPE(Sampler2d, SamplerChannel);

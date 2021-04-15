@@ -32,6 +32,19 @@ namespace manta {
         std::vector<Light *> m_lights;
     };
 
+    class SceneAddLight : public ObjectReferenceNode<Scene> {
+    public:
+        SceneAddLight();
+        virtual ~SceneAddLight();
+
+    protected:
+        virtual void _evaluate();
+        virtual void registerInputs();
+
+        piranha::pNodeInput m_sceneInput;
+        piranha::pNodeInput m_lightInput;
+    };
+
 } /* namespace manta */
 
 #endif /* MANTARAY_SCENE_H */

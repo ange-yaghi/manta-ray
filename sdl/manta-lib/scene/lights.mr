@@ -1,0 +1,28 @@
+module {
+    @name:          "Lights"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2021, Ange Yaghi"
+    @doc:           "Defines all lights"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
+import "../types/atomic_types.mr"
+import "../types/conversions.mr"
+import "../types/operations.mr"
+
+@doc: "Light channel type"
+public node light => __mantaray__light { /* void */ }
+
+public node area_light => __mantaray__area_light {
+    input intensity [vector]: 1;
+    input width [scalar]: 1;
+    input height [scalar]: 1;
+    input direction [vector]: vector(0, -1, 0);
+    input origin [vector]: vector(0, 1, 0);
+    input up [vector]: vector(1, 0, 0);
+    input name [string]: "AreaLight";
+    alias output __out [light]; 
+}

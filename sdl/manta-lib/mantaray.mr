@@ -29,6 +29,7 @@ public import "mesh/utilities.mr"
 public import "scene/scene_geometry.mr"
 public import "scene/scene_object.mr"
 public import "scene/scene.mr"
+public import "scene/lights.mr"
 
 public import "acceleration/kd_tree.mr"
 

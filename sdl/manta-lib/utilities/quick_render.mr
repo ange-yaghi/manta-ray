@@ -49,6 +49,7 @@ public node quick_render {
     input output_name:      "quick_render";
     input image_plane:      image_plane(width: resolution_x, height: resolution_y);
     input output_dir:       "";
+    input scene:            scene();
 
     // Save the current date/time
     current_date current_date()
@@ -94,7 +95,6 @@ public node quick_render {
         default_material: default_material
     )
 
-    scene scene()
     scene_object main_object(
         name: "Main",
         scene: scene,

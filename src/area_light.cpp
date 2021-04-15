@@ -92,6 +92,33 @@ manta::math::real manta::AreaLight::getArea() const {
     return m_width * m_height;
 }
 
+void manta::AreaLight::_evaluate() {
+    Light::_evaluate();
+
+    static_cast<VectorNodeOutput *>(m_upInput)->sample(nullptr, &m_up);
+    static_cast<VectorNodeOutput *>(m_directionInput)->sample(nullptr, &m_direction);
+    static_cast<VectorNodeOutput *>(m_originInput)->sample(nullptr, &m_origin);
+    static_cast<VectorNodeOutput *>(m_intensityInput)->sample(nullptr, &m_intensity);
+
+    math::Vector width, height;
+    static_cast<VectorNodeOutput *>(m_widthInput)->sample(nullptr, &width);
+    static_cast<VectorNodeOutput *>(m_heightInput)->sample(nullptr, &height);
+
+    m_width = math::getScalar(width);
+    m_height = math::getScalar(height);
+}
+
+void manta::AreaLight::registerInputs() {
+    Light::registerInputs();
+
+    registerInput(&m_upInput, "up");
+    registerInput(&m_directionInput, "direction");
+    registerInput(&m_originInput, "origin");
+    registerInput(&m_intensityInput, "intensity");
+    registerInput(&m_widthInput, "width");
+    registerInput(&m_heightInput, "height");
+}
+
 manta::math::real manta::AreaLight::pdfIncoming(const math::Vector &ref, const math::Vector &p, const math::Vector &wi) const {
     const math::real distanceSquared = math::getScalar(math::magnitudeSquared3(math::sub(ref, p)));
     const math::real absDot = math::getScalar(math::abs(math::dot(m_direction, wi)));

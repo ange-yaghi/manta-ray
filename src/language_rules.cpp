@@ -66,6 +66,7 @@
 #include "../include/bump_node.h"
 #include "../include/perlin_noise_node.h"
 #include "../include/turbulence_noise_node.h"
+#include "../include/area_light.h"
 
 manta::LanguageRules::LanguageRules() {
     /* void */
@@ -109,6 +110,8 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__scene_object_channel", &ObjectChannel::SceneGeometryChannel);
     registerBuiltinType<Scene>(
         "__mantaray__scene", &ObjectChannel::SceneChannel);
+    registerBuiltinType<Light>(
+        "__mantaray__light", &ObjectChannel::LightChannel);
     registerBuiltinType<piranha::ChannelNode>(
         "__mantaray__camera", &ObjectChannel::CameraChannel);
     registerBuiltinType <piranha::ChannelNode>(
@@ -233,6 +236,10 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__perlin_noise");
     registerBuiltinType<TurbulenceNoiseNode>(
         "__mantaray__turbulence_noise");
+    registerBuiltinType<AreaLight>(
+        "__mantaray__area_light");
+    registerBuiltinType<SceneAddLight>(
+        "__mantaray__scene_add_light");
 
     // Actions
     registerBuiltinType<piranha::ConsoleInputNode>(
@@ -321,7 +328,10 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         piranha::native_int, piranha::AddOperationNodeOutput>>("__mantaray__int_add");
     registerBuiltinType<piranha::OperationNodeSpecialized<
         piranha::native_int, piranha::SubtractOperationNodeOutput>>("__mantaray__int_sub");
+    registerBuiltinType<piranha::NumNegateOperationNode<
+        piranha::native_int>>("__mantaray__int_negate");
 
+    // -- String operations
     registerBuiltinType<piranha::OperationNodeSpecialized<
         piranha::native_string, piranha::AddOperationNodeOutput>>("__mantaray__string_add");
 
@@ -457,6 +467,10 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
     // ====================================================
     // Unary operators
     // ====================================================
+    registerUnaryOperator(
+        { piranha::IrUnaryOperator::Operator::NumericNegate, &piranha::FundamentalType::IntType },
+        "__mantaray__int_negate"
+    );
     registerUnaryOperator(
         { piranha::IrUnaryOperator::Operator::NumericNegate, &piranha::FundamentalType::FloatType },
         "__mantaray__float_negate"

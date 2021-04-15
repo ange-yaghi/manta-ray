@@ -148,3 +148,8 @@ public node int_sub => __mantaray__int_sub {
     input __in1 [int];
     alias output __out [int];
 }
+
+public node int_negate => __mantaray__int_negate {
+    input __in [int];
+    alias output __out [int];
+}

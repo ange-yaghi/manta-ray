@@ -1,5 +1,7 @@
 #include "light.h"
 
+#include "cacheable_input.h"
+
 namespace manta {
 
     class AreaLight : public Light {
@@ -23,6 +25,17 @@ namespace manta {
 
         void setWidth(math::real width) { m_width = width; }
         void setHeight(math::real height) { m_height = height; }
+
+    protected:
+        virtual void _evaluate();
+        virtual void registerInputs();
+
+        piranha::pNodeInput m_upInput;
+        piranha::pNodeInput m_directionInput;
+        piranha::pNodeInput m_originInput;
+        piranha::pNodeInput m_intensityInput;
+        piranha::pNodeInput m_widthInput;
+        piranha::pNodeInput m_heightInput;
 
     protected:
         math::real pdfIncoming(const math::Vector &ref, const math::Vector &p, const math::Vector &wi) const;

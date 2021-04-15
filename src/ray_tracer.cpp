@@ -283,9 +283,11 @@ manta::math::Vector manta::RayTracer::estimateDirect(
         lightPdf = light->pdfIncoming(*point, wi);
         if (lightPdf == 0) {
             return Ld;
-        }
+        } 
 
         const math::real weight = powerHeuristic(1, scatteringPdf, 1, lightPdf);
+
+        //return math::mul(f, math::loadScalar(weight / scatteringPdf));
 
         if (light->intersect(point->m_position, wi, &depth)) {
             SceneObject *object;
@@ -547,17 +549,14 @@ manta::math::Vector manta::RayTracer::traceRay(
             ? sampler->generate2d()
             : math::Vector2(math::uniformRandom(), math::uniformRandom());
         math::real pdf;
-        math::Vector f = bsdf->sampleF(&point, s_u, outgoingDir, &incomingDir, &pdf, s);
+        math::Vector f = bsdf->sampleF(&point, s_u, outgoingDir, &incomingDir, &pdf, s, true);
         f = math::mul(f, material->getFilterColor(point));
         f = math::mask(f, math::constants::MaskOffW);
 
         if (pdf == (math::real)0.0) break;
         if (math::getScalar(math::maxComponent(f)) < (math::real)1E-4) break;
-
-        beta = math::mul(
-            math::mul(f, beta),
-            math::abs(math::dot(incomingDir, point.m_vertexNormal))
-        );
+        
+        beta = math::mul(beta, f);
         beta = math::div(
             beta,
             math::loadScalar(pdf)

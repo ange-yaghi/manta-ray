@@ -57,6 +57,10 @@ manta::math::Vector manta::BSDF::sampleF(
                 const math::Vector i_local = m_bxdfs[j]->transform(i, basis_u, basis_v, basis_w);
                 const math::Vector o_local = m_bxdfs[j]->transform(*o, basis_u, basis_v, basis_w);
 
+                if (math::getZ(i_local) < 0 || math::getZ(o_local) < 0) {
+                    continue;
+                }
+
                 *pdf += m_bxdfs[j]->pdf(surfaceInteraction, i_local, o_local);
 
                 math::Vector f_i = m_bxdfs[j]->f(surfaceInteraction, i_local, o_local, stackAllocator);
@@ -90,14 +94,16 @@ manta::math::Vector manta::BSDF::f(
         const math::Vector i_local = m_bxdfs[j]->transform(i, basis_u, basis_v, basis_w);
         const math::Vector o_local = m_bxdfs[j]->transform(o, basis_u, basis_v, basis_w);
 
+        if (math::getZ(i_local) < 0 || math::getZ(o_local) < 0) {
+            continue;
+        }
+
         math::Vector f_i = m_bxdfs[j]->f(surfaceInteraction, i_local, o_local, nullptr);
         if (cosineWeight) {
             f_i = math::mul(f_i, math::expandZ(o_local));
         }
 
-        f = math::add(
-            f,
-            f_i);
+        f = math::add(f, f_i);
     }
 
     return f;
@@ -115,6 +121,10 @@ manta::math::real manta::BSDF::pdf(
 
         const math::Vector i_local = m_bxdfs[j]->transform(i, basis_u, basis_v, basis_w);
         const math::Vector o_local = m_bxdfs[j]->transform(o, basis_u, basis_v, basis_w);
+
+        if (math::getZ(i_local) < 0 || math::getZ(o_local) < 0) {
+            continue;
+        }
 
         pdf += m_bxdfs[j]->pdf(surfaceInteraction, i_local, o_local);
     }

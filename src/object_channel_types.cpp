@@ -10,6 +10,7 @@ const piranha::ChannelType manta::ObjectChannel::MicrofacetDistributionChannel("
 const piranha::ChannelType manta::ObjectChannel::MaterialLibraryChannel("MaterialLibraryChannel");
 const piranha::ChannelType manta::ObjectChannel::SceneObjectChannel("SceneObjectChannel");
 const piranha::ChannelType manta::ObjectChannel::SceneChannel("SceneChannel");
+const piranha::ChannelType manta::ObjectChannel::LightChannel("LightChannel");
 const piranha::ChannelType manta::ObjectChannel::SamplerChannel("SamplerChannel");
 const piranha::ChannelType manta::ObjectChannel::CameraChannel("CameraChannel");
 const piranha::ChannelType manta::ObjectChannel::ApertureChannel("ApertureChannel");

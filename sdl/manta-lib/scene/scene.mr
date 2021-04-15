@@ -9,5 +9,13 @@ module {
     @github:        "github.com/ange-yaghi/manta-ray"
 }
 
+import "lights.mr"
+
 @doc: "Scene channel type"
 public node scene => __mantaray__scene { /* void */ }
+
+public node add_light => __mantaray__scene_add_light {
+    input light [light];
+    input this [scene];
+    alias output __out [scene];
+}
