@@ -69,7 +69,7 @@ void manta::RayTracer::traceAll(const Scene *scene, CameraRayEmitterGroup *group
     // Create jobs
     const int horizontalBlocks = target->getWidth() / m_renderBlockSize + 1;
     const int verticalBlocks = target->getHeight() / m_renderBlockSize + 1;
-
+    
     for (int i = 0; i < horizontalBlocks; i++) {
         for (int j = 0; j < verticalBlocks; j++) {
             Job newJob;
@@ -221,7 +221,7 @@ void manta::RayTracer::incrementRayCompletion(const Job *job, int increment) {
     m_outputLock.unlock();
 }
 
-manta::math::Vector manta::RayTracer::uniformSampleOneLight(IntersectionPoint *point, const Scene *scene, Sampler *sampler, StackAllocator *stackAllocator) const {
+manta::math::Vector manta::RayTracer::uniformSampleOneLight(IntersectionPoint *point, const Scene *scene, Sampler *sampler, IntersectionPointManager *manager, StackAllocator *stackAllocator) const {
     const int lightCount = scene->getLightCount();
     if (lightCount == 0) return math::constants::Zero;
     const int light_i = std::min((int)(sampler->generate1d() * lightCount), lightCount - 1);
@@ -234,7 +234,7 @@ manta::math::Vector manta::RayTracer::uniformSampleOneLight(IntersectionPoint *p
     const math::Vector l_n = math::loadScalar((math::real)lightCount);
     return math::mul(
         l_n,
-        estimateDirect(point, uScattering, light, uLight, scene, sampler, stackAllocator)
+        estimateDirect(point, uScattering, light, uLight, scene, sampler, manager, stackAllocator)
     );
 }
 
@@ -245,6 +245,7 @@ manta::math::Vector manta::RayTracer::estimateDirect(
     const math::Vector2 &uLight,
     const Scene *scene,
     Sampler *sampler,
+    IntersectionPointManager *manager,
     StackAllocator *stackAllocator) const
 {
     math::Vector wi;
@@ -277,6 +278,8 @@ manta::math::Vector manta::RayTracer::estimateDirect(
         const math::real w = powerHeuristic(1, lightPdf, 1, scatteringPdf);
         Ld = math::add(Ld, math::mul(f, math::mul(Li, math::loadScalar(w / lightPdf))));
     }
+
+    point->m_id = manager->generateId();
 
     f = point->m_bsdf->sampleF(point, uScattering, math::negate(point->m_lightRay->getDirection()), &wi, &scatteringPdf, stackAllocator, true);
     if (scatteringPdf > 0) {
@@ -539,11 +542,13 @@ manta::math::Vector manta::RayTracer::traceRay(
 
         L = math::add(
             L,
-            math::mul(beta, uniformSampleOneLight(&point, scene, sampler, s)));
+            math::mul(beta, uniformSampleOneLight(&point, scene, sampler, manager, s)));
 
         // Generate a new path
         const math::Vector outgoingDir = math::negate(currentRay->getDirection());
         math::Vector incomingDir;
+
+        point.m_id = manager->generateId();
 
         math::Vector2 s_u = (sampler != nullptr)
             ? sampler->generate2d()

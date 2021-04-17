@@ -29,10 +29,16 @@ manta::math::Vector manta::MicrofacetBRDF::sampleF(
     const math::real cosThetaO = math::getZ(*o);
     const math::real cosThetaI = math::getZ(i);
 
+    /*
     if (o_dot_m <= MIN_EPSILON ||
         cosThetaO <= MIN_EPSILON ||
         cosThetaI <= MIN_EPSILON) 
     {
+        *pdf = (math::real)0.0;
+        return math::constants::Zero;
+    }*/
+
+    if (!sameHemisphere(*o, i)) {
         *pdf = (math::real)0.0;
         return math::constants::Zero;
     }
@@ -41,15 +47,7 @@ manta::math::Vector manta::MicrofacetBRDF::sampleF(
 
     // Calculate reflectivity
     const math::real F = (math::real)1.0; // TODO: fresnel calculation goes here
-
-    const math::Vector reflectivity = math::loadScalar(
-        m_distribution->calculateDistribution(m, surfaceInteraction) * 
-        m_distribution->bidirectionalShadowMasking(i, *o, m, surfaceInteraction) * 
-        F / (4 * cosThetaI * cosThetaO));
-
-    return math::mul(
-        reflectivity,
-        getReflectivity(surfaceInteraction));
+    return f(surfaceInteraction, i, *o, stackAllocator);
 }
 
 manta::math::Vector manta::MicrofacetBRDF::f(
@@ -58,19 +56,26 @@ manta::math::Vector manta::MicrofacetBRDF::f(
     const math::Vector &o,
     StackAllocator *stackAllocator)
 {
-    const math::Vector wh = math::normalize(math::add(i, o));
+    math::Vector wh = math::add(i, o);
+
+    const math::real cosThetaO = std::abs(math::getZ(o));
+    const math::real cosThetaI = std::abs(math::getZ(i));
+
+    if (cosThetaO == 0 || cosThetaI == 0) return math::constants::Zero;
+    if (math::getX(wh) == 0 || math::getY(wh) == 0 || math::getZ(wh) == 0) return math::constants::Zero;
+
+    wh = math::normalize(wh);
+
     const math::real o_dot_wh = math::getScalar(math::dot(wh, o));
     const math::real F = (math::real)1.0; // TODO: fresnel calculation goes here
 
-    const math::real cosThetaO = math::getZ(o);
-    const math::real cosThetaI = math::getZ(i);
-
+    /*
     if (o_dot_wh <= MIN_EPSILON ||
         cosThetaO <= MIN_EPSILON ||
         cosThetaI <= MIN_EPSILON)
     {
         return math::constants::Zero;
-    }
+    }*/
 
     const math::Vector reflectivity = math::loadScalar(
         m_distribution->calculateDistribution(wh, surfaceInteraction) *
@@ -87,18 +92,23 @@ manta::math::real manta::MicrofacetBRDF::pdf(
     const math::Vector &i,
     const math::Vector &o) 
 {
+    if (!sameHemisphere(i, o)) {
+        return 0;
+    }
+
     const math::Vector wh = math::normalize(math::add(i, o));
     const math::real o_dot_wh = math::getScalar(math::dot(wh, o));
 
     const math::real cosThetaO = math::getZ(o);
     const math::real cosThetaI = math::getZ(i);
 
+    /*
     if (o_dot_wh <= MIN_EPSILON ||
         cosThetaO <= MIN_EPSILON ||
         cosThetaI <= MIN_EPSILON)
     {
         return (math::real)0.0;
-    }
+    }*/
 
     const math::real pdf = m_distribution->calculatePDF(wh, surfaceInteraction) / ::abs(4 * o_dot_wh);
     return pdf;

@@ -107,7 +107,9 @@ public node quick_render {
         camera: camera,
         materials: materials,
         background: background,
-        sampler: sampler
+        sampler: sampler,
+        deterministic_seed: true,
+        threads: 12
     )
 
     log("Render complete\n")

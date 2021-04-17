@@ -30,6 +30,8 @@ namespace manta {
 
         void seed(unsigned int seed);
 
+        int getCurrentPixelSample() const { return m_currentPixelSample; }
+
     protected:
         int m_currentPixelSample;
 

@@ -48,14 +48,14 @@ namespace manta {
         RayTracer();
         ~RayTracer();
 
-        void traceAll(const Scene *scene, CameraRayEmitterGroup *rayEmitterGroup, 
+        void traceAll(const Scene *scene, CameraRayEmitterGroup *rayEmitterGroup,
             ImagePlane *target);
-        void tracePixel(int px, int py, const Scene *scene, 
+        void tracePixel(int px, int py, const Scene *scene,
             CameraRayEmitterGroup *rayEmitterGroup, ImagePlane *target);
 
         int getThreadCount() const { return m_threadCount; }
 
-        void configure(mem_size stackSize, mem_size workerStackSize, int threadCount, 
+        void configure(mem_size stackSize, mem_size workerStackSize, int threadCount,
             int renderBlockSize, bool multithreaded);
         void destroy();
 
@@ -69,7 +69,7 @@ namespace manta {
             /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const;
         void incrementRayCompletion(const Job *job, int increment = 1);
 
-        math::Vector uniformSampleOneLight(IntersectionPoint *point, const Scene *scene, Sampler *sampler, StackAllocator *stackAllocator) const;
+        math::Vector uniformSampleOneLight(IntersectionPoint *point, const Scene *scene, Sampler *sampler, IntersectionPointManager *manager, StackAllocator *stackAllocator) const;
         math::Vector estimateDirect(
             IntersectionPoint *point,
             const math::Vector2 &uScattering,
@@ -77,6 +77,7 @@ namespace manta {
             const math::Vector2 &uLight,
             const Scene *scene,
             Sampler *sampler,
+            IntersectionPointManager *manager,
             StackAllocator *stackAllocator) const;
         static math::real powerHeuristic(int nf, math::real f_pdf, int ng, math::real g_pdf);
 

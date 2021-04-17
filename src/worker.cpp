@@ -114,11 +114,6 @@ void manta::Worker::doJob(const Job *job) {
         for (int x = job->startX; x <= job->endX; ++x) {
             if (m_rayTracer->getProgram()->isKilled()) break;
 
-            m_sampler->startPixelSession();
-
-            CameraRayEmitter *emitter = job->group->createEmitter(x, y, m_stack);
-            emitter->setSampler(m_sampler);
-            emitter->initialize();
             const int pixelIndex = job->group->getResolutionX() * y + x;
 
             if (m_deterministicSeed) {
@@ -130,7 +125,14 @@ void manta::Worker::doJob(const Job *job) {
                 constexpr __int64 c = 1013904223;
                 unsigned __int64 xn = (a * pixelIndex + c) % 0xFFFFFFFF;
                 srand((unsigned int)xn);
+                m_sampler->seed((unsigned int)xn);
             }
+
+            m_sampler->startPixelSession();
+
+            CameraRayEmitter *emitter = job->group->createEmitter(x, y, m_stack);
+            emitter->setSampler(m_sampler);
+            emitter->initialize();
 
             if (emitter != nullptr) {
                 emitter->setStackAllocator(m_stack);
@@ -144,12 +146,23 @@ void manta::Worker::doJob(const Job *job) {
                     if (ray.getCameraWeight() > 0) {
                         ray.calculateTransformations();
 
+                        if (x == 769 && y == 572 && m_sampler->getCurrentPixelSample() == 450) {
+                            int a = 0;
+                        }
+
                         const math::Vector L = m_rayTracer->traceRay(job->scene, &ray, 0, &m_ipManager, m_sampler,
                             m_stack /**/ PATH_RECORDER_ARG /**/ STATISTICS_ROOT(&m_statistics));
 
                         ImageSample &sample = samples[sampleCount++];
                         sample.imagePlaneLocation = ray.getImagePlaneLocation();
                         sample.intensity = L;
+
+                        if (math::getX(L) > 10) {
+                            //if (x == 770-1 && y == 572-1) {
+                            //    int a = 0;
+                            //}
+                            int a = 0;
+                        }
 
                         if (sampleCount >= SAMPLE_BUFFER_CAPACITY) {
                             job->target->processSamples(samples, sampleCount, m_stack);

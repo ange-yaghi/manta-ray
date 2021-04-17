@@ -39,6 +39,10 @@ namespace manta {
         math::Vector inverseTransform(const math::Vector &direction, const math::Vector &u, const math::Vector &v, const math::Vector &w);
         math::Vector sampleNormal(const IntersectionPoint *surfaceInteraction);
 
+        inline bool sameHemisphere(const math::Vector &w0, const math::Vector &w1) {
+            return math::getZ(w0) * math::getZ(w1) > 0;
+        }
+
     protected:
         virtual void _evaluate();
         virtual void registerInputs();
