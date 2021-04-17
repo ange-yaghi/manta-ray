@@ -289,9 +289,6 @@ manta::math::Vector manta::RayTracer::estimateDirect(
         } 
 
         const math::real weight = powerHeuristic(1, scatteringPdf, 1, lightPdf);
-
-        //return math::mul(f, math::loadScalar(weight / scatteringPdf));
-
         if (light->intersect(point->m_position, wi, &depth)) {
             SceneObject *object;
             IntersectionPoint testPoint;
@@ -511,7 +508,16 @@ manta::math::Vector manta::RayTracer::traceRay(
         point.m_threadId = manager->getThreadId();
         point.m_manager = manager;
 
-        depthCull(scene, currentRay, &sceneObject, &point, s, math::constants::REAL_MAX /**/ STATISTICS_PARAM_INPUT);
+        const int lightCount = scene->getLightCount();
+        math::real depth = math::constants::REAL_MAX;
+        Light *lightInteraction = nullptr;
+        for (int i = 0; i < lightCount; ++i) {
+            if (scene->getLight(i)->intersect(point.m_position, point.m_lightRay->getDirection(), &depth)) {
+                lightInteraction = scene->getLight(i);
+            }
+        }
+
+        depthCull(scene, currentRay, &sceneObject, &point, s, depth /**/ STATISTICS_PARAM_INPUT);
 
         const bool foundIntersection = (sceneObject != nullptr);
         if (foundIntersection) {
@@ -519,7 +525,7 @@ manta::math::Vector manta::RayTracer::traceRay(
                 ? sceneObject->getDefaultMaterial()
                 : material = m_materialManager->getMaterial(point.m_material);
 
-            math::Vector emission = material->getEmission(point);
+            const math::Vector emission = material->getEmission(point);
 
             L = math::add(
                 L,
@@ -527,10 +533,18 @@ manta::math::Vector manta::RayTracer::traceRay(
             );
         }
         else {
-            L = math::add(
-                L,
-                math::mul(beta, m_backgroundColor)
-            );
+            if (lightInteraction == nullptr) {
+                L = math::add(
+                    L,
+                    math::mul(beta, m_backgroundColor)
+                );
+            }
+            else {
+                L = math::add(
+                    L,
+                    math::mul(beta, lightInteraction->L(point, point.m_lightRay->getDirection()))
+                );
+            }
             break;
         }
 
