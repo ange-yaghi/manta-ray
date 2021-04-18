@@ -3,6 +3,7 @@
 
 #include "node.h"
 
+#include "bxdf.h"
 #include "manta_math.h"
 #include "media_interface.h"
 #include "object_reference_node.h"
@@ -14,7 +15,6 @@ namespace manta {
 
     struct IntersectionPoint;
     class StackAllocator;
-    class BXDF;
 
     class BSDF : public ObjectReferenceNode<BSDF> {
     public:
@@ -27,7 +27,7 @@ namespace manta {
 
         math::Vector sampleF(const IntersectionPoint *surfaceInteraction, 
             const math::Vector2 &u, const math::Vector &i, math::Vector *o, math::real *pdf, 
-            StackAllocator *stackAllocator, bool cosineWeight = false) const;
+            RayFlags *flags, StackAllocator *stackAllocator, bool cosineWeight = false) const;
 
         math::Vector f(const IntersectionPoint *surfaceInteraction, const math::Vector &i, const math::Vector &o, bool cosineWeight = false) const;
         math::real pdf(const IntersectionPoint *surfaceInteraction, const math::Vector &i, const math::Vector &o) const;

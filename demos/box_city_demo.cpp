@@ -66,7 +66,8 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
     // Create all scene geometry
     Mesh boxCity;
-    boxCity.loadObjFileData(&boxCityObj, rayTracer.getMaterialLibrary());
+    boxCity.loadObjFileData(&boxCityObj);
+    boxCity.bindMaterialLibrary(rayTracer.getMaterialLibrary());
     boxCity.setFastIntersectEnabled(false);
     //boxCity.findQuads();
 

@@ -40,6 +40,8 @@
     <ClCompile Include="..\..\src\disney_gtr_clearcoat_distribution.cpp" />
     <ClCompile Include="..\..\src\disney_specular_brdf.cpp" />
     <ClCompile Include="..\..\src\filter.cpp" />
+    <ClCompile Include="..\..\src\fresnel_node.cpp" />
+    <ClCompile Include="..\..\src\fresnel_node_output.cpp" />
     <ClCompile Include="..\..\src\gaussian_filter.cpp" />
     <ClCompile Include="..\..\src\image_plane_converter_node.cpp" />
     <ClCompile Include="..\..\src\light.cpp" />
@@ -109,7 +111,7 @@
     <ClCompile Include="..\..\src\microfacet_distribution.cpp" />
     <ClCompile Include="..\..\src\microfacet_glass_bsdf.cpp" />
     <ClCompile Include="..\..\src\microfacet_brdf.cpp" />
-    <ClCompile Include="..\..\src\microfacet_transmission_btdf.cpp" />
+    <ClCompile Include="..\..\src\microfacet_btdf.cpp" />
     <ClCompile Include="..\..\src\octree.cpp" />
     <ClCompile Include="..\..\src\os_utilities.cpp" />
     <ClCompile Include="..\..\src\phong_distribution.cpp" />
@@ -182,6 +184,8 @@
     <ClInclude Include="..\..\include\disney_ggx_distribution.h" />
     <ClInclude Include="..\..\include\disney_gtr_clearcoat_distribution.h" />
     <ClInclude Include="..\..\include\disney_specular_brdf.h" />
+    <ClInclude Include="..\..\include\fresnel_node.h" />
+    <ClInclude Include="..\..\include\fresnel_node_output.h" />
     <ClInclude Include="..\..\include\image_plane_converter_node.h" />
     <ClInclude Include="..\..\include\light.h" />
     <ClInclude Include="..\..\include\perlin_noise_node.h" />
@@ -268,7 +272,7 @@
     <ClInclude Include="..\..\include\microfacet_distribution.h" />
     <ClInclude Include="..\..\include\microfacet_glass_bsdf.h" />
     <ClInclude Include="..\..\include\microfacet_brdf.h" />
-    <ClInclude Include="..\..\include\microfacet_transmission_btdf.h" />
+    <ClInclude Include="..\..\include\microfacet_btdf.h" />
     <ClInclude Include="..\..\include\octree.h" />
     <ClInclude Include="..\..\include\opaque_media_interface.h" />
     <ClInclude Include="..\..\include\os_utilities.h" />

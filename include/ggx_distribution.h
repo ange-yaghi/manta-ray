@@ -48,7 +48,7 @@ namespace manta {
 
     protected:
         CacheableInput<math::Vector> m_width;
-        NodeCache<math::real> m_distribution;
+        NodeCache<math::real, DistributionCacheKey> m_distribution;
     };
 
 } /* namespace manta */

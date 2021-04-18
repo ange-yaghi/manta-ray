@@ -63,7 +63,8 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
 
     // Create all scene geometry
     Mesh smallHouse;
-    smallHouse.loadObjFileData(&smallHouseObj, rayTracer.getMaterialLibrary(), -1, 0);
+    smallHouse.loadObjFileData(&smallHouseObj, 0);
+    smallHouse.bindMaterialLibrary(rayTracer.getMaterialLibrary(), -1);
     smallHouse.setFastIntersectEnabled(false);
 
     Mesh shutters;

@@ -61,6 +61,7 @@ public import "surface/bsdf/bxdf_to_bsdf.mr"
 public import "surface/bsdf/bilayer_brdf.mr"
 public import "surface/bsdf/lambertian_brdf.mr"
 public import "surface/bsdf/microfacet_brdf.mr"
+public import "surface/bsdf/microfacet_btdf.mr"
 public import "surface/bsdf/glass_bsdf.mr"
 
 public import "surface/bsdf/disney_diffuse_brdf.mr"
@@ -75,6 +76,7 @@ public import "surface/materials/surface_interaction.mr"
 public import "surface/color/color.mr"
 
 public import "surface/normal/bump.mr"
+public import "surface/normal/fresnel.mr"
 
 public import "surface/noise/noise.mr"
 

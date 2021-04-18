@@ -37,9 +37,9 @@ manta::math::real manta::DisneyGgxDistribution::calculateDistribution(
     const intersection_id id = surfaceInteraction->m_id;
     const int threadId = surfaceInteraction->m_threadId;
 
-    const math::real *memory = m_distribution.cacheGet(id, threadId);
+    const math::real *memory = m_distribution.cacheGet({ m, id }, threadId);
     if (memory == nullptr) {
-        math::real *newMemory = m_distribution.cachePut(id, threadId);
+        math::real *newMemory = m_distribution.cachePut({ m, id }, threadId);
         *newMemory = GgxDistribution::calculateDistribution(m, alpha);
 
         memory = newMemory;

@@ -106,7 +106,8 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 
     // Create all scene geometry
     Mesh lamp;
-    lamp.loadObjFileData(&lampObj, rayTracer.getMaterialLibrary(), floorMaterial->getIndex());
+    lamp.loadObjFileData(&lampObj);
+    lamp.bindMaterialLibrary(rayTracer.getMaterialLibrary(), floorMaterial->getIndex());
     lamp.setFastIntersectEnabled(true);
     lamp.setFastIntersectRadius((math::real)2.123);
     lamp.setFastIntersectPosition(math::loadVector(-0.06430f, 1.86833f, -2.96564f));
@@ -121,7 +122,8 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
     else if (MATERIAL == ENAMEL) mainObjectMaterial = teapotMaterial;
 
     Mesh objectMesh;
-    objectMesh.loadObjFileData(&teapotObj, rayTracer.getMaterialLibrary(), mainObjectMaterial->getIndex());
+    objectMesh.loadObjFileData(&teapotObj);
+    objectMesh.bindMaterialLibrary(rayTracer.getMaterialLibrary(), mainObjectMaterial->getIndex());
     objectMesh.setFastIntersectEnabled(true);
     objectMesh.setFastIntersectRadius((math::real)2.0);
     objectMesh.setFastIntersectPosition(math::loadVector(-0.5724f, 1.02483f, -0.04969f));

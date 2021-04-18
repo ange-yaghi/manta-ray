@@ -24,6 +24,7 @@ namespace manta {
         const T_Data &sample(const IntersectionPoint *surfaceInteraction) {
             if (m_optimizedOut || m_port == nullptr) return m_cachedValue;
             else {
+                
                 const T_Data *data = m_cache.cacheGet(surfaceInteraction->m_id, surfaceInteraction->m_threadId);
                 if (data == nullptr) {
                     // There was a cache miss

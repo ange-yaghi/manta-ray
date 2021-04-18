@@ -12,6 +12,8 @@ namespace manta {
 
     struct IntersectionPoint {
         math::Vector m_position;
+        math::Vector m_inside;
+        math::Vector m_outside;
         math::Vector m_vertexNormal;
         math::Vector m_faceNormal;
         math::Vector m_textureCoodinates;

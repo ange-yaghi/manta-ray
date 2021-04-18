@@ -18,7 +18,7 @@ manta::DisneySpecularBRDF::~DisneySpecularBRDF() {
 }
 
 manta::math::Vector manta::DisneySpecularBRDF::sampleF(const IntersectionPoint *surfaceInteraction, 
-    const math::Vector2 &u, const math::Vector &i, math::Vector *o, math::real *pdf, StackAllocator *stackAllocator)
+    const math::Vector2 &u, const math::Vector &i, math::Vector *o, math::real *pdf, RayFlags *flags, StackAllocator *stackAllocator)
 {
     const math::Vector m = m_distribution->generateMicrosurfaceNormal(surfaceInteraction, u);
     const math::Vector ri = math::reflect(i, m);

@@ -59,7 +59,8 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 
     // Create all scene geometry
     Mesh stressSpiders;
-    stressSpiders.loadObjFileData(&stressSpidersObj, rayTracer.getMaterialLibrary(), spiderMaterial->getIndex());
+    stressSpiders.loadObjFileData(&stressSpidersObj);
+    stressSpiders.bindMaterialLibrary(rayTracer.getMaterialLibrary(), spiderMaterial->getIndex());
     stressSpiders.setFastIntersectEnabled(false);
     stressSpidersObj.destroy();
 

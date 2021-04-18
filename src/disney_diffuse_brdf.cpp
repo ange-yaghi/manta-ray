@@ -12,8 +12,14 @@ manta::DisneyDiffuseBRDF::~DisneyDiffuseBRDF() {
     /* void */
 }
 
-manta::math::Vector manta::DisneyDiffuseBRDF::sampleF(const IntersectionPoint *surfaceInteraction,
-    const math::Vector2 &u, const math::Vector &i, math::Vector *o, math::real *pdf, StackAllocator *stackAllocator)
+manta::math::Vector manta::DisneyDiffuseBRDF::sampleF(
+    const IntersectionPoint *surfaceInteraction,
+    const math::Vector2 &u,
+    const math::Vector &i,
+    math::Vector *o,
+    math::real *pdf,
+    RayFlags *flags,
+    StackAllocator *stackAllocator)
 {
     // Uniformly sample a hemisphere
     math::real r1 = u.x * math::constants::TWO_PI;

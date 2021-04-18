@@ -85,7 +85,8 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
 
     // Create all scene geometry
     Mesh blocks;
-    blocks.loadObjFileData(&blocksObj, rayTracer.getMaterialLibrary());
+    blocks.loadObjFileData(&blocksObj);
+    blocks.bindMaterialLibrary(rayTracer.getMaterialLibrary());
     blocks.setFastIntersectEnabled(false);
     blocksObj.destroy();
 

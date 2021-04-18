@@ -13,6 +13,7 @@ namespace manta {
     class VectorMap2D;
     class PreviewNode;
     class KDTree;
+    class Mesh;
 
     class Session {
     public:
@@ -32,12 +33,16 @@ namespace manta {
         KDTree *getCachedKdTree(const std::string &key);
         void putCachedKdTree(const std::string &key, KDTree *tree);
 
+        Mesh *getCachedMesh(const std::string &key);
+        void putCachedMesh(const std::string &key, Mesh *mesh);
+
     protected:
         Console *m_console;
 
         std::mutex m_previewLock;
         std::vector<PreviewNode *> m_previews;
         std::map<std::string, KDTree *> m_kdTreeCache;
+        std::map<std::string, Mesh *> m_meshCache;
     };
 
 } /* namespace manta */

@@ -19,19 +19,25 @@ public node obj_file {
     input filename          [string];
     input materials         [material_library]: material_library();
     input default_material  [string]: "";
+    input cache_key         [string]: "cache-obj_file";
+    input overwrite_cache   [bool]: false;
 
     alias output __out:
         __obj_file(
             filename: append_path(path: filename),
             materials: materials,
-            default_material: default_material
+            default_material: default_material,
+            cache_key: cache_key,
+            overwrite_cache: overwrite_cache
         );
 }
 
 private node __obj_file => __mantaray__obj_file {
     input filename          [string];
-    input materials         [material_library]: material_library();
-    input default_material  [string]: "";
+    input materials         [material_library];
+    input default_material  [string];
+    input cache_key         [string];
+    input overwrite_cache   [bool];
 
     alias output __out      [mesh];
 }

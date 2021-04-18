@@ -100,7 +100,8 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 
     // Create all scene geometry
     Mesh pen;
-    pen.loadObjFileData(&penObj, rayTracer.getMaterialLibrary(), chromeMaterial->getIndex(), 0);
+    pen.loadObjFileData(&penObj, 0);
+    pen.bindMaterialLibrary(rayTracer.getMaterialLibrary(), chromeMaterial->getIndex());
 
     // Destroy file loaders
     penObj.destroy();

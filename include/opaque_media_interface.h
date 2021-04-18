@@ -11,9 +11,8 @@ namespace manta {
         virtual ~OpaqueMediaInterface();
 
         virtual math::real fresnelTerm(const math::Vector &i, const math::Vector &m,
-            Direction d) const { return (math::real)0.0; }
-        virtual math::real fresnelTerm(math::real cosThetaI, math::real *pdf,
-            Direction d) const { return (math::real)0.0; }
+            Direction d) const { return (math::real)1.0; }
+        virtual math::real fresnelTerm(math::real cosThetaI, Direction d) const { return (math::real)1.0; }
 
         virtual math::real ior(Direction d) const { return (math::real)1.0; }
         virtual math::real no(Direction d) const { return (math::real)1.0; }

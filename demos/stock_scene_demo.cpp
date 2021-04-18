@@ -175,7 +175,8 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
 
     // Create all scene geometry
     Mesh stage;
-    stage.loadObjFileData(&stageObj, rayTracer.getMaterialLibrary(), defaultLambert->getIndex(), 0);
+    stage.loadObjFileData(&stageObj, 0);
+    stage.bindMaterialLibrary(rayTracer.getMaterialLibrary(), defaultLambert->getIndex());
 
     // Destroy file loaders
     stageObj.destroy();

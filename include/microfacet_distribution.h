@@ -31,6 +31,18 @@ namespace manta {
             const math::Vector &m, const IntersectionPoint *surfaceInteraction);
 
         ObjectReferenceNodeOutput<MicrofacetDistribution> *getMainOutput() { return &m_output; }
+
+    protected:
+        struct DistributionCacheKey {
+            math::Vector m = math::constants::Zero;
+            intersection_id id = -1;
+
+            bool operator==(const DistributionCacheKey &key) const {
+                return
+                    key.id == id &&
+                    math::bitwiseEqual(key.m, m);
+            }
+        };
     };
 
 } /* namespace manta */

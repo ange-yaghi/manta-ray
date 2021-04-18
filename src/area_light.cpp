@@ -38,7 +38,7 @@ manta::math::Vector manta::AreaLight::sampleIncoming(
 }
 
 manta::math::real manta::AreaLight::pdfIncoming(const IntersectionPoint &ref, const math::Vector &wi) const {
-    math::real depth;
+    math::real depth = math::constants::REAL_MAX;
     const bool intersects = intersect(ref.m_position, wi, &depth);
 
     if (!intersects) return 0;

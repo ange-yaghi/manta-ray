@@ -25,6 +25,8 @@ namespace manta {
         piranha::pNodeInput m_filename;
         piranha::pNodeInput m_materialLibrary;
         piranha::pNodeInput m_defaultMaterial;
+        piranha::pNodeInput m_cacheKey;
+        piranha::pNodeInput m_overwriteCache;
 
         Mesh *m_mesh;
     };

@@ -36,6 +36,9 @@ namespace manta {
         piranha::pNodeInput getWidthNode() const { return m_roughness.getPort(); }
 
     protected:
+        math::real recalculateDistribution(const math::Vector &m, const IntersectionPoint *surfaceInteraction);
+
+    protected:
         virtual void registerInputs();
 
         virtual void _evaluate();
@@ -43,6 +46,7 @@ namespace manta {
 
     protected:
         CacheableInput<math::Vector> m_roughness;
+        NodeCache<math::real, DistributionCacheKey> m_distribution;
     };
 
 } /* namespace manta */

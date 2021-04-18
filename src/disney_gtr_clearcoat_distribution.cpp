@@ -52,6 +52,30 @@ manta::math::Vector manta::DisneyGtrClearcoatDistribution::generateMicrosurfaceN
 manta::math::real manta::DisneyGtrClearcoatDistribution::calculateDistribution(
     const math::Vector &m, const IntersectionPoint *surfaceInteraction)
 {
+    const intersection_id id = surfaceInteraction->m_id;
+    const int threadId = surfaceInteraction->m_threadId;
+
+    const math::real *memory = m_distribution.cacheGet({ m, id }, threadId);
+    if (memory == nullptr) {
+        math::real *newMemory = m_distribution.cachePut({ m, id }, threadId);
+        *newMemory = recalculateDistribution(m, surfaceInteraction);
+
+        memory = newMemory;
+    }
+
+    return *memory;
+}
+
+manta::math::real manta::DisneyGtrClearcoatDistribution::calculateG1(
+    const math::Vector &v, const math::Vector &m, const IntersectionPoint *surfaceInteraction)
+{
+    constexpr math::real FIXED_ALPHA_G = (math::real)0.25;
+    return GgxDistribution::calculateG1(v, m, FIXED_ALPHA_G);
+}
+
+manta::math::real manta::DisneyGtrClearcoatDistribution::recalculateDistribution(
+    const math::Vector &m, const IntersectionPoint *surfaceInteraction)
+{
     math::real alpha = getAlpha(surfaceInteraction);
 
     math::real cos_theta_m = math::getZ(m);
@@ -73,13 +97,6 @@ manta::math::real manta::DisneyGtrClearcoatDistribution::calculateDistribution(
         return d_gtr;
     }
     else return 0; // Technically a delta distribution
-}
-
-manta::math::real manta::DisneyGtrClearcoatDistribution::calculateG1(
-    const math::Vector &v, const math::Vector &m, const IntersectionPoint *surfaceInteraction)
-{
-    constexpr math::real FIXED_ALPHA_G = (math::real)0.25;
-    return GgxDistribution::calculateG1(v, m, FIXED_ALPHA_G);
 }
 
 void manta::DisneyGtrClearcoatDistribution::registerInputs() {

@@ -10,6 +10,8 @@
 #include "../include/primitives.h"
 #include "../include/runtime_statistics.h"
 
+#include <map>
+
 manta::Mesh::Mesh() {
     CHECK_ALIGNMENT(this, 16);
 
@@ -54,6 +56,7 @@ void manta::Mesh::initialize(int faceCount, int vertexCount, int normalCount, in
     m_faces = StandardAllocator::Global()->allocate<Face>(faceCount);
     m_auxFaceData = StandardAllocator::Global()->allocate<AuxFaceData>(faceCount);
     m_vertices = StandardAllocator::Global()->allocate<math::Vector>(vertexCount, 16);
+    m_materialMap = StandardAllocator::Global()->allocate<int>(faceCount);
     m_normals = (normalCount > 0)
         ? StandardAllocator::Global()->allocate<math::Vector>(normalCount, 16)
         : nullptr;
@@ -421,8 +424,6 @@ void manta::Mesh::fineIntersection(const math::Vector &r, IntersectionPoint *p, 
         material = auxData->material;
     }
 
-    p->m_depth = hint->depth;
-
     math::Vector vertexNormal;
     math::Vector textureCoordinates;
     const math::Vector faceNormal = math::normalize(math::cross(math::sub(*vertices[1], *vertices[0]), math::sub(*vertices[2], *vertices[0])));
@@ -463,9 +464,18 @@ void manta::Mesh::fineIntersection(const math::Vector &r, IntersectionPoint *p, 
         textureCoordinates = math::constants::Zero;
     }
 
+    // Re-project
+    const math::Vector pp0 = math::sub(r, *vertices[0]);
+    const math::Vector pp0_dot_n = math::dot(pp0, faceNormal);
+    const math::Vector projected = math::sub(r, math::mul(pp0_dot_n, faceNormal));
+    const math::Vector offset = math::mul(faceNormal, math::loadScalar(1E-6));
+
+    p->m_depth = hint->depth;
     p->m_vertexNormal = vertexNormal;
     p->m_faceNormal = faceNormal;
-    p->m_position = r;
+    p->m_position = projected;
+    p->m_inside = math::sub(projected, offset);
+    p->m_outside = math::add(projected, offset);
     p->m_textureCoodinates = textureCoordinates;
     p->m_material = material;
     p->m_mesh = this;
@@ -500,15 +510,28 @@ bool manta::Mesh::fastIntersection(LightRay *ray) const {
     else return true;
 }
 
-void manta::Mesh::loadObjFileData(
-    ObjFileLoader *data,
-    MaterialLibrary *materialLibrary,
-    int defaultMaterialIndex,
-    unsigned int globalId) 
-{
+void manta::Mesh::loadObjFileData(ObjFileLoader *data, unsigned int globalId) {
     initialize(data->getFaceCount(), data->getVertexCount(), data->getNormalCount(), data->getTexCoordCount());
 
-    for (unsigned int i = 0; i < data->getFaceCount(); i++) {
+    std::map<std::string, int> materialNameToIndex;
+    std::vector<std::string> materialNames;
+
+    for (unsigned int i = 0; i < data->getFaceCount(); ++i) {
+        ObjFileLoader::ObjFace *face = data->getFace(i);
+
+        auto material = materialNameToIndex.find(face->material->name);
+        if (material == materialNameToIndex.end()) {
+            materialNameToIndex[face->material->name] = (int)materialNames.size();
+            materialNames.push_back(face->material->name);
+        }
+    }
+
+    m_materials = StandardAllocator::Global()->allocate<std::string>((int)materialNames.size());
+    for (int i = 0; i < materialNames.size(); ++i) {
+        m_materials[i] = materialNames[i];
+    }
+
+    for (unsigned int i = 0; i < data->getFaceCount(); ++i) {
         ObjFileLoader::ObjFace *face = data->getFace(i);
         m_faces[i].u = face->v1 - 1;
         m_faces[i].v = face->v2 - 1;
@@ -522,25 +545,9 @@ void manta::Mesh::loadObjFileData(
         m_auxFaceData[i].data[1].t = face->vt2 - 1;
         m_auxFaceData[i].data[2].t = face->vt3 - 1;
 
-        // Resolve the material reference
-        if (face->material == nullptr) {
-            m_auxFaceData[i].material = defaultMaterialIndex;
-        }
-        else {
-            if (materialLibrary != nullptr) {
-                Material *material = materialLibrary->searchByName(face->material->name);
-                if (material != nullptr) {
-                    m_auxFaceData[i].material = material->getIndex();
-                }
-                else {
-                    // TODO: raise an error or notification if this happens
-                    m_auxFaceData[i].material = defaultMaterialIndex;
-                }
-            }
-            else {
-                m_auxFaceData[i].material = defaultMaterialIndex;
-            }
-        }
+        m_materialMap[i] = (face->material != nullptr)
+            ? materialNameToIndex[face->material->name]
+            : -1;
     }
 
     for (unsigned int i = 0; i < data->getVertexCount(); i++) {
@@ -572,6 +579,33 @@ void manta::Mesh::loadObjFileData(
 
     filterDegenerateFaces();
     computeBounds();
+}
+
+void manta::Mesh::bindMaterialLibrary(MaterialLibrary *library, int defaultMaterialIndex) {
+    for (int i = 0; i < m_triangleFaceCount; ++i) {
+        const int materialIndex = m_materialMap[i];
+        const std::string &materialName = m_materials[materialIndex];
+
+        // Resolve the material reference
+        if (materialIndex == -1) {
+            m_auxFaceData[i].material = defaultMaterialIndex;
+        }
+        else {
+            if (library != nullptr) {
+                Material *material = library->searchByName(materialName);
+                if (material != nullptr) {
+                    m_auxFaceData[i].material = material->getIndex();
+                }
+                else {
+                    // TODO: raise an error or notification if this happens
+                    m_auxFaceData[i].material = defaultMaterialIndex;
+                }
+            }
+            else {
+                m_auxFaceData[i].material = defaultMaterialIndex;
+            }
+        }
+    }
 }
 
 void manta::Mesh::merge(const Mesh *mesh) {

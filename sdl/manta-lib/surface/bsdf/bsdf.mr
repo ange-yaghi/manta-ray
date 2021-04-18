@@ -20,7 +20,15 @@ public node null_bsdf => __mantaray__null_bsdf {
 }
 
 @doc: "Add a BXDF to a BSDF"
-public node add_bxdf => __mantaray__add_bxdf {
+public node add_bxdf {
     input bxdf [bxdf]: null_bxdf();
-    modify bsdf [bsdf]: null_bsdf();
+    modify this [bsdf]: null_bsdf();
+    alias output out [bsdf]: this;
+
+    _add_bxdf(bxdf, this)
+}
+
+public node _add_bxdf => __mantaray__add_bxdf {
+    input bxdf [bxdf];
+    modify bsdf [bsdf];
 }

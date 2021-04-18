@@ -361,6 +361,13 @@ math::Vector manta::math::bitOr(const Vector &v1, const Vector &v2) {
     return _mm_or_ps(v1, v2);
 }
 
+bool manta::math::bitwiseEqual(const Vector &v1, const Vector &v2) {
+    __m128i vec_cmp = _mm_castps_si128(_mm_cmpeq_ps(v1, v2));
+    uint16_t test = _mm_movemask_epi8(vec_cmp);
+
+    return test == 0xFFFF;
+}
+
 // Quaternion
 
 math::Quaternion math::quatInvert(const Quaternion &q) {

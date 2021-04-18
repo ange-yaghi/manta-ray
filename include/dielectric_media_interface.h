@@ -18,7 +18,7 @@ namespace manta {
 
         virtual math::real fresnelTerm(const math::Vector &i, const math::Vector &m, 
             Direction d) const;
-        virtual math::real fresnelTerm(math::real cosThetaI, math::real *pdf, Direction d) const;
+        virtual math::real fresnelTerm(math::real cosThetaI, Direction d) const;
 
         virtual math::real ior(Direction d) const;
         virtual math::real no(Direction d) const;

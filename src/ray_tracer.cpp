@@ -90,6 +90,18 @@ void manta::RayTracer::traceAll(const Scene *scene, CameraRayEmitterGroup *group
             m_jobQueue.push(newJob);
         }
     }
+    /*
+    Job newJob;
+    newJob.scene = scene;
+    newJob.group = group;
+    newJob.target = target;
+    newJob.startX = 899;
+    newJob.startY = 960;
+    newJob.endX = 902;
+    newJob.endY = 970;
+    newJob.samples = 0;
+
+    m_jobQueue.push(newJob);*/
 
     // Hide the cursor to avoid annoying blinking artifact
     showConsoleCursor(false);
@@ -263,7 +275,8 @@ manta::math::Vector manta::RayTracer::estimateDirect(
             IntersectionPoint testPoint;
             LightRay testRay;
             testRay.setDirection(wi);
-            testRay.setSource(point->m_position);
+            if (point->m_direction == MediaInterface::Direction::In) testRay.setSource(point->m_outside);
+            else testRay.setSource(point->m_inside);
             testRay.calculateTransformations();
             depthCull(scene, &testRay, &object, &testPoint, stackAllocator, depth);
 
@@ -279,14 +292,18 @@ manta::math::Vector manta::RayTracer::estimateDirect(
         Ld = math::add(Ld, math::mul(f, math::mul(Li, math::loadScalar(w / lightPdf))));
     }
 
-    point->m_id = manager->generateId();
-
-    f = point->m_bsdf->sampleF(point, uScattering, math::negate(point->m_lightRay->getDirection()), &wi, &scatteringPdf, stackAllocator, true);
+    RayFlags flags = RayFlag::None;
+    f = point->m_bsdf->sampleF(point, uScattering, math::negate(point->m_lightRay->getDirection()), &wi, &scatteringPdf, &flags, stackAllocator, true);
     if (scatteringPdf > 0) {
+        //return wi;
+        //return Ld;
+        //return math::loadScalar(scatteringPdf / 100000000);
+        //return math::mul(math::add(wi, math::constants::One), math::constants::Half);
+
         lightPdf = light->pdfIncoming(*point, wi);
         if (lightPdf == 0) {
             return Ld;
-        } 
+        }
 
         const math::real weight = powerHeuristic(1, scatteringPdf, 1, lightPdf);
         if (light->intersect(point->m_position, wi, &depth)) {
@@ -294,7 +311,9 @@ manta::math::Vector manta::RayTracer::estimateDirect(
             IntersectionPoint testPoint;
             LightRay testRay;
             testRay.setDirection(wi);
-            testRay.setSource(point->m_position);
+            if ((flags & RayFlag::Transmission) > 0) testRay.setSource(point->m_inside);
+            else testRay.setSource(point->m_outside);
+            //testRay.setSource(math::add(point->m_position, math::mul(testRay.getDirection(), math::loadScalar((math::real)1E-2))));
             testRay.calculateTransformations();
             depthCull(scene, &testRay, &object, &testPoint, stackAllocator, depth);
 
@@ -463,17 +482,20 @@ void manta::RayTracer::refineContact(const LightRay *ray, math::real depth,
 {
     // Simple bias
     math::real d = depth;
-    d -= (math::real)5E-3;
+    /*d -= (math::real)5E-3;
     if (d < (math::real)0.0) {
         d = (math::real)0.0;
     }
     math::Vector dist = math::loadScalar(d);
-    point->m_position = math::add(ray->getSource(), math::mul(ray->getDirection(), dist));
+    point->m_position = math::add(ray->getSource(), math::mul(ray->getDirection(), dist));*/
 
     if (math::getScalar(math::dot(point->m_faceNormal, ray->getDirection())) > 0.0) {
         point->m_faceNormal = math::negate(point->m_faceNormal);
         point->m_vertexNormal = math::negate(point->m_vertexNormal);
         point->m_direction = MediaInterface::Direction::Out;
+        math::Vector temp = point->m_inside;
+        point->m_inside = point->m_outside;
+        point->m_outside = temp;
     }
     else {
         point->m_direction = MediaInterface::Direction::In;
@@ -490,7 +512,7 @@ manta::math::Vector manta::RayTracer::traceRay(
     PATH_RECORDER_DECL /**/
     STATISTICS_PROTOTYPE) const 
 {
-    constexpr int MAX_BOUNCES = 4;
+    constexpr int MAX_BOUNCES = 8;
 
     LightRay *currentRay = ray;
     LightRay localRay;
@@ -508,16 +530,7 @@ manta::math::Vector manta::RayTracer::traceRay(
         point.m_threadId = manager->getThreadId();
         point.m_manager = manager;
 
-        const int lightCount = scene->getLightCount();
-        math::real depth = math::constants::REAL_MAX;
-        Light *lightInteraction = nullptr;
-        for (int i = 0; i < lightCount; ++i) {
-            if (scene->getLight(i)->intersect(point.m_position, point.m_lightRay->getDirection(), &depth)) {
-                lightInteraction = scene->getLight(i);
-            }
-        }
-
-        depthCull(scene, currentRay, &sceneObject, &point, s, depth /**/ STATISTICS_PARAM_INPUT);
+        depthCull(scene, currentRay, &sceneObject, &point, s, math::constants::REAL_MAX /**/ STATISTICS_PARAM_INPUT);
 
         const bool foundIntersection = (sceneObject != nullptr);
         if (foundIntersection) {
@@ -533,18 +546,29 @@ manta::math::Vector manta::RayTracer::traceRay(
             );
         }
         else {
-            if (lightInteraction == nullptr) {
-                L = math::add(
-                    L,
-                    math::mul(beta, m_backgroundColor)
-                );
+            L = math::add(
+                L,
+                math::mul(beta, m_backgroundColor)
+            );
+
+            if (bounces == 0) {
+                const int lightCount = scene->getLightCount();
+                math::real depth = math::constants::REAL_MAX;
+                Light *lightInteraction = nullptr;
+                for (int i = 0; i < lightCount; ++i) {
+                    if (scene->getLight(i)->intersect(point.m_position, point.m_lightRay->getDirection(), &depth)) {
+                        lightInteraction = scene->getLight(i);
+                    }
+                }
+
+                if (lightInteraction != nullptr) {
+                    L = math::add(
+                        L,
+                        math::mul(beta, lightInteraction->L(point, point.m_lightRay->getDirection()))
+                    );
+                }
             }
-            else {
-                L = math::add(
-                    L,
-                    math::mul(beta, lightInteraction->L(point, point.m_lightRay->getDirection()))
-                );
-            }
+
             break;
         }
 
@@ -562,18 +586,17 @@ manta::math::Vector manta::RayTracer::traceRay(
         const math::Vector outgoingDir = math::negate(currentRay->getDirection());
         math::Vector incomingDir;
 
-        point.m_id = manager->generateId();
-
         math::Vector2 s_u = (sampler != nullptr)
             ? sampler->generate2d()
             : math::Vector2(math::uniformRandom(), math::uniformRandom());
         math::real pdf;
-        math::Vector f = bsdf->sampleF(&point, s_u, outgoingDir, &incomingDir, &pdf, s, true);
+        RayFlags flags = RayFlag::None;
+        math::Vector f = bsdf->sampleF(&point, s_u, outgoingDir, &incomingDir, &pdf, &flags, s, true);
         f = math::mul(f, material->getFilterColor(point));
         f = math::mask(f, math::constants::MaskOffW);
 
         if (pdf == (math::real)0.0) break;
-        if (math::getScalar(math::maxComponent(f)) < (math::real)1E-4) break;
+        //if (math::getScalar(math::maxComponent(f)) < (math::real)1E-4) return math::loadVector(0, 100, 0);
         
         beta = math::mul(beta, f);
         beta = math::div(
@@ -582,18 +605,10 @@ manta::math::Vector manta::RayTracer::traceRay(
         );
 
         assert(!std::isnan(math::getX(beta)) && !std::isnan(math::getY(beta)) && !std::isnan(math::getZ(beta)));
-
-        /*
+        
         localRay.setDirection(incomingDir);
-        if (math::getScalar(math::dot(incomingDir, w)) >= 0) {
-            localRay.setSource(point.m_position);
-        }
-        else {
-            // The light ray is undergoing transmission
-            localRay.setSource(math::add(point.m_position, math::mul(localRay.getDirection(), math::loadScalar((math::real)1E-2))));
-        }*/
-        localRay.setDirection(incomingDir);
-        localRay.setSource(point.m_position);
+        if ((flags & RayFlag::Transmission) > 0) localRay.setSource(point.m_inside);
+        else localRay.setSource(point.m_outside);
         localRay.calculateTransformations();
         currentRay = &localRay;
 

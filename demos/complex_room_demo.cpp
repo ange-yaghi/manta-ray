@@ -110,12 +110,13 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
 
     // Create all scene geometry
     Mesh roomGeometry;
-    roomGeometry.loadObjFileData(&complexRoomObj, rayTracer.getMaterialLibrary());
+    roomGeometry.loadObjFileData(&complexRoomObj);
     roomGeometry.setFastIntersectEnabled(false);
 
     if (BLOCK_ALL_LIGHT) {
         Mesh roomShutters;
-        roomShutters.loadObjFileData(&roomShuttersObj, rayTracer.getMaterialLibrary(), wallMaterial->getIndex());
+        roomShutters.loadObjFileData(&roomShuttersObj);
+        roomShutters.bindMaterialLibrary(rayTracer.getMaterialLibrary(), wallMaterial->getIndex());
         roomShutters.setFastIntersectEnabled(false);
 
         roomGeometry.merge(&roomShutters);

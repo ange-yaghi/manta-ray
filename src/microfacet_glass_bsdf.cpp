@@ -21,6 +21,7 @@ manta::math::Vector manta::MicrofacetGlassBSDF::sampleF(
     const math::Vector &i,
     math::Vector *o,
     math::real *pdf,
+    RayFlags *flags,
     StackAllocator *stackAllocator) 
 {
     // Choose which distribution to sample and remap the stratified samples

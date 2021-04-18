@@ -9,7 +9,7 @@
 #include "../include/dielectric_media_interface.h"
 #include "../include/phong_distribution.h"
 #include "../include/microfacet_brdf.h"
-#include "../include/microfacet_transmission_btdf.h"
+#include "../include/microfacet_btdf.h"
 #include "../include/microfacet_glass_bsdf.h"
 #include "../include/bsdf.h"
 #include "../include/disney_diffuse_brdf.h"
@@ -28,8 +28,9 @@ TEST(BSDFTests, BSDFSanityCheck) {
     math::Vector incident = math::loadVector((math::real)1.0, (math::real)1.0, (math::real)0.0);
     math::Vector outgoing;
     math::real pdf;
+    RayFlags flags = RayFlag::None;
 
-    math::Vector reflectance = brdf.sampleF(nullptr, math::Vector2(math::uniformRandom(), math::uniformRandom()), incident, &outgoing, &pdf, nullptr);
+    math::Vector reflectance = brdf.sampleF(nullptr, math::Vector2(math::uniformRandom(), math::uniformRandom()), incident, &outgoing, &pdf, &flags, nullptr);
 
     math::Vector normal = math::loadVector((math::real)0.0, (math::real)0.0, (math::real)1.0);
     math::Vector expected = math::reflect(incident, normal);
@@ -53,7 +54,8 @@ TEST(BSDFTests, LambertBSDFEnergyConservation) {
     // Calculate rho
     for (int i = 0; i < SAMPLE_COUNT; i++) {
         math::Vector outgoing;
-        math::Vector reflectance = bsdf.sampleF(nullptr, math::Vector2(math::uniformRandom(), math::uniformRandom()), incident, &outgoing, &pdf, nullptr);
+        RayFlags flags = RayFlag::None;
+        math::Vector reflectance = bsdf.sampleF(nullptr, math::Vector2(math::uniformRandom(), math::uniformRandom()), incident, &outgoing, &pdf, &flags, nullptr);
 
         math::Vector abs_cos_theta = math::abs(math::dot(outgoing, normal));
         accum = math::add(accum, math::div(math::mul(reflectance, abs_cos_theta), math::loadScalar(pdf))); //  * 1.33333
@@ -88,8 +90,8 @@ math::Vector comprehensiveBsdfTest(const math::Vector &incident, BSDF &bsdf, int
 
         math::real pdf;
         math::Vector outgoing;
-
-        math::Vector reflectance = bsdf.sampleF(&point, math::Vector2(math::uniformRandom(), math::uniformRandom()), incident, &outgoing, &pdf, &s);
+        RayFlags flags = RayFlag::None;
+        math::Vector reflectance = bsdf.sampleF(&point, math::Vector2(math::uniformRandom(), math::uniformRandom()), incident, &outgoing, &pdf, &flags, &s);
 
         EXPECT_VALID_VEC(reflectance);
         EXPECT_VALID(pdf);
@@ -145,7 +147,6 @@ TEST(BSDFTests, PhongMicrofacetEnergyConservation) {
 }
 
 TEST(BSDFTests, BilayerBRDFEnergyConservation) {
-    
     PhongDistribution phong;
     phong.setPower((math::real)4.0);
 
@@ -176,7 +177,8 @@ TEST(BSDFTests, BilayerBRDFEnergyConservation) {
     // Calculate rho
     for (int i = 0; i < SAMPLE_COUNT; i++) {
         math::Vector outgoing;
-        math::Vector reflectance = brdf.sampleF(nullptr, math::Vector2(math::uniformRandom(), math::uniformRandom()), incident, &outgoing, &pdf, &s);
+        RayFlags flags = RayFlag::None;
+        math::Vector reflectance = brdf.sampleF(nullptr, math::Vector2(math::uniformRandom(), math::uniformRandom()), incident, &outgoing, &pdf, &flags, &s);
 
         EXPECT_GE(math::getX(reflectance), 0.0);
         EXPECT_GE(math::getY(reflectance), 0.0);
@@ -201,7 +203,7 @@ TEST(BSDFTests, TransmissionBSDFTest) {
     PhongDistribution phong;
     phong.setPower((math::real)4.0);
 
-    MicrofacetTransmissionBTDF btdf;
+    MicrofacetBTDF btdf;
     btdf.setDistribution(&phong);
     //LambertianBRDF bsdf1;
     LambertianBRDF bsdf2;
@@ -227,7 +229,8 @@ TEST(BSDFTests, TransmissionBSDFTest) {
     // Calculate rho
     for (int i = 0; i < SAMPLE_COUNT; i++) {
         math::Vector outgoing;
-        math::Vector transmitance = btdf.sampleF(&point, math::Vector2(math::uniformRandom(), math::uniformRandom()), incident, &outgoing, &pdf, &s);
+        RayFlags flags = RayFlag::None;
+        math::Vector transmitance = btdf.sampleF(&point, math::Vector2(math::uniformRandom(), math::uniformRandom()), incident, &outgoing, &pdf, &flags, &s);
 
         EXPECT_LT(math::getZ(outgoing), 0.0);
 
@@ -294,7 +297,8 @@ TEST(BSDFTests, GlassBSDFNANTest) {
     // Calculate rho
     for (int i = 0; i < SAMPLE_COUNT; i++) {
         math::Vector outgoing;
-        math::Vector transmitance = bsdf.sampleF(&point, math::Vector2(math::uniformRandom(), math::uniformRandom()), incident, &outgoing, &pdf, &s);
+        RayFlags flags = RayFlag::None;
+        math::Vector transmitance = bsdf.sampleF(&point, math::Vector2(math::uniformRandom(), math::uniformRandom()), incident, &outgoing, &pdf, &flags, &s);
 
         EXPECT_GE(math::getX(transmitance), 0.0f);
         EXPECT_GE(math::getY(transmitance), 0.0f);
@@ -372,7 +376,8 @@ TEST(BSDFTests, CompoundBSDFNanTest) {
         }
 
         math::Vector outgoing;
-        math::Vector reflectance = disneyBsdf.sampleF(&point, math::Vector2(math::uniformRandom(), math::uniformRandom()), incident, &outgoing, &pdf, &s);
+        RayFlags flags = RayFlag::None;
+        math::Vector reflectance = disneyBsdf.sampleF(&point, math::Vector2(math::uniformRandom(), math::uniformRandom()), incident, &outgoing, &pdf, &flags, &s);
 
         EXPECT_GE(math::getX(reflectance), 0.0f);
         EXPECT_GE(math::getY(reflectance), 0.0f);
@@ -438,7 +443,8 @@ TEST(BSDFTests, DisneyClearCoatTest) {
         }
 
         math::Vector outgoing;
-        math::Vector reflectance = brdf.sampleF(&point, math::Vector2(math::uniformRandom(), math::uniformRandom()), incident, &outgoing, &pdf, &s);
+        RayFlags flags = RayFlag::None;
+        math::Vector reflectance = brdf.sampleF(&point, math::Vector2(math::uniformRandom(), math::uniformRandom()), incident, &outgoing, &pdf, &flags, &s);
 
         EXPECT_GE(math::getX(reflectance), 0.0f);
         EXPECT_GE(math::getY(reflectance), 0.0f);

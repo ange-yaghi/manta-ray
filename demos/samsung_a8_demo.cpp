@@ -302,7 +302,8 @@ void manta_demo::samsungA8Demo(int samplesPerPixel, int resolutionX, int resolut
 
     // Create all scene geometry
     Mesh phone;
-    phone.loadObjFileData(&phoneObj, rayTracer.getMaterialLibrary(), defaultMaterial->getIndex(), 0);
+    phone.loadObjFileData(&phoneObj, 0);
+    phone.bindMaterialLibrary(rayTracer.getMaterialLibrary(), defaultMaterial->getIndex());
 
     // Destroy file loaders
     phoneObj.destroy();

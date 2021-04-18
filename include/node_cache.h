@@ -8,9 +8,7 @@
 
 namespace manta {
 
-    typedef long long cache_key;
-
-    template <typename T_Memory>
+    template <typename T_Memory, typename T_CacheKey = long long>
     class NodeCache {
     public:
         static constexpr int CACHE_DEPTH = 1;
@@ -18,8 +16,9 @@ namespace manta {
 
     public:
         struct CacheMemory {
-            intersection_id intersectionId;
+            T_CacheKey key;
             T_Memory memory;
+            bool valid = false;
         };
 
         struct ThreadMemory {
@@ -32,7 +31,7 @@ namespace manta {
             for (int i = 0; i < MAX_THREADS; i++) {
                 m_cache[i].currentSlot = 0;
                 for (int j = 0; j < CACHE_DEPTH; j++) {
-                    m_cache[i].memory[j].intersectionId = INVALID_CACHE_KEY;
+                    m_cache[i].memory[j].key = T_CacheKey();
                 }
             }
         }
@@ -41,10 +40,10 @@ namespace manta {
             /* void */
         }
 
-        inline const T_Memory *cacheGet(cache_key key, int threadId) const {
+        inline const T_Memory *cacheGet(const T_CacheKey &key, int threadId) const {
             const ThreadMemory &threadMemory = m_cache[threadId];
             for (int i = 0; i < CACHE_DEPTH; i++) {
-                if (threadMemory.memory[i].intersectionId == key) {
+                if (threadMemory.memory[i].key == key && threadMemory.memory[i].valid) {
                     return &threadMemory.memory[i].memory;
                 }
             }
@@ -52,15 +51,15 @@ namespace manta {
             return nullptr;
         }
 
-        inline T_Memory *cachePut(cache_key key, int threadId) {
+        inline T_Memory *cachePut(const T_CacheKey &key, int threadId) {
             ThreadMemory &threadMemory = m_cache[threadId];
             CacheMemory &memory = threadMemory.memory[threadMemory.currentSlot];
-            memory.intersectionId = key;
+            memory.key = key;
+            memory.valid = true;
 
-            threadMemory.currentSlot = (threadMemory.currentSlot + 1) % CACHE_DEPTH;
+            threadMemory.currentSlot = (threadMemory.currentSlot + 1) & (CACHE_DEPTH - 1);
 
             memory.memory = T_Memory();
-
             return &memory.memory;
         }
 

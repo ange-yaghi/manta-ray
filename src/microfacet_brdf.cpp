@@ -6,6 +6,8 @@
 manta::MicrofacetBRDF::MicrofacetBRDF() {
     m_distribution = nullptr;
     m_distributionInput = nullptr;
+    m_mediaInterface = nullptr;
+    m_mediaInterfaceInput = nullptr;
 }
 
 manta::MicrofacetBRDF::~MicrofacetBRDF() {
@@ -18,6 +20,7 @@ manta::math::Vector manta::MicrofacetBRDF::sampleF(
     const math::Vector &i,
     math::Vector *o,
     math::real *pdf,
+    RayFlags *flags,
     StackAllocator *stackAllocator) 
 {
     const math::Vector m = m_distribution->generateMicrosurfaceNormal(surfaceInteraction, u);
@@ -29,15 +32,6 @@ manta::math::Vector manta::MicrofacetBRDF::sampleF(
     const math::real cosThetaO = math::getZ(*o);
     const math::real cosThetaI = math::getZ(i);
 
-    /*
-    if (o_dot_m <= MIN_EPSILON ||
-        cosThetaO <= MIN_EPSILON ||
-        cosThetaI <= MIN_EPSILON) 
-    {
-        *pdf = (math::real)0.0;
-        return math::constants::Zero;
-    }*/
-
     if (!sameHemisphere(*o, i)) {
         *pdf = (math::real)0.0;
         return math::constants::Zero;
@@ -46,7 +40,6 @@ manta::math::Vector manta::MicrofacetBRDF::sampleF(
     *pdf = m_distribution->calculatePDF(m, surfaceInteraction) / ::abs(4 * o_dot_m);
 
     // Calculate reflectivity
-    const math::real F = (math::real)1.0; // TODO: fresnel calculation goes here
     return f(surfaceInteraction, i, *o, stackAllocator);
 }
 
@@ -67,15 +60,9 @@ manta::math::Vector manta::MicrofacetBRDF::f(
     wh = math::normalize(wh);
 
     const math::real o_dot_wh = math::getScalar(math::dot(wh, o));
-    const math::real F = (math::real)1.0; // TODO: fresnel calculation goes here
-
-    /*
-    if (o_dot_wh <= MIN_EPSILON ||
-        cosThetaO <= MIN_EPSILON ||
-        cosThetaI <= MIN_EPSILON)
-    {
-        return math::constants::Zero;
-    }*/
+    const math::real F = (m_mediaInterface == nullptr)
+        ? (math::real)1.0
+        : m_mediaInterface->fresnelTerm(cosThetaI, surfaceInteraction->m_direction);
 
     const math::Vector reflectivity = math::loadScalar(
         m_distribution->calculateDistribution(wh, surfaceInteraction) *
@@ -102,14 +89,6 @@ manta::math::real manta::MicrofacetBRDF::pdf(
     const math::real cosThetaO = math::getZ(o);
     const math::real cosThetaI = math::getZ(i);
 
-    /*
-    if (o_dot_wh <= MIN_EPSILON ||
-        cosThetaO <= MIN_EPSILON ||
-        cosThetaI <= MIN_EPSILON)
-    {
-        return (math::real)0.0;
-    }*/
-
     const math::real pdf = m_distribution->calculatePDF(wh, surfaceInteraction) / ::abs(4 * o_dot_wh);
     return pdf;
 }
@@ -127,6 +106,7 @@ manta::math::Vector manta::MicrofacetBRDF::getReflectivity(
 void manta::MicrofacetBRDF::_evaluate() {
     BXDF::_evaluate();
     m_distribution = getObject<MicrofacetDistribution>(m_distributionInput);
+    m_mediaInterface = getObject<MediaInterface>(m_mediaInterfaceInput);
 }
 
 piranha::Node * manta::MicrofacetBRDF::_optimize(piranha::NodeAllocator *nodeAllocator) {
@@ -140,4 +120,5 @@ void manta::MicrofacetBRDF::registerInputs() {
 
     registerInput(&m_distributionInput, "distribution");
     registerInput(m_reflectivity.getPortAddress(), "reflectivity");
+    registerInput(&m_mediaInterfaceInput, "media_interface");
 }

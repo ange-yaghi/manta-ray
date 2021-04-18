@@ -11,6 +11,7 @@ module {
 
 private import "bxdf.mr"
 
+private import "media-interface/media_interfaces.mr"
 private import "../materials/surface_interaction.mr"
 private import "../microfacet-models/microfacet_distributions.mr"
 private import "../../types/atomic_types.mr"
@@ -21,5 +22,6 @@ public node microfacet_brdf => __mantaray__microfacet_brdf {
     input distribution      [microfacet_distribution]: ggx_distribution(0.5);
     input reflectivity      [vector]: 1;
     input normal            [vector]: surface_interaction().normal;
+    input media_interface   [media_interface]: opaque_interface();
     alias output __out      [bxdf];
 }

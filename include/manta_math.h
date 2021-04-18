@@ -268,6 +268,7 @@ namespace manta {
 
         Vector mask(const Vector &v, const VectorMask &mask);
         Vector bitOr(const Vector &v1, const Vector &v2);
+        bool bitwiseEqual(const Vector &v1, const Vector &v2);
 
         Vector reflect(const Vector &v, const Vector &n);
         Vector inverseReflect(const Vector &v, const Vector &r);

@@ -20,7 +20,7 @@ namespace manta {
 
         virtual math::Vector sampleF(const IntersectionPoint *surfaceInteraction, 
             const math::Vector2 &u, const math::Vector &i, math::Vector *o, math::real *pdf,
-            StackAllocator *stackAllocator);
+            RayFlags *flags, StackAllocator *stackAllocator);
         virtual math::Vector f(const IntersectionPoint *surfaceInteraction,
             const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator);
         virtual math::real pdf(const IntersectionPoint *surfaceInteraction,
@@ -38,8 +38,10 @@ namespace manta {
         virtual void registerInputs();
 
         piranha::pNodeInput m_distributionInput;
+        piranha::pNodeInput m_mediaInterfaceInput;
         CacheableInput<math::Vector> m_reflectivity;
 
+        MediaInterface *m_mediaInterface;
         MicrofacetDistribution *m_distribution;
     };
 

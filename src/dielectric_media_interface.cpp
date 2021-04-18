@@ -29,29 +29,28 @@ manta::math::real manta::DielectricMediaInterface::fresnelTerm(
         no = m_iorIncident;
     }
 
-    math::real c = ::abs(math::getScalar(math::dot(i, m)));
-    math::real g_2 = (no * no) / (ni * ni) - (math::real)1.0 + c * c;
-    if (g_2 < (math::real)0.0) {
+    const math::real n = no / ni;
+
+    const math::real cosThetaI = math::getScalar(math::abs(math::dot(m, i)));
+    const math::real sinThetaI = ::sqrt(std::max((math::real)0.0, 1 - cosThetaI * cosThetaI));
+
+    // Total internal reflection
+    if (sinThetaI >= (math::real)1.0) {
         return (math::real)1.0;
     }
-    math::real g = ::sqrt(g_2);
 
-    // Calculate Fresnel term for dielectrics
-    math::real g_min_c = g - c;
-    math::real g_add_c = g + c;
-    math::real t1 = (g_min_c * g_min_c) / (2 * g_add_c * g_add_c);
+    const math::real cosThetaT = ::sqrt(std::max((math::real)0.0, 1 - n * n * sinThetaI * sinThetaI));
 
-    math::real t2_num = c * g_add_c - 1;
-    math::real t2_div = c * g_min_c + 1;
+    const math::real Rparl = ((no * cosThetaI) - (ni * cosThetaT)) /
+        ((no * cosThetaI) + (ni * cosThetaT));
+    const math::real Rperp = ((ni * cosThetaI) - (no * cosThetaT)) /
+        ((ni * cosThetaI) + (no * cosThetaT));
 
-    math::real t2 = (t2_num * t2_num) / (t2_div * t2_div) + 1;
-
-    return t1 * t2;
+    return (Rparl * Rparl + Rperp * Rperp) / (math::real)2.0;
 }
 
 manta::math::real manta::DielectricMediaInterface::fresnelTerm(
     math::real cosThetaI,
-    math::real *pdf,
     Direction d) const
 {
     math::real ni, no;
@@ -64,18 +63,15 @@ manta::math::real manta::DielectricMediaInterface::fresnelTerm(
         no = m_iorIncident;
     }
 
-    math::real cosThetaT;
-    math::real sinThetaT;
-
-    sinThetaT = ::sqrt(std::max((math::real)0.0, 1 - cosThetaI * cosThetaI));
-    sinThetaT = (ni / no) * sinThetaT;
+    math::real sinThetaI = ::sqrt(std::max((math::real)0.0, 1 - cosThetaI * cosThetaI));
+    math::real sinThetaT = (ni / no) * sinThetaI;
 
     // Total internal reflection
     if (sinThetaT >= (math::real)1.0) {
         return (math::real)1.0;
     }
 
-    cosThetaT = ::sqrt(std::max((math::real)0.0, 1 - sinThetaT * sinThetaT));
+    math::real cosThetaT = ::sqrt(std::max((math::real)0.0, 1 - sinThetaT * sinThetaT));
 
     math::real Rparl = ((no * cosThetaI) - (ni * cosThetaT)) /
         ((no * cosThetaI) + (ni * cosThetaT));

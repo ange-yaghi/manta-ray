@@ -15,6 +15,7 @@
 #include "../include/disney_specular_brdf.h"
 #include "../include/material_library.h"
 #include "../include/microfacet_brdf.h"
+#include "../include/microfacet_btdf.h"
 #include "../include/kd_tree_node.h"
 #include "../include/obj_file_node.h"
 #include "../include/scene.h"
@@ -67,6 +68,7 @@
 #include "../include/perlin_noise_node.h"
 #include "../include/turbulence_noise_node.h"
 #include "../include/area_light.h"
+#include "../include/fresnel_node.h"
 
 manta::LanguageRules::LanguageRules() {
     /* void */
@@ -156,6 +158,8 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__add_bxdf");
     registerBuiltinType<MicrofacetBRDF>(
         "__mantaray__microfacet_brdf");
+    registerBuiltinType<MicrofacetBTDF>(
+        "__mantaray__microfacet_btdf");
     registerBuiltinType<SimpleBSDFMaterial>(
         "__mantaray__simple_bsdf_material");
     registerBuiltinType<BilayerBRDF>(
@@ -240,6 +244,8 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__area_light");
     registerBuiltinType<SceneAddLight>(
         "__mantaray__scene_add_light");
+    registerBuiltinType<FresnelNode>(
+        "__mantaray__fresnel");
 
     // Actions
     registerBuiltinType<piranha::ConsoleInputNode>(

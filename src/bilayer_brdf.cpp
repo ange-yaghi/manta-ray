@@ -24,6 +24,7 @@ manta::math::Vector manta::BilayerBRDF::sampleF(
     const math::Vector &i,
     math::Vector *o,
     math::real *pdf,
+    RayFlags *flags,
     StackAllocator *stackAllocator)
 {
     const math::Vector diffuseR = m_diffuse.sample(surfaceInteraction);

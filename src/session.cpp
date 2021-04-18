@@ -2,6 +2,7 @@
 
 #include "../include/vector_map_2d.h"
 #include "../include/kd_tree.h"
+#include "../include/mesh.h"
 
 manta::Session::Session() {
     m_console = nullptr;
@@ -35,6 +36,22 @@ void manta::Session::putCachedKdTree(const std::string &key, KDTree *tree) {
     }
 
     m_kdTreeCache.emplace(key, tree);
+}
+
+manta::Mesh *manta::Session::getCachedMesh(const std::string &key) {
+    auto mesh = m_meshCache.find(key);
+    return mesh == m_meshCache.end()
+        ? nullptr
+        : mesh->second;
+}
+
+void manta::Session::putCachedMesh(const std::string &key, Mesh *mesh) {
+    Mesh *cached = getCachedMesh(key);
+    if (cached != nullptr) {
+        delete cached;
+    }
+
+    m_meshCache.emplace(key, mesh);
 }
 
 void manta::Session::registerPreview(PreviewNode *preview) {

@@ -16,6 +16,14 @@ namespace manta {
     struct IntersectionPoint;
     class StackAllocator;
 
+    typedef unsigned int RayFlags;
+    struct RayFlag {
+        static const RayFlags None = 0x0;
+        static const RayFlags Transmission = 0x1;
+        static const RayFlags Reflection = 0x2;
+        static const RayFlags PerfectSpecular = 0x4;
+    };
+
     class BXDF : public ObjectReferenceNode<BXDF> {
     public:
         BXDF();
@@ -23,7 +31,7 @@ namespace manta {
 
         virtual math::Vector sampleF(const IntersectionPoint *surfaceInteraction,
             const math::Vector2 &u, const math::Vector &i, math::Vector *o, math::real *pdf,
-            StackAllocator *stackAllocator) = 0;
+            RayFlags *flags, StackAllocator *stackAllocator) = 0;
 
         virtual math::Vector f(const IntersectionPoint *surfaceInteraction,
             const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) = 0;

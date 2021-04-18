@@ -31,10 +31,10 @@ manta::math::real manta::GgxDistribution::calculateDistribution(
     const intersection_id id = surfaceInteraction->m_id;
     const int threadId = surfaceInteraction->m_threadId;
 
-    const math::real *memory = m_distribution.cacheGet(id, threadId);
+    const math::real *memory = m_distribution.cacheGet({ m, id }, threadId);
 
     if (memory == nullptr) {
-        math::real *newValue = m_distribution.cachePut(id, threadId);
+        math::real *newValue = m_distribution.cachePut({ m, id }, threadId);
         *newValue = calculateDistribution(m, width);
 
         memory = newValue;
@@ -65,7 +65,7 @@ manta::math::Vector manta::GgxDistribution::generateMicrosurfaceNormal(
     math::Vector t1 = math::loadVector(sin_theta_m, sin_theta_m, cos_theta_m);
     math::Vector t2 = math::loadVector(cos(rho_m), sin(rho_m), (math::real)1.0);
 
-    return math::mul(t1, t2);
+    return math::normalize(math::mul(t1, t2));
 }
 
 manta::math::real manta::GgxDistribution::calculateDistribution(

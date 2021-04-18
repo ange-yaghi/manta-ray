@@ -23,10 +23,14 @@ manta::math::Vector manta::BSDF::sampleF(
     const math::Vector &i,
     math::Vector *o,
     math::real *pdf,
+    RayFlags *flags,
     StackAllocator *stackAllocator,
     bool cosineWeight) const 
 {
-    const int bxdf_i = rand() % m_bxdfCount;
+    const int bxdf_n = m_bxdfCount;
+    const int bxdf_i = std::min((int)std::floor(u.x * bxdf_n), bxdf_n - 1);
+
+    math::Vector2 remapped_u = { u.x * bxdf_n - bxdf_i, u.y };
 
     BXDF *bxdf = m_bxdfs[bxdf_i];
     const math::Vector normal = bxdf->sampleNormal(surfaceInteraction);
@@ -36,10 +40,10 @@ manta::math::Vector manta::BSDF::sampleF(
 
     const math::Vector i_local = bxdf->transform(i, basis_u, basis_v, basis_w);
     math::Vector o_local;
-    math::Vector f = bxdf->sampleF(surfaceInteraction, u, i_local, &o_local, pdf, stackAllocator);
+    math::Vector f = bxdf->sampleF(surfaceInteraction, remapped_u, i_local, &o_local, pdf, flags, stackAllocator);
 
     if (cosineWeight) {
-        f = math::mul(f, math::expandZ(o_local));
+        f = math::mul(f, math::abs(math::expandZ(o_local)));
     }
 
     *o = bxdf->inverseTransform(o_local, basis_u, basis_v, basis_w);
@@ -57,7 +61,7 @@ manta::math::Vector manta::BSDF::sampleF(
                 const math::Vector i_local = m_bxdfs[j]->transform(i, basis_u, basis_v, basis_w);
                 const math::Vector o_local = m_bxdfs[j]->transform(*o, basis_u, basis_v, basis_w);
 
-                if (math::getZ(i_local) < 0 || math::getZ(o_local) < 0) {
+                if (math::getZ(i_local) <= 0 || math::getZ(o_local) <= 0) {
                     continue;
                 }
 
@@ -68,7 +72,7 @@ manta::math::Vector manta::BSDF::sampleF(
 
                 math::Vector f_i = m_bxdfs[j]->f(surfaceInteraction, i_local, o_local, stackAllocator);
                 if (cosineWeight) {
-                    f_i = math::mul(f_i, math::expandZ(o_local));
+                    f_i = math::mul(f_i, math::abs(math::expandZ(o_local)));
                 }
 
                 f = math::add(f, f_i);

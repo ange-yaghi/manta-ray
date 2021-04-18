@@ -18,7 +18,7 @@ namespace manta {
 
         virtual math::Vector sampleF(const IntersectionPoint *surfaceInteraction, 
             const math::Vector2 &u, const math::Vector &i, math::Vector *o, math::real *pdf,
-            StackAllocator *stackAllocator);
+            RayFlags *flags, StackAllocator *stackAllocator);
 
         virtual math::Vector f(const IntersectionPoint *surfaceInteraction,
             const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator);

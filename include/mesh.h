@@ -71,8 +71,8 @@ namespace manta {
         void setFastIntersectRadius(math::real radius) { m_fastIntersectRadius = radius; }
         void setFastIntersectPosition(math::Vector pos) { m_fastIntersectPosition = pos; }
 
-        void loadObjFileData(ObjFileLoader *data, MaterialLibrary *materialLibrary = nullptr, 
-            int defaultMaterialIndex = -1, unsigned int globalId = 0);
+        void loadObjFileData(ObjFileLoader *data, unsigned int globalId = 0);
+        void bindMaterialLibrary(MaterialLibrary *library, int defaultMaterialIndex = -1);
 
         void merge(const Mesh *mesh);
 
@@ -160,6 +160,9 @@ namespace manta {
         QuadFace *m_quadFaces;
         QuadAuxFaceData *m_auxQuadFaceData;
         AABB *m_faceBounds;
+
+        int *m_materialMap;
+        std::string *m_materials;
 
         math::Vector *m_vertices;
         math::Vector *m_normals;
