@@ -6,6 +6,7 @@
 #include "../include/path.h"
 #include "../include/material.h"
 #include "../include/session.h"
+#include "../include/console.h"
 
 #include <piranha.h>
 #include <string>
@@ -55,12 +56,23 @@ void manta::ObjFileNode::_evaluate() {
 
     Mesh *mesh = Session::get().getCachedMesh(cacheKey);
     if (mesh == nullptr || overrideCache) {
+        auto startTime = std::chrono::system_clock::now();
+        manta::Session::get().getConsole()->out("Loading object file: " + resolvedPath.toString() + "\n");
+
         ObjFileLoader loader;
         const bool result = loader.loadObjFile(resolvedPath.toString().c_str());
         if (!result) {
+            manta::Session::get().getConsole()->out("Error loading object file: " + resolvedPath.toString() + "\n");
             throwError("Could not open .obj file: " + resolvedPath.toString());
             return;
         }
+
+        auto endTime = std::chrono::system_clock::now();
+        std::chrono::duration<double> timeElapsed = endTime - startTime;
+        std::stringstream ss;
+        ss << "Loading took: " << timeElapsed.count() << "s" << "\n";
+
+        manta::Session::get().getConsole()->out(ss.str());
 
         mesh = new Mesh;
         mesh->loadObjFileData(&loader);
@@ -69,6 +81,9 @@ void manta::ObjFileNode::_evaluate() {
         loader.destroy();
 
         Session::get().putCachedMesh(cacheKey, mesh);
+    }
+    else {
+        manta::Session::get().getConsole()->out("Using cached mesh data: " + cacheKey + "\n");
     }
 
     mesh->bindMaterialLibrary(library, defaultMaterialIndex);

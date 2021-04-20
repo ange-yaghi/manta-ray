@@ -86,13 +86,9 @@ manta::math::Vector manta::PerlinNoiseNodeOutput::noise(const math::Vector &coor
     const math::real y = math::getY(coordinates);
     const math::real z = math::getZ(coordinates);
 
-    if (x < 0) {
-        int a = 0;
-    }
-
-    int ix = std::floor(x);
-    int iy = std::floor(y);
-    int iz = std::floor(z);
+    int ix = (int)std::floor(x);
+    int iy = (int)std::floor(y);
+    int iz = (int)std::floor(z);
 
     const math::real dx = x - ix;
     const math::real dy = y - iy;

@@ -6,6 +6,9 @@
 #include "geometry.h"
 #include "manta_math.h"
 #include "primitives.h"
+#include "coarse_intersection.h"
+
+#define ENABLE_FACE_AABB (false)
 
 namespace manta {
 
@@ -30,7 +33,10 @@ namespace manta {
         void destroy();
         void filterDegenerateFaces();
         void findQuads();
+
+#if ENABLE_FACE_AABB
         void computeBounds();
+#endif /* ENABLE_FACE_AABB */
 
         virtual bool findClosestIntersection(LightRay *ray, 
             CoarseIntersection *intersection, math::real minDepth, 
@@ -60,7 +66,10 @@ namespace manta {
         const Face *getFace(int index) const { return &m_faces[index]; }
         const AuxFaceData *getAuxFace(int index) const { return &m_auxFaceData[index]; }
         const QuadFace *getQuadFace(int index) const { return &m_quadFaces[index]; }
+#if ENABLE_FACE_AABB
         const AABB *getBounds(int index) const { return &m_faceBounds[index]; }
+#endif /* ENABLE_FACE_AABB */
+
         const math::Vector *getVertex(int index) const { return &m_vertices[index]; }
         const math::Vector *getNormal(int index) const { return &m_normals[index]; }
         const math::Vector *getTexCoord(int index) const { return &m_textureCoords[index]; }
@@ -145,8 +154,51 @@ namespace manta {
         bool detectQuadIntersection(int faceIndex, math::real minDepth, 
             math::real maxDepth, const LightRay *ray, CoarseCollisionOutput *output) const;
 
-        bool findClosestIntersection(int *faceList, int faceCount, LightRay *ray, 
-            CoarseIntersection *intersection, math::real minDepth, math::real maxDepth /**/ STATISTICS_PROTOTYPE) const;
+        __forceinline bool findClosestIntersection(const int *faceList, int faceCount, LightRay *ray,
+            CoarseIntersection *intersection, math::real minDepth, math::real maxDepth /**/ STATISTICS_PROTOTYPE) const
+        {
+            math::real currentMaxDepth = maxDepth;
+            bool found = false;
+            CoarseCollisionOutput output;
+            for (int i = 0; i < faceCount; i++) {
+                const int face = faceList[i];
+                if (ray->getTouched(face)) continue;
+                else ray->setTouched(face);
+
+#if ENABLE_FACE_AABB
+                AABB &aabb = m_faceBounds[face];
+                math::real tmin, tmax;
+
+                INCREMENT_COUNTER(RuntimeStatistics::Counter::TotalBvTests);
+                if (aabb.rayIntersect(*ray, &tmin, &tmax)) {
+                    INCREMENT_COUNTER(RuntimeStatistics::Counter::TotalBvHits);
+
+                    if (tmin > currentMaxDepth || tmax < minDepth) continue;
+
+#endif /* ENABLE_FACE_AABB */
+                    INCREMENT_COUNTER(RuntimeStatistics::Counter::TriangleTests);
+                    if (detectTriangleIntersection(face, minDepth, currentMaxDepth, ray, &output)) {
+                        intersection->depth = output.depth;
+                        intersection->faceHint = face; // Face index
+                        intersection->subdivisionHint = -1; // Not used for triangles
+                        intersection->sceneGeometry = this;
+
+                        intersection->su = output.u;
+                        intersection->sv = output.v;
+                        intersection->sw = output.w;
+
+                        currentMaxDepth = output.depth;
+                        found = true;
+                    }
+                    else {
+                        INCREMENT_COUNTER(RuntimeStatistics::Counter::UnecessaryTriangleTests);
+                    }
+#if ENABLE_FACE_AABB
+                }
+#endif /* ENABLE_FACE_AABB */
+            }
+            return found;
+        }
 
         bool checkFaceAABB(int faceIndex, const AABB &bounds) const;
         void calculateFaceAABB(int faceIndex, AABB *target) const;
@@ -159,7 +211,10 @@ namespace manta {
         AuxFaceData *m_auxFaceData;
         QuadFace *m_quadFaces;
         QuadAuxFaceData *m_auxQuadFaceData;
+
+#if ENABLE_FACE_AABB
         AABB *m_faceBounds;
+#endif /* ENABLE_FACE_AABB */
 
         int *m_materialMap;
         std::string *m_materials;

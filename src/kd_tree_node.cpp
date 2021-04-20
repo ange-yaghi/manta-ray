@@ -57,6 +57,8 @@ void manta::KdTreeNode::_evaluate() {
     }
     
     m_output.setReference(m_kdTree);
+
+    //m_kdTree->writeToObjFile("kd_tree_debug.obj");
 }
 
 void manta::KdTreeNode::_destroy() {

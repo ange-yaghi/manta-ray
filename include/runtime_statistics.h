@@ -26,11 +26,14 @@ namespace manta {
         enum class Counter {
             // Counters
             TriangleTests,
+            UnecessaryTriangleTests,
+            KdLeafNodeTraversals,
+            KdEmptyLeafNodeTraversals,
+            KdInnerNodeTraversals,
             QuadTests,
             RaysCast,
             TotalBvTests,
             TotalBvHits,
-            UnecessaryPrimitiveTests,
 
             // Special label for counter count
             Count
@@ -63,8 +66,14 @@ namespace manta {
                 return "TOTAL BV HITS";
             case Counter::TotalBvTests:
                 return "TOTAL BV TESTS";
-            case Counter::UnecessaryPrimitiveTests:
-                return "UNNECESSARY PRIMITIVE TESTS";
+            case Counter::UnecessaryTriangleTests:
+                return "UNNECESSARY TRIANGLE TESTS";
+            case Counter::KdLeafNodeTraversals:
+                return "KD LEAF NODE TRAVERSALS";
+            case Counter::KdInnerNodeTraversals:
+                return "KD INNER NODE TRAVERSALS";
+            case Counter::KdEmptyLeafNodeTraversals:
+                return "KD EMPTY LEAF NODE TRAVERSALS";
             default:
                 return "UNKNOWN COUNTER";
             }

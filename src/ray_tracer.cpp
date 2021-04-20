@@ -278,7 +278,7 @@ manta::math::Vector manta::RayTracer::estimateDirect(
             if (point->m_direction == MediaInterface::Direction::In) testRay.setSource(point->m_outside);
             else testRay.setSource(point->m_inside);
             testRay.calculateTransformations();
-            depthCull(scene, &testRay, &object, &testPoint, stackAllocator, depth);
+            depthCull(scene, &testRay, &object, &testPoint, stackAllocator, depth /**/ STATISTICS_NULL_INPUT);
 
             if (testPoint.m_valid) {
                 Li = math::constants::Zero;
@@ -315,7 +315,7 @@ manta::math::Vector manta::RayTracer::estimateDirect(
             else testRay.setSource(point->m_outside);
             //testRay.setSource(math::add(point->m_position, math::mul(testRay.getDirection(), math::loadScalar((math::real)1E-2))));
             testRay.calculateTransformations();
-            depthCull(scene, &testRay, &object, &testPoint, stackAllocator, depth);
+            depthCull(scene, &testRay, &object, &testPoint, stackAllocator, depth /**/ STATISTICS_NULL_INPUT);
 
             if (!testPoint.m_valid) {
                 // TODO: inputs are technically wrong

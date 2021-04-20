@@ -23,7 +23,7 @@ manta::KDTree::KDTree() {
     m_volumeCount = 0;
     m_volumeCapacity = 0;
 
-    m_faceLists = nullptr;
+    m_faceList = nullptr;
     m_faceCount = 0;
 
     m_progress = (math::real)0.0;
@@ -31,7 +31,7 @@ manta::KDTree::KDTree() {
 }
 
 manta::KDTree::~KDTree() {
-    assert(m_faceLists == nullptr);
+    assert(m_faceList == nullptr);
     assert(m_nodeVolumes == nullptr);
     assert(m_nodes == nullptr);
 }
@@ -73,9 +73,9 @@ void manta::KDTree::configure(math::real width, const math::Vector &position) {
 }
 
 void manta::KDTree::destroy() {
-    if (m_faceLists != nullptr) {
-        StandardAllocator::Global()->free(m_faceLists, m_faceCount);
-        m_faceLists = nullptr;
+    if (m_faceList != nullptr) {
+        StandardAllocator::Global()->free(m_faceList, m_faceCount);
+        m_faceList = nullptr;
         m_faceCount = 0;
     }
 
@@ -118,6 +118,8 @@ bool manta::KDTree::findClosestIntersection(
     const KDTreeNode *node = &m_nodes[0];
     while (true) {
         if (!node->isLeaf()) {
+            INCREMENT_COUNTER(RuntimeStatistics::Counter::KdInnerNodeTraversals);
+
             const int axis = node->getSplitAxis();
             const math::real split = node->getSplit();
 
@@ -154,19 +156,29 @@ bool manta::KDTree::findClosestIntersection(
             }
         }
         else {
+            INCREMENT_COUNTER(RuntimeStatistics::Counter::KdLeafNodeTraversals);
+
             const int primitiveCount = node->getPrimitiveCount();
-            const int objectOffset = node->getObjectOffset();
-            int *faceList;
-            if (primitiveCount > 0) {
-                const KDBoundingVolume &bv = m_nodeVolumes[objectOffset];
-                faceList = &m_faceLists[bv.faceListOffset];
+            if (primitiveCount == 1) {
+                if (m_mesh->findClosestIntersection(&node->singleObject, primitiveCount, ray, intersection, minDepth, closestHit /**/ STATISTICS_PARAM_INPUT)) {
+                    hit = true;
+                    closestHit = intersection->depth;
+                }
+            }
+            else {
+                if (primitiveCount == 0) {
+                    INCREMENT_COUNTER(RuntimeStatistics::Counter::KdEmptyLeafNodeTraversals);
+                }
+
+                const int *faceList = &m_faceList[node->getObjectOffset()];
 
 #if KD_TREE_WITH_BOUNDING_BOXES
                 INCREMENT_COUNTER(RuntimeStatistics::Counter::TotalBvTests);
+                const KDBoundingVolume &bv = m_nodeVolumes[node->getObjectOffset()];
                 math::real t0, t1;
                 if (bv.bounds.rayIntersect(*ray, &t0, &t1)) {
-#endif /* KD_TREE_WITH_BOUNDING_BOXES */
                     INCREMENT_COUNTER(RuntimeStatistics::Counter::TotalBvHits);
+#endif /* KD_TREE_WITH_BOUNDING_BOXES */
                     if (m_mesh->findClosestIntersection(faceList, primitiveCount, ray, intersection, minDepth, closestHit /**/ STATISTICS_PARAM_INPUT)) {
                         hit = true;
                         closestHit = intersection->depth;
@@ -174,9 +186,6 @@ bool manta::KDTree::findClosestIntersection(
 #if KD_TREE_WITH_BOUNDING_BOXES
                 }
 #endif /* KD_TREE_WITH_BOUNDING_BOXES */
-            }
-            else {
-                // Nothing in this node
             }
 
             if (currentJob > 0) {
@@ -238,7 +247,7 @@ void manta::KDTree::analyzeWithProgress(Mesh *mesh, int maxSize) {
 }
 
 void manta::KDTree::analyze(Mesh *mesh, int maxSize) {
-    constexpr int MAX_DEPTH = 64;
+    constexpr int MAX_DEPTH = 40;
 
     setComplete(false);
     resetProgress();
@@ -275,10 +284,10 @@ void manta::KDTree::analyze(Mesh *mesh, int maxSize) {
     // Copy faces into a new array
     int totalFaces = (int)workspace.faces.size();
 
-    m_faceLists = StandardAllocator::Global()->allocate<int>(totalFaces);
+    m_faceList = StandardAllocator::Global()->allocate<int>(totalFaces);
     m_faceCount = totalFaces;
     for (int i = 0; i < totalFaces; i++) {
-        m_faceLists[i] = workspace.faces[i];
+        m_faceList[i] = workspace.faces[i];
     }
 
     // Destroy all allocated memory
@@ -297,15 +306,16 @@ void manta::KDTree::setMesh(Mesh *mesh) {
 }
 
 void manta::KDTree::_analyze(int currentNode, AABB *nodeBounds, const std::vector<int> &faces, 
-                            int badRefines, int depth, KDTreeWorkspace *workspace, math::real effort) {
-    constexpr math::real intersectionCost = 80;
-    constexpr math::real traversalCost = 1;
-    constexpr math::real emptyBonus = 0.5;
+                            int badRefines, int depth, KDTreeWorkspace *workspace, math::real effort)
+{
+    constexpr math::real intersectionCost = 50;
+    constexpr math::real traversalCost = 50;
+    constexpr math::real emptyBonus = 0.0;
 
     createNode();
 
     // Debug only
-    //m_nodeBounds.push_back(*nodeBounds);
+    m_nodeBounds.push_back(*nodeBounds);
 
     int primitiveCount = (int)faces.size();
     if (primitiveCount <= workspace->maxPrimitives || depth == 0) {
@@ -325,13 +335,13 @@ void manta::KDTree::_analyze(int currentNode, AABB *nodeBounds, const std::vecto
     int retries = 0;
     int axis = math::maxDimension3(d);
 
-    retry_split:
+retry_split:
     // Initialize edges
     for (int i = 0; i < primitiveCount; i++) {
         int primitiveIndex = faces[i];
         const AABB &bounds = workspace->allFaceBounds[primitiveIndex];
-        workspace->edges[axis][2 * i] = KDBoundEdge(math::get(bounds.minPoint, axis), primitiveIndex, true);    // Start
-        workspace->edges[axis][2 * i + 1] = KDBoundEdge(math::get(bounds.maxPoint, axis), primitiveIndex, false);    // End
+        workspace->edges[axis][2 * i] = KDBoundEdge(math::get(bounds.minPoint, axis), primitiveIndex, true); // Start
+        workspace->edges[axis][2 * i + 1] = KDBoundEdge(math::get(bounds.maxPoint, axis), primitiveIndex, false); // End
     }
 
     std::sort(&workspace->edges[axis][0], &workspace->edges[axis][2 * primitiveCount],
@@ -375,7 +385,7 @@ void manta::KDTree::_analyze(int currentNode, AABB *nodeBounds, const std::vecto
     }
 
     if (bestCost > oldCost) ++badRefines;
-    if (((bestCost > 4 * oldCost && primitiveCount < workspace->maxPrimitives) || bestAxis == -1 || badRefines == 3)) {
+    if ((bestCost > 4 * oldCost && primitiveCount < workspace->maxPrimitives) || bestAxis == -1 || badRefines == 3) {
         initLeaf(currentNode, faces, *nodeBounds, workspace);
         incrementProgress(effort);
         return;
@@ -401,13 +411,13 @@ void manta::KDTree::_analyze(int currentNode, AABB *nodeBounds, const std::vecto
     math::set(bounds0.maxPoint, bestAxis, split);
     math::set(bounds1.minPoint, bestAxis, split);
 
-    int totalPrimitives = (int)primitives0.size() + (int)primitives1.size();
+    const int totalPrimitives = (int)primitives0.size() + (int)primitives1.size();
     math::real effort0, effort1;
     effort0 = (math::real)primitives0.size() / totalPrimitives;
     effort1 = (math::real)1.0 - effort0;
 
     _analyze(currentNode + 1, &bounds0, primitives0, badRefines, depth - 1, workspace, effort0 * effort);
-    int aboveChild = m_nodeCount;
+    const int aboveChild = m_nodeCount;
     m_nodes[currentNode].initInterior(bestAxis, aboveChild, split);
     _analyze(aboveChild, &bounds1, primitives1, badRefines, depth - 1, workspace, effort1 * effort);
 }
@@ -468,6 +478,8 @@ void manta::KDTree::initLeaf(int node, const std::vector<int> &faces, const AABB
         ? new bool[primitiveCount]
         : nullptr;
 
+    int singleFace = -1;
+
     // Filter faces
     if (primitiveCount > 0) {
         for (int i = 0; i < primitiveCount; i++) {
@@ -477,16 +489,19 @@ void manta::KDTree::initLeaf(int node, const std::vector<int> &faces, const AABB
             else {
                 filtered[i] = false;
                 filteredPrimitiveCount++;
+                singleFace = faces[i];
             }
         }
     }
 
-    m_nodes[node].initLeaf(filteredPrimitiveCount, newNodeVolume);
-
-    if (filteredPrimitiveCount > 0) {
+    if (filteredPrimitiveCount == 1) {
+        m_nodes[node].initLeaf(1, singleFace);
+    }
+    else {
         // Initialize the new volume
         KDBoundingVolume &volume = m_nodeVolumes[newNodeVolume];
-        volume.faceListOffset = (int)workspace->faces.size();
+
+        m_nodes[node].initLeaf(filteredPrimitiveCount, (int)workspace->faces.size());
 
         // Add all primitives to the list
         for (int i = 0; i < primitiveCount; i++) {

@@ -24,7 +24,10 @@ manta::Mesh::Mesh() {
     m_vertices = nullptr;
     m_normals = nullptr;
     m_textureCoords = nullptr;
+
+#if ENABLE_FACE_AABB
     m_faceBounds = nullptr;
+#endif /* ENABLE_FACE_AABB */
 
     m_triangleFaceCount = 0;
     m_quadFaceCount = 0;
@@ -46,7 +49,10 @@ manta::Mesh::~Mesh() {
     assert(m_vertices == nullptr);
     assert(m_normals == nullptr);
     assert(m_textureCoords == nullptr);
+
+#if ENABLE_FACE_AABB
     assert(m_faceBounds == nullptr);
+#endif /* ENABLE_FACE_AABB */
 }
 
 void manta::Mesh::initialize(int faceCount, int vertexCount, int normalCount, int texCoordCount) {
@@ -79,7 +85,11 @@ void manta::Mesh::destroy() {
     if (m_vertices != nullptr) StandardAllocator::Global()->aligned_free(m_vertices, m_vertexCount);
     if (m_normals != nullptr) StandardAllocator::Global()->aligned_free(m_normals, m_normalCount);
     if (m_textureCoords != nullptr) StandardAllocator::Global()->aligned_free(m_textureCoords, m_texCoordCount);
+
+#if ENABLE_FACE_AABB
     if (m_faceBounds != nullptr) StandardAllocator::Global()->free(m_faceBounds, m_triangleFaceCount);
+    m_faceBounds = nullptr;
+#endif /* ENABLE_FACE_AABB */
 
     m_faces = nullptr;
     m_auxFaceData = nullptr;
@@ -88,7 +98,6 @@ void manta::Mesh::destroy() {
     m_vertices = nullptr;
     m_normals = nullptr;
     m_textureCoords = nullptr;
-    m_faceBounds = nullptr;
 }
 
 void manta::Mesh::filterDegenerateFaces() {
@@ -103,8 +112,8 @@ void manta::Mesh::filterDegenerateFaces() {
         if (abs(math::getX(normal)) < 1E-9 && abs(math::getY(normal)) < 1E-9 && abs(math::getZ(normal)) < 1E-9) {
             m_faces[i] = m_faces[actualFaceCount - 1];
             m_auxFaceData[i] = m_auxFaceData[actualFaceCount - 1];
-            actualFaceCount--;
-            i--;
+            --actualFaceCount;
+            --i;
         }
     }
 
@@ -271,38 +280,53 @@ void manta::Mesh::findQuads() {
     // Update triangle list
     std::vector<Face> newTrianglesTemp;
     std::vector<AuxFaceData> newAuxFaceDataTemp;
-    std::vector<AABB> newFaceBoundsTemp;
     for (int i = 0; i < m_triangleFaceCount; i++) {
         if (!usedFlags[i]) {
             newTrianglesTemp.push_back(m_faces[i]);
             newAuxFaceDataTemp.push_back(m_auxFaceData[i]);
+        }
+    }
+
+#if ENABLE_FACE_AABB
+    std::vector<AABB> newFaceBoundsTemp;
+    for (int i = 0; i < m_triangleFaceCount; i++) {
+        if (!usedFlags[i]) {
             newFaceBoundsTemp.push_back(m_faceBounds[i]);
         }
     }
+#endif /* ENABLE_FACE_AABB */
 
     m_triangleFaceCount = (int)newTrianglesTemp.size();
     Face *newFaces = StandardAllocator::Global()->allocate<Face>(m_triangleFaceCount);
     AuxFaceData *newAuxData = StandardAllocator::Global()->allocate<AuxFaceData>(m_triangleFaceCount);
-    AABB *newFaceBounds = StandardAllocator::Global()->allocate<AABB>(m_triangleFaceCount);
 
     for (int i = 0; i < m_triangleFaceCount; i++) {
         newFaces[i] = newTrianglesTemp[i];
         newAuxData[i] = newAuxFaceDataTemp[i];
-        newFaceBounds[i] = newFaceBoundsTemp[i];
     }
 
     StandardAllocator::Global()->free(m_faces, originalTriangleCount);
     StandardAllocator::Global()->free(m_auxFaceData, originalTriangleCount);
+
+#if ENABLE_FACE_AABB
+    AABB *newFaceBounds = StandardAllocator::Global()->allocate<AABB>(m_triangleFaceCount);
+
+    for (int i = 0; i < m_triangleFaceCount; i++) {
+        newFaceBounds[i] = newFaceBoundsTemp[i];
+    }
+
     StandardAllocator::Global()->free(m_faceBounds, originalTriangleCount);
+    m_faceBounds = newFaceBounds;
+#endif /* ENABLE_FACE_AABB */
 
     m_faces = newFaces;
     m_auxFaceData = newAuxData;
-    m_faceBounds = newFaceBounds;
 
     // Clean up temporary memory
     StandardAllocator::Global()->free(usedFlags, originalTriangleCount);
 }
 
+#if ENABLE_FACE_AABB
 void manta::Mesh::computeBounds() {
     m_faceBounds = StandardAllocator::Global()->allocate<AABB>(m_triangleFaceCount);
 
@@ -312,6 +336,7 @@ void manta::Mesh::computeBounds() {
         calculateFaceAABB(face, aabb);
     }
 }
+#endif /* ENABLE_FACE_AABB */
 
 bool manta::Mesh::findClosestIntersection(
     LightRay *ray,
@@ -468,7 +493,7 @@ void manta::Mesh::fineIntersection(const math::Vector &r, IntersectionPoint *p, 
     const math::Vector pp0 = math::sub(r, *vertices[0]);
     const math::Vector pp0_dot_n = math::dot(pp0, faceNormal);
     const math::Vector projected = math::sub(r, math::mul(pp0_dot_n, faceNormal));
-    const math::Vector offset = math::mul(faceNormal, math::loadScalar(1E-6));
+    const math::Vector offset = math::mul(faceNormal, math::loadScalar((math::real)1E-6));
 
     p->m_depth = hint->depth;
     p->m_vertexNormal = vertexNormal;
@@ -517,12 +542,15 @@ void manta::Mesh::loadObjFileData(ObjFileLoader *data, unsigned int globalId) {
     std::vector<std::string> materialNames;
 
     for (unsigned int i = 0; i < data->getFaceCount(); ++i) {
-        ObjFileLoader::ObjFace *face = data->getFace(i);
+        ObjFileLoader::ObjFace face = data->getFace(i);
 
-        auto material = materialNameToIndex.find(face->material->name);
-        if (material == materialNameToIndex.end()) {
-            materialNameToIndex[face->material->name] = (int)materialNames.size();
-            materialNames.push_back(face->material->name);
+        if (face.material != -1) {
+            const std::string materialName = data->getMaterial(face.material).name;
+            auto material = materialNameToIndex.find(materialName);
+            if (material == materialNameToIndex.end()) {
+                materialNameToIndex[materialName] = (int)materialNames.size();
+                materialNames.push_back(materialName);
+            }
         }
     }
 
@@ -532,33 +560,33 @@ void manta::Mesh::loadObjFileData(ObjFileLoader *data, unsigned int globalId) {
     }
 
     for (unsigned int i = 0; i < data->getFaceCount(); ++i) {
-        ObjFileLoader::ObjFace *face = data->getFace(i);
-        m_faces[i].u = face->v1 - 1;
-        m_faces[i].v = face->v2 - 1;
-        m_faces[i].w = face->v3 - 1;
+        ObjFileLoader::ObjFace face = data->getFace(i);
+        m_faces[i].u = face.v1 - 1;
+        m_faces[i].v = face.v2 - 1;
+        m_faces[i].w = face.v3 - 1;
 
-        m_auxFaceData[i].data[0].n = face->vn1 - 1;
-        m_auxFaceData[i].data[1].n = face->vn2 - 1;
-        m_auxFaceData[i].data[2].n = face->vn3 - 1;
+        m_auxFaceData[i].data[0].n = face.vn1 - 1;
+        m_auxFaceData[i].data[1].n = face.vn2 - 1;
+        m_auxFaceData[i].data[2].n = face.vn3 - 1;
 
-        m_auxFaceData[i].data[0].t = face->vt1 - 1;
-        m_auxFaceData[i].data[1].t = face->vt2 - 1;
-        m_auxFaceData[i].data[2].t = face->vt3 - 1;
+        m_auxFaceData[i].data[0].t = face.vt1 - 1;
+        m_auxFaceData[i].data[1].t = face.vt2 - 1;
+        m_auxFaceData[i].data[2].t = face.vt3 - 1;
 
-        m_materialMap[i] = (face->material != nullptr)
-            ? materialNameToIndex[face->material->name]
+        m_materialMap[i] = (face.material != -1)
+            ? materialNameToIndex[data->getMaterial(face.material).name]
             : -1;
     }
 
     for (unsigned int i = 0; i < data->getVertexCount(); i++) {
-        math::Vector3 *v = data->getVertex(i);
-        m_vertices[i] = math::loadVector(*v);
+        math::Vector3 v = data->getVertex(i);
+        m_vertices[i] = math::loadVector(v);
     }
 
     if (data->getNormalCount() > 0) {
         for (unsigned int i = 0; i < data->getNormalCount(); i++) {
-            math::Vector3 *n = data->getNormal(i);
-            m_normals[i] = math::loadVector(*n);
+            math::Vector3 n = data->getNormal(i);
+            m_normals[i] = math::loadVector(n);
         }
         m_perVertexNormals = true;
     }
@@ -568,8 +596,8 @@ void manta::Mesh::loadObjFileData(ObjFileLoader *data, unsigned int globalId) {
 
     if (data->getTexCoordCount() > 0) {
         for (unsigned int i = 0; i < data->getTexCoordCount(); i++) {
-            math::Vector2 *t = data->getTexCoords(i);
-            m_textureCoords[i] = math::loadVector(*t);
+            math::Vector2 t = data->getTexCoords(i);
+            m_textureCoords[i] = math::loadVector(t);
         }
         m_useTextureCoords = true;
     }
@@ -578,7 +606,10 @@ void manta::Mesh::loadObjFileData(ObjFileLoader *data, unsigned int globalId) {
     }
 
     filterDegenerateFaces();
+
+#if ENABLE_FACE_AABB
     computeBounds();
+#endif /* ENABLE_FACE_AABB */
 }
 
 void manta::Mesh::bindMaterialLibrary(MaterialLibrary *library, int defaultMaterialIndex) {
@@ -634,7 +665,10 @@ void manta::Mesh::merge(const Mesh *mesh) {
     if (newFaceCount > 0) {
         memcpy((void *)newFaces, (void *)m_faces, sizeof(Face) * m_triangleFaceCount);
         memcpy((void *)newAuxFaceData, (void *)m_auxFaceData, sizeof(AuxFaceData) * m_triangleFaceCount);
+
+#if ENABLE_FACE_AABB
         memcpy((void *)newFaceBounds, (void *)m_faceBounds, sizeof(AABB) * m_triangleFaceCount);
+#endif /* ENABLE_FACE_AABB */
     }
     if (newVertexCount > 0) memcpy((void *)newVerts, (void *)m_vertices, sizeof(math::Vector) * m_vertexCount);
     if (newNormalCount > 0) memcpy((void *)newNormals, (void *)m_normals, sizeof(math::Vector) * m_normalCount);
@@ -645,10 +679,13 @@ void manta::Mesh::merge(const Mesh *mesh) {
         AABB &newBound = newFaceBounds[i + m_triangleFaceCount];
         AuxFaceData &auxData = newAuxFaceData[i + m_triangleFaceCount];
         const Face *mergeFace = mesh->getFace(i);
-        const AABB *mergeBound = mesh->getBounds(i);
         const AuxFaceData *mergeAuxData = mesh->getAuxFace(i);
 
+#if ENABLE_FACE_AABB
+        const AABB *mergeBound = mesh->getBounds(i);
         newBound = *mergeBound;
+#endif /* ENABLE_FACE_AABB */
+
         auxData.material = mergeAuxData->material;
 
         if (newFaceCount > 0) {
@@ -683,14 +720,17 @@ void manta::Mesh::merge(const Mesh *mesh) {
     }
 
     if (m_faces != nullptr) StandardAllocator::Global()->free(m_faces, m_triangleFaceCount);
-    if (m_faceBounds != nullptr) StandardAllocator::Global()->free(m_faceBounds, m_triangleFaceCount);
     if (m_auxFaceData != nullptr) StandardAllocator::Global()->free(m_auxFaceData, m_triangleFaceCount);
     if (m_vertices != nullptr) StandardAllocator::Global()->aligned_free(m_vertices, m_vertexCount);
     if (m_normals != nullptr) StandardAllocator::Global()->aligned_free(m_normals, m_normalCount);
     if (m_textureCoords != nullptr) StandardAllocator::Global()->aligned_free(m_textureCoords, m_texCoordCount);
 
-    m_faces = newFaces;
+#if ENABLE_FACE_AABB
+    if (m_faceBounds != nullptr) StandardAllocator::Global()->free(m_faceBounds, m_triangleFaceCount);
     m_faceBounds = newFaceBounds;
+#endif /* ENABLE_FACE_AABB */
+
+    m_faces = newFaces;
     m_auxFaceData = newAuxFaceData;
     m_vertices = newVerts;
     m_normals = newNormals;
@@ -804,71 +844,76 @@ bool manta::Mesh::detectQuadIntersection(
     return true;
 }
 
-bool manta::Mesh::findClosestIntersection(int *faceList, int faceCount, LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth /**/ STATISTICS_PROTOTYPE) const {
-    math::real currentMaxDepth = maxDepth;
-    bool found = false;
-    CoarseCollisionOutput output;
-    for (int i = 0; i < faceCount; i++) {
-        const int face = faceList[i];
-        if (ray->getTouched(face)) continue;
-        else ray->setTouched(face);
-
-        //if (face < m_triangleFaceCount) {
-            // Face is a triangle
-            AABB &aabb = m_faceBounds[face];
-
-            INCREMENT_COUNTER(RuntimeStatistics::Counter::TotalBvTests);
-            math::real tmin, tmax;
-            if (aabb.rayIntersect(*ray, &tmin, &tmax)) {
-                INCREMENT_COUNTER(RuntimeStatistics::Counter::TotalBvHits);
-
-                if (tmin > currentMaxDepth || tmax < minDepth) continue;
-
-                INCREMENT_COUNTER(RuntimeStatistics::Counter::TriangleTests);
-                if (detectTriangleIntersection(face, minDepth, currentMaxDepth, ray, &output)) {
-                    intersection->depth = output.depth;
-                    intersection->faceHint = face; // Face index
-                    intersection->subdivisionHint = -1; // Not used for triangles
-                    intersection->sceneGeometry = this;
-
-                    intersection->su = output.u;
-                    intersection->sv = output.v;
-                    intersection->sw = output.w;
-
-                    currentMaxDepth = output.depth;
-                    found = true;
-                }
-                else {
-                    INCREMENT_COUNTER(RuntimeStatistics::Counter::UnecessaryPrimitiveTests);
-                }
-            }
-        //}
-    }
-
-    /*
-    for (int i = 0; i < faceCount; i++) {
-        int face = faceList[i];
-        if (face >= m_triangleFaceCount) {
-            // Face is a quad
-            INCREMENT_COUNTER(RuntimeStatistics::Counter::QuadTests);
-            if (detectQuadIntersection(face - m_triangleFaceCount, minDepth, currentMaxDepth, ray, &output)) {
-                intersection->depth = output.depth;
-                intersection->faceHint = faceList[i]; // Face index
-                intersection->subdivisionHint = output.subdivisionHint; // Tells which half of the quad the point lies on
-                intersection->sceneGeometry = this;
-
-                intersection->su = output.u;
-                intersection->sv = output.v;
-                intersection->sw = output.w;
-
-                currentMaxDepth = output.depth;
-                found = true;
-            }
-        }
-    }*/
-
-    return found;
-}
+//bool manta::Mesh::findClosestIntersection(int *faceList, int faceCount, LightRay *ray, CoarseIntersection *intersection, math::real minDepth, math::real maxDepth /**/ STATISTICS_PROTOTYPE) const {
+//    math::real currentMaxDepth = maxDepth;
+//    bool found = false;
+//    CoarseCollisionOutput output;
+//    for (int i = 0; i < faceCount; i++) {
+//        const int face = faceList[i];
+//        if (ray->getTouched(face)) continue;
+//        else ray->setTouched(face);
+//
+//        //if (face < m_triangleFaceCount) {
+//            // Face is a triangle
+//
+//#if ENABLE_FACE_AABB
+//            AABB &aabb = m_faceBounds[face];
+//            math::real tmin, tmax;
+//
+//            INCREMENT_COUNTER(RuntimeStatistics::Counter::TotalBvTests);
+//            if (aabb.rayIntersect(*ray, &tmin, &tmax)) {
+//                INCREMENT_COUNTER(RuntimeStatistics::Counter::TotalBvHits);
+//
+//                if (tmin > currentMaxDepth || tmax < minDepth) continue;
+//
+//#endif /* ENABLE_FACE_AABB */
+//                INCREMENT_COUNTER(RuntimeStatistics::Counter::TriangleTests);
+//                if (detectTriangleIntersection(face, minDepth, currentMaxDepth, ray, &output)) {
+//                    intersection->depth = output.depth;
+//                    intersection->faceHint = face; // Face index
+//                    intersection->subdivisionHint = -1; // Not used for triangles
+//                    intersection->sceneGeometry = this;
+//
+//                    intersection->su = output.u;
+//                    intersection->sv = output.v;
+//                    intersection->sw = output.w;
+//
+//                    currentMaxDepth = output.depth;
+//                    found = true;
+//                }
+//                else {
+//                    INCREMENT_COUNTER(RuntimeStatistics::Counter::UnecessaryPrimitiveTests);
+//                }
+//#if ENABLE_FACE_AABB
+//            }
+//#endif /* ENABLE_FACE_AABB */
+//        //}
+//    }
+//
+//    /*
+//    for (int i = 0; i < faceCount; i++) {
+//        int face = faceList[i];
+//        if (face >= m_triangleFaceCount) {
+//            // Face is a quad
+//            INCREMENT_COUNTER(RuntimeStatistics::Counter::QuadTests);
+//            if (detectQuadIntersection(face - m_triangleFaceCount, minDepth, currentMaxDepth, ray, &output)) {
+//                intersection->depth = output.depth;
+//                intersection->faceHint = faceList[i]; // Face index
+//                intersection->subdivisionHint = output.subdivisionHint; // Tells which half of the quad the point lies on
+//                intersection->sceneGeometry = this;
+//
+//                intersection->su = output.u;
+//                intersection->sv = output.v;
+//                intersection->sw = output.w;
+//
+//                currentMaxDepth = output.depth;
+//                found = true;
+//            }
+//        }
+//    }*/
+//
+//    return found;
+//}
 
 #define fast_max(a, b) ((a) > (b) ? (a) : (b))
 #define fast_min(a, b) ((a) < (b) ? (a) : (b))

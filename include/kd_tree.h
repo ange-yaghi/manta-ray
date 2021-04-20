@@ -13,7 +13,7 @@
 #include <atomic>
 
 #define OPTIMIZED_KD_TREE_NODE (true)
-#define KD_TREE_WITH_BOUNDING_BOXES (true)
+#define KD_TREE_WITH_BOUNDING_BOXES (false)
 
 namespace manta {
 
@@ -87,12 +87,11 @@ namespace manta {
 #if KD_TREE_WITH_BOUNDING_BOXES
     struct KDBoundingVolume {
         AABB bounds;
-        int faceListOffset;
         int padding[3];
     };
 #else
     struct KDBoundingVolume {
-        int faceListOffset;
+        /* void */
     };
 #endif /* KD_TREE_WITH_BOUNDING_BOXES */
 
@@ -202,7 +201,7 @@ namespace manta {
         int m_volumeCount;
         int m_volumeCapacity;
 
-        int *m_faceLists;
+        int *m_faceList;
         int m_faceCount;
 
         std::vector<AABB> m_nodeBounds;
