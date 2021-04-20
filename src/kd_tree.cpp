@@ -203,6 +203,138 @@ bool manta::KDTree::findClosestIntersection(
     return hit;
 }
 
+bool manta::KDTree::occluded(const math::Vector &p0, const math::Vector &d, math::real maxDepth /**/ STATISTICS_PROTOTYPE) const {
+    constexpr int MAX_DEPTH = 64;
+    KDJob jobs[MAX_DEPTH];
+    int currentJob = 0;
+
+    const math::Vector dir = d;
+    const math::Vector invDir = math::div(math::constants::One, dir);
+    const int kz = math::maxDimension3(math::abs(dir));
+    const int kx = (kz + 1) % 3;
+    const int ky = (kx + 1) % 3;
+
+    const math::Vector permutedDirection = math::permute(dir, kx, ky, kz);
+    const math::real dirZ = math::getZ(permutedDirection);
+    const math::Vector3 shear = {
+        -math::getX(permutedDirection) / dirZ,
+        -math::getY(permutedDirection) / dirZ,
+        (math::real)1.0 / dirZ
+    };
+
+    math::real tmax = maxDepth;
+    math::real tmin = -math::constants::REAL_MAX;
+
+    const KDTreeNode *node = &m_nodes[0];
+    while (true) {
+        if (!node->isLeaf()) {
+            INCREMENT_COUNTER(RuntimeStatistics::Counter::KdInnerNodeTraversals);
+
+            const int axis = node->getSplitAxis();
+            const math::real split = node->getSplit();
+
+            const math::real o_axis = math::get(p0, axis);
+            const math::real tPlane = (split - o_axis) * math::get(invDir, axis);
+
+            const KDTreeNode *firstChild, *secondChild;
+            const bool belowFirst = (o_axis < split) || (o_axis == split && math::get(dir, axis) <= 0);
+
+            if (belowFirst) {
+                firstChild = node + 1;
+                secondChild = &m_nodes[node->getAboveChild()];
+            }
+            else {
+                firstChild = &m_nodes[node->getAboveChild()];
+                secondChild = node + 1;
+            }
+
+            if (tPlane > tmax || !(tPlane > 0)) {
+                node = firstChild;
+            }
+            else if (tPlane < tmin) {
+                node = secondChild;
+            }
+            else {
+                // Add second child to queue
+                jobs[currentJob].node = secondChild;
+                jobs[currentJob].tmin = tPlane;
+                jobs[currentJob].tmax = tmax;
+                ++currentJob;
+
+                node = firstChild;
+                tmax = tPlane;
+            }
+        }
+        else {
+            INCREMENT_COUNTER(RuntimeStatistics::Counter::KdLeafNodeTraversals);
+
+            const int primitiveCount = node->getPrimitiveCount();
+            if (primitiveCount == 1) {
+                INCREMENT_COUNTER(RuntimeStatistics::Counter::TriangleTests);
+                if (m_mesh->rayTriangleIntersection(
+                    node->singleObject,
+                    tmin,
+                    tmax,
+                    p0,
+                    shear,
+                    kx,
+                    ky,
+                    kz)) 
+                {
+                    return true;
+                }
+                else {
+                    INCREMENT_COUNTER(RuntimeStatistics::Counter::UnecessaryTriangleTests);
+                }
+            }
+            else {
+                if (primitiveCount == 0) {
+                    INCREMENT_COUNTER(RuntimeStatistics::Counter::KdEmptyLeafNodeTraversals);
+                }
+
+#if KD_TREE_WITH_BOUNDING_BOXES
+                INCREMENT_COUNTER(RuntimeStatistics::Counter::TotalBvTests);
+                const KDBoundingVolume &bv = m_nodeVolumes[node->getObjectOffset()];
+                math::real t0, t1;
+                if (bv.bounds.rayIntersect(*ray, &t0, &t1)) {
+                    INCREMENT_COUNTER(RuntimeStatistics::Counter::TotalBvHits);
+#endif /* KD_TREE_WITH_BOUNDING_BOXES */
+                    const int *faceList = &m_faceList[node->getObjectOffset()];
+                    for (int i = 0; i < primitiveCount; ++i) {
+                        if (m_mesh->rayTriangleIntersection(
+                            faceList[i],
+                            tmin,
+                            tmax,
+                            p0,
+                            shear,
+                            kx,
+                            ky,
+                            kz)) 
+                        {
+                            return true;
+                        }
+                        else {
+                            INCREMENT_COUNTER(RuntimeStatistics::Counter::UnecessaryTriangleTests);
+                        }
+                    }
+#if KD_TREE_WITH_BOUNDING_BOXES
+                }
+#endif /* KD_TREE_WITH_BOUNDING_BOXES */
+            }
+
+            if (currentJob > 0) {
+                --currentJob;
+                node = jobs[currentJob].node;
+                tmin = jobs[currentJob].tmin;
+                tmax = jobs[currentJob].tmax;
+            }
+            else break;
+        }
+    }
+
+    return false;
+}
+
 manta::math::Vector manta::KDTree::getClosestPoint(const CoarseIntersection *hint, const math::Vector &p) const {
     return math::Vector();
 }

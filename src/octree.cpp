@@ -14,6 +14,8 @@
 
 manta::Octree::Octree() {
     m_mesh = nullptr;
+    m_childLists = nullptr;
+    m_faceLists = nullptr;
 
     m_childListsCount = 0;
     m_faceListsCount = 0;

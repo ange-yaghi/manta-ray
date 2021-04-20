@@ -21,6 +21,11 @@ manta::ImagePlane::ImagePlane() {
 
     m_resolutionXInput = nullptr;
     m_resolutionYInput = nullptr;
+
+    m_windowX0Input = nullptr;
+    m_windowX1Input = nullptr;
+    m_windowY0Input = nullptr;
+    m_windowY1Input = nullptr;
 }
 
 manta::ImagePlane::~ImagePlane() {
@@ -46,6 +51,11 @@ void manta::ImagePlane::initialize(int width, int height) {
         m_buffer[i] = math::constants::Zero;
         m_sampleWeightSums[i] = (math::real)0.0;
     }
+
+    m_windowLeft = 0;
+    m_windowRight = width - 1;
+    m_windowTop = 0;
+    m_windowBottom = height - 1;
 }
 
 void manta::ImagePlane::destroy() {
@@ -60,7 +70,11 @@ void manta::ImagePlane::destroy() {
 }
 
 bool manta::ImagePlane::checkPixel(int x, int y) const {
-    return (x < m_width && x >= 0) && (y < m_height && y >= 0);
+    return x < m_width && x >= 0 && y < m_height && y >= 0;
+}
+
+bool manta::ImagePlane::inWindow(int x, int y) const {
+    return x >= m_windowLeft && x <= m_windowRight && y >= m_windowTop && y <= m_windowBottom;
 }
 
 inline void manta::ImagePlane::set(const math::Vector &v, int x, int y) {
@@ -200,8 +214,18 @@ void manta::ImagePlane::_evaluate() {
     piranha::native_int width, height;
     m_resolutionXInput->fullCompute((void *)&width);
     m_resolutionYInput->fullCompute((void *)&height);
-
     initialize(width, height);
+
+    piranha::native_int x0, x1, y0, y1;
+    m_windowX0Input->fullCompute((void *)&x0);
+    m_windowX1Input->fullCompute((void *)&x1);
+    m_windowY0Input->fullCompute((void *)&y0);
+    m_windowY1Input->fullCompute((void *)&y1);
+
+    m_windowLeft = std::min(x0, x1);
+    m_windowRight = std::max(x0, x1);
+    m_windowTop = std::min(y0, y1);
+    m_windowBottom = std::max(y0, y1);
 
     m_output.setReference(this);
 }
@@ -218,6 +242,10 @@ void manta::ImagePlane::registerInputs() {
     registerInput(&m_filterInput, "filter");
     registerInput(&m_resolutionXInput, "width");
     registerInput(&m_resolutionYInput, "height");
+    registerInput(&m_windowX0Input, "w_x0");
+    registerInput(&m_windowX1Input, "w_x1");
+    registerInput(&m_windowY0Input, "w_y0");
+    registerInput(&m_windowY1Input, "w_y1");
 }
 
 void manta::ImagePlane::registerOutputs() {

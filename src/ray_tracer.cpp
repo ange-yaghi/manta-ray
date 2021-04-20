@@ -90,18 +90,6 @@ void manta::RayTracer::traceAll(const Scene *scene, CameraRayEmitterGroup *group
             m_jobQueue.push(newJob);
         }
     }
-    /*
-    Job newJob;
-    newJob.scene = scene;
-    newJob.group = group;
-    newJob.target = target;
-    newJob.startX = 899;
-    newJob.startY = 960;
-    newJob.endX = 902;
-    newJob.endY = 970;
-    newJob.samples = 0;
-
-    m_jobQueue.push(newJob);*/
 
     // Hide the cursor to avoid annoying blinking artifact
     showConsoleCursor(false);
@@ -258,7 +246,8 @@ manta::math::Vector manta::RayTracer::estimateDirect(
     const Scene *scene,
     Sampler *sampler,
     IntersectionPointManager *manager,
-    StackAllocator *stackAllocator) const
+    StackAllocator *stackAllocator /**/
+    STATISTICS_PROTOTYPE) const
 {
     math::Vector wi;
     math::real lightPdf = 0, scatteringPdf = 0;
@@ -271,16 +260,12 @@ manta::math::Vector manta::RayTracer::estimateDirect(
         f = point->m_bsdf->f(point, point->m_lightRay->getDirection(), math::negate(wi), true);
         scatteringPdf = point->m_bsdf->pdf(point, point->m_lightRay->getDirection(), math::negate(wi));
         if (scatteringPdf != 0) {
-            SceneObject *object;
-            IntersectionPoint testPoint;
-            LightRay testRay;
-            testRay.setDirection(wi);
-            if (point->m_direction == MediaInterface::Direction::In) testRay.setSource(point->m_outside);
-            else testRay.setSource(point->m_inside);
-            testRay.calculateTransformations();
-            depthCull(scene, &testRay, &object, &testPoint, stackAllocator, depth /**/ STATISTICS_NULL_INPUT);
+            const math::Vector p0 = (point->m_direction == MediaInterface::Direction::In)
+                ? point->m_outside
+                : point->m_inside;
+            const bool occluded = this->occluded(scene, p0, wi, depth /**/ STATISTICS_PARAM_INPUT);
 
-            if (testPoint.m_valid) {
+            if (occluded) {
                 Li = math::constants::Zero;
             }
         }
@@ -295,11 +280,6 @@ manta::math::Vector manta::RayTracer::estimateDirect(
     RayFlags flags = RayFlag::None;
     f = point->m_bsdf->sampleF(point, uScattering, math::negate(point->m_lightRay->getDirection()), &wi, &scatteringPdf, &flags, stackAllocator, true);
     if (scatteringPdf > 0) {
-        //return wi;
-        //return Ld;
-        //return math::loadScalar(scatteringPdf / 100000000);
-        //return math::mul(math::add(wi, math::constants::One), math::constants::Half);
-
         lightPdf = light->pdfIncoming(*point, wi);
         if (lightPdf == 0) {
             return Ld;
@@ -307,19 +287,16 @@ manta::math::Vector manta::RayTracer::estimateDirect(
 
         const math::real weight = powerHeuristic(1, scatteringPdf, 1, lightPdf);
         if (light->intersect(point->m_position, wi, &depth)) {
-            SceneObject *object;
-            IntersectionPoint testPoint;
-            LightRay testRay;
-            testRay.setDirection(wi);
-            if ((flags & RayFlag::Transmission) > 0) testRay.setSource(point->m_inside);
-            else testRay.setSource(point->m_outside);
-            //testRay.setSource(math::add(point->m_position, math::mul(testRay.getDirection(), math::loadScalar((math::real)1E-2))));
-            testRay.calculateTransformations();
-            depthCull(scene, &testRay, &object, &testPoint, stackAllocator, depth /**/ STATISTICS_NULL_INPUT);
+            const math::Vector p0 = ((flags & RayFlag::Transmission) > 0)
+                ? point->m_inside
+                : point->m_outside;
+            const bool occluded = this->occluded(scene, p0, wi, depth /**/ STATISTICS_PARAM_INPUT);
 
-            if (!testPoint.m_valid) {
+            if (!occluded) {
                 // TODO: inputs are technically wrong
-                Li = light->L(testPoint, wi);
+                IntersectionPoint p;
+                p.m_position = p0;
+                Li = light->L(p, wi);
             }
             else {
                 Li = math::constants::Zero;
@@ -477,18 +454,13 @@ void manta::RayTracer::depthCull(
     }
 }
 
-void manta::RayTracer::refineContact(const LightRay *ray, math::real depth, 
-    IntersectionPoint *point, SceneObject **closestObject, StackAllocator *s) const 
+void manta::RayTracer::refineContact(
+    const LightRay *ray,
+    math::real depth, 
+    IntersectionPoint *point,
+    SceneObject **closestObject,
+    StackAllocator *s) const 
 {
-    // Simple bias
-    math::real d = depth;
-    /*d -= (math::real)5E-3;
-    if (d < (math::real)0.0) {
-        d = (math::real)0.0;
-    }
-    math::Vector dist = math::loadScalar(d);
-    point->m_position = math::add(ray->getSource(), math::mul(ray->getDirection(), dist));*/
-
     if (math::getScalar(math::dot(point->m_faceNormal, ray->getDirection())) > 0.0) {
         point->m_faceNormal = math::negate(point->m_faceNormal);
         point->m_vertexNormal = math::negate(point->m_vertexNormal);
@@ -500,6 +472,20 @@ void manta::RayTracer::refineContact(const LightRay *ray, math::real depth,
     else {
         point->m_direction = MediaInterface::Direction::In;
     }
+}
+
+bool manta::RayTracer::occluded(const Scene *scene, const math::Vector &p0, const math::Vector &d, math::real maxDepth STATISTICS_PROTOTYPE) const {
+    const int objectCount = scene->getSceneObjectCount();
+    for (int i = 0; i < objectCount; i++) {
+        SceneObject *object = scene->getSceneObject(i);
+        SceneGeometry *geometry = object->getGeometry();
+
+        if (geometry->occluded(p0, d, maxDepth /**/ STATISTICS_PARAM_INPUT)) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 manta::math::Vector manta::RayTracer::traceRay(

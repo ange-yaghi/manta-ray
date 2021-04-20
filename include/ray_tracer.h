@@ -132,11 +132,11 @@ namespace manta {
         void destroyWorkers();
 
     protected:
-        // Ray tracing features
-        void depthCull(const Scene *scene, LightRay *ray, SceneObject **closestObject, 
+        void depthCull(const Scene *scene, LightRay *ray, SceneObject **closestObject,
             IntersectionPoint *point, StackAllocator *s, math::real startingDepth /**/ STATISTICS_PROTOTYPE) const;
-        void refineContact(const LightRay *ray, math::real depth, IntersectionPoint *point, 
+        void refineContact(const LightRay *ray, math::real depth, IntersectionPoint *point,
             SceneObject **closestObject, StackAllocator *s) const;
+        bool occluded(const Scene *scene, const math::Vector &p0, const math::Vector &d, math::real maxDepth /**/ STATISTICS_PROTOTYPE) const;
 
         math::Vector m_backgroundColor;
         VectorMap2D *m_outputImage;

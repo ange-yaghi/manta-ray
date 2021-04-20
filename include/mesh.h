@@ -44,6 +44,7 @@ namespace manta {
         virtual void fineIntersection(const math::Vector &r, IntersectionPoint *p, 
             const CoarseIntersection *hint) const;
         virtual bool fastIntersection(LightRay *ray) const;
+        virtual bool occluded(const math::Vector &p0, const math::Vector &d, math::real maxDepth /**/ STATISTICS_PROTOTYPE) const { return false; }
 
         int getFaceCount() const { return m_triangleFaceCount + m_quadFaceCount; }
         int getTriangleFaceCount() const { return m_triangleFaceCount; }
@@ -85,8 +86,72 @@ namespace manta {
 
         void merge(const Mesh *mesh);
 
-        __forceinline bool detectTriangleIntersection(int faceIndex, math::real minDepth, 
-            math::real maxDepth, const LightRay *ray, CoarseCollisionOutput *output) const 
+        __forceinline bool rayTriangleIntersection(
+            int faceIndex,
+            math::real minDepth,
+            math::real maxDepth,
+            const math::Vector &source,
+            const math::Vector3 &shear,
+            int kx,
+            int ky,
+            int kz) const
+        {
+            Face &face = m_faces[faceIndex];
+
+            const math::Vector v0 = m_vertices[face.u];
+            const math::Vector v1 = m_vertices[face.v];
+            const math::Vector v2 = m_vertices[face.w];
+
+            math::Vector p0t = math::sub(v0, source);
+            math::Vector p1t = math::sub(v1, source);
+            math::Vector p2t = math::sub(v2, source);
+
+            p0t = math::permute(p0t, kx, ky, kz);
+            p1t = math::permute(p1t, kx, ky, kz);
+            p2t = math::permute(p2t, kx, ky, kz);
+
+            const math::real sx = shear.x;
+            const math::real sy = shear.y;
+            const math::real sz = shear.z;
+
+            const math::Vector s = math::loadVector(sx, sy);
+            const math::Vector p0t_z = math::expandZ(p0t);
+            const math::Vector p1t_z = math::expandZ(p1t);
+            const math::Vector p2t_z = math::expandZ(p2t);
+
+            p0t = math::add(p0t, math::mul(s, p0t_z));
+            p1t = math::add(p1t, math::mul(s, p1t_z));
+            p2t = math::add(p2t, math::mul(s, p2t_z));
+
+            const math::real e0 = math::getX(p1t) * math::getY(p2t) - math::getY(p1t) * math::getX(p2t);
+            const math::real e1 = math::getX(p2t) * math::getY(p0t) - math::getY(p2t) * math::getX(p0t);
+            const math::real e2 = math::getX(p0t) * math::getY(p1t) - math::getY(p0t) * math::getX(p1t);
+
+            if ((e0 < 0 || e1 < 0 || e2 < 0) && (e0 > 0 || e1 > 0 || e2 > 0)) return false;
+
+            math::real det = e0 + e1 + e2;
+            if (det == (math::real)0.0) {
+                return false;
+            }
+
+            // Compute distance
+            math::real p0t_sz = math::getZ(p0t) * sz;
+            math::real p1t_sz = math::getZ(p1t) * sz;
+            math::real p2t_sz = math::getZ(p2t) * sz;
+
+            math::real t_scaled = e0 * p0t_sz + e1 * p1t_sz + e2 * p2t_sz;
+
+            if (det < 0 && (t_scaled >= 0 || t_scaled < maxDepth * det)) return false;
+            else if (det > 0 && (t_scaled <= 0 || t_scaled > maxDepth * det)) return false;
+            else return true;
+        }
+
+        __forceinline bool rayTriangleIntersection(
+            int faceIndex,
+            math::real minDepth, 
+            math::real maxDepth,
+            const LightRay *ray,
+            CoarseCollisionOutput *output) const 
         {
             Face &face = m_faces[faceIndex];
 
@@ -177,7 +242,7 @@ namespace manta {
 
 #endif /* ENABLE_FACE_AABB */
                     INCREMENT_COUNTER(RuntimeStatistics::Counter::TriangleTests);
-                    if (detectTriangleIntersection(face, minDepth, currentMaxDepth, ray, &output)) {
+                    if (rayTriangleIntersection(face, minDepth, currentMaxDepth, ray, &output)) {
                         intersection->depth = output.depth;
                         intersection->faceHint = face; // Face index
                         intersection->subdivisionHint = -1; // Not used for triangles

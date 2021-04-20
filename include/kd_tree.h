@@ -159,6 +159,7 @@ namespace manta {
         virtual bool findClosestIntersection(LightRay *ray, 
             CoarseIntersection *intersection, math::real minDepth, 
             math::real maxDepth, StackAllocator *s /**/ STATISTICS_PROTOTYPE) const;
+        virtual bool occluded(const math::Vector &p0, const math::Vector &d, math::real maxDepth /**/ STATISTICS_PROTOTYPE) const;
         virtual math::Vector getClosestPoint(const CoarseIntersection *hint, 
             const math::Vector &p) const;
         virtual void fineIntersection(const math::Vector &r, IntersectionPoint *p, 

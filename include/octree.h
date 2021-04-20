@@ -53,6 +53,7 @@ namespace manta {
         virtual void fineIntersection(const math::Vector &r, IntersectionPoint *p, 
             const CoarseIntersection *hint) const;
         virtual bool fastIntersection(LightRay *ray) const;
+        virtual bool occluded(const math::Vector &p0, const math::Vector &d, math::real maxDepth /**/ STATISTICS_PROTOTYPE) const { return false; }
 
         void analyze(Mesh *mesh, int maxSize);
 

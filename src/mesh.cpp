@@ -351,7 +351,7 @@ bool manta::Mesh::findClosestIntersection(
     bool found = false;
     for (int i = 0; i < m_triangleFaceCount; i++) {
         INCREMENT_COUNTER(RuntimeStatistics::Counter::TriangleTests);
-        if (detectTriangleIntersection(i, minDepth, currentMaxDepth, ray, &output)) {
+        if (rayTriangleIntersection(i, minDepth, currentMaxDepth, ray, &output)) {
             intersection->depth = output.depth;
             intersection->faceHint = i; // Face index
             intersection->sceneGeometry = this;

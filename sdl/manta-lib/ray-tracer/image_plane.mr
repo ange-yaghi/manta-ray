@@ -10,6 +10,7 @@ module {
 }
 
 private import "../types/atomic_types.mr"
+private import "../types/operations.mr"
 private import "../signal-processing/filters/filters.mr"
 
 @doc: "Image Plane channel type"
@@ -20,5 +21,9 @@ public node image_plane => __mantaray__standard_image_plane {
     input filter        [filter]: gaussian_filter();
     input width         [int]: 1920;
     input height        [int]: 1080;
+    input w_x0          [int]: 0;
+    input w_y0          [int]: 0;
+    input w_x1          [int]: width - 1;
+    input w_y1          [int]: height - 1;
     alias output __out  [image_plane_channel];
 }

@@ -26,6 +26,7 @@ namespace manta {
         void destroy();
 
         bool checkPixel(int x, int y) const;
+        bool inWindow(int x, int y) const;
         inline void set(const math::Vector &v, int x, int y);
         inline math::Vector sample(int x, int y) const;
 
@@ -61,10 +62,18 @@ namespace manta {
         piranha::pNodeInput m_filterInput;
         piranha::pNodeInput m_resolutionXInput;
         piranha::pNodeInput m_resolutionYInput;
+        piranha::pNodeInput m_windowX0Input;
+        piranha::pNodeInput m_windowX1Input;
+        piranha::pNodeInput m_windowY0Input;
+        piranha::pNodeInput m_windowY1Input;
 
     protected:
         int m_width;
         int m_height;
+        int m_windowLeft;
+        int m_windowRight;
+        int m_windowTop;
+        int m_windowBottom;
         math::Vector *m_buffer;
         math::real *m_sampleWeightSums;
         Filter *m_filter;
