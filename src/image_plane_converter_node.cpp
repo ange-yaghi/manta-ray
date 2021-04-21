@@ -6,6 +6,7 @@ manta::ImagePlaneConverterNode::ImagePlaneConverterNode() {
     m_imagePlaneInput = nullptr;
     m_imagePlane = nullptr;
     m_target = nullptr;
+    m_preexisting = false;
 }
 
 manta::ImagePlaneConverterNode::~ImagePlaneConverterNode() {
@@ -26,18 +27,24 @@ void manta::ImagePlaneConverterNode::_initialize() {
 }
 
 void manta::ImagePlaneConverterNode::_evaluate() {
-    m_target = new VectorMap2D();
-
     m_imagePlane = getObject<ImagePlane>(m_imagePlaneInput);
-    m_imagePlane->setPreviewTarget(m_target);
 
-    m_target->initialize(m_imagePlane->getWidth(), m_imagePlane->getHeight());
+    if (m_imagePlane->getPreviewTarget() == nullptr) {
+        m_target = new VectorMap2D();
+        m_target->initialize(m_imagePlane->getWidth(), m_imagePlane->getHeight());
+        m_imagePlane->setPreviewTarget(m_target);
+        m_preexisting = false;
+    }
+    else {
+        m_target = m_imagePlane->getPreviewTarget();
+        m_preexisting = true;
+    }
 
     m_textureOutput.setMap(m_target);
 }
 
 void manta::ImagePlaneConverterNode::_destroy() {
-    if (m_target != nullptr) {
+    if (m_target != nullptr && !m_preexisting) {
         m_target->destroy();
         delete m_target;
     }

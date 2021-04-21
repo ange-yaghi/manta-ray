@@ -30,6 +30,8 @@ namespace manta {
         ImagePlane *m_imagePlane;
         VectorMap2D *m_target;
 
+        bool m_preexisting;
+
     protected:
         piranha::pNodeInput m_imagePlaneInput;
 
