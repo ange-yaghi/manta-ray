@@ -12,12 +12,15 @@ manta::PhongDistribution::~PhongDistribution() {
     /* void */
 }
 
-manta::math::real manta::PhongDistribution::getPower(const IntersectionPoint *surfaceInteraction) {
+manta::math::real manta::PhongDistribution::getPower(
+    const IntersectionPoint *surfaceInteraction)
+{
     return math::getScalar(m_power.sample(surfaceInteraction));
 }
 
 manta::math::Vector manta::PhongDistribution::generateMicrosurfaceNormal(
-    const IntersectionPoint *surfaceInteraction, const math::Vector2 &u)
+    const IntersectionPoint *surfaceInteraction,
+    const math::Vector2 &u)
 {
     math::real power = getPower(surfaceInteraction);
 
@@ -38,7 +41,8 @@ manta::math::Vector manta::PhongDistribution::generateMicrosurfaceNormal(
 }
 
 manta::math::real manta::PhongDistribution::calculateDistribution(
-        const math::Vector &m, const IntersectionPoint *surfaceInteraction) 
+    const math::Vector &m,
+    const IntersectionPoint *surfaceInteraction)
 {
     math::real power = getPower(surfaceInteraction);
 
@@ -50,7 +54,9 @@ manta::math::real manta::PhongDistribution::calculateDistribution(
 }
 
 manta::math::real manta::PhongDistribution::calculateG1(
-    const math::Vector &v, const math::Vector &m, const IntersectionPoint *surfaceInteraction) 
+    const math::Vector &v,
+    const math::Vector &m,
+    const IntersectionPoint *surfaceInteraction)
 {
     math::real power = getPower(surfaceInteraction);
 

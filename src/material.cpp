@@ -18,10 +18,6 @@ manta::math::Vector manta::Material::getEmission(const IntersectionPoint &ip) {
     return math::constants::Zero;
 }
 
-manta::math::Vector manta::Material::getFilterColor(const IntersectionPoint &ip) {
-    return math::constants::One;
-}
-
 void manta::Material::_initialize() {
     /* void */
 }

@@ -6,11 +6,6 @@
 namespace manta {
 
     class VectorMaterialNode;
-
-    struct LambertMemory {
-        math::Vector reflectance;
-    };
-
     class LambertianBRDF : public BXDF {
     public:
         LambertianBRDF();
@@ -25,6 +20,12 @@ namespace manta {
 
         virtual math::real pdf(const IntersectionPoint *surfaceInteraction,
             const math::Vector &i, const math::Vector &o);
+
+    protected:
+        virtual piranha::Node *_optimize(piranha::NodeAllocator *nodeAllocator);
+        virtual void registerInputs();
+
+        CacheableInput<math::Vector> m_color;
     };
 
 } /* namespace manta */

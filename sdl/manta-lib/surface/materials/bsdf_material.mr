@@ -21,7 +21,6 @@ public node bsdf_material => __mantaray__simple_bsdf_material {
     input name          [types::string]: "";
     modify library      [material_library];
     input bsdf          [bsdf]: lambertian_brdf(); // Defaults to Lambert
-    input reflectance   [types::vector]: 1.0;
     input emission      [types::vector]: 0.0;
 
     alias output __out  [material];

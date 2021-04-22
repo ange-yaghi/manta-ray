@@ -20,7 +20,7 @@ namespace manta {
     class Material : public ObjectReferenceNode<Material> {
     public:
         Material();
-        virtual    ~Material();
+        virtual ~Material();
 
         void setName(const std::string &name) { m_name = name; }
         std::string getName() const { return m_name; }
@@ -29,7 +29,6 @@ namespace manta {
         int getIndex() const { return m_index; }
 
         virtual math::Vector getEmission(const IntersectionPoint &ip);
-        virtual math::Vector getFilterColor(const IntersectionPoint &ip);
         virtual BSDF *getBSDF() const { return nullptr; }
 
     protected:

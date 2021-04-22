@@ -17,14 +17,16 @@ manta::math::real manta::GgxDistribution::getWidth(const IntersectionPoint *surf
 }
 
 manta::math::Vector manta::GgxDistribution::generateMicrosurfaceNormal(
-    const IntersectionPoint *surfaceInteraction, const math::Vector2 &u)
+    const IntersectionPoint *surfaceInteraction,
+    const math::Vector2 &u)
 {
     math::real width = getWidth(surfaceInteraction);
     return generateMicrosurfaceNormal(width, u);
 }
 
 manta::math::real manta::GgxDistribution::calculateDistribution(
-    const math::Vector &m, const IntersectionPoint *surfaceInteraction) 
+    const math::Vector &m,
+    const IntersectionPoint *surfaceInteraction) 
 {
     math::real width = getWidth(surfaceInteraction);
 
@@ -43,15 +45,18 @@ manta::math::real manta::GgxDistribution::calculateDistribution(
     return *memory;
 }
 
-manta::math::real manta::GgxDistribution::calculateG1(const math::Vector &v, 
-    const math::Vector &m, const IntersectionPoint *surfaceInteraction) 
+manta::math::real manta::GgxDistribution::calculateG1(
+    const math::Vector &v,
+    const math::Vector &m,
+    const IntersectionPoint *surfaceInteraction) 
 {
     math::real width = getWidth(surfaceInteraction);
     return calculateG1(v, m, width);
 }
 
 manta::math::Vector manta::GgxDistribution::generateMicrosurfaceNormal(
-    math::real width, const math::Vector2 &u) 
+    math::real width,
+    const math::Vector2 &u) 
 {
     math::real r1 = u.x;
     math::real r2 = u.y;
@@ -69,7 +74,8 @@ manta::math::Vector manta::GgxDistribution::generateMicrosurfaceNormal(
 }
 
 manta::math::real manta::GgxDistribution::calculateDistribution(
-    const math::Vector &m, math::real width) 
+    const math::Vector &m,
+    math::real width) 
 {
     math::real cos_theta_m = math::getZ(m);
 
@@ -90,8 +96,10 @@ manta::math::real manta::GgxDistribution::calculateDistribution(
     return d_m;
 }
 
-manta::math::real manta::GgxDistribution::calculateG1(const math::Vector &v, 
-    const math::Vector &m, math::real width) 
+manta::math::real manta::GgxDistribution::calculateG1(
+    const math::Vector &v,
+    const math::Vector &m,
+    math::real width) 
 {
     math::real v_dot_m = math::getScalar(math::dot(v, m));
     math::real v_dot_n = (math::getZ(v));

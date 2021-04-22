@@ -39,6 +39,8 @@ namespace manta {
 
         MicrofacetDistribution *m_distribution;
         MediaInterface *m_mediaInterface;
+
+        CacheableInput<math::Vector> m_transmittance;
     };
 
 } /* namespace manta */

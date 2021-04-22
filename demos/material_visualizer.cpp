@@ -49,7 +49,7 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
 
     SimpleBSDFMaterial *glassMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     glassMaterial->setName("Phong_Glass");
-    glassMaterial->setReflectance(getColor(255, 255, 255));
+    //glassMaterial->setReflectance(getColor(255, 255, 255));
     glassMaterial->setBSDF(new BSDF(&simpleGlassBSDF));
 
     // GGX Glass
@@ -62,7 +62,7 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
 
     SimpleBSDFMaterial *ggxGlassMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     ggxGlassMaterial->setName("GGX_Glass");
-    ggxGlassMaterial->setReflectance(getColor(255, 255, 255));
+    //ggxGlassMaterial->setReflectance(getColor(255, 255, 255));
     ggxGlassMaterial->setBSDF(new BSDF(&ggxGlassBSDF));
 
     // Simple Wood
@@ -99,7 +99,7 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
 
     SimpleBSDFMaterial *steelMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     steelMaterial->setName("Steel");
-    steelMaterial->setReflectance(getColor(255, 255, 255));
+    //steelMaterial->setReflectance(getColor(255, 255, 255));
     steelMaterial->setBSDF(new BSDF(&steelBSDF));
     steelMaterial->setEmission(math::constants::Zero);
 
@@ -161,7 +161,7 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
     ggxTestMaterial->setName("GGX_Test");
     ggxTestMaterial->setBSDF(new BSDF(&ggxTestBDSF));
     ggxTestMaterial->setEmission(math::constants::Zero);
-    ggxTestMaterial->setReflectance(math::constants::One);
+    //ggxTestMaterial->setReflectance(math::constants::One);
 
     // ========================================================================
 
@@ -172,13 +172,13 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
 
     SimpleBSDFMaterial *backdropTexture = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     backdropTexture->setBSDF(new BSDF(&lambert));
-    backdropTexture->setReflectanceNode(checkerboardTexture.getMainOutput());
+    //backdropTexture->setReflectanceNode(checkerboardTexture.getMainOutput());
     backdropTexture->setEmission(math::constants::Zero);
     backdropTexture->setName("Backdrop");
 
     SimpleBSDFMaterial *lightMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     lightMaterial->setEmission(math::loadVector(3.0, 3.0, 3.0));
-    lightMaterial->setReflectance(math::constants::Zero);
+    //lightMaterial->setReflectance(math::constants::Zero);
     lightMaterial->setName("Light");
 
     // Get the material to display

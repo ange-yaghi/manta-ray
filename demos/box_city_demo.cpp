@@ -50,7 +50,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
     SimpleBSDFMaterial outdoorTopLightMaterial;
     outdoorTopLightMaterial.setEmission(math::loadVector(1.f, 1.f, 1.f));
-    outdoorTopLightMaterial.setReflectance(math::constants::Zero);
+    //outdoorTopLightMaterial.setReflectance(math::constants::Zero);
 
     SimpleBSDFMaterial *groundMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     groundMaterial->setName("Ground");
@@ -60,7 +60,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
 
     SimpleBSDFMaterial *sunMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     sunMaterial->setName("Sun");
-    sunMaterial->setReflectance(math::loadVector(0.0f, 0.0f, 0.0f));
+    //sunMaterial->setReflectance(math::loadVector(0.0f, 0.0f, 0.0f));
     sunMaterial->setEmission(math::loadVector(100.0f, 100.0f, 100.0f));
     sunMaterial->setBSDF(nullptr);
 

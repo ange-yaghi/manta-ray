@@ -74,7 +74,7 @@ manta::math::Vector manta::MicrofacetBTDF::f(
     const math::real cosThetaI = ::abs(math::getZ(i));
     const math::real costhetaO = ::abs(math::getZ(o));
 
-    const math::real F = (math::real)m_mediaInterface->fresnelTerm(cosThetaI, surfaceInteraction->m_direction);
+    const math::real F = (math::real)m_mediaInterface->fresnelTerm(std::abs(i_dot_m), surfaceInteraction->m_direction);
     const math::real Ft_num =
         ior * ior *
         m_distribution->calculateDistribution(m, surfaceInteraction) *
@@ -85,7 +85,9 @@ manta::math::Vector manta::MicrofacetBTDF::f(
     Ft_div *= Ft_div;
     Ft_div *= (costhetaO * cosThetaI);
 
-    return math::loadScalar(Ft_num / Ft_div);
+    return math::mul(
+        math::loadScalar(Ft_num / Ft_div),
+        m_transmittance.sample(surfaceInteraction));
 }
 
 manta::math::real manta::MicrofacetBTDF::pdf(
@@ -122,6 +124,8 @@ void manta::MicrofacetBTDF::_evaluate() {
 }
 
 piranha::Node *manta::MicrofacetBTDF::_optimize(piranha::NodeAllocator *nodeAllocator) {
+    m_transmittance.optimize();
+
     return this;
 }
 
@@ -130,4 +134,5 @@ void manta::MicrofacetBTDF::registerInputs() {
 
     registerInput(&m_distributionInput, "distribution");
     registerInput(&m_mediaInterfaceInput, "media_interface");
+    registerInput(m_transmittance.getPortAddress(), "transmittance");
 }

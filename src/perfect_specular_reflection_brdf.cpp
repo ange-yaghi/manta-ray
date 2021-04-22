@@ -17,7 +17,7 @@ manta::math::Vector manta::PerfectSpecularReflectionBRDF::sampleF(
     *o = math::mul(i, reflect);
     *pdf = (math::real)1.0;
 
-    *flags = RayFlag::PerfectSpecular;
+    *flags = RayFlag::Delta;
 
     return math::constants::One;
 }

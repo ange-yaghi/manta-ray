@@ -12,7 +12,6 @@ manta::SimpleBSDFMaterial::SimpleBSDFMaterial() {
     m_bsdf = nullptr;
     m_defaultBsdf = nullptr;
 
-    m_reflectance.setDefault(math::constants::One);
     m_emission.setDefault(math::constants::One);
 }
 
@@ -20,16 +19,8 @@ manta::SimpleBSDFMaterial::~SimpleBSDFMaterial() {
     /* void */
 }
 
-const manta::VectorNodeOutput *manta::SimpleBSDFMaterial::getReflectanceNode() const {
-    return static_cast<manta::VectorNodeOutput *>(m_reflectance.getPort());
-}
-
 const manta::VectorNodeOutput *manta::SimpleBSDFMaterial::getEmissionNode() const {
     return static_cast<manta::VectorNodeOutput *>(m_emission.getPort());
-}
-
-manta::math::Vector manta::SimpleBSDFMaterial::getFilterColor(const IntersectionPoint &ip) {
-    return m_reflectance.sample(&ip);
 }
 
 manta::math::Vector manta::SimpleBSDFMaterial::getEmission(const IntersectionPoint &ip) {
@@ -48,7 +39,6 @@ void manta::SimpleBSDFMaterial::_initialize() {
 
 void manta::SimpleBSDFMaterial::registerInputs() {
     Material::registerInputs();
-    registerInput(m_reflectance.getPortAddress(), "reflectance");
     registerInput(m_emission.getPortAddress(), "emission");
     registerInput(&m_bsdfInput, "bsdf");
 }

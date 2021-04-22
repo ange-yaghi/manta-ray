@@ -15,7 +15,7 @@ const ysVector mantaray_ui::Application::StandardRed = ysColor::srgbiToSrgb(0xFF
 const ysVector mantaray_ui::Application::StandardYellow = ysColor::srgbiToSrgb(0xFF9F15);
 
 mantaray_ui::Application::Application() {
-    m_inputFile = "../../workspace/ui_test/script/maserati.mr";
+    m_inputFile = "../../workspace/ui_test/script/hard_geometry.mr";
     m_fileWatcherThread = nullptr;
     m_fileChangeCount = 0;
     m_fileChangeDebounce = 0.0f;
@@ -278,8 +278,10 @@ void mantaray_ui::Application::process() {
             }
         }
         else if (m_engine.ProcessKeyDown(ysKey::Code::Up)) {
-            const int newIndex = max(m_activePreview->getIndex() - 1, 0);
-            m_activePreview = m_previews[newIndex];
+            if (m_activePreview != nullptr) {
+                const int newIndex = max(m_activePreview->getIndex() - 1, 0);
+                m_activePreview = m_previews[newIndex];
+            }
         }
     }
 

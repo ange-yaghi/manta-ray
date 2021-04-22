@@ -578,7 +578,6 @@ manta::math::Vector manta::RayTracer::traceRay(
         math::real pdf;
         RayFlags flags = RayFlag::None;
         math::Vector f = bsdf->sampleF(&point, s_u, outgoingDir, &incomingDir, &pdf, &flags, s, true);
-        f = math::mul(f, material->getFilterColor(point));
         f = math::mask(f, math::constants::MaskOffW);
 
         if (pdf == (math::real)0.0) break;

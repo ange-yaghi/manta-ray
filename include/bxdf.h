@@ -19,9 +19,10 @@ namespace manta {
     typedef unsigned int RayFlags;
     struct RayFlag {
         static const RayFlags None = 0x0;
-        static const RayFlags Transmission = 0x1;
-        static const RayFlags Reflection = 0x2;
-        static const RayFlags PerfectSpecular = 0x4;
+        static const RayFlags Transmission = 0x1 << 0;
+        static const RayFlags Reflection = 0x1 << 1;
+        static const RayFlags Delta = 0x1 << 2;
+        static const RayFlags Diffuse = 0x1 << 3;
     };
 
     class BXDF : public ObjectReferenceNode<BXDF> {

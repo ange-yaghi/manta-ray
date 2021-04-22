@@ -64,24 +64,24 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
     SimpleBSDFMaterial *simpleBlockMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     simpleBlockMaterial->setName("Block");
     simpleBlockMaterial->setEmission(math::constants::Zero);
-    simpleBlockMaterial->setReflectanceNode(whiteNode.getMainOutput());
+    //simpleBlockMaterial->setReflectanceNode(whiteNode.getMainOutput());
     simpleBlockMaterial->setBSDF(new BSDF(&blockBSDF));
 
     SimpleBSDFMaterial *simpleLetterMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     simpleLetterMaterial->setName("Letters");
     simpleLetterMaterial->setEmission(math::constants::Zero);
-    simpleLetterMaterial->setReflectanceNode(whiteNode.getMainOutput());
+    //simpleLetterMaterial->setReflectanceNode(whiteNode.getMainOutput());
     simpleLetterMaterial->setBSDF(new BSDF(&blockBSDF));
 
     SimpleBSDFMaterial *simpleGroundMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     simpleGroundMaterial->setName("Ground");
     simpleGroundMaterial->setEmission(math::constants::Zero);
-    simpleGroundMaterial->setReflectanceNode(whiteNode.getMainOutput());
+    //simpleGroundMaterial->setReflectanceNode(whiteNode.getMainOutput());
     simpleGroundMaterial->setBSDF(new BSDF(&floorBSDF));
 
     SimpleBSDFMaterial outdoorTopLightMaterial;
     outdoorTopLightMaterial.setEmission(math::loadVector(5.f, 5.f, 5.f));
-    outdoorTopLightMaterial.setReflectance(math::constants::Zero);
+    //outdoorTopLightMaterial.setReflectance(math::constants::Zero);
 
     // Create all scene geometry
     Mesh blocks;

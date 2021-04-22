@@ -62,7 +62,7 @@ manta::math::Vector manta::MicrofacetBRDF::f(
     const math::real o_dot_wh = math::getScalar(math::dot(wh, o));
     const math::real F = (m_mediaInterface == nullptr)
         ? (math::real)1.0
-        : m_mediaInterface->fresnelTerm(cosThetaI, surfaceInteraction->m_direction);
+        : m_mediaInterface->fresnelTerm(o_dot_wh, surfaceInteraction->m_direction);
 
     const math::Vector reflectivity = math::loadScalar(
         m_distribution->calculateDistribution(wh, surfaceInteraction) *

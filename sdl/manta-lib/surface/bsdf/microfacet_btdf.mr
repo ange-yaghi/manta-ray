@@ -20,6 +20,7 @@ private import "../../types/conversions.mr"
 @doc: "Single layer transmission BTDF"
 public node microfacet_btdf => __mantaray__microfacet_btdf {
     input distribution      [microfacet_distribution]: ggx_distribution(0.5);
+    input transmittance     [vector]: 1;
     input media_interface   [media_interface]: dielectric_interface();
     input normal            [vector]: surface_interaction().normal;
     alias output __out      [bxdf];

@@ -30,21 +30,42 @@ manta::math::Vector manta::LambertianBRDF::sampleF(
     *o = direction;
     *pdf = (math::real)1.0 / math::constants::TWO_PI;
 
-    return math::loadScalar((math::real)1.0 / math::constants::PI);
+    return math::mul(
+        m_color.sample(surfaceInteraction),
+        math::loadScalar((math::real)1.0 / math::constants::PI));
 }
 
-manta::math::Vector manta::LambertianBRDF::f(const IntersectionPoint *surfaceInteraction, 
-    const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) 
+manta::math::Vector manta::LambertianBRDF::f(
+    const IntersectionPoint *surfaceInteraction,
+    const math::Vector &i,
+    const math::Vector &o,
+    StackAllocator *stackAllocator)
 {
-    return math::loadScalar((math::real)1.0 / math::constants::PI);
+    return math::mul(
+        m_color.sample(surfaceInteraction),
+        math::loadScalar((math::real)1.0 / math::constants::PI));
 }
 
 manta::math::real manta::LambertianBRDF::pdf(
-    const IntersectionPoint *surfaceInteraction, const math::Vector &i, const math::Vector &o) 
+    const IntersectionPoint *surfaceInteraction,
+    const math::Vector &i,
+    const math::Vector &o) 
 {
     if (math::getZ(o) < 0) {
         return 0;
     }
 
     return (math::real)1.0 / math::constants::TWO_PI;
+}
+
+piranha::Node *manta::LambertianBRDF::_optimize(piranha::NodeAllocator *nodeAllocator) {
+    m_color.optimize();
+
+    return this;
+}
+
+void manta::LambertianBRDF::registerInputs() {
+    BXDF::registerInputs();
+
+    registerInput(m_color.getPortAddress(), "color");
 }

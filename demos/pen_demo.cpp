@@ -85,17 +85,17 @@ void manta_demo::penDemo(int samplesPerPixel, int resolutionX, int resolutionY) 
 
     SimpleBSDFMaterial *floorMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     floorMaterial->setBSDF(new BSDF(&floorBSDF));
-    floorMaterial->setReflectanceNode(floorWood.getMainOutput());
+    //floorMaterial->setReflectanceNode(floorWood.getMainOutput());
     floorMaterial->setName("Backdrop");
 
     SimpleBSDFMaterial *strongLight = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     strongLight->setEmission(math::loadVector(2.0f, 2.0f, 2.0f));
-    strongLight->setReflectance(math::constants::Zero);
+    //strongLight->setReflectance(math::constants::Zero);
     strongLight->setName("StrongLight");
 
     SimpleBSDFMaterial *weakLight = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     weakLight->setEmission(math::loadVector(1.0f, 1.0f, 1.0f));
-    weakLight->setReflectance(math::constants::Zero);
+    //weakLight->setReflectance(math::constants::Zero);
     weakLight->setName("WeakLight");
 
     // Create all scene geometry

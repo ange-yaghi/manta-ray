@@ -38,26 +38,26 @@ void manta_demo::simpleRoomDemo(int samplesPerPixel, int resolutionX, int resolu
     SimpleBSDFMaterial *wallMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     wallMaterial->setName("WallMaterial");
     wallMaterial->setBSDF(new BSDF(&lambert));
-    wallMaterial->setReflectance(getColor(200, 200, 200));
+    //wallMaterial->setReflectance(getColor(200, 200, 200));
     wallMaterial->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial outdoorLight;
     outdoorLight.setEmission(math::loadVector(18.f, 16.f, 16.f));
-    outdoorLight.setReflectance(math::constants::Zero);
+    //outdoorLight.setReflectance(math::constants::Zero);
 
     SimpleBSDFMaterial outdoorTopLightMaterial;
     outdoorTopLightMaterial.setEmission(math::loadVector(20.f, 20.f, 22.f));
-    outdoorTopLightMaterial.setReflectance(math::constants::Zero);
+    //outdoorTopLightMaterial.setReflectance(math::constants::Zero);
 
     SimpleBSDFMaterial *tableMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     tableMaterial->setName("TableMaterial");
-    tableMaterial->setReflectance(getColor(78, 46, 40));
+    //tableMaterial->setReflectance(getColor(78, 46, 40));
     tableMaterial->setBSDF(new BSDF(&lambert));
     tableMaterial->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial *groundMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     groundMaterial->setName("GroundMaterial");
-    groundMaterial->setReflectance(math::mul(math::loadVector(78, 46, 40), math::loadScalar(0.001f)));
+    //groundMaterial->setReflectance(math::mul(math::loadVector(78, 46, 40), math::loadScalar(0.001f)));
     groundMaterial->setBSDF(new BSDF(&lambert));
     groundMaterial->setEmission(math::constants::Zero);
 

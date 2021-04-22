@@ -109,7 +109,7 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
 
     SimpleBSDFMaterial *blackSteelMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     blackSteelMaterial->setName("BlackSteel");
-    blackSteelMaterial->setReflectance(getColor(0xC0, 0xC0, 0xC0));
+    //blackSteelMaterial->setReflectance(getColor(0xC0, 0xC0, 0xC0));
     blackSteelMaterial->setBSDF(new BSDF(&steelBSDF));
     blackSteelMaterial->setEmission(math::constants::Zero);
 
@@ -122,7 +122,7 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
 
     SimpleBSDFMaterial *graphiteMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     graphiteMaterial->setName("Graphite");
-    graphiteMaterial->setReflectance(getColor(0x29, 0x29, 0x29));
+    //graphiteMaterial->setReflectance(getColor(0x29, 0x29, 0x29));
     graphiteMaterial->setBSDF(new BSDF(&graphiteBSDF));
     graphiteMaterial->setEmission(math::constants::Zero);
 
@@ -150,28 +150,28 @@ void manta_demo::stockSceneDemo(int samplesPerPixel, int resolutionX, int resolu
     SimpleBSDFMaterial *rubber = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     rubber->setBSDF(new BSDF(&lambert));
     rubber->setName("Eraser");
-    rubber->setReflectance(getColor(0xFF, 0xFF, 0xFF));
-    rubber->setReflectanceNode(eraserTexture.getMainOutput());
+    //rubber->setReflectance(getColor(0xFF, 0xFF, 0xFF));
+    //rubber->setReflectanceNode(eraserTexture.getMainOutput());
     rubber->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial *wood = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     wood->setBSDF(new BSDF(&lambert));
     wood->setName("Wood");
-    wood->setReflectance(getColor(0xFF, 0xFF, 0xFF));
-    wood->setReflectanceNode(woodTexture.getMainOutput());
+    //wood->setReflectance(getColor(0xFF, 0xFF, 0xFF));
+    //wood->setReflectanceNode(woodTexture.getMainOutput());
     wood->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial *floorMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     floorMaterial->setBSDF(new BSDF(&lambert));
     floorMaterial->setName("Floor");
-    floorMaterial->setReflectanceNode(floorTexture.getMainOutput());
+    //floorMaterial->setReflectanceNode(floorTexture.getMainOutput());
     floorMaterial->setEmission(math::constants::Zero);
 
     SimpleBSDFMaterial *mainLight = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     mainLight->setBSDF(nullptr);
     mainLight->setName("Light");
     mainLight->setEmission(math::loadScalar(4.0f));
-    mainLight->setReflectance(math::constants::Zero);
+    //mainLight->setReflectance(math::constants::Zero);
 
     // Create all scene geometry
     Mesh stage;

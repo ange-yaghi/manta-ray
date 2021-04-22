@@ -25,7 +25,8 @@ manta::math::real manta::DisneyGtrClearcoatDistribution::getAlpha(
 }
 
 manta::math::Vector manta::DisneyGtrClearcoatDistribution::generateMicrosurfaceNormal(
-    const IntersectionPoint *surfaceInteraction, const math::Vector2 &u)
+    const IntersectionPoint *surfaceInteraction,
+    const math::Vector2 &u)
 {
     math::real alpha = getAlpha(surfaceInteraction);
     math::real alpha_2 = alpha * alpha;
@@ -50,7 +51,8 @@ manta::math::Vector manta::DisneyGtrClearcoatDistribution::generateMicrosurfaceN
 }
 
 manta::math::real manta::DisneyGtrClearcoatDistribution::calculateDistribution(
-    const math::Vector &m, const IntersectionPoint *surfaceInteraction)
+    const math::Vector &m,
+    const IntersectionPoint *surfaceInteraction)
 {
     const intersection_id id = surfaceInteraction->m_id;
     const int threadId = surfaceInteraction->m_threadId;
@@ -67,14 +69,17 @@ manta::math::real manta::DisneyGtrClearcoatDistribution::calculateDistribution(
 }
 
 manta::math::real manta::DisneyGtrClearcoatDistribution::calculateG1(
-    const math::Vector &v, const math::Vector &m, const IntersectionPoint *surfaceInteraction)
+    const math::Vector &v,
+    const math::Vector &m,
+    const IntersectionPoint *surfaceInteraction)
 {
     constexpr math::real FIXED_ALPHA_G = (math::real)0.25;
     return GgxDistribution::calculateG1(v, m, FIXED_ALPHA_G);
 }
 
 manta::math::real manta::DisneyGtrClearcoatDistribution::recalculateDistribution(
-    const math::Vector &m, const IntersectionPoint *surfaceInteraction)
+    const math::Vector &m,
+    const IntersectionPoint *surfaceInteraction)
 {
     math::real alpha = getAlpha(surfaceInteraction);
 

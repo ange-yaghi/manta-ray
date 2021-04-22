@@ -83,8 +83,7 @@ public node quick_render {
     bsdf_material(
         name: "Default",
         library: default_library,
-        bsdf: lambertian_brdf(),
-        reflectance: 0.5
+        bsdf: lambertian_brdf()
     )
 
     // Load the scene

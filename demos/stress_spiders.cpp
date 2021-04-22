@@ -55,7 +55,7 @@ void manta_demo::stressSpidersDemo(int samplesPerPixel, int resolutionX, int res
 
     SimpleBSDFMaterial outdoorTopLightMaterial;
     outdoorTopLightMaterial.setEmission(math::loadVector(5.f, 5.f, 5.f));
-    outdoorTopLightMaterial.setReflectance(math::constants::Zero);
+    //outdoorTopLightMaterial.setReflectance(math::constants::Zero);
 
     // Create all scene geometry
     Mesh stressSpiders;

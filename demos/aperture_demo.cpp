@@ -26,11 +26,11 @@ void manta_demo::apertureDemo(int samplesPerPixel, int resolutionX, int resoluti
     SimpleBSDFMaterial *brightMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     brightMaterial->setName("Bright");
     brightMaterial->setEmission(math::loadVector(100.f, 100.f, 100.f));
-    brightMaterial->setReflectance(math::constants::Zero);
+    //brightMaterial->setReflectance(math::constants::Zero);
 
     SimpleBSDFMaterial *backdropMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     backdropMaterial->setName("Backdrop");
-    backdropMaterial->setReflectance(math::constants::Zero);
+    //backdropMaterial->setReflectance(math::constants::Zero);
 
     // Create all scene geometry
     Mesh blocks;

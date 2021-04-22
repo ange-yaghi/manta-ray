@@ -73,7 +73,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 
     SimpleBSDFMaterial *lampLightMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     lampLightMaterial->setEmission(math::mul(getColor(255, 197, 143), math::loadScalar(50.0)));
-    lampLightMaterial->setReflectance(math::constants::Zero);
+    //lampLightMaterial->setReflectance(math::constants::Zero);
 
     PhongDistribution teapotCoating;
     teapotCoating.setPower((math::real)1024);
@@ -100,7 +100,7 @@ void manta_demo::teapotLampDemo(int samplesPerPixel, int resolutionX, int resolu
 
     SimpleBSDFMaterial *glassMaterial = rayTracer.getMaterialLibrary()->newMaterial<SimpleBSDFMaterial>();
     glassMaterial->setName("Glass");
-    glassMaterial->setReflectance(getColor(255, 255, 255));
+    //glassMaterial->setReflectance(getColor(255, 255, 255));
     glassMaterial->setBSDF(new BSDF(&simpleGlassBSDF));
     glassMaterial->setEmission(math::constants::Zero);
 
