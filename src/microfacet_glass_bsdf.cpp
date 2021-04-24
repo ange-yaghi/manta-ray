@@ -105,7 +105,7 @@ manta::math::Vector manta::MicrofacetGlassBSDF::sampleF(
 
         tPdf = m_distribution->calculatePDF(m, surfaceInteraction) * jacobian;
 
-        // Calculate transmitance
+        // Calculate transmittance
         math::real Ft_num = (1 / (ior * ior)) * 
             m_distribution->calculateDistribution(m, surfaceInteraction) *
             m_distribution->bidirectionalShadowMasking(i, rt, m, surfaceInteraction) * (1 - F);

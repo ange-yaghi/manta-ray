@@ -22,20 +22,20 @@ manta::math::Vector manta::PhongDistribution::generateMicrosurfaceNormal(
     const IntersectionPoint *surfaceInteraction,
     const math::Vector2 &u)
 {
-    math::real power = getPower(surfaceInteraction);
+    const math::real power = getPower(surfaceInteraction);
 
-    math::real r1 = u.x;
-    math::real r2 = u.y;
+    const math::real r1 = u.x;
+    const math::real r2 = u.y;
 
-    math::real rho_m = math::constants::TWO_PI * r2;
-    math::real cos_theta_m = ::pow(r1, (math::real)1.0 / (power + (math::real)2.0));
-    math::real sin_theta_m = ::sqrt((math::real)1.0 - cos_theta_m * cos_theta_m);
+    const math::real rho_m = math::constants::TWO_PI * r2;
+    const math::real cos_theta_m = ::pow(r1, (math::real)1.0 / (power + (math::real)2.0));
+    const math::real sin_theta_m = ::sqrt((math::real)1.0 - cos_theta_m * cos_theta_m);
 
     assert(!std::isnan(cos_theta_m));
     assert(!std::isnan(sin_theta_m));
 
-    math::Vector t1 = math::loadVector(sin_theta_m, sin_theta_m, cos_theta_m);
-    math::Vector t2 = math::loadVector(cos(rho_m), sin(rho_m), (math::real)1.0);
+    const math::Vector t1 = math::loadVector(sin_theta_m, sin_theta_m, cos_theta_m);
+    const math::Vector t2 = math::loadVector(cos(rho_m), sin(rho_m), (math::real)1.0);
 
     return math::mul(t1, t2);
 }
@@ -44,12 +44,12 @@ manta::math::real manta::PhongDistribution::calculateDistribution(
     const math::Vector &m,
     const IntersectionPoint *surfaceInteraction)
 {
-    math::real power = getPower(surfaceInteraction);
+    const math::real power = getPower(surfaceInteraction);
 
-    math::real cos_theta_m = math::getZ(m);
+    const math::real cos_theta_m = math::getZ(m);
     if (cos_theta_m <= 0) return (math::real)0.0;
 
-    math::real d_m = ((power + (math::real)2.0) / math::constants::TWO_PI) * ::pow(cos_theta_m, power);
+    const math::real d_m = ((power + (math::real)2.0) / math::constants::TWO_PI) * ::pow(cos_theta_m, power);
     return d_m;
 }
 
@@ -58,15 +58,14 @@ manta::math::real manta::PhongDistribution::calculateG1(
     const math::Vector &m,
     const IntersectionPoint *surfaceInteraction)
 {
-    math::real power = getPower(surfaceInteraction);
+    const math::real power = getPower(surfaceInteraction);
 
-    math::real v_dot_m = (math::getScalar(math::dot(v, m)));
-    math::real v_dot_n = (math::getZ(v));
+    const math::real v_dot_m = (math::getScalar(math::dot(v, m)));
+    const math::real v_dot_n = (math::getZ(v));
     if ((v_dot_m < 0) != (v_dot_n < 0)) return (math::real)0.0;
 
-    math::real cos_theta_v = ::abs(math::getZ(v));
-    math::real sin2_theta_v = 1 - cos_theta_v * cos_theta_v;
-
+    const math::real cos_theta_v = ::abs(math::getZ(v));
+    const math::real sin2_theta_v = 1 - cos_theta_v * cos_theta_v;
     if (sin2_theta_v == 0) return 1.0;
 
     // tan_theta_v term is split to take advantage of the sqrt already here

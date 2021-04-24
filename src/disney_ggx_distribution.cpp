@@ -19,7 +19,7 @@ manta::math::real manta::DisneyGgxDistribution::getRoughness(
 manta::math::real manta::DisneyGgxDistribution::getAlpha(
     const IntersectionPoint *surfaceInteraction)
 {
-    math::real roughness = getRoughness(surfaceInteraction);
+    const math::real roughness = getRoughness(surfaceInteraction);
     return roughness * roughness;
 }
 
@@ -27,7 +27,9 @@ manta::math::Vector manta::DisneyGgxDistribution::generateMicrosurfaceNormal(
     const IntersectionPoint *surfaceInteraction,
     const math::Vector2 &u)
 {
-    math::real alpha = getAlpha(surfaceInteraction);
+    if (isDeltaInternal(surfaceInteraction)) return SurfaceAlignedMicrofacetNormal;
+
+    const math::real alpha = getAlpha(surfaceInteraction);
     return GgxDistribution::generateMicrosurfaceNormal(alpha, u);
 }
 
@@ -35,8 +37,8 @@ manta::math::real manta::DisneyGgxDistribution::calculateDistribution(
     const math::Vector &m,
     const IntersectionPoint *surfaceInteraction)
 {
-    math::real roughness = getRoughness(surfaceInteraction);
-    math::real alpha = roughness * roughness;
+    const math::real roughness = getRoughness(surfaceInteraction);
+    const math::real alpha = roughness * roughness;
 
     const intersection_id id = surfaceInteraction->m_id;
     const int threadId = surfaceInteraction->m_threadId;
@@ -45,7 +47,6 @@ manta::math::real manta::DisneyGgxDistribution::calculateDistribution(
     if (memory == nullptr) {
         math::real *newMemory = m_distribution.cachePut({ m, id }, threadId);
         *newMemory = GgxDistribution::calculateDistribution(m, alpha);
-
         memory = newMemory;
     }
 
@@ -57,11 +58,15 @@ manta::math::real manta::DisneyGgxDistribution::calculateG1(
     const math::Vector &m,
     const IntersectionPoint *surfaceInteraction)
 {
-    math::real roughness = getRoughness(surfaceInteraction);
-    math::real alpha_g = ((math::real)0.5 + roughness / 2);
-    alpha_g = alpha_g * alpha_g;
+    const math::real roughness = getRoughness(surfaceInteraction);
+    const math::real alpha_g = ((math::real)0.5 + roughness / 2);
+    const math::real alpha_g_2 = alpha_g * alpha_g;
 
-    return GgxDistribution::calculateG1(v, m, alpha_g);
+    return GgxDistribution::calculateG1(v, m, alpha_g_2);
+}
+
+bool manta::DisneyGgxDistribution::isDelta(const IntersectionPoint *surfaceInteraction) {
+    return isDeltaInternal(surfaceInteraction);
 }
 
 void manta::DisneyGgxDistribution::registerInputs() {
@@ -73,7 +78,7 @@ void manta::DisneyGgxDistribution::_evaluate() {
 }
 
 piranha::Node *manta::DisneyGgxDistribution::_optimize(piranha::NodeAllocator *nodeAllocator) {
-    if (ENABLE_OPTIMIZATION) {
+    if (EnableOptimization) {
         m_roughness.optimize();
     }
 

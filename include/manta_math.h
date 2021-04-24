@@ -21,7 +21,7 @@
 #endif /* MANTA_USE SIMD */
 
 // Macros
-#define MATH_CONST extern const __declspec(selectany)
+#define MATH_CONST extern constexpr
 
 // Standard math functions and definitions
 namespace manta {

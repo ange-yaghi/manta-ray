@@ -63,19 +63,19 @@ manta::math::real manta::DielectricMediaInterface::fresnelTerm(
         no = m_iorIncident;
     }
 
-    math::real sinThetaI = ::sqrt(std::max((math::real)0.0, 1 - cosThetaI * cosThetaI));
-    math::real sinThetaT = (ni / no) * sinThetaI;
+    const math::real sinThetaI = ::sqrt(std::max((math::real)0.0, 1 - cosThetaI * cosThetaI));
+    const math::real sinThetaT = (ni / no) * sinThetaI;
 
     // Total internal reflection
     if (sinThetaT >= (math::real)1.0) {
         return (math::real)1.0;
     }
 
-    math::real cosThetaT = ::sqrt(std::max((math::real)0.0, 1 - sinThetaT * sinThetaT));
+    const math::real cosThetaT = ::sqrt(std::max((math::real)0.0, 1 - sinThetaT * sinThetaT));
 
-    math::real Rparl = ((no * cosThetaI) - (ni * cosThetaT)) /
+    const math::real Rparl = ((no * cosThetaI) - (ni * cosThetaT)) /
         ((no * cosThetaI) + (ni * cosThetaT));
-    math::real Rperp = ((ni * cosThetaI) - (no * cosThetaT)) /
+    const math::real Rperp = ((ni * cosThetaI) - (no * cosThetaT)) /
         ((ni * cosThetaI) + (no * cosThetaT));
 
     return (Rparl * Rparl + Rperp * Rperp) / (math::real)2.0;

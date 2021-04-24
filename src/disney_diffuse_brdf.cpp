@@ -22,11 +22,11 @@ manta::math::Vector manta::DisneyDiffuseBRDF::sampleF(
     StackAllocator *stackAllocator)
 {
     // Uniformly sample a hemisphere
-    math::real r1 = u.x * math::constants::TWO_PI;
-    math::real r2 = u.y;
-    math::real r2s = (math::real)sqrt(1 - r2 * r2);
+    const math::real r1 = u.x * math::constants::TWO_PI;
+    const math::real r2 = u.y;
+    const math::real r2s = (math::real)sqrt(1 - r2 * r2);
 
-    math::Vector direction = math::loadVector(
+    const math::Vector direction = math::loadVector(
         cos(r1) * r2s,
         sin(r1) * r2s,
         r2);
@@ -37,24 +37,27 @@ manta::math::Vector manta::DisneyDiffuseBRDF::sampleF(
     return f(surfaceInteraction, i, *o, stackAllocator);
 }
 
-manta::math::Vector manta::DisneyDiffuseBRDF::f(const IntersectionPoint *surfaceInteraction,
-    const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator)
+manta::math::Vector manta::DisneyDiffuseBRDF::f(
+    const IntersectionPoint *surfaceInteraction,
+    const math::Vector &i,
+    const math::Vector &o,
+    StackAllocator *stackAllocator)
 {
-    math::Vector baseColor = m_baseColor.sample(surfaceInteraction);
-    math::Vector power = m_power.sample(surfaceInteraction);
-    math::real roughness = math::getScalar(m_roughness.sample(surfaceInteraction));
+    const math::Vector baseColor = m_baseColor.sample(surfaceInteraction);
+    const math::Vector power = m_power.sample(surfaceInteraction);
+    const math::real roughness = math::getScalar(m_roughness.sample(surfaceInteraction));
 
-    math::Vector h = math::normalize(math::add(i, o));
-    math::real h_dot_i = math::getScalar(math::dot(h, i));
-    math::real h_dot_i_2 = h_dot_i * h_dot_i;
-    math::real f_d90 = (math::real)0.5 + 2 * h_dot_i_2 * roughness;
+    const math::Vector h = math::normalize(math::add(i, o));
+    const math::real h_dot_i = math::getScalar(math::dot(h, i));
+    const math::real h_dot_i_2 = h_dot_i * h_dot_i;
+    const math::real f_d90 = (math::real)0.5 + 2 * h_dot_i_2 * roughness;
 
-    math::real cos_theta_i = math::getZ(i);
-    math::real cos_theta_o = math::getZ(o);
+    const math::real cos_theta_i = math::getZ(i);
+    const math::real cos_theta_o = math::getZ(o);
 
     auto pow5 = [](math::real v) { return (v * v) * (v * v) * v; };
 
-    math::real f_d = (1 + (f_d90 - 1) * pow5(1 - cos_theta_i)) * (1 + (f_d90 - 1) * pow5(1 - cos_theta_o)) / math::constants::PI;
+    const math::real f_d = (1 + (f_d90 - 1) * pow5(1 - cos_theta_i)) * (1 + (f_d90 - 1) * pow5(1 - cos_theta_o)) / math::constants::PI;
 
     math::Vector f = math::mul(math::loadScalar(f_d), baseColor);
     f = math::mul(f, power);
@@ -62,13 +65,13 @@ manta::math::Vector manta::DisneyDiffuseBRDF::f(const IntersectionPoint *surface
 }
 
 manta::math::real manta::DisneyDiffuseBRDF::pdf(
-    const IntersectionPoint *surfaceInteraction, const math::Vector &i, const math::Vector &o)
+    const IntersectionPoint *surfaceInteraction,
+    const math::Vector &i,
+    const math::Vector &o)
 {
-    if (math::getZ(o) < 0) {
-        return 0;
-    }
-
-    return (math::real)1.0 / math::constants::TWO_PI;
+    return (math::getZ(o) < 0)
+        ? 0
+        : (math::real)1.0 / math::constants::TWO_PI;
 }
 
 piranha::Node *manta::DisneyDiffuseBRDF::_optimize(piranha::NodeAllocator *nodeAllocator) {

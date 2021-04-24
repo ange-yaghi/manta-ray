@@ -40,7 +40,7 @@ manta::math::Vector manta::MicrofacetBRDF::sampleF(
     *pdf = m_distribution->calculatePDF(m, surfaceInteraction) / ::abs(4 * o_dot_m);
 
     // Calculate reflectivity
-    return f(surfaceInteraction, i, *o, stackAllocator);
+    return MicrofacetBRDF::f(surfaceInteraction, i, *o, stackAllocator);
 }
 
 manta::math::Vector manta::MicrofacetBRDF::f(

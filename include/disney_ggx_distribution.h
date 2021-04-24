@@ -13,7 +13,8 @@ namespace manta {
 
     class DisneyGgxDistribution : public MicrofacetDistribution {
     public:
-        static constexpr bool ENABLE_OPTIMIZATION = true;
+        static constexpr bool EnableOptimization = true;
+        static constexpr math::real DeltaThreshold = 1E-4;
 
     public:
         DisneyGgxDistribution();
@@ -23,17 +24,27 @@ namespace manta {
         math::real getAlpha(const IntersectionPoint *surfaceInteraction);
 
         virtual math::Vector generateMicrosurfaceNormal(
-            const IntersectionPoint *surfaceInteraction, const math::Vector2 &u);
-        virtual math::real calculateDistribution(const math::Vector &m,
+            const IntersectionPoint *surfaceInteraction,
+            const math::Vector2 &u);
+        virtual math::real calculateDistribution(
+            const math::Vector &m,
             const IntersectionPoint *surfaceInteraction);
-        virtual math::real calculateG1(const math::Vector &v, const math::Vector &m,
+        virtual math::real calculateG1(
+            const math::Vector &v,
+            const math::Vector &m,
             const IntersectionPoint *surfaceInteraction);
+        virtual bool isDelta(const IntersectionPoint *surfaceInteraction);
 
         void setRoughness(math::real roughness) { m_roughness.setConstant(math::loadScalar(roughness)); }
         math::real getRoughness() const { return math::getScalar(m_roughness.getConstant()); }
 
         void setRoughnessNode(piranha::pNodeInput node) { m_roughness.setPort(node); }
         piranha::pNodeInput getWidthNode() const { return m_roughness.getPort(); }
+
+    public:
+        __forceinline bool isDeltaInternal(const IntersectionPoint *surfaceInteraction) {
+            return getRoughness(surfaceInteraction) < DeltaThreshold;
+        }
 
     protected:
         virtual void registerInputs();

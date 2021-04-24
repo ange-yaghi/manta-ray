@@ -14,7 +14,7 @@ manta::math::real manta::MicrofacetDistribution::calculatePDF(
     const math::Vector &m,
     const IntersectionPoint *surfaceInteraction)
 {
-    math::real cos_theta_m = math::getZ(m);
+    const math::real cos_theta_m = math::getZ(m);
     return calculateDistribution(m, surfaceInteraction) * cos_theta_m;
 }
 

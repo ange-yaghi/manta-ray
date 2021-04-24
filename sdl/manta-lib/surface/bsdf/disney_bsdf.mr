@@ -25,7 +25,7 @@ public node disney_bsdf {
     input base_color: 1.0;
     input metallic: 0.0;
     input roughness: 0.5;
-    input specular: 0.0;
+    input specular: 1.0;
     input clearcoat: 0.1;
     input clearcoat_roughness: 0.05;
 
@@ -46,7 +46,7 @@ public node disney_bsdf {
     // Specular BRDF
     add_bxdf(
         disney_specular_brdf(
-            base_color: base_color,
+            base_color: 1,
             roughness: roughness,
             specular: specular * scalar(0.08),
             power: scalar(1.0) - metallic

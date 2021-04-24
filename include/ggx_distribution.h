@@ -14,7 +14,8 @@ namespace manta {
 
     class GgxDistribution : public MicrofacetDistribution {
     public:
-        static constexpr bool ENABLE_OPTIMIZATION = true;
+        static constexpr bool EnableOptimization = true;
+        static constexpr math::real DeltaThreshold = (math::real)1E-4;
 
     public:
         GgxDistribution();
@@ -23,11 +24,16 @@ namespace manta {
         math::real getWidth(const IntersectionPoint *surfaceInteraction);
 
         virtual math::Vector generateMicrosurfaceNormal(
-            const IntersectionPoint *surfaceInteraction, const math::Vector2 &u);
-        virtual math::real calculateDistribution(const math::Vector &m, 
+            const IntersectionPoint *surfaceInteraction,
+            const math::Vector2 &u);
+        virtual math::real calculateDistribution(
+            const math::Vector &m,
             const IntersectionPoint *surfaceInteraction);
-        virtual math::real calculateG1(const math::Vector &v, const math::Vector &m, 
+        virtual math::real calculateG1(
+            const math::Vector &v,
+            const math::Vector &m,
             const IntersectionPoint *surfaceInteraction);
+        virtual bool isDelta(const IntersectionPoint *surfaceInteraction);
 
         void setWidth(math::real width) { m_width.setConstant(math::loadVector(width)); }
         math::real getWidth() const { return math::getScalar(m_width.getConstant()); }
@@ -39,6 +45,10 @@ namespace manta {
         static math::Vector generateMicrosurfaceNormal(math::real width, const math::Vector2 &u);
         static math::real calculateDistribution(const math::Vector &m, math::real width);
         static math::real calculateG1(const math::Vector &v, const math::Vector &m, math::real width);
+
+        __forceinline bool isDeltaInternal(const IntersectionPoint *surfaceInteraction) {
+            return getWidth(surfaceInteraction) < DeltaThreshold;
+        }
 
     protected:
         virtual void registerInputs();
