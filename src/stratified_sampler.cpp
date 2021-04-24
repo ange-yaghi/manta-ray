@@ -42,7 +42,9 @@ manta::Sampler *manta::StratifiedSampler::clone() const {
 }
 
 void manta::StratifiedSampler::stratifiedSample1d(
-    std::vector<math::real> &samples, int sampleCount, bool jitter) 
+    std::vector<math::real> &samples,
+    int sampleCount,
+    bool jitter) 
 {
     math::real *data = samples.data();
 
@@ -55,8 +57,11 @@ void manta::StratifiedSampler::stratifiedSample1d(
     }
 }
 
-void manta::StratifiedSampler::stratifiedSample2d(std::vector<math::Vector2> &samples, 
-    int latticeWidth, int latticeHeight, bool jitter) 
+void manta::StratifiedSampler::stratifiedSample2d(
+    std::vector<math::Vector2> &samples, 
+    int latticeWidth,
+    int latticeHeight,
+    bool jitter) 
 {
     math::real dx = (math::real)1.0 / latticeWidth;
     math::real dy = (math::real)1.0 / latticeHeight;

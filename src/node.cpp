@@ -18,7 +18,6 @@ void manta::Node::resolvePath(const Path *relative, Path *target) const {
 
     piranha::Path unitFile = getProgram()->getRootUnit()->getPath();
     piranha::Path home;
-    
     unitFile.getParentPath(&home);
 
     *target = Path(home.toString()).append(*relative);

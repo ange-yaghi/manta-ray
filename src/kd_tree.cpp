@@ -48,7 +48,6 @@ void manta::KDTree::_evaluate() {
     static_cast<VectorNodeOutput *>(m_centerInput)->sample(nullptr, (void *)&center);
 
     configure((math::real)width, center);
-
     analyzeWithProgress(mesh, granularity);
 
     setOutput(this);
@@ -67,7 +66,6 @@ void manta::KDTree::registerInputs() {
 
 void manta::KDTree::configure(math::real width, const math::Vector &position) {
     m_width = width;
-
     m_bounds.maxPoint = math::add(position, math::loadScalar(width));
     m_bounds.minPoint = math::sub(position, math::loadScalar(width));
 }
@@ -437,8 +435,14 @@ void manta::KDTree::setMesh(Mesh *mesh) {
     m_mesh = mesh;
 }
 
-void manta::KDTree::_analyze(int currentNode, AABB *nodeBounds, const std::vector<int> &faces, 
-                            int badRefines, int depth, KDTreeWorkspace *workspace, math::real effort)
+void manta::KDTree::_analyze(
+    int currentNode,
+    AABB *nodeBounds,
+    const std::vector<int> &faces,
+    int badRefines,
+    int depth,
+    KDTreeWorkspace *workspace,
+    math::real effort)
 {
     constexpr math::real intersectionCost = 50;
     constexpr math::real traversalCost = 50;
@@ -599,7 +603,12 @@ int manta::KDTree::createNodeVolume() {
     return m_volumeCount++;
 }
 
-void manta::KDTree::initLeaf(int node, const std::vector<int> &faces, const AABB &bounds, KDTreeWorkspace *workspace) {
+void manta::KDTree::initLeaf(
+    int node,
+    const std::vector<int> &faces,
+    const AABB &bounds,
+    KDTreeWorkspace *workspace)
+{
     int primitiveCount = (int)faces.size();
     int filteredPrimitiveCount = 0;
     int newNodeVolume = createNodeVolume();
@@ -659,16 +668,15 @@ void manta::KDTree::initLeaf(int node, const std::vector<int> &faces, const AABB
 void manta::KDTree::writeToObjFile(const char *fname) const {
     if (m_nodeBounds.empty()) return; // Check if debug info is present
 
-    std::ofstream f(fname);
-
     int width = 0;
     int nodes = m_nodeCount;
     while (nodes > 0) {
         width++; 
         nodes /= 10;
     }
-    
-    int nodeCount = m_nodeCount;
+
+    std::ofstream f(fname);
+    const int nodeCount = m_nodeCount;
     for (int i = 0; i < nodeCount; i++) {
         const AABB &bounds = m_nodeBounds[i];
         KDTreeNode &node = m_nodes[i];

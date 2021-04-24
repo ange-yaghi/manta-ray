@@ -54,16 +54,16 @@ void manta::ImageFileNode::_evaluate() {
         pixelData[i] = StandardAllocator::Global()->allocate<Pixel>(image->w);;
     }
 
-    for (int i = 0; i < image->w; i++) {
-        for (int j = 0; j < image->h; j++) {
+    for (int j = 0; j < image->h; j++) {
+        for (int i = 0; i < image->w; i++) {
             getPixel(image, i, j, &pixelData[j][i]);
         }
     }
 
     m_imageMap.initialize(image->w, image->h);
 
-    for (int i = 0; i < image->w; i++) {
-        for (int j = 0; j < image->h; j++) {
+    for (int j = 0; j < image->h; j++) {
+        for (int i = 0; i < image->w; i++) {
             Pixel &pixel = pixelData[j][i];
 
             math::real r = pixel.r / (math::real)255.0;

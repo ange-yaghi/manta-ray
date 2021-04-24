@@ -27,9 +27,9 @@ void manta::ImageOutputNode::_initialize() {
 void manta::ImageOutputNode::_evaluate() {
     ImageByteBuffer byteBuffer;
 
-    bool gammaCorrection = m_gammaCorrection;
-    int jpegQuality = m_jpegQuality;
-    std::string filename = m_outputFilename;
+    piranha::native_bool gammaCorrection = m_gammaCorrection;
+    piranha::native_int jpegQuality = m_jpegQuality;
+    piranha::native_string filename = m_outputFilename;
 
     if (m_correctGammaInput != nullptr) 
         static_cast<piranha::NodeOutput *>(m_correctGammaInput)->fullCompute((void *)&gammaCorrection);
@@ -50,7 +50,6 @@ void manta::ImageOutputNode::_evaluate() {
     VectorMap2D map;
     VectorNodeOutput *input = static_cast<VectorNodeOutput *>(m_input);
     input->calculateAllDimensions(&map);
-
     map.fillByteBuffer(&byteBuffer, gammaCorrection);
 
     JpegWriter jpegWriter;
