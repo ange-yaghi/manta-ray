@@ -27,9 +27,9 @@ Uint32 GetPixel24(SDL_Surface *surface, int x, int y) {
 void PlacePixel24(SDL_Surface * surface, int x, int y, const manta::math::Vector &color) {
     Uint32 color32 = 0;
 
-    manta::math::real_d r = (manta::math::real_d)manta::math::getX(color);
-    manta::math::real_d g = (manta::math::real_d)manta::math::getY(color);
-    manta::math::real_d b = (manta::math::real_d)manta::math::getZ(color);
+    manta::math::real r = manta::math::getX(color);
+    manta::math::real g = manta::math::getY(color);
+    manta::math::real b = manta::math::getZ(color);
 
     manta::math::real gamma = (manta::math::real)1.0;
 
@@ -37,9 +37,9 @@ void PlacePixel24(SDL_Surface * surface, int x, int y, const manta::math::Vector
     g = pow(manta::math::clamp(g), 1 / gamma);
     b = pow(manta::math::clamp(b), 1 / gamma);
 
-    color32 |= lround(r * 255);
-    color32 |= (lround(g * 255) << 8);
-    color32 |= (lround(b * 255) << 16);
+    color32 |= lroundf(r * 255);
+    color32 |= (lroundf(g * 255) << 8);
+    color32 |= (lroundf(b * 255) << 16);
 
     Uint8 * pixel = (Uint8*)surface->pixels;
     pixel += (y * (size_t)surface->pitch) + (x * sizeof(Uint8) * 3);

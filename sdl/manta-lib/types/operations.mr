@@ -108,6 +108,32 @@ public node step => __mantaray__step {
     alias output __out [vector];
 }
 
+public node clamp {
+    input s [vector];
+    input min [vector]: 0;
+    input max [vector]: 1;
+    alias output out [vector]:
+        min(max, max(min, s));
+}
+
+private node var {
+    input in;
+    alias output out: in;
+}
+
+public node map {
+    input s [vector];
+    input to_min [vector]: 0;
+    input to_max [vector]: 1;
+    input from_min [vector]: 0;
+    input from_max [vector]: 1;
+    alias output out [vector]: (p * to_max) + ((1 - p) * to_min);
+    
+    var clamped(clamp(s, from_min, from_max))
+    var dist(from_max - from_min)
+    var p((clamped - from_min) / dist)
+}
+
 public node average => __mantaray__vector_average {
     input __in [vector];
     alias output __out [vector];

@@ -269,12 +269,12 @@ void manta::FraunhoferDiffraction::_generateMap(
 {
     const int res = target->getWidth();
 
-    math::real_d sdx = m_sensorElementWidth;
-    math::real_d sdy = m_sensorElementWidth;
-    math::real_d scx = m_physicalSensorWidth / 2;
-    math::real_d scy = m_physicalSensorWidth / 2;
-    math::real_d maxFreqX = estimator->getHorizontalFreqRange();
-    math::real_d maxFreqY = estimator->getVerticalFreqRange();
+    const math::real_d sdx = m_sensorElementWidth;
+    const math::real_d sdy = m_sensorElementWidth;
+    const math::real_d scx = m_physicalSensorWidth / 2;
+    const math::real_d scy = m_physicalSensorWidth / 2;
+    const math::real_d maxFreqX = estimator->getHorizontalFreqRange();
+    const math::real_d maxFreqY = estimator->getVerticalFreqRange();
 
     const int startWavelength = settings->minWavelength;
     const int endWavelength = settings->maxWavelength;
@@ -286,10 +286,10 @@ void manta::FraunhoferDiffraction::_generateMap(
     spectrum.initialize(steps, (math::real)startWavelength, (math::real)endWavelength, nullptr);
 
     for (int i = startRow; i < endRow; i++) {
-        math::real_d x = i * sdx - scx;
+        const math::real_d x = i * sdx - scx;
 
         for (int j = 0; j < res; j++) {
-            math::real_d y = j * sdy - scy;
+            const math::real_d y = j * sdy - scy;
             spectrum.clear();
 
             for (
@@ -300,14 +300,11 @@ void manta::FraunhoferDiffraction::_generateMap(
                 math::real_d freqSpace = (sdx * 1E6 / wavelength) * 1.0;
 
                 for (int s = 0; s < textureSamples; s++) {
-                    math::real randX = math::uniformRandom() - (math::real)0.5;
-                    math::real randY = math::uniformRandom() - (math::real)0.5;
+                    const math::real randX = math::uniformRandom() - (math::real)0.5;
+                    const math::real randY = math::uniformRandom() - (math::real)0.5;
 
-                    math::real_d freq_x = ((x * 1E6) / wavelength);
-                    math::real_d freq_y = ((y * 1E6) / wavelength);
-
-                    freq_x += randX * freqSpace;
-                    freq_y += randY * freqSpace;
+                    const math::real_d freq_x = ((x * 1E6) / wavelength) + randX * freqSpace;
+                    const math::real_d freq_y = ((y * 1E6) / wavelength) + randY * freqSpace;
 
                     if (abs(freq_x) > maxFreqX) continue;
                     if (abs(freq_y) > maxFreqY) continue;
