@@ -69,6 +69,7 @@
 #include "../include/turbulence_noise_node.h"
 #include "../include/area_light.h"
 #include "../include/fresnel_node.h"
+#include "../include/aces_fitted_node.h"
 
 manta::LanguageRules::LanguageRules() {
     /* void */
@@ -188,6 +189,8 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__sphere");
     registerBuiltinType<SrgbNode>(
         "__mantaray__srgb");
+    registerBuiltinType<ACESFittedNode>(
+        "__mantaray__aces_fitted");
     registerBuiltinType<ImageFileNode>(
         "__mantaray__image_file");
     registerBuiltinType<CircularAperture>(

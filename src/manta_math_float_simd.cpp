@@ -810,5 +810,12 @@ float math::clamp(float value) {
     }
 }
 
+math::Vector math::clamp(const Vector &value) {
+    return math::componentMin(
+        math::constants::One,
+        math::componentMax(math::constants::Zero, value)
+    );
+}
+
 #endif /* MANTA_USE_SIMD */
 #endif /* MANTA_PRECISION */

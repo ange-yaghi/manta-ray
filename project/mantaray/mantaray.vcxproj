@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\aces_fitted_node.cpp" />
+    <ClCompile Include="..\..\src\aces_fitted_node_output.cpp" />
     <ClCompile Include="..\..\src\add_bxdf_node.cpp" />
     <ClCompile Include="..\..\src\aperture.cpp" />
     <ClCompile Include="..\..\src\append_path_node.cpp" />
@@ -160,6 +162,8 @@
     <ClCompile Include="..\..\src\worker.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\include\aces_fitted_node.h" />
+    <ClInclude Include="..\..\include\aces_fitted_node_output.h" />
     <ClInclude Include="..\..\include\add_bxdf_node.h" />
     <ClInclude Include="..\..\include\aperture.h" />
     <ClInclude Include="..\..\include\append_path_node.h" />

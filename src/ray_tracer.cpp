@@ -260,11 +260,10 @@ manta::math::Vector manta::RayTracer::estimateDirect(
         f = point->m_bsdf->f(point, point->m_lightRay->getDirection(), math::negate(wi), true);
         scatteringPdf = point->m_bsdf->pdf(point, point->m_lightRay->getDirection(), math::negate(wi));
         if (scatteringPdf != 0) {
-            const math::Vector p0 = (point->m_direction == MediaInterface::Direction::In)
+            const math::Vector p0 = (math::getScalar(math::dot(wi, point->m_vertexNormal)) > 0)
                 ? point->m_outside
                 : point->m_inside;
             const bool occluded = this->occluded(scene, p0, wi, depth /**/ STATISTICS_PARAM_INPUT);
-
             if (occluded) {
                 Li = math::constants::Zero;
             }
@@ -279,6 +278,7 @@ manta::math::Vector manta::RayTracer::estimateDirect(
 
     RayFlags flags = RayFlag::None;
     f = point->m_bsdf->sampleF(point, uScattering, math::negate(point->m_lightRay->getDirection()), &wi, &scatteringPdf, &flags, stackAllocator, true);
+    f = math::mask(f, math::constants::MaskOffW);
     if (scatteringPdf > 0) {
         lightPdf = light->pdfIncoming(*point, wi);
         if (lightPdf == 0) {
@@ -286,6 +286,7 @@ manta::math::Vector manta::RayTracer::estimateDirect(
         }
 
         const math::real weight = powerHeuristic(1, scatteringPdf, 1, lightPdf);
+        depth = math::constants::REAL_MAX;
         if (light->intersect(point->m_position, wi, &depth)) {
             const math::Vector p0 = ((flags & RayFlag::Transmission) > 0)
                 ? point->m_inside
@@ -465,7 +466,7 @@ void manta::RayTracer::refineContact(
         point->m_faceNormal = math::negate(point->m_faceNormal);
         point->m_vertexNormal = math::negate(point->m_vertexNormal);
         point->m_direction = MediaInterface::Direction::Out;
-        math::Vector temp = point->m_inside;
+        const math::Vector temp = point->m_inside;
         point->m_inside = point->m_outside;
         point->m_outside = temp;
     }
@@ -505,6 +506,8 @@ manta::math::Vector manta::RayTracer::traceRay(
     math::Vector beta = math::constants::One;
     math::Vector L = math::constants::Zero;
 
+    math::Vector temp = L;
+
     for (int bounces = 0; bounces < MAX_BOUNCES; bounces++) {
         currentRay->resetCache();
 
@@ -517,6 +520,23 @@ manta::math::Vector manta::RayTracer::traceRay(
         point.m_manager = manager;
 
         depthCull(scene, currentRay, &sceneObject, &point, s, math::constants::REAL_MAX /**/ STATISTICS_PARAM_INPUT);
+
+        /*
+        const int lightCount = scene->getLightCount();
+        math::real depth = math::constants::REAL_MAX;
+        Light *lightInteraction = nullptr;
+        for (int i = 0; i < lightCount; ++i) {
+            if (scene->getLight(i)->intersect(point.m_position, point.m_lightRay->getDirection(), &depth)) {
+                lightInteraction = scene->getLight(i);
+            }
+        }
+
+        if (lightInteraction != nullptr) {
+            L = math::add(
+                temp,
+                math::mul(beta, lightInteraction->L(point, point.m_lightRay->getDirection()))
+            );
+        }*/
 
         const bool foundIntersection = (sceneObject != nullptr);
         if (foundIntersection) {
@@ -563,6 +583,8 @@ manta::math::Vector manta::RayTracer::traceRay(
         if (bsdf == nullptr) break;
 
         point.m_bsdf = bsdf;
+
+        temp = L;
 
         L = math::add(
             L,

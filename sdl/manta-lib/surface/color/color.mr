@@ -37,3 +37,8 @@ public node srgb_i {
         a / 255.0
     );
 }
+
+public node aces_fitted => __mantaray__aces_fitted {
+    input in [vector];
+    alias output out [vector];
+}

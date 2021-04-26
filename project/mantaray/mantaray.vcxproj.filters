@@ -451,6 +451,12 @@
     <Filter Include="Source Files\lights">
       <UniqueIdentifier>{20894dbb-346c-4467-bf4a-59a791764d5d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\sdl\nodes\library\color">
+      <UniqueIdentifier>{595edb5b-da9c-4f81-9c69-888db56832ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sdl\nodes\library\color">
+      <UniqueIdentifier>{656b3a4b-7efb-4cac-bfc3-46405c93395e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -869,6 +875,12 @@
     </ClCompile>
     <ClCompile Include="..\..\src\microfacet_btdf.cpp">
       <Filter>Source Files\material\interface\surface-modeling\bsdf\library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\aces_fitted_node_output.cpp">
+      <Filter>Source Files\sdl\nodes\output-ports\color</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\aces_fitted_node.cpp">
+      <Filter>Source Files\sdl\nodes\library\color</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1390,6 +1402,12 @@
     </ClInclude>
     <ClInclude Include="..\..\include\microfacet_btdf.h">
       <Filter>Header Files\material\surface-modeling\bsdf\library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\aces_fitted_node_output.h">
+      <Filter>Header Files\sdl\nodes\output-ports\color</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\aces_fitted_node.h">
+      <Filter>Header Files\sdl\nodes\library\color</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

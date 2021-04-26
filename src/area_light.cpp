@@ -30,7 +30,6 @@ manta::math::Vector manta::AreaLight::sampleIncoming(
     pos = math::add(pos, math::mul(right, math::loadScalar(offset_u)));
 
     *depth = math::getScalar(math::magnitude(math::sub(pos, ref.m_position)));
-
     *wi = math::normalize(math::sub(pos, ref.m_position));
     *pdf = pdfIncoming(ref.m_position, pos, *wi);
 
@@ -56,9 +55,9 @@ manta::math::Vector manta::AreaLight::L(const IntersectionPoint &ref, const math
     return m_intensity;
 }
 
-bool manta::AreaLight::intersect(const math::Vector &src, const math::Vector &dir, math::real *depth) const {
-    math::real d_dot_n = math::getScalar(math::dot(dir, m_direction));
-
+bool manta::AreaLight::intersect(const math::Vector &src, const math::Vector &dir_, math::real *depth) const {
+    const math::Vector dir = dir_;
+    const math::real d_dot_n = math::getScalar(math::dot(dir, m_direction));
     if (d_dot_n == 0) {
         return false;
     }

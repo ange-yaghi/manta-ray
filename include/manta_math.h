@@ -40,7 +40,16 @@ namespace manta {
         };
 
         struct Matrix {
-            Vector rows[4];
+            union {
+                struct {
+                    Vector row0;
+                    Vector row1;
+                    Vector row2;
+                    Vector row3;
+                };
+
+                Vector rows[4];
+            };
         };
 
 
@@ -309,6 +318,7 @@ namespace manta {
         Vector getTranslationPart(const Matrix &mat);
 
         real clamp(real value);
+        Vector clamp(const Vector &value);
 
     } /* namespace math */
 

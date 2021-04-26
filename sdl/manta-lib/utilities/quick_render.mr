@@ -17,6 +17,7 @@ private import "../types/conversions.mr"
 private import "../types/operations.mr"
 private import "../surface/materials/material_library.mr"
 private import "../surface/materials/bsdf_material.mr"
+private import "../surface/color/color.mr"
 private import "../surface/bsdf/lambertian_brdf.mr"
 private import "../surface/bsdf/bxdf_to_bsdf.mr"
 private import "../camera/utilities.mr"
@@ -115,7 +116,7 @@ public node quick_render {
     log("Writing render to file\n")
 
     image_output(
-        map: mantaray.image,
+        map: aces_fitted(mantaray.image),
         jpeg_quality: 100,
         filename: 
             output_dir + current_date.as_string + "_" + output_name + 
