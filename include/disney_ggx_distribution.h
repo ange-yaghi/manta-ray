@@ -14,7 +14,7 @@ namespace manta {
     class DisneyGgxDistribution : public MicrofacetDistribution {
     public:
         static constexpr bool EnableOptimization = true;
-        static constexpr math::real DeltaThreshold = 1E-4;
+        static constexpr math::real DeltaThreshold = (math::real)1E-4;
 
     public:
         DisneyGgxDistribution();

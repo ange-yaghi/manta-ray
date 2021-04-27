@@ -882,6 +882,9 @@
     <ClCompile Include="..\..\src\aces_fitted_node.cpp">
       <Filter>Source Files\sdl\nodes\library\color</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\specular_glass_bsdf.cpp">
+      <Filter>Source Files\material\interface\surface-modeling\bsdf\library</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\sphere_primitive.h">
@@ -1408,6 +1411,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\aces_fitted_node.h">
       <Filter>Header Files\sdl\nodes\library\color</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\specular_glass_bsdf.h">
+      <Filter>Header Files\material\surface-modeling\bsdf\library</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -29,6 +29,7 @@ manta::math::Vector manta::LambertianBRDF::sampleF(
 
     *o = direction;
     *pdf = (math::real)1.0 / math::constants::TWO_PI;
+    *flags = RayFlag::Reflection;
 
     return math::mul(
         m_color.sample(surfaceInteraction),

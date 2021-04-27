@@ -279,7 +279,7 @@ manta::math::Vector manta::RayTracer::estimateDirect(
     RayFlags flags = RayFlag::None;
     f = point->m_bsdf->sampleF(point, uScattering, math::negate(point->m_lightRay->getDirection()), &wi, &scatteringPdf, &flags, stackAllocator, true);
     f = math::mask(f, math::constants::MaskOffW);
-    if (scatteringPdf > 0) {
+    if (scatteringPdf > 0 && (flags & RayFlag::Delta) == 0) {
         lightPdf = light->pdfIncoming(*point, wi);
         if (lightPdf == 0) {
             return Ld;
@@ -376,7 +376,6 @@ void manta::RayTracer::createWorkers() {
     m_workers = new Worker[m_threadCount];
 
     std::mt19937 seedGenerator;
-
     for (int i = 0; i < m_threadCount; i++) {
         m_workers[i].initialize(m_workerStackSize, this, i, m_deterministicSeed, m_pathRecordingOutputDirectory, seedGenerator());
     }
@@ -499,16 +498,15 @@ manta::math::Vector manta::RayTracer::traceRay(
     PATH_RECORDER_DECL /**/
     STATISTICS_PROTOTYPE) const 
 {
-    constexpr int MAX_BOUNCES = 8;
+    int maxBounces = 4;
 
     LightRay *currentRay = ray;
     LightRay localRay;
     math::Vector beta = math::constants::One;
     math::Vector L = math::constants::Zero;
 
-    math::Vector temp = L;
-
-    for (int bounces = 0; bounces < MAX_BOUNCES; bounces++) {
+    RayFlags flags = RayFlag::None;
+    for (int bounces = 0; bounces < maxBounces; bounces++) {
         currentRay->resetCache();
 
         SceneObject *sceneObject = nullptr;
@@ -520,23 +518,6 @@ manta::math::Vector manta::RayTracer::traceRay(
         point.m_manager = manager;
 
         depthCull(scene, currentRay, &sceneObject, &point, s, math::constants::REAL_MAX /**/ STATISTICS_PARAM_INPUT);
-
-        /*
-        const int lightCount = scene->getLightCount();
-        math::real depth = math::constants::REAL_MAX;
-        Light *lightInteraction = nullptr;
-        for (int i = 0; i < lightCount; ++i) {
-            if (scene->getLight(i)->intersect(point.m_position, point.m_lightRay->getDirection(), &depth)) {
-                lightInteraction = scene->getLight(i);
-            }
-        }
-
-        if (lightInteraction != nullptr) {
-            L = math::add(
-                temp,
-                math::mul(beta, lightInteraction->L(point, point.m_lightRay->getDirection()))
-            );
-        }*/
 
         const bool foundIntersection = (sceneObject != nullptr);
         if (foundIntersection) {
@@ -557,7 +538,7 @@ manta::math::Vector manta::RayTracer::traceRay(
                 math::mul(beta, m_backgroundColor)
             );
 
-            if (bounces == 0) {
+            if (bounces == 0 || (flags & RayFlag::Delta) > 0) {
                 const int lightCount = scene->getLightCount();
                 math::real depth = math::constants::REAL_MAX;
                 Light *lightInteraction = nullptr;
@@ -581,10 +562,7 @@ manta::math::Vector manta::RayTracer::traceRay(
         // Get the BSDF associated with this material
         BSDF *bsdf = material->getBSDF();
         if (bsdf == nullptr) break;
-
-        point.m_bsdf = bsdf;
-
-        temp = L;
+        else point.m_bsdf = bsdf;
 
         L = math::add(
             L,
@@ -598,12 +576,15 @@ manta::math::Vector manta::RayTracer::traceRay(
             ? sampler->generate2d()
             : math::Vector2(math::uniformRandom(), math::uniformRandom());
         math::real pdf;
-        RayFlags flags = RayFlag::None;
+        flags = RayFlag::None;
         math::Vector f = bsdf->sampleF(&point, s_u, outgoingDir, &incomingDir, &pdf, &flags, s, true);
         f = math::mask(f, math::constants::MaskOffW);
 
+        if ((flags & RayFlag::Transmission) > 0) {
+            maxBounces = std::max(maxBounces, 16);
+        }
+
         if (pdf == (math::real)0.0) break;
-        //if (math::getScalar(math::maxComponent(f)) < (math::real)1E-4) return math::loadVector(0, 100, 0);
         
         beta = math::mul(beta, f);
         beta = math::div(
@@ -620,8 +601,8 @@ manta::math::Vector manta::RayTracer::traceRay(
         currentRay = &localRay;
 
         if (bounces > 3) {
-            math::real q = std::max((math::real)0.05, 1 - math::getScalar(math::maxComponent(beta)));
-            math::real d = (sampler != nullptr)
+            const math::real q = std::max((math::real)0.05, 1 - math::getScalar(math::maxComponent(beta)));
+            const math::real d = (sampler != nullptr)
                 ? sampler->generate1d()
                 : math::uniformRandom();
             if (d < q) break;

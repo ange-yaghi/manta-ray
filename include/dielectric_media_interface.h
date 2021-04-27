@@ -16,7 +16,9 @@ namespace manta {
         void setIorTransmitted(math::real iorTransmitted) { m_iorTransmitted = iorTransmitted; }
         math::real getIorTransmitted() const { return m_iorTransmitted; }
 
-        virtual math::real fresnelTerm(const math::Vector &i, const math::Vector &m, 
+        virtual math::real fresnelTerm(
+            const math::Vector &i,
+            const math::Vector &m,
             Direction d) const;
         virtual math::real fresnelTerm(math::real cosThetaI, Direction d) const;
 

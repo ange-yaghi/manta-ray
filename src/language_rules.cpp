@@ -70,6 +70,7 @@
 #include "../include/area_light.h"
 #include "../include/fresnel_node.h"
 #include "../include/aces_fitted_node.h"
+#include "../include/specular_glass_bsdf.h"
 
 manta::LanguageRules::LanguageRules() {
     /* void */
@@ -218,7 +219,9 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
     registerBuiltinType<DielectricMediaInterface>(
         "__mantaray__dielectric_media_interface");
     registerBuiltinType<MicrofacetGlassBSDF>(
-        "__mantaray__glass_bsdf");
+        "__mantaray__microfacet_glass_bsdf");
+    registerBuiltinType<SpecularGlassBSDF>(
+        "__mantaray__specular_glass_bsdf");
     registerBuiltinType<TriangleFilter>(
         "__mantaray__triangle_filter");
     registerBuiltinType<BoxFilter>(

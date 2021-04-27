@@ -18,7 +18,9 @@ namespace manta {
         MediaInterface();
         virtual ~MediaInterface();
 
-        virtual math::real fresnelTerm(const math::Vector &i, const math::Vector &m, 
+        virtual math::real fresnelTerm(
+            const math::Vector &i,
+            const math::Vector &m,
             Direction d) const = 0;
         virtual math::real fresnelTerm(math::real cosThetaI, Direction d) const = 0;
 

@@ -41,6 +41,7 @@ manta::math::Vector manta::DisneySpecularBRDF::sampleF(
     }
 
     *pdf = m_distribution->calculatePDF(m, surfaceInteraction) / ::abs(4 * o_dot_m);
+    *flags = RayFlag::Reflection;
     return DisneySpecularBRDF::f(surfaceInteraction, i, *o, stackAllocator);
 }
 

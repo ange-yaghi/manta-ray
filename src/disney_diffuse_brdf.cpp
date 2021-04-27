@@ -33,6 +33,7 @@ manta::math::Vector manta::DisneyDiffuseBRDF::sampleF(
 
     *o = direction;
     *pdf = (math::real)1.0 / math::constants::TWO_PI;
+    *flags = RayFlag::Reflection;
 
     return f(surfaceInteraction, i, *o, stackAllocator);
 }

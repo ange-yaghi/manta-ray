@@ -94,6 +94,7 @@
     <ClCompile Include="..\..\src\session.cpp" />
     <ClCompile Include="..\..\src\signal_processing.cpp" />
     <ClCompile Include="..\..\src\spectrum.cpp" />
+    <ClCompile Include="..\..\src\specular_glass_bsdf.cpp" />
     <ClCompile Include="..\..\src\srgb_node.cpp" />
     <ClCompile Include="..\..\src\srgb_node_output.cpp" />
     <ClCompile Include="..\..\src\stack_allocator.cpp" />
@@ -233,6 +234,7 @@
     <ClInclude Include="..\..\include\sampler.h" />
     <ClInclude Include="..\..\include\script_path_node.h" />
     <ClInclude Include="..\..\include\session.h" />
+    <ClInclude Include="..\..\include\specular_glass_bsdf.h" />
     <ClInclude Include="..\..\include\stratified_sampler.h" />
     <ClInclude Include="..\..\include\streaming_node_output.h" />
     <ClInclude Include="..\..\include\obj_file_node.h" />

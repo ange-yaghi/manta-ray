@@ -12,16 +12,27 @@ module {
 private import "bxdf.mr"
 private import "media-interface/media_interfaces.mr"
 private import "../microfacet-models/microfacet_distributions.mr"
+private import "../materials/surface_interaction.mr"
 private import "../../types/atomic_types.mr"
 private import "../../types/conversions.mr"
 
 @doc: "Glass BSDF for glass transmission and reflection"
-public node glass_bsdf => __mantaray__glass_bsdf {
+public node microfacet_glass_bsdf => __mantaray__microfacet_glass_bsdf {
     input distribution [microfacet_distribution]: 
         phong_distribution(32000.0);
-        
     input media_interface [media_interface]: 
         dielectric_interface(); // Defaults to crown glass
+    input normal [vector]: surface_interaction().normal;
+
+    alias output __out [bxdf];
+}
+
+@doc: "Specular glass BSDF for glass transmission and reflection"
+public node specular_glass_bsdf => __mantaray__specular_glass_bsdf {
+    input tint [vector]: 1;
+    input media_interface [media_interface]: 
+        dielectric_interface(); // Defaults to crown glass
+    input normal [vector]: surface_interaction().normal;
 
     alias output __out [bxdf];
 }
