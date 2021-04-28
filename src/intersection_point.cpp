@@ -110,7 +110,7 @@ void manta::IntersectionPoint::offset(math::real du_s, math::real dv_s) {
     const math::Vector dv = math::loadScalar(dv_s);
 
     const math::Vector dpdu = math::normalize(math::cross(this->v_basis, m_vertexNormal));
-    const math::Vector dpdv = math::normalize(math::cross(m_vertexNormal, this->u_basis));
+    const math::Vector dpdv = math::normalize(math::cross(m_vertexNormal, dpdu));
 
     m_position = math::add(
         m_position,

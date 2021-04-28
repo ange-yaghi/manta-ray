@@ -49,9 +49,16 @@ void manta::BumpNodeOutput::sample(const IntersectionPoint *surfaceInteraction, 
     const math::Vector p1p0 = math::sub(p1, p0);
     const math::Vector p2p0 = math::sub(p2, p0);
 
-    const math::Vector bumpNormal = math::normalize(math::cross(p1p0, p2p0));
+    math::Vector bumpNormal = math::cross(p1p0, p2p0);
+    const math::Vector mag = math::magnitude(bumpNormal);
+    bumpNormal = math::div(bumpNormal, mag);
 
     math::Vector *result = reinterpret_cast<math::Vector *>(target);
+    if (math::getScalar(mag) == 0) {
+        *result = norm0;
+        return;
+    }
+
     *result = bumpNormal;
 }
 

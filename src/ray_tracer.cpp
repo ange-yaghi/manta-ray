@@ -276,6 +276,10 @@ manta::math::Vector manta::RayTracer::estimateDirect(
         Ld = math::add(Ld, math::mul(f, math::mul(Li, math::loadScalar(w / lightPdf))));
     }
 
+    if (std::isnan(math::getX(Ld)) || std::isnan(math::getY(Ld)) || std::isnan(math::getZ(Ld))) {
+        int a = 0;
+    }
+
     RayFlags flags = RayFlag::None;
     f = point->m_bsdf->sampleF(point, uScattering, math::negate(point->m_lightRay->getDirection()), &wi, &scatteringPdf, &flags, stackAllocator, true);
     f = math::mask(f, math::constants::MaskOffW);
@@ -307,6 +311,10 @@ manta::math::Vector manta::RayTracer::estimateDirect(
                 Ld,
                 math::mul(math::mul(f, Li), math::loadScalar(weight / scatteringPdf)));
         }
+    }
+
+    if (std::isnan(math::getX(Ld)) || std::isnan(math::getY(Ld)) || std::isnan(math::getZ(Ld))) {
+        int a = 0;
     }
 
     return Ld;
@@ -567,6 +575,10 @@ manta::math::Vector manta::RayTracer::traceRay(
         L = math::add(
             L,
             math::mul(beta, uniformSampleOneLight(&point, scene, sampler, manager, s)));
+
+        if (std::isnan(math::getX(L)) || std::isnan(math::getY(L)) || std::isnan(math::getZ(L))) {
+            int a = 0;
+        }
 
         // Generate a new path
         const math::Vector outgoingDir = math::negate(currentRay->getDirection());
