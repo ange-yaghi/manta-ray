@@ -237,7 +237,7 @@ void manta_demo::materialVisualizer(int samplesPerPixel, int resolutionX, int re
     group = camera;
 
     // Create the raytracer
-    rayTracer.configure(200 * MB, 50 * MB, 12, 100, true);
+    rayTracer.configure(200 * MB, 50 * MB, 12, true);
     rayTracer.setBackgroundColor(getColor(100, 100, 100));
     rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
     rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");

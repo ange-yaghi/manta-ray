@@ -42,21 +42,31 @@ namespace manta {
     class MaterialLibrary;
     class Sampler;
     class Light;
+    class RenderPattern;
 
     class RayTracer : public Node {
     public:
         RayTracer();
         ~RayTracer();
 
-        void traceAll(const Scene *scene, CameraRayEmitterGroup *rayEmitterGroup,
+        void traceAll(
+            const Scene *scene,
+            CameraRayEmitterGroup *rayEmitterGroup,
             ImagePlane *target);
-        void tracePixel(int px, int py, const Scene *scene,
-            CameraRayEmitterGroup *rayEmitterGroup, ImagePlane *target);
+        void tracePixel(
+            int px,
+            int py,
+            const Scene *scene,
+            CameraRayEmitterGroup *rayEmitterGroup,
+            ImagePlane *target);
 
         int getThreadCount() const { return m_threadCount; }
 
-        void configure(mem_size stackSize, mem_size workerStackSize, int threadCount,
-            int renderBlockSize, bool multithreaded);
+        void configure(
+            mem_size stackSize,
+            mem_size workerStackSize,
+            int threadCount,
+            bool multithreaded);
         void destroy();
 
         void setBackgroundColor(const math::Vector &color) { m_backgroundColor = color; }
@@ -69,7 +79,12 @@ namespace manta {
             /**/ PATH_RECORDER_DECL /**/ STATISTICS_PROTOTYPE) const;
         void incrementRayCompletion(const Job *job, int increment = 1);
 
-        math::Vector uniformSampleOneLight(IntersectionPoint *point, const Scene *scene, Sampler *sampler, IntersectionPointManager *manager, StackAllocator *stackAllocator) const;
+        math::Vector uniformSampleOneLight(
+            IntersectionPoint *point,
+            const Scene *scene,
+            Sampler *sampler,
+            IntersectionPointManager *manager,
+            StackAllocator *stackAllocator) const;
         math::Vector estimateDirect(
             IntersectionPoint *point,
             const math::Vector2 &uScattering,
@@ -102,17 +117,18 @@ namespace manta {
 
         piranha::pNodeInput m_multithreadedInput;
         piranha::pNodeInput m_threadCountInput;
-        piranha::pNodeInput m_renderBlockSizeInput;
         piranha::pNodeInput m_backgroundColorInput;
         piranha::pNodeInput m_deterministicSeedInput;
         piranha::pNodeInput m_materialLibraryInput;
         piranha::pNodeInput m_sceneInput;
         piranha::pNodeInput m_cameraInput;
         piranha::pNodeInput m_samplerInput;
+        piranha::pNodeInput m_renderPatternInput;
 
         VectorMap2DNodeOutput m_output;
 
         Sampler *m_sampler;
+        RenderPattern *m_renderPattern;
 
     protected:
         // Multithreading features

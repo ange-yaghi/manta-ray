@@ -1,0 +1,37 @@
+module {
+    @name:          "Render Patterns"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2021, Ange Yaghi"
+    @doc:           "Render Patterns"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
+private import "../types/atomic_types.mr"
+private import "../types/operations.mr"
+
+@doc: "Render pattern channel type"
+public node render_pattern => __mantaray__render_pattern { /* void */ }
+
+@doc: "Randomized render pattern"
+public node random_render_pattern => __mantaray__random_render_pattern {
+    input block_width [int]: 64;
+    input block_height [int]: block_width;
+    alias output __out [render_pattern];
+}
+
+@doc: "Spiral render pattern"
+public node spiral_render_pattern => __mantaray__spiral_render_pattern {
+    input block_width [int]: 64;
+    input block_height [int]: block_width;
+    alias output __out [render_pattern];
+}
+
+@doc: "Radial render pattern"
+public node radial_render_pattern => __mantaray__radial_render_pattern {
+    input block_width [int]: 64;
+    input block_height [int]: block_width;
+    alias output __out [render_pattern];
+}

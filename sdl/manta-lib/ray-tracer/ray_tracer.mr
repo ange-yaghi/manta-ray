@@ -9,6 +9,8 @@ module {
     @github:        "github.com/ange-yaghi/manta-ray"
 }
 
+private import "image_plane.mr"
+private import "render_patterns.mr"
 private import "../scene/scene.mr"
 private import "../camera/cameras.mr"
 private import "../surface/materials/material_library.mr"
@@ -17,7 +19,6 @@ private import "../types/conversions.mr"
 private import "../image/vector_map.mr"
 private import "../signal-processing/filters/filters.mr"
 private import "../signal-processing/samplers/samplers.mr"
-private import "image_plane.mr"
 
 @doc: "Unidirectional MantaRay ray-tracer"
 public node ray_tracer => __mantaray__ray_tracer {
@@ -30,8 +31,8 @@ public node ray_tracer => __mantaray__ray_tracer {
     // Optional inputs
     input multithreaded [bool]: true;
     input threads       [int]: 12;
-    input block_size    [int]: 100;
-    input background    [vector]: 0.0;
+    input render_pattern[render_pattern]: spiral_render_pattern(64, 64);
+    input background    [vector]: 0;
     input deterministic_seed [bool]: false;
 
     @doc: "Rendered image"

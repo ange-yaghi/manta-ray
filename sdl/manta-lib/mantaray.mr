@@ -10,6 +10,7 @@ module {
 
 public import "ray-tracer/ray_tracer.mr"
 public import "ray-tracer/image_plane.mr"
+public import "ray-tracer/render_patterns.mr"
 
 public import "image/image_output.mr"
 public import "image/vector_map.mr"

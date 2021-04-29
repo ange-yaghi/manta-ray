@@ -174,7 +174,7 @@ void manta_demo::boxCityDemo(int samplesPerPixel, int resolutionX, int resolutio
     sceneBuffer.setFilter(&filter);
 
     // Initialize and run the ray tracer
-    rayTracer.configure(200 * MB, 50 * MB, 12, 100, true);
+    rayTracer.configure(200 * MB, 50 * MB, 12, true);
     rayTracer.setBackgroundColor(math::loadScalar(1.1f));
     rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");
     rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);

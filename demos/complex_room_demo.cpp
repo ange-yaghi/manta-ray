@@ -206,7 +206,7 @@ void manta_demo::complexRoomDemo(int samplesPerPixel, int resolutionX, int resol
     }
 
     // Create the raytracer
-    rayTracer.configure(200 * MB, 100 * MB, 12, 100, true);
+    rayTracer.configure(200 * MB, 100 * MB, 12, true);
     rayTracer.setBackgroundColor(getColor(255, 255, 255));
     rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
     rayTracer.setPathRecordingOutputDirectory("../../workspace/diagnostics/");

@@ -71,6 +71,9 @@
 #include "../include/fresnel_node.h"
 #include "../include/aces_fitted_node.h"
 #include "../include/specular_glass_bsdf.h"
+#include "../include/spiral_render_pattern.h"
+#include "../include/random_render_pattern.h"
+#include "../include/radial_render_pattern.h"
 
 manta::LanguageRules::LanguageRules() {
     /* void */
@@ -134,6 +137,8 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__filter", &ObjectChannel::FilterChannel);
     registerBuiltinType<piranha::ChannelNode>(
         "__mantaray__image_plane", &ObjectChannel::ImagePlaneChannel);
+    registerBuiltinType<piranha::ChannelNode>(
+        "__mantaray__render_pattern", &ObjectChannel::RenderPatternChannel);
 
     // Constructors
     registerBuiltinType<MaterialLibrary>(
@@ -252,6 +257,12 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__scene_add_light");
     registerBuiltinType<FresnelNode>(
         "__mantaray__fresnel");
+    registerBuiltinType<RandomRenderPattern>(
+        "__mantaray__random_render_pattern");
+    registerBuiltinType<SpiralRenderPattern>(
+        "__mantaray__spiral_render_pattern");
+    registerBuiltinType<RadialRenderPattern>(
+        "__mantaray__radial_render_pattern");
 
     // Actions
     registerBuiltinType<piranha::ConsoleInputNode>(

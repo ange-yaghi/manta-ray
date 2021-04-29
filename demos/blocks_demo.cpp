@@ -174,7 +174,7 @@ void manta_demo::blocksDemo(int samplesPerPixel, int resolutionX, int resolution
     sceneBuffer.setFilter(&filter);
 
     // Run the ray tracer
-    rayTracer.configure(200 * MB, 50 * MB, 12, 100, true);
+    rayTracer.configure(200 * MB, 50 * MB, 12, true);
     rayTracer.setBackgroundColor(getColor(0, 0, 0));
     rayTracer.setDeterministicSeedMode(DETERMINISTIC_SEED_MODE);
 

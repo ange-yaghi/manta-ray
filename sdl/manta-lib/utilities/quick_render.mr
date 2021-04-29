@@ -29,6 +29,7 @@ private import "../acceleration/kd_tree.mr"
 private import "../dates/dates.mr"
 private import "../ray-tracer/ray_tracer.mr"
 private import "../ray-tracer/image_plane.mr"
+private import "../ray-tracer/render_patterns.mr"
 private import "../signal-processing/samplers/samplers.mr"
 private import "../image/image_output.mr"
 private import "../mesh/obj_file.mr"
@@ -51,6 +52,7 @@ public node quick_render {
     input image_plane:      image_plane(width: resolution_x, height: resolution_y);
     input output_dir:       "";
     input scene:            scene();
+    input render_pattern:   spiral_render_pattern();
 
     // Save the current date/time
     current_date current_date()
@@ -109,7 +111,8 @@ public node quick_render {
         background: background,
         sampler: sampler,
         deterministic_seed: true,
-        threads: 12
+        threads: 12,
+        render_pattern: render_pattern
     )
 
     log("Render complete\n")

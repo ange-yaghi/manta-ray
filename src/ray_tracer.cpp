@@ -24,16 +24,19 @@
 #include "../include/sampler.h"
 #include "../include/console.h"
 #include "../include/light.h"
+#include "../include/render_pattern.h"
+#include "../include/spiral_render_pattern.h"
 
 #include <iostream>
 #include <thread>
 #include <chrono>
 #include <sstream>
+#include <stack>
 
 manta::RayTracer::RayTracer() {
     m_multithreadedInput = nullptr;
     m_threadCountInput = nullptr;
-    m_renderBlockSizeInput = nullptr;
+    m_renderPatternInput = nullptr;
     m_backgroundColorInput = nullptr;
     m_deterministicSeedInput = nullptr;
     m_materialLibraryInput = nullptr;
@@ -42,6 +45,7 @@ manta::RayTracer::RayTracer() {
     m_samplerInput = nullptr;
     m_outputImage = nullptr;
     m_workers = nullptr;
+    m_renderPattern = nullptr;
 
     m_deterministicSeed = false;
     m_pathRecordingOutputDirectory = "";
@@ -67,28 +71,19 @@ void manta::RayTracer::traceAll(const Scene *scene, CameraRayEmitterGroup *group
     group->configure();
 
     // Create jobs
-    const int horizontalBlocks = target->getWidth() / m_renderBlockSize + 1;
-    const int verticalBlocks = target->getHeight() / m_renderBlockSize + 1;
-    
-    for (int i = 0; i < horizontalBlocks; i++) {
-        for (int j = 0; j < verticalBlocks; j++) {
-            Job newJob;
-            newJob.scene = scene;
-            newJob.group = group;
-            newJob.target = target;
-            newJob.startX = i * m_renderBlockSize;
-            newJob.startY = j * m_renderBlockSize;
-            newJob.endX = (i + 1) * m_renderBlockSize - 1;
-            newJob.endY = (j + 1) * m_renderBlockSize - 1;
-            newJob.samples = 0;
+    RenderPattern::PatternParameters params;
+    params.group = group;
+    params.scene = scene;
+    params.target = target;
 
-            if (newJob.startX >= target->getWidth()) continue;
-            if (newJob.startY >= target->getHeight()) continue;
-            if (newJob.endX >= target->getWidth()) newJob.endX = target->getWidth() - 1;
-            if (newJob.endY >= target->getHeight()) newJob.endY = target->getHeight() - 1;
-
-            m_jobQueue.push(newJob);
-        }
+    if (m_renderPattern == nullptr) {
+        SpiralRenderPattern renderPattern;
+        renderPattern.setBlockWidth(64);
+        renderPattern.setBlockHeight(64);
+        renderPattern.generateJobs(params, &m_jobQueue);
+    }
+    else {
+        m_renderPattern->generateJobs(params, &m_jobQueue);
     }
 
     // Hide the cursor to avoid annoying blinking artifact
@@ -186,9 +181,8 @@ void manta::RayTracer::tracePixel(int px, int py, const Scene *scene, CameraRayE
     waitForWorkers();
 }
 
-void manta::RayTracer::configure(mem_size stackSize, mem_size workerStackSize, int threadCount, int renderBlockSize, bool multithreaded) {
+void manta::RayTracer::configure(mem_size stackSize, mem_size workerStackSize, int threadCount, bool multithreaded) {
     m_stack.initialize(stackSize);
-    m_renderBlockSize = renderBlockSize;
     m_multithreaded = multithreaded;
     m_threadCount = threadCount;
     m_workerStackSize = workerStackSize;
@@ -276,10 +270,6 @@ manta::math::Vector manta::RayTracer::estimateDirect(
         Ld = math::add(Ld, math::mul(f, math::mul(Li, math::loadScalar(w / lightPdf))));
     }
 
-    if (std::isnan(math::getX(Ld)) || std::isnan(math::getY(Ld)) || std::isnan(math::getZ(Ld))) {
-        int a = 0;
-    }
-
     RayFlags flags = RayFlag::None;
     f = point->m_bsdf->sampleF(point, uScattering, math::negate(point->m_lightRay->getDirection()), &wi, &scatteringPdf, &flags, stackAllocator, true);
     f = math::mask(f, math::constants::MaskOffW);
@@ -313,10 +303,6 @@ manta::math::Vector manta::RayTracer::estimateDirect(
         }
     }
 
-    if (std::isnan(math::getX(Ld)) || std::isnan(math::getY(Ld)) || std::isnan(math::getZ(Ld))) {
-        int a = 0;
-    }
-
     return Ld;
 }
 
@@ -327,25 +313,24 @@ manta::math::real manta::RayTracer::powerHeuristic(int nf, math::real f_pdf, int
 }
 
 void manta::RayTracer::_evaluate() {
-    int threadCount;
-    int renderBlockSize;
-    bool multithreaded;
-    bool deterministicSeed;
+    piranha::native_int threadCount;
+    piranha::native_bool multithreaded;
+    piranha::native_bool deterministicSeed;
     CameraRayEmitterGroup *camera;
     Scene *scene;
 
     static_cast<piranha::NodeOutput *>(m_multithreadedInput)->fullCompute((void *)&multithreaded);
     static_cast<piranha::NodeOutput *>(m_threadCountInput)->fullCompute((void *)&threadCount);
-    static_cast<piranha::NodeOutput *>(m_renderBlockSizeInput)->fullCompute((void *)&renderBlockSize);
     static_cast<piranha::NodeOutput *>(m_deterministicSeedInput)->fullCompute((void *)&deterministicSeed);
     static_cast<VectorNodeOutput *>(m_backgroundColorInput)->sample(nullptr, (void *)&m_backgroundColor);
 
     m_materialManager = getObject<MaterialLibrary>(m_materialLibraryInput);
     m_sampler = getObject<Sampler>(m_samplerInput);
+    m_renderPattern = getObject<RenderPattern>(m_renderPatternInput);
     camera = getObject<CameraRayEmitterGroup>(m_cameraInput);
     scene = getObject<Scene>(m_sceneInput);
 
-    configure(200 * MB, 50 * MB, threadCount, renderBlockSize, multithreaded);
+    configure(200 * MB, 50 * MB, threadCount, multithreaded);
     setDeterministicSeedMode(deterministicSeed);
 
     traceAll(scene, camera, camera->getImagePlane());
@@ -367,7 +352,7 @@ void manta::RayTracer::_destroy() {
 void manta::RayTracer::registerInputs() {
     registerInput(&m_multithreadedInput, "multithreaded");
     registerInput(&m_threadCountInput, "threads");
-    registerInput(&m_renderBlockSizeInput, "block_size");
+    registerInput(&m_renderPatternInput, "render_pattern");
     registerInput(&m_backgroundColorInput, "background");
     registerInput(&m_deterministicSeedInput, "deterministic_seed");
     registerInput(&m_materialLibraryInput, "materials");
@@ -575,10 +560,6 @@ manta::math::Vector manta::RayTracer::traceRay(
         L = math::add(
             L,
             math::mul(beta, uniformSampleOneLight(&point, scene, sampler, manager, s)));
-
-        if (std::isnan(math::getX(L)) || std::isnan(math::getY(L)) || std::isnan(math::getZ(L))) {
-            int a = 0;
-        }
 
         // Generate a new path
         const math::Vector outgoingDir = math::negate(currentRay->getDirection());

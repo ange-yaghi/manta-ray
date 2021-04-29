@@ -85,9 +85,12 @@
     <ClCompile Include="..\..\src\manta_math.cpp" />
     <ClCompile Include="..\..\src\opaque_media_interface.cpp" />
     <ClCompile Include="..\..\src\pixel_based_sampler.cpp" />
+    <ClCompile Include="..\..\src\radial_render_pattern.cpp" />
     <ClCompile Include="..\..\src\ramp_node.cpp" />
     <ClCompile Include="..\..\src\ramp_node_output.cpp" />
+    <ClCompile Include="..\..\src\random_render_pattern.cpp" />
     <ClCompile Include="..\..\src\remap_node_output.cpp" />
+    <ClCompile Include="..\..\src\render_pattern.cpp" />
     <ClCompile Include="..\..\src\rgb_space.cpp" />
     <ClCompile Include="..\..\src\sampler.cpp" />
     <ClCompile Include="..\..\src\script_path_node.cpp" />
@@ -95,6 +98,7 @@
     <ClCompile Include="..\..\src\signal_processing.cpp" />
     <ClCompile Include="..\..\src\spectrum.cpp" />
     <ClCompile Include="..\..\src\specular_glass_bsdf.cpp" />
+    <ClCompile Include="..\..\src\spiral_render_pattern.cpp" />
     <ClCompile Include="..\..\src\srgb_node.cpp" />
     <ClCompile Include="..\..\src\srgb_node_output.cpp" />
     <ClCompile Include="..\..\src\stack_allocator.cpp" />
@@ -231,10 +235,14 @@
     <ClInclude Include="..\..\include\padded_frame_output.h" />
     <ClInclude Include="..\..\include\pixel_based_sampler.h" />
     <ClInclude Include="..\..\include\preview_manager.h" />
+    <ClInclude Include="..\..\include\radial_render_pattern.h" />
+    <ClInclude Include="..\..\include\random_render_pattern.h" />
+    <ClInclude Include="..\..\include\render_pattern.h" />
     <ClInclude Include="..\..\include\sampler.h" />
     <ClInclude Include="..\..\include\script_path_node.h" />
     <ClInclude Include="..\..\include\session.h" />
     <ClInclude Include="..\..\include\specular_glass_bsdf.h" />
+    <ClInclude Include="..\..\include\spiral_render_pattern.h" />
     <ClInclude Include="..\..\include\stratified_sampler.h" />
     <ClInclude Include="..\..\include\streaming_node_output.h" />
     <ClInclude Include="..\..\include\obj_file_node.h" />
