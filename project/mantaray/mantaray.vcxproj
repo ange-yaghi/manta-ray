@@ -45,6 +45,8 @@
     <ClCompile Include="..\..\src\fresnel_node.cpp" />
     <ClCompile Include="..\..\src\fresnel_node_output.cpp" />
     <ClCompile Include="..\..\src\gaussian_filter.cpp" />
+    <ClCompile Include="..\..\src\hable_filmic_node.cpp" />
+    <ClCompile Include="..\..\src\hable_filmic_node_output.cpp" />
     <ClCompile Include="..\..\src\image_plane_converter_node.cpp" />
     <ClCompile Include="..\..\src\light.cpp" />
     <ClCompile Include="..\..\src\perlin_noise_node.cpp" />
@@ -195,6 +197,8 @@
     <ClInclude Include="..\..\include\disney_specular_brdf.h" />
     <ClInclude Include="..\..\include\fresnel_node.h" />
     <ClInclude Include="..\..\include\fresnel_node_output.h" />
+    <ClInclude Include="..\..\include\hable_filmic_node.h" />
+    <ClInclude Include="..\..\include\hable_filmic_node_output.h" />
     <ClInclude Include="..\..\include\image_plane_converter_node.h" />
     <ClInclude Include="..\..\include\light.h" />
     <ClInclude Include="..\..\include\perlin_noise_node.h" />

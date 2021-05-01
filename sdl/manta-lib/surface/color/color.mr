@@ -42,3 +42,10 @@ public node aces_fitted => __mantaray__aces_fitted {
     input in [vector];
     alias output out [vector];
 }
+
+public node hable_filmic => __mantaray__hable_filmic {
+    input in [vector];
+    input exposure_bias [scalar]: 2;
+    input white_point [scalar]: 11.2;
+    alias output out [vector];
+}

@@ -73,6 +73,7 @@ public:
     // Textures 
     virtual ysError CreateTexture(ysTexture **texture, const char *fname);
     virtual ysError CreateTexture(ysTexture **texture, int width, int height, const unsigned char *buffer);
+    virtual ysError UpdateTexture(ysTexture *texture, const unsigned char *buffer);
     virtual ysError CreateAlphaTexture(ysTexture **texture, int width, int height, const unsigned char *buffer);
     virtual ysError DestroyTexture(ysTexture *&texture);
     virtual ysError UseTexture(ysTexture *texture, int slot);

@@ -13,10 +13,12 @@ namespace manta {
 
         VectorNodeOutput *getOutput();
 
-        piranha::native_string getTitle() const { return m_title; }
+        std::string getTitle() const { return m_title; }
+        float getRefreshRate() const { return m_refreshRate; }
 
     private:
-        piranha::native_string m_title;
+        std::string m_title;
+        math::real m_refreshRate;
 
     protected:
         virtual void _initialize();
@@ -29,6 +31,7 @@ namespace manta {
     protected:
         piranha::pNodeInput m_titleInput;
         piranha::pNodeInput m_dataInput;
+        piranha::pNodeInput m_refreshRateInput;
     };
 
 } /* namespace manta */

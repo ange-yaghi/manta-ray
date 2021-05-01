@@ -29,6 +29,9 @@ namespace manta {
     protected:
         math::real m_iorIncident;
         math::real m_iorTransmitted;
+        math::real m_f0;
+        math::real m_f1;
+        math::real m_power;
 
     protected:
         virtual void _evaluate();
@@ -36,6 +39,9 @@ namespace manta {
 
         piranha::pNodeInput m_iorIncidentInput;
         piranha::pNodeInput m_iorTransmittedInput;
+        piranha::pNodeInput m_f0Input;
+        piranha::pNodeInput m_f1Input;
+        piranha::pNodeInput m_powerInput;
     };
 
 } /* namespace manta */

@@ -903,6 +903,12 @@
     <ClCompile Include="..\..\src\radial_render_pattern.cpp">
       <Filter>Source Files\image-plane\render-patterns</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\hable_filmic_node_output.cpp">
+      <Filter>Source Files\sdl\nodes\output-ports\color</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\hable_filmic_node.cpp">
+      <Filter>Source Files\sdl\nodes\library\color</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\sphere_primitive.h">
@@ -1444,6 +1450,12 @@
     </ClInclude>
     <ClInclude Include="..\..\include\radial_render_pattern.h">
       <Filter>Header Files\image-plane\render-patterns</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\hable_filmic_node.h">
+      <Filter>Header Files\sdl\nodes\library\color</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\hable_filmic_node_output.h">
+      <Filter>Header Files\sdl\nodes\output-ports\color</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

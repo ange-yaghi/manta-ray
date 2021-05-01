@@ -70,6 +70,7 @@
 #include "../include/area_light.h"
 #include "../include/fresnel_node.h"
 #include "../include/aces_fitted_node.h"
+#include "../include/hable_filmic_node.h"
 #include "../include/specular_glass_bsdf.h"
 #include "../include/spiral_render_pattern.h"
 #include "../include/random_render_pattern.h"
@@ -197,6 +198,8 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__srgb");
     registerBuiltinType<ACESFittedNode>(
         "__mantaray__aces_fitted");
+    registerBuiltinType<HableFilmicNode>(
+        "__mantaray__hable_filmic");
     registerBuiltinType<ImageFileNode>(
         "__mantaray__image_file");
     registerBuiltinType<CircularAperture>(

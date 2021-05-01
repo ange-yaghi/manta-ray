@@ -46,6 +46,11 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "delta-physics", "..\dependencies\submodules\delta-studio\project\delta-physics\delta-physics.vcxproj", "{AED09032-5029-4526-A032-5BC47185516B}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "build", "..\dependencies\submodules\delta-studio\project\build\build.vcxproj", "{885DE433-D8EA-4E95-8EBD-5AC1AADE299E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{AED09032-5029-4526-A032-5BC47185516B} = {AED09032-5029-4526-A032-5BC47185516B}
+		{6DB2FA44-5C75-431B-85F5-BAA11D6EF583} = {6DB2FA44-5C75-431B-85F5-BAA11D6EF583}
+		{4192524D-8D19-4BEC-A9F0-C18C1333C456} = {4192524D-8D19-4BEC-A9F0-C18C1333C456}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

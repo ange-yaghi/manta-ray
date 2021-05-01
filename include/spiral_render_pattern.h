@@ -7,8 +7,6 @@
 
 namespace manta {
 
-    class JobQueue;
-
     class SpiralRenderPattern : public RenderPattern {
     public:
         SpiralRenderPattern();

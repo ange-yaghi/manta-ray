@@ -191,6 +191,9 @@ public:
     // Create an alpha texture from an in-memory buffer
     virtual ysError CreateAlphaTexture(ysTexture **texture, int width, int height, const unsigned char *buffer) = 0;
 
+    // Update a texture
+    virtual ysError UpdateTexture(ysTexture *texture, const unsigned char *buffer) = 0;
+
     // Destroy a texture
     virtual ysError DestroyTexture(ysTexture *&texture);
 

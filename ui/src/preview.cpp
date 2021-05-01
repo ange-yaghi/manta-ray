@@ -10,6 +10,12 @@ mantaray_ui::Preview::Preview() {
     m_previewNode = nullptr;
     m_pan = manta::math::constants::Zero;
     m_updateQueue = 0;
+    m_texture = nullptr;
+    m_swapBuffers = false;
+    m_refreshRate = 0.5f;
+    m_buffer = nullptr;
+    m_width = 0;
+    m_height = 0;
 }
 
 mantaray_ui::Preview::~Preview() {
@@ -22,49 +28,62 @@ void mantaray_ui::Preview::initialize(dbasic::DeltaEngine *engine, int index) {
 }
 
 void mantaray_ui::Preview::destroy() {
-    std::lock_guard<std::mutex> lock(m_textureLock);
+    if (m_texture != nullptr) {
+        m_engine->GetDevice()->DestroyTexture(m_texture);
+        m_texture = nullptr;
+    }
 
-    for (PreviewSnapshot &snapshot : m_previewSnapshots) {
-        if (snapshot.texture != nullptr) {
-            m_engine->GetDevice()->DestroyTexture(snapshot.texture);
-            snapshot.texture = nullptr;
-        }
+    if (m_buffer != nullptr) {
+        delete[] m_buffer;
     }
 }
 
 ysTexture *mantaray_ui::Preview::getCurrentPreview() {
-    std::lock_guard<std::mutex> lock(m_textureLock);
-    if (m_previewSnapshots.size() > 0) {
-        return m_previewSnapshots.back().texture;
+    return m_texture;
+}
+
+void mantaray_ui::Preview::updateTexture() {
+    std::lock_guard<std::mutex> lock(m_bufferLock);
+
+    if (!m_swapBuffers) {
+        return;
     }
     else {
-        return nullptr;
+        m_swapBuffers = false;
+        if (m_texture == nullptr) {
+            m_engine->GetDevice()->CreateTexture(&m_texture, m_width, m_height, m_buffer);
+        }
+        else{
+            m_engine->GetDevice()->UpdateTexture(m_texture, m_buffer);
+        }
     }
 }
 
-ysTexture *mantaray_ui::Preview::createTexture(const manta::VectorMap2D *vectorMap) {
-    const int width = vectorMap->getWidth();
-    const int height = vectorMap->getHeight();
-    unsigned char *buffer = new unsigned char[width * height * 4];
+void mantaray_ui::Preview::updateBuffer(const manta::VectorMap2D *vectorMap) {
+    m_width = vectorMap->getWidth();
+    m_height = vectorMap->getHeight();
 
-    for (int i = 0; i < width; ++i) {
-        for (int j = 0; j < height; ++j) {
+    unsigned char *buffer = new unsigned char[(size_t)m_width * m_height * 4];
+
+    for (int i = 0; i < m_width; ++i) {
+        for (int j = 0; j < m_height; ++j) {
             const manta::math::Vector v = vectorMap->get(i, j);
-            buffer[(j * width + i) * 4 + 0] = (int)(min(std::round(manta::RgbSpace::applyGammaSrgb(manta::math::getX(v)) * 255), 255));
-            buffer[(j * width + i) * 4 + 1] = (int)(min(std::round(manta::RgbSpace::applyGammaSrgb(manta::math::getY(v)) * 255), 255));
-            buffer[(j * width + i) * 4 + 2] = (int)(min(std::round(manta::RgbSpace::applyGammaSrgb(manta::math::getZ(v)) * 255), 255));
-            buffer[(j * width + i) * 4 + 3] = 0xFF;
+            buffer[(j * m_width + i) * 4 + 0] = (int)(min(std::round(manta::RgbSpace::applyGammaSrgb(manta::math::getX(v)) * 255), 255));
+            buffer[(j * m_width + i) * 4 + 1] = (int)(min(std::round(manta::RgbSpace::applyGammaSrgb(manta::math::getY(v)) * 255), 255));
+            buffer[(j * m_width + i) * 4 + 2] = (int)(min(std::round(manta::RgbSpace::applyGammaSrgb(manta::math::getZ(v)) * 255), 255));
+            buffer[(j * m_width + i) * 4 + 3] = 0xFF;
         }
     }
 
-    ysTexture *newTexture = nullptr;
-    ysError error = m_engine->GetDevice()->CreateTexture(&newTexture, width, height, buffer);
+    if (m_buffer == nullptr) {
+        m_buffer = new unsigned char[(size_t)m_width * m_height * 4];
+    }
+
+    std::lock_guard<std::mutex> lock(m_bufferLock);
+    memcpy(m_buffer, buffer, sizeof(unsigned char) * m_width * m_height * 4);
 
     delete[] buffer;
-
-    return (error == ysError::None)
-        ? newTexture
-        : nullptr;
+    m_swapBuffers = true;
 }
 
 void mantaray_ui::Preview::update(bool force) {
@@ -79,14 +98,7 @@ void mantaray_ui::Preview::update(bool force) {
 }
 
 void mantaray_ui::Preview::clean() {
-    std::lock_guard<std::mutex> lock(m_textureLock);
-
-    for (PreviewSnapshot &snapshot : m_previewSnapshots) {
-        if (snapshot.outdated && snapshot.texture != nullptr) {
-            m_engine->GetDevice()->DestroyTexture(snapshot.texture);
-            snapshot.texture = nullptr;
-        }
-    }
+    /* void */
 }
 
 void mantaray_ui::Preview::updateThread(int index) {
@@ -98,26 +110,7 @@ void mantaray_ui::Preview::updateThread(int index) {
     manta::VectorMap2D *map = new manta::VectorMap2D;
     m_previewNode->getOutput()->calculateAllDimensions(map);
 
-    ysTexture *newTexture = createTexture(map);
-
-    std::lock_guard<std::mutex> lock(m_textureLock);
-    if (m_previewSnapshots.size() > 0) {
-        if (m_previewSnapshots.back().index > index) {
-            m_engine->GetDevice()->DestroyTexture(newTexture);
-            map->destroy();
-            delete map;
-
-            --m_updateQueue;
-
-            return;
-        }
-    }
-
-    for (PreviewSnapshot &snapshot : m_previewSnapshots) {
-        snapshot.outdated = true;
-    }
-
-    m_previewSnapshots.push_back({ newTexture, index, false });
+    updateBuffer(map);
 
     map->destroy();
     delete map;

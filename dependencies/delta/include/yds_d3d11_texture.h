@@ -17,6 +17,7 @@ public:
 protected:
     ID3D11ShaderResourceView *m_resourceView;
     ID3D11RenderTargetView *m_renderTargetView;
+    ID3D11Texture2D *m_textureResource;
 };
 
 #endif /* YDS_D3D11_TEXTURE_H */

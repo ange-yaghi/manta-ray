@@ -38,34 +38,6 @@ void manta::ACESFittedNodeOutput::_evaluateDimensions() {
     }
 }
 
-manta::math::Vector manta::ACESFittedNodeOutput::linearToSrgb(const math::Vector &v) {
-    math::real r = math::getX(v);
-    math::real g = math::getY(v);
-    math::real b = math::getZ(v);
-    math::real a = math::getW(v);
-
-    RgbSpace::srgb.applyGammaSrgb(r);
-    RgbSpace::srgb.applyGammaSrgb(g);
-    RgbSpace::srgb.applyGammaSrgb(b);
-    RgbSpace::srgb.applyGammaSrgb(a);
-
-    return math::loadVector(r, g, b, a);
-}
-
-manta::math::Vector manta::ACESFittedNodeOutput::srgbToLinear(const math::Vector &v) {
-    math::real r = math::getX(v);
-    math::real g = math::getY(v);
-    math::real b = math::getZ(v);
-    math::real a = math::getW(v);
-
-    RgbSpace::srgb.inverseGammaSrgb(r);
-    RgbSpace::srgb.inverseGammaSrgb(g);
-    RgbSpace::srgb.inverseGammaSrgb(b);
-    RgbSpace::srgb.inverseGammaSrgb(a);
-
-    return math::loadVector(r, g, b, a);
-}
-
 manta::math::Vector manta::ACESFittedNodeOutput::RRTAndODTFit(const math::Vector &v) {
     const math::Vector a = math::sub(
         math::mul(v, math::add(v, math::loadScalar((math::real)0.0245786))),
@@ -96,9 +68,11 @@ manta::math::Vector manta::ACESFittedNodeOutput::HillACESFitted(const math::Vect
     );
 
     // This fit was developed by Stephen Hill (@self_shadow)
-    math::Vector t = linearToSrgb(math::mask(color, math::constants::MaskOffW));
+    math::Vector t = math::mask(color, math::constants::MaskOffW);
     t = math::matMult(ACESInputTransform, t);
     t = RRTAndODTFit(t);
     t = math::matMult(ACESOutputTransform, t);
-    return srgbToLinear(math::clamp(t));
+    t = math::clamp(t);
+
+    return t;
 }

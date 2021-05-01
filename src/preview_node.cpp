@@ -5,7 +5,9 @@
 manta::PreviewNode::PreviewNode() {
     m_titleInput = nullptr;
     m_dataInput = nullptr;
+    m_refreshRateInput = nullptr;
     m_title = "";
+    m_refreshRate = 0.5f;
 }
 
 manta::PreviewNode::~PreviewNode() {
@@ -21,7 +23,14 @@ void manta::PreviewNode::_initialize() {
 }
 
 void manta::PreviewNode::_evaluate() {
-    m_titleInput->fullCompute(reinterpret_cast<void *>(&m_title));
+    piranha::native_string title;
+    piranha::native_float refreshRate;
+
+    m_titleInput->fullCompute(reinterpret_cast<void *>(&title));
+    m_refreshRateInput->fullCompute(reinterpret_cast<void *>(&refreshRate));
+
+    m_title = title;
+    m_refreshRate = refreshRate;
 
     Session::get().registerPreview(this);
 }
@@ -37,4 +46,5 @@ void manta::PreviewNode::registerOutputs() {
 void manta::PreviewNode::registerInputs() {
     registerInput(&m_titleInput, "title");
     registerInput(&m_dataInput, "data");
+    registerInput(&m_refreshRateInput, "refresh_rate");
 }

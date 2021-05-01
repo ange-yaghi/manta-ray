@@ -7,8 +7,6 @@
 
 namespace manta {
 
-    class JobQueue;
-
     class RandomRenderPattern : public RenderPattern {
     public:
         RandomRenderPattern();

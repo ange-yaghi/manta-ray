@@ -10,6 +10,7 @@ module {
 }
 
 private import "../../../types/atomic_types.mr"
+private import "../../../types/conversions.mr"
 
 @doc: "Media interface channel type"
 public node media_interface => __mantaray__media_interface { /* void */ }
@@ -18,6 +19,9 @@ public node media_interface => __mantaray__media_interface { /* void */ }
 public node dielectric_interface => __mantaray__dielectric_media_interface {
     input ior_interior [float]: 1.52; // Crown glass
     input ior_exterior [float]: 1.00;
+    input remap_0      [float]: 0;
+    input remap_1      [float]: 1;
+    input power        [float]: 1;
 
     alias output __out [media_interface];
 }

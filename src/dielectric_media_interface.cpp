@@ -5,9 +5,15 @@
 manta::DielectricMediaInterface::DielectricMediaInterface() {
     m_iorIncident = (math::real)1.0;
     m_iorTransmitted = (math::real)1.0;
+    m_f0 = (math::real)0.0;
+    m_f1 = (math::real)1.0;
+    m_power = (math::real)1.0;
 
     m_iorIncidentInput = nullptr;
     m_iorTransmittedInput = nullptr;
+    m_f0Input = nullptr;
+    m_f1Input = nullptr;
+    m_powerInput = nullptr;
 }
 
 manta::DielectricMediaInterface::~DielectricMediaInterface() {
@@ -46,7 +52,9 @@ manta::math::real manta::DielectricMediaInterface::fresnelTerm(
     const math::real Rperp = ((ni * cosThetaI) - (no * cosThetaT)) /
         ((ni * cosThetaI) + (no * cosThetaT));
 
-    return (Rparl * Rparl + Rperp * Rperp) / (math::real)2.0;
+    math::real F = (Rparl * Rparl + Rperp * Rperp) / (math::real)2.0;
+    F = 1 - std::pow(1 - F, m_power);
+    return F * m_f1 + (1 - F) * m_f0;
 }
 
 manta::math::real manta::DielectricMediaInterface::fresnelTerm(
@@ -78,7 +86,9 @@ manta::math::real manta::DielectricMediaInterface::fresnelTerm(
     const math::real Rperp = ((ni * cosThetaI) - (no * cosThetaT)) /
         ((ni * cosThetaI) + (no * cosThetaT));
 
-    return (Rparl * Rparl + Rperp * Rperp) / (math::real)2.0;
+    math::real F = (Rparl * Rparl + Rperp * Rperp) / (math::real)2.0;
+    F = 1 - std::pow(1 - F, m_power);
+    return F * m_f1 + (1 - F) * m_f0;
 }
 
 manta::math::real manta::DielectricMediaInterface::ior(Direction d) const {
@@ -123,15 +133,26 @@ void manta::DielectricMediaInterface::_evaluate() {
     MediaInterface::_evaluate();
 
     piranha::native_float iorTransmitted, iorIncident;
+    piranha::native_float f0, f1;
+    piranha::native_float power;
 
     m_iorIncidentInput->fullCompute((void *)&iorIncident);
     m_iorTransmittedInput->fullCompute((void *)&iorTransmitted);
+    m_f0Input->fullCompute((void *)&f0);
+    m_f1Input->fullCompute((void *)&f1);
+    m_powerInput->fullCompute((void *)&power);
 
     m_iorIncident = (math::real)iorIncident;
     m_iorTransmitted = (math::real)iorTransmitted;
+    m_f0 = (math::real)f0;
+    m_f1 = (math::real)f1;
+    m_power = (math::real)power;
 }
 
 void manta::DielectricMediaInterface::registerInputs() {
     registerInput(&m_iorIncidentInput, "ior_exterior");
     registerInput(&m_iorTransmittedInput, "ior_interior");
+    registerInput(&m_f0Input, "remap_0");
+    registerInput(&m_f1Input, "remap_1");
+    registerInput(&m_powerInput, "power");
 }

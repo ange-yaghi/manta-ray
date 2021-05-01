@@ -15,7 +15,7 @@ const ysVector mantaray_ui::Application::StandardRed = ysColor::srgbiToSrgb(0xFF
 const ysVector mantaray_ui::Application::StandardYellow = ysColor::srgbiToSrgb(0xFF9F15);
 
 mantaray_ui::Application::Application() {
-    m_inputFile = "../../workspace/ui_test/script/hard_geometry.mr";
+    m_inputFile = "../../workspace/ui_test/script/maserati.mr";
     m_fileWatcherThread = nullptr;
     m_fileChangeCount = 0;
     m_fileChangeDebounce = 0.0f;
@@ -295,6 +295,7 @@ void mantaray_ui::Application::process() {
                 newPreview->initialize(&m_engine, (int)m_previews.size());
                 newPreview->setPreviewNode(node);
                 newPreview->update(true);
+                newPreview->setRefreshRate(node->getRefreshRate());
 
                 m_previews.push_back(newPreview);
 
@@ -305,8 +306,10 @@ void mantaray_ui::Application::process() {
 
     if (m_currentState == State::CompilingAndExecuting) {
         if (m_previews.size() > 0) {
-            if (m_updateTimer <= 0.0f) {
-                m_activePreview->update(false);
+            if (m_updateTimer <= 0.0f || m_engine.ProcessKeyDown(ysKey::Code::Space)) {
+                if (m_activePreview != nullptr) {
+                    m_activePreview->update(false);
+                }
             }
         }
     }
@@ -315,8 +318,10 @@ void mantaray_ui::Application::process() {
         preview->clean();
     }
 
-    if (m_updateTimer < 0.0f) {
-        m_updateTimer = 2.0f;
+    if (m_updateTimer <= 0.0f) {
+        if (m_activePreview != nullptr) {
+            m_updateTimer = 1 / m_activePreview->getRefreshRate();
+        }
     }
 }
 
@@ -367,6 +372,8 @@ void mantaray_ui::Application::render() {
     }
 
     if (m_activePreview != nullptr) {
+        m_activePreview->updateTexture();
+
         if (mouseOnScreen) {
             m_activePreview->zoom(m_engine.GetMouseWheel() - m_lastMouseWheel);
 

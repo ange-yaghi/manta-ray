@@ -21,8 +21,6 @@ namespace manta {
         virtual void _evaluateDimensions();
 
     protected:
-        static math::Vector linearToSrgb(const math::Vector &v);
-        static math::Vector srgbToLinear(const math::Vector &v);
         static math::Vector RRTAndODTFit(const math::Vector &v);
         static math::Vector HillACESFitted(const math::Vector &color);
 

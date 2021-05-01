@@ -493,7 +493,7 @@ void manta::Mesh::fineIntersection(const math::Vector &r, IntersectionPoint *p, 
     const math::Vector pp0 = math::sub(r, *vertices[0]);
     const math::Vector pp0_dot_n = math::dot(pp0, faceNormal);
     const math::Vector projected = math::sub(r, math::mul(pp0_dot_n, faceNormal));
-    const math::Vector offset = math::mul(faceNormal, math::loadScalar((math::real)1E-6));
+    const math::Vector offset = math::mul(faceNormal, math::loadScalar((math::real)1E-4));
 
     p->m_depth = hint->depth;
     p->m_vertexNormal = vertexNormal;

@@ -53,6 +53,8 @@ public node quick_render {
     input output_dir:       "";
     input scene:            scene();
     input render_pattern:   spiral_render_pattern();
+    input processed_in:     aces_fitted(raw_out);
+    output raw_out:         mantaray.image;
 
     // Save the current date/time
     current_date current_date()
@@ -119,7 +121,7 @@ public node quick_render {
     log("Writing render to file\n")
 
     image_output(
-        map: aces_fitted(mantaray.image),
+        map: processed_in,
         jpeg_quality: 100,
         filename: 
             output_dir + current_date.as_string + "_" + output_name + 
