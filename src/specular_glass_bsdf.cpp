@@ -26,6 +26,7 @@ manta::math::Vector manta::SpecularGlassBSDF::sampleF(
         ? (math::real)1.55
         : m_mediaInterface->ior(surfaceInteraction->m_direction);
     const math::Vector tint = m_tint.sample(surfaceInteraction);
+    const math::real bias = math::getX(m_reflectionBias.sample(surfaceInteraction));
 
     const math::real cosThetaI = std::abs(math::getZ(i));
     if (cosThetaI == 0) {
@@ -33,7 +34,8 @@ manta::math::Vector manta::SpecularGlassBSDF::sampleF(
         return math::constants::Zero;
     }
 
-    if (u.x <= F) {
+    const math::real F_b = F * (1 + bias * (1 - F));
+    if (u.x <= F_b) {
         *o = math::reflect(i, math::constants::ZAxis);
 
         const math::real cosThetaO = std::abs(math::getZ(*o));
@@ -42,9 +44,9 @@ manta::math::Vector manta::SpecularGlassBSDF::sampleF(
             return math::constants::Zero;
         }
 
-        const math::Vector f = math::loadScalar(F / cosThetaO);
+        const math::Vector f = math::loadScalar(F_b / cosThetaO);
 
-        *pdf = F;
+        *pdf = F_b;
         *flags = RayFlag::Delta | RayFlag::Reflection;
         return math::mul(f, tint);
     }
@@ -60,10 +62,10 @@ manta::math::Vector manta::SpecularGlassBSDF::sampleF(
             return math::constants::Zero;
         }
 
-        math::real f_t = (1 - F) / cosThetaO;
+        math::real f_t = (1 - F_b) / cosThetaO;
         f_t *= (ior * ior);
 
-        *pdf = 1 - F;
+        *pdf = 1 - F_b;
         *flags = RayFlag::Delta | RayFlag::Transmission;
         return math::mul(tint, math::loadScalar(f_t));
     }
@@ -88,6 +90,7 @@ manta::math::real manta::SpecularGlassBSDF::pdf(
 
 piranha::Node *manta::SpecularGlassBSDF::_optimize(piranha::NodeAllocator *nodeAllocator) {
     m_tint.optimize();
+    m_reflectionBias.optimize();
     return this;
 }
 
@@ -102,4 +105,5 @@ void manta::SpecularGlassBSDF::registerInputs() {
 
     registerInput(&m_mediaInterfaceInput, "media_interface");
     registerInput(m_tint.getPortAddress(), "tint");
+    registerInput(m_reflectionBias.getPortAddress(), "reflection_bias");
 }

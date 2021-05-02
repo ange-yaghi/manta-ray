@@ -377,7 +377,7 @@ void manta::KDTree::analyzeWithProgress(Mesh *mesh, int maxSize) {
 }
 
 void manta::KDTree::analyze(Mesh *mesh, int maxSize) {
-    constexpr int MAX_DEPTH = 40;
+    constexpr int MAX_DEPTH = 45;
 
     setComplete(false);
     resetProgress();

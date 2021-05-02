@@ -31,6 +31,7 @@ namespace manta {
         int m_threadId = 0;
         IntersectionPointManager *m_manager;
 
+        Light *m_light = nullptr;
         const Mesh *m_mesh = nullptr;
         const BSDF *m_bsdf = nullptr;
         int m_faceIndex = -1;

@@ -33,6 +33,7 @@ public node specular_glass_bsdf => __mantaray__specular_glass_bsdf {
     input media_interface [media_interface]: 
         dielectric_interface(); // Defaults to crown glass
     input normal [vector]: surface_interaction().normal;
+    input reflection_bias [scalar]: 0;
 
     alias output __out [bxdf];
 }

@@ -41,6 +41,7 @@ namespace manta {
         virtual void registerInputs();
 
         CacheableInput<math::Vector> m_tint;
+        CacheableInput<math::Vector> m_reflectionBias;
         MediaInterface *m_mediaInterface;
 
         piranha::pNodeInput m_mediaInterfaceInput;

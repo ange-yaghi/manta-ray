@@ -54,7 +54,12 @@ manta::math::real manta::DielectricMediaInterface::fresnelTerm(
 
     math::real F = (Rparl * Rparl + Rperp * Rperp) / (math::real)2.0;
     F = 1 - std::pow(1 - F, m_power);
-    return F * m_f1 + (1 - F) * m_f0;
+    if (d == Direction::In) {
+        return F * m_f1 + (1 - F) * m_f0;
+    }
+    else {
+        return F;
+    }
 }
 
 manta::math::real manta::DielectricMediaInterface::fresnelTerm(
@@ -88,7 +93,12 @@ manta::math::real manta::DielectricMediaInterface::fresnelTerm(
 
     math::real F = (Rparl * Rparl + Rperp * Rperp) / (math::real)2.0;
     F = 1 - std::pow(1 - F, m_power);
-    return F * m_f1 + (1 - F) * m_f0;
+    if (d == Direction::In) {
+        return F * m_f1 + (1 - F) * m_f0;
+    }
+    else {
+        return F;
+    }
 }
 
 manta::math::real manta::DielectricMediaInterface::ior(Direction d) const {

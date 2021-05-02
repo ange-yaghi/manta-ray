@@ -71,8 +71,6 @@ bool manta::AreaLight::intersect(const math::Vector &src, const math::Vector &di
     if (intersectionDepth > *depth) return false;
     if (intersectionDepth < 0) return false;
 
-    *depth = intersectionDepth;
-
     const math::Vector i = math::add(
         src,
         math::mul(d, dir)
@@ -86,7 +84,10 @@ bool manta::AreaLight::intersect(const math::Vector &src, const math::Vector &di
 
     if (std::abs(u) > m_width / 2) return false;
     else if (std::abs(v) > m_height / 2) return false;
-    else return true;
+    else {
+        *depth = intersectionDepth;
+        return true;
+    }
 }
 
 manta::math::real manta::AreaLight::getArea() const {

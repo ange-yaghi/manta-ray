@@ -102,33 +102,37 @@ void manta::Mesh::destroy() {
 
 void manta::Mesh::filterDegenerateFaces() {
     // Delete faces that are too small
-    int actualFaceCount = m_triangleFaceCount;
-    for (int i = 0; i < actualFaceCount; i++) {
+    int actualFaceCount = 0;
+    for (int i = 0; i < m_triangleFaceCount; i++) {
         const math::Vector u = m_vertices[m_faces[i].u];
         const math::Vector v = m_vertices[m_faces[i].v];
         const math::Vector w = m_vertices[m_faces[i].w];
 
         const math::Vector normal = math::cross(math::sub(v, u), math::sub(w, u));
-        if (abs(math::getX(normal)) < 1E-9 && abs(math::getY(normal)) < 1E-9 && abs(math::getZ(normal)) < 1E-9) {
-            m_faces[i] = m_faces[actualFaceCount - 1];
-            m_auxFaceData[i] = m_auxFaceData[actualFaceCount - 1];
-            --actualFaceCount;
-            --i;
+        if (!(abs(math::getX(normal)) < 1E-9 && abs(math::getY(normal)) < 1E-9 && abs(math::getZ(normal)) < 1E-9)) {
+            m_faces[actualFaceCount] = m_faces[i];
+            m_auxFaceData[actualFaceCount] = m_auxFaceData[i];
+            m_materialMap[actualFaceCount] = m_materialMap[i];
+            ++actualFaceCount;
         }
     }
 
     Face *newFaces = StandardAllocator::Global()->allocate<Face>(actualFaceCount);
     AuxFaceData *newAuxFaceData = StandardAllocator::Global()->allocate<AuxFaceData>(actualFaceCount);
+    int *newMaterialMap = StandardAllocator::Global()->allocate<int>(actualFaceCount);
     for (int i = 0; i < actualFaceCount; i++) {
         newFaces[i] = m_faces[i];
         newAuxFaceData[i] = m_auxFaceData[i];
+        newMaterialMap[i] = m_materialMap[i];
     }
 
     StandardAllocator::Global()->free(m_faces, m_triangleFaceCount);
     StandardAllocator::Global()->free(m_auxFaceData, m_triangleFaceCount);
+    StandardAllocator::Global()->free(m_materialMap, m_triangleFaceCount);
 
     m_faces = newFaces;
     m_auxFaceData = newAuxFaceData;
+    m_materialMap = newMaterialMap;
     m_triangleFaceCount = actualFaceCount;
 }
 
@@ -614,6 +618,10 @@ void manta::Mesh::loadObjFileData(ObjFileLoader *data, unsigned int globalId) {
 
 void manta::Mesh::bindMaterialLibrary(MaterialLibrary *library, int defaultMaterialIndex) {
     for (int i = 0; i < m_triangleFaceCount; ++i) {
+        if (i == 260877) {
+            int a = 0;
+        }
+
         const int materialIndex = m_materialMap[i];
         const std::string &materialName = m_materials[materialIndex];
 

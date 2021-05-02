@@ -413,33 +413,52 @@ void manta::RayTracer::depthCull(
     math::real startingDepth
     /**/ STATISTICS_PROTOTYPE) const
 {
-    const int objectCount = scene->getSceneObjectCount();
-
     CoarseIntersection closestIntersection;
+    closestIntersection.sceneObject = nullptr;
+
+    Light *light = nullptr;
     math::real closestDepth = startingDepth;
+    bool found = false;
+
+    const int lightCount = scene->getLightCount();
+    for (int i = 0; i < lightCount; ++i) {
+        const bool intersectLight = scene->getLight(i)->intersect(ray->getSource(), ray->getDirection(), &closestDepth);
+
+        if (intersectLight) {
+            light = scene->getLight(i);
+            found = true;
+        }
+    }
 
     // Find the closest intersection
-    bool found = false;
+    const int objectCount = scene->getSceneObjectCount();
     for (int i = 0; i < objectCount; i++) {
         SceneObject *object = scene->getSceneObject(i);
         SceneGeometry *geometry = object->getGeometry();
 
         if (!geometry->fastIntersection(ray)) continue;
-
         if (geometry->findClosestIntersection(ray, &closestIntersection, (math::real)0.0, closestDepth, s /**/ STATISTICS_PARAM_INPUT)) {
             found = true;
             closestIntersection.sceneObject = object;
+            light = nullptr;
             closestDepth = closestIntersection.depth;
         }
     }
 
     if (found) {
-        math::Vector position = math::add(ray->getSource(), math::mul(ray->getDirection(), math::loadScalar(closestIntersection.depth)));
-        closestIntersection.sceneGeometry->fineIntersection(position, point, &closestIntersection);
         point->m_valid = true;
-        *closestObject = closestIntersection.sceneObject;
 
-        refineContact(ray, closestIntersection.depth, point, closestObject, s);
+        if (closestIntersection.sceneObject != nullptr) {
+            const math::Vector position = math::add(ray->getSource(), math::mul(ray->getDirection(), math::loadScalar(closestIntersection.depth)));
+            closestIntersection.sceneGeometry->fineIntersection(position, point, &closestIntersection);
+            *closestObject = closestIntersection.sceneObject;
+
+            refineContact(ray, closestIntersection.depth, point, closestObject, s);
+        }
+        else if (light != nullptr) {
+            point->m_light = light;
+            *closestObject = nullptr;
+        }
     }
     else {
         point->m_valid = false;
@@ -512,11 +531,12 @@ manta::math::Vector manta::RayTracer::traceRay(
 
         depthCull(scene, currentRay, &sceneObject, &point, s, math::constants::REAL_MAX /**/ STATISTICS_PARAM_INPUT);
 
-        const bool foundIntersection = (sceneObject != nullptr);
-        if (foundIntersection) {
+        const bool geometryIntersection = (sceneObject != nullptr);
+        const bool lightIntersection = (point.m_light != nullptr);
+        if (geometryIntersection) {
             material = (point.m_material == -1) 
                 ? sceneObject->getDefaultMaterial()
-                : material = m_materialManager->getMaterial(point.m_material);
+                : m_materialManager->getMaterial(point.m_material);
 
             const math::Vector emission = material->getEmission(point);
 
@@ -526,25 +546,18 @@ manta::math::Vector manta::RayTracer::traceRay(
             );
         }
         else {
-            L = math::add(
-                L,
-                math::mul(beta, m_backgroundColor)
-            );
+            if (point.m_light != nullptr) {
+                L = math::add(
+                    L,
+                    math::mul(beta, m_backgroundColor)
+                );
+            }
 
             if (bounces == 0 || (flags & RayFlag::Delta) > 0) {
-                const int lightCount = scene->getLightCount();
-                math::real depth = math::constants::REAL_MAX;
-                Light *lightInteraction = nullptr;
-                for (int i = 0; i < lightCount; ++i) {
-                    if (scene->getLight(i)->intersect(point.m_position, point.m_lightRay->getDirection(), &depth)) {
-                        lightInteraction = scene->getLight(i);
-                    }
-                }
-
-                if (lightInteraction != nullptr) {
+                if (point.m_light != nullptr) {
                     L = math::add(
                         L,
-                        math::mul(beta, lightInteraction->L(point, point.m_lightRay->getDirection()))
+                        math::mul(beta, point.m_light->L(point, point.m_lightRay->getDirection()))
                     );
                 }
             }
