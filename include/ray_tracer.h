@@ -124,6 +124,7 @@ namespace manta {
         piranha::pNodeInput m_cameraInput;
         piranha::pNodeInput m_samplerInput;
         piranha::pNodeInput m_renderPatternInput;
+        piranha::pNodeInput m_directLightSamplingEnableInput;
 
         VectorMap2DNodeOutput m_output;
 
@@ -141,6 +142,7 @@ namespace manta {
         int m_threadCount;
         int m_renderBlockSize;
         bool m_multithreaded;
+        bool m_directLightSampling;
 
         void createWorkers();
         void startWorkers();

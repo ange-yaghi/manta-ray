@@ -34,6 +34,7 @@ public node ray_tracer => __mantaray__ray_tracer {
     input render_pattern[render_pattern]: spiral_render_pattern(64, 64);
     input background    [vector]: 0;
     input deterministic_seed [bool]: false;
+    input direct_light_sampling [bool]: true;
 
     @doc: "Rendered image"
     output image        [vector_map];

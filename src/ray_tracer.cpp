@@ -46,7 +46,9 @@ manta::RayTracer::RayTracer() {
     m_outputImage = nullptr;
     m_workers = nullptr;
     m_renderPattern = nullptr;
+    m_directLightSamplingEnableInput = nullptr;
 
+    m_directLightSampling = true;
     m_deterministicSeed = false;
     m_pathRecordingOutputDirectory = "";
     m_backgroundColor = math::constants::Zero;
@@ -316,13 +318,17 @@ void manta::RayTracer::_evaluate() {
     piranha::native_int threadCount;
     piranha::native_bool multithreaded;
     piranha::native_bool deterministicSeed;
+    piranha::native_bool enableDirectLightSampling;
     CameraRayEmitterGroup *camera;
     Scene *scene;
 
     static_cast<piranha::NodeOutput *>(m_multithreadedInput)->fullCompute((void *)&multithreaded);
     static_cast<piranha::NodeOutput *>(m_threadCountInput)->fullCompute((void *)&threadCount);
     static_cast<piranha::NodeOutput *>(m_deterministicSeedInput)->fullCompute((void *)&deterministicSeed);
+    static_cast<piranha::NodeOutput *>(m_directLightSamplingEnableInput)->fullCompute((void *)&enableDirectLightSampling);
     static_cast<VectorNodeOutput *>(m_backgroundColorInput)->sample(nullptr, (void *)&m_backgroundColor);
+
+    m_directLightSampling = enableDirectLightSampling;
 
     m_materialManager = getObject<MaterialLibrary>(m_materialLibraryInput);
     m_sampler = getObject<Sampler>(m_samplerInput);
@@ -359,6 +365,7 @@ void manta::RayTracer::registerInputs() {
     registerInput(&m_sceneInput, "scene");
     registerInput(&m_cameraInput, "camera");
     registerInput(&m_samplerInput, "sampler");
+    registerInput(&m_directLightSamplingEnableInput, "direct_light_sampling");
 }
 
 void manta::RayTracer::registerOutputs() {
@@ -553,7 +560,7 @@ manta::math::Vector manta::RayTracer::traceRay(
                 );
             }
 
-            if (bounces == 0 || (flags & RayFlag::Delta) > 0) {
+            if (bounces == 0 || (flags & RayFlag::Delta) > 0 || !m_directLightSampling) {
                 if (point.m_light != nullptr) {
                     L = math::add(
                         L,
@@ -570,9 +577,11 @@ manta::math::Vector manta::RayTracer::traceRay(
         if (bsdf == nullptr) break;
         else point.m_bsdf = bsdf;
 
-        L = math::add(
-            L,
-            math::mul(beta, uniformSampleOneLight(&point, scene, sampler, manager, s)));
+        if (m_directLightSampling) {
+            L = math::add(
+                L,
+                math::mul(beta, uniformSampleOneLight(&point, scene, sampler, manager, s)));
+        }
 
         // Generate a new path
         const math::Vector outgoingDir = math::negate(currentRay->getDirection());
