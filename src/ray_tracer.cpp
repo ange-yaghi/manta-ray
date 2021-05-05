@@ -208,7 +208,7 @@ void manta::RayTracer::incrementRayCompletion(const Job *job, int increment) {
     // Print in increments of 1000 or the last 1000 one by one
     if ((m_currentRay - m_lastRayPrint) > 1000 || m_currentRay >= (emitterCount - 1000)) {
         std::stringstream ss;
-        ss << "Ray " << m_currentRay << "/" << emitterCount << "                      \r";
+        ss << "Pixel " << m_currentRay << "/" << emitterCount << "                      \r";
         Session::get().getConsole()->out(ss.str());
 
         m_lastRayPrint = m_currentRay;
@@ -480,7 +480,7 @@ void manta::RayTracer::refineContact(
     SceneObject **closestObject,
     StackAllocator *s) const 
 {
-    if (math::getScalar(math::dot(point->m_faceNormal, ray->getDirection())) > 0.0) {
+    if (math::getScalar(math::dot(point->m_faceNormal, ray->getDirection())) > 0) {
         point->m_faceNormal = math::negate(point->m_faceNormal);
         point->m_vertexNormal = math::negate(point->m_vertexNormal);
         point->m_direction = MediaInterface::Direction::Out;
