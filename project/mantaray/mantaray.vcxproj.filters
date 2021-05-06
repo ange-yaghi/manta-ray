@@ -909,6 +909,9 @@
     <ClCompile Include="..\..\src\hable_filmic_node.cpp">
       <Filter>Source Files\sdl\nodes\library\color</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\progressive_resolution_render_pattern.cpp">
+      <Filter>Source Files\image-plane\render-patterns</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\sphere_primitive.h">
@@ -1456,6 +1459,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\hable_filmic_node_output.h">
       <Filter>Header Files\sdl\nodes\output-ports\color</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\progressive_resolution_render_pattern.h">
+      <Filter>Header Files\image-plane\render-patterns</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -116,6 +116,14 @@ public node clamp {
         min(max, max(min, s));
 }
 
+public node rect {
+    input s [vector];
+    input min [vector]: -1;
+    input max [vector]: 1;
+    alias output out [vector]:
+        step(s, min) - step(s, max);
+}
+
 private node var {
     input in;
     alias output out: in;

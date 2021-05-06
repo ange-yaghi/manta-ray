@@ -87,6 +87,7 @@
     <ClCompile Include="..\..\src\manta_math.cpp" />
     <ClCompile Include="..\..\src\opaque_media_interface.cpp" />
     <ClCompile Include="..\..\src\pixel_based_sampler.cpp" />
+    <ClCompile Include="..\..\src\progressive_resolution_render_pattern.cpp" />
     <ClCompile Include="..\..\src\radial_render_pattern.cpp" />
     <ClCompile Include="..\..\src\ramp_node.cpp" />
     <ClCompile Include="..\..\src\ramp_node_output.cpp" />
@@ -239,6 +240,7 @@
     <ClInclude Include="..\..\include\padded_frame_output.h" />
     <ClInclude Include="..\..\include\pixel_based_sampler.h" />
     <ClInclude Include="..\..\include\preview_manager.h" />
+    <ClInclude Include="..\..\include\progressive_resolution_render_pattern.h" />
     <ClInclude Include="..\..\include\radial_render_pattern.h" />
     <ClInclude Include="..\..\include\random_render_pattern.h" />
     <ClInclude Include="..\..\include\render_pattern.h" />

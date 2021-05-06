@@ -75,6 +75,7 @@
 #include "../include/spiral_render_pattern.h"
 #include "../include/random_render_pattern.h"
 #include "../include/radial_render_pattern.h"
+#include "../include/progressive_resolution_render_pattern.h"
 
 manta::LanguageRules::LanguageRules() {
     /* void */
@@ -266,6 +267,8 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__spiral_render_pattern");
     registerBuiltinType<RadialRenderPattern>(
         "__mantaray__radial_render_pattern");
+    registerBuiltinType<ProgressiveResolutionRenderPattern>(
+        "__mantaray__progressive_resolution_render_pattern");
 
     // Actions
     registerBuiltinType<piranha::ConsoleInputNode>(
