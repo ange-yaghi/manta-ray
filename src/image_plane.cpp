@@ -186,23 +186,25 @@ void manta::ImagePlane::processSamples(ImageSample *samples, int sampleCount, St
 void manta::ImagePlane::normalize() {
     for (int x = 0; x < m_width; x++) {
         for (int y = 0; y < m_height; y++) {
-            math::Vector &value = m_buffer[y * m_width + x];
+            math::Vector *value = &m_buffer[y * m_width + x];
             math::real weightSum = m_sampleWeightSums[y * m_width + x];
 
-            value = math::div(value, math::loadScalar(weightSum));
+            *value = (weightSum == 0)
+                ? math::constants::Zero
+                : math::div(*value, math::loadScalar(weightSum));
 
             constexpr math::Vector DebugRed = { { (math::real)1.0, (math::real)0.0, (math::real)0.0 } };
             constexpr math::Vector DebugBlue = { { (math::real)0.0, (math::real)0.0, (math::real)1.0 } };
             constexpr math::Vector DebugGreen = { { (math::real)0.0, (math::real)1.0, (math::real)0.0 } };
 
-            if (std::isnan(math::getX(value)) || std::isnan(math::getY(value)) || std::isnan(math::getZ(value))) {
-                value = DebugRed;
+            if (std::isnan(math::getX(*value)) || std::isnan(math::getY(*value)) || std::isnan(math::getZ(*value))) {
+                *value = DebugRed;
             }
-            else if (std::isinf(math::getX(value)) || std::isinf(math::getY(value)) || std::isinf(math::getZ(value))) {
-                value = DebugGreen;
+            else if (std::isinf(math::getX(*value)) || std::isinf(math::getY(*value)) || std::isinf(math::getZ(*value))) {
+                *value = DebugGreen;
             }
-            else if (math::getX(value) < 0 || math::getY(value) < 0 || math::getZ(value) < 0) {
-                value = DebugBlue;
+            else if (math::getX(*value) < 0 || math::getY(*value) < 0 || math::getZ(*value) < 0) {
+                *value = DebugBlue;
             }
         }
     }
