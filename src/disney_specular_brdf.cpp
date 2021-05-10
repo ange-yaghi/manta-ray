@@ -108,6 +108,10 @@ manta::math::real manta::DisneySpecularBRDF::pdf(
     return pdf;
 }
 
+bool manta::DisneySpecularBRDF::isDelta(const IntersectionPoint *surfaceInteraction) {
+    return false;
+}
+
 manta::math::Vector manta::DisneySpecularBRDF::remapSpecular(const math::Vector &specular) {
     constexpr math::Vector MaxIncidentResponse = { { (math::real)0.08, (math::real)0.08, (math::real)0.08, (math::real)0.08 } };
     return math::mul(specular, MaxIncidentResponse);

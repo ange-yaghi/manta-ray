@@ -27,8 +27,7 @@ namespace manta {
         virtual math::real pdf(const IntersectionPoint *surfaceInteraction,
             const math::Vector &i, const math::Vector &o);
 
-        void setCoatingDistributionNode(piranha::pNodeInput coatingDistributionNode) 
-            { m_coatingDistributionNode = coatingDistributionNode; }
+        void setCoatingDistributionNode(piranha::pNodeInput coatingDistributionNode);
         piranha::pNodeInput getCoatingDistributionNode() { return m_coatingDistributionNode; }
 
         void setCoatingDistribution(MicrofacetDistribution *distribution);

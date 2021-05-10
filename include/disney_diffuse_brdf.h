@@ -14,15 +14,25 @@ namespace manta {
         DisneyDiffuseBRDF();
         virtual ~DisneyDiffuseBRDF();
 
-        virtual math::Vector sampleF(const IntersectionPoint *surfaceInteraction,
-            const math::Vector2 &u, const math::Vector &i, math::Vector *o, math::real *pdf,
-            RayFlags *flags, StackAllocator *stackAllocator);
+        virtual math::Vector sampleF(
+            const IntersectionPoint *surfaceInteraction,
+            const math::Vector2 &u,
+            const math::Vector &i,
+            math::Vector *o,
+            math::real *pdf,
+            RayFlags *flags,
+            StackAllocator *stackAllocator);
 
-        virtual math::Vector f(const IntersectionPoint *surfaceInteraction,
-            const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator);
+        virtual math::Vector f(
+            const IntersectionPoint *surfaceInteraction,
+            const math::Vector &i,
+            const math::Vector &o,
+            StackAllocator *stackAllocator);
 
-        virtual math::real pdf(const IntersectionPoint *surfaceInteraction,
-            const math::Vector &i, const math::Vector &o);
+        virtual math::real pdf(
+            const IntersectionPoint *surfaceInteraction,
+            const math::Vector &i,
+            const math::Vector &o);
 
         void setBaseColor(const math::Vector &baseColor) { m_baseColor.setDefault(baseColor); }
         math::Vector getBaseColor() const { return m_baseColor.getDefault(); }

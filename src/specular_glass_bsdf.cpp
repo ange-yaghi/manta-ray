@@ -26,7 +26,7 @@ manta::math::Vector manta::SpecularGlassBSDF::sampleF(
         ? (math::real)1.55
         : m_mediaInterface->ior(surfaceInteraction->m_direction);
     const math::Vector tint = m_tint.sample(surfaceInteraction);
-    const math::real bias = math::getX(m_reflectionBias.sample(surfaceInteraction));
+    const math::real bias = math::getScalar(m_reflectionBias.sample(surfaceInteraction));
 
     const math::real cosThetaI = std::abs(math::getZ(i));
     if (cosThetaI == 0) {

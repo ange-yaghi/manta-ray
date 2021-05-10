@@ -13,13 +13,25 @@ namespace manta {
         MicrofacetGlassBSDF();
         virtual ~MicrofacetGlassBSDF();
 
-        virtual math::Vector sampleF(const IntersectionPoint *surfaceInteraction, 
-            const math::Vector2 &u, const math::Vector &i, math::Vector *o, math::real *pdf,
-            RayFlags *flags, StackAllocator *stackAllocator);
-        virtual math::Vector f(const IntersectionPoint *surfaceInteraction,
-            const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator);
-        virtual math::real pdf(const IntersectionPoint *surfaceInteraction,
-            const math::Vector &i, const math::Vector &o);
+        virtual math::Vector sampleF(
+            const IntersectionPoint *surfaceInteraction, 
+            const math::Vector2 &u,
+            const math::Vector &i,
+            math::Vector *o,
+            math::real *pdf,
+            RayFlags *flags, 
+            StackAllocator *stackAllocator);
+
+        virtual math::Vector f(
+            const IntersectionPoint *surfaceInteraction,
+            const math::Vector &i,
+            const math::Vector &o,
+            StackAllocator *stackAllocator);
+
+        virtual math::real pdf(
+            const IntersectionPoint *surfaceInteraction,
+            const math::Vector &i,
+            const math::Vector &o);
 
         void setDistribution(MicrofacetDistribution *distribution)  { m_distribution = distribution; }
         MicrofacetDistribution *getDistribution() const { return m_distribution; }
@@ -33,7 +45,6 @@ namespace manta {
 
     protected:
         virtual void _evaluate();
-
         virtual void registerInputs();
 
         piranha::pNodeInput m_distributionInput;
@@ -43,4 +54,3 @@ namespace manta {
 } /* namespace manta */
 
 #endif /* MANTARAY_MICROFACET_GLASS_BSDF_H */
-

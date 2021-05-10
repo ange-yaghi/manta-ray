@@ -26,6 +26,11 @@ manta::ImagePlane::ImagePlane() {
     m_windowX1Input = nullptr;
     m_windowY0Input = nullptr;
     m_windowY1Input = nullptr;
+
+    m_windowBottom = 0;
+    m_windowTop = 0;
+    m_windowLeft = 0;
+    m_windowRight = 0;
 }
 
 manta::ImagePlane::~ImagePlane() {

@@ -13,20 +13,30 @@ namespace manta {
         MicrofacetBTDF();
         virtual ~MicrofacetBTDF();
 
-        virtual math::Vector sampleF(const IntersectionPoint *surfaceInteraction, 
-            const math::Vector2 &u, const math::Vector &i, math::Vector *o, math::real *pdf,
-            RayFlags *flags, StackAllocator *stackAllocator);
-        virtual math::Vector f(const IntersectionPoint *surfaceInteraction,
-            const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator);
-        virtual math::real pdf(const IntersectionPoint *surfaceInteraction,
-            const math::Vector &i, const math::Vector &o);
+        virtual math::Vector sampleF(
+            const IntersectionPoint *surfaceInteraction, 
+            const math::Vector2 &u,
+            const math::Vector &i,
+            math::Vector *o,
+            math::real *pdf,
+            RayFlags *flags,
+            StackAllocator *stackAllocator);
 
-        void setDistribution(MicrofacetDistribution *distribution) 
-            { m_distribution = distribution; }
+        virtual math::Vector f(
+            const IntersectionPoint *surfaceInteraction,
+            const math::Vector &i,
+            const math::Vector &o,
+            StackAllocator *stackAllocator);
+
+        virtual math::real pdf(
+            const IntersectionPoint *surfaceInteraction,
+            const math::Vector &i,
+            const math::Vector &o);
+
+        void setDistribution(MicrofacetDistribution *distribution) { m_distribution = distribution; }
         MicrofacetDistribution *getDistribution() const { return m_distribution; }
 
-        void setMediaInterface(MediaInterface *mediaInterface) 
-            { m_mediaInterface = mediaInterface; }
+        void setMediaInterface(MediaInterface *mediaInterface) { m_mediaInterface = mediaInterface; }
         MediaInterface *getMediaInterface() { return m_mediaInterface; }
 
     protected:

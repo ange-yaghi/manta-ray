@@ -30,20 +30,39 @@ namespace manta {
         BXDF();
         virtual ~BXDF();
 
-        virtual math::Vector sampleF(const IntersectionPoint *surfaceInteraction,
-            const math::Vector2 &u, const math::Vector &i, math::Vector *o, math::real *pdf,
-            RayFlags *flags, StackAllocator *stackAllocator) = 0;
+        virtual math::Vector sampleF(
+            const IntersectionPoint *surfaceInteraction,
+            const math::Vector2 &u, 
+            const math::Vector &i,
+            math::Vector *o,
+            math::real *pdf,
+            RayFlags *flags,
+            StackAllocator *stackAllocator) = 0;
 
-        virtual math::Vector f(const IntersectionPoint *surfaceInteraction,
-            const math::Vector &i, const math::Vector &o, StackAllocator *stackAllocator) = 0;
+        virtual math::Vector f(
+            const IntersectionPoint *surfaceInteraction,
+            const math::Vector &i,
+            const math::Vector &o,
+            StackAllocator *stackAllocator) = 0;
 
-        virtual math::real pdf(const IntersectionPoint *surfaceInteraction,
-            const math::Vector &i, const math::Vector &o) = 0;
+        virtual math::real pdf(
+            const IntersectionPoint *surfaceInteraction,
+            const math::Vector &i,
+            const math::Vector &o) = 0;
 
-        static inline bool refract(const math::Vector &i, const math::Vector &n,
-            math::real ior, math::Vector *t);
+        static inline bool refract(
+            const math::Vector &i,
+            const math::Vector &n,
+            math::real ior,
+            math::Vector *t);
 
-        void generateBasisVectors(const math::Vector &direction, const IntersectionPoint *surfaceInteraction, math::Vector *u, math::Vector *v, math::Vector *w);
+        void generateBasisVectors(
+            const math::Vector &direction,
+            const IntersectionPoint *surfaceInteraction,
+            math::Vector *u,
+            math::Vector *v,
+            math::Vector *w);
+
         math::Vector transform(const math::Vector &direction, const math::Vector &u, const math::Vector &v, const math::Vector &w);
         math::Vector inverseTransform(const math::Vector &direction, const math::Vector &u, const math::Vector &v, const math::Vector &w);
         math::Vector sampleNormal(const IntersectionPoint *surfaceInteraction);
@@ -60,18 +79,22 @@ namespace manta {
         CacheableInput<math::Vector> m_normal;
     };
 
-    inline bool BXDF::refract(const math::Vector &i, const math::Vector &n,
-        math::real ior, math::Vector *t) {
-        math::real cosThetaI = math::getScalar(math::dot(n, i));
-        math::real sin2ThetaI = std::max((math::real)0.0, (math::real)1.0 - cosThetaI * cosThetaI);
-        math::real sin2ThetaT = ior * ior * sin2ThetaI;
+    inline bool BXDF::refract(
+        const math::Vector &i,
+        const math::Vector &n,
+        math::real ior,
+        math::Vector *t)
+    {
+        const math::real cosThetaI = math::getScalar(math::dot(n, i));
+        const math::real sin2ThetaI = std::max((math::real)0.0, (math::real)1.0 - cosThetaI * cosThetaI);
+        const math::real sin2ThetaT = ior * ior * sin2ThetaI;
 
         if (sin2ThetaT >= (math::real)1.0) return false;
 
-        math::real cosThetaT = ::sqrt((math::real)1.0 - sin2ThetaT);
+        const math::real cosThetaT = ::sqrt((math::real)1.0 - sin2ThetaT);
 
-        math::Vector ior_v = math::loadScalar(ior);
-        math::Vector S = math::loadScalar(ior * cosThetaI - cosThetaT);
+        const math::Vector ior_v = math::loadScalar(ior);
+        const math::Vector S = math::loadScalar(ior * cosThetaI - cosThetaT);
         *t = math::add(
             math::mul(ior_v, math::negate(i)),
             math::mul(S, n)
