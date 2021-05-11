@@ -15,7 +15,7 @@ const ysVector mantaray_ui::Application::StandardRed = ysColor::srgbiToSrgb(0xFF
 const ysVector mantaray_ui::Application::StandardYellow = ysColor::srgbiToSrgb(0xFF9F15);
 
 mantaray_ui::Application::Application() {
-    m_inputFile = "../../workspace/ui_test/script/maserati.mr";
+    m_inputFile = "../../workspace/ui_test/script/hard_geometry.mr";
     m_fileWatcherThread = nullptr;
     m_fileChangeCount = 0;
     m_fileChangeDebounce = 0.0f;

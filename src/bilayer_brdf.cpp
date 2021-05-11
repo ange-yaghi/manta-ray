@@ -145,7 +145,7 @@ manta::math::real manta::BilayerBRDF::pdf(
 }
 
 void manta::BilayerBRDF::setCoatingDistributionNode(piranha::pNodeInput coatingDistributionNode) {
-    m_coatingDistribution = coatingDistributionNode;
+    m_coatingDistributionNode = coatingDistributionNode;
 }
 
 void manta::BilayerBRDF::setCoatingDistribution(MicrofacetDistribution *distribution) {

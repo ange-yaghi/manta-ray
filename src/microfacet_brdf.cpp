@@ -34,8 +34,14 @@ manta::math::Vector manta::MicrofacetBRDF::sampleF(
         return math::constants::Zero;
     }
 
-    *pdf = m_distribution->calculatePDF(m, surfaceInteraction) / ::abs(4 * o_dot_m);
-    *flags = RayFlag::Reflection;
+    if (!m_distribution->isDelta(surfaceInteraction)) {
+        *pdf = m_distribution->calculatePDF(m, surfaceInteraction) / ::abs(4 * o_dot_m);
+        *flags = RayFlag::Reflection;
+    }
+    else {
+        *pdf = 1.0;
+        *flags = RayFlag::Reflection | RayFlag::Delta;
+    }
 
     // Calculate reflectivity
     return MicrofacetBRDF::f(surfaceInteraction, i, *o, stackAllocator);
@@ -47,10 +53,14 @@ manta::math::Vector manta::MicrofacetBRDF::f(
     const math::Vector &o,
     StackAllocator *stackAllocator)
 {
-    math::Vector wh = math::add(i, o);
-
     const math::real cosThetaO = std::abs(math::getZ(o));
     const math::real cosThetaI = std::abs(math::getZ(i));
+
+    if (m_distribution->isDelta(surfaceInteraction)) {
+        return getReflectivity(surfaceInteraction);
+    }
+
+    math::Vector wh = math::add(i, o);
 
     if (cosThetaO == 0 || cosThetaI == 0) return math::constants::Zero;
     if (math::getX(wh) == 0 && math::getY(wh) == 0 && math::getZ(wh) == 0) return math::constants::Zero;
@@ -77,6 +87,10 @@ manta::math::real manta::MicrofacetBRDF::pdf(
     const math::Vector &i,
     const math::Vector &o) 
 {
+    if (m_distribution->isDelta(surfaceInteraction)) {
+        return 0;
+    }
+
     if (!sameHemisphere(i, o)) {
         return 0;
     }
