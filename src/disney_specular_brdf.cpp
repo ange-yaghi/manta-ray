@@ -40,8 +40,15 @@ manta::math::Vector manta::DisneySpecularBRDF::sampleF(
         return math::constants::Zero;
     }
 
-    *pdf = m_distribution->calculatePDF(m, surfaceInteraction) / ::abs(4 * o_dot_m);
-    *flags = RayFlag::Reflection;
+    if (!m_distribution->isDelta(surfaceInteraction)) {
+        *pdf = m_distribution->calculatePDF(m, surfaceInteraction) / ::abs(4 * o_dot_m);
+        *flags = RayFlag::Reflection;
+    }
+    else {
+        *pdf = (math::real)1.0;
+        *flags = RayFlag::Reflection | RayFlag::Delta;
+    }
+
     return DisneySpecularBRDF::f(surfaceInteraction, i, *o, stackAllocator);
 }
 
@@ -64,10 +71,16 @@ manta::math::Vector manta::DisneySpecularBRDF::f(
         return math::constants::Zero;
     }
 
-    math::Vector reflectivity = math::loadScalar(
-        m_distribution->calculateDistribution(wh, surfaceInteraction) *
-        m_distribution->bidirectionalShadowMasking(i, o, wh, surfaceInteraction) / 
-        (4 * cosThetaI * cosThetaO));
+    math::Vector reflectivity = math::constants::One;
+    if (!m_distribution->isDelta(surfaceInteraction)) {
+        reflectivity = math::loadScalar(
+            m_distribution->calculateDistribution(wh, surfaceInteraction) *
+            m_distribution->bidirectionalShadowMasking(i, o, wh, surfaceInteraction) /
+            (4 * cosThetaI * cosThetaO));
+    }
+    else {
+        reflectivity = math::loadScalar(1 / cosThetaO);
+    }
 
     // Apply power attenuation
     const math::Vector power = m_power.sample(surfaceInteraction);
@@ -97,6 +110,10 @@ manta::math::real manta::DisneySpecularBRDF::pdf(
     const math::Vector &i,
     const math::Vector &o)
 {
+    if (m_distribution->isDelta(surfaceInteraction)) {
+        return 0;
+    }
+
     const math::Vector wh = math::normalize(math::add(i, o));
     const math::real o_dot_wh = math::getScalar(math::dot(wh, o));
 
@@ -106,10 +123,6 @@ manta::math::real manta::DisneySpecularBRDF::pdf(
 
     const math::real pdf = m_distribution->calculatePDF(wh, surfaceInteraction) / ::abs(4 * o_dot_wh);
     return pdf;
-}
-
-bool manta::DisneySpecularBRDF::isDelta(const IntersectionPoint *surfaceInteraction) {
-    return false;
 }
 
 manta::math::Vector manta::DisneySpecularBRDF::remapSpecular(const math::Vector &specular) {

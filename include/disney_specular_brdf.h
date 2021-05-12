@@ -37,8 +37,6 @@ namespace manta {
             const math::Vector &i,
             const math::Vector &o);
 
-        virtual bool isDelta(const IntersectionPoint *surfaceInteraction);
-
         void setDistribution(MicrofacetDistribution *distribution) { m_distribution = distribution; }
         const MicrofacetDistribution *getDistribution() const { return m_distribution; }
 
