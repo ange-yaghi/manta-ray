@@ -53,30 +53,32 @@ manta::math::Vector manta::BSDF::sampleF(
     }
 
     if (m_bxdfCount > 1) {
-        for (int j = 0; j < m_bxdfCount; j++) {
-            if (j != bxdf_i) {
-                math::Vector basis_u, basis_v, basis_w;
-                m_bxdfs[j]->generateBasisVectors(i, surfaceInteraction, &basis_u, &basis_v, &basis_w);
+        if ((*flags & RayFlag::Delta) == 0) {
+            for (int j = 0; j < m_bxdfCount; j++) {
+                if (j != bxdf_i) {
+                    math::Vector basis_u, basis_v, basis_w;
+                    m_bxdfs[j]->generateBasisVectors(i, surfaceInteraction, &basis_u, &basis_v, &basis_w);
 
-                const math::Vector i_local = m_bxdfs[j]->transform(i, basis_u, basis_v, basis_w);
-                const math::Vector o_local = m_bxdfs[j]->transform(*o, basis_u, basis_v, basis_w);
+                    const math::Vector i_local = m_bxdfs[j]->transform(i, basis_u, basis_v, basis_w);
+                    const math::Vector o_local = m_bxdfs[j]->transform(*o, basis_u, basis_v, basis_w);
 
-                if (math::getZ(i_local) <= 0 || math::getZ(o_local) <= 0) {
-                    continue;
+                    if (math::getZ(i_local) <= 0 || math::getZ(o_local) <= 0) {
+                        continue;
+                    }
+
+                    const math::real pdf_j = m_bxdfs[j]->pdf(surfaceInteraction, i_local, o_local);
+
+                    if (pdf_j == 0) continue;
+                    else *pdf += pdf_j;
+
+                    math::Vector f_i = m_bxdfs[j]->f(surfaceInteraction, i_local, o_local, stackAllocator);
+                    if (cosineWeight) {
+                        f_i = math::mul(f_i, math::abs(math::expandZ(o_local)));
+                    }
+
+                    f = math::add(f, f_i);
                 }
-
-                const math::real pdf_j = m_bxdfs[j]->pdf(surfaceInteraction, i_local, o_local);
-
-                if (pdf_j == 0) continue;
-                else *pdf += pdf_j;
-
-                math::Vector f_i = m_bxdfs[j]->f(surfaceInteraction, i_local, o_local, stackAllocator);
-                if (cosineWeight) {
-                    f_i = math::mul(f_i, math::abs(math::expandZ(o_local)));
-                }
-
-                f = math::add(f, f_i);
-            }   
+            }
         }
 
         *pdf /= m_bxdfCount;

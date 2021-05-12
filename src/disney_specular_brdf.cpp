@@ -43,13 +43,32 @@ manta::math::Vector manta::DisneySpecularBRDF::sampleF(
     if (!m_distribution->isDelta(surfaceInteraction)) {
         *pdf = m_distribution->calculatePDF(m, surfaceInteraction) / ::abs(4 * o_dot_m);
         *flags = RayFlag::Reflection;
+
+        return DisneySpecularBRDF::f(surfaceInteraction, i, *o, stackAllocator);
     }
     else {
         *pdf = (math::real)1.0;
         *flags = RayFlag::Reflection | RayFlag::Delta;
-    }
 
-    return DisneySpecularBRDF::f(surfaceInteraction, i, *o, stackAllocator);
+        const math::Vector F0 = m_specular.sample(surfaceInteraction);
+
+        auto pow5 = [](math::real v) { return (v * v) * (v * v) * v; };
+
+        const math::Vector s = math::loadScalar(pow5(1 - o_dot_m));
+        const math::Vector F = math::add(
+            F0,
+            math::mul(
+                math::sub(math::constants::One, F0),
+                s
+            ));
+
+        const math::Vector power = m_power.sample(surfaceInteraction);
+        const math::Vector baseColor = m_baseColor.sample(surfaceInteraction);
+        return math::mul(
+            math::div(power, math::loadScalar(cosThetaO)),
+            math::mul(baseColor, F)
+        );
+    }
 }
 
 manta::math::Vector manta::DisneySpecularBRDF::f(
@@ -58,6 +77,8 @@ manta::math::Vector manta::DisneySpecularBRDF::f(
     const math::Vector &o,
     StackAllocator *stackAllocator)
 {
+    if (m_distribution->isDelta(surfaceInteraction)) return math::constants::Zero;
+
     const math::Vector wh = math::normalize(math::add(i, o));
     const math::real o_dot_wh = math::getScalar(math::dot(wh, o));
 
@@ -71,16 +92,10 @@ manta::math::Vector manta::DisneySpecularBRDF::f(
         return math::constants::Zero;
     }
 
-    math::Vector reflectivity = math::constants::One;
-    if (!m_distribution->isDelta(surfaceInteraction)) {
-        reflectivity = math::loadScalar(
-            m_distribution->calculateDistribution(wh, surfaceInteraction) *
-            m_distribution->bidirectionalShadowMasking(i, o, wh, surfaceInteraction) /
-            (4 * cosThetaI * cosThetaO));
-    }
-    else {
-        reflectivity = math::loadScalar(1 / cosThetaO);
-    }
+    math::Vector reflectivity = math::loadScalar(
+        m_distribution->calculateDistribution(wh, surfaceInteraction) *
+        m_distribution->bidirectionalShadowMasking(i, o, wh, surfaceInteraction) /
+        (4 * cosThetaI * cosThetaO));
 
     // Apply power attenuation
     const math::Vector power = m_power.sample(surfaceInteraction);
