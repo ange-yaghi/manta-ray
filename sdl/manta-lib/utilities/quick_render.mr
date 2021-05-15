@@ -54,6 +54,7 @@ public node quick_render {
     input scene:            scene();
     input render_pattern:   spiral_render_pattern();
     input processed_in:     aces_fitted(raw_out);
+    input direct_light_sampling: true;
     output raw_out:         mantaray.image;
 
     // Save the current date/time
@@ -114,7 +115,8 @@ public node quick_render {
         sampler: sampler,
         deterministic_seed: true,
         threads: 12,
-        render_pattern: render_pattern
+        render_pattern: render_pattern,
+        direct_light_sampling: direct_light_sampling
     )
 
     log("Render complete\n")
