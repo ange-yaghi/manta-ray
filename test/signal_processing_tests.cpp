@@ -214,7 +214,7 @@ TEST(SignalProcessingTests, CftApproximationBasicTest) {
         for (int j = 0; j < SIZE; j++) {
             math::real y = j * dy - cy;
 
-            if (aperture.filter(x, y)) {
+            if (aperture.isNotBlocked(x, y)) {
                 apertureFunction.set(math::Complex(1.0f, 0.0f), i, j);
             }
             else {

@@ -36,4 +36,3 @@ namespace piranha {
 } /* namespace piranha */
 
 #endif /* PIRANHA_IR_UNARY_OPERATOR_H */
-

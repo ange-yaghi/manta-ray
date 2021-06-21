@@ -41,7 +41,7 @@ void manta::TurbulenceNoiseNodeOutput::discreteSample2d(int x, int y, void *targ
 manta::math::Vector manta::TurbulenceNoiseNodeOutput::fractionalBrownianMotion(const math::Vector &input, math::real omega, int octaves) {
     math::Vector sum = math::constants::Zero;
     math::Vector lambda = math::constants::One;
-    math::Vector o = math::constants::One;
+    math::Vector o = math::loadScalar(omega);
 
     for (int i = 0; i < octaves; ++i) {
         sum = math::add(
@@ -52,5 +52,6 @@ manta::math::Vector manta::TurbulenceNoiseNodeOutput::fractionalBrownianMotion(c
         lambda = math::mul(lambda, math::loadScalar((math::real)1.99f));
         o = math::mul(o, math::loadScalar(omega));
     }
+
     return sum;
 }

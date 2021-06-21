@@ -21,6 +21,7 @@ public:
     enum class Format {
         R8G8B8A8_UNORM,
         R32G32B32_FLOAT,
+        R32_DEPTH_COMPONENT,
         R32_FLOAT
     };
 

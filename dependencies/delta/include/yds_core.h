@@ -98,4 +98,6 @@
 #pragma comment(lib, "dxerr.lib")
 #pragma comment(lib, "dxguid.lib")
 
+#pragma comment(lib, "vulkan-1.lib")
+
 #endif /* YDS_CORE_H */

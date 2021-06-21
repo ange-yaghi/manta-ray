@@ -12,8 +12,8 @@ namespace manta {
         Aperture();
         virtual ~Aperture();
 
-        // Test whether a point lies inside or outside the aperture
-        virtual bool filter(math::real x, math::real y) const = 0;
+        virtual bool isNotBlocked(math::real x, math::real y) const = 0;
+        math::real sample(math::real x, math::real y);
 
         void setRadius(math::real size) { m_radius = size; };
         math::real getRadius() const { return m_radius; };
@@ -29,6 +29,7 @@ namespace manta {
         virtual void registerInputs();
         virtual void registerOutputs();
 
+        piranha::pNodeInput m_dirt;
         piranha::pNodeInput m_radiusInput;
     };
 

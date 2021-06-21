@@ -12,6 +12,7 @@ module {
 import "apertures.mr"
 import "../ray-tracer/image_plane.mr"
 import "../types/atomic_types.mr"
+import "../types/conversions.mr"
 
 @doc: "Lens channel type"
 public node lens => __mantaray__lens { /* void */ }

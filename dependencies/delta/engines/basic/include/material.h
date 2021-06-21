@@ -37,10 +37,35 @@ namespace dbasic {
         bool UsesDiffuseMap() const { return m_diffuseMap != nullptr; }
         bool UsesAoMap() const { return m_aoMap != nullptr; }
 
+        void SetMetallic(float metallic) { m_metallic = metallic; }
+        float GetMetallic() const { return m_metallic; }
+
+        void SetDiffuseRoughness(float diffuseRoughness) { m_diffuseRoughness = diffuseRoughness; }
+        float GetDiffuseRoughness() const { return m_diffuseRoughness; }
+
+        void SetSpecularPower(float specularPower) { m_specularPower = specularPower; }
+        float GetSpecularPower() const { return m_specularPower; }
+
+        void SetSpecularMix(float specularMix) { m_specularMix = specularMix; }
+        float GetSpecularMix() const { return m_specularMix; }
+
+        void SetDiffuseMix(float diffuseMix) { m_diffuseMix = diffuseMix; }
+        float GetDiffuseMix() const { return m_diffuseMix; }
+
+        void SetIncidentSpecular(float incidentSpecular) { m_incidentSpecular = incidentSpecular; }
+        float GetIncidentSpecular() const { return m_incidentSpecular; }
+
     protected:
         char m_name[64];
 
         ysVector4 m_diffuseColor;
+
+        float m_metallic;
+        float m_diffuseRoughness;
+        float m_specularPower;
+        float m_specularMix;
+        float m_diffuseMix;
+        float m_incidentSpecular;
 
         ysTexture *m_diffuseMap;
         ysTexture *m_specularMap;

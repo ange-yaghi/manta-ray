@@ -15,7 +15,7 @@ const ysVector mantaray_ui::Application::StandardRed = ysColor::srgbiToSrgb(0xFF
 const ysVector mantaray_ui::Application::StandardYellow = ysColor::srgbiToSrgb(0xFF9F15);
 
 mantaray_ui::Application::Application() {
-    m_inputFile = "../../workspace/ui_test/script/cursed.mr";
+    m_inputFile = "../../workspace/ui_test/script/fraunhofer.mr";
     m_fileWatcherThread = nullptr;
     m_fileChangeCount = 0;
     m_fileChangeDebounce = 0.0f;
@@ -201,13 +201,13 @@ void mantaray_ui::Application::fsmChangeState(State nextState) {
     else if (nextState == State::Killing) {
         if (m_currentState == State::CompilingAndExecuting) {
             if (m_compileTriggered) {
-                manta::Session::get().getConsole()->out("File modification detected. Stopping job.\n", StandardRed);
+                manta::Session::get().getConsole()->out("File modification detected. Halting.\n", StandardRed);
             }
             else if (m_manualCompileTriggered) {
-                manta::Session::get().getConsole()->out("Enter key press detected. Stopping job.\n", StandardRed);
+                manta::Session::get().getConsole()->out("Enter key press detected. Halting.\n", StandardRed);
             }
             else if (m_cancelTriggered) {
-                manta::Session::get().getConsole()->out("Render cancelled. Stopping job.\n", StandardRed);
+                manta::Session::get().getConsole()->out("Execution cancelled. Halting.\n", StandardRed);
             }
 
             m_compilerThread->kill();
@@ -228,7 +228,7 @@ void mantaray_ui::Application::fsmChangeState(State nextState) {
     else if (nextState == State::Destroying) {
         if (m_currentState == State::Killing) {
             m_compilerThread->setContinue(true);
-            manta::Session::get().getConsole()->out("Job successfully stopped. Freeing memory.\n", StandardBlue);
+            manta::Session::get().getConsole()->out("Execution successfully stopped. Freeing memory.\n", StandardBlue);
         }
         else if (m_currentState == State::Finalizing) {
             m_compilerThread->setContinue(true);

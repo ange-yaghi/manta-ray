@@ -37,7 +37,7 @@ namespace manta {
         FraunhoferDiffraction();
         ~FraunhoferDiffraction();
 
-        void generate(const Aperture *aperture, const VectorMap2D *dirtMap, 
+        void generate(Aperture *aperture, const VectorMap2D *dirtMap, 
             int outputResolution, math::real physicalSensorWidth, 
             CmfTable *colorTable, Spectrum *sourceSpectrum, 
             const Settings *settings = nullptr);

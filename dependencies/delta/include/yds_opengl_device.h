@@ -29,7 +29,7 @@ public:
     virtual ysError CreateSubRenderTarget(ysRenderTarget **newTarget, ysRenderTarget *parent, int x, int y, int width, int height);
     virtual ysError ResizeRenderTarget(ysRenderTarget *target, int width, int height, int pwidth, int pheight);
     virtual ysError DestroyRenderTarget(ysRenderTarget *&target);
-    virtual ysError SetRenderTarget(ysRenderTarget *target);
+    virtual ysError SetRenderTarget(ysRenderTarget *target, int slot=0);
     virtual ysError SetDepthTestEnabled(ysRenderTarget *target, bool enable);
 
     virtual ysError ClearBuffers(const float *clearColor);
@@ -97,6 +97,7 @@ protected:
 
     // Get a GL type from a geometry channel format
     static int GetFormatGLType(ysRenderGeometryChannel::ChannelFormat format);
+    static int GetFramebufferName(int slot);
 
 protected:
     ysOpenGLVirtualContext *m_realContext;
@@ -107,7 +108,6 @@ protected:
     // Hidden functionality
     ysError CreateOpenGLOffScreenRenderTarget(ysRenderTarget *target, int width, int height, ysRenderTarget::Format format, bool colorData, bool depthBuffer);
     ysError DestroyOpenGLRenderTarget(ysRenderTarget *target);
-
 };
 
 #endif /* YDS_OPENGL_DEVICE_H */

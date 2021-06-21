@@ -44,6 +44,7 @@ namespace dbasic {
         // Drawing Text
         void RenderText(const std::string &s, float x, float y, float h);
         void RenderMonospaceText(const std::string &s, float x, float y, float h, float w);
+
         float CalculateWidth(const std::string &s, float h) const;
 
         // Utilities
@@ -53,4 +54,3 @@ namespace dbasic {
 } /* namespace dbasic */
 
 #endif /* DELTA_BASIC_CONSOLE_H */
-

@@ -133,16 +133,16 @@ TEST(CameraEmulationTests, PolygonalApertureTest) {
     PolygonalAperture aperture;
     aperture.setRadius(1.0f);
     aperture.configure(3, -math::constants::PI / 2); // Triangle
-    bool filtered = aperture.filter(0.0f, 0.0f);
+    bool filtered = aperture.isNotBlocked(0.0f, 0.0f);
     EXPECT_TRUE(filtered);
 
-    filtered = aperture.filter(0.99f, 0.0f);
+    filtered = aperture.isNotBlocked(0.99f, 0.0f);
     EXPECT_TRUE(filtered);
 
-    filtered = aperture.filter(0.0f, 1.0f);
+    filtered = aperture.isNotBlocked(0.0f, 1.0f);
     EXPECT_FALSE(filtered);
 
-    filtered = aperture.filter(-0.99f, 0.0f);
+    filtered = aperture.isNotBlocked(-0.99f, 0.0f);
     EXPECT_FALSE(filtered);
 
     aperture.destroy();

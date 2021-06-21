@@ -12,6 +12,17 @@ public:
         std::vector<ysVector2> Coordinates;
     };
 
+    struct Light {
+        int LightType;
+        float Intensity;
+        float CutoffDistance;
+        float Distance;
+        ysVector3 Color;
+
+        float SpotAngularSize;
+        float SpotFade;
+    };
+
     struct IndexSet {
         union {
             struct {
@@ -31,6 +42,8 @@ public:
         Plane,
         Instance,
         Empty,
+        Armature,
+        Light,
         Undefined = -1
     };
 
@@ -58,6 +71,8 @@ public:
     std::vector<IndexSet> NormalIndices;
     std::vector<std::vector<IndexSet>> UVIndices;
     std::vector<IndexSet> TangentIndices;
+
+    Light LightInformation;
 
     bool Validate() const;
 

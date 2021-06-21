@@ -90,7 +90,7 @@ void mantaray_ui::UiConsole::render() {
             
             float offset = 0.0f;
             if (line.centered) {
-                const float width = m_textRenderer->CalculateWidth(block.text, height);
+                const const float width = m_textRenderer->CalculateWidth(block.text, height);
                 offset = -width / 2.0f + m_boundingBox.Width() / 2.0f;
             }
 

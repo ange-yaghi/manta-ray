@@ -23,6 +23,7 @@
     <ClCompile Include="..\..\src\aces_fitted_node_output.cpp" />
     <ClCompile Include="..\..\src\add_bxdf_node.cpp" />
     <ClCompile Include="..\..\src\aperture.cpp" />
+    <ClCompile Include="..\..\src\aperture_render_node.cpp" />
     <ClCompile Include="..\..\src\append_path_node.cpp" />
     <ClCompile Include="..\..\src\area_light.cpp" />
     <ClCompile Include="..\..\src\box_filter.cpp" />
@@ -174,6 +175,7 @@
     <ClInclude Include="..\..\include\aces_fitted_node_output.h" />
     <ClInclude Include="..\..\include\add_bxdf_node.h" />
     <ClInclude Include="..\..\include\aperture.h" />
+    <ClInclude Include="..\..\include\aperture_render_node.h" />
     <ClInclude Include="..\..\include\append_path_node.h" />
     <ClInclude Include="..\..\include\area_light.h" />
     <ClInclude Include="..\..\include\average_node_output.h" />

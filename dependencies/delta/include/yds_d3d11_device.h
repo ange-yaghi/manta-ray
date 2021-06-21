@@ -41,7 +41,7 @@ public:
     virtual ysError CreateSubRenderTarget(ysRenderTarget **newTarget, ysRenderTarget *parent, int x, int y, int width, int height);
     virtual ysError ResizeRenderTarget(ysRenderTarget *target, int width, int height, int pwidth, int pheight);
     virtual ysError DestroyRenderTarget(ysRenderTarget *&target);
-    virtual ysError SetRenderTarget(ysRenderTarget *target);
+    virtual ysError SetRenderTarget(ysRenderTarget *target, int slot=0);
     virtual ysError SetDepthTestEnabled(ysRenderTarget *target, bool enable);
 
     virtual ysError ClearBuffers(const float *clearColor);

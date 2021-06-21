@@ -73,7 +73,7 @@ void manta::PolygonalAperture::destroy() {
     m_edgeCount = 0;
 }
 
-bool manta::PolygonalAperture::filter(math::real x, math::real y) const {
+bool manta::PolygonalAperture::isNotBlocked(math::real x, math::real y) const {
     enum class Sign {
         None,
         Negative,
@@ -93,11 +93,11 @@ bool manta::PolygonalAperture::filter(math::real x, math::real y) const {
 
         if (c == 0) continue;
         else if (c < 0) {
-            if (s == Sign::Positive) { insidePolygon = false; break;  }
+            if (s == Sign::Positive) { insidePolygon = false; break; }
             else s = Sign::Negative;
         }
         else if (c > 0) {
-            if (s == Sign::Negative) { insidePolygon = false; break;  }
+            if (s == Sign::Negative) { insidePolygon = false; break; }
             else s = Sign::Positive;
         }
     }
@@ -122,7 +122,7 @@ bool manta::PolygonalAperture::filter(math::real x, math::real y) const {
         const Edge &edge = m_edges[i];
 
         math::real div = edge.direction.y * radial_x - edge.direction.x * radial_y;
-        
+
         if (div != (math::real)0.0) {
             math::real r = edge.cache / div;
             if (r > (math::real)0.0 && r < polygonLimitR) {
@@ -160,7 +160,7 @@ void manta::PolygonalAperture::_evaluate() {
 }
 
 void manta::PolygonalAperture::_destroy() {
-    /* void */
+    destroy();
 }
 
 void manta::PolygonalAperture::registerInputs() {

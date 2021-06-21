@@ -61,6 +61,9 @@ enum class ysError {
     CouldNotDestroyContext,
     BufferSwapError,
 
+    // Vulkan specific
+    NoQueueFamilyFound,
+
     // Render Targets
     CouldNotGetBackBuffer,
     CouldNotCreateRenderTarget,

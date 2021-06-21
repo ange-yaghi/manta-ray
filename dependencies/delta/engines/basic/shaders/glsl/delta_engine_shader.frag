@@ -219,5 +219,5 @@ void main(void) {
 			mix(
 				totalLighting.rgb,
 				FogColor.rgb,
-				fogAttenuation)), 1.0);
+				fogAttenuation)), baseColor.a);
 }

@@ -40,7 +40,7 @@ manta::FraunhoferDiffraction::~FraunhoferDiffraction() {
 }
 
 void manta::FraunhoferDiffraction::generate(
-    const Aperture *aperture,
+    Aperture *aperture,
     const VectorMap2D *dirtMap,
     int outputResolution,
     math::real physicalSensorWidth,
@@ -111,7 +111,7 @@ void manta::FraunhoferDiffraction::generate(
             for (int si = -2; si <= 2; si++) {
                 for (int sj = -2; sj <= 2; sj++) {
                     totalSamples++;
-                    if (aperture->filter(x + si * (dx / 4), y + sj * (dy / 4))) {
+                    if (aperture->isNotBlocked(x + si * (dx / 4), y + sj * (dy / 4))) {
                         samplesInFilter++;
                     }
                 }

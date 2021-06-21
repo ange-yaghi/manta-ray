@@ -20,7 +20,7 @@ namespace manta {
         void configure(int edges, math::real angle = (math::real)0.0, bool halfOffset=false);
         void destroy();
 
-        virtual bool filter(math::real x, math::real y) const;
+        virtual bool isNotBlocked(math::real x, math::real y) const;
 
         void setBladeCurvature(math::real bladeCurvature) { m_bladeCurvature = bladeCurvature; }
         math::real getBladeCurvature() const { return m_bladeCurvature; }

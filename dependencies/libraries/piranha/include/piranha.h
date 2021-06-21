@@ -1,4 +1,4 @@
-// Auto-generated on: 2021-05-05 19:10:28.034173
+// Auto-generated on: 2021-06-20 22:23:31.351146
 
 #ifndef PIRANHA_PIRANHA_H
 #define PIRANHA_PIRANHA_H
@@ -23,6 +23,7 @@
 #include "include/fundamental_output.h"
 #include "include/fundamental_types.h"
 #include "include/int_conversions.h"
+#include "include/int_probe.h"
 #include "include/ir_attribute.h"
 #include "include/ir_attribute_definition.h"
 #include "include/ir_attribute_definition_list.h"

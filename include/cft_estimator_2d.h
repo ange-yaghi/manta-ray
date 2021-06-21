@@ -16,7 +16,9 @@ namespace manta {
         CftEstimator2D();
         ~CftEstimator2D();
 
-        void initialize(const ComplexMap2D *spatialFunction, math::real_d phyiscalWidth, 
+        void initialize(
+            const ComplexMap2D *spatialFunction,
+            math::real_d physicalWidth,
             math::real_d physicalHeight);
         void destroy();
 

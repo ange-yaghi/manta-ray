@@ -33,4 +33,4 @@ namespace piranha {
 
 } /* namespace piranha */
 
-#endif /* PIRANHA_IMPORT_STATEMENT */
+#endif /* PIRANHA_IR_IMPORT_STATEMENT */

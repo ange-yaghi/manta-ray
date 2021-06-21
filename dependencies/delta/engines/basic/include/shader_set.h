@@ -15,7 +15,18 @@ namespace dbasic {
         virtual ysError Initialize(ysDevice *device);
         ysError Destroy();
 
-        ysError NewStage(const std::string &name, ShaderStage **newStage);
+        template <typename T_ShaderStage=ShaderStage>
+        ysError NewStage(const std::string &name, T_ShaderStage **newStage) {
+            YDS_ERROR_DECLARE("NewStage");
+
+            T_ShaderStage *stage = new T_ShaderStage();
+            m_stages.New() = stage;
+            stage->Initialize(m_device, name);
+
+            *newStage = stage;
+
+            return YDS_ERROR_RETURN(ysError::None);
+        }
 
         int GetObjectDataSize() const;
 

@@ -11,7 +11,8 @@ public:
         Unknown,
         DirectX10,
         DirectX11,
-        OpenGL4_0
+        OpenGL4_0,
+        Vulkan
     };
 
 public:

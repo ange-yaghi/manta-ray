@@ -57,7 +57,7 @@ namespace dbasic {
         SceneObjectAsset *NewSceneObject();
         int GetSceneObjectCount() const { return m_sceneObjects.GetNumObjects(); }
         SceneObjectAsset *GetSceneObject(int index) { return (index < 0) ? nullptr : m_sceneObjects.Get(index); }
-        SceneObjectAsset *GetSceneObject(const char *fname);
+        SceneObjectAsset *GetSceneObject(const char *fname, ysObjectData::ObjectType type);
         SceneObjectAsset *GetRoot(SceneObjectAsset *object);
 
         ModelAsset *NewModelAsset();

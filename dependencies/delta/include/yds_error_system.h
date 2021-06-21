@@ -63,7 +63,7 @@ protected:
 {                                                       \
                                                         \
     ysError code = (call);                              \
-    if (code != ysError::None)                  \
+    if (code != ysError::None)                          \
     {                                                   \
         ysErrorSystem::GetInstance()->StackDescend();   \
         return code;                                    \

@@ -13,6 +13,24 @@ namespace dbasic {
         friend AssetManager;
 
     public:
+        struct LightInformation {
+            enum class Type {
+                Spot = 0,
+                Point = 1,
+                Sun = 2
+            };
+
+            Type LightType;
+            float Intensity;
+            float CutoffDistance;
+            float Distance;
+            ysVector3 Color;
+
+            float SpotAngularSize;
+            float SpotFade;
+        };
+
+    public:
         SceneObjectAsset();
         ~SceneObjectAsset();
 
@@ -39,12 +57,19 @@ namespace dbasic {
         void SetName(const char *name) { strcpy_s(m_name, 64, name); }
         const char *GetName() const { return m_name; }
 
+        LightInformation &GetLightInformation() { return m_lightInformation; }
+
+        SceneObjectAsset *GetInstance() { return m_instance; }
+        void SetInstance(SceneObjectAsset *instance) { m_instance = instance; }
+
     protected:
         char m_name[64];
         int m_parent;
         int m_skeletonIndex;
         ysObjectData::ObjectType m_type;
+        LightInformation m_lightInformation;
 
+        SceneObjectAsset *m_instance;
         Material *m_material;
         ModelAsset *m_geometry;
         AssetManager *m_manager;

@@ -10,6 +10,10 @@ module {
 }
 
 private import "../types/atomic_types.mr"
+private import "../types/conversions.mr"
+private import "../types/operations.mr"
+private import "../image/vector_map.mr"
+private import "../ray-tracer/image_plane.mr"
 
 @doc: "Aperture channel type"
 public node aperture => __mantaray__aperture { /* void */ }
@@ -17,6 +21,7 @@ public node aperture => __mantaray__aperture { /* void */ }
 @doc: "Circular aperture"
 public node circular_aperture => __mantaray__circular_aperture {
     input radius        [float];
+    input dirt          [vector]: 1;
 
     alias output __out  [::aperture];
 }
@@ -24,6 +29,7 @@ public node circular_aperture => __mantaray__circular_aperture {
 @doc: "Square aperture"
 public node square_aperture => __mantaray__square_aperture {
     input half_width    [float];
+    input dirt          [vector]: 1;
 
     alias output __out  [::aperture];
 }
@@ -34,6 +40,17 @@ public node polygonal_aperture => __mantaray__polygonal_aperture {
     input blades        [int]: 6;
     input curvature     [float]: 0.2;
     input angle         [float]: 0.0;
+    input dirt          [vector]: 1;
 
     alias output __out  [::aperture];
+}
+
+@doc: "Render an aperture to a 2D map"
+node render_aperture => __mantaray__render_aperture {
+    input aperture      [::aperture];
+    input image_plane   [image_plane];
+    input scale         [float]: 1.0;
+    input multisample   [int]: 8;
+    
+    alias output __out  [vector_map];
 }

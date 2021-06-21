@@ -39,6 +39,17 @@ public:
         ysVector3 Scale;
     };
 
+    struct LightInformation {
+        int LightType;
+        float Intensity;
+        float CutoffDistance;
+        float Distance;
+        ysVector3 Color;
+
+        float SpotAngularSize;
+        float SpotFade;
+    };
+
     struct SceneHeader {
         unsigned int ObjectCount;
     };

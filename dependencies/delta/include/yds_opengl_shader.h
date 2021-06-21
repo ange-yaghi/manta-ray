@@ -8,7 +8,7 @@ class ysOpenGLShader : public ysShader {
 
 public:
     ysOpenGLShader();
-    ~ysOpenGLShader();
+    virtual ~ysOpenGLShader();
 
 protected:
     unsigned int m_handle;

@@ -16,9 +16,9 @@ manta::CftEstimator2D::~CftEstimator2D() {
 }
 
 void manta::CftEstimator2D::initialize(
-    const ComplexMap2D *spatialFunction, math::real_d phyiscalWidth, math::real_d physicalHeight) 
+    const ComplexMap2D *spatialFunction, math::real_d physicalWidth, math::real_d physicalHeight) 
 {
-    m_physicalWidth = phyiscalWidth;
+    m_physicalWidth = physicalWidth;
     m_physicalHeight = physicalHeight;
 
     m_verticalSamples = spatialFunction->getWidth();
@@ -27,7 +27,7 @@ void manta::CftEstimator2D::initialize(
     ComplexMap2D dftApprox;
     spatialFunction->fft_multithreaded(&dftApprox, 12);
 
-    dftApprox.cft(&m_discreteApproximation, phyiscalWidth, physicalHeight);
+    dftApprox.cft(&m_discreteApproximation, physicalWidth, physicalHeight);
     dftApprox.destroy();
 }
 
@@ -36,7 +36,9 @@ void manta::CftEstimator2D::destroy() {
 }
 
 manta::math::Complex manta::CftEstimator2D::sample(
-    math::real_d freq_x, math::real_d freq_y, math::real_d w) const 
+    math::real_d freq_x,
+    math::real_d freq_y,
+    math::real_d w) const 
 {
     math::real_d k_x, k_y;
 
@@ -75,7 +77,8 @@ manta::math::real_d manta::CftEstimator2D::getVerticalFreqStep() const {
 }
 
 manta::math::real_d manta::CftEstimator2D::getFreqRange(
-    int horizontalSamples, math::real_d physicalWidth) 
+    int horizontalSamples,
+    math::real_d physicalWidth) 
 {
     math::real_d maxFreq = (horizontalSamples / 2) / physicalWidth;
     return maxFreq;

@@ -176,8 +176,8 @@ void manta::ImagePlane::processSamples(ImageSample *samples, int sampleCount, St
         for (int i = 0; i < blockCount; ++i) {
             const Block &block = blocks[i];
 
-            math::Vector &value = m_buffer[block.y * m_width + block.x];
-            math::real &weightSum = m_sampleWeightSums[block.y * m_width + block.x];
+            const math::Vector value = m_buffer[block.y * m_width + block.x];
+            const math::real weightSum = m_sampleWeightSums[block.y * m_width + block.x];
 
             if (weightSum != 0) {
                 m_previewTarget->set(math::div(value, math::loadScalar(weightSum)), block.x, block.y);

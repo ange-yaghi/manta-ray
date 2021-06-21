@@ -140,4 +140,3 @@ TEST(MathTests, ExpandTest) {
     n = math::expandZ(n);
     CHECK_VEC_EQ(n, math::loadScalar(1), 0.0);
 }
-

@@ -64,14 +64,8 @@
     <Filter Include="Header Files\camera-emulation\lenses">
       <UniqueIdentifier>{0626a23c-f4a2-4ded-9470-238b89b96cb3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\camera-emulation\apertures">
-      <UniqueIdentifier>{d775624a-5c3a-4369-b9f8-f0b6083897c2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\camera-emulation\lenses">
       <UniqueIdentifier>{23e4a08a-e9e4-472c-b99f-090ee064042a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\camera-emulation\apertures">
-      <UniqueIdentifier>{39c44cb6-cdfb-43f5-93cb-6f92906e3f98}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\geometry\utilities">
       <UniqueIdentifier>{5a0b8afb-d82b-4dff-b4d9-7848b762aeed}</UniqueIdentifier>
@@ -463,6 +457,18 @@
     <Filter Include="Source Files\image-plane\render-patterns">
       <UniqueIdentifier>{0d0acfa2-12f4-46ac-8f4a-b20ac9245174}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\camera-emulation\aperture">
+      <UniqueIdentifier>{5f9651d0-bb7e-4495-8aec-cf591aece886}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\camera-emulation\aperture\apertures">
+      <UniqueIdentifier>{d775624a-5c3a-4369-b9f8-f0b6083897c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\camera-emulation\aperture">
+      <UniqueIdentifier>{faf4d22d-715f-4a63-a986-dd5833b247f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\camera-emulation\aperture\apertures">
+      <UniqueIdentifier>{39c44cb6-cdfb-43f5-93cb-6f92906e3f98}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -499,7 +505,7 @@
       <Filter>Source Files\camera-emulation</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\circular_aperture.cpp">
-      <Filter>Source Files\camera-emulation\apertures</Filter>
+      <Filter>Source Files\camera-emulation\aperture\apertures</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\lens.cpp">
       <Filter>Source Files\camera-emulation</Filter>
@@ -607,10 +613,10 @@
       <Filter>Source Files\material\interface\surface-modeling\microfacet-model</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\square_aperture.cpp">
-      <Filter>Source Files\camera-emulation\apertures</Filter>
+      <Filter>Source Files\camera-emulation\aperture\apertures</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\polygonal_aperture.cpp">
-      <Filter>Source Files\camera-emulation\apertures</Filter>
+      <Filter>Source Files\camera-emulation\aperture\apertures</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\image_plane.cpp">
       <Filter>Source Files\image-plane</Filter>
@@ -680,9 +686,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\step_node.cpp">
       <Filter>Source Files\sdl\nodes\library</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\aperture.cpp">
-      <Filter>Source Files\camera-emulation</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\opaque_media_interface.cpp">
       <Filter>Source Files\material\interface\surface-modeling\media-interface</Filter>
@@ -912,6 +915,12 @@
     <ClCompile Include="..\..\src\progressive_resolution_render_pattern.cpp">
       <Filter>Source Files\image-plane\render-patterns</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\aperture.cpp">
+      <Filter>Source Files\camera-emulation\aperture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\aperture_render_node.cpp">
+      <Filter>Source Files\camera-emulation\aperture</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\sphere_primitive.h">
@@ -959,11 +968,8 @@
     <ClInclude Include="..\..\include\biconvex_lens.h">
       <Filter>Header Files\camera-emulation\lens-elements</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\aperture.h">
-      <Filter>Header Files\camera-emulation</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\circular_aperture.h">
-      <Filter>Header Files\camera-emulation\apertures</Filter>
+      <Filter>Header Files\camera-emulation\aperture\apertures</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\lens.h">
       <Filter>Header Files\camera-emulation</Filter>
@@ -1113,10 +1119,10 @@
       <Filter>Header Files\material\surface-modeling\microfacet-distribution</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\square_aperture.h">
-      <Filter>Header Files\camera-emulation\apertures</Filter>
+      <Filter>Header Files\camera-emulation\aperture\apertures</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\polygonal_aperture.h">
-      <Filter>Header Files\camera-emulation\apertures</Filter>
+      <Filter>Header Files\camera-emulation\aperture\apertures</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\image_plane.h">
       <Filter>Header Files\image-plane</Filter>
@@ -1462,6 +1468,12 @@
     </ClInclude>
     <ClInclude Include="..\..\include\progressive_resolution_render_pattern.h">
       <Filter>Header Files\image-plane\render-patterns</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\aperture.h">
+      <Filter>Header Files\camera-emulation\aperture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\aperture_render_node.h">
+      <Filter>Header Files\camera-emulation\aperture</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

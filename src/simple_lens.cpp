@@ -52,7 +52,7 @@ bool manta::SimpleLens::transformRay(LightRay *inputRay, LightRay *outputRay) co
     x = math::getScalar(proj_x);
     y = math::getScalar(proj_y);
 
-    flag = m_aperture->filter(x, y);
+    flag = m_aperture->isNotBlocked(x, y);
     if (!flag) return false;
 
     outputRay->setAperturePoint(math::Vector2(x, y));

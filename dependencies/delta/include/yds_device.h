@@ -22,10 +22,13 @@ protected:
     ysDevice(ysContextObject::DeviceAPI API);
     virtual ~ysDevice();
 
+    static constexpr int MaxRenderTargets = 2;
+
 public:
     enum class CullMode {
         Front,
-        Back
+        Back,
+        None
     };
 
 public:
@@ -94,7 +97,7 @@ public:
     virtual ysError DestroyRenderTarget(ysRenderTarget *&target);
 
     // Set the active rendering target
-    virtual ysError SetRenderTarget(ysRenderTarget *target);
+    virtual ysError SetRenderTarget(ysRenderTarget *target, int slot=0);
 
     /* Scene start/end */
 
@@ -211,13 +214,13 @@ public:
     // TEMP
     virtual void Draw(int numFaces, int indexOffset, int vertexOffset) { (void)numFaces; (void)indexOffset; (void)vertexOffset; }
 
-    ysRenderTarget *GetActiveRenderTarget() const { return m_activeRenderTarget; }
+    ysRenderTarget *GetActiveRenderTarget(int slot=0) const { return m_activeRenderTarget[slot]; }
 
     void SetDebugFlag(int flag, bool state);
     bool GetDebugFlag(int flag) const;
 
 protected:
-    ysRenderTarget *GetActualRenderTarget();
+    ysRenderTarget *GetActualRenderTarget(int slot);
 
 protected:
     // Object Holders
@@ -230,7 +233,7 @@ protected:
     ysDynamicArray<ysTexture, 32>            m_textures;
 
     // Active Objects
-    ysRenderTarget *m_activeRenderTarget;
+    ysRenderTarget *m_activeRenderTarget[MaxRenderTargets];
     ysRenderingContext *m_activeContext;
 
     ysGPUBuffer *m_activeVertexBuffer;

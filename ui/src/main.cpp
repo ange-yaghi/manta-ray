@@ -8,7 +8,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     (void)hPrevInstance;
 
     mantaray_ui::Application app;
-    app.initialize((void *)&hInstance, ysContextObject::DeviceAPI::DirectX11); 
+    app.initialize((void *)&hInstance, ysContextObject::DeviceAPI::DirectX11);
     app.run();
     app.destroy();
 

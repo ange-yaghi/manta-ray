@@ -12,6 +12,12 @@ namespace dbasic {
 
     class ShaderStage : public ysObject {
     public:
+        struct OutputSlot {
+            static constexpr int Color0 = 0;
+            static constexpr int Color1 = 1;
+            static constexpr int Count = 2;
+        };
+
         struct ConstantBufferBinding {
             enum class BufferType {
                 ObjectData,
@@ -100,6 +106,7 @@ namespace dbasic {
         void ReadObjectData(const void *source);
 
         ysError AddInput(ysRenderTarget *renderTarget, int slot);
+        ysError SetInput(ysRenderTarget *renderTarget, int slot);
         int GetInputCount() const { return m_inputs.GetNumObjects(); }
 
         ysError AddTextureInput(int slot, TextureHandle *handle);
@@ -109,8 +116,8 @@ namespace dbasic {
         ysError BindScene();
         ysError BindObject();
 
-        void SetRenderTarget(ysRenderTarget *target) { m_renderTarget = target; }
-        ysRenderTarget *GetRenderTarget() const { return m_renderTarget; }
+        void SetRenderTarget(ysRenderTarget *target, int slot=OutputSlot::Color0) { m_renderTarget[slot] = target; }
+        ysRenderTarget *GetRenderTarget(int slot=OutputSlot::Color0) const { return m_renderTarget[slot]; }
 
         void SetShaderProgram(ysShaderProgram *shaderProgram) { m_shaderProgram = shaderProgram; }
         ysShaderProgram *GetShaderProgram() const { return m_shaderProgram; }
@@ -145,9 +152,15 @@ namespace dbasic {
         bool IsEnabled() const { return m_enabled; }
         void SetEnabled(bool enabled) { m_enabled = enabled; }
 
+        void SetPasses(int passes) { m_passes = passes; }
+        int GetPasses() const { return m_passes; }
+
+        virtual void OnPass(int pass) { /* void */ }
+        virtual void OnEnd() { /* void */  }
+
     protected:
         ysDevice *m_device;
-        ysRenderTarget *m_renderTarget;
+        ysRenderTarget *m_renderTarget[OutputSlot::Count];
 
         ysShaderProgram *m_shaderProgram;
         ysInputLayout *m_inputLayout;
@@ -159,6 +172,7 @@ namespace dbasic {
         std::string m_name;
         Type m_type;
 
+        int m_passes;
         int m_objectDataSize;
         int m_flagBit;
 

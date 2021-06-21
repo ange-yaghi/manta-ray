@@ -1,4 +1,5 @@
-Texture2D mainInput : register( t0 );
+Texture2D layer0 : register( t0 );
+Texture2D layer1 : register( t1 );
 SamplerState samLinear : register( s0 );
 
 struct VS_INPUT_STANDARD {
@@ -21,5 +22,9 @@ VS_OUTPUT VS_SAQ(VS_INPUT_STANDARD input) {
 }
 
 float4 PS_SAQ(VS_OUTPUT input) : SV_Target {
-	return mainInput.Sample(samLinear, input.TexCoord);
+	float4 l0 = layer0.Sample(samLinear, input.TexCoord);
+	float4 l1 = layer1.Sample(samLinear, input.TexCoord);
+	float alpha = l1.a;
+
+	return (alpha * l1) + (1 - alpha) * l0;
 }

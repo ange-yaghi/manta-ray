@@ -14,6 +14,8 @@ public:
         Plane,
         Instance,
         Empty,
+        Armature,
+        Light,
         Undefined = -1
     };
 
