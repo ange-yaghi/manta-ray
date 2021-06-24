@@ -33,17 +33,11 @@ void manta::StreamingNodeOutput::evaluateDimensions() {
 
     _evaluateDimensions();
 
-    m_dimensionsEvaluated = true;
+    //m_dimensionsEvaluated = true;
 }
 
 void manta::StreamingNodeOutput::_evaluate() {
     evaluateDimensions();
-
-    if (m_dimensionCount == 2) {
-        //if (m_dimensions[0] > 2000 || m_dimensions[1] > 2000) {
-        //    throw;
-        //}
-    }
 }
 
 void manta::StreamingNodeOutput::_evaluateDimensions() {

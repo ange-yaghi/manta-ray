@@ -38,7 +38,7 @@ void manta::CftEstimator2D::destroy() {
 manta::math::Complex manta::CftEstimator2D::sample(
     math::real_d freq_x,
     math::real_d freq_y,
-    math::real_d w) const 
+    math::real_d w) const
 {
     math::real_d k_x, k_y;
 

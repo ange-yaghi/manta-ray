@@ -12,8 +12,6 @@ manta::ConstructedVectorNodeOutput::~ConstructedVectorNodeOutput() {
 }
 
 void manta::ConstructedVectorNodeOutput::sample(const IntersectionPoint *surfaceInteraction, void *_target) const {
-    (void)surfaceInteraction;
-
     math::Vector *target = reinterpret_cast<math::Vector *>(_target);
     math::Vector v_x, v_y, v_z, v_w;
 

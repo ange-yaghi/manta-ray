@@ -33,8 +33,10 @@ void manta::ApertureRenderNode::_evaluate() {
     int multisample;
     m_multisample->fullCompute(&multisample);
 
-    piranha::native_float scale;
-    m_scale->fullCompute(&scale);
+    piranha::native_float scaleIn;
+    m_scale->fullCompute(&scaleIn);
+
+    math::real scale = (math::real)scaleIn;
 
     ImageSample *samples = new ImageSample[SampleBufferCapacity];
     int sampleCount = 0;

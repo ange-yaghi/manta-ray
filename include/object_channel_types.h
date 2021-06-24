@@ -25,12 +25,14 @@ namespace manta {
         static const piranha::ChannelType FilterChannel;
         static const piranha::ChannelType ImagePlaneChannel;
         static const piranha::ChannelType RenderPatternChannel;
+        static const piranha::ChannelType ComplexMap2dChannel;
+        static const piranha::ChannelType ComplexMapSamplerChannel;
     };
 
-    template <typename Type> 
-    extern inline const piranha::ChannelType *LookupChannelType() { 
-        static_assert(false, "Invalid type lookup"); 
-        return nullptr;  
+    template <typename Type>
+    extern inline const piranha::ChannelType *LookupChannelType() {
+        static_assert(false, "Invalid type lookup");
+        return nullptr;
     }
 
     // Forward declaration of all types
@@ -55,6 +57,8 @@ namespace manta {
     class Filter;
     class ImagePlane;
     class RenderPattern;
+    class ComplexMap2D;
+    class ComplexMapSampler;
 
     // Helper macro
 #define ASSIGN_CHANNEL_TYPE(type, channel) template <> extern inline const piranha::ChannelType *LookupChannelType<type>() { return &ObjectChannel::channel; }
@@ -80,6 +84,8 @@ namespace manta {
     ASSIGN_CHANNEL_TYPE(Filter, FilterChannel);
     ASSIGN_CHANNEL_TYPE(ImagePlane, ImagePlaneChannel);
     ASSIGN_CHANNEL_TYPE(RenderPattern, RenderPatternChannel);
+    ASSIGN_CHANNEL_TYPE(ComplexMap2D, ComplexMap2dChannel);
+    ASSIGN_CHANNEL_TYPE(ComplexMapSampler, ComplexMapSamplerChannel);
 
 } /* namespace manta */
 

@@ -1,5 +1,7 @@
 #include "../include/language_rules.h"
 
+#include "../include/complex_split_node.h"
+#include "../include/constructed_complex_node.h"
 #include "../include/vector_split_node.h"
 #include "../include/constructed_vector_node.h"
 #include "../include/vector_conversions.h"
@@ -77,6 +79,11 @@
 #include "../include/radial_render_pattern.h"
 #include "../include/progressive_resolution_render_pattern.h"
 #include "../include/aperture_render_node.h"
+#include "../include/complex_map_2d_node.h"
+#include "../include/complex_map_interface_node.h"
+#include "../include/complex_map_sampler.h"
+#include "../include/complex_map_nearest_sampler_node.h"
+#include "../include/complex_map_sample_node.h"
 
 manta::LanguageRules::LanguageRules() {
     /* void */
@@ -100,6 +107,10 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__bool", &piranha::FundamentalType::BoolType);
     registerBuiltinType<VectorSplitNode>(
         "__mantaray__vector", &VectorNodeOutput::VectorType);
+    registerBuiltinType<ComplexSplitNode>(
+        "__mantaray__complex", &ComplexNodeOutput::ComplexType);
+    registerBuiltinType<ComplexMapInterfaceNode>(
+        "__mantaray__complex_map_2d_channel", &ObjectChannel::ComplexMap2dChannel);
     registerBuiltinType<piranha::ChannelNode> (
         "__mantaray__string", &piranha::FundamentalType::StringType);
     registerBuiltinType<piranha::ChannelNode>(
@@ -142,14 +153,20 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__image_plane", &ObjectChannel::ImagePlaneChannel);
     registerBuiltinType<piranha::ChannelNode>(
         "__mantaray__render_pattern", &ObjectChannel::RenderPatternChannel);
+    registerBuiltinType<piranha::ChannelNode>(
+        "__mantaray__complex_map_sampler", &ObjectChannel::ComplexMapSamplerChannel);
 
     // Constructors
+    registerBuiltinType<ComplexMap2dNode>(
+        "__mantaray__complex_map_2d");
     registerBuiltinType<MaterialLibrary>(
         "__mantaray__material_library");
     registerBuiltinType<RayTracer>(
         "__mantaray__ray_tracer");
     registerBuiltinType<ConstructedVectorNode>(
         "__mantaray__vector_constructor");
+    registerBuiltinType<ConstructedComplexNode>(
+        "__mantaray__complex_constructor");
     registerBuiltinType<KdTreeNode>(
         "__mantaray__kd_tree");
     registerBuiltinType<PhongDistribution>(
@@ -272,12 +289,16 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__progressive_resolution_render_pattern");
     registerBuiltinType<ApertureRenderNode>(
         "__mantaray__render_aperture");
+    registerBuiltinType<ComplexMapNearestSamplerNode>(
+        "__mantaray__complex_map_nearest_sampler");
 
     // Actions
     registerBuiltinType<piranha::ConsoleInputNode>(
         "__mantaray__console_in");
     registerBuiltinType<ConsoleOutputNode>(
         "__mantaray__console_out");
+    registerBuiltinType<ComplexMapSampleNode>(
+        "__mantaray__complex_map_sample");
 
     // Literals
     registerBuiltinType<piranha::DefaultLiteralFloatNode>(

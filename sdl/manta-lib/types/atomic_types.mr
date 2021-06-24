@@ -37,6 +37,12 @@ private node vector_channel => __mantaray__vector {
     output a [::scalar_channel];
 }
 
+@doc: "Complex channel type"
+private node complex_channel => __mantaray__complex {
+    output r [::scalar_channel];
+    output i [::scalar_channel];
+}
+
 @doc: "String channel type"
 private node string_channel => __mantaray__string { /* void */ }
 
@@ -108,6 +114,14 @@ public inline node vector => __mantaray__vector_constructor {
     input w [::scalar]: 0.0;
 
     alias output __out [::vector_channel];
+}
+
+@doc: "Complex constructor type"
+public inline node complex => __mantaray__complex_constructor {
+    input r [::scalar]: 0.0;
+    input i [::scalar]: 0.0;
+
+    alias output __out [::complex_channel];
 }
 
 @doc: "String type"

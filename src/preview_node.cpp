@@ -30,7 +30,7 @@ void manta::PreviewNode::_evaluate() {
     m_refreshRateInput->fullCompute(reinterpret_cast<void *>(&refreshRate));
 
     m_title = title;
-    m_refreshRate = refreshRate;
+    m_refreshRate = (math::real)refreshRate;
 
     Session::get().registerPreview(this);
 }

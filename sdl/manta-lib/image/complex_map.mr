@@ -1,0 +1,42 @@
+module {
+    @name:          "Complex Map"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2021, Ange Yaghi"
+    @doc:           "Complex map base class"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
+private import "../types/atomic_types.mr"
+private import "../types/conversions.mr"
+
+@doc: "2D Complex Map Channel"
+public node complex_map_channel => __mantaray__complex_map_2d_channel { 
+    output width [int];
+    output height [int];
+}
+
+@doc: "2D Complex Map"
+public node complex_map => __mantaray__complex_map_2d {
+    input width [int]: 0;
+    input height [int]: 0;
+    input value [complex]: complex(0, 0);
+    alias output __out [::complex_map_channel];
+}
+
+@doc: "2D Complex Map Sample Operations"
+public node complex_map_sample => __mantaray__complex_map_sample {
+    input map [::complex_map];
+    input sampler [::complex_map_sampler]: ::complex_map_nearest_sampler();
+    alias output __out [complex];
+}
+
+@doc: "2D Complex Map Sampler Channel"
+public node complex_map_sampler => __mantaray__complex_map_sampler { /* void */ }
+
+@doc: "2D Complex Map Nearest Sampler"
+public node complex_map_nearest_sampler => __mantaray__complex_map_nearest_sampler {
+    alias output __out [::complex_map_sampler];
+}

@@ -16,6 +16,7 @@ public import "image/image_output.mr"
 public import "image/vector_map.mr"
 public import "image/image_file.mr"
 public import "image/uv_operations.mr"
+public import "image/complex_map.mr"
 
 public import "types/atomic_types.mr"
 public import "types/conversions.mr"

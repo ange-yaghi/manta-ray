@@ -469,6 +469,24 @@
     <Filter Include="Source Files\camera-emulation\aperture\apertures">
       <UniqueIdentifier>{39c44cb6-cdfb-43f5-93cb-6f92906e3f98}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\sdl\nodes\library\maps">
+      <UniqueIdentifier>{1feff1d7-26fa-42c6-be1f-6dc1ac4270d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl\nodes\library\map">
+      <UniqueIdentifier>{518e0610-26d8-407e-9fb5-bfe41b79f67f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\math\maps\complex">
+      <UniqueIdentifier>{63710629-4563-4a03-a4cc-ac71ce5348f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sdl\nodes\library\map\sampler">
+      <UniqueIdentifier>{b6a37905-048b-464d-bf7d-e49434292fe5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sdl\nodes\library\maps\sampler">
+      <UniqueIdentifier>{e70e1dc8-0737-4632-b249-200aff963c51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\math\maps\complex">
+      <UniqueIdentifier>{565ac0b0-7f68-443d-815f-f70724f6e8bf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\scene_geometry.cpp">
@@ -648,9 +666,6 @@
     <ClCompile Include="..\..\src\spectrum.cpp">
       <Filter>Source Files\color</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\complex_map_2d.cpp">
-      <Filter>Source Files\math\maps</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\vector_map_2d.cpp">
       <Filter>Source Files\math\maps</Filter>
     </ClCompile>
@@ -668,9 +683,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\remap_node_output.cpp">
       <Filter>Source Files\sdl\nodes\output-ports\operations</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\vector_node_output.cpp">
-      <Filter>Source Files\sdl\nodes\output-ports</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\ramp_node_output.cpp">
       <Filter>Source Files\sdl\nodes\output-ports\operations</Filter>
@@ -921,6 +933,36 @@
     <ClCompile Include="..\..\src\aperture_render_node.cpp">
       <Filter>Source Files\camera-emulation\aperture</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\complex_node_output.cpp">
+      <Filter>Source Files\sdl\nodes\output-ports\atomic-types</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\vector_node_output.cpp">
+      <Filter>Source Files\sdl\nodes\output-ports\atomic-types</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\complex_split_node.cpp">
+      <Filter>Source Files\sdl\nodes\library\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\constructed_complex_node_output.cpp">
+      <Filter>Source Files\sdl\nodes\output-ports\atomic-types</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\complex_split_node_output.cpp">
+      <Filter>Source Files\sdl\nodes\output-ports\atomic-types</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\constructed_complex_node.cpp">
+      <Filter>Source Files\sdl\nodes\library\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\complex_map_2d_node.cpp">
+      <Filter>Source Files\sdl\nodes\library\maps</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\complex_map_sample_node_output.cpp">
+      <Filter>Source Files\sdl\nodes\library\maps\sampler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\complex_map_2d.cpp">
+      <Filter>Source Files\math\maps\complex</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\complex_map_sampler.cpp">
+      <Filter>Source Files\math\maps\complex</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\sphere_primitive.h">
@@ -1167,9 +1209,6 @@
       <Filter>Header Files\math\maps</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\vector_map_2d.h">
-      <Filter>Header Files\math\maps</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\complex_map_2d.h">
       <Filter>Header Files\math\maps</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\mipmap.h">
@@ -1474,6 +1513,57 @@
     </ClInclude>
     <ClInclude Include="..\..\include\aperture_render_node.h">
       <Filter>Header Files\camera-emulation\aperture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\complex_split_node.h">
+      <Filter>Header Files\sdl\nodes\library\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\complex_split_node_output.h">
+      <Filter>Header Files\sdl\nodes\output-ports\atomic-types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\vector_node_output.h">
+      <Filter>Header Files\sdl\nodes\output-ports\atomic-types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\complex_node_output.h">
+      <Filter>Header Files\sdl\nodes\output-ports\atomic-types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\constructed_complex_node.h">
+      <Filter>Header Files\sdl\nodes\library\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\constructed_complex_node_output.h">
+      <Filter>Header Files\sdl\nodes\output-ports\atomic-types</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\complex_bake_node.h">
+      <Filter>Header Files\sdl\nodes\library\map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\complex_map_2d_node.h">
+      <Filter>Header Files\sdl\nodes\library\map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\complex_map_interface_node.h">
+      <Filter>Header Files\sdl\nodes\library\map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\complex_map_interface_node_output.h">
+      <Filter>Header Files\sdl\nodes\library\map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\complex_map_2d_node_output.h">
+      <Filter>Header Files\sdl\nodes\library\map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\complex_map_2d.h">
+      <Filter>Header Files\math\maps\complex</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\complex_map_sampler.h">
+      <Filter>Header Files\math\maps\complex</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\complex_map_nearest_sampler.h">
+      <Filter>Header Files\math\maps\complex</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\complex_map_nearest_sampler_node.h">
+      <Filter>Header Files\sdl\nodes\library\map\sampler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\complex_map_sample_node_output.h">
+      <Filter>Header Files\sdl\nodes\library\map\sampler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\complex_map_sample_node.h">
+      <Filter>Header Files\sdl\nodes\library\map\sampler</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

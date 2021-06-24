@@ -58,8 +58,8 @@ manta::math::Complex manta::ComplexMap2D::sampleDiscrete(math::real_d ku, math::
     assert(m_data != nullptr);
 
     // Very simple sampling for now
-    int ik_x = (int)(ku + 0.5);
-    int ik_y = (int)(kv + 0.5);
+    const int ik_x = (int)(ku + 0.5);
+    const int ik_y = (int)(kv + 0.5);
 
     return m_data[ik_y * m_width + ik_x];
 }
@@ -102,8 +102,8 @@ void manta::ComplexMap2D::fillByteBuffer(ImageByteBuffer *target, bool realOnly,
 void manta::ComplexMap2D::roll(ComplexMap2D *target) const {
     target->initialize(m_width, m_height);
 
-    int offsetX = m_width / 2;
-    int offsetY = m_height / 2;
+    const int offsetX = m_width / 2;
+    const int offsetY = m_height / 2;
 
     for (int i = 0; i < m_width; i++) {
         for (int j = 0; j < m_height; j++) {
@@ -116,9 +116,9 @@ void manta::ComplexMap2D::roll(ComplexMap2D *target) const {
 void manta::ComplexMap2D::fft(ComplexMap2D *target) const {
     target->initialize(m_width, m_height);
 
-    int width = m_width;
-    int height = m_height;
-    int minSpace = (width > height) ? width : height;
+    const int width = m_width;
+    const int height = m_height;
+    const int minSpace = (width > height) ? width : height;
 
     math::Complex *inputBuffer = StandardAllocator::Global()->allocate<math::Complex>(minSpace);
     math::Complex *outputBuffer = StandardAllocator::Global()->allocate<math::Complex>(minSpace);
@@ -172,7 +172,7 @@ void manta::ComplexMap2D::fft_multithreaded(ComplexMap2D *target, int threadCoun
 
     // Horizontal FFTs
     for (int i = 0; i < threadCount; i++) {
-        int start = i * divVertical;
+        const int start = i * divVertical;
         int end = (i + 1) * divVertical;
 
         if (end >= m_height || i == (threadCount - 1)) {
@@ -197,7 +197,7 @@ void manta::ComplexMap2D::fft_multithreaded(ComplexMap2D *target, int threadCoun
 
     // Vertical FFTs
     for (int i = 0; i < threadCount; i++) {
-        int start = i * divHorizontal;
+        const int start = i * divHorizontal;
         int end = (i + 1) * divHorizontal;
 
         if (end >= m_width || i == (threadCount - 1)) {
@@ -321,8 +321,8 @@ void manta::ComplexMap2D::inverseFft(ComplexMap2D *target) const {
 void manta::ComplexMap2D::cft(ComplexMap2D *target, math::real_d physicalWidth, math::real_d physicalHeight) const {
     target->initialize(m_width, m_height);
 
-    int horizontalSamples = m_width;
-    int verticalSamples = m_height;
+    const int horizontalSamples = m_width;
+    const int verticalSamples = m_height;
 
     math::real_d w_inv = 1 / physicalWidth;
     math::real_d h_inv = 1 / physicalHeight;
@@ -332,8 +332,8 @@ void manta::ComplexMap2D::cft(ComplexMap2D *target, math::real_d physicalWidth, 
 
     math::Complex fs_inv_s = math::Complex(1 / (fs_x * fs_y), (math::real_d)0.0);
 
-    int halfHorizontalSamples = horizontalSamples / 2;
-    int halfVerticalSamples = verticalSamples / 2;
+    const int halfHorizontalSamples = horizontalSamples / 2;
+    const int halfVerticalSamples = verticalSamples / 2;
 
     for (int kx = -halfHorizontalSamples; kx < halfHorizontalSamples; kx++) {
         // frequency_x = kx / physicalWidth
@@ -342,14 +342,14 @@ void manta::ComplexMap2D::cft(ComplexMap2D *target, math::real_d physicalWidth, 
             // frequency_y = ky / physicalHeight
 
             // phase = exp(2 * pi * (frequency_x * (w / 2) + frequency_y * (h / 2)))
-            int phase = kx + ky;
+            const int phase = kx + ky;
 
             math::Complex phaseTransformation;
             phaseTransformation.r = (phase % 2 == 0) ? (math::real_d)1.0 : (math::real_d)-1.0;
             phaseTransformation.i = (math::real_d)0.0;
 
-            int mapIndexX = (kx + horizontalSamples) % horizontalSamples;
-            int mapIndexY = (ky + verticalSamples) % verticalSamples;
+            const int mapIndexX = (kx + horizontalSamples) % horizontalSamples;
+            const int mapIndexY = (ky + verticalSamples) % verticalSamples;
 
             math::Complex dftApprox = get(mapIndexX, mapIndexY);
             dftApprox = dftApprox * phaseTransformation * fs_inv_s;
@@ -362,8 +362,8 @@ void manta::ComplexMap2D::cft(ComplexMap2D *target, math::real_d physicalWidth, 
 void manta::ComplexMap2D::inverseCft(ComplexMap2D *target, math::real_d physicalWidth, math::real_d physicalHeight) const {
     target->initialize(m_width, m_height);
 
-    int horizontalSamples = m_width;
-    int verticalSamples = m_height;
+    const int horizontalSamples = m_width;
+    const int verticalSamples = m_height;
 
     math::real_d w_inv = 1 / physicalWidth;
     math::real_d h_inv = 1 / physicalHeight;
@@ -373,8 +373,8 @@ void manta::ComplexMap2D::inverseCft(ComplexMap2D *target, math::real_d physical
 
     math::Complex fs_inv_s = math::Complex(1 / (fs_x * fs_y), (math::real_d)0.0);
 
-    int halfHorizontalSamples = horizontalSamples / 2;
-    int halfVerticalSamples = verticalSamples / 2;
+    const int halfHorizontalSamples = horizontalSamples / 2;
+    const int halfVerticalSamples = verticalSamples / 2;
 
     for (int kx = -halfHorizontalSamples; kx < halfHorizontalSamples; kx++) {
         // frequency_x = kx / physicalWidth
@@ -383,14 +383,14 @@ void manta::ComplexMap2D::inverseCft(ComplexMap2D *target, math::real_d physical
             // frequency_y = ky / physicalHeight
 
             // phase = exp(2 * pi * (frequency_x * (w / 2) + frequency_y * (h / 2)))
-            int phase = kx + ky;
+            const int phase = kx + ky;
 
             math::Complex phaseTransformation;
             phaseTransformation.r = (phase % 2 == 0) ? (math::real_d)1.0 : (math::real_d) -1.0;
             phaseTransformation.i = (math::real_d)0.0;
 
-            int mapIndexX = (kx + horizontalSamples) % horizontalSamples;
-            int mapIndexY = (ky + verticalSamples) % verticalSamples;
+            const int mapIndexX = (kx + horizontalSamples) % horizontalSamples;
+            const int mapIndexY = (ky + verticalSamples) % verticalSamples;
 
             math::Complex dftApprox = get(mapIndexX, mapIndexY);
             dftApprox = dftApprox / (phaseTransformation * fs_inv_s);
@@ -401,19 +401,19 @@ void manta::ComplexMap2D::inverseCft(ComplexMap2D *target, math::real_d physical
 }
 
 void manta::ComplexMap2D::cftConvolve(ComplexMap2D *gDft, math::real_d physicalWidth, math::real_d physicalHeight) {
-    int horizontalSamples = m_width;
-    int verticalSamples = m_height;
+    const int horizontalSamples = m_width;
+    const int verticalSamples = m_height;
 
-    math::real_d w_inv = 1 / physicalWidth;
-    math::real_d h_inv = 1 / physicalHeight;
+    const math::real_d w_inv = 1 / physicalWidth;
+    const math::real_d h_inv = 1 / physicalHeight;
 
-    math::real_d fs_x = horizontalSamples * w_inv;
-    math::real_d fs_y = verticalSamples * h_inv;
+    const math::real_d fs_x = horizontalSamples * w_inv;
+    const math::real_d fs_y = verticalSamples * h_inv;
 
-    math::Complex fs_inv_s = math::Complex(1 / (fs_x * fs_y), (math::real_d)0.0);
+    const math::Complex fs_inv_s = math::Complex(1 / (fs_x * fs_y), (math::real_d)0.0);
 
-    int halfHorizontalSamples = horizontalSamples / 2;
-    int halfVerticalSamples = verticalSamples / 2;
+    const int halfHorizontalSamples = horizontalSamples / 2;
+    const int halfVerticalSamples = verticalSamples / 2;
 
     for (int kx = -halfHorizontalSamples; kx < halfHorizontalSamples; kx++) {
         // frequency_x = kx / physicalWidth

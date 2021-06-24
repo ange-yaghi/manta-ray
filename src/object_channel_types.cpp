@@ -19,3 +19,5 @@ const piranha::ChannelType manta::ObjectChannel::MediaInterfaceChannel("MediaInt
 const piranha::ChannelType manta::ObjectChannel::FilterChannel("FilterChannel");
 const piranha::ChannelType manta::ObjectChannel::ImagePlaneChannel("ImagePlaneChannel");
 const piranha::ChannelType manta::ObjectChannel::RenderPatternChannel("RenderPatternChannel");
+const piranha::ChannelType manta::ObjectChannel::ComplexMap2dChannel("ComplexMap2dChannel");
+const piranha::ChannelType manta::ObjectChannel::ComplexMapSamplerChannel("ComplexMapSamplerChannel");

@@ -13,8 +13,13 @@ namespace manta {
             Complex(real_d r, real_d i) : r(r), i(i) {}
             ~Complex() {}
 
-            real_d r;
-            real_d i;
+            union {
+                struct {
+                    real_d r;
+                    real_d i;
+                };
+                real_d values[2];
+            };
 
             Complex operator+(const Complex &b) const {
                 return { r + b.r, i + b.i };

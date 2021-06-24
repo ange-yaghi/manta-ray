@@ -3,6 +3,7 @@
 #include <assert.h>
 
 manta::VectorSplitNodeOutput::VectorSplitNodeOutput() : VectorNodeOutput(true) {
+    m_input = nullptr;
     m_valueIndex = -1;
 }
 
@@ -11,8 +12,6 @@ manta::VectorSplitNodeOutput::~VectorSplitNodeOutput() {
 }
 
 void manta::VectorSplitNodeOutput::sample(const IntersectionPoint *surfaceInteraction, void *_target) const {
-    (void)surfaceInteraction;
-
     assert(m_valueIndex != -1);
 
     math::Vector *target = reinterpret_cast<math::Vector *>(_target);
