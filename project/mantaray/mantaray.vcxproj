@@ -204,6 +204,8 @@
     <ClInclude Include="..\..\include\complex_map_2d_node_output.h" />
     <ClInclude Include="..\..\include\complex_map_interface_node.h" />
     <ClInclude Include="..\..\include\complex_map_interface_node_output.h" />
+    <ClInclude Include="..\..\include\complex_map_linear_sampler.h" />
+    <ClInclude Include="..\..\include\complex_map_linear_sampler_node.h" />
     <ClInclude Include="..\..\include\complex_map_nearest_sampler.h" />
     <ClInclude Include="..\..\include\complex_map_nearest_sampler_node.h" />
     <ClInclude Include="..\..\include\complex_map_sampler.h" />
@@ -221,6 +223,7 @@
     <ClInclude Include="..\..\include\disney_ggx_distribution.h" />
     <ClInclude Include="..\..\include\disney_gtr_clearcoat_distribution.h" />
     <ClInclude Include="..\..\include\disney_specular_brdf.h" />
+    <ClInclude Include="..\..\include\complex_map_operation_node.h" />
     <ClInclude Include="..\..\include\fresnel_node.h" />
     <ClInclude Include="..\..\include\fresnel_node_output.h" />
     <ClInclude Include="..\..\include\hable_filmic_node.h" />

@@ -75,6 +75,7 @@ void manta::ApertureRenderNode::_evaluate() {
     delete[] samples;
 
     m_outputMap = new VectorMap2D();
+    imagePlane->normalize();
     m_outputMap->copy(imagePlane);
 
     m_output.setMap(m_outputMap);

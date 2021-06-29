@@ -21,6 +21,8 @@ manta::ComplexMap2D::~ComplexMap2D() {
 }
 
 void manta::ComplexMap2D::initialize(int width, int height, math::real value) {
+    if (m_data != nullptr) destroy();
+
     m_width = width;
     m_height = height;
 

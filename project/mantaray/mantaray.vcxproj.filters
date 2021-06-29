@@ -1565,6 +1565,15 @@
     <ClInclude Include="..\..\include\complex_map_sample_node.h">
       <Filter>Header Files\sdl\nodes\library\map\sampler</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\complex_map_operation_node.h">
+      <Filter>Header Files\sdl\nodes\library\map</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\complex_map_linear_sampler.h">
+      <Filter>Header Files\math\maps\complex</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\complex_map_linear_sampler_node.h">
+      <Filter>Header Files\sdl\nodes\library\map\sampler</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\opencl_programs\mantaray.cl">

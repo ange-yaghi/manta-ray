@@ -20,8 +20,8 @@ namespace manta {
         }
 
         virtual math::Complex sample(ComplexMap2D *map, math::real u, math::real v) {
-            const int nearest_u = (int)std::round(u * map->getWidth());
-            const int nearest_v = (int)std::round(v * map->getHeight());
+            const int nearest_u = (int)std::round(u * (map->getWidth() - 1));
+            const int nearest_v = (int)std::round(v * (map->getHeight() - 1));
 
             return map->get(nearest_u, nearest_v);
         }

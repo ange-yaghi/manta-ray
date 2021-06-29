@@ -40,3 +40,34 @@ public node complex_map_sampler => __mantaray__complex_map_sampler { /* void */ 
 public node complex_map_nearest_sampler => __mantaray__complex_map_nearest_sampler {
     alias output __out [::complex_map_sampler];
 }
+
+@doc: "2D Complex Map Linear Sampler"
+public node complex_map_linear_sampler => __mantaray__complex_map_linear_sampler {
+    alias output __out [::complex_map_sampler];
+}
+
+@doc: "2D FFT"
+public node fft => __mantaray__fft {
+    input in [::complex_map];
+    modify target [::complex_map];
+}
+
+@doc: "2D DFT -> CFT"
+public node dft_to_cft => __mantaray__dft_to_cft {
+    input in [::complex_map];
+    modify target [::complex_map];
+    input width [float]: 1.0;
+    input height [float]: 1.0;
+}
+
+@doc: "Complex Map Roll"
+public node roll => __mantaray__roll {
+    input in [::complex_map];
+    modify target [::complex_map];
+}
+
+@doc: "Complex Map Destroy"
+public node complex_map_destroy => __mantaray__complex_map_destroy {
+    modify in [::complex_map];
+}
+

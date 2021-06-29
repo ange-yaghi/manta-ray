@@ -83,7 +83,9 @@
 #include "../include/complex_map_interface_node.h"
 #include "../include/complex_map_sampler.h"
 #include "../include/complex_map_nearest_sampler_node.h"
+#include "../include/complex_map_linear_sampler_node.h"
 #include "../include/complex_map_sample_node.h"
+#include "../include/complex_map_operation_node.h"
 
 manta::LanguageRules::LanguageRules() {
     /* void */
@@ -291,6 +293,16 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__render_aperture");
     registerBuiltinType<ComplexMapNearestSamplerNode>(
         "__mantaray__complex_map_nearest_sampler");
+    registerBuiltinType<ComplexMapLinearSamplerNode>(
+        "__mantaray__complex_map_linear_sampler");
+    registerBuiltinType<ComplexMapOperationNode<ComplexMapOperation::Fft>>(
+        "__mantaray__fft");
+    registerBuiltinType<ComplexMapOperationNode<ComplexMapOperation::Roll>>(
+        "__mantaray__roll");
+    registerBuiltinType<ComplexMapOperationNode<ComplexMapOperation::DftToCft>>(
+        "__mantaray__dft_to_cft");
+    registerBuiltinType<ComplexMapOperationNode<ComplexMapOperation::Destroy>>(
+        "__mantaray__complex_map_destroy");
 
     // Actions
     registerBuiltinType<piranha::ConsoleInputNode>(

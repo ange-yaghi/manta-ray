@@ -187,3 +187,19 @@ public node int_negate => __mantaray__int_negate {
     input __in [int];
     alias output __out [int];
 }
+
+// Complex operations
+
+public node conjugate {
+    input __in [complex];
+    alias output __out [complex]: complex(__in.r, -__in.i);
+}
+
+public node complex_mul {
+    input __in0 [complex];
+    input __in1 [complex];
+    alias output __out [complex]:
+        complex(
+            __in0.r * __in1.r - __in0.i * __in1.i,
+            __in0.i * __in1.r + __in0.r * __in1.i);
+}

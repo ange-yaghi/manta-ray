@@ -1,6 +1,7 @@
 #include "../include/complex_map_2d_node.h"
 
 #include "../include/complex_node_output.h"
+#include "../include/intersection_point.h"
 
 manta::ComplexMap2dNode::ComplexMap2dNode() {
     m_width = nullptr;
@@ -24,12 +25,23 @@ void manta::ComplexMap2dNode::_evaluate() {
         m_map.initialize(width, height);
 
         ComplexNodeOutput *input = static_cast<ComplexNodeOutput *>(m_input);
+        IntersectionPoint p{};
+        math::Complex last;
         for (int j = 0; j < height; ++j) {
             for (int i = 0; i < width; ++i) {
                 math::Complex value;
-                input->discreteSample2d(i, j, &value);
+                p.m_textureCoodinates = math::loadVector(
+                    i / (math::real)width,
+                    j / (math::real)height);
+                input->sample(&p, &value);
+
+                if (j == 512 && value.r != last.r) {
+                    int a = 0;
+                }
 
                 m_map.set(value, i, j);
+
+                last = value;
             }
         }
     }

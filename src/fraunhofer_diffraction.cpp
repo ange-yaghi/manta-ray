@@ -33,6 +33,7 @@ manta::FraunhoferDiffraction::FraunhoferDiffraction() {
     m_apertureInput = nullptr;
     m_resolutionInput = nullptr;
     m_sensorWidthInput = nullptr;
+    m_cmfTableInput = nullptr;
 }
 
 manta::FraunhoferDiffraction::~FraunhoferDiffraction() {

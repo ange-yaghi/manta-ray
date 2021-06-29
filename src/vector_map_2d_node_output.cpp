@@ -15,8 +15,8 @@ manta::VectorMap2DNodeOutput::~VectorMap2DNodeOutput() {
 void manta::VectorMap2DNodeOutput::sample(const IntersectionPoint *surfaceInteraction, void *_target) const {
     math::Vector *target = reinterpret_cast<math::Vector *>(_target);
 
-    math::real u = math::getX(surfaceInteraction->m_textureCoodinates);
-    math::real v = 1 - math::getY(surfaceInteraction->m_textureCoodinates);
+    const math::real u = math::getX(surfaceInteraction->m_textureCoodinates);
+    const math::real v = 1 - math::getY(surfaceInteraction->m_textureCoodinates);
 
     *target = m_map->triangleSample(u, v);
 }
