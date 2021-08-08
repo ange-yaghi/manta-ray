@@ -78,14 +78,14 @@ manta::math::Vector manta::CmfTable::pureToRgb(math::real_d wavelength) const {
 
     Entry entry = sampleXyz(wavelength);
     ColorRgb rgb = RgbSpace::srgb.convertToRgb(entry.colorXyz);
-    return math::loadVector((math::real)rgb.x, (math::real)rgb.y, (math::real)rgb.z);
+    return math::loadVector((math::real)rgb.x, (math::real)rgb.y, (math::real)rgb.z, (math::real)1.0);
 }
 
 manta::math::Vector manta::CmfTable::xyzToRgb(const ColorXyz &color) const {
     assert(m_entries != nullptr);
 
     ColorRgb rgb = RgbSpace::srgb.convertToRgb(color);
-    return math::loadVector((math::real)rgb.x, (math::real)rgb.y, (math::real)rgb.z);
+    return math::loadVector((math::real)rgb.x, (math::real)rgb.y, (math::real)rgb.z, (math::real)1.0);
 }
 
 manta::CmfTable::Entry manta::CmfTable::sampleXyz(math::real_d wavelength) const {

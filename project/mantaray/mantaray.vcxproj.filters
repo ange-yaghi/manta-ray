@@ -963,6 +963,9 @@
     <ClCompile Include="..\..\src\complex_map_sampler.cpp">
       <Filter>Source Files\math\maps\complex</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\fraunhofer_diffraction_node.cpp">
+      <Filter>Source Files\camera-emulation\diffraction</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\sphere_primitive.h">
@@ -1573,6 +1576,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\complex_map_linear_sampler_node.h">
       <Filter>Header Files\sdl\nodes\library\map\sampler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\fraunhofer_diffraction_node.h">
+      <Filter>Header Files\camera-emulation\diffraction</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -80,6 +80,11 @@ public node vector_negate => __mantaray__vector_negate {
     alias output __out [vector];
 }
 
+public node sin => __mantaray__vector_sin {
+    input __in [vector];
+    alias output __out [vector];
+}
+
 public node normalize => __mantaray__vector_normalize {
     input __in [vector];
     alias output __out [vector];
@@ -202,4 +207,10 @@ public node complex_mul {
         complex(
             __in0.r * __in1.r - __in0.i * __in1.i,
             __in0.i * __in1.r + __in0.r * __in1.i);
+}
+
+public node complex_modulus_2 {
+    input __in [complex];
+    alias output __out:
+        complex_mul(__in, conjugate(__in));
 }

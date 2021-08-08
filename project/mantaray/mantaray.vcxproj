@@ -51,6 +51,7 @@
     <ClCompile Include="..\..\src\disney_gtr_clearcoat_distribution.cpp" />
     <ClCompile Include="..\..\src\disney_specular_brdf.cpp" />
     <ClCompile Include="..\..\src\filter.cpp" />
+    <ClCompile Include="..\..\src\fraunhofer_diffraction_node.cpp" />
     <ClCompile Include="..\..\src\fresnel_node.cpp" />
     <ClCompile Include="..\..\src\fresnel_node_output.cpp" />
     <ClCompile Include="..\..\src\gaussian_filter.cpp" />
@@ -224,6 +225,7 @@
     <ClInclude Include="..\..\include\disney_gtr_clearcoat_distribution.h" />
     <ClInclude Include="..\..\include\disney_specular_brdf.h" />
     <ClInclude Include="..\..\include\complex_map_operation_node.h" />
+    <ClInclude Include="..\..\include\fraunhofer_diffraction_node.h" />
     <ClInclude Include="..\..\include\fresnel_node.h" />
     <ClInclude Include="..\..\include\fresnel_node_output.h" />
     <ClInclude Include="..\..\include\hable_filmic_node.h" />

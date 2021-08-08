@@ -9,6 +9,8 @@ manta::CftEstimator2D::CftEstimator2D() {
 
     m_horizontalSamples = 0;
     m_verticalSamples = 0;
+
+    m_discreteApproximation = nullptr;
 }
 
 manta::CftEstimator2D::~CftEstimator2D() {
@@ -16,23 +18,21 @@ manta::CftEstimator2D::~CftEstimator2D() {
 }
 
 void manta::CftEstimator2D::initialize(
-    const ComplexMap2D *spatialFunction, math::real_d physicalWidth, math::real_d physicalHeight) 
+    ComplexMap2D *cft,
+    math::real_d physicalWidth,
+    math::real_d physicalHeight)
 {
     m_physicalWidth = physicalWidth;
     m_physicalHeight = physicalHeight;
 
-    m_verticalSamples = spatialFunction->getWidth();
-    m_horizontalSamples = spatialFunction->getHeight();
+    m_verticalSamples = cft->getWidth();
+    m_horizontalSamples = cft->getHeight();
 
-    ComplexMap2D dftApprox;
-    spatialFunction->fft_multithreaded(&dftApprox, 12);
-
-    dftApprox.cft(&m_discreteApproximation, physicalWidth, physicalHeight);
-    dftApprox.destroy();
+    m_discreteApproximation = cft;
 }
 
 void manta::CftEstimator2D::destroy() {
-    m_discreteApproximation.destroy();
+    /* void */
 }
 
 manta::math::Complex manta::CftEstimator2D::sample(
@@ -57,7 +57,23 @@ manta::math::Complex manta::CftEstimator2D::sample(
     if (i < 0) return math::Complex();
     if (j < 0) return math::Complex();
 
-    return m_discreteApproximation.sampleDiscrete(i, j);
+    return m_discreteApproximation->sampleDiscrete(i, j);
+}
+
+manta::math::Complex manta::CftEstimator2D::sampleDiscrete(int i, int j) const {
+    return m_discreteApproximation->sampleDiscrete(i, j);
+}
+
+manta::math::real_d manta::CftEstimator2D::getFrequencyX(int i) const {
+    if (i >= m_horizontalSamples / 2) i -= m_horizontalSamples;
+
+    return i / m_physicalWidth;
+}
+
+manta::math::real_d manta::CftEstimator2D::getFrequencyY(int j) const {
+    if (j >= m_verticalSamples / 2) j -= m_verticalSamples;
+
+    return j / m_physicalHeight;
 }
 
 manta::math::real_d manta::CftEstimator2D::getHorizontalFreqRange() const {

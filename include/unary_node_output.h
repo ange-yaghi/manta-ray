@@ -10,7 +10,8 @@ namespace manta {
         NEGATE,
         MAGNITUDE,
         MAX_COMPONENT,
-        ABSOLUTE
+        ABSOLUTE,
+        SIN
     };
 
     template <UNARY_OPERATION op>
@@ -38,6 +39,8 @@ namespace manta {
                 return math::maxComponent(input);
             case ABSOLUTE:
                 return math::abs(input);
+            case SIN:
+                return math::loadScalar(sin(math::getScalar(input)));
             default:
                 return math::constants::Zero;
             }

@@ -46,6 +46,7 @@ public import "primitives/primitives.mr"
 public import "utilities/console.mr"
 public import "utilities/quick_render.mr"
 public import "utilities/paths.mr"
+public import "utilities/utilities.mr"
 
 public import "ui/preview.mr"
 public import "ui/image_plane_to_map.mr"

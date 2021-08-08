@@ -9,7 +9,7 @@ void manta::NaiveFFT::fft(const math::Complex *input, math::Complex *target, int
 void manta::NaiveFFT::fft_inverse(const math::Complex *input, math::Complex *target, int n) {
     fft_child(input, target, n, 1);
 
-    math::real inv_n = 1 / (math::real)n;
+    math::real_d inv_n = 1 / (math::real_d)n;
 
     // Apply scale and reverse direction
     for (int i = 0; i < n; i++) {
@@ -27,6 +27,8 @@ void manta::NaiveFFT::fft_inverse(const math::Complex *input, math::Complex *tar
 }
 
 void manta::NaiveFFT::fft_child(const math::Complex *input, math::Complex *target, int n, int s) {
+    static constexpr math::real_d pi = 3.1415926535897932384626433832795028;
+
     if (n == 1) {
         target[0] = input[0];
         return;
@@ -43,9 +45,9 @@ void manta::NaiveFFT::fft_child(const math::Complex *input, math::Complex *targe
     for (int k = 0; k < n / 2; k++) {
         math::Complex t = target[k];
 
-        math::real angle = -math::constants::TWO_PI * k / (math::real)n;
-        math::real cos_angle = ::cos(angle);
-        math::real sin_angle = ::sin(angle);
+        math::real_d angle = -2 * pi * k / (math::real_d)n;
+        math::real_d cos_angle = ::cos(angle);
+        math::real_d sin_angle = ::sin(angle);
 
         math::Complex x = target[k + n / 2];
 

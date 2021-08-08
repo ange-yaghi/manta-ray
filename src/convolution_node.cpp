@@ -71,6 +71,14 @@ void manta::ConvolutionNode::_evaluate() {
     ComplexMap2D a_c, a_ft;
     ComplexMap2D b_c, b_ft;
 
+    for (int i = 0; i < b_map->getWidth(); ++i) {
+        for (int j = 0; j < b_map->getHeight(); ++j) {
+            if (math::getY(b_map->get(i, j)) != 0 && j < 128) {
+                int a = 0;
+            }
+        }
+    }
+
     for (int i = 0; i < 3; i++) {
         a_c.copy(a_map, i);
         a_c.fft_multithreaded(&a_ft, 12); 
@@ -88,10 +96,13 @@ void manta::ConvolutionNode::_evaluate() {
 
         for (int u = margins.left; u < margins.left + margins.width; u++) {
             for (int v = margins.top; v < margins.top + margins.height; v++) {
-                int iu = u - margins.left, iv = v - margins.top;
+                const int iu = u - margins.left, iv = v - margins.top;
 
                 math::Vector result = m_outputMap.get(iu, iv);
                 math::set(result, i, (math::real)b_ft.get(u, v).r);
+
+                assert(!std::isnan(b_ft.get(u, v).r));
+                assert(!std::isinf(b_ft.get(u, v).r));
 
                 m_outputMap.set(result, iu, iv);
             }

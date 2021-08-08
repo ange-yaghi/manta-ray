@@ -36,7 +36,7 @@ void manta::ApertureRenderNode::_evaluate() {
     piranha::native_float scaleIn;
     m_scale->fullCompute(&scaleIn);
 
-    math::real scale = (math::real)scaleIn;
+    const math::real scale = (math::real)scaleIn;
 
     ImageSample *samples = new ImageSample[SampleBufferCapacity];
     int sampleCount = 0;
@@ -51,7 +51,7 @@ void manta::ApertureRenderNode::_evaluate() {
             samples[sampleCount++] = {
                 math::loadScalar(
                     aperture->isNotBlocked((2.0f * u - 1.0f) * radius / scale, (2.0f * v - 1.0f) * radius / scale)
-                        ? aperture->sample(2.0f * u - 1.0f, 2.0f * v - 1.0f)
+                        ? aperture->sample((2.0f * u - 1.0f) * radius / scale, (2.0f * v - 1.0f) * radius / scale)
                         : 0.0f),
                 { u * width, v * height }
             };

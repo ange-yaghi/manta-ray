@@ -13,6 +13,7 @@ namespace manta {
         Fft,
         DftToCft,
         Roll,
+        Normalize,
         Destroy
     };
 
@@ -24,6 +25,7 @@ namespace manta {
     public:
         ComplexMapOperationNode() {
             m_input = nullptr;
+            m_target = nullptr;
             for (int i = 0; i < MaxAuxInputs; ++i) m_aux[i] = nullptr;
 
             m_auxInputs = 0;
@@ -63,6 +65,9 @@ namespace manta {
             case ComplexMapOperation::Destroy:
                 input->destroy();
                 break;
+            case ComplexMapOperation::Normalize:
+                input->normalize(target);
+                break;
             }
         }
 
@@ -82,6 +87,7 @@ namespace manta {
             case ComplexMapOperation::Fft:
             case ComplexMapOperation::DftToCft:
             case ComplexMapOperation::Roll:
+            case ComplexMapOperation::Normalize:
                 registerInput(&m_target, "target", true);
             }
 
@@ -89,6 +95,7 @@ namespace manta {
             case ComplexMapOperation::Fft:
             case ComplexMapOperation::DftToCft:
             case ComplexMapOperation::Roll:
+            case ComplexMapOperation::Normalize:
                 registerInput(&m_input, "in");
                 break;
             case ComplexMapOperation::Destroy:

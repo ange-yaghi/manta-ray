@@ -35,10 +35,6 @@ void manta::ComplexMap2dNode::_evaluate() {
                     j / (math::real)height);
                 input->sample(&p, &value);
 
-                if (j == 512 && value.r != last.r) {
-                    int a = 0;
-                }
-
                 m_map.set(value, i, j);
 
                 last = value;

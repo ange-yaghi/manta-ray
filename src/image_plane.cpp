@@ -119,6 +119,17 @@ void manta::ImagePlane::clear(const math::Vector &v) {
 
 #define FAST_ABS(x) (((x) > 0) ? (x) : -(x))
 
+void manta::ImagePlane::add(const math::Vector &v, int x, int y) {
+    if (x >= m_width || x < 0) return;
+    if (y >= m_height || y < 0) return;
+
+    m_buffer[y * m_width + x] = math::add(m_buffer[y * m_width + x], v);
+
+    if (m_previewTarget != nullptr) {
+        m_previewTarget->set(m_buffer[y * m_width + x], x, y);
+    }
+}
+
 void manta::ImagePlane::processSamples(ImageSample *samples, int sampleCount, StackAllocator *stack) {
     struct Block {
         math::Vector value;
@@ -195,7 +206,7 @@ void manta::ImagePlane::normalize() {
             math::real weightSum = m_sampleWeightSums[y * m_width + x];
 
             *value = (weightSum == 0)
-                ? math::constants::Zero
+                ? *value
                 : math::div(*value, math::loadScalar(weightSum));
 
             constexpr math::Vector DebugRed = { { (math::real)1.0, (math::real)0.0, (math::real)0.0 } };

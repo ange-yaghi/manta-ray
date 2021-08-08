@@ -35,6 +35,7 @@ namespace manta {
         void fillByteBuffer(ImageByteBuffer *target, bool realOnly = true, const Margins *margins = nullptr) const;
 
         void roll(ComplexMap2D *target) const;
+        void normalize(ComplexMap2D *target) const;
 
         void fft(ComplexMap2D *target) const;
         void fft_multithreaded(ComplexMap2D *target, int threadCount, 

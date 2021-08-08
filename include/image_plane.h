@@ -44,6 +44,7 @@ namespace manta {
 
         const math::Vector *getBuffer() const { return m_buffer; }
 
+        void add(const math::Vector &v, int x, int y);
         void processSamples(ImageSample *samples, int sampleCount, StackAllocator *stack);
 
         void normalize();

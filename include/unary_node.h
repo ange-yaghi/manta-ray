@@ -51,6 +51,7 @@ namespace manta {
     typedef UnaryNode<MAGNITUDE> VectorMagnitudeNode;
     typedef UnaryNode<MAX_COMPONENT> VectorMaxComponentNode;
     typedef UnaryNode<ABSOLUTE> VectorAbsoluteNode;
+    typedef UnaryNode<SIN> VectorSinNode;
 
     typedef UvNode<UvOperation::Wrap> UvWrapNode;
 

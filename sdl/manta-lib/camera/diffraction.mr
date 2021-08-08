@@ -13,7 +13,9 @@ private import "apertures.mr"
 private import "../types/atomic_types.mr"
 private import "../types/conversions.mr"
 private import "../image/vector_map.mr"
+private import "../image/complex_map.mr"
 private import "../utilities/paths.mr"
+private import "../ray-tracer/image_plane.mr"
 
 @doc: "Settings for Fraunhofer diffraction simulation"
 public node fraunhofer_settings {
@@ -38,7 +40,7 @@ public node fraunhofer_diffraction {
     input sensor_width      [float];
     input resolution        [int];
     input dirt_map          [vector]: 1.0;
-    input cmf_table_path    [string]: 
+    input cmf_table_path    [string]:
         append_path(
             script_path(), 
             "../resources/cmf/xyz_cmf_31.csv"
@@ -63,7 +65,7 @@ public node fraunhofer_diffraction {
 }
 
 @doc: "Builtin Fraunhofer diffraction simulator"
-public node __fraunhofer_diffraction => __mantaray__fraunhofer_diffraction {
+public node __fraunhofer_diffraction => __mantaray__fraunhofer_diffraction_legacy {
     input aperture_samples  [int];
     input texture_samples   [int];
     input min_wavelength    [int];
@@ -80,4 +82,29 @@ public node __fraunhofer_diffraction => __mantaray__fraunhofer_diffraction {
 
     output diffraction      [vector_map];
     output aperture_function [vector_map];
+}
+
+@doc: "Builtin Fraunhofer diffraction simulator"
+public node __fraunhofer_diffraction_new => __mantaray__fraunhofer_diffraction {
+    input pattern_cft [complex_map];
+    input image_plane [image_plane];
+    input resolution [int];
+    input sensor_size [float];
+    input sensor_distance [float];
+    input cft_size [float];
+    input cmf_table_path [string]:
+        append_path(
+            script_path(), 
+            "../resources/cmf/xyz_cmf_31.csv"
+        );
+    input spectrum_path [string]:
+        append_path(
+            script_path(), 
+            "../resources/cmf/d65_lighting.csv"
+        );
+    input normalize_color [bool]: true;
+    input start_wavelength [int]: 380;
+    input end_wavelength [int]: 750;
+    input wavelength_step [int]: 2; 
+    alias output __out [vector_map];
 }

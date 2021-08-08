@@ -114,10 +114,10 @@ void manta::ImageByteBuffer::setPixel(int row, int column, const Color &c) {
 
 void manta::ImageByteBuffer::convertToColor(const math::Vector &v, bool correctGamma, Color *c) const {
     math::real vr, vg, vb, va;
-    vr = math::getX(v);
-    vg = math::getY(v);
-    vb = math::getZ(v);
-    va = math::getW(v);
+    vr = math::clamp(math::getX(v));
+    vg = math::clamp(math::getY(v));
+    vb = math::clamp(math::getZ(v));
+    va = math::clamp(math::getW(v));
 
     if (correctGamma) {
         // Default to SRGB

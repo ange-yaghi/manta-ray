@@ -45,7 +45,7 @@ manta::math::real manta::Aperture::sample(math::real x, math::real y) {
     VectorNodeOutput *dirt = static_cast<VectorNodeOutput *>(m_dirt);
     
     IntersectionPoint p{};
-    p.m_textureCoodinates = math::loadVector(0.5f * x + 0.5f, 0.5f * y + 0.5f, 0.0f, 0.0f);
+    p.m_textureCoodinates = math::loadVector(0.5f * (x / m_radius) + 0.5f, 0.5f * (y / m_radius) + 0.5f, 0.0f, 0.0f);
 
     math::Vector dirtValue;
     dirt->sample(&p, &dirtValue);

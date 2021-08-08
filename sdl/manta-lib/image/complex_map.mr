@@ -9,16 +9,17 @@ module {
     @github:        "github.com/ange-yaghi/manta-ray"
 }
 
+private import "../types/operations.mr"
 private import "../types/atomic_types.mr"
 private import "../types/conversions.mr"
 
-@doc: "2D Complex Map Channel"
+@doc: "2D complex map channel"
 public node complex_map_channel => __mantaray__complex_map_2d_channel { 
     output width [int];
     output height [int];
 }
 
-@doc: "2D Complex Map"
+@doc: "2D complex map"
 public node complex_map => __mantaray__complex_map_2d {
     input width [int]: 0;
     input height [int]: 0;
@@ -26,22 +27,22 @@ public node complex_map => __mantaray__complex_map_2d {
     alias output __out [::complex_map_channel];
 }
 
-@doc: "2D Complex Map Sample Operations"
+@doc: "2D complex map sample operations"
 public node complex_map_sample => __mantaray__complex_map_sample {
     input map [::complex_map];
     input sampler [::complex_map_sampler]: ::complex_map_nearest_sampler();
     alias output __out [complex];
 }
 
-@doc: "2D Complex Map Sampler Channel"
+@doc: "2D complex map sampler channel"
 public node complex_map_sampler => __mantaray__complex_map_sampler { /* void */ }
 
-@doc: "2D Complex Map Nearest Sampler"
+@doc: "2D complex map nearest sampler"
 public node complex_map_nearest_sampler => __mantaray__complex_map_nearest_sampler {
     alias output __out [::complex_map_sampler];
 }
 
-@doc: "2D Complex Map Linear Sampler"
+@doc: "2D complex map linear sampler"
 public node complex_map_linear_sampler => __mantaray__complex_map_linear_sampler {
     alias output __out [::complex_map_sampler];
 }
@@ -52,7 +53,7 @@ public node fft => __mantaray__fft {
     modify target [::complex_map];
 }
 
-@doc: "2D DFT -> CFT"
+@doc: "2D DFT -> CFT approximation"
 public node dft_to_cft => __mantaray__dft_to_cft {
     input in [::complex_map];
     modify target [::complex_map];
@@ -60,14 +61,34 @@ public node dft_to_cft => __mantaray__dft_to_cft {
     input height [float]: 1.0;
 }
 
-@doc: "Complex Map Roll"
+@doc: "Complex map roll operation"
 public node roll => __mantaray__roll {
     input in [::complex_map];
     modify target [::complex_map];
 }
 
-@doc: "Complex Map Destroy"
+@doc: "Complex map normalize"
+public node complex_map_normalize => __mantaray__complex_map_normalize {
+    input in [::complex_map];
+    modify target [::complex_map];
+}
+
+
+@doc: "Complex map destroy operation"
 public node complex_map_destroy => __mantaray__complex_map_destroy {
     modify in [::complex_map];
 }
 
+@doc: "Complex map to Vector2D conversion utility"
+public node complex_map_to_rgb {
+    input map;
+    input range0: -100;
+    input range1: 100;
+    alias output __out: vector(
+        map(sampled.r, 0, 1, range0, range1),
+        0,
+        map(sampled.i, 0, 1, range0, range1)
+    );
+
+    complex_map_sample sampled(map)
+}

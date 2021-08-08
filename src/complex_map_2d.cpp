@@ -115,6 +115,22 @@ void manta::ComplexMap2D::roll(ComplexMap2D *target) const {
     }
 }
 
+void manta::ComplexMap2D::normalize(ComplexMap2D *target) const {
+    math::real_d maxNorm = 0;
+    for (int i = 0; i < m_width * m_height; ++i) {
+        const math::real_d norm = (m_data[i].conjugate() * m_data[i]).r;
+        if (norm > maxNorm) {
+            maxNorm = norm;
+        }
+    }
+
+    maxNorm = ::sqrt(maxNorm);
+
+    for (int i = 0; i < m_width * m_height; ++i) {
+        target->m_data[i] = m_data[i] / math::Complex(maxNorm, 0);
+    }
+}
+
 void manta::ComplexMap2D::fft(ComplexMap2D *target) const {
     target->initialize(m_width, m_height);
 
@@ -417,21 +433,21 @@ void manta::ComplexMap2D::cftConvolve(ComplexMap2D *gDft, math::real_d physicalW
     const int halfHorizontalSamples = horizontalSamples / 2;
     const int halfVerticalSamples = verticalSamples / 2;
 
-    for (int kx = -halfHorizontalSamples; kx < halfHorizontalSamples; kx++) {
+    for (int kx = -halfHorizontalSamples; kx < halfHorizontalSamples; ++kx) {
         // frequency_x = kx / physicalWidth
 
-        for (int ky = -halfVerticalSamples; ky < halfVerticalSamples; ky++) {
+        for (int ky = -halfVerticalSamples; ky < halfVerticalSamples; ++ky) {
             // frequency_y = ky / physicalHeight
 
             // phase = exp(2 * pi * (frequency_x * (w / 2) + frequency_y * (h / 2)))
-            int phase = kx + ky;
+            const int phase = kx + ky;
 
             math::Complex phaseTransformation;
-            phaseTransformation.r = (phase % 2 == 0) ? (math::real_d)1.0 : (math::real_d) -1.0;
+            phaseTransformation.r = (phase % 2 == 0) ? (math::real_d)1.0 : (math::real_d)-1.0;
             phaseTransformation.i = (math::real_d)0.0;
 
-            int mapIndexX = (kx + horizontalSamples) % horizontalSamples;
-            int mapIndexY = (ky + verticalSamples) % verticalSamples;
+            const int mapIndexX = (kx + horizontalSamples) % horizontalSamples;
+            const int mapIndexY = (ky + verticalSamples) % verticalSamples;
 
             math::Complex dftApprox = get(mapIndexX, mapIndexY) * gDft->get(mapIndexX, mapIndexY);
             dftApprox = fs_inv_s * dftApprox * phaseTransformation;

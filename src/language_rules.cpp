@@ -38,6 +38,7 @@
 #include "../include/polygonal_aperture.h"
 #include "../include/square_aperture.h"
 #include "../include/fraunhofer_diffraction.h"
+#include "../include/fraunhofer_diffraction_node.h"
 #include "../include/convolution_node.h"
 #include "../include/step_node.h"
 #include "../include/padded_frame_output.h"
@@ -230,6 +231,8 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
     registerBuiltinType<PolygonalAperture>(
         "__mantaray__polygonal_aperture");
     registerBuiltinType<FraunhoferDiffraction>(
+        "__mantaray__fraunhofer_diffraction_legacy");
+    registerBuiltinType<FraunhoferDiffractionNode>(
         "__mantaray__fraunhofer_diffraction");
     registerBuiltinType<ConvolutionNode>(
         "__mantaray__convolve_2d");
@@ -299,6 +302,8 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__fft");
     registerBuiltinType<ComplexMapOperationNode<ComplexMapOperation::Roll>>(
         "__mantaray__roll");
+    registerBuiltinType<ComplexMapOperationNode<ComplexMapOperation::Normalize>>(
+        "__mantaray__complex_map_normalize");
     registerBuiltinType<ComplexMapOperationNode<ComplexMapOperation::DftToCft>>(
         "__mantaray__dft_to_cft");
     registerBuiltinType<ComplexMapOperationNode<ComplexMapOperation::Destroy>>(
@@ -351,8 +356,10 @@ void manta::LanguageRules::registerBuiltinNodeTypes() {
         "__mantaray__vector_normalize");
     registerBuiltinType<VectorMaxComponentNode>(
         "__mantaray__vector_max_component");
-    registerBuiltinType<VectorAbsoluteNode>(
+    registerBuiltinType<VectorSinNode>(
         "__mantaray__vector_absolute");
+    registerBuiltinType<VectorSinNode>(
+        "__mantaray__vector_sin");
 
     registerBuiltinType<UvWrapNode>(
         "__mantaray__uv_wrap");

@@ -1,0 +1,16 @@
+module {
+    @name:          "Generic Utilities"
+    @project:       "MantaRay"
+    @author:        "Ange Yaghi"
+    @maintainer:    "Ange Yaghi"
+    @copyright:     "Copyright 2021, Ange Yaghi"
+    @doc:           "Defines all console utilities"
+    @version:       "0.0.1a"
+    @github:        "github.com/ange-yaghi/manta-ray"
+}
+
+@doc: "Label a node"
+public node tag {
+    input __in;
+    alias output __out: __in;
+}
