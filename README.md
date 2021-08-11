@@ -11,13 +11,6 @@ Tutorials are continually added here: [Tutorials](docs/public/tutorials/all_tuto
  
 ## Setup Instructions For Developers
 
-Only a few steps are required to begin developing on MantaRay:
-1. Install Python 3
-2. Clone the MantaRay repository
-3. Open ```project/mantaray.sln``` in Microsoft Visual Studio
-4. Right click on **mantaray_demos** and select 'Set as StartUp Project'
-5. Run the application
-
-All output from the demos is by default directed to: ```workspace/render/bitmap```
+This project was recently migrated to CMake and the setup instructions have changed. They will be updated here shortly.
 
 #### You are now ready to begin development!
