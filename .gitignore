@@ -366,3 +366,7 @@ My Advisor Results*/
 
 # VTune
 **/VTune Profiler Results/*
+
+# Code completion
+.cache/
+compile_commands.json
