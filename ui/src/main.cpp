@@ -11,6 +11,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     app.initialize((void *)&hInstance, ysContextObject::DeviceAPI::DirectX11);
     app.run();
     app.destroy();
-
+ 
     return 0;
 }
