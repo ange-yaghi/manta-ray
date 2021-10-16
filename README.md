@@ -19,7 +19,7 @@
 - Racing stripes generated via procedural shaders (not textures)
 ---
 
-![Alt text](docs/public/samples/2019-03-20_T18_24_22_stock_scene_S14800.bmp?raw=true)
+![Alt text](docs/public/samples/2019-03-20_T18_24_22_stock_scene_S14800.jpg?raw=true)
 - Physically accurate depth of field via lens simulation
 - Textures loaded from files
 - Roughness mapping
