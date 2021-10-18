@@ -1,10 +1,9 @@
 ![Alt text](docs/public/banners/mantaray_banner_v4.png?raw=true)
 
-
 **MantaRay** is an advanced open-source renderer. It uses modern rendering techniques to generate photorealistic images of complex scenes.
 
-This ray-tracer is also featured in the following YouTube videos on my channel AngeTheGreat:
-- [User Interface and Rendered Improvements](https://youtu.be/8liHiCNM4iU)
+This ray-tracer is also featured in the following YouTube videos on my channel [AngeTheGreat](https://www.youtube.com/channel/UCV0t1y4h_6-2SqEpXBXgwFQ):
+- [User Interface and Renderer Improvements](https://youtu.be/8liHiCNM4iU)
 - [Fraunhofer Diffraction](https://youtu.be/QWqb5Gewbx8)
 
 ## Sample Renders and Features
